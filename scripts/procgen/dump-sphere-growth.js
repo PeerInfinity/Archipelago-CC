@@ -14,7 +14,6 @@
  *       --victory victory \
  *       --fillers 2 --revisit 0.25 \
  *       -o /tmp/sphere-dump.json
- *
  * Flags:
  *   --seed N                 RNG seed (default 1)
  *   --region WxH             region dims (default 8x6)
@@ -81,6 +80,7 @@
  *                            tile is only placed when this is > 0)
  *   --rules-out PATH         additionally write the bare rules.json here
  *   -o, --out PATH           output JSON path (default ./sphere-growth-dump.json)
+ *   -h, --help               print this and exit
  *
  * Output JSON shape:
  *   {
@@ -95,6 +95,8 @@
 import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import { argvHelp, helpText } from './argvHelp.js';
 
 // Substrate libraries register their adapters on import.
 import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
@@ -119,6 +121,8 @@ import {
     collectSphereGrowthPrep, assembleRegionParams,
     mergeSubstrateItemLib, resolveSphereGoal,
 } from '../../frontend/modules/procgenPipeline/sphereConfigHooks.js';
+
+argvHelp(import.meta.url);
 
 /**
  * Build the X1 consumable-tile config, or null when byte-inert.
@@ -269,8 +273,7 @@ function parseArgs(argv) {
             case '-o':
             case '--out': out.out = next(); break;
             case '-h':
-            case '--help':
-                console.log('See the docblock in scripts/procgen/dump-sphere-growth.js');
+                process.stdout.write(`${helpText(fileURLToPath(import.meta.url))}\n`);
                 process.exit(0);
                 break;
             default:

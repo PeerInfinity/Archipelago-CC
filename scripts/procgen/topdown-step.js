@@ -15,25 +15,20 @@
  *   node scripts/procgen/topdown-step.js realise  -i t1.json -o t2.json
  *   node scripts/procgen/topdown-step.js finalize -i t2.json -o t3.json
  *   node scripts/procgen/topdown-step.js compile  -i t3.json -o t4.json --rules-out rules.json
- *
  *   # run a range (or the whole pipeline) in one process:
  *   node scripts/procgen/topdown-step.js run --source world_rules.json \
  *        --mix maze=1 --rules-out rules.json
- *
  *   # re-run from a step after hand-editing the envelope (e.g. substrate pins):
  *   node scripts/procgen/topdown-step.js run -i t1.json --from realise --rules-out rules.json
- *
  *   # auto-resume a partial / hand-edited envelope (no --from): runs from the
  *   # FIRST step whose output is missing (presence = keep, absence = recompute):
  *   node scripts/procgen/topdown-step.js run -i partial.json --rules-out rules.json
- *
  *   # RECORDED LAYOUT EDITS (envelope `edits[]`, see layoutEdits.js) replay
  *   # after the step each one addresses — layout ops after `finalize`, re-roll
  *   # and set-substrate after `layout`. An edit hand-added to an envelope whose
  *   # stage has ALREADY run does nothing until that step runs again, so:
  *   node scripts/procgen/topdown-step.js run -i t1.json --from layout --rules-out rules.json
  *   # (the run names any edit it is skipping, so the no-op is never silent).
- *
  * World flags (layout / run when starting from --source):
  *   --source <rules.json>   source world to realise (required to start)
  *   --seed N                rng seed (default 1)
@@ -47,17 +42,19 @@
  *                           driver 'top-down-sphere' + sphere_tree/_plan
  *   --enable-loop-mode      compute loop_costs in the rules.json
  *   --region-xp-effect E    loop-mode xp effect (default cost)
- *
  * I/O flags (all subcommands):
  *   -i, --input <envelope.json>   prior step's envelope
  *   -o, --out <envelope.json>     where to write the resulting envelope ('-' = stdout)
  *   --rules-out <rules.json>      (compile / run) also write the bare rules.json
  *   --from <step>                 (run) resume from this step
  *   --to <step>                   (run) stop after this step (default compile)
+ *   -h, --help                    print this and exit
  */
 import { writeFileSync, readFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import { argvHelp, helpText } from './argvHelp.js';
 
 // Side-effect: register the maze + bounce substrates.
 import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
@@ -70,6 +67,8 @@ import {
 import {
     defaultProcgenParams, assembleRegionParams,
 } from '../../frontend/modules/procgenPipeline/sphereConfigHooks.js';
+
+argvHelp(import.meta.url);
 
 // --- CLI parser ---
 
@@ -131,8 +130,8 @@ function parseArgs(argv) {
             case '--rules-out': out.rulesOut = next(); break;
             case '--from': out.from = next(); break;
             case '--to': out.to = next(); break;
-            case '-h': case '--help':
-                process.stdout.write('See the header comment in scripts/procgen/topdown-step.js\n');
+            case '-h':
+                process.stdout.write(`${helpText(fileURLToPath(import.meta.url))}\n`);
                 process.exit(0);
                 break;
             default: throw new Error(`unknown flag '${a}'`);

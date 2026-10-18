@@ -13,18 +13,14 @@
  *   node scripts/procgen/spiral-step.js content  -i s1.json -o s2.json
  *   node scripts/procgen/spiral-step.js regions  -i s2.json -o s3.json
  *   node scripts/procgen/spiral-step.js compile  -i s3.json -o s4.json --rules-out rules.json
- *
  *   # run the whole pipeline (or a range) in one process:
  *   node scripts/procgen/spiral-step.js run --quota maze=4 --quota jta=4 --start maze \
  *        --items key_red=2 --rules-out rules.json
- *
  *   # re-run from a step after hand-editing the envelope:
  *   node scripts/procgen/spiral-step.js run -i s1.json --from regions --rules-out rules.json
- *
  *   # auto-resume a partial / hand-edited envelope (no --from): runs from the
  *   # FIRST step whose output is missing (presence = keep, absence = recompute):
  *   node scripts/procgen/spiral-step.js run -i partial.json --rules-out rules.json
- *
  * World flags (arrange / run when starting fresh):
  *   --seed N                rng seed (default 1)
  *   --region WxH            per-region tile size (default 8x6)
@@ -38,7 +34,6 @@
  *   --victory-item NAME     completion item for an envelope whose ③ predates the
  *                           item layer; a fresh ③ names its own goal (`Victory`,
  *                           or none), which ④ uses instead
- *
  * JtA ② content dataset flags (arrange / run; Part 3 — generation is Node-only):
  *   --jta-dataset-file F    install a pre-generated dataset document as ② content
  *   --jta-generate          generate the dataset from the bundled-less fixtures
@@ -50,7 +45,6 @@
  *                                 original item (P2/S3; byte-inert default 1)
  *   --jta-dummy-item-ratio R      per-rep chance an award becomes the minted
  *                                 inert dummy item (P2; byte-inert default 0)
- *
  * Award-schedule knobs, GLOBAL (P2/S3 — one pair governs every generator;
  * the --jta-* spellings above override them for jta only):
  *   --original-item-weight W      per-award chance the original is kept
@@ -64,7 +58,6 @@
  *   --jta-free-zones N      zones requiring no perks (default 1)
  *   --jta-starting-perks N  perks the player starts with (default 0)
  *   --jta-perk-shuffle-seed N   seeded cross-zone perk placement
- *
  * X1 maze consumable-tile knobs (arrange / run; need a maze quota):
  *   --consumable-tiles N    per-maze-region cross-game consumable tiles
  *                           (byte-inert default 0). The foreign pool is the
@@ -76,17 +69,19 @@
  *   --mana-tiles N          per-maze-region mana-refill tiles (default 0)
  *   --mana-tile-amount N    mana per refill tile (default 0; a tile is only
  *                           placed when this is > 0)
- *
  * I/O flags (all subcommands):
  *   -i, --input <envelope.json>   prior step's envelope
  *   -o, --out <envelope.json>     where to write the resulting envelope ('-' = stdout)
  *   --rules-out <rules.json>      (compile / run) also write the bare rules.json
  *   --from <step>                 (run) resume from this step
  *   --to <step>                   (run) stop after this step (default compile)
+ *   -h, --help                    print this and exit
  */
 import { writeFileSync, readFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import { argvHelp, helpText } from './argvHelp.js';
 
 // Side-effect: register the spiral-capable substrates.
 import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
@@ -103,6 +98,8 @@ import {
     nextSpiralStep, detectSpiralCompleted, newSpiralEnvelope,
     serializeSpiralEnvelope, deserializeSpiralEnvelope,
 } from '../../frontend/modules/procgenPipeline/spiralSteps.js';
+
+argvHelp(import.meta.url);
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -214,8 +211,8 @@ function parseArgs(argv) {
             case '--jta-free-zones': out.jtaFreeZones = parseInt(next(), 10); break;
             case '--jta-starting-perks': out.jtaStartingPerks = parseInt(next(), 10); break;
             case '--jta-perk-shuffle-seed': out.jtaPerkShuffleSeed = parseInt(next(), 10); break;
-            case '-h': case '--help':
-                process.stdout.write('See the header comment in scripts/procgen/spiral-step.js\n');
+            case '-h':
+                process.stdout.write(`${helpText(fileURLToPath(import.meta.url))}\n`);
                 process.exit(0);
                 break;
             default: throw new Error(`unknown flag '${a}'`);

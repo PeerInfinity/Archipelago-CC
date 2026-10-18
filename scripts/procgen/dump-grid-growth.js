@@ -12,7 +12,6 @@
  *       --quota maze=2 --quota text_adventure=2 \
  *       --start maze \
  *       -o /tmp/dump.json
- *
  * Flags:
  *   --seed N                 RNG seed (default 1)
  *   --grid WxH               grid dims (default 3x3)
@@ -30,6 +29,7 @@
  *   --asymmetric add|remove  cross-branch one-way exit reconciliation
  *                            (default add)
  *   -o, --out PATH           output JSON path (default ./grid-growth-dump.json)
+ *   -h, --help               print this and exit
  *
  * Output JSON shape:
  *   {
@@ -45,6 +45,8 @@ import { writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { argvHelp, helpText } from './argvHelp.js';
+
 // Substrate libraries register their adapters on import. growMaze
 // needs at least one registered substrate to build regions.
 import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
@@ -52,6 +54,8 @@ import '../../frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstr
 
 import { growMaze, buildRulesJson, getRegionExits } from
     '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
+
+argvHelp(import.meta.url);
 
 // --- CLI parser ---
 
@@ -127,8 +131,7 @@ function parseArgs(argv) {
             case '-o':
             case '--out': out.out = next(); break;
             case '-h':
-            case '--help':
-                console.log(extractHelpText());
+                process.stdout.write(`${helpText(fileURLToPath(import.meta.url))}\n`);
                 process.exit(0);
                 break;
             default:
@@ -141,26 +144,6 @@ function parseArgs(argv) {
     return out;
 }
 
-function extractHelpText() {
-    // Mirror the docblock at the top of the file.
-    return [
-        'Usage: node scripts/procgen/dump-grid-growth.js [flags]',
-        '',
-        '  --seed N',
-        '  --grid WxH                 (default 3x3)',
-        '  --region WxH               (default 8x6)',
-        '  --quota id=N               repeat per substrate',
-        '  --mix id=W                 mutually exclusive with --quota',
-        '  --start id                 substrate id or "auto" (default auto)',
-        '  --stop-on-pool-empty',
-        '  --max-regions N',
-        '  --items id=N',
-        '  --obstacles id=N',
-        '  --branch P                 branchProbability (default 0.5)',
-        '  --no-bidirectional',
-        '  -o, --out PATH             (default ./grid-growth-dump.json)',
-    ].join('\n');
-}
 
 // --- Output shaping ---
 

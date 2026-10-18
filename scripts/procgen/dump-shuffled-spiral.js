@@ -10,7 +10,6 @@
  *       --quota jta=5 \
  *       --start jta \
  *       -o /tmp/spiral.json
- *
  * Flags:
  *   --seed N                 RNG seed (default 1)
  *   --region WxH             region dims (default 8x6)
@@ -21,8 +20,11 @@
  *   --items id=N             item pool entry (procedural substrates
  *                            only); repeat per item
  *   --obstacles id=N         obstacle pool entry; repeat per obstacle
+ *   --jta-locations          emit jta zone tasks as AP locations (off by
+ *                            default — byte-identical to prior jta dumps)
  *   -o, --out PATH           output JSON path
  *                            (default ./shuffled-spiral-dump.json)
+ *   -h, --help               print this and exit
  *
  * The grid is auto-sized to fit sum(quotas) regions; --grid is not
  * accepted. Cross-branch asymmetric exits do not arise (every cell
@@ -33,6 +35,8 @@
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import { argvHelp, helpText } from './argvHelp.js';
 
 // Substrate libraries register on import.
 import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
@@ -45,6 +49,8 @@ import { arrangeShuffledSpiral, buildRulesJson, getRegionExits } from
     '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 import { setJtaEmitZoneLocations } from
     '../../frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
+
+argvHelp(import.meta.url);
 
 function parseArgs(argv) {
     const out = {
@@ -97,8 +103,7 @@ function parseArgs(argv) {
             case '-o':
             case '--out': out.out = next(); break;
             case '-h':
-            case '--help':
-                console.log(extractHelpText());
+                process.stdout.write(`${helpText(fileURLToPath(import.meta.url))}\n`);
                 process.exit(0);
                 break;
             default:
@@ -111,21 +116,6 @@ function parseArgs(argv) {
     return out;
 }
 
-function extractHelpText() {
-    return [
-        'Usage: node scripts/procgen/dump-shuffled-spiral.js [flags]',
-        '',
-        '  --seed N                   (default 1)',
-        '  --region WxH               (default 8x6)',
-        '  --quota id=N               required; repeat per substrate',
-        '  --start id                 substrate id or "auto" (default auto)',
-        '  --no-bidirectional',
-        '  --jta-locations            emit jta zone tasks as AP locations',
-        '  --items id=N',
-        '  --obstacles id=N',
-        '  -o, --out PATH             (default ./shuffled-spiral-dump.json)',
-    ].join('\n');
-}
 
 function shapeRegions(grid) {
     const out = [];
