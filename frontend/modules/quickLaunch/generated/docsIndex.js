@@ -840,6 +840,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The Modules panel shows all loaded frontend modules and lets you enable or disable them at runtime."
     },
     {
+        "path": "docs/json/user/modules/noiz2sa.md",
+        "title": "Noiz2sa Panel",
+        "section": "user/modules",
+        "summary": "The Noiz2sa panel plays a generated world's Noiz2sa regions. Noiz2sa is Kenta Cho's bullet-hell shoot-'em-up: you fly a small ship through waves of patterned bullets. Each region is a stretch of the…"
+    },
+    {
         "path": "docs/json/user/modules/pathAnalyzerPanel.md",
         "title": "Path Analyzer Panel",
         "section": "user/modules",
@@ -1137,6 +1143,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/modules/mazeRoom.md",
             "docs/json/user/modules/metaGamePanel.md",
             "docs/json/user/modules/modules.md",
+            "docs/json/user/modules/noiz2sa.md",
             "docs/json/user/modules/pathAnalyzerPanel.md",
             "docs/json/user/modules/playbackBot.md",
             "docs/json/user/modules/presets.md",

@@ -39,6 +39,7 @@ User-friendly guides still to be written. See the corresponding technical refere
 - [Loops](./loops.md) — Running a world in Loop mode: the queue, mana and experience
 - [Loop Stats](./loopStats.md) — Each queued action's cost and the mana left, this loop and the last
 - [Bounce Demo](./bounceDemo.md) — Playing a generated world's bounce regions
+- [Noiz2sa](./noiz2sa.md) — Playing a generated world's Noiz2sa regions, and training its bot
 
 ## Core Service Modules
 
