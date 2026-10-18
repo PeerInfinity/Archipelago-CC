@@ -69,10 +69,10 @@ const DOC_DIR = 'docs/json/developer/procgen';
  * These are the files the library table at the end of the matrix region in
  * `substrate-registry.md` lists — `procgenCore/substrateLibraries.js`, the one
  * list the regenerate worker and the pipeline drivers read too, rooted at the
- * repo. ⚠ `flash` registers as a side effect of `bounceDemoLibrary`
- * (bounce's entry factory builds on the flash one), so `flash` arrives with
- * bounce's library rather than its own — which is a fact about the code, and
- * the table PRINTS which library each id actually arrived with.
+ * repo. ⚠ `flashSubstrateLibrary` is NOT one of them: it holds only the
+ * `createFlashSubstrateEntry` FACTORY and registers no entry (⚖ user,
+ * 2026-10-18: the generic `flash` entry "isn't really a substrate").
+ * The table PRINTS which library each id actually arrived with.
  */
 export const REGISTRY_LIBRARIES = Object.freeze(SUBSTRATE_LIBRARIES.map((rel) => `frontend/modules/${rel}`));
 

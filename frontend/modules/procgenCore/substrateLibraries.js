@@ -18,9 +18,11 @@
  * had six of the ten. `substrateLibraries.test.js` refuses a file that calls
  * `substrateRegistry.register(` and that no entry here reaches.
  *
- * ⚠ `flash` registers as a side effect of `bounceDemo/bounceDemoLibrary.js`,
- * and `flash_seedling_gen` through its BUILD door `flashSeedlingGenBuild.js`
- * (which also installs the generator), not its light library.
+ * ⚠ `flash_seedling_gen` registers through its BUILD door
+ * `flashSeedlingGenBuild.js` (which also installs the generator), not its
+ * light library. `flashSubstrate/flashSubstrateLibrary.js` is NOT listed: it
+ * holds only the `createFlashSubstrateEntry` factory and registers no entry
+ * (⚖ user, 2026-10-18: the generic `flash` entry "isn't really a substrate").
  *
  * ⛔ BROWSER-SAFE: no imports, so the worker and the panel can read it.
  */
@@ -29,7 +31,6 @@ export const SUBSTRATE_LIBRARIES = Object.freeze([
     'bounceDemo/bounceDemoLibrary.js',
     'runnerDemo/runnerDemoLibrary.js',
     'textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js',
-    'flashSubstrate/flashSubstrateLibrary.js',
     'flashPanel/flashSeedlingLibrary.js',
     'flashPanel/flashSeedlingGenBuild.js',
     'jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js',

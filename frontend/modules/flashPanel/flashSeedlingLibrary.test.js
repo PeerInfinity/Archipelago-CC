@@ -5,11 +5,15 @@ import {
     FLASH_SEEDLING_SUBSTRATE_ID,
     FLASH_SEEDLING_LOAD_REGION_EVENT,
 } from './flashSeedlingLibrary.js';
-import { substrateRegistryEntry as genericFlashEntry } from '../flashSubstrate/flashSubstrateLibrary.js';
+import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibrary.js';
 import { substrateRegistryEntry as flashSeedlingGenEntry } from './flashSeedlingGenLibrary.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { substrateIdFor } from '../procgenPipeline/regionAtlasCompiler.js';
 import { captureShapeOf, solverKindOf } from '../procgenCore/substratePredicates.js';
+
+// The factory's bare shape, built here and never registered — the registry has
+// no generic `flash` entry (⚖ user, 2026-10-18: "isn't really a substrate").
+const genericFlashEntry = createFlashSubstrateEntry({ id: 'flash_factory_probe' });
 
 describe('flash_seedling substrate entry', () => {
     it('registers itself on import — headless callers get it from the import alone', () => {
@@ -41,7 +45,7 @@ describe('flash_seedling substrate entry', () => {
         expect(substrateRegistryEntry.generateRegionCore).toBeUndefined();
     });
 
-    it('⛓ SEEDLING LOOP MODE: a Loops Bot block walks it (executeVia solver), the generic flash entry does not', () => {
+    it('⛓ SEEDLING LOOP MODE: a Loops Bot block walks it (executeVia solver), the factory default shape does not', () => {
         // The Seedling truth: the walkTo solver on the factory's manual-play base,
         // over exits AND locations (⚖ user 2026-10-11: a queued check is a solver walk).
         expect(substrateRegistryEntry.loopSupport).toMatchObject({
@@ -60,7 +64,7 @@ describe('flash_seedling substrate entry', () => {
     it('⛓ PLAY CLOCK (⚖ "Drain play time too"): it declares playClock, so Loops drains its coarse regions per GAME second', () => {
         // The host reports the game's own clock (`seedlingPlayClock.js`); `loopState._regionDrainsTime` reads this flag.
         expect(substrateRegistryEntry.loopSupport.playClock).toBe(true);
-        // Beside §5.63's executeVia; the generic flash entry declares none (the generated entry: the block below).
+        // Beside §5.63's executeVia; the factory's default shape declares none (the generated entry: the block below).
         expect(substrateRegistryEntry.loopSupport.executeVia).toBe('solver');
         expect(genericFlashEntry.loopSupport.playClock).toBeUndefined();
     });
