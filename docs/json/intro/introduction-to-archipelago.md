@@ -1,6 +1,6 @@
 # Introduction to Archipelago
 
-This page is for readers who have never heard of Archipelago or randomizers. The rest of this project's documentation assumes you know the basics covered here.
+This page is for readers who have never heard of [Archipelago](https://archipelago.gg/) or randomizers. The rest of this project's documentation assumes you know the basics covered here.
 
 ## What's a randomizer?
 

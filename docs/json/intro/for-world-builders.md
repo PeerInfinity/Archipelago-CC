@@ -1,10 +1,10 @@
 # For World Builders
 
-This page is for people who want to make Archipelago worlds. The main way to do that here is the **procgen pipeline**, which generates complete worlds in the browser. You can also author a world directly from a graph, a proof, or an existing game's logic. It assumes you know how an Archipelago world is put together: regions, locations, items and access rules.
+This page is for people who want to make Archipelago worlds. The main way to do that here is the **[procgen pipeline](../features/procgen.md)**, which generates complete worlds in the browser. You can also author a world directly from a [graph](../features/depgraph.md), a [proof](../../../worlds/metamath/docs/README.md), or an existing game's logic, with the [World Generator](../../../world_generator/README.md). It assumes you know how an Archipelago world is put together: regions, locations, items and access rules.
 
 ## Generate a world
 
-The **Procgen Pipeline** panel builds a world from a seed and a few choices: which substrates draw its regions (maze, text adventure, the Bounce platformer, Noiz2sa stages, Seedling rooms, and the idle games in Loop mode), how many regions of each, and which items it is about. The access rules are not just written down: for substrates such as Bounce and Seedling they are derived from the game's physics and checked, so if the logic says you need an item to reach an exit, that is true in play. The result compiles to a standard `rules.json`, the same format this project exports from real games, so the whole app works on it.
+The **[Procgen Pipeline](../features/procgen.md)** panel builds a world from a seed and a few choices: which substrates draw its regions (maze, text adventure, the Bounce platformer, Noiz2sa stages, Seedling rooms, and the idle games in Loop mode), how many regions of each, and which items it is about. The access rules are not just written down: for substrates such as Bounce and Seedling they are derived from the game's physics and checked, so if the logic says you need an item to reach an exit, that is true in play. The result compiles to a standard `rules.json`, the same format this project exports from real games, so the whole app works on it.
 
 The pipeline has several layout modes, each with its own tutorial:
 

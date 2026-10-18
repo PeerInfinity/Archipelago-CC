@@ -4,14 +4,14 @@ This page is for people who want to play. Everything here runs in the browser at
 
 ## Play a generated world
 
-The project generates complete randomizer worlds. Each region is drawn by a *substrate*, a small game of its own: a maze to walk, a platformer to climb, a text adventure to read, a shoot-'em-up stage, or a room of *Seedling*, a Flash game recompiled to run in the browser. One world can mix them. When you leave one region, the next one opens in its own game.
+The project generates complete randomizer worlds. Each region is drawn by a *[substrate](../features/procgen-substrates.md)*, a small game of its own: a maze to walk, a platformer to climb, a text adventure to read, a shoot-'em-up stage, or a room of *Seedling*, a Flash game recompiled to run in the browser. One world can mix them. When you leave one region, the next one opens in its own game.
 
 - **[Guided Tour](../user/guided-tour.md)** — ten minutes: watch a generated world play itself, look at the logic underneath, then generate a world of your own. Or [start it inside the app](https://peerinfinity.github.io/Archipelago-CC/?game=procgen_maze&seed=1&tutorial=guided-tour), where the Tutorial panel can do each step for you.
 - **[Procgen: a mixed world](../user/tutorials/procgen-mixed-world.md)** — one world made of several substrates.
 - **[Procgen: Seedling rooms](../user/tutorials/procgen-seedling.md)** — rooms of the real Seedling game, and new rooms generated in its style, as regions.
 - **[Seedling: watch the bot play](../user/tutorials/seedling-bot.md)** — the whole original game as an Archipelago world, played by the Playback Bot.
 
-The **Playback Bot** can play any generated world from its solution path, driving each substrate's real gameplay, so you can always see that a world can be finished.
+The **[Playback Bot](../user/tutorials/procgen-settings-and-bot.md)** can play any generated world from its solution path, driving each substrate's real gameplay, so you can always see that a world can be finished.
 
 ## Play in Loop mode
 
@@ -22,7 +22,7 @@ The **Playback Bot** can play any generated world from its solution path, drivin
 
 ## Play in a multiworld
 
-A generated world is a real Archipelago game. The APWorld Editor packages it as an `.apworld`, Archipelago's own generator and server load it, and the browser app is its client.
+A generated world is a real Archipelago game. The [APWorld Editor](../user/tutorials/procgen-to-multiworld.md) packages it as an `.apworld`, Archipelago's own generator and server load it, and the browser app is its client.
 
 - **[Procgen: from a generated world to a multiworld](../user/tutorials/procgen-to-multiworld.md)** — generate, package, host it on your own computer, connect and play. This one needs a local Archipelago installation.
 - **[Seedling: in a multiworld](../user/tutorials/seedling-multiworld.md)** — the same for the Seedling world.

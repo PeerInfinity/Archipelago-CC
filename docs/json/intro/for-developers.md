@@ -1,6 +1,6 @@
 # For Developers
 
-This page is for people who want to work on the code. The project is a fork of [Archipelago](https://github.com/ArchipelagoMW/Archipelago) with three main parts: the **procgen system**, which generates and plays worlds in the browser; the **exporter**, which writes a seed's full logic to JSON; and the **web frontend**, which loads that JSON to track, play and visualise a world. Everything else, from the trackers to Loop mode, builds on the shared `rules.json` format.
+This page is for people who want to work on the code. The project is a fork of [Archipelago](https://github.com/ArchipelagoMW/Archipelago) with three main parts: the **[procgen system](../developer/procgen/README.md)**, which generates and plays worlds in the browser; the **[exporter](../../../exporter/README.md)**, which writes a seed's full logic to JSON; and the **[web frontend](../../../frontend/README.md)**, which loads that JSON to track, play and visualise a world. Everything else, from the trackers to [Loop mode](../features/loops.md), builds on the shared [`rules.json`](../../../frontend/schema/rules.schema.json) format.
 
 ## Set up
 
