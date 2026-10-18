@@ -207,6 +207,10 @@ async function main() {
     const rulesJson = buildRulesJson(grid, { startCell, seed: config.seed });
 
     const dump = {
+        // The format stamp (§5au item 4): bump the version when a reader of
+        // the old shape would misread the new one.
+        kind: 'grid-growth-dump',
+        envelope_version: 1,
         config,
         startCell,
         stats,

@@ -318,6 +318,7 @@ function spiralOnContentEdit(env) {
 
 // The spiral mode descriptor — the whole per-mode surface the harness needs.
 const SPIRAL_DESCRIPTOR = {
+    kind: 'spiral-envelope',
     steps: SPIRAL_STEPS,
     runners: RUNNERS,
     present: SPIRAL_STEP_OUTPUT_PRESENT,

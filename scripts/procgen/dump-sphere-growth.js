@@ -464,6 +464,10 @@ async function main() {
     const oracleErrors = compareSpheresToPlan(computed, plan);
 
     const dump = {
+        // The format stamp (§5au item 4): bump the version when a reader of
+        // the old shape would misread the new one.
+        kind: 'sphere-growth-dump',
+        envelope_version: 1,
         config,
         plan,
         startCell,

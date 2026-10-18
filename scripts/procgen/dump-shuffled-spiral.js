@@ -176,6 +176,10 @@ async function main() {
         completionConditionItem: goalItem,
     });
     const dump = {
+        // The format stamp (§5au item 4): bump the version when a reader of
+        // the old shape would misread the new one.
+        kind: 'shuffled-spiral-dump',
+        envelope_version: 1,
         config,
         startCell,
         stats,
