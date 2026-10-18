@@ -1837,7 +1837,13 @@
             "id": "playback-bot-loop-mode-mixed",
             "enabled": true,
             "category": "Playback Bot",
-            "_comment": "loop-mode-bot S5: a generated loop-mode world of maze (Bot/delegation), text adventure (coarse → Playback) and bounce (Bot/walkTo); every sphere-log location checked by the queue."
+            "_comment": "loop-mode-bot S5: a generated loop-mode world of maze (Bot/delegation), text adventure (Bot/walkTo since ta-loop-bot; coarse → Playback before) and bounce (Bot/walkTo); every sphere-log location checked by the queue."
+        },
+        {
+            "id": "playback-bot-loop-mode-text-adventure",
+            "enabled": true,
+            "category": "Playback Bot",
+            "_comment": "ta-loop-bot (⚖ user 2026-10-18): a text-adventure-only loop-mode world played to Victory by Bot blocks (walkTo solver; the text adventure's perform takes each move, check and explore). Logs the per-action Bot times (chart L7)."
         },
         {
             "id": "playback-bot-loop-mode-jta",

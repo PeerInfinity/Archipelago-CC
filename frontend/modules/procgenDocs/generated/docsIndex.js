@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 28,
         "headings": 1114,
         "indexHeadings": 2,
-        "lines": 30141,
+        "lines": 30146,
         "pages": 4,
-        "words": 408616
+        "words": 408938
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -58,7 +58,7 @@ export const DOCS_INDEX = frz({
             "file": "substrate-registry.md",
             "h1": "Substrate Registry Reference",
             "headings": 22,
-            "lines": 270,
+            "lines": 273,
             "links": [
                 "architecture.md",
                 "concepts.md",
@@ -69,7 +69,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 5353
+            "words": 5483
         },
         {
             "description": "A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The catalogue itself is data in `demos.js`; this page says where it lives and how to add to it.",
@@ -198,7 +198,7 @@ export const DOCS_INDEX = frz({
                 "text-adventure.md"
             ],
             "path": "docs/json/developer/procgen/loop-recording.md",
-            "words": 4739
+            "words": 4785
         },
         {
             "description": "The maze substrate (`frontend/modules/mazeRoom/`, substrate id `maze`) renders each region as a grid-of-tiles room: the player walks tile by tile, picks up items by stepping onto location tiles, and leaves through exit tiles. It is the only substrate with saved custom queues, and it doubles as the second binding of the procgen level generator.",
@@ -316,7 +316,7 @@ export const DOCS_INDEX = frz({
             "file": "text-adventure.md",
             "h1": "Text Adventure Substrate",
             "headings": 10,
-            "lines": 98,
+            "lines": 100,
             "links": [
                 "architecture.md",
                 "concepts.md",
@@ -326,7 +326,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/text-adventure.md",
-            "words": 1300
+            "words": 1446
         },
         {
             "description": "How the repo drives the real recompiled Seedling with a scripted input tape and checks a JavaScript transcription of its physics against what the game actually did, tick by tick. The chronological build history (the R1–R9 rungs and the `watch.html` arcs) is in [seedling-bot-log.md](./seedling-bot-log.md).",

@@ -10,12 +10,14 @@
  * Protocol: host publishes one of:
  *   eventBus 'textAdventureSubstrateWrapper:control'
  *   payload  { method: 'play' | 'stop' | 'step' | 'instant' | 'reset'
- *                     | 'setRate' | 'walkTo',
+ *                     | 'setRate' | 'walkTo' | 'perform',
  *              args:   array of method arguments }
  *
  * The bridge owns its own clock (setInterval). Same semantics as the
  * in-process controller: replace-on-walkTo (last write wins); step()
- * drains the queued target.
+ * drains the queued target. `perform(target)` acts at once instead — the
+ * loops Bot block's call, which has no clock to wait for (see
+ * TextAdventurePlaybackProxy).
  */
 
 const DEFAULT_RATE_HZ = 4;
@@ -28,12 +30,14 @@ export class PlaybackBridge {
      * @param {() => object|null} deps.getWorld   returns the bridge-built engine world (with rooms)
      * @param {() => string|null} deps.getCurrentRegion   returns lastSeenRegion (engine's roomId === AP region name)
      * @param {(level: string, ...args: any[]) => void} [deps.log]   optional logger
+     * @param {(text: string, kind: string) => void} [deps.showMessage]   prints to the engine (an explore's line)
      */
-    constructor({ client, getWorld, getCurrentRegion, log }) {
+    constructor({ client, getWorld, getCurrentRegion, log, showMessage }) {
         this._client = client;
         this._getWorld = getWorld;
         this._getCurrentRegion = getCurrentRegion;
         this._log = log ?? (() => {});
+        this._showMessage = showMessage ?? (() => {});
         this._clock = null;
         this._rateHz = DEFAULT_RATE_HZ;
         this._target = null;          // queued walkTo target
@@ -71,6 +75,7 @@ export class PlaybackBridge {
             case 'reset':   this.reset(); return;
             case 'setRate': this.setRate(args[0]); return;
             case 'walkTo':  this.walkTo(args[0]); return;
+            case 'perform': this.perform(args[0]); return;
             default:
                 this._log('warn', 'playbackBridge: unknown control method', method);
         }
@@ -124,6 +129,16 @@ export class PlaybackBridge {
         this._target = target;
     }
 
+    /**
+     * Act on `target` now, dropping any queued walkTo: the loops Bot block
+     * drives one action at a time and waits for its event, so there is no
+     * clock to drain a queue. Also takes `{kind: 'explore'}`.
+     */
+    perform(target) {
+        this._target = null;
+        this._performAction(target);
+    }
+
     // M3b: the recorded-visit replay half (replayActions / _replayTick /
     // _replayOne / _issueDeparture) was removed. The text adventure is a
     // coarse-only substrate — a Playback block's interior is executed by
@@ -161,6 +176,14 @@ export class PlaybackBridge {
                 targetRegion: exitInfo.targetRoomId,
                 exitName: exitInfo.id,
             });
+            return;
+        }
+        if (target.kind === 'explore') {
+            // ⚖ The engine SHOWS the explore and nothing else: loops completes
+            // the action and its loop:exploreCompleted (fromLoop) is what
+            // reveals, so publishing one here would reveal twice.
+            const label = world.rooms?.[currentRegion]?.title ?? currentRegion ?? 'the area';
+            this._showMessage(`You explore ${label}.`, 'system');
             return;
         }
         if (target.kind === 'tile') {
