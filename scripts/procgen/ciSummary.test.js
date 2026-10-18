@@ -20,7 +20,8 @@ import { describe, expect, it } from 'vitest';
 
 import {
     GATE_JOB, GUARD_JOB, gateVerdicts, parseGateLines, parseGateMsLines, pickGateRuns,
-    pickSuiteRun, pickVitestJob, shardNoteIn, VITEST_JOB,
+    pickSuiteRun, pickVitestJob, shardNoteIn, SUITE_SHARD_JOB, SUITE_SLOW_JOB, suiteJobs,
+    sumSummaries, VITEST_JOB,
 } from './ciSummary.js';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -173,7 +174,14 @@ describe('parseGateMsLines — what the arm cost the runner', () => {
 describe('shardNoteIn — was this job a slice of a partition?', () => {
     it('reads the id and the count out of the job\'s own note', () => {
         expect(shardNoteIn('## shard 2 of 3 — maze-lab +16; 171.7s banked'))
-            .toEqual({ id: 2, of: 3 });
+            .toEqual({ id: 2, of: 3, fixed: false });
+    });
+
+    /** ⛓ ci-jsut-split — a headless shard says it is a FIXED-count slice, so the
+     *  audit holds it to its kill deadline and never to the bin budget. */
+    it('reads `; fixed count` as a fixed shard', () => {
+        expect(shardNoteIn('## shard 1 of 2 — procgen-help +40; 612.0s measured in CI; fixed count'))
+            .toEqual({ id: 1, of: 2, fixed: true });
     });
 
     /** ⛔ A job that ran its whole set printed no note, and answering `shard 0
@@ -264,9 +272,10 @@ describe('pickVitestJob — the split workflow (the gates are their own job)', (
         expect(VITEST_JOB.test('Headless procgen gates')).toBe(false);
     });
 
-    /** ⛔ Read off the workflow, not typed: exactly ONE job name matches, and it
-     *  is the job that runs `test:unit` — never the one that runs the gates. */
-    it('in unittests_frontend.yml exactly one job matches, and it runs the suite', () => {
+    /** ⛔ Read off the workflow, not typed. ⛓ ci-jsut-split: the suite is TWO job
+     *  definitions now — the `vitest --shard` matrix and the slow tier — and the
+     *  gates are in neither. */
+    it('in unittests_frontend.yml the suite family is the shard matrix + the slow job', () => {
         const wf = readFileSync(join(REPO, '.github/workflows/unittests_frontend.yml'), 'utf8');
         const jobs = [];
         for (const block of wf.slice(wf.indexOf('\njobs:\n')).split(/\n(?= {2}[a-z][\w-]*:\n)/).slice(1)) {
@@ -275,12 +284,25 @@ describe('pickVitestJob — the split workflow (the gates are their own job)', (
         }
         expect(jobs.length).toBeGreaterThanOrEqual(4);
         const matching = jobs.filter((j) => VITEST_JOB.test(j.name));
-        expect(matching.map((j) => j.name)).toEqual(['JavaScript Unit Tests (Vitest)']);
-        expect(matching[0].block).toContain('npm run test:unit');
-        expect(matching[0].block).toContain('npm run test:unit:slow');
-        expect(matching[0].block).not.toContain('ci-gates.mjs');
-        const gates = jobs.find((j) => /node scripts\/procgen\/ci-gates\.mjs\s*$/m.test(j.block));
-        expect(gates?.name).toBe('Headless procgen gates');
+        expect(matching.map((j) => j.name)).toEqual([
+            'JavaScript Unit Tests (Vitest shard ${{ matrix.shard }}/${{ strategy.job-total }})',
+            'JavaScript Unit Tests (slow Vitest)']);
+        const [shards, slow] = matching;
+        expect(shards.block).toContain(
+            'npm run test:unit -- --shard=${{ matrix.shard }}/${{ strategy.job-total }}');
+        expect(shards.block).not.toContain('test:unit:slow');
+        expect(shards.block).toMatch(/fail-fast: false/);
+        expect(slow.block).toContain('npm run test:unit:slow');
+        for (const j of matching) expect(j.block).not.toContain('ci-gates.mjs');
+        /** ⛓ the EXPANDED names are what the reader's regexes see. */
+        const n = JSON.parse(/^ {8}shard: (\[.*\])$/m.exec(shards.block)[1]).length;
+        expect(n).toBe(3);
+        for (let k = 1; k <= n; k++) {
+            expect(SUITE_SHARD_JOB.test(`JavaScript Unit Tests (Vitest shard ${k}/${n})`)).toBe(true);
+        }
+        expect(SUITE_SLOW_JOB.test(slow.name)).toBe(true);
+        const gates = jobs.find((j) => /node scripts\/procgen\/ci-gates\.mjs --set=headless/m.test(j.block));
+        expect(gates?.name).toBe('Headless procgen gates (shard ${{ matrix.shard }})');
     });
 });
 
@@ -387,6 +409,118 @@ describe('pickGateRuns — only runs whose gate jobs RAN are a cost population',
         const wf = readFileSync(join(REPO, '.github/workflows/unittests_frontend.yml'), 'utf8');
         const names = [...wf.matchAll(/^ {4}name: (.+)$/gm)].map((m) => m[1]);
         expect(names.filter((n) => GATE_JOB.test(n))).toEqual(
-            ['Headless procgen gates', 'Browser gate shard — ${{ matrix.shard.name }}']);
+            ['Headless procgen gates (shard ${{ matrix.shard }})',
+                'Browser gate shard — ${{ matrix.shard.name }}']);
+    });
+});
+
+/**
+ * ⛓⛓⛓ ci-jsut-split (⚖ user, 2026-10-17) — **ONE SUITE ANSWER OUT OF FOUR JOBS.**
+ * The shapes are the job listing of the split workflow: three `Vitest shard k/3`
+ * jobs, the `slow Vitest` job, and — when rule 1 skips it — ONE job under the
+ * matrix's UNEXPANDED name (measured on run 39083220867 for the browser matrix).
+ */
+describe('suiteJobs — the suite family, and every way it can be partial', () => {
+    const job = (name, conclusion = 'success', status = 'completed', id = name) =>
+        ({ id, name, status, conclusion });
+    const shard = (k, n = 3, c, st) => job(`JavaScript Unit Tests (Vitest shard ${k}/${n})`, c, st);
+    const SLOW = job('JavaScript Unit Tests (slow Vitest)');
+    const OTHERS = [job('Same SHA already green?', 'skipped'), job('Headless procgen gates (shard 0)'),
+        job('Browser gate shard — seedling-wasm-ship')];
+
+    it('a complete split run: three shards and the slow job, nothing missing', () => {
+        const s = suiteJobs([...OTHERS, shard(2), SLOW, shard(1), shard(3)]);
+        expect(s.layout).toBe('split');
+        expect(s.shards.map((x) => x.k)).toEqual([1, 2, 3]);
+        expect(s.slow.name).toBe(SLOW.name);
+        expect(s.missing).toEqual([]);
+        expect(s.pending).toEqual([]);
+    });
+
+    it('⛔ a shard absent from the listing is MISSING by name', () => {
+        const s = suiteJobs([shard(1), shard(3), SLOW]);
+        expect(s.missing).toEqual(['JavaScript Unit Tests (Vitest shard 2/3)']);
+    });
+
+    it('⛔ the slow job is owed whenever any shard ran', () => {
+        expect(suiteJobs([shard(1), shard(2), shard(3)]).missing)
+            .toEqual(['JavaScript Unit Tests (slow Vitest)']);
+    });
+
+    it('⛔ a SKIPPED member of a suite that otherwise ran is missing, not summed away', () => {
+        const s = suiteJobs([shard(1), shard(2, 3, 'skipped'), shard(3), SLOW]);
+        expect(s.missing).toEqual(['JavaScript Unit Tests (Vitest shard 2/3) (skipped)']);
+    });
+
+    it('⛔ shards that disagree on N are named', () => {
+        const s = suiteJobs([shard(1), shard(2), shard(3), shard(1, 2), SLOW]);
+        expect(s.missing.some((m) => /disagrees/.test(m))).toBe(true);
+    });
+
+    it('a red or cancelled shard is NOT missing — its job is there, and it reads red', () => {
+        const s = suiteJobs([shard(1), shard(2, 3, 'failure'), shard(3, 3, 'cancelled'), SLOW]);
+        expect(s.missing).toEqual([]);
+        expect(s.shards.map((x) => x.job.conclusion)).toEqual(['success', 'failure', 'cancelled']);
+    });
+
+    it('pending names every member that has not concluded', () => {
+        const s = suiteJobs([shard(1), shard(2, 3, null, 'in_progress'), shard(3, 3, null, 'queued'), SLOW]);
+        expect(s.pending.map((j) => j.name)).toEqual([
+            'JavaScript Unit Tests (Vitest shard 2/3)', 'JavaScript Unit Tests (Vitest shard 3/3)']);
+    });
+
+    it('rule 1: the family skipped under its UNEXPANDED matrix name reads as skipped', () => {
+        const s = suiteJobs([job('Same SHA already green?'),
+            job('JavaScript Unit Tests (Vitest shard ${{ matrix.shard }}/${{ strategy.job-total }})', 'skipped'),
+            job('JavaScript Unit Tests (slow Vitest)', 'skipped')]);
+        expect(s.skipped).toBe(true);
+    });
+
+    it('a run from before the split (one job, both summaries) is `single`', () => {
+        const s = suiteJobs([job('JavaScript Unit Tests (Vitest)'), job('Headless procgen gates')]);
+        expect(s.layout).toBe('single');
+        expect(s.single.name).toBe('JavaScript Unit Tests (Vitest)');
+        expect(s.missing).toEqual([]);
+    });
+
+    it('no suite job at all is `none`', () => {
+        expect(suiteJobs(OTHERS).layout).toBe('none');
+        expect(suiteJobs(undefined).layout).toBe('none');
+    });
+});
+
+describe('sumSummaries — the shards add up to one suite', () => {
+    const row = (ff, fp, tf, tp, ts) => ({
+        files: { failed: ff, passed: fp, skipped: 0, total: ff + fp },
+        tests: { failed: tf, passed: tp, skipped: ts, total: tf + tp + ts } });
+    it('sums every field', () => {
+        expect(sumSummaries([row(0, 280, 0, 7000, 1), row(1, 279, 2, 6900, 0), row(0, 279, 0, 6927, 0)]))
+            .toEqual({ files: { failed: 1, passed: 838, skipped: 0, total: 839 },
+                tests: { failed: 2, passed: 20827, skipped: 1, total: 20830 } });
+    });
+});
+
+describe('pickSuiteRun — the split family', () => {
+    const run = (id, o = {}) => ({ databaseId: id, event: 'push', headBranch: 'main',
+        status: 'completed', conclusion: 'success', ...o });
+    const job = (name, status, conclusion) => ({ name, status, conclusion });
+    const GUARD = 'Same SHA already green?';
+
+    it('passes over a main run whose whole family skipped', () => {
+        const runs = [run(2), run(1, { headBranch: 'b' })];
+        const jobs = { 2: [job(GUARD, 'completed', 'success'),
+            job('JavaScript Unit Tests (Vitest shard ${{ matrix.shard }}/${{ strategy.job-total }})', 'completed', 'skipped'),
+            job('JavaScript Unit Tests (slow Vitest)', 'completed', 'skipped')],
+        1: [job('JavaScript Unit Tests (Vitest shard 1/3)', 'completed', 'success')] };
+        expect(pickSuiteRun(runs, (x) => jobs[x.databaseId]).run.databaseId).toBe(1);
+    });
+
+    it('a main run with ONE shard still running and no guard verdict defers to an older success', () => {
+        const runs = [run(2, { status: 'in_progress', conclusion: null }), run(1, { headBranch: 'b' })];
+        const jobs = { 2: [job(GUARD, 'in_progress', null),
+            job('JavaScript Unit Tests (Vitest shard 1/3)', 'completed', 'success'),
+            job('JavaScript Unit Tests (Vitest shard 2/3)', 'in_progress', null)],
+        1: [] };
+        expect(pickSuiteRun(runs, (x) => jobs[x.databaseId]).run.databaseId).toBe(1);
     });
 });

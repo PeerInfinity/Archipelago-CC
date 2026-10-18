@@ -74,8 +74,8 @@ import { join } from 'node:path';
 import { promisify } from 'node:util';
 
 import { releaseBoxLock, takeBoxLock } from './boxLock.js';
-import { CI_ARM_COSTS_FILE, CI_SHARD_BUDGET_MS, auditRunShards, ciGatePlanFor, ciRunnable,
-    ciUnrunnableIdentityRows } from './ciGatePlan.js';
+import { CI_ARM_COSTS_FILE, CI_FIXED_SHARD_LIMIT_MS, CI_SHARD_BUDGET_MS, auditRunShards, ciGatePlanFor, ciRunnable,
+    ciUnrunnableIdentityRows, readCiArmCosts } from './ciGatePlan.js';
 import { recentRuns, runById, runShardCosts } from './ciSummary.js';
 import { LOCAL_HOST, REPO, gateRoster } from './gateRoster.js';
 import { headlineOf, runRow } from './standingValues.js';
@@ -94,6 +94,10 @@ const arg = (name, fallback = null) => {
 
 const JSON_OUT = flag('json');
 const SET = arg('set', 'headless');
+/** ⛓ ci-jsut-split — `--write-costs` re-prices ONE set only when `--set=` is
+ *  named, keeping every other arm's banked price (so a headless re-price cannot
+ *  move the browser partition). */
+const SET_NAMED = arg('set') !== null;
 const SHARD = arg('shard');
 const HOST = arg('host', LOCAL_HOST);
 const WAIT_FOR_BOX = Number(arg('wait-for-box', '0')) || 0;
@@ -128,6 +132,14 @@ if (flag('plan')) {
         + `priced from ${pricedFrom.length} run(s) at `
         + `${measuredAt ? measuredAt.slice(0, 10) : '(NO COSTS FILE — every arm lands alone)'}`);
     for (const s of shards) {
+        if (s.fixed) {
+            console.log(`\n## shard ${s.id} of ${shards.length} (fixed count) — `
+                + `${(s.ms / 1000).toFixed(1)}s measured in CI, ${s.keys.length} arm(s)`
+                + `${s.unpriced ? `, ${s.unpriced} UNPRICED (priced at the median priced arm `
+                    + 'until --write-costs has seen it)' : ''}`);
+            for (const k of s.keys) console.log(`     ${k}`);
+            continue;
+        }
         console.log(`\n## shard ${s.id} — ${(s.ms / 1000).toFixed(1)}s measured in CI, `
             + `${s.keys.length} arm(s), margin ${((budgetMs - s.ms) / 1000).toFixed(1)}s `
             + `(headroom reserved ${(s.headroomMs / 1000).toFixed(1)}s)${s.unpriced ? `, ${s.unpriced} UNPRICED (an arm no runner `
@@ -153,7 +165,17 @@ if (flag('plan')) {
  * direction `planCiShards` prices an unknown in.
  */
 if (flag('write-costs')) {
-    const runs = AUDIT_RUN ? [runById(Number(AUDIT_RUN))] : recentRuns({ limit: COST_RUNS });
+    /** ⛓ `--run=<id>[,<id>…]` — several named runs, so arms only a NEW layout
+     *  ran (ci-jsut-split's 32 never-reached headless arms) can be priced from
+     *  more than one sample. */
+    const runs = AUDIT_RUN
+        ? AUDIT_RUN.split(',').map((id) => runById(Number(id)))
+        : recentRuns({ limit: COST_RUNS });
+    const inSet = SET_NAMED ? new Set(arms.map((a) => a.key)) : null;
+    /** ⛓ …and in that mode every banked price these runs did NOT re-measure is
+     *  kept — another set's, or an arm of this set the runs never reached (a
+     *  truncated battery): an old price beats the unpriced fallback. */
+    const banked = SET_NAMED ? readCiArmCosts({ repo: REPO })?.arms ?? {} : {};
     if (!runs.length) {
         console.log('FAIL: no successful run of the workflow to price from');
         process.exit(1);
@@ -167,6 +189,7 @@ if (flag('write-costs')) {
         for (const u of unreadable) console.log(`⚠ job log unreadable in ${r.databaseId}: ${u}`);
         for (const j of jobs) {
             for (const a of j.arms) {
+                if (inSet && !inSet.has(a.key)) continue;
                 const prev = armsOut[a.key];
                 armsOut[a.key] = {
                     ms: Math.max(prev?.ms ?? 0, a.ms),
@@ -178,6 +201,7 @@ if (flag('write-costs')) {
             }
         }
     }
+    const kept = () => Object.fromEntries(Object.entries(banked).filter(([k]) => !(k in armsOut)));
     const doc = {
         why: 'What each CI arm COST THE RUNNER, keyed by the CI key its `##   ms | … | here=` '
             + 'line is printed under. `planCiShards` prices the shard partition off THIS and '
@@ -189,8 +213,11 @@ if (flag('write-costs')) {
             + '--write-costs`.',
         measuredAt: new Date().toISOString(),
         budgetMs,
+        /** ⛓ ci-jsut-split — `runs` priced THIS set only; the others' prices are older. */
+        ...(SET_NAMED ? { repricedSet: SET } : {}),
         runs: seen,
-        arms: Object.fromEntries(Object.entries(armsOut).sort(([a], [b]) => a.localeCompare(b))),
+        arms: Object.fromEntries(Object.entries({ ...kept(), ...armsOut })
+            .sort(([a], [b]) => a.localeCompare(b))),
     };
     writeFileSync(join(REPO, CI_ARM_COSTS_FILE), `${JSON.stringify(doc, null, 2)}\n`);
     const total = Object.values(armsOut).reduce((n, a) => n + a.ms, 0);
@@ -200,6 +227,10 @@ if (flag('write-costs')) {
     for (const [k, v] of Object.entries(doc.arms)) {
         console.log(`     ${(v.ms / 1000).toFixed(1).padStart(7)}s  spread ${((v.ms - v.minMs) / 1000)
             .toFixed(1).padStart(6)}s  ${String(v.samples).padStart(2)} sample(s)  ${k}`);
+    }
+    if (SET_NAMED) {
+        console.log(`\n⛓ --set=${SET}: ${Object.keys(armsOut).length} arm(s) re-priced; `
+            + `${Object.keys(kept()).length} other arm(s) kept at their banked price`);
     }
     console.log(`\n${Object.keys(doc.arms).length} arm(s) priced from ${seen.length} run(s), `
         + `${(total / 1000).toFixed(1)}s total ⇒ ${CI_ARM_COSTS_FILE}`);
@@ -233,12 +264,18 @@ if (flag('audit')) {
         + `${(budgetMs / 1000).toFixed(0)}s of the RUNNER'S OWN seconds per sharded job`);
     for (const r of audit.rows) {
         console.log(`\n${r.over ? 'FAIL:' : 'PASS:'} ${r.name}`);
-        console.log(`      ${r.sharded ? `shard ${r.shard.id} of ${r.shard.of}` : 'NOT sharded — '
+        console.log(`      ${r.sharded ? `shard ${r.shard.id} of ${r.shard.of}${r.shard.fixed === true
+            ? ' (fixed count)' : ''}` : 'NOT sharded — '
             + 'ran its whole set, so no per-shard budget applies'}`
             + ` · ${r.arms} arm(s) · ${(r.ms / 1000).toFixed(1)}s measured here`
             + `${r.heaviest ? ` · heaviest ${r.heaviest.key} ${(r.heaviest.ms / 1000).toFixed(1)}s`
                 : ''}`);
-        if (r.over) {
+        if (r.over && r.shard?.fixed === true) {
+            console.log(`      ⛔ ${(r.ms / 1000).toFixed(1)}s > the `
+                + `${(CI_FIXED_SHARD_LIMIT_MS / 1000).toFixed(0)}s limit for a fixed shard — the `
+                + 'headless step\'s 20-minute deadline is near, and it TRUNCATES the battery '
+                + 'silently. Raise CI_HEADLESS_SHARDS.');
+        } else if (r.over) {
             console.log(`      ⛔ ${r.arms} arms and ${(r.ms / 1000).toFixed(1)}s > the `
                 + `${(budgetMs / 1000).toFixed(0)}s budget. A job holding ONE arm may exceed `
                 + 'it; a job holding several may not — the partition underpriced these arms.');
@@ -268,8 +305,11 @@ if (SHARD !== null) {
     }
     const want = new Set(shard.keys);
     selected = arms.filter((a) => want.has(a.key));
+    /** ⛔ `fixed count` is READ by `ciSummary.shardNoteIn`: the audit judges a
+     *  fixed shard against its kill deadline, never against the bin budget. */
     shardNote = `shard ${shard.id} of ${shards.length} — ${shard.name}; `
-        + `${(shard.ms / 1000).toFixed(1)}s measured in CI`;
+        + `${(shard.ms / 1000).toFixed(1)}s measured in CI`
+        + `${shard.fixed ? '; fixed count' : ''}`;
 }
 
 const roster = gateRoster({ repo: REPO });

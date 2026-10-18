@@ -83,7 +83,7 @@ import { REPO, gateRoster } from './gateRoster.js';
 import { browserShardsRan } from './ciDocsOnly.js';
 import {
     findRun, gateLogs, gateVerdicts, jobLogById, parseGateLines, parseSummaries, runById,
-    runJobs, vitestJob,
+    runJobs, suiteJobs, sumSummaries,
 } from './ciSummary.js';
 import { readStandingValues } from './standingValues.js';
 
@@ -232,20 +232,37 @@ if (!run) {
  * jobs, so for them the run really is the unit of completeness.
  */
 const suiteArm = !GATE && !ALL_GATES;
-let unitJob = suiteArm ? vitestJob(run) : null;
-const jobDone = () => unitJob && unitJob.status === 'completed';
+/**
+ * ⛓⛓ ci-jsut-split — **THE SUITE IS A FAMILY OF JOBS, AND `--wait` WAITS ON
+ * EVERY MEMBER.** Three `Vitest shard k/3` jobs and the `slow Vitest` job; the
+ * answer exists when ALL of them have concluded, and until then the reader
+ * names the ones it is waiting on (fidelity-9's ask: never "pending", always
+ * "pending ON WHAT").
+ */
+let suite = suiteArm ? suiteJobs(runJobs(run)) : null;
+const jobDone = () => suite && suite.layout !== 'none' && suite.pending.length === 0;
+const waitingOn = () => (suite?.pending ?? []).map((j) => `"${j.name}" ${j.status}`).join(', ');
 const deadline = Date.now() + 40 * 60 * 1000;
+let lastWaiting = null;
 while (run.status !== 'completed' && !jobDone()) {
     if (!wait) {
         console.error(`run ${run.databaseId} for ${sha} is ${run.status}`
-            + (unitJob ? ` and its "${unitJob.name}" job is ${unitJob.status}` : '')
+            + (suite?.pending.length ? ` and its suite is waiting on ${waitingOn()}` : '')
             + ' — pass --wait');
         process.exit(3);
     }
-    if (Date.now() > deadline) { console.error(`run ${run.databaseId} still ${run.status} after 40 min`); process.exit(3); }
+    if (suiteArm && waitingOn() !== lastWaiting) {
+        lastWaiting = waitingOn();
+        console.error(`⏳ run ${run.databaseId}: waiting on ${lastWaiting || '(no suite job listed yet)'}`);
+    }
+    if (Date.now() > deadline) {
+        console.error(`run ${run.databaseId} still ${run.status} after 40 min`
+            + (suite?.pending.length ? ` — still waiting on ${waitingOn()}` : ''));
+        process.exit(3);
+    }
     await new Promise((r) => setTimeout(r, 30_000));
     run = findRun(sha);
-    if (suiteArm) unitJob = vitestJob(run);
+    if (suiteArm) suite = suiteJobs(runJobs(run));
 }
 /**
  * ⛓ THE SUITE LIVES IN ONE JOB; THE GATE LINES ARE SPREAD ACROSS ALL OF THEM
@@ -253,7 +270,7 @@ while (run.status !== 'completed' && !jobDone()) {
  * wanted would pay four extra API round trips for nothing.
  */
 const gathered = suiteArm ? null : gateLogs(run);
-const log = gathered ? gathered.log : jobLogById(unitJob.id);
+const log = gathered ? gathered.log : null;
 
 /* ── --gates: the whole verdict set, beside the bank's ───────────────── */
 
@@ -357,10 +374,57 @@ if (GATE) {
     process.exit(row.exit === 0 ? 0 : 1);
 }
 
-/* ── the suite, unchanged ────────────────────────────────────────────── */
+/* ── the suite ───────────────────────────────────────────────────────── */
 
-const [unit, slow] = parseSummaries(log);
-if (!unit) { console.error(`run ${run.databaseId} (${run.conclusion}) has no vitest summary in its log — read it yourself`); process.exit(4); }
+/**
+ * ⛓⛓⛓ ci-jsut-split — ONE SUITE ANSWER, SUMMED ACROSS THE SHARDS.
+ *
+ * ⛔ Every way the sum could be partial is a NAMED refusal (exit 4, no JSON, so
+ * `standing-values --write` KEEPS the row): a shard the listing does not carry,
+ * a skipped member, or a member whose log has no vitest summary (cancelled, or
+ * died before vitest printed). A member that ran and FAILED is summed and reads
+ * red (exit 1) with its name, because its numbers are whole.
+ */
+if (suite.layout === 'none') {
+    console.error(`run ${run.databaseId} (${run.conclusion}) has no JavaScript Unit Tests job at all`);
+    process.exit(4);
+}
+if (suite.missing.length) {
+    console.error(`run ${run.databaseId} (${run.conclusion}) — the suite is INCOMPLETE, so no sum is `
+        + `printed: ${suite.missing.join('; ')}. ⛔ A partial suite is never a smaller green one.`);
+    process.exit(4);
+}
+let unit; let slow; let members;
+if (suite.layout === 'single') {
+    [unit, slow] = parseSummaries(jobLogById(suite.single.id));
+    members = [{ name: suite.single.name, status: suite.single.status,
+        conclusion: suite.single.conclusion }];
+    if (!unit) { console.error(`run ${run.databaseId} (${run.conclusion}) has no vitest summary in its log — read it yourself`); process.exit(4); }
+} else {
+    const read = (job) => ({ job, summary: parseSummaries(jobLogById(job.id))[0] });
+    const shardRows = suite.shards.map((s) => read(s.job));
+    const slowRow = read(suite.slow);
+    const blank = [...shardRows, slowRow].filter((r) => !r.summary);
+    if (blank.length) {
+        console.error(`run ${run.databaseId} (${run.conclusion}) — no vitest summary in the log of `
+            + `${blank.map((r) => `"${r.job.name}" (${r.job.conclusion ?? r.job.status})`).join(', ')}`
+            + ', so the suite is INCOMPLETE and no sum is printed. ⛔ A partial suite is never a '
+            + 'smaller green one.');
+        process.exit(4);
+    }
+    unit = sumSummaries(shardRows.map((r) => r.summary));
+    slow = slowRow.summary;
+    members = [...shardRows, slowRow].map((r) => ({ name: r.job.name, status: r.job.status,
+        conclusion: r.job.conclusion, files: r.summary.files, tests: r.summary.tests }));
+}
+/** ⛓ The family's worst conclusion — `success` only when every member's is. */
+const RANK = ['success', 'neutral', null, 'skipped', 'cancelled', 'timed_out', 'failure'];
+const worst = suite.family.map((j) => j.conclusion)
+    .reduce((w, c) => (RANK.indexOf(c) > RANK.indexOf(w) ? c : w), 'success');
+const unitJob = { name: suite.layout === 'single' ? suite.single.name
+    : `JavaScript Unit Tests (${suite.shards.length} Vitest shards + slow)`,
+status: suite.pending.length ? 'in_progress' : 'completed',
+conclusion: suite.pending.length ? null : worst };
 
 const out = {
     sha, run: run.databaseId, conclusion: run.conclusion, createdAt: run.createdAt,
@@ -370,9 +434,9 @@ const out = {
      * reads that field (`standingValues.js:458`), and moving its meaning under
      * an unchanged name is exactly the ⚖ 8 hazard the shim above exists for.
      */
-    job: unitJob
-        ? { name: unitJob.name, status: unitJob.status, conclusion: unitJob.conclusion }
-        : null,
+    job: { name: unitJob.name, status: unitJob.status, conclusion: unitJob.conclusion },
+    /** ⛓ ci-jsut-split — every job the sum came out of, with its own numbers. */
+    jobs: members,
     standingRow: `${unit.files.total}/${unit.tests.total}`,
     unit, slow,
 };
@@ -380,9 +444,9 @@ if (json) console.log(JSON.stringify(out, null, 2));
 else {
     console.log(`CI vitest @ ${sha.slice(0, 9)} — run ${run.databaseId} `
         + `${run.conclusion ?? run.status} (${run.createdAt})`);
-    if (unitJob) {
-        console.log(`  job "${unitJob.name}"  ${unitJob.status}`
-            + `${unitJob.conclusion ? ` ${unitJob.conclusion}` : ''}`);
+    for (const m of members) {
+        console.log(`  job "${m.name}"  ${m.status}${m.conclusion ? ` ${m.conclusion}` : ''}`
+            + `${m.files ? `  ${m.files.total}/${m.tests.total}${m.tests.failed ? ` (${m.tests.failed} failed)` : ''}` : ''}`);
     }
     console.log(`  suite: vitest (unfiltered)  ${out.standingRow}   (${unit.tests.passed} passed | ${unit.tests.skipped} skipped | ${unit.tests.failed} failed)`);
     console.log(slow ? `  slow battery                ${slow.files.total}/${slow.tests.total}   (${slow.tests.passed} passed | ${slow.tests.failed} failed)` : '  slow battery                (no summary — step cancelled?)');
@@ -394,6 +458,12 @@ else {
  */
 const suiteConclusion = run.status === 'completed'
     ? run.conclusion : (unitJob?.conclusion ?? run.conclusion);
+/** ⛓ ci-jsut-split — and every member's own, so a red shard is red by name even
+ *  if the run's conclusion were ever to hide it. */
+const redMembers = members.filter((m) => m.conclusion !== 'success');
+if (redMembers.length) {
+    console.error(`⛔ red member(s): ${redMembers.map((m) => `"${m.name}" ${m.conclusion}`).join(', ')}`);
+}
 const red = unit.tests.failed > 0 || (slow && slow.tests.failed > 0)
-    || suiteConclusion !== 'success';
+    || suiteConclusion !== 'success' || redMembers.length > 0;
 process.exit(red ? 1 : 0);

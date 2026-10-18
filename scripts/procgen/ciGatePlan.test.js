@@ -22,6 +22,8 @@ import { describe, expect, it } from 'vitest';
 
 import {
     CI_ARM_COSTS_FILE,
+    CI_FIXED_SHARD_LIMIT_MS,
+    CI_HEADLESS_SHARDS,
     CI_SHARD_BUDGET_MS,
     armName,
     auditRunShards,
@@ -33,6 +35,7 @@ import {
     ciSourced,
     lastRunShardAudit,
     planCiShards,
+    planFixedShards,
 } from './ciGatePlan.js';
 import { LOCAL_HOST, REPO, argvFor, gateRoster } from './gateRoster.js';
 import { readStandingValues, standingRows } from './standingValues.js';
@@ -437,10 +440,13 @@ describe('H2 — unittests_frontend.yml paths', () => {
 describe('G1 — the vitest job AND the gates job unshallow vendor/seedling first', () => {
     const wf = readFileSync(join(REPO, '.github/workflows/unittests_frontend.yml'), 'utf8');
     /** ⛓ ci-split C2: the gates left the Vitest job for `headless-gates`, so
-     *  the order is pinned in EACH job, over that job's own slice. */
+     *  the order is pinned in EACH job, over that job's own slice.
+     *  ⛓ ci-jsut-split: and the slow tier left the shards for its own job. */
     const jobs = {
-        'javascript-tests': [wf.indexOf('  javascript-tests:'), wf.indexOf('\n  headless-gates:'),
-            ['Run Vitest tests', 'Run slow Vitest tests']],
+        'javascript-tests': [wf.indexOf('  javascript-tests:'), wf.indexOf('\n  javascript-tests-slow:'),
+            ['Run Vitest tests']],
+        'javascript-tests-slow': [wf.indexOf('  javascript-tests-slow:'), wf.indexOf('\n  headless-gates:'),
+            ['Run slow Vitest tests']],
         'headless-gates': [wf.indexOf('  headless-gates:'), wf.indexOf('\n  browser-gate-plan:'),
             ['Run headless procgen gates']],
     };
@@ -1043,5 +1049,74 @@ describe('lastRunShardAudit — the last run, audited where somebody is looking'
         const r = lastRunShardAudit({ recentRuns: runs, runShardCosts: jobs([]) });
         expect(r.available).toBe(false);
         expect(r.why).toMatch(/no .*ms \| <key> \| here=.* lines/);
+    });
+});
+
+/**
+ * ⛓⛓⛓ ci-jsut-split (⚖ user, 2026-10-17) — **THE HEADLESS SET, IN A FIXED PAIR.**
+ * Longest-first into the lighter bin, priced off the same costs file as the
+ * browser plan; an unpriced arm at the MEDIAN priced arm, never at the budget.
+ */
+describe('planFixedShards — the headless set, longest-first into a fixed count', () => {
+    const a = (key) => ({ key, gate: null });
+    const costs = { 'x: help': { ms: 337_000 }, 'x: bomb': { ms: 299_000 },
+        'x: c6': { ms: 96_000 }, 'x: sf': { ms: 88_000 }, 'x: c3': { ms: 75_000 },
+        'x: c4': { ms: 73_000 }, 'x: g1': { ms: 55_000 }, 'x: acc': { ms: 41_000 },
+        'x: s1': { ms: 7_000 }, 'x: s2': { ms: 6_000 } };
+    const arms = Object.keys(costs).map(a);
+
+    it('places every arm exactly once, in CI_HEADLESS_SHARDS shards, balanced', () => {
+        const shards = planFixedShards({ arms, costs });
+        expect(shards).toHaveLength(CI_HEADLESS_SHARDS);
+        expect(shards.flatMap((s) => s.keys).sort()).toEqual(arms.map((x) => x.key).sort());
+        const ms = shards.map((s) => s.ms);
+        expect(Math.max(...ms) - Math.min(...ms)).toBeLessThanOrEqual(Math.max(...Object.values(costs).map((c) => c.ms)));
+        expect(shards.every((s) => s.fixed === true)).toBe(true);
+        /** the two heaviest arms never share a shard */
+        expect(shards.find((s) => s.keys.includes('x: help')).keys).not.toContain('x: bomb');
+    });
+
+    it('is a pure function of (arms, costs) — order of the input does not matter', () => {
+        expect(planFixedShards({ arms: [...arms].reverse(), costs }))
+            .toEqual(planFixedShards({ arms, costs }));
+    });
+
+    it('⛔ an unpriced arm is priced at the MEDIAN priced arm, and counted', () => {
+        const shards = planFixedShards({ arms: [...arms, a('x: new')], costs });
+        const withNew = shards.find((s) => s.keys.includes('x: new'));
+        expect(withNew.unpriced).toBe(1);
+        const sorted = Object.values(costs).map((c) => c.ms).sort((p, q) => p - q);
+        const median = sorted[Math.floor((sorted.length - 1) / 2)];
+        const total = shards.reduce((n, s) => n + s.ms, 0);
+        expect(total).toBe(Object.values(costs).reduce((n, c) => n + c.ms, 0) + median);
+    });
+
+    it('the tree\'s own headless plan is fixed and covers every headless arm', () => {
+        const { arms: h, shards } = ciGatePlanFor({ repo: REPO, set: 'headless' });
+        expect(shards).toHaveLength(Math.min(CI_HEADLESS_SHARDS, h.length));
+        expect(shards.flatMap((s) => s.keys).sort()).toEqual(h.map((x) => x.key).sort());
+    });
+
+    it('unittests_frontend.yml runs one headless job per shard, by --shard=', () => {
+        const wf = readFileSync(join(REPO, '.github/workflows/unittests_frontend.yml'), 'utf8');
+        const job = wf.slice(wf.indexOf('  headless-gates:'), wf.indexOf('\n  browser-gate-plan:'));
+        const list = JSON.parse(/^ {8}shard: (\[.*\])$/m.exec(job)[1]);
+        expect(list).toEqual(Array.from({ length: CI_HEADLESS_SHARDS }, (_, i) => i));
+        expect(job).toContain('node scripts/procgen/ci-gates.mjs --set=headless --shard=${{ matrix.shard }}');
+        expect(job).toMatch(/fail-fast: false/);
+    });
+});
+
+describe('auditRunShards — a FIXED shard is held to its kill deadline, not the bin budget', () => {
+    const fixed = (ms, n = 30) => ({ name: 'Headless procgen gates (shard 0)',
+        shard: { id: 0, of: 2, fixed: true },
+        arms: Array.from({ length: n }, (_, i) => ({ key: `k${i}`, ms: ms / n })) });
+    it('a 700 s multi-arm fixed shard is NOT over (the budget does not apply)', () => {
+        expect(auditRunShards({ jobs: [fixed(700_000)] }).ok).toBe(true);
+    });
+    it('⛔ a fixed shard past CI_FIXED_SHARD_LIMIT_MS IS over — the deadline truncates silently', () => {
+        const r = auditRunShards({ jobs: [fixed(CI_FIXED_SHARD_LIMIT_MS + 30_000)] });
+        expect(r.ok).toBe(false);
+        expect(r.over[0].name).toMatch(/Headless/);
     });
 });
