@@ -714,16 +714,34 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "Detailed documentation of the simulation engine mechanics."
     },
     {
+        "path": "docs/json/intro/for-developers.md",
+        "title": "For Developers",
+        "section": "intro",
+        "summary": "This page is for people who want to work on the code. The project is a fork of Archipelago with three main parts: the procgen system, which generates and plays worlds in the browser; the exporter…"
+    },
+    {
+        "path": "docs/json/intro/for-players.md",
+        "title": "For Players",
+        "section": "intro",
+        "summary": "This page is for people who want to play. Everything here runs in the browser at the live demo, with nothing to install, unless the section says otherwise. It assumes you know what an Archipelago…"
+    },
+    {
+        "path": "docs/json/intro/for-world-builders.md",
+        "title": "For World Builders",
+        "section": "intro",
+        "summary": "This page is for people who want to make Archipelago worlds. The main way to do that here is the procgen pipeline, which generates complete worlds in the browser. You can also author a world…"
+    },
+    {
+        "path": "docs/json/intro/introduction-to-archipelago.md",
+        "title": "Introduction to Archipelago",
+        "section": "intro",
+        "summary": "This page is for readers who have never heard of Archipelago or randomizers. The rest of this project's documentation assumes you know the basics covered here."
+    },
+    {
         "path": "docs/json/user/guided-tour.md",
         "title": "Guided Tour",
         "section": "user",
         "summary": "Ten minutes, nothing to install, no server to set up — everything below runs in the live demo in your browser. (New to Archipelago itself? Read the Introduction to Archipelago first; this tour…"
-    },
-    {
-        "path": "docs/json/user/introduction-to-archipelago.md",
-        "title": "Introduction to Archipelago",
-        "section": "user",
-        "summary": "This page is for readers who have never heard of Archipelago or randomizers. The rest of this project's documentation assumes you know the basics covered here."
     },
     {
         "path": "docs/json/user/modules/apworldEditor.md",
@@ -969,7 +987,7 @@ export const DOCS_INDEX = Object.freeze([
         "path": "docs/json/user/overview.md",
         "title": "Overview: What Is This?",
         "section": "user",
-        "summary": "The Archipelago JSON Export Tools project provides an advanced tracker for Archipelago multiworld randomizer games. Archipelago is an open-source framework that connects multiple single-player games…"
+        "summary": "The Archipelago JSON Export Tools project generates new Archipelago worlds in the browser and provides an advanced tracker for existing multiworld randomizer games. Archipelago is an open-source…"
     },
     {
         "path": "docs/json/user/quick-start.md",
@@ -1168,13 +1186,25 @@ export const HELP_SECTIONS = Object.freeze([
         "children": []
     },
     {
+        "dir": "intro",
+        "label": "Start Here",
+        "order": 5,
+        "audience": "user",
+        "docs": [
+            "docs/json/intro/for-developers.md",
+            "docs/json/intro/for-players.md",
+            "docs/json/intro/for-world-builders.md",
+            "docs/json/intro/introduction-to-archipelago.md"
+        ],
+        "children": []
+    },
+    {
         "dir": "user",
         "label": "User Guides",
         "order": 10,
         "audience": "user",
         "docs": [
             "docs/json/user/guided-tour.md",
-            "docs/json/user/introduction-to-archipelago.md",
             "docs/json/user/overview.md",
             "docs/json/user/quick-start.md",
             "docs/json/user/standard-client.md",
