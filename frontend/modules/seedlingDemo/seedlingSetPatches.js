@@ -83,6 +83,8 @@
  * responder in either room (and no `buttonroom` in any level writes into 29 or
  * 74), so a button left behind presses a group nothing answers, and the solver
  * refuses a `hold` on it. L39's tset 6 keeps its pulser, so its rope stays.
+ * The measurement: `CC/docs/cloud-reports/seedling-fidelity-rockmove.md` (D1
+ * census, D2 game witnesses, D3 solver legs, D5 table) and its evidence dir.
  * Game witness: `probe-seedling-rock-remove.mjs`.
  *
  * ── ⛔ WHERE THIS APPLIES, AND WHERE IT DOES NOT ─────────────────────────────
