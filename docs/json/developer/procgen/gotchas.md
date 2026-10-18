@@ -61,7 +61,7 @@ if (!substrateRegistry.has(substrateRegistryEntry.id)) {
 }
 ```
 
-The libraries are `mazeRoomLibrary.js`, `bounceDemoLibrary.js`, `runnerDemoLibrary.js`, `textAdventureSubstrateWrapperLibrary.js`, `flashSubstrateLibrary.js`, `jtaSubstrateWrapperLibrary.js`, `omsiSubstrateWrapperLibrary.js`, `flashSeedlingLibrary.js` and `flashSeedlingGenLibrary.js`; `rg -a -l "substrateRegistry.register\(substrateRegistryEntry\)" frontend/modules` lists them with their `index.js` twins. The app registers from each module's `register()`, but headless scripts (`scripts/procgen/*.js`, `scripts/utils/generate-topdown-preset.js`) and engine tests never run `register()`: they get substrates only by importing the libraries.
+The libraries are `mazeRoomLibrary.js`, `bounceDemoLibrary.js`, `runnerDemoLibrary.js`, `textAdventureSubstrateWrapperLibrary.js`, `jtaSubstrateWrapperLibrary.js`, `omsiSubstrateWrapperLibrary.js`, `noiz2saSubstrateLibrary.js`, `flashSeedlingLibrary.js` and `flashSeedlingGenLibrary.js` (`flashSubstrateLibrary.js` holds only the factory and registers nothing); `rg -a -l "substrateRegistry.register\(substrateRegistryEntry\)" frontend/modules` lists them with their `index.js` twins. The app registers from each module's `register()`, but headless scripts (`scripts/procgen/*.js`, `scripts/utils/generate-topdown-preset.js`) and engine tests never run `register()`: they get substrates only by importing the libraries.
 
 **Warning:** a substrate that is not registered is not an error. The pipeline skips regions that ask for it, so a script writes a world missing that substrate and exits 0. When you change such an import, assert the registry holds the id afterwards, and check the entry's shape, not just its presence.
 

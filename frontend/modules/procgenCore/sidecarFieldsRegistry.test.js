@@ -26,6 +26,7 @@ import { describe, expect, it } from 'vitest';
 
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibrary.js';
 import { sidecarFieldsOf, sidecarPayloadErrors, validateSidecarFields } from './sidecarFields.js';
 import {
     DEFAULT_REGION_GEOMETRY, REGION_GEOMETRIES, REGION_GEOMETRY, geometryOf,
@@ -160,7 +161,7 @@ describe('⛓ V0 — `apLocationNamesOf` / `apExitNamesOf`, and the jta referenc
     it('flash_seedling removes BOTH of the factory\'s carriers (atlas-compiled: no ap_locations, '
         + 'teleporter doors only)', () => {
         const seedling = substrateRegistry.get('flash_seedling');
-        const factory = substrateRegistry.get('flash');
+        const factory = createFlashSubstrateEntry({ id: 'flash_factory_probe' }); // not registered
         expect(typeof factory.apLocationNamesOf).toBe('function');
         expect(typeof factory.apExitNamesOf).toBe('function');
         expect(seedling.apLocationNamesOf).toBeUndefined();

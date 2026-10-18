@@ -412,8 +412,8 @@ export const substrateRegistryEntry = Object.freeze({
      * generated room through the controller above (`executeVia: 'solver'` → `loopState.regionSolver` answers
      * 'walkTo'; the J2 walker / the solver serves an exit and a location on JS and wasm, a tile target is refused by
      * name), a queued `locationCheck` is walked to its apitem and completed by the game's own check, and `playClock`
-     * drains the region per GAME second `seedlingPlayClock.js` reports (⚖ "Drain play time too"). The generic flash
-     * entry still declares none of the three.
+     * drains the region per GAME second `seedlingPlayClock.js` reports (⚖ "Drain play time too"). The factory's default
+     * shape still declares none of the three.
      */
     loopSupport: Object.freeze({
         ...runtime.loopSupport,

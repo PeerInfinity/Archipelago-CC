@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 28,
         "headings": 1114,
         "indexHeadings": 2,
-        "lines": 30146,
+        "lines": 30148,
         "pages": 4,
-        "words": 409014
+        "words": 409089
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -37,10 +37,11 @@ export const DOCS_INDEX = frz({
             "file": "architecture.md",
             "h1": "Procedural Generation Architecture",
             "headings": 18,
-            "lines": 265,
+            "lines": 267,
             "links": [
                 "demos.md",
                 "editing-core.md",
+                "flash.md",
                 "loop-recording.md",
                 "maze.md",
                 "playback-and-debugging.md",
@@ -51,7 +52,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/architecture.md",
-            "words": 4550
+            "words": 4584
         },
         {
             "description": "`frontend/modules/shared/procgen/substrateRegistry.js` connects the pipeline, the runtime player and the substrates: each substrate registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This page documents the entry fields, the generated capability matrix, and how to add a substrate.",
@@ -97,7 +98,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/gotchas.md",
-            "words": 3308
+            "words": 3316
         },
         {
             "description": "The substrate-free editing machinery in `frontend/modules/procgenCore/`: the edit core and editor view that every level editor is built on, the adapter contract a substrate implements, the shared toolkit for `rules.json` and region-atlas documents, and the set editor that edits a whole collection of rooms.",
@@ -309,7 +310,7 @@ export const DOCS_INDEX = frz({
                 "flash.md"
             ],
             "path": "docs/json/developer/procgen/pipeline-presets.md",
-            "words": 1979
+            "words": 1986
         },
         {
             "description": "The text-adventure substrate (id `text_adventure`) shows a region as prose: a description with clickable compass exits and clickable locations. At build time a region is a room, not a tile grid: exits sit on compass sides, and gates are the document's own rules.",
@@ -403,7 +404,7 @@ export const DOCS_INDEX = frz({
             "words": 2075
         },
         {
-            "description": "The flash substrates host recompiled Flash games (SWF → C → WASM via SWFRecomp-CC) as procgen regions. This page covers the generic iframe machinery (`flashSubstrate/`) and the two Seedling entries that play rooms of the real game in the flash panel: `flash_seedling` (a real room from the region atlas) and `flash_seedling_gen` (a generated room).",
+            "description": "The flash substrates host recompiled Flash games (SWF → C → WASM via SWFRecomp-CC) as procgen regions. This page covers the shared iframe machinery (`flashSubstrate/`) and the two Seedling entries that play rooms of the real game in the flash panel: `flash_seedling` (a real room from the region atlas) and `flash_seedling_gen` (a generated room).",
             "file": "flash.md",
             "h1": "Flash Substrate",
             "headings": 31,
@@ -419,7 +420,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/flash.md",
-            "words": 30112
+            "words": 30138
         },
         {
             "description": "The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) runs the Journey to Ascension fork, an incremental game in the `frontend/modules/journey-to-ascension/` submodule, in a same-origin iframe as a loop-mode substrate. One AP region is one JtA zone, and the game's energy is mirrored into the host's shared mana pool.",
