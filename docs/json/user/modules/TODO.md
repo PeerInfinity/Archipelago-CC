@@ -32,6 +32,7 @@ User-friendly guides still to be written. See the corresponding technical refere
 - [Window Manager Panel](./windowManagerPanel.md) — Opening and managing separate windows
 - [Proof Queue](./proofQueue.md) — Table-based proof interface for MetaMath games
 - [Proof Graph](./proofGraph.md) — Visual graph of proof dependencies for MetaMath games
+- [Procgen Pipeline](./procgenPipeline.md) — Generating a procgen world and loading it to play
 
 ## Core Service Modules
 

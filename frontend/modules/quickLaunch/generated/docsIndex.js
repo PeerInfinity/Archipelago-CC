@@ -822,6 +822,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The Presets panel is the primary way to load a game into the application. It lists all predefined game configurations and lets you load custom files from your computer."
     },
     {
+        "path": "docs/json/user/modules/procgenPipeline.md",
+        "title": "Procgen Pipeline Panel",
+        "section": "user/modules",
+        "summary": "The Procgen Pipeline generates a whole Archipelago world: it plans which items unlock what, builds a playable room for every region (a maze, a text adventure, a bounce zone, a Seedling room, …)…"
+    },
+    {
         "path": "docs/json/user/modules/progressBarPanel.md",
         "title": "Progress Bar Panel",
         "section": "user/modules",
@@ -1092,6 +1098,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/modules/modules.md",
             "docs/json/user/modules/pathAnalyzerPanel.md",
             "docs/json/user/modules/presets.md",
+            "docs/json/user/modules/procgenPipeline.md",
             "docs/json/user/modules/progressBarPanel.md",
             "docs/json/user/modules/proofGraph.md",
             "docs/json/user/modules/proofQueue.md",
