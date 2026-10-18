@@ -577,7 +577,7 @@ if (TIER_KEY) {
     const { tierKeyAt } = await import(join(HERE, 'fullTierKey.js'));
     const tapes = tierRoster(fixtureNames()).map((name) => ({ name, fp: tapeFingerprint(name) }));
     const { key, files } = tierKeyAt({ repo: REPO, entry: fileURLToPath(import.meta.url),
-        tier: TIER, fingerprint: FINGERPRINT, tapes });
+        tier: TIER, fingerprint: FINGERPRINT, tapes, roster: fixtureNames() });
     console.log(`TIER-KEY: ${key} (tier ${TIER}, ${tapes.length} tape(s), page ${PAGE_NAME}, `
         + `channel ${CHANNEL}, fingerprint ${FINGERPRINT}, ${files} file(s) outside it)`);
     process.exit(0);

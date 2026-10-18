@@ -27,6 +27,20 @@
  *                                  DERIVED from its parts and any hand edit to
  *                                  either is overwritten — ⚖ 17. `--why` is
  *                                  refused here: the derivation writes it.
+ *   …--quote='<value>' --category=<name> --reused-run=<run id>
+ *                                  ⛓⛓ RE-STAMP a part AT THIS HEAD from a
+ *                                  green `seedling-full-tier.yml` run that a
+ *                                  later dispatch REUSED (ci-skip-rules rule 3,
+ *                                  ⚖ user 2026-10-17: *"Yes, if possible."*).
+ *                                  The tier key is recomputed here, at a clean
+ *                                  HEAD, for the category's tier and `full`;
+ *                                  one must equal the key the run banked. Then
+ *                                  `measuredAt` = HEAD and `coveredBy` names
+ *                                  the run, its SHA, tier and key. ⛓ Sound
+ *                                  because the key covers every population
+ *                                  `check-seedling-full-tier-owed` reads
+ *                                  (`fullTierKey.js`); `--measured-at=` may be
+ *                                  omitted and is refused unless it is HEAD.
  *
  * ⛔⛔ **A QUOTED ROW IS MARKED AS ONE.** The whole point of the file is that a
  * number in it was produced by the command beside it. A row that a human typed
@@ -65,17 +79,18 @@ const KEY = arg('key');
 const FROM = arg('from');
 const QUOTE = arg('quote');
 const WHY = arg('why');
-const MEASURED_AT = arg('measured-at');
+let MEASURED_AT = arg('measured-at');
 const CATEGORY = arg('category');
 const TAPES = arg('tapes');
-const COVERED_BY = arg('covered-by');
+let COVERED_BY = arg('covered-by');
 /**
  * ⛓ R1 — which BROWSER drove this part (`win` | `headless`), recorded as data
  * on the part rather than inferred from the key. Optional and never defaulted:
  * see `channelSuffix` in `standingValues.js` for why absence must keep meaning
  * "not recorded" rather than "win".
  */
-const CHANNEL = arg('channel');
+let CHANNEL = arg('channel');
+const REUSED_RUN = arg('reused-run');
 
 if (retiredKeyProblem(KEY)) {
     console.log(retiredKeyProblem(KEY));
@@ -123,11 +138,78 @@ if (CHANNEL && !CHANNELS.includes(CHANNEL)) {
         + 'Omit it to record no channel; ⛔ do not omit it to mean `win`.');
     process.exit(1);
 }
+/**
+ * ⛓⛓ `--reused-run=` — the re-stamp's evidence, gathered here and judged by
+ * `fullTierKey.reuseVerdict`. ⛔ Refused on a tree whose key inputs differ
+ * from HEAD: the key is computed from the files on disk, so a dirty tree
+ * would stamp HEAD with a key about something else.
+ */
+async function reusedAtHead(runId) {
+    const { deadFrameFiles, reuseVerdict } = await import('./fullTierKey.js');
+    const { githubRepoOf } = await import('./fullTierEstimate.js');
+    if (!/^\d+$/.test(runId)) return { ok: false, problem: 'a run id is digits' };
+    if (QUOTE === null || !CATEGORY) {
+        return { ok: false, problem: 'it re-stamps ONE part: --quote= and --category= are required' };
+    }
+    if (COVERED_BY) return { ok: false, problem: '--covered-by= is refused with it (it is written)' };
+    if (CHANNEL && CHANNEL !== 'headless') {
+        return { ok: false, problem: `--channel=${CHANNEL}: a CI tier is headless` };
+    }
+    const git = (...a) => execFileSync('git', a, { cwd: REPO, encoding: 'utf8' }).trim();
+    const HEAD = git('rev-parse', 'HEAD');
+    if (MEASURED_AT && git('rev-parse', `${MEASURED_AT}^{commit}`) !== HEAD) {
+        return { ok: false, problem: `--measured-at=${MEASURED_AT} is not HEAD (${HEAD.slice(0, 10)}); `
+            + 'a reused run is stamped at the head its key matched, or quoted plainly at its own SHA' };
+    }
+    const dirty = git('status', '--porcelain', '--untracked-files=all', '--',
+        'frontend/modules/seedlingDemo', 'frontend/modules/flashPanel', 'scripts/procgen',
+        '.github/workflows/seedling-full-tier.yml', 'package-lock.json', ...deadFrameFiles(REPO),
+        `:!${FILE}`);
+    if (dirty) {
+        return { ok: false, problem: `the tree differs from HEAD under the key's inputs:\n${dirty}` };
+    }
+    const repo = githubRepoOf(git('remote', 'get-url', 'origin'));
+    const gh = (path) => JSON.parse(execFileSync('gh', ['api', `repos/${repo}/${path}`],
+        { encoding: 'utf8', maxBuffer: 1 << 26 }));
+    let run;
+    let artifacts;
+    try {
+        run = gh(`actions/runs/${runId}`);
+        artifacts = gh(`actions/runs/${runId}/artifacts?per_page=100`).artifacts;
+    } catch (e) {
+        return { ok: false, problem: `the GitHub API did not answer (${String(e.message).split('\n')[0]})` };
+    }
+    const diff = join(REPO, 'scripts/procgen/check-seedling-bot-differential.mjs');
+    const keysAtHead = {};
+    for (const tier of [...new Set([CATEGORY, 'full'])]) {
+        const out = execFileSync('node', [diff, `--tier=${tier}`, '--tier-key'],
+            { cwd: REPO, encoding: 'utf8' });
+        keysAtHead[tier] = /^TIER-KEY: ([0-9a-f]{16}) /m.exec(out)?.[1] ?? null;
+    }
+    const v = reuseVerdict({ run, artifacts, keysAtHead });
+    if (!v.ok) return v;
+    return { ok: true, head: HEAD,
+        coveredBy: `run ${run.id} @${run.head_sha.slice(0, 10)} (tier ${v.tier}, key ${v.key}) — `
+            + `REUSED at ${HEAD.slice(0, 10)}: the tier key at this head equals the run's `
+            + '(ci-skip-rules rule 3)' };
+}
+
 if (QUOTE !== null && CATEGORY) {
     if (!ROSTER_CATEGORIES.includes(CATEGORY)) {
         console.log(`FAIL: --category=${CATEGORY} is not a derived category `
             + `(${ROSTER_CATEGORIES.join(', ')}).`);
         process.exit(1);
+    }
+    if (REUSED_RUN !== null) {
+        const r = await reusedAtHead(REUSED_RUN);
+        if (!r.ok) {
+            console.log(`FAIL: --reused-run=${REUSED_RUN} cannot be stamped at this head — ${r.problem}`);
+            process.exit(1);
+        }
+        MEASURED_AT = r.head;
+        COVERED_BY = r.coveredBy;
+        CHANNEL = 'headless';
+        console.log(`⛓ REUSED: ${r.coveredBy}`);
     }
     if (!MEASURED_AT) {
         console.log('FAIL: --category= needs --measured-at=<sha>. A part without its own head '
@@ -181,6 +263,11 @@ if (QUOTE !== null && CATEGORY) {
     process.exit(0);
 }
 
+if (REUSED_RUN !== null) {
+    console.log('FAIL: --reused-run= re-stamps ONE part of the checkpoint row: --quote= and '
+        + '--category= are required.');
+    process.exit(1);
+}
 if (QUOTE !== null) {
     if (!MEASURED_AT || !WHY) {
         console.log('FAIL: --quote= needs --measured-at=<sha> and --why=<one line>. '
