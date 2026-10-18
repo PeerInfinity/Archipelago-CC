@@ -17,6 +17,7 @@ import { describe, expect, it } from 'vitest';
 
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibrary.js';
 import { fieldNamesOf } from '../procgenDocs/registryShape.js';
 import { REGISTRY } from '../procgenDocs/generated/registry.js';
 import {
@@ -399,7 +400,12 @@ describe('the n/a cells that are the ANSWER\'s, not a prerequisite\'s (S3, ⚖ p
                 expect(e.zoneCount, e.id).toBeUndefined();
             }
         }
-        expect([...kinds].sort()).toEqual([CELL_KINDS.NA, CELL_KINDS.NO, CELL_KINDS.YES].sort());
+        // ⛓ No real entry is ✗ since the generic `flash` entry went (2026-10-18), so the
+        //   ✗ arm is held on the flash factory's bare shape, which declares no zoneCount.
+        expect([...kinds].sort()).toEqual([CELL_KINDS.NA, CELL_KINDS.YES].sort());
+        const bare = createFlashSubstrateEntry({ id: 'flash_factory_probe' });
+        expect(bare.zoneCount).toBeUndefined();
+        expect(CAPABILITY_STATEMENTS.find((s) => s.id === 'G2').answer(bare).kind).toBe(CELL_KINDS.NO);
     });
 
     it('L7: n/a where a replay is a summary (Instant is always); still n/a where L6 is ✗; ✓ somewhere', () => {
