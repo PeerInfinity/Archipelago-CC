@@ -185,13 +185,31 @@ jobs:
             echo "green=false" >> "$GITHUB_OUTPUT"
           fi
 
+  # ══════════════════════════════════════════════════════════════════════
+  # ⛓⛓ ci-jsut-split (⚖ user, 2026-10-17: "Vitest + headless") — THE SUITE IS
+  # A MATRIX OF `vitest --shard=k/N` JOBS, AND THE SLOW TIER IS ITS OWN JOB.
+  #
+  # Before: ONE job ran `test:unit` (726–1236 s) then `test:unit:slow`
+  # (351–591 s) back to back — a 1808 s median, the run's critical path.
+  # ⛔ N is typed ONCE, in the matrix list: the job name and `--shard=` read it
+  # back as `strategy.job-total`. `ciSummary.suiteJobs` reads `k/N` off the job
+  # NAMES, so a shard missing from a run is named, never summed away.
+  # ⛔ THE NAMES ARE READ — `JavaScript Unit Tests (Vitest shard k/N)` and
+  # `JavaScript Unit Tests (slow Vitest)` (`SUITE_SHARD_JOB` / `SUITE_SLOW_JOB`).
+  # ⛔ `fail-fast: false`: a red shard must not cancel its siblings, or the
+  # reader could only say "incomplete" where it can say "red, in shard 2".
+  # ══════════════════════════════════════════════════════════════════════
   javascript-tests:
-    name: JavaScript Unit Tests (Vitest)
+    name: JavaScript Unit Tests (Vitest shard ${{ matrix.shard }}/${{ strategy.job-total }})
     runs-on: ubuntu-latest
     # ⛓ RULE 1. `!cancelled()`, not `always()`: the guard is SKIPPED off main,
     # and a cancelled run (F3's supersede) must not start the suite.
     needs: already-green
     if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
 
     steps:
       - name: Checkout repository
@@ -227,8 +245,45 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run Vitest tests
-        run: npm run test:unit
+      - name: Run Vitest tests (shard ${{ matrix.shard }}/${{ strategy.job-total }})
+        run: npm run test:unit -- --shard=${{ matrix.shard }}/${{ strategy.job-total }}
+
+  # ⛓ ci-jsut-split — the slow tier, alone and UNSHARDED: it runs serially
+  # (`fileParallelism: false`, vitest.slow.config.js) because its synchronous
+  # CPU-bound suites flake under contention, and at 351–591 s it is already
+  # shorter than a headless shard — splitting it would buy a runner, not wall.
+  javascript-tests-slow:
+    name: JavaScript Unit Tests (slow Vitest)
+    runs-on: ubuntu-latest
+    # ⛓ RULE 1 — the same guard as the suite's.
+    needs: already-green
+    if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+
+      # ⛓ G1 — the same step as the Vitest shards' (see the comment there).
+      - name: Unshallow the Seedling source submodule
+        run: |
+          S=$(date +%s)
+          if [ "$(git -C vendor/seedling rev-parse --is-shallow-repository)" = "true" ]; then
+            git -C vendor/seedling fetch --unshallow --quiet
+            echo "MEASURED: vendor/seedling unshallowed to $(git -C vendor/seedling rev-list --count HEAD) commit(s) in $(( $(date +%s) - S ))s"
+          else
+            echo "MEASURED: vendor/seedling already full ($(git -C vendor/seedling rev-list --count HEAD) commit(s)) — nothing fetched"
+          fi
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
 
       # Heavy generate-and-test suites (*.slow.test.js), run serially so they
       # don't flake under parallel CPU contention. See vitest.slow.config.js.
@@ -254,14 +309,30 @@ jobs:
   # Seedling unshallow (`seedling-source-pin` (iii) reads the fork's
   # ancestry; it printed `3 VERIFIED, 0 UNVERIFIABLE` on run 36286595941).
   # ══════════════════════════════════════════════════════════════════════
+  #
+  # ⛓⛓ ci-jsut-split (⚖ user, 2026-10-17) — AND THE HEADLESS SET IS TWO JOBS.
+  # ⛔ MEASURED at 06b6b754a6 (run 39081866066): the one job hit the step's
+  # 20-minute deadline after 63 of its 95 arms, and `continue-on-error` kept it
+  # green — 32 producer arms printed no line at all. The partition is
+  # `ciGatePlan.planFixedShards`: longest-first into the lighter of
+  # `CI_HEADLESS_SHARDS` bins, priced off `ci-arm-costs.json` like the browser
+  # plan, so a new arm lands without anyone typing it. ⛔ The matrix list below
+  # is pinned to `CI_HEADLESS_SHARDS` by `ciGatePlan.test.js`. And no plan job:
+  # the count is fixed, so each shard recomputes its own slice from the tree.
+  # ══════════════════════════════════════════════════════════════════════
   headless-gates:
-    name: Headless procgen gates
+    name: Headless procgen gates (shard ${{ matrix.shard }})
     runs-on: ubuntu-latest
     # ⛓ RULE 1 — the same guard as the suite's.
     needs: already-green
     if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' }}
-    # The step's own 20-minute deadline below, plus the ~30 s of setup.
-    timeout-minutes: 25
+    # The step's own 30-minute deadline below, plus the ~30 s of setup.
+    timeout-minutes: 35
+    strategy:
+      # ⛔ One shard's red must not cancel the other: these are readers.
+      fail-fast: false
+      matrix:
+        shard: [0, 1]
 
     steps:
       - name: Checkout repository
@@ -342,10 +413,34 @@ jobs:
       # 0.11x-0.23x this box on pure-node work, measured in S4c's step-1
       # scratch run 33581070573) plus the twenty cheap ones, which are 2.1 min
       # of box between them.
-      - name: Run headless procgen gates
+      - name: Run headless procgen gates (shard ${{ matrix.shard }})
         continue-on-error: true
-        timeout-minutes: 20
-        run: node scripts/procgen/ci-gates.mjs
+        # ⛓ ci-jsut-split — 30, not 20: the scratch run 39085485474 measured the
+        # SAME arms at up to 1.9x on a slow runner (bombstand 515 s vs 265 s), and
+        # shard 1 hit 20 minutes at 32/48. Priced at their max, each shard is
+        # ~972 s; a typical runner lands ~700-850 s.
+        timeout-minutes: 30
+        run: |
+          set -o pipefail
+          node scripts/procgen/ci-gates.mjs --set=headless --shard=${{ matrix.shard }} \
+            --deadline-s=1800 2>&1 | tee /tmp/gates.log
+
+      # ⛔⛔ ci-jsut-split (fidelity-9's ask (b)) — A CUT BATTERY IS RED, BY NAME.
+      # From 2026-10-10 to this split the step above hit its 20-minute deadline on
+      # most runs and printed 54–68 of 80–95 arms — green, because
+      # `continue-on-error` also swallows a TIMEOUT. `continue-on-error` stays (a
+      # red GATE is a standing-row fact, not a merge gate); a battery that never
+      # printed `## CI-DONE |` fails the job here, and `ci-summary --gates` names it.
+      - name: Battery complete? (shard ${{ matrix.shard }})
+        if: ${{ !cancelled() }}
+        run: |
+          grep -a '^## CI-PLANNED |' /tmp/gates.log || true
+          if grep -aq '^## CI-DONE |' /tmp/gates.log; then
+            grep -a '^## CI-DONE |' /tmp/gates.log
+          else
+            echo "::error title=gate battery TRUNCATED::shard ${{ matrix.shard }} printed $(grep -ac '^## CI-GATE |' /tmp/gates.log) CI-GATE line(s) and no CI-DONE line — cut by its step deadline or crashed"
+            exit 1
+          fi
 
   # ══════════════════════════════════════════════════════════════════════
   # ⛓⛓⛓ S3 (⚖ RULING 72, 2026-09-01) — **THE BROWSER GATES, IN CI.**
@@ -572,11 +667,23 @@ jobs:
           set +e
           node scripts/procgen/ci-gates.mjs \
             --set=browser --shard=${{ matrix.shard.id }} \
-            --host=http://localhost:8000 2>&1 | tee /tmp/gates.log
+            --host=http://localhost:8000 --deadline-s=2400 2>&1 | tee /tmp/gates.log
           RC=$?
           set -e
           kill "$(cat /tmp/httpd.pid)" 2>/dev/null || true
           exit $RC
+
+      # ⛔ ci-jsut-split — the same check as the headless shards' (see there).
+      - name: 'Battery complete? (shard ${{ matrix.shard.id }})'
+        if: ${{ !cancelled() }}
+        run: |
+          grep -a '^## CI-PLANNED |' /tmp/gates.log || true
+          if grep -aq '^## CI-DONE |' /tmp/gates.log; then
+            grep -a '^## CI-DONE |' /tmp/gates.log
+          else
+            echo "::error title=gate battery TRUNCATED::shard ${{ matrix.shard.id }} printed $(grep -ac '^## CI-GATE |' /tmp/gates.log) CI-GATE line(s) and no CI-DONE line — cut by its step deadline or crashed"
+            exit 1
+          fi
 
       - name: 'Shard ${{ matrix.shard.id }} — summary'
         if: always()

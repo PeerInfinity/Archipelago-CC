@@ -16,6 +16,11 @@ export const CI_REPO = 'PeerInfinity/Archipelago-CC';
 export const WORKFLOW = 'unittests_frontend.yml';
 /** ⛓ ONE spelling of the marker `ci-gates.mjs` prints and this file reads. */
 export const CI_GATE_MARK = '## CI-GATE |';
+/** ⛓ ci-jsut-split — what a battery planned, and that it finished (see `batteryCompleteness`). */
+export const CI_PLANNED_MARK = '## CI-PLANNED |';
+export const CI_DONE_MARK = '## CI-DONE |';
+/** ⛓ …and the fraction of a step deadline past which a battery WARNS. */
+export const HEADROOM_WARN_FRACTION = 0.75;
 
 /**
  * ⛓ `gh`'s stderr is PIPED, never inherited: a caught 404 must not leak a
@@ -110,13 +115,14 @@ export function pickSuiteRun(runs, jobsOf) {
     const passedOver = [];
     for (const [i, run] of runs.entries()) {
         const jobs = jobsOf(run);
-        const vitest = pickVitestJob(jobs);
-        if (vitest?.conclusion === 'skipped') {
+        /** ⛓ ci-jsut-split — the suite is a FAMILY of jobs now (shards + slow). */
+        const suite = suiteJobs(jobs);
+        if (suite.skipped) {
             passedOver.push({ run, why: 'its suite job was SKIPPED (the SHA was already green)' });
             continue;
         }
         const guard = jobs.find((j) => GUARD_JOB.test(j.name ?? ''));
-        const undecided = guardedPush(run) && (!vitest || vitest.status !== 'completed')
+        const undecided = guardedPush(run) && (suite.layout === 'none' || suite.pending.length > 0)
             && guard?.status !== 'completed';
         if (undecided && runs.slice(i + 1).some((r) => r.conclusion === 'success')) {
             passedOver.push({ run, why: 'its guard has not decided, and an older run at this '
@@ -189,6 +195,80 @@ export function pickVitestJob(jobs) {
 }
 
 /**
+ * ⛓⛓⛓ ci-jsut-split (⚖ user, 2026-10-17) — **THE SUITE IS SPLIT ACROSS JOBS NOW.**
+ * `unittests_frontend.yml` runs the default tier as a matrix of
+ * `JavaScript Unit Tests (Vitest shard k/N)` jobs (`vitest --shard=k/N`) and the
+ * slow tier as `JavaScript Unit Tests (slow Vitest)`. Until then ONE job ran
+ * both, and its log carried both summaries.
+ *
+ * ⛔⛔ A PARTIAL SUITE MUST NEVER READ AS A SMALLER GREEN ONE. The shard count is
+ * read off the shard jobs' OWN names (`k/N`), so a shard that is absent from the
+ * listing is named in `missing`, and the slow job is owed whenever any shard is.
+ * A SKIPPED member of a suite that otherwise ran is missing too: it carries no
+ * summary, and a sum without it is a different number.
+ *
+ * ⛓ A run of the OLD layout (one job, both summaries) is `single`, so a SHA from
+ * before the split still reads.
+ *
+ * @returns {{layout: 'none'|'single'|'split', skipped: boolean, family: object[],
+ *   shards: {k:number, n:number, job:object}[], slow: object|null, single: object|null,
+ *   missing: string[], pending: object[]}}
+ */
+export const SUITE_SHARD_JOB = /^JavaScript Unit Tests \(Vitest shard (\d+)\/(\d+)\)$/;
+export const SUITE_SLOW_JOB = /^JavaScript Unit Tests \(slow Vitest\)$/;
+export function suiteJobs(jobs) {
+    const family = (jobs ?? []).filter((j) => VITEST_JOB.test(j.name ?? ''));
+    const out = { layout: 'none', skipped: false, family, shards: [], slow: null, single: null,
+        missing: [], pending: family.filter((j) => j.status !== 'completed') };
+    if (!family.length) return out;
+    /** ⛓ Rule 1 skips the whole family together — and a skipped MATRIX job is
+     *  listed once, under its UNEXPANDED name, so the skip is read off the family. */
+    if (family.every((j) => j.conclusion === 'skipped')) {
+        out.skipped = true;
+        out.layout = family.some((j) => /shard|slow/.test(j.name)) ? 'split' : 'single';
+        return out;
+    }
+    for (const job of family) {
+        const m = SUITE_SHARD_JOB.exec(job.name);
+        if (m) out.shards.push({ k: Number(m[1]), n: Number(m[2]), job });
+        else if (SUITE_SLOW_JOB.test(job.name)) out.slow = job;
+    }
+    if (!out.shards.length && !out.slow) {
+        out.layout = 'single';
+        out.single = family[0];
+        return out;
+    }
+    out.layout = 'split';
+    out.shards.sort((a, b) => a.k - b.k);
+    const n = Math.max(0, ...out.shards.map((s) => s.n));
+    if (!n) out.missing.push('JavaScript Unit Tests (Vitest shard ?/?) — no shard job at all');
+    for (let k = 1; k <= n; k++) {
+        const s = out.shards.find((x) => x.k === k && x.n === n);
+        if (!s) out.missing.push(`JavaScript Unit Tests (Vitest shard ${k}/${n})`);
+        else if (s.job.conclusion === 'skipped') out.missing.push(`${s.job.name} (skipped)`);
+    }
+    for (const s of out.shards.filter((x) => x.n !== n)) {
+        out.missing.push(`${s.job.name} — disagrees with the other shards' count ${n}`);
+    }
+    if (!out.slow) out.missing.push('JavaScript Unit Tests (slow Vitest)');
+    else if (out.slow.conclusion === 'skipped') out.missing.push(`${out.slow.name} (skipped)`);
+    return out;
+}
+
+/**
+ * ⛓ ci-jsut-split — the summed suite out of a split run's per-job summaries.
+ * Pure. Each input is `parseSummaries(log)[0]` of one shard (or `undefined`
+ * when the log carried none — then the sum is refused by the caller).
+ */
+export function sumSummaries(rows) {
+    const add = (a, b) => ({ failed: a.failed + b.failed, passed: a.passed + b.passed,
+        skipped: a.skipped + b.skipped, total: a.total + b.total });
+    const zero = { failed: 0, passed: 0, skipped: 0, total: 0 };
+    return rows.reduce((acc, r) => ({ files: add(acc.files, r.files), tests: add(acc.tests, r.tests) }),
+        { files: zero, tests: zero });
+}
+
+/**
  * ⛓⛓⛓ **R1 — THE SUITE'S JOB, AS ITS OWN STATUS.** `ci-summary` refused an
  * in-progress RUN — *"pass --wait"* — even when the Vitest job had finished and
  * its log was final, because `unittests_frontend.yml` keeps the run open while
@@ -236,7 +316,39 @@ export function jobLog(run) {
  */
 export function gateLogs(run) {
     const { parts, jobs, unreadable } = gateLogParts(run);
-    return { log: parts.map((p) => p.log).join('\n'), jobs, unreadable };
+    return { log: parts.map((p) => p.log).join('\n'), jobs, unreadable,
+        battery: batteryCompleteness(parts) };
+}
+
+/**
+ * ⛓⛓⛓ ci-jsut-split (fidelity-9's asks (b), (c)) — **DID EACH BATTERY FINISH?**
+ *
+ * ⛔ Measured: from 2026-10-10 the one headless job ran past its 20-minute step
+ * deadline on most runs, printed 54–68 of its 80–95 arms, and stayed green under
+ * `continue-on-error` — so a missing line read as "no such line", never as "the
+ * job was cut". A job that printed `## CI-PLANNED |` and no `## CI-DONE |` is
+ * TRUNCATED, by name; one that finished past `HEADROOM_WARN_FRACTION` of its
+ * step deadline is TIGHT. Pure: `parts` is `gateLogParts`' `{job, log}[]`.
+ * A log from before the markers existed carries neither and is not judged.
+ */
+export function batteryCompleteness(parts) {
+    const jobs = [];
+    for (const { job, log } of parts) {
+        const lines = strip(log).split('\n');
+        const at = (mark) => lines.find((l) => l.includes(mark));
+        const planned = at(CI_PLANNED_MARK);
+        if (!planned) continue;
+        const done = at(CI_DONE_MARK);
+        const n = Number((/(\d+) arm\(s\)/.exec(planned) ?? [])[1]);
+        const printed = lines.filter((l) => l.includes(CI_GATE_MARK)).length;
+        const m = done ? /\| ([0-9.]+)s(?: of a (\d+)s step deadline)?/.exec(done) : null;
+        const elapsedS = m ? Number(m[1]) : null;
+        const deadlineS = m?.[2] ? Number(m[2]) : null;
+        jobs.push({ job, planned: n, printed, done: Boolean(done), elapsedS, deadlineS,
+            truncated: !done || printed < n,
+            tight: Boolean(deadlineS) && elapsedS > HEADROOM_WARN_FRACTION * deadlineS });
+    }
+    return { jobs, truncated: jobs.filter((j) => j.truncated), tight: jobs.filter((j) => j.tight) };
 }
 
 /**
@@ -255,7 +367,14 @@ export function gateLogParts(run) {
     const jobs = runJobs(run);
     const parts = [];
     const unreadable = [];
+    /**
+     * ⛓ ci-jsut-split — the suite family prints no gate line once the gates have
+     * jobs of their own (C2), and since the split it is FOUR logs, not one: read
+     * them only for a run from before C2, whose gates ran inside the Vitest job.
+     */
+    const gatesHaveJobs = jobs.some((j) => GATE_JOB.test(j.name ?? ''));
     for (const job of jobs) {
+        if (gatesHaveJobs && VITEST_JOB.test(job.name ?? '')) continue;
         /**
          * ⛓ A SKIPPED job has no log (the endpoint 404s), so it is named
          * without asking. Rule 1's guard is skipped on every branch push.
@@ -277,7 +396,7 @@ export function gateLogParts(run) {
 /** ⛓ ONE spelling of the cost line `ci-gates.mjs` prints beside every arm. */
 export const CI_MS_MARK = '##   ms |';
 /** ⛓ …and of the note a SHARDED invocation prints about itself. */
-const SHARD_NOTE_RE = /^## shard (\d+) of (\d+)\b/;
+const SHARD_NOTE_RE = /^## shard (\d+) of (\d+)\b(.*)$/;
 
 /**
  * ⛓⛓⛓ S5b — **WHAT EACH ARM COST THE RUNNER, out of one job's log.**
@@ -316,7 +435,9 @@ export function shardNoteIn(log) {
         const i = raw.indexOf('## shard ');
         if (i < 0) continue;
         const m = SHARD_NOTE_RE.exec(raw.slice(i));
-        if (m) return { id: Number(m[1]), of: Number(m[2]) };
+        /** ⛓ ci-jsut-split — `; fixed count` marks a headless shard: the audit
+         *  holds it to its kill deadline, never to the bin budget. */
+        if (m) return { id: Number(m[1]), of: Number(m[2]), fixed: /; fixed count\b/.test(m[3]) };
     }
     return null;
 }
