@@ -152,11 +152,11 @@ export const CI_HEADLESS_SHARDS = 2;
 
 /**
  * ⛓ …and what a fixed shard may measure before the audit calls it FAIL: three
- * quarters of the headless step's 20-minute kill deadline. A fixed shard has no
+ * quarters of the headless step's 30-minute kill deadline. A fixed shard has no
  * budget to be packed under, so the only number that matters is the one that
  * truncates the battery — and the audit must say so BEFORE it does.
  */
-export const CI_FIXED_SHARD_LIMIT_MS = 900000;
+export const CI_FIXED_SHARD_LIMIT_MS = 1350000;
 
 /**
  * ⛓⛓⛓ **WHAT EACH ARM COSTS THE RUNNER** — written by `ci-gates.mjs

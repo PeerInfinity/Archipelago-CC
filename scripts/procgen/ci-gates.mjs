@@ -278,7 +278,7 @@ if (flag('audit')) {
         if (r.over && r.shard?.fixed === true) {
             console.log(`      ⛔ ${(r.ms / 1000).toFixed(1)}s > the `
                 + `${(CI_FIXED_SHARD_LIMIT_MS / 1000).toFixed(0)}s limit for a fixed shard — the `
-                + 'headless step\'s 20-minute deadline is near, and it TRUNCATES the battery '
+                + 'headless step deadline is near, and it TRUNCATES the battery '
                 + 'silently. Raise CI_HEADLESS_SHARDS.');
         } else if (r.over) {
             console.log(`      ⛔ ${r.arms} arms and ${(r.ms / 1000).toFixed(1)}s > the `

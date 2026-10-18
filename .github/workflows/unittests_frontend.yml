@@ -326,8 +326,8 @@ jobs:
     # ⛓ RULE 1 — the same guard as the suite's.
     needs: already-green
     if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' }}
-    # The step's own 20-minute deadline below, plus the ~30 s of setup.
-    timeout-minutes: 25
+    # The step's own 30-minute deadline below, plus the ~30 s of setup.
+    timeout-minutes: 35
     strategy:
       # ⛔ One shard's red must not cancel the other: these are readers.
       fail-fast: false
@@ -415,11 +415,15 @@ jobs:
       # of box between them.
       - name: Run headless procgen gates (shard ${{ matrix.shard }})
         continue-on-error: true
-        timeout-minutes: 20
+        # ⛓ ci-jsut-split — 30, not 20: the scratch run 39085485474 measured the
+        # SAME arms at up to 1.9x on a slow runner (bombstand 515 s vs 265 s), and
+        # shard 1 hit 20 minutes at 32/48. Priced at their max, each shard is
+        # ~972 s; a typical runner lands ~700-850 s.
+        timeout-minutes: 30
         run: |
           set -o pipefail
           node scripts/procgen/ci-gates.mjs --set=headless --shard=${{ matrix.shard }} \
-            --deadline-s=1200 2>&1 | tee /tmp/gates.log
+            --deadline-s=1800 2>&1 | tee /tmp/gates.log
 
       # ⛔⛔ ci-jsut-split (fidelity-9's ask (b)) — A CUT BATTERY IS RED, BY NAME.
       # From 2026-10-10 to this split the step above hit its 20-minute deadline on
