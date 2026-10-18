@@ -12529,7 +12529,12 @@
       },
       "set_patches": [
         "moonrock-removed",
-        "l37-fallrock-removed"
+        "l37-fallrock-removed",
+        "l74-fallrock-removed",
+        "l74-button-removed",
+        "l39-fallrock-removed",
+        "l29-fallrock-removed",
+        "l29-button-removed"
       ],
       "pit_chains": "frontend/modules/seedlingDemo/fidelityDescent.js censusFallsOntoDoors",
       "semantics": "frontend/modules/flashPanel/seedlingSemantics.js",
