@@ -1,0 +1,12 @@
+{"mode":"base-off","wl":"l18","rc":0,"load":0.61,"wall":125.1}
+{"mode":"base-on","wl":"l18","rc":0,"load":3.63,"wall":203.1}
+{"mode":"head-off","wl":"l18","rc":0,"load":0.61,"wall":126.8}
+{"mode":"head-on","wl":"l18","rc":0,"load":3.63,"wall":194.5}
+{"mode":"lab-off","wl":"l18","rc":0,"load":0.26,"wall":150.8}
+{"mode":"lab-on","wl":"l18","rc":0,"load":3.82,"wall":225.7}
+de6f6e4e0dffa7bb8ee524e8e79688b7 runs/base-off/l18.out
+bae5c6de0f9d512c76f75155c3256dc4 runs/base-on/l18.out
+de6f6e4e0dffa7bb8ee524e8e79688b7 runs/head-off/l18.out
+bae5c6de0f9d512c76f75155c3256dc4 runs/head-on/l18.out
+de6f6e4e0dffa7bb8ee524e8e79688b7 runs/lab-off/l18.out
+bae5c6de0f9d512c76f75155c3256dc4 runs/lab-on/l18.out
