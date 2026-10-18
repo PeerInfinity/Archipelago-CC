@@ -81,12 +81,6 @@ function recordingDocument() {
                 sib.splice(sib.indexOf(n), 1);
                 n.parentNode = null;
             },
-            insertBefore(c, ref) {
-                if (c.parentNode) c.remove();
-                c.parentNode = n;
-                const at = n.children.indexOf(ref);
-                n.children.splice(at < 0 ? n.children.length : at, 0, c);
-            },
             // ⛓ RK VIEW — listeners are kept, so a row can click (`n.click()`)
             listeners: {},
             addEventListener(type, fn) { (n.listeners[type] ??= []).push(fn); },

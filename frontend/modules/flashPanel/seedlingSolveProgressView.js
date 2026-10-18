@@ -412,7 +412,9 @@ export class SolveProgressView {
         const why = snap ? lastWhyText(snap.lastWhy) : null;
         if (!this._rkShown) {
             if (totals === null && why === null) return;
-            this.element.insertBefore(this.rkBox, this.body);
+            // before the body: the body is moved after it (append and remove only — every DOM the view meets has them)
+            this.body.remove();
+            this.element.append(this.rkBox, this.body);
             this._rkShown = true;
         }
         this._line(this.kindsText, totals === null ? ''
