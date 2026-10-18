@@ -8,7 +8,7 @@
  * own level transitions crosses the AP region boundary; arriving in a region
  * teleports the player to the marked entrance spawn.
  *
- * Two things make this entry different from the generic `flash` one, and both
+ * Two things make this entry different from the factory's default shape, and both
  * are deliberate:
  *
  *   - **It renders in the flashPanel panel, not flashSubstratePanel.** The

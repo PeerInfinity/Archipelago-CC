@@ -911,6 +911,31 @@ export async function seedlingJsRuntimeSolveProgressView(tc) {
             /^asks by site \(this segment\): /.test(view.asksText.textContent));
         tc.assertEqual('the work counters are drawn (Tier A)', true, /^work: ticks \d+ · /.test(view.workText.textContent));
         tc.assertEqual('the active path reads finished (Tier A)', 'active: — (finished)', view.pathText.textContent);
+        // ⛓ RK VIEW — the v2 snapshot's refusals by kind and last why are drawn, and each listed row's chips are its
+        // `rejectionKinds` (the in-app solve may refuse nothing: then the line reads `none yet` and no row has chips)
+        const final = st.snapshot ?? {};
+        tc.log(`RK view: v ${final.v}; ${view.kindsText.textContent} | ${view.whyText.textContent.slice(0, 160)}`);
+        tc.assertEqual('the snapshot is v: 2 (hammer-phase RK)', true, final.v >= 2);
+        tc.assertEqual('the refusals by kind are drawn (RK view)', true,
+            /^refusals by kind \(this segment, each once\): /.test(view.kindsText.textContent));
+        const why = final.lastWhy ?? null;
+        tc.assertEqual('the last why is drawn iff the segment has one (RK view)', true, why === null
+            ? view.whyText.textContent === '' : view.whyText.textContent.startsWith(`last why: ${why.kind} at ${why.key}: `));
+        // the finished tree is one collapsed root row: its chips are the root's kinds (their ORDER is the unit rows')
+        const rootChips = (view._lines[0]?._chips?.children ?? []).map((c) => c.textContent).sort();
+        const rootKinds = Object.entries(final.tree?.rejectionKinds ?? {}).filter(([, n]) => n > 0)
+            .map(([k, n]) => `${k} ${n}`).sort();
+        tc.assertEqual('the root row\'s chips are its rejectionKinds (RK view)', JSON.stringify(rootKinds),
+            JSON.stringify(rootChips));
+        // ⛓ STAMPS VIEW — S3's Tier B stamps on the real solve: the request (kept from the solve's FIRST post — the
+        // final snapshot does not carry it), the plan in hand, and where the time went (Σ = the attempt's wall)
+        tc.log(`stamps view: ${view.requestText.textContent} | ${view.bestText.textContent} | ${view.etaText.textContent}`
+            + ` | ${view.wallText.textContent}`);
+        tc.assertEqual('the request identity is drawn, kept from the first post (stamps view)', true,
+            final.request === undefined && /^request: .* · boot L\d+ · /.test(view.requestText.textContent));
+        tc.assertEqual('the plan in hand is drawn (stamps view)', true, /^best: (ok · \d+ ticks|refused|none yet)/.test(view.bestText.textContent));
+        tc.assertEqual('the wall by site is drawn (stamps view)', true,
+            /^wall by site \(this attempt\): .* · Σ [\d.]+ (ms|s)$/.test(view.wallText.textContent));
         if (st.snapshot?.tiles) {
             tc.assertEqual('the tile map is ONE canvas sized to the room', `${st.snapshot.tiles.cols}x${st.snapshot.tiles.rows}`,
                 `${Math.round(view.canvas.width / view._px)}x${Math.round(view.canvas.height / view._px)}`);

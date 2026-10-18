@@ -138,12 +138,15 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⚖ (user, 2026-10-14, "Flip now") ON since the wave-16 harvest.
             ceremonyShove: true,
             // ⛓ fidelity LAPSECOST D2: `flyerLive` (the Flyer stepped: its chase, its "fall" and its drop) ships OFF.
-            flyerLive: false,
+            // ⛓ fidelity LAPSECOST D2: `flyerLive` (the Flyer stepped: its chase, its "fall" and its drop) shipped OFF;
             // ⛓ fidelity BEAMTOWER: `beamTowerDrift` (D1, the tower's Solid drifts with its `y`) and `beamTowerBeamHit`
-            // (D3, the run bills the beam on the player) ship OFF.
-            beamTowerDrift: false, beamTowerBeamHit: false,
+            // (D3, the run bills the beam on the player) shipped OFF — ⚖ ON together since planning-9's flip (user
+            // "BeamTower trio", 2026-10-18).
+            flyerLive: true,
+            beamTowerDrift: true, beamTowerBeamHit: true,
             // ⛓ fidelity SPINNINGAXE D1: `spinningAxePlayerHit` (a spinning axe bills the player) ships OFF.
-            spinningAxePlayerHit: false,
+            // ⛓ planning-9's axe flip (⚖ user "Axe flip", 2026-10-18) turns it ON.
+            spinningAxePlayerHit: true,
             // ⛓ fidelity SPINNINGAXE D2: `partialDodgeReprobe` (a phase dodge's partial stall re-probed) ships OFF.
             partialDodgeReprobe: false,
 
@@ -159,9 +162,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity ARROWLANE D2: `arrowLaneCrossing` (an ARMED lane crossed, its arrows billed) ships OFF.
             arrowLaneCrossing: false,
             // ⛓ fidelity AXETIMING D2: `axeTimingRung` (a spinning axe's gap crossed on its clock at dash speed) ships OFF.
-            axeTimingRung: false,
+            // ⛓ planning-9's axe flip (⚖ user "Axe flip", 2026-10-18) turns it ON.
+            axeTimingRung: true,
             // ⛓ fidelity AXETIMING D2b: `axeGateTransit` (the walk's gate times a spinning axe's blade) ships OFF.
-            axeGateTransit: false,
+            // ⛓ planning-9's axe flip (⚖ user "Axe flip", 2026-10-18) turns it ON.
+            axeGateTransit: true,
             // ⛓ fidelity DASHSTEP D2: `statueTalkRange` (a statue's talk circle is its class's 32 px) shipped OFF;
             // ⛓ planning-9's flip (⚖ user "Harvest, then flip it ON", 2026-10-17) turns it ON.
             statueTalkRange: true });

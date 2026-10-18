@@ -454,10 +454,11 @@ export const CONTACT_FIDELITY = {
      * walk under a flyer that had chased it. MEASURED (sweep leg 773, L105, the lapse ON): `flyer@104,8` hovers above
      * the walk from t96, its "fall" reaches frame 10 at t103 and drops on the player (game `hits` 0 → 2, Δy +0.82), where
      * the model billed nothing. ON: the flyer chases, falls and drops as above (run and forecast), and the danger map
-     * prices its drop (timed) instead of a placement. ⛔ OFF by default (no licence); `SEEDLING_FLYER_LIVE=0|1` for a
+     * prices its drop (timed) instead of a placement. ✅ ON by default (the BeamTower trio flip, 2026-10-18); `SEEDLING_FLYER_LIVE=0|1` for a
      * node measurement.
      */
-    flyerLive: false,
+    // ⚖ ON with `beamTowerDrift` and `beamTowerBeamHit` since planning-9's flip (user "BeamTower trio", 2026-10-18).
+    flyerLive: true,
     /**
      * fidelity BEAMTOWER D1 — THE BEAM TOWER'S SOLID DRIFTS WITH ITS `y` (`beamTower.stepBeamTowerFrame`).
      *
@@ -470,9 +471,9 @@ export const CONTACT_FIDELITY = {
      * time). MEASURED (LAPSECOST D2, leg 773 `flyerLive` plan, L105): the game's player holding `left` is blocked at
      * x 66.04 from t205 by `beamtower@48,40`, risen ~4.7 px, where the model walked through. ON: the run steps every
      * tower once per tick in its update slot (`Game.time` = `clock.now()`, no drift on a frozen tick), and the
-     * tower's Solid is `liveRectOf`'s `beamTowers` arm. ⛔ OFF by default (no licence); `SEEDLING_BEAMTOWER_DRIFT=0|1`.
+     * tower's Solid is `liveRectOf`'s `beamTowers` arm. ✅ ON by default (the trio flip, 2026-10-18); `SEEDLING_BEAMTOWER_DRIFT=0|1`.
      */
-    beamTowerDrift: false,
+    beamTowerDrift: true,
     /**
      * fidelity BEAMTOWER D3 — THE BEAM TOWER'S BEAM HITS THE PLAYER IN THE RUN (`levelRun.stepBeamTowersNow`).
      *
@@ -484,9 +485,9 @@ export const CONTACT_FIDELITY = {
      * leg 773's witness): on the first L104 tick after the crossing, `beamtower@16,56`'s UP beam (x 22..26, y 0..53)
      * takes the player at (24, 39.2): `hits` 1, Δy −4.275. ON: the run steps the tower's anim and fires the beam on
      * the player's PRE-move box, inclusively (`Entity.collideRect`), from the tower's pre-drift point; the shake is the
-     * `beamTowerBeam` writer. ⛔ OFF by default (no licence); `SEEDLING_BEAMTOWER_BEAM_HIT=0|1`.
+     * `beamTowerBeam` writer. ✅ ON by default (the trio flip, 2026-10-18); `SEEDLING_BEAMTOWER_BEAM_HIT=0|1`.
      */
-    beamTowerBeamHit: false,
+    beamTowerBeamHit: true,
     /**
      * fidelity SPINNINGAXE D1 — A SPINNING AXE HITS THE PLAYER (`levelRun.stepSpinningAxesNow`).
      *
@@ -500,10 +501,11 @@ export const CONTACT_FIDELITY = {
      * on. ON: every axe in the room keeps a per-world update counter (restarted at every rebuild: a door, a death, an
      * ending reboot) and bills `applyPlayerHit` from `hitPlayer`'s point when its blade or hub touches the PRE-move
      * box; a count it cannot vouch for (a frozen tick or a non-load dead-frame span in the visit) with the player
-     * within the axe's reach is refused by name. OFF: byte-identical. ⛔ OFF by default (no licence);
+     * within the axe's reach is refused by name. OFF: byte-identical. ✅ ON by default since the user's axe flip (2026-10-18, with axeTimingRung + axeGateTransit + spinningAxePlayerHit
+     * together);
      * `SEEDLING_SPINNING_AXE_PLAYER_HIT=0|1` for a node measurement.
      */
-    spinningAxePlayerHit: false,
+    spinningAxePlayerHit: true,
     /**
      * fidelity SPINNINGAXE D2 — A PHASE DODGE'S PARTIAL STALL IS RE-PROBED (`solverBot.walkToUnder`).
      *
@@ -595,10 +597,11 @@ export const CONTACT_FIDELITY = {
      * dash chain it is in reach 19–25 ticks and 17–21 stalls are clean. ON: after the AXE arm's stall search and bent
      * corridors refuse, the rung searches stall × dash-chain phase, certifies the crossing with the probe's own
      * predicate (the danger map's transit blade on the PRE-move box, the question `spinningAxePlayerHit` bills),
-     * drives it, and refuses by name if the run billed a hit. OFF: never asked, byte-identical. ⛔ OFF by default (no
-     * licence); `SEEDLING_AXE_TIMING_RUNG=0|1` for a node measurement.
+     * drives it, and refuses by name if the run billed a hit. OFF: never asked, byte-identical. ✅ ON by default since the user's axe flip (2026-10-18, with axeTimingRung + axeGateTransit + spinningAxePlayerHit
+     * together);
+     * `SEEDLING_AXE_TIMING_RUNG=0|1` for a node measurement.
      */
-    axeTimingRung: false,
+    axeTimingRung: true,
     /**
      * fidelity AXETIMING D2b — THE WALK'S DECISION GATE TIMES A SPINNING AXE'S BLADE (`solverBot.axeGateTimed`).
      *
@@ -606,10 +609,11 @@ export const CONTACT_FIDELITY = {
      * 38926058850, leg 497, L54): the player arrives 16 px under `spinningaxe@128,432` (rate −2) and the gate refuses
      * before any corridor is planned, though the blade is far from the player and the goal is the door 8 px below. ON:
      * that gate prices each axe by its exact blade and hub at the walk's first transit sample (the probe's own
-     * question); a count the visit clock cannot vouch for keeps the disc. OFF: byte-identical. ⛔ OFF by default (no
-     * licence); `SEEDLING_AXE_GATE_TRANSIT=0|1` for a node measurement.
+     * question); a count the visit clock cannot vouch for keeps the disc. OFF: byte-identical. ✅ ON by default since the user's axe flip (2026-10-18, with axeTimingRung + axeGateTransit + spinningAxePlayerHit
+     * together);
+     * `SEEDLING_AXE_GATE_TRANSIT=0|1` for a node measurement.
      */
-    axeGateTransit: false,
+    axeGateTransit: true,
     /**
      * fidelity DASHSTEP D2 — A STATUE'S TALK CIRCLE IS 32 PX, NOT THE NPC DEFAULT 24 (`endingChain.talkRangeOf`).
      *

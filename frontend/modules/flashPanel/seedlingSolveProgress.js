@@ -30,7 +30,19 @@
  *    `asksBySite` (the deadline sites' asks, which under a deadline are the work units), `workCounters` (the
  *    segment's other counters), `activePath` (the active path and its climb depth) and `reasonsText` (a node's
  *    rejection tallies inline — `treeRows` marks the rungs of an active climb with `reasons`).
+ *  - ⛓ RK VIEW (slice `seedling-js-rk-view`, reads hammer-phase RK's `v: 2`): `kindChips` (a node's
+ *    `rejectionKinds` in `REFUSAL_KINDS`' order, a kind not in the list after them by name), `kindTotals` (the
+ *    segment's refusals by kind, each counted ONCE: on the node where it was tallied deepest — never a sum over every
+ *    node) and `lastWhyText` (`‹kind› at ‹key›: ‹why›`, the why verbatim). A v1 snapshot has neither field, and each
+ *    reads as "nothing to draw".
+ *  - ⛓ STAMPS VIEW (slice `seedling-js-stamps-view`, draws S3's Tier B tap stamps; the tap is unchanged):
+ *    `wallBySiteRows` (`budget.wallBySite`, the most wall first, Σ = the attempt's wall), `etaText` (`budget.rate`
+ *    as written — never recomputed), `requestText` (the request identity, which `applyProgress` KEEPS from the solve's
+ *    first post for the rest of that solve, and drops on a new solve) and `bestText` (the plan in hand). A snapshot
+ *    without the stamps reads as "nothing to draw" for each.
  */
+
+import { REFUSAL_KINDS } from '../seedlingDemo/solveProgress.js';
 
 /** The feed's re-resolve interval (ms): also the "last update N s ago" refresh. */
 export const SOLVE_PROGRESS_POLL_MS = 1000;
@@ -40,7 +52,7 @@ export const SOLVE_PROGRESS_TREE_CAP = 160;
 /** The empty state: nothing received yet. */
 export function emptyProgress() {
     return { service: null, solveId: null, snapshot: null, final: false, seq: null, segmentIndex: null,
-        receivedAt: null, received: 0, dropped: { stale: 0, order: 0 } };
+        request: null, receivedAt: null, received: 0, dropped: { stale: 0, order: 0 } };
 }
 
 /**
@@ -65,6 +77,9 @@ export function applyProgress(state, note, now) {
     return {
         service: note.service, solveId: note.solveId, snapshot: snap, final: note.final === true,
         seq: Number.isFinite(snap.seq) ? snap.seq : null, segmentIndex: snap.segment?.index ?? null,
+        // ⛓ STAMPS VIEW — the tap stamps `request` on a solve's FIRST post only: kept for the rest of the solve, and
+        // forgotten by a new one (a new solve whose first post was dropped has no identity — never the old one's)
+        request: snap.request && typeof snap.request === 'object' ? snap.request : (fresh ? null : state.request ?? null),
         // a new segment (or solve) is a new tree: the viewer's expansions belong to the old one
         segmentChanged: fresh || (snap.segment?.index ?? null) !== state.segmentIndex,
         receivedAt: now, received: fresh ? 1 : state.received + 1,
@@ -170,6 +185,146 @@ export function activePath(tree) {
         if (n) nodes.push(n);
     }
     return { nodes, climbDepth: nodes.filter((x) => x.role === 'climb').length };
+}
+
+/**
+ * ⛓ RK VIEW — a node's `rejectionKinds` as `[[kind, n], …]`: the kinds of `REFUSAL_KINDS` (imported, so a kind the
+ * emitter adds is ordered with it) in that order, then any kind NOT in the list by name — shown, never dropped. Zero
+ * and non-numeric counts are skipped. A node with no kinds (every v1 node) is `[]`.
+ */
+export function kindChips(rejectionKinds) {
+    const kinds = rejectionKinds ?? {};
+    const live = (k) => Number.isFinite(kinds[k]) && kinds[k] > 0;
+    const known = REFUSAL_KINDS.filter(live).map((k) => [k, kinds[k]]);
+    const other = Object.keys(kinds).filter((k) => !REFUSAL_KINDS.includes(k) && live(k)).sort()
+        .map((k) => [k, kinds[k]]);
+    return [...known, ...other];
+}
+
+/**
+ * ⛓ RK VIEW — the segment's refusals by kind, each counted ONCE, as `{rows: [[kind, n], …] (kindChips' order),
+ * total}`; `null` for a v1 tree (no `rejectionKinds` on its root).
+ *
+ * ⛔ NOT a sum over every node: the emitter tallies a refusal on more than one node. A rung's row refusal and a
+ * search's bound are tallied on that node alone, but a THROWN error is tallied on EVERY frame it unwinds through
+ * (`progressLeave`: L18's `levelRun` refusal sits on segment → goal → walk → verb → arm, five times), and a climb
+ * that unwinds also tallies its cursor (the rung, and the arm under it). The node where a refusal was tallied
+ * DEEPEST is where it happened, and every node above it holds the same tally again. So each node counts, per kind,
+ * only what its children do not already hold: `max(0, own − Σ children)`. That is every rung row refusal and
+ * search bound (no child holds them) plus each error's deepest node (its frames above count 0) — what hammer-phase
+ * RK's report asks for, derived from the tally rules rather than from a role list. Its one blind spot: a frame
+ * whose own refusal has the kind of refusals its children took and SURVIVED reads that one as theirs (a lower bound).
+ */
+export function kindTotals(tree) {
+    if (!tree || typeof tree.rejectionKinds !== 'object' || tree.rejectionKinds === null) return null;
+    const totals = {};
+    const visit = (n) => {
+        const kids = n.children ?? [];
+        const below = {};
+        for (const c of kids) {
+            for (const [k, v] of Object.entries(c.rejectionKinds ?? {})) {
+                if (Number.isFinite(v)) below[k] = (below[k] ?? 0) + v;
+            }
+        }
+        for (const [k, v] of Object.entries(n.rejectionKinds ?? {})) {
+            const own = Number.isFinite(v) ? v - (below[k] ?? 0) : 0;
+            if (own > 0) totals[k] = (totals[k] ?? 0) + own;
+        }
+        for (const c of kids) visit(c);
+    };
+    visit(tree);
+    const rows = kindChips(totals);
+    return { rows, total: rows.reduce((a, [, n]) => a + n, 0) };
+}
+
+/**
+ * ⛓ RK VIEW — the segment's last refusal as one line, `‹kind› at ‹key›: ‹why›`, the why VERBATIM (the view clamps
+ * it and escapes it — it only ever writes text); `null` when there is none (`lastWhy: null`, or a v1 snapshot).
+ * Fields the line does not name (`name`, should the emitter add it) are ignored.
+ */
+export function lastWhyText(lastWhy) {
+    if (!lastWhy || typeof lastWhy !== 'object') return null;
+    return `${lastWhy.kind ?? '?'} at ${lastWhy.key ?? '?'}: ${lastWhy.why ?? ''}`;
+}
+
+/** ⛓ RK VIEW — `text` cut to at most `max` characters, the cut marked with `…` (a short text is unchanged). */
+export function clampText(text, max) {
+    return text.length <= max ? text : `${text.slice(0, Math.max(0, max - 1))}…`;
+}
+
+/**
+ * ⛓ STAMPS VIEW — a wall-clock span for a line: `850 ms`, `4.2 s` (under 10 s), `37 s`. Never a budget: the
+ * budgets are work units.
+ */
+export function formatMs(ms) {
+    if (!Number.isFinite(ms)) return '?';
+    if (ms < 1000) return `${Math.round(ms)} ms`;
+    return ms < 10000 ? `${(ms / 1000).toFixed(1)} s` : `${Math.round(ms / 1000)} s`;
+}
+
+/**
+ * ⛓ STAMPS VIEW — `budget.wallBySite` as `{rows: [['from→to', ms], …], total}`, the most wall first (ties by name);
+ * `total` is the sum over EVERY pair (the attempt's wall ms so far — the tap charges every hook call). The stamp is
+ * per ATTEMPT (summed across segments), unlike the asks (per segment). `null` when the snapshot has no stamp.
+ */
+export function wallBySiteRows(snapshot) {
+    const wall = snapshot?.budget?.wallBySite;
+    if (!wall || typeof wall !== 'object') return null;
+    const rows = Object.entries(wall).filter(([, ms]) => Number.isFinite(ms) && ms > 0)
+        .sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
+    return { rows, total: rows.reduce((a, [, ms]) => a + ms, 0) };
+}
+
+/**
+ * ⛓ STAMPS VIEW — `budget.rate` as one line: `41.2 units/s · ≈ 3.1 s to window · ≈ 12 s to limit`, each ETA only
+ * when the tap wrote it (`toWindowMs` only while the window bounds the pass; neither before anything is spent),
+ * `0` as `reached`. Read as written, never recomputed from `spent`/`limit`. `null` when there is nothing to say
+ * (no `rate`, or nothing spent and no ETA).
+ */
+export function etaText(snapshot) {
+    const rate = snapshot?.budget?.rate;
+    if (!rate || typeof rate !== 'object') return null;
+    const eta = (ms, what) => (ms > 0 ? `≈ ${formatMs(ms)} to ${what}` : `${what} reached`);
+    const parts = [];
+    if (Number.isFinite(rate.unitsPerSec) && rate.unitsPerSec > 0) parts.push(`${rate.unitsPerSec} units/s`);
+    if (Number.isFinite(rate.toWindowMs)) parts.push(eta(rate.toWindowMs, 'window'));
+    if (Number.isFinite(rate.toLimitMs)) parts.push(eta(rate.toLimitMs, 'limit'));
+    return parts.length ? parts.join(' · ') : null;
+}
+
+/** ⛓ STAMPS VIEW — a switch stamp's value for the header: a scalar as is, an object as compact JSON (clamped). */
+const switchValue = (v) => (v !== null && typeof v === 'object' ? clampText(JSON.stringify(v), 80) : String(v));
+
+/**
+ * ⛓ STAMPS VIEW — the request identity (S3's `request`, the solve's first post) as one line: the tape name, the boot
+ * level, `seamTime` (when the staging has one), the goal kind, the passes, the OFF-DEFAULT switches (`{}` = the
+ * defaults → not mentioned) and the attempt (`request.attempt.label`; `retry N` when it is a held retry). Solver text
+ * is returned as is: the view writes it as text only. `null` without a request.
+ */
+export function requestText(request) {
+    if (!request || typeof request !== 'object') return null;
+    const parts = [`${request.name ?? '?'}`];
+    if (request.level !== null && request.level !== undefined) parts.push(`boot L${request.level}`);
+    if (Number.isFinite(request.seamTime)) parts.push(`seamTime ${request.seamTime}`);
+    if (request.goal) parts.push(`goal ${request.goal}`);
+    if (Array.isArray(request.passes) && request.passes.length) {
+        parts.push(`passes ${request.passes.map((p) => p ?? '?').join(' → ')}`);
+    }
+    const switches = Object.entries(request.switches ?? {});
+    if (switches.length) parts.push(`switches ${switches.map(([k, v]) => `${k}=${switchValue(v)}`).join(', ')}`);
+    const a = request.attempt;
+    if (a && typeof a === 'object' && a.label) parts.push(`attempt ${a.label}${a.retry > 0 ? ` (retry ${a.retry})` : ''}`);
+    return `request: ${parts.join(' · ')}`;
+}
+
+/**
+ * ⛓ STAMPS VIEW — the plan in hand (S3's `best`, `onPass`'s best so far — not a pass's own answer): `best: ok · N
+ * ticks (pass P)`, `best: refused (pass P)`, or `best: none yet` when no pass has landed.
+ */
+export function bestText(best) {
+    if (!best || typeof best !== 'object') return 'best: none yet';
+    const pass = best.pass ? ` (pass ${best.pass})` : '';
+    return best.ok === true ? `best: ok · ${best.ticks ?? '?'} ticks${pass}` : `best: refused${pass}`;
 }
 
 /** The tile map's cells as a lookup and its maximum count: `{max, at(col,row) → [col,row,reached,firstTick]|null}`. */

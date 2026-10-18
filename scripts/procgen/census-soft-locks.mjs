@@ -18,34 +18,40 @@ import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 
-import { argvHelp } from './argvHelp.js';
+import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { softLockCensus, sphereInventories } from './softLockCensus.js';
 
 argvHelp(import.meta.url);
-const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
-const argOf = (name) => process.argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
 
-const PRESET = join(REPO, 'frontend', 'presets', 'seedling_playthrough');
-const rulesPath = argOf('rules') ?? join(PRESET, 'AP_1', 'AP_1_rules.json');
-const logPath = argOf('log') ?? (() => {
-    const seed = readdirSync(PRESET).find((d) => /^AP_\d{6,}$/.test(d));
-    return join(PRESET, seed, `${seed}_sphere_log.jsonl`);
-})();
+/** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
+if (isEntryPoint(import.meta.url)) await main();
 
-const rules = JSON.parse(readFileSync(rulesPath, 'utf8'));
-const log = readFileSync(logPath, 'utf8').split('\n').filter((l) => l.trim()).map((l) => JSON.parse(l));
-const census = softLockCensus(rules, sphereInventories(log));
+async function main() {
+    const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
+    const argOf = (name) => process.argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
 
-console.log(`soft-lock census — ${relative(REPO, resolve(rulesPath))}`);
-console.log(`  start ${census.start}; return_to_menu ${census.returnToMenu ? 'DECLARED: the list is RESTART-ONLY (a diagnostic)' : 'absent: the list is SOFT-LOCKS'}`);
-let worst = 0;
-for (const row of census.rows) {
-    worst = Math.max(worst, row.stuck.length);
-    console.log(`  sphere ${row.sphere.padStart(5)}  reach ${String(row.reachable).padStart(3)}  ${census.kind} ${String(row.stuck.length).padStart(3)}`
-        + `${row.stuck.length ? `  ${row.stuck.join(' ')}` : ''}`);
+    const PRESET = join(REPO, 'frontend', 'presets', 'seedling_playthrough');
+    const rulesPath = argOf('rules') ?? join(PRESET, 'AP_1', 'AP_1_rules.json');
+    const logPath = argOf('log') ?? (() => {
+        const seed = readdirSync(PRESET).find((d) => /^AP_\d{6,}$/.test(d));
+        return join(PRESET, seed, `${seed}_sphere_log.jsonl`);
+    })();
+
+    const rules = JSON.parse(readFileSync(rulesPath, 'utf8'));
+    const log = readFileSync(logPath, 'utf8').split('\n').filter((l) => l.trim()).map((l) => JSON.parse(l));
+    const census = softLockCensus(rules, sphereInventories(log));
+
+    console.log(`soft-lock census — ${relative(REPO, resolve(rulesPath))}`);
+    console.log(`  start ${census.start}; return_to_menu ${census.returnToMenu ? 'DECLARED: the list is RESTART-ONLY (a diagnostic)' : 'absent: the list is SOFT-LOCKS'}`);
+    let worst = 0;
+    for (const row of census.rows) {
+        worst = Math.max(worst, row.stuck.length);
+        console.log(`  sphere ${row.sphere.padStart(5)}  reach ${String(row.reachable).padStart(3)}  ${census.kind} ${String(row.stuck.length).padStart(3)}`
+            + `${row.stuck.length ? `  ${row.stuck.join(' ')}` : ''}`);
+    }
+    console.log(`${census.kind === 'soft-lock' ? 'SOFT-LOCKS' : 'RESTART-ONLY'}: max ${worst} region(s) in one sphere, `
+        + `${census.rows.filter((r) => r.stuck.length).length} of ${census.rows.length} sphere(s) with any`);
+    const json = argOf('json');
+    if (json) writeFileSync(json, `${JSON.stringify(census, null, 1)}\n`);
+    if (process.argv.includes('--strict') && census.kind === 'soft-lock' && worst > 0) process.exit(1);
 }
-console.log(`${census.kind === 'soft-lock' ? 'SOFT-LOCKS' : 'RESTART-ONLY'}: max ${worst} region(s) in one sphere, `
-    + `${census.rows.filter((r) => r.stuck.length).length} of ${census.rows.length} sphere(s) with any`);
-const json = argOf('json');
-if (json) writeFileSync(json, `${JSON.stringify(census, null, 1)}\n`);
-if (process.argv.includes('--strict') && census.kind === 'soft-lock' && worst > 0) process.exit(1);

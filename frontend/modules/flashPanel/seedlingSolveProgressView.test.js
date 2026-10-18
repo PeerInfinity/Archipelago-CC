@@ -37,7 +37,33 @@
  *   a7 a Tier A line written on every render          -> 'an unchanged Tier A line is not written again …' reds
  *   a8 reasons inline on every rejecting row          -> 'INLINE REASONS: …' reds
  *   a9 no recency palette (a rise ignored)            -> 'a cell that ROSE …' and 'only CHANGED cells …' red
+ *
+ * ⛓ RK VIEW — the kind chips, the refusals by kind, the last why (hammer-phase RK's `v: 2`). Its mutants (all RED):
+ *   k1 chips in the snapshot's order                  -> 'CHIPS: …' and 'TALLY: …' red
+ *   k2 a kind not in REFUSAL_KINDS dropped            -> 'UNKNOWN KIND: …' and 'ESCAPING: …' red
+ *   k3 the totals sum every node                      -> 'TALLY: …' reds
+ *   k4 no clamp                                       -> 'CLAMP: …' reds
+ *   k5 the RK lines inserted on a v1 snapshot         -> 'a v1 stream … the S2 view's bytes' reds
+ *   k6 a chip box made on every row                   -> 'a v1 stream … the S2 view's bytes' and 'CHIPS: …' red
+ *   k7 the chips after the inline reasons             -> 'INLINE REASONS stay after the chips …' reds
+ *   k8 a row with chips rewritten every render        -> 'CHIPS: …' reds
+ *   k9 the why written with innerHTML                 -> 'ESCAPING: …' reds (the source scan)
+ *   k10 the why's tooltip not set                     -> 'CLAMP: …' reds
+ *
+ * ⛓ STAMPS VIEW — S3's Tier B stamps drawn (the request, best, the rate/ETA, the wall by site). Its mutants (all RED):
+ *   w1 the wall by site smallest first                -> 'WALL: …' reds
+ *   w2 the window's ETA read from `toLimitMs`         -> 'ETA: …' reds
+ *   w3 the request dropped after the first post       -> 'REQUEST: … KEPT …' and 'written only when …' red
+ *   w4 the request kept across solves                 -> 'REQUEST: … KEPT …' reds
+ *   w5 best's pass read from the segment's pass       -> 'BEST: …' reds
+ *   w6 the stamp lines inserted without a stamp       -> both no-stamps identity rows red
+ *   w7 the wall line written every render             -> 'written only when …' reds
+ *   w8 Σ over the listed pairs only                   -> 'WALL: …' reds
+ *   w9 the default switches (`{}`) drawn               -> both 'REQUEST: …' rows red
+ *   w10 a 0 ms ETA drawn as `≈ 0 ms to …`             -> 'ETA: …' reds
  */
+import { createHash } from 'node:crypto';
+
 import { describe, expect, it } from 'vitest';
 
 import { cellColour, levelColour, recentLevel, shadeLevel, SolveProgressView } from './seedlingSolveProgressView.js';
@@ -67,7 +93,11 @@ function recordingDocument() {
                 sib.splice(sib.indexOf(n), 1);
                 n.parentNode = null;
             },
-            addEventListener() {}, querySelectorAll: () => [] };
+            // ⛓ RK VIEW — listeners are kept, so a row can click (`n.click()`)
+            listeners: {},
+            addEventListener(type, fn) { (n.listeners[type] ??= []).push(fn); },
+            click() { for (const fn of n.listeners.click ?? []) fn({ target: n }); },
+            querySelectorAll: () => [] };
         if (tag === 'canvas') {
             let w = 0;
             let h = 0;
@@ -112,6 +142,9 @@ const treeOf = (n, attempts = () => 1, { finished = false } = {}) => ({
         attempts: attempts(i), successes: 0, active: !finished, children: finished && i === 0
             ? [{ key: `root/0/x`, role: 'walk', label: 'x', attempts: 1, successes: 1, active: false, children: [] }] : [] })),
 });
+/** ⛓ RK VIEW — the md5 of each v1 note's drawing, measured with the S2 view (main e37e9188a5). */
+const V1_MD5S = ['60159777ae48d584d62fd0af73d22271', '51543130f75583522aa9db4cbea9c73f',
+    '90291df755e6a133784bcb20f40e8745'];
 const tilesOf = (cells, { cols = 10, rows = 6, level = 4 } = {}) => ({ level, tile: 16, cols, rows, cells });
 const snap = (seq, { tree = null, tiles = null, outcome = 'running', index = 0 } = {}) => ({ v: 1, seq,
     segment: { name: 't', index, level: 4, outcome }, tree, tiles, budget: { work: { shouldStop: seq } } });
@@ -459,6 +492,469 @@ describe('⛓ S2 — TIER A: tile RECENCY (a delta between two drawn snapshots)'
             }
             t.runFrames();
             expect(t.view.recent).toEqual({ cells: 1, max: 5 });
+        } finally { t.restore(); }
+    });
+});
+
+// ── ⛓ RK VIEW — refusal kinds and the last why (hammer-phase RK's `v: 2`) ──
+
+/**
+ * The view's element tree as one string: every element's tag, class, style, title, data-* and own text, and every
+ * text node's data, in document order. What a v1 snapshot draws is pinned by its md5 (measured with the S2 view,
+ * before the RK view's change).
+ */
+function serialize(n) {
+    if (n.tagName === undefined) return `#text(${JSON.stringify(n.data)})`;
+    const own = n.children.length ? '' : JSON.stringify(n.textContent);
+    const data = Object.keys(n.dataset).sort().map((k) => `${k}=${n.dataset[k]}`).join(',');
+    return `<${n.tagName} c=${JSON.stringify(n.className)} s=${JSON.stringify(n.style.cssText)}`
+        + ` t=${JSON.stringify(n.title)} d=${JSON.stringify(data)}>${own}${n.children.map(serialize).join('')}</>`;
+}
+
+/** A v1 stream with every Tier A feature drawn: asks, work, an active climb whose rungs refuse, tiles that rise. */
+function v1Stream() {
+    const tree = (active) => {
+        const t = { key: 's', role: 'segment', label: 'tape', attempts: 1, successes: 0, rejections: {}, active,
+            children: [{ key: 's/g', role: 'goal', label: 'reach-exit (1,2)', attempts: 1, successes: 0,
+                rejections: {}, active, children: [climb('s/g/c', [
+                    rung('s/g/c/r:avoid', 'avoid', { 'the danger-forbidden corridor STILL probes dangerous at': 4 }),
+                    rung('s/g/c/r:time', 'time', { 'wait exhausted': 2 }, { active }),
+                    { ...rung('s/g/c/r:kill', 'kill', {}), children: [{ key: 's/g/c/r:kill/w', role: 'walk',
+                        label: 'walk', attempts: 1, successes: 1, rejections: {}, active: false, children: [] }] },
+                ], { active })] }] };
+        return tree;
+    };
+    return [1, 2, 3].map((seq) => {
+        const s = snap(seq, { tree: tree(seq < 3), outcome: seq < 3 ? 'running' : 'solved',
+            tiles: tilesOf([[0, 0, 4 * seq, 0], [1, 0, 4, 1], [2, seq, 1, seq]]) });
+        s.budget = { asks: { walk: 3 * seq, 'hammer-escape': 5 }, work: { shouldStop: 5 + 3 * seq, ticks: 40 * seq } };
+        return { solveId: 1, snapshot: s, final: seq === 3 };
+    });
+}
+
+describe('⛓ RK VIEW — v1 still renders exactly as before', () => {
+    it('a v1 stream (no `v: 2` fields) draws the S2 view\'s bytes, note by note', () => {
+        const t = setup();
+        try {
+            const md5s = [];
+            for (const n of v1Stream()) {
+                t.emit(n);
+                t.runFrames();
+                md5s.push(createHash('md5').update(serialize(t.view.element)).digest('hex'));
+            }
+            expect(md5s).toEqual(V1_MD5S);
+        } finally { t.restore(); }
+    });
+});
+
+/** ⛓ RK VIEW — a v2 snapshot: `snap` with `v: 2`, kinds on every node and a `lastWhy`. */
+const snap2 = (seq, { tree, lastWhy = null, ...rest } = {}) => ({ ...snap(seq, { tree, ...rest }), v: 2, lastWhy });
+/** A v2 node: `rejections` and `rejectionKinds` with the same total (as the emitter writes them). */
+const node2 = (key, role, kinds = {}, children = [], { active = false } = {}) => ({ key, role, label: key.split('/').pop(),
+    attempts: 1, successes: 0, active, children,
+    rejections: Object.fromEntries(Object.entries(kinds).map(([k, v]) => [`${k} reason`, v])), rejectionKinds: kinds });
+const chipsOf = (line) => (line._chips?.children ?? []).map((c) => c.textContent);
+const rowOf = (t, key) => t.view.tree.children.find((c) => c._shown?.text?.includes(`: ${key.split('/').pop()} `));
+
+describe('⛓ RK VIEW — kind chips per row', () => {
+    it('CHIPS: a row shows its kinds as `kind n` in REFUSAL_KINDS\' order (not the snapshot\'s); a row with none has no chip box', () => {
+        const t = setup();
+        try {
+            // the snapshot lists them out of order; the list's order is deadline, pending, …, exhausted, …, error
+            const tree = node2('s', 'segment', {}, [
+                node2('s/r', 'rung', { error: 1, exhausted: 4, deadline: 2, pending: 3 }),
+                node2('s/q', 'rung', {}),
+            ], { active: true });
+            t.emit({ solveId: 1, snapshot: snap2(1, { tree }), final: false });
+            t.runFrames();
+            expect(chipsOf(rowOf(t, 's/r'))).toEqual(['deadline 2', 'pending 3', 'exhausted 4', 'error 1']);
+            expect(rowOf(t, 's/r').textContent).toMatch(/: r {2}1a 0✓ 10✗deadline 2pending 3exhausted 4error 1$/);
+            expect(rowOf(t, 's/q')._chips).toBeUndefined();
+            expect(rowOf(t, 's')._chips).toBeUndefined();
+            // one count changes: that row alone is written, its chips follow
+            const written = t.view.stats.rowsWritten;
+            t.emit({ solveId: 1, snapshot: snap2(2, { tree: { ...tree, children: [
+                node2('s/r', 'rung', { error: 1, exhausted: 5, deadline: 2, pending: 3 }), node2('s/q', 'rung', {})] } }),
+            final: false });
+            t.runFrames();
+            expect(t.view.stats.rowsWritten).toBe(written + 1);
+            expect(chipsOf(rowOf(t, 's/r'))).toEqual(['deadline 2', 'pending 3', 'exhausted 5', 'error 1']);
+            // the same tree again: nothing is written
+            t.emit({ solveId: 1, snapshot: snap2(3, { tree: { ...tree, children: [
+                node2('s/r', 'rung', { error: 1, exhausted: 5, deadline: 2, pending: 3 }), node2('s/q', 'rung', {})] } }),
+            final: false });
+            t.runFrames();
+            expect(t.view.stats.rowsWritten).toBe(written + 1);
+        } finally { t.restore(); }
+    });
+
+    it('UNKNOWN KIND: a kind not in REFUSAL_KINDS (RK2\'s `precondition`, say) still renders, after the listed ones, by name', () => {
+        const t = setup();
+        try {
+            const tree = node2('s', 'segment', {}, [node2('s/r', 'rung', { zeta: 1, precondition: 2, danger: 1 })],
+                { active: true });
+            t.emit({ solveId: 1, snapshot: snap2(1, { tree }), final: false });
+            t.runFrames();
+            expect(chipsOf(rowOf(t, 's/r'))).toEqual(['danger 1', 'precondition 2', 'zeta 1']);
+            expect(t.view.kindsText.textContent)
+                .toBe('refusals by kind (this segment, each once): danger 1 · precondition 2 · zeta 1 · Σ 4');
+        } finally { t.restore(); }
+    });
+
+    it('INLINE REASONS stay after the chips: a refusing rung of an active climb reads counts, chips, reasons', () => {
+        const t = setup();
+        try {
+            const r = node2('s/c/r', 'rung', { danger: 4 });
+            const tree = node2('s', 'segment', {}, [node2('s/c', 'climb', {}, [r], { active: true })], { active: true });
+            t.emit({ solveId: 1, snapshot: snap2(1, { tree }), final: false });
+            t.runFrames();
+            const line = rowOf(t, 's/c/r');
+            expect(line.children.map((c) => c.data ?? 'chips')).toEqual(['      rung: r  1a 0✓ 4✗', 'chips', '  — 4× danger reason']);
+        } finally { t.restore(); }
+    });
+});
+
+describe('⛓ RK VIEW — the refusals by kind, each counted ONCE', () => {
+    // L18's shape (hammer-phase RK's report): a `levelRun` refusal unwound segment → goal → walk → verb → arm and is
+    // tallied on all five; the arm's escape search exhausted (a leaf, tallied there alone). A climb's rungs refused by
+    // row (danger, bound); then the climb exhausted under its cursor (rung:kill → arm:chaser), which unwound to the root.
+    const l18ish = () => node2('s', 'segment', { pending: 1, exhausted: 1 }, [
+        node2('s/g0', 'goal', { pending: 1 }, [node2('s/g0/w', 'walk', { pending: 1 }, [
+            node2('s/g0/w/v', 'verb', { pending: 1 }, [node2('s/g0/w/v/press', 'arm', { pending: 1 }, [
+                node2('s/g0/w/v/press/esc', 'search', { exhausted: 1 })])])])]),
+        node2('s/g1', 'goal', { exhausted: 1 }, [node2('s/g1/w', 'walk', { exhausted: 1 }, [
+            node2('s/g1/w/c', 'climb', { exhausted: 1 }, [
+                node2('s/g1/w/c/avoid', 'rung', { danger: 1 }),
+                node2('s/g1/w/c/time', 'rung', { bound: 1 }),
+                node2('s/g1/w/c/kill', 'rung', { exhausted: 1 }, [node2('s/g1/w/c/kill/chaser', 'arm', { exhausted: 1 })]),
+            ])])]),
+    ]);
+
+    it('TALLY: each refusal once, on the node it was tallied deepest — not the sum over every node', async () => {
+        const { kindTotals } = await import('./seedlingSolveProgress.js');
+        // over every node: pending 5, exhausted 7, danger 1, bound 1 (Σ 14) — the double count
+        const all = {};
+        const visit = (n) => { for (const [k, v] of Object.entries(n.rejectionKinds)) all[k] = (all[k] ?? 0) + v; n.children.forEach(visit); };
+        visit(l18ish());
+        expect(all).toEqual({ pending: 5, exhausted: 7, danger: 1, bound: 1 });
+        // once each: the levelRun refusal (at the arm), the escape search, the two rung rows, the climb's last arm
+        expect(kindTotals(l18ish())).toEqual({ rows: [['pending', 1], ['danger', 1], ['bound', 1], ['exhausted', 2]], total: 5 });
+        expect(kindTotals({ key: 's', role: 'segment', children: [], rejections: {} })).toBeNull();   // v1
+        const t = setup();
+        try {
+            t.emit({ solveId: 1, snapshot: snap2(1, { tree: l18ish() }), final: false });
+            t.runFrames();
+            expect(t.view.kindsText.textContent)
+                .toBe('refusals by kind (this segment, each once): pending 1 · danger 1 · bound 1 · exhausted 2 · Σ 5');
+            t.emit({ solveId: 1, snapshot: snap2(2, { tree: node2('s', 'segment', {}, [], { active: true }) }), final: false });
+            t.runFrames();
+            expect(t.view.kindsText.textContent).toBe('refusals by kind (this segment, each once): none yet');
+        } finally { t.restore(); }
+    });
+});
+
+describe('⛓ RK VIEW — the last why', () => {
+    const long = `levelRun: spinner@112,48's removal at tick 205 OPENS 1 kill lock(s) in level 18 ${'x'.repeat(900)} END`;
+
+    it('CLAMP: a 900-char why is ONE line of LAST_WHY_CHARS with an ellipsis; the tooltip and a click give it whole', async () => {
+        const { LAST_WHY_CHARS } = await import('./seedlingSolveProgressView.js');
+        const t = setup();
+        try {
+            const lastWhy = { why: long, kind: 'pending', key: 's/g0/w/v/press' };
+            t.emit({ solveId: 1, snapshot: snap2(1, { tree: node2('s', 'segment', { pending: 1 }), lastWhy }), final: false });
+            t.runFrames();
+            const full = `pending at s/g0/w/v/press: ${long}`;
+            const shown = t.view.whyText.textContent;
+            expect(shown.startsWith('last why: pending at s/g0/w/v/press: levelRun: spinner@112,48')).toBe(true);
+            expect(shown).toHaveLength('last why: '.length + LAST_WHY_CHARS);
+            expect(shown.endsWith('…')).toBe(true);
+            expect(t.view.whyText.title).toBe(full);
+            expect(t.view.whyText.style.cssText).toMatch(/white-space:nowrap;overflow:hidden;text-overflow:ellipsis;/);
+            t.view.whyText.click();
+            expect(t.view.whyText.textContent).toBe(`last why: ${full}`);
+            expect(t.view.whyText.style.cssText).toMatch(/white-space:pre-wrap;/);
+            t.view.whyText.click();
+            expect(t.view.whyText.textContent).toBe(shown);
+            // a short why is not cut
+            t.emit({ solveId: 1, snapshot: snap2(2, { tree: node2('s', 'segment', { exhausted: 1 }),
+                lastWhy: { why: 'exhausted', kind: 'exhausted', key: 's/esc' } }), final: false });
+            t.runFrames();
+            expect(t.view.whyText.textContent).toBe('last why: exhausted at s/esc: exhausted');
+        } finally { t.restore(); }
+    });
+
+    it('`lastWhy: null` → no line; a field the line does not name (`name`) changes nothing; the lines sit under the active path', () => {
+        const t = setup();
+        try {
+            t.emit({ solveId: 1, snapshot: snap2(1, { tree: node2('s', 'segment', {}, [], { active: true }) }), final: false });
+            t.runFrames();
+            expect(t.view.whyText.textContent).toBe('');
+            expect(t.view.whyText.title).toBe('');
+            const kids = t.view.element.children;
+            expect(kids.indexOf(t.view.rkBox)).toBe(kids.indexOf(t.view.pathText) + 1);
+            expect(kids.indexOf(t.view.body)).toBe(kids.indexOf(t.view.rkBox) + 1);
+            const lastWhy = { why: 'no stance within puncher@128,624\'s leash', kind: 'exhausted', key: 's/c/bait' };
+            t.emit({ solveId: 1, snapshot: snap2(2, { tree: node2('s', 'segment', {}), lastWhy }), final: false });
+            t.runFrames();
+            const plain = t.view.whyText.textContent;
+            t.emit({ solveId: 1, snapshot: snap2(3, { tree: node2('s', 'segment', {}), lastWhy: { ...lastWhy, name: 'SolverRefusal' } }), final: false });
+            t.runFrames();
+            expect(t.view.whyText.textContent).toBe(plain);
+            expect(plain).toBe('last why: exhausted at s/c/bait: no stance within puncher@128,624\'s leash');
+        } finally { t.restore(); }
+    });
+
+    it('ESCAPING: a why, a key and a kind are written as TEXT — markup in them stays literal, no element is made from it', async () => {
+        const t = setup();
+        try {
+            const evil = '<img src=x onerror="alert(1)">&amp;</div>';
+            const tree = node2('s', 'segment', {}, [node2('s/r', 'rung', { [evil]: 1 })], { active: true });
+            t.emit({ solveId: 1, snapshot: snap2(1, { tree, lastWhy: { why: evil, kind: evil, key: evil } }), final: false });
+            t.runFrames();
+            expect(t.view.whyText.textContent).toBe(`last why: ${evil} at ${evil}: ${evil}`);
+            expect(t.view.whyText.children).toEqual([]);
+            const chip = rowOf(t, 's/r')._chips.children[0];
+            expect(chip.textContent).toBe(`${evil} 1`);
+            expect(chip.children).toEqual([]);
+            expect(t.view.kindsText.textContent).toContain(`${evil} 1`);
+            // ⛔ the view never parses a string as HTML
+            const { readFileSync } = await import('node:fs');
+            const src = readFileSync(new URL('./seedlingSolveProgressView.js', import.meta.url), 'utf8');
+            expect(src).not.toMatch(/innerHTML|outerHTML|insertAdjacentHTML|createContextualFragment|DOMParser/);
+        } finally { t.restore(); }
+    });
+});
+
+describe('⛓ RK VIEW — v1 after v2, and v2 on the same row elements', () => {
+    it('a v2 row reused for a v1 row drops its chips; a v2 stream after the identity stream draws its lines', () => {
+        const t = setup();
+        try {
+            for (const n of v1Stream()) { t.emit(n); t.runFrames(); }
+            expect(t.view.element.children.includes(t.view.rkBox)).toBe(false);
+            const tree = node2('s', 'segment', {}, [node2('s/r', 'rung', { danger: 2 })], { active: true });
+            t.emit({ solveId: 2, snapshot: snap2(1, { tree }), final: false });
+            t.runFrames();
+            expect(t.view.element.children.includes(t.view.rkBox)).toBe(true);
+            expect(chipsOf(rowOf(t, 's/r'))).toEqual(['danger 2']);
+            t.emit({ solveId: 3, snapshot: snap(1, { tree: treeOf(2) }), final: false });
+            t.runFrames();
+            expect(t.view.tree.children.every((c) => chipsOf(c).length === 0)).toBe(true);
+            expect([t.view.kindsText.textContent, t.view.whyText.textContent]).toEqual(['', '']);
+        } finally { t.restore(); }
+    });
+});
+
+// ── ⛓ STAMPS VIEW — S3's Tier B tap stamps drawn: the request identity, the plan in hand, the rate/ETA, the wall ──
+
+/** A v2 stream with no Tier B stamps: every RK and Tier A line drawn (kinds, a why, asks, work, tiles). */
+function v2NoStampsStream() {
+    return [1, 2, 3].map((seq) => {
+        const tree = node2('s', 'segment', { danger: seq }, [node2('s/c', 'climb', { danger: seq }, [
+            node2('s/c/avoid', 'rung', { danger: seq }), node2('s/c/time', 'rung', {}, [], { active: seq < 3 })],
+        { active: seq < 3 })], { active: seq < 3 });
+        const s = snap2(seq, { tree, lastWhy: { why: `the corridor probes dangerous at ${seq}`, kind: 'danger', key: 's/c/avoid' },
+            outcome: seq < 3 ? 'running' : 'solved', tiles: tilesOf([[0, 0, 2 * seq, 0], [3, 1, 1, seq]]) });
+        s.budget = { asks: { walk: 2 * seq }, work: { shouldStop: 2 * seq, ticks: 30 * seq },
+            spent: { shouldStop: 2 * seq }, limit: { shouldStop: 640 } };
+        return { solveId: 1, snapshot: s, final: seq === 3 };
+    });
+}
+/** ⛓ STAMPS VIEW — the md5 of each no-stamps v2 note's drawing, measured with the RK view (main 004368c2a3). */
+const V2_NO_STAMPS_MD5S = ['d0fda5497aa4ecc11328462081a4db29', 'da679ac03775dbdce5ff31416fe8376a',
+    '7cac294851810d5aa033d11bd680b782'];
+
+describe('⛓ STAMPS VIEW — a snapshot without the stamps draws exactly as before', () => {
+    it('a v1 stream and a v2 stream with no Tier B stamps draw the RK view\'s bytes, note by note; no stamp line is inserted', () => {
+        for (const [stream, want] of [[v1Stream, V1_MD5S], [v2NoStampsStream, V2_NO_STAMPS_MD5S]]) {
+            const t = setup();
+            try {
+                const md5s = [];
+                for (const n of stream()) {
+                    t.emit(n);
+                    t.runFrames();
+                    md5s.push(createHash('md5').update(serialize(t.view.element)).digest('hex'));
+                }
+                expect(md5s).toEqual(want);
+                expect(t.view.element.children.includes(t.view.stampsHead)).toBe(false);
+                expect(t.view.meter.children.includes(t.view.wallText)).toBe(false);
+            } finally { t.restore(); }
+        }
+    });
+});
+
+/**
+ * A stamped snapshot (the tap's S3 stamps on a v2 snapshot): `request` only where given (the tap stamps it on the
+ * solve's first post), `wall`, `rate` and `best` as given (`null` = not stamped).
+ */
+const stamped = (seq, { request, wall = { 'start→walk': 3, 'walk→walk': 40 }, rate = { unitsPerSec: 20, toLimitMs: 31000 },
+    best, index = 0, pass = 'quick' } = {}) => {
+    const s = snap2(seq, { tree: node2('s', 'segment', {}, [], { active: true }), index });
+    s.segment.pass = pass;
+    s.budget = { work: { shouldStop: seq }, asks: { walk: seq }, spent: { shouldStop: 10 + seq },
+        limit: { shouldStop: 640 }, ...(wall ? { wallBySite: wall } : {}), ...(rate ? { rate } : {}) };
+    if (request) s.request = request;
+    if (best) s.best = best;
+    return s;
+};
+const REQUEST = { name: 'r9-solve-18', level: 18, seamTime: 412.5, goal: 'reach-exit', passes: ['quick', 'full'],
+    budgetWork: 640, windowAt: 85, switches: {}, attempt: { retry: 0, budgets: [640], label: '640' } };
+
+describe('⛓ STAMPS VIEW — where did the time go (budget.wallBySite)', () => {
+    it('WALL: the most wall first (ties by name), ms or s, Σ over EVERY pair = the attempt\'s wall; labelled per attempt; the full list in the tooltip', async () => {
+        const { WALL_SITES_SHOWN } = await import('./seedlingSolveProgressView.js');
+        const { formatMs, wallBySiteRows } = await import('./seedlingSolveProgress.js');
+        expect([formatMs(0.4), formatMs(850), formatMs(4249), formatMs(37400)]).toEqual(['0 ms', '850 ms', '4.2 s', '37 s']);
+        expect(wallBySiteRows(snap(1))).toBeNull();
+        const wall = { 'a→b': 5, 'start→walk': 3, 'walk→walk': 12000, 'walk→hammer-escape': 900, 'b→a': 5, 'x→y': 1,
+            'y→z': 2, 'z→end': 4 };
+        expect(wallBySiteRows({ budget: { wallBySite: wall } }).rows.map(([k]) => k))
+            .toEqual(['walk→walk', 'walk→hammer-escape', 'a→b', 'b→a', 'z→end', 'start→walk', 'y→z', 'x→y']);
+        expect(wallBySiteRows({ budget: { wallBySite: wall } }).total).toBe(12920);   // every pair, the 2 unlisted too
+        const t = setup();
+        try {
+            t.emit({ solveId: 1, snapshot: stamped(1, { wall }), final: false });
+            t.runFrames();
+            expect(WALL_SITES_SHOWN).toBe(6);
+            expect(t.view.wallText.textContent).toBe('wall by site (this attempt): walk→walk 12 s · walk→hammer-escape 900 ms'
+                + ' · a→b 5 ms · b→a 5 ms · z→end 4 ms · start→walk 3 ms · +2 more · Σ 13 s');
+            expect(t.view.wallText.title.split('\n')).toHaveLength(8);
+            expect(t.view.wallText.style.cssText).toMatch(/white-space:nowrap;overflow:hidden;text-overflow:ellipsis;/);
+            // under the meter's text, before the (per segment) asks
+            const kids = t.view.meter.children;
+            expect(kids.map((c) => c.className || c)).toEqual([kids[0], kids[1], 'flash-panel-solve-progress-eta',
+                'flash-panel-solve-progress-wall', 'flash-panel-solve-progress-asks', 'flash-panel-solve-progress-work']);
+            t.emit({ solveId: 1, snapshot: stamped(2, { wall: {} }), final: false });
+            t.runFrames();
+            expect(t.view.wallText.textContent).toBe('wall by site (this attempt): none yet');
+        } finally { t.restore(); }
+    });
+});
+
+describe('⛓ STAMPS VIEW — the ETA beside the meter (budget.rate, as the tap wrote it)', () => {
+    it('ETA: units/s and the ms left to the window and the limit, READ (never recomputed); an absent field says nothing; 0 = reached', async () => {
+        const { etaText } = await import('./seedlingSolveProgress.js');
+        const at = (rate) => etaText({ budget: { rate } });
+        // the rate disagrees with spent/limit on purpose: the line is the stamp's, not a recomputation
+        expect(at({ unitsPerSec: 41.25, toWindowMs: 3100, toLimitMs: 12400 })).toBe('41.25 units/s · ≈ 3.1 s to window · ≈ 12 s to limit');
+        expect(at({ unitsPerSec: 20, toLimitMs: 900 })).toBe('20 units/s · ≈ 900 ms to limit');
+        expect(at({ unitsPerSec: 20, toWindowMs: 0, toLimitMs: 5000 })).toBe('20 units/s · window reached · ≈ 5.0 s to limit');
+        expect(at({ unitsPerSec: 0 })).toBeNull();        // nothing spent yet: no ETA
+        expect(etaText({ budget: {} })).toBeNull();        // no rate (0 ms, or no stamps)
+        expect(at({ unitsPerSec: 7.5 })).toBe('7.5 units/s');   // in place: no budget, no ETA
+        const t = setup();
+        try {
+            t.emit({ solveId: 1, snapshot: stamped(1, { rate: { unitsPerSec: 41.25, toWindowMs: 3100, toLimitMs: 12400 } }), final: false });
+            t.runFrames();
+            expect(t.view.etaText.textContent).toBe('41.25 units/s · ≈ 3.1 s to window · ≈ 12 s to limit');
+            expect(t.view.meterText.textContent).toBe('work 11 / 640 units');   // the meter's own line is untouched
+            t.emit({ solveId: 1, snapshot: stamped(2, { rate: null }), final: false });
+            t.runFrames();
+            expect(t.view.etaText.textContent).toBe('');
+        } finally { t.restore(); }
+    });
+});
+
+describe('⛓ STAMPS VIEW — the request identity in the header (first post only — KEPT for the solve)', () => {
+    it('REQUEST: drawn from the first post and KEPT while later posts lack it; a new solve forgets it', () => {
+        const t = setup();
+        try {
+            t.emit({ solveId: 1, snapshot: stamped(1, { request: REQUEST }), final: false });
+            t.runFrames();
+            const line = 'request: r9-solve-18 · boot L18 · seamTime 412.5 · goal reach-exit · passes quick → full · attempt 640';
+            expect(t.view.requestText.textContent).toBe(line);
+            for (const seq of [2, 3]) {
+                t.emit({ solveId: 1, snapshot: stamped(seq, { index: seq - 1 }), final: seq === 3 });
+                t.runFrames();
+                expect(t.view.state.request).toBe(REQUEST);
+                expect(t.view.requestText.textContent).toBe(line);
+            }
+            // a new solve whose first post carried no request (say it was dropped) has NO identity — not the old one's
+            t.emit({ solveId: 2, snapshot: stamped(1), final: false });
+            t.runFrames();
+            expect(t.view.state.request).toBeNull();
+            expect(t.view.requestText.textContent).toBe('');
+            // header order: the request and the plan sit under the header, above the meter
+            const kids = t.view.element.children;
+            expect(kids.indexOf(t.view.stampsHead)).toBe(kids.indexOf(t.view.header) + 1);
+            expect(kids.indexOf(t.view.meter)).toBe(kids.indexOf(t.view.stampsHead) + 1);
+        } finally { t.restore(); }
+    });
+
+    it('REQUEST: the switches only when OFF-default ({} says nothing), the held retry\'s label, no seamTime when null; solver text stays TEXT', async () => {
+        const { requestText } = await import('./seedlingSolveProgress.js');
+        expect(requestText(null)).toBeNull();
+        const retry = { ...REQUEST, seamTime: null, switches: { dashOnlyWindow: false, killLockBodies: { spinner: true } },
+            attempt: { retry: 1, budgets: [640, 2560], label: '640 → 2560' } };
+        expect(requestText(retry)).toBe('request: r9-solve-18 · boot L18 · goal reach-exit · passes quick → full'
+            + ' · switches dashOnlyWindow=false, killLockBodies={"spinner":true} · attempt 640 → 2560 (retry 1)');
+        expect(requestText({ ...REQUEST, attempt: undefined })).not.toMatch(/attempt|switches/);
+        const evil = '<img src=x onerror="alert(1)">';
+        const t = setup();
+        try {
+            t.emit({ solveId: 1, snapshot: stamped(1, { request: { ...REQUEST, name: evil } }), final: false });
+            t.runFrames();
+            expect(t.view.requestText.textContent.startsWith(`request: ${evil} · `)).toBe(true);
+            expect(t.view.requestText.children).toEqual([]);
+        } finally { t.restore(); }
+    });
+});
+
+describe('⛓ STAMPS VIEW — the plan in hand (best)', () => {
+    it('BEST: `best: ok · N ticks (pass P)` from the stamp\'s own pass (not the segment\'s), `refused`, or `none yet`', () => {
+        const t = setup();
+        try {
+            t.emit({ solveId: 1, snapshot: stamped(1, { pass: 'quick' }), final: false });
+            t.runFrames();
+            expect(t.view.bestText.textContent).toBe('best: none yet');
+            // the full pass is running; the best so far is the quick pass's plan
+            t.emit({ solveId: 1, snapshot: stamped(2, { pass: 'full', best: { ok: true, ticks: 412, pass: 'quick' } }), final: false });
+            t.runFrames();
+            expect(t.view.bestText.textContent).toBe('best: ok · 412 ticks (pass quick)');
+            t.emit({ solveId: 2, snapshot: stamped(1, { best: { ok: false, ticks: null, pass: 'quick' } }), final: false });
+            t.runFrames();
+            expect(t.view.bestText.textContent).toBe('best: refused (pass quick)');
+        } finally { t.restore(); }
+    });
+});
+
+describe('⛓ STAMPS VIEW — a stamp line is written only when its text changes', () => {
+    it('re-posts with the same stamps write no stamp line; one changed stamp writes one line', () => {
+        const t = setup();
+        try {
+            const same = { request: REQUEST, best: { ok: true, ticks: 9, pass: 'quick' } };
+            t.emit({ solveId: 1, snapshot: stamped(1, same), final: false });
+            t.runFrames();
+            const lines = [t.view.requestText, t.view.bestText, t.view.etaText, t.view.wallText];
+            const sets = lines.map(() => 0);
+            lines.forEach((n, i) => {
+                let v = n.textContent;
+                Object.defineProperty(n, 'textContent', { get: () => v, set: (x) => { v = x; sets[i] += 1; } });
+            });
+            for (const seq of [2, 3, 4]) {
+                t.emit({ solveId: 1, snapshot: stamped(seq, { best: same.best }), final: false });
+                t.runFrames();
+            }
+            expect(sets).toEqual([0, 0, 0, 0]);
+            t.emit({ solveId: 1, snapshot: stamped(5, { best: same.best, wall: { 'walk→walk': 41 } }), final: false });
+            t.runFrames();
+            expect(sets).toEqual([0, 0, 0, 1]);
+        } finally { t.restore(); }
+    });
+});
+
+describe('⛓ STAMPS VIEW — stamps after the RK lines, and on a view that drew a no-stamps stream', () => {
+    it('the stamp lines go in once, in place, whichever stream came first; the RK box keeps its place under the path', () => {
+        const t = setup();
+        try {
+            for (const n of v2NoStampsStream()) { t.emit(n); t.runFrames(); }
+            t.emit({ solveId: 2, snapshot: stamped(1, { request: REQUEST }), final: false });
+            t.runFrames();
+            t.emit({ solveId: 2, snapshot: stamped(2), final: false });
+            t.runFrames();
+            const order = t.view.element.children.map((c) => c === t.view.header ? 'header' : c === t.view.stampsHead ? 'stamps'
+                : c === t.view.meter ? 'meter' : c === t.view.pathText ? 'path' : c === t.view.rkBox ? 'rk'
+                    : c === t.view.body ? 'body' : 'title');
+            expect(order).toEqual(['title', 'header', 'stamps', 'meter', 'path', 'rk', 'body']);
         } finally { t.restore(); }
     });
 });

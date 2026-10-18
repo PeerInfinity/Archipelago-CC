@@ -1,10 +1,10 @@
 # Flash Substrate
 
-The flash substrates host recompiled Flash games (SWF → C → WASM via SWFRecomp-CC) as procgen regions. This page covers the generic iframe machinery (`flashSubstrate/`) and the two Seedling entries that play rooms of the real game in the flash panel: `flash_seedling` (a real room from the region atlas) and `flash_seedling_gen` (a generated room).
+The flash substrates host recompiled Flash games (SWF → C → WASM via SWFRecomp-CC) as procgen regions. This page covers the shared iframe machinery (`flashSubstrate/`) and the two Seedling entries that play rooms of the real game in the flash panel: `flash_seedling` (a real room from the region atlas) and `flash_seedling_gen` (a generated room).
 
 ## The `__swfBridge` contract
 
-The generic `flash` entry lives in `frontend/modules/flashSubstrate/`. It renders a same-origin iframe in `flashSubstratePanel` and ships a placeholder game page, so it can be tested without a real recompiled game.
+The shared machinery lives in `frontend/modules/flashSubstrate/`. It renders a same-origin iframe in `flashSubstratePanel` and ships a placeholder game page, so it can be tested without a real recompiled game. There is no generic `flash` registry entry (⚖ the user, 2026-10-18: it "isn't really a substrate"); the in-app `flashSubstrate` rows drive the panel and its placeholder directly.
 
 The game page owns `window.__swfBridge.configure` and `pollItems`. The host injects `bridge.js` into the iframe after it loads, and the bridge:
 
@@ -25,11 +25,11 @@ The load event name comes from the iframe URL's `loadRegionEvent` parameter (def
 
 ## Per-game entries (one panel, many ids)
 
-`createFlashSubstrateEntry` (`flashSubstrateLibrary.js`) is a factory. Each Flash game can register its own substrate id and `supportedFeatures`, while every entry built by the factory shares the `flashSubstratePanel` component and the `flash:loadRegion` event; the bridge keys its behaviour on the payload (`gameId`, `ap_locations`), not the id. The module itself registers only the generic `flash` entry.
+`createFlashSubstrateEntry` (`flashSubstrateLibrary.js`) is a factory. Each Flash game can register its own substrate id and `supportedFeatures`, while every entry built by the factory shares the `flashSubstratePanel` component and the `flash:loadRegion` event; the bridge keys its behaviour on the payload (`gameId`, `ap_locations`), not the id. The module itself registers no entry.
 
 The factory also supplies the exits-Map `serializeWorld`/`deserializeWorld` round trip and a null playback stub; [Bounce](./bounce.md) builds on it. The entry's `iframeId` closes an init race: procgenPlayer re-publishes the active region's load event when that iframe announces `appReady`.
 
-By default a flash region is an opaque minigame: `arbitrary_ap_locations` only, no build-time hooks (the sidecar records `gameId` and params) and no playback controller. The entry contract is in the [Substrate Registry Reference](./substrate-registry.md).
+By default an entry the factory builds is an opaque minigame: `arbitrary_ap_locations` only, no build-time hooks (the sidecar records `gameId` and params) and no playback controller. The entry contract is in the [Substrate Registry Reference](./substrate-registry.md).
 
 ## `flash_seedling` — a real game's map as procgen regions
 
@@ -395,11 +395,11 @@ Two in-app rows cover it (same category and batch): `seedling-js-runtime-bot-com
 
 #### The solver mode (`flashPanel.seedlingSolverWalk`)
 
-The setting `moduleSettings.flashPanel.seedlingSolverWalk` (boolean, default on) makes the page's walk ask the real solver (`solverBot.solveSegment`) for the room's plan before it walks. It applies to the atlas rooms on the JS runtime. Generated rooms always keep the walker above. The panel reads the setting at init and on change (without a reinit), hands it to the live page, and the controller hands it to the page again with every goal (`playback.setSolverWalk`). It is on by default since S2. ⚖ Q3 kept it off until the Worker and the budget landed. The solve runs in a module Worker (solver-walk S2), so the page never freezes while the solver plans, and a solve that runs too long is stopped.
+The setting `moduleSettings.flashPanel.seedlingSolverWalk` (boolean, default on) makes the page's walk ask the real solver (`solverBot.solveSegment`) for the room's plan before it walks. It applies to every room on the JS runtime, atlas and generated alike (since §5.36, above). The panel reads the setting at init and on change (without a reinit), hands it to the live page, and the controller hands it to the page again with every goal (`playback.setSolverWalk`). It is on by default since S2. ⚖ Q3 kept it off until the Worker and the budget landed. The solve runs in a module Worker (solver-walk S2), so the page never freezes while the solver plans, and a solve that runs too long is stopped.
 
 `seedlingDemo/jsRuntimeSolver.js` (DOM-free, beside the walker) does the work. The walker asks it first for each tick's keys:
 
-1. **The goal.** An exit becomes `reach-exit` at the live teleporter the walker resolved (its `.oel` x, y), or `reach-pit` at the pit tile it resolved (below). A location becomes `collect-placement` at the entity's `.oel` x, y. A `tile` goal, and every goal of a mounted generated set, stay on the walker.
+1. **The goal.** An exit becomes `reach-exit` at the live teleporter the walker resolved (its `.oel` x, y), or `reach-pit` at the pit tile it resolved (below). A location becomes `collect-placement` at the entity's `.oel` x, y. A `tile` goal stays on the walker; a mounted generated set's goals map the same way (§5.36).
 2. **The shadow.** The page's session is a tape: its staging plus `perTick`. The solver mode replays it into a fresh run (`createRunForStaging`), re-making any equip it played at its tick, and asserts that the shadow's digest equals the live run's. The digest is level, state, run clock, deaths, transitions, chasers, strike bodies and the selected slot. A mismatch is a page bug, and the walk fails by name. It never solves from a state the page is not in.
 3. **The solve.** `solveSegment` runs on the shadow with `prefix: session.perTick`, the admission for a run that has already ticked ([Seedling bot](./seedling-bot.md)). The shadow is wrapped in a recording proxy, so each `advance` the solver makes becomes a row of the expected trajectory and each `equipNow` becomes an equip at that row. This works because the solver searches no run futures.
 4. **The play.** The page plays one key set per tick on its own clock, with the session's ceremony auto-advance off: the plan already presses every X. Each equip is applied at its tick.

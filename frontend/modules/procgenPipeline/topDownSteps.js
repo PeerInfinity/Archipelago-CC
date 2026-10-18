@@ -477,6 +477,7 @@ const TD_STEP_OUTPUT_PRESENT = {
 
 // The top-down mode descriptor — the whole per-mode surface the harness needs.
 const TD_DESCRIPTOR = {
+    kind: 'topdown-envelope',
     steps: TOPDOWN_STEPS,
     runners: RUNNERS,
     present: TD_STEP_OUTPUT_PRESENT,

@@ -3344,3 +3344,101 @@ describe('M6 — Bot × Instant, the effect', () => {
     expect(handles.calls).toEqual(['walkTo']);
   });
 });
+
+// ⛓ The text adventure's Bot (⚖ user 2026-10-18: "walkTo solver"; explore:
+// "the engine shows it"). A COARSE walkTo solver whose controller has
+// `perform` (act now) besides `walkTo` (queue for a clock), and which queues
+// explores. Only `perform` and `walkTo` are spied; the shape mirrors
+// TextAdventurePlaybackProxy.
+function registerPerformSolverSubstrate({ withPerform = true } = {}) {
+  try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getRegionInfo'); } catch { /* ignore */ }
+  try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getWarehouse'); } catch { /* ignore */ }
+  try { substrateRegistry.clear?.(); } catch { /* ignore */ }
+  const handles = { performCalls: [], walkToCalls: [] };
+  const controller = {
+    walkTo: (target) => { handles.walkToCalls.push(target); },
+    stop: () => {},
+  };
+  if (withPerform) controller.perform = (target) => { handles.performCalls.push(target); };
+  substrateRegistry.register?.({
+    id: 'perform_sub',
+    label: 'Perform',
+    panelComponentType: 'performPanel',
+    loadRegionEvent: 'perform:loadRegion',
+    getPlaybackController: () => controller,
+    loopSupport: {
+      queueActions: ['regionMove', 'locationCheck', 'explore'],
+      manual: true, customQueues: false,
+      record: true, playback: true, instant: true,
+      executeVia: 'solver',
+    },
+  });
+  centralRegistry.registerPublicFunction('procgenPlayer', 'getRegionInfo', (region) => (
+    region === 'A' ? { substrate: 'perform_sub', label: 'Perform', manaEnabled: true } : null
+  ));
+  return handles;
+}
+
+describe('text adventure Bot — a coarse walkTo solver that PERFORMS', () => {
+  let loopState, gs, bus, tick;
+
+  // Queue: Menu→A, Loc1 (or an explore) in A, A→B. Cursor on index 1.
+  function setUp({ withPerform = true, explore = false } = {}) {
+    ({ loopState, gs, bus } = wire());
+    tick = makeTicker();
+    const handles = registerPerformSolverSubstrate({ withPerform });
+    loopState.setCostDataManager(botCosts({ locations: { Loc1: 7 } }));
+    loopState._cachedRulesData = RULES_DATA;
+    gs.updatePath('A', 'go', 'Menu');
+    if (explore) gs.addCustomAction('explore', {});
+    else gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+    loopState.setBlockMode('A', 1, 'bot');
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+    return handles;
+  }
+
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+  });
+
+  it('a check goes to `perform`, never the queueing `walkTo`, and parks until its event', () => {
+    const handles = setUp();
+    expect(handles.performCalls).toEqual([{ kind: 'location', name: 'Loc1' }]);
+    expect(handles.walkToCalls).toEqual([]);
+    expect(loopState._botExecutedAction?.locationName).toBe('Loc1');
+    const manaBefore = gs.getCurrentMana();
+
+    loopState._handleBotWake_locationCheck('Loc1');
+
+    expect(loopState.actionQueueManager.isCompleted(1)).toBe(true);
+    // Coarse: loops charges the completion (the substrate charged nothing).
+    expect(gs.getCurrentMana()).toBe(manaBefore - 7);
+  });
+
+  it('an explore is performed AND completed at once — the engine shows it, loops reveals', () => {
+    const handles = setUp({ explore: true });
+    expect(loopState.getActionQueue()[1]).toMatchObject({ type: 'customAction', actionName: 'explore' });
+    expect(handles.performCalls).toEqual([{ kind: 'explore', region: 'A' }]);
+    expect(loopState._botExecutedAction).toBeNull();
+    expect(loopState.actionQueueManager.isCompleted(1)).toBe(true);
+    // It never parked for live play.
+    expect(bus.events.some((e) => e.name === 'loopState:manualEntered')).toBe(false);
+  });
+
+  it('without `perform` an explore cannot engage: the block parks for live play, not the timer', () => {
+    const handles = setUp({ withPerform: false, explore: true });
+    expect(handles.walkToCalls).toEqual([]);
+    expect(loopState.actionQueueManager.isCompleted(1)).toBe(false);
+    expect(loopState._manualActionEntered).toBe(true);
+  });
+
+  it('without `perform` a check still goes to `walkTo` (jta, bounce, runner unchanged)', () => {
+    const handles = setUp({ withPerform: false });
+    expect(handles.walkToCalls).toEqual([{ kind: 'location', name: 'Loc1' }]);
+  });
+});

@@ -399,7 +399,7 @@ export const DOCS_INDEX = Object.freeze([
         "path": "docs/json/developer/procgen/flash.md",
         "title": "Flash Substrate",
         "section": "developer/procgen",
-        "summary": "The flash substrates host recompiled Flash games (SWF → C → WASM via SWFRecomp-CC) as procgen regions. This page covers the generic iframe machinery (flashSubstrate/) and the two Seedling entries…"
+        "summary": "The flash substrates host recompiled Flash games (SWF → C → WASM via SWFRecomp-CC) as procgen regions. This page covers the shared iframe machinery (flashSubstrate/) and the two Seedling entries…"
     },
     {
         "path": "docs/json/developer/procgen/gotchas.md",

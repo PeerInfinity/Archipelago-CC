@@ -134,47 +134,6 @@ export const CAPABILITIES = frz({
             ]
         },
         {
-            "id": "flash",
-            "label": "Flash",
-            "lines": [
-                {
-                    "group": "play",
-                    "statement": "You can play its regions by hand",
-                    "text": null
-                },
-                {
-                    "group": "play",
-                    "statement": "What the generator may do with it",
-                    "text": "locations placed anywhere"
-                },
-                {
-                    "group": "loop",
-                    "statement": "You can play it in loop mode",
-                    "text": null
-                },
-                {
-                    "group": "loop",
-                    "statement": "What you can queue for it",
-                    "text": "moves between regions"
-                },
-                {
-                    "group": "loop",
-                    "statement": "You can play it outside loop mode",
-                    "text": null
-                },
-                {
-                    "group": "generate",
-                    "statement": "A world of it can start with an empty inventory",
-                    "text": null
-                },
-                {
-                    "group": "edit",
-                    "statement": "The editor's validity report checks its location and exit names",
-                    "text": null
-                }
-            ]
-        },
-        {
             "id": "flash_seedling",
             "label": "Seedling (region atlas)",
             "lines": [
@@ -927,6 +886,11 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "loop",
+                    "statement": "A Bot block can play it for you",
+                    "text": "the game's own automation walks it"
+                },
+                {
+                    "group": "loop",
                     "statement": "You can play it outside loop mode",
                     "text": null
                 },
@@ -984,10 +948,6 @@ export const CAPABILITIES = frz({
             "label": "Bounce Demo"
         },
         {
-            "id": "flash",
-            "label": "Flash"
-        },
-        {
             "id": "flash_seedling",
             "label": "Seedling (region atlas)"
         },
@@ -1021,11 +981,11 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 91,
-        "fieldsRead": 38,
+        "fields": 92,
+        "fieldsRead": 39,
         "fieldsUnread": 50,
         "statements": 29,
-        "substrates": 10
+        "substrates": 9
     },
     "fieldsRead": [
         "apExitNamesOf",
@@ -1045,6 +1005,7 @@ export const CAPABILITIES = frz({
         "instantiateLibraryEntry",
         "libraryItems",
         "locationCapacity",
+        "loopSupport.botActsAtOnce",
         "loopSupport.executeVia",
         "loopSupport.instant",
         "loopSupport.manual",
@@ -1133,21 +1094,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "panelComponentType",
                             "value": "bounceDemoPanel"
-                        },
-                        {
-                            "field": "deserializeWorld",
-                            "value": "fn"
-                        }
-                    ]
-                },
-                {
-                    "id": "flash",
-                    "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "panelComponentType",
-                            "value": "flashSubstratePanel"
                         },
                         {
                             "field": "deserializeWorld",
@@ -1302,21 +1248,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "flash",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "getPlaybackController",
-                            "value": "—"
-                        },
-                        {
-                            "field": "playbackScope",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "flash_seedling",
                     "kind": "partial",
                     "text": "with the Flash Panel's JS runtime, or its wasm runtime",
@@ -1459,17 +1390,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "flash",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "compositeMap.drawRegion",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "flash_seedling",
                     "kind": "no",
                     "text": null,
@@ -1579,21 +1499,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "supportedFeatures",
                             "value": "arbitrary_ap_locations, bounce_abilities"
-                        }
-                    ]
-                },
-                {
-                    "id": "flash",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "libraryItems",
-                            "value": "—"
-                        },
-                        {
-                            "field": "supportedFeatures",
-                            "value": "arbitrary_ap_locations"
                         }
                     ]
                 },
@@ -1740,17 +1645,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "flash",
-                    "kind": "yes",
-                    "text": "locations placed anywhere",
-                    "why": [
-                        {
-                            "field": "supportedFeatures",
-                            "value": "arbitrary_ap_locations"
-                        }
-                    ]
-                },
-                {
                     "id": "flash_seedling",
                     "kind": "yes",
                     "text": "locations placed anywhere",
@@ -1850,17 +1744,6 @@ export const CAPABILITIES = frz({
             "cells": [
                 {
                     "id": "bounce",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "conceptRealisations",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
-                    "id": "flash",
                     "kind": "no",
                     "text": null,
                     "why": [
@@ -1992,17 +1875,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "flash",
-                    "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "loopSupport.manual",
-                            "value": "yes"
-                        }
-                    ]
-                },
-                {
                     "id": "flash_seedling",
                     "kind": "yes",
                     "text": null,
@@ -2108,17 +1980,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "loopSupport.queueActions",
                             "value": "regionMove, locationCheck"
-                        }
-                    ]
-                },
-                {
-                    "id": "flash",
-                    "kind": "yes",
-                    "text": "moves between regions",
-                    "why": [
-                        {
-                            "field": "loopSupport.queueActions",
-                            "value": "regionMove"
                         }
                     ]
                 },
@@ -2232,21 +2093,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "loopSupport.playback",
                             "value": "yes"
-                        }
-                    ]
-                },
-                {
-                    "id": "flash",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "loopSupport.record",
-                            "value": "—"
-                        },
-                        {
-                            "field": "loopSupport.playback",
-                            "value": "—"
                         }
                     ]
                 },
@@ -2397,21 +2243,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "flash",
-                    "kind": "na",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "takeLastRecording",
-                            "value": "—"
-                        },
-                        {
-                            "field": "loopSupport.summaryRecording",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "flash_seedling",
                     "kind": "na",
                     "text": null,
@@ -2554,21 +2385,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "loopSupport.summaryRecording",
                             "value": "yes"
-                        }
-                    ]
-                },
-                {
-                    "id": "flash",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "loopSupport.instant",
-                            "value": "—"
-                        },
-                        {
-                            "field": "loopSupport.summaryRecording",
-                            "value": "—"
                         }
                     ]
                 },
@@ -2719,21 +2535,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "flash",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "loopSupport.executeVia",
-                            "value": "—"
-                        },
-                        {
-                            "field": "sharing.mana.loopActionDelegation",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "flash_seedling",
                     "kind": "yes",
                     "text": "the game's own automation walks it",
@@ -2840,12 +2641,12 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "text_adventure",
-                    "kind": "no",
-                    "text": null,
+                    "kind": "yes",
+                    "text": "the game's own automation walks it",
                     "why": [
                         {
                             "field": "loopSupport.executeVia",
-                            "value": "—"
+                            "value": "solver"
                         },
                         {
                             "field": "sharing.mana.loopActionDelegation",
@@ -2884,28 +2685,9 @@ export const CAPABILITIES = frz({
                         {
                             "field": "loopSupport.summaryRecording",
                             "value": "yes"
-                        }
-                    ]
-                },
-                {
-                    "id": "flash",
-                    "kind": "na",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "loopSupport.instant",
-                            "value": "—"
                         },
                         {
-                            "field": "loopSupport.executeVia",
-                            "value": "—"
-                        },
-                        {
-                            "field": "takeLastRecording",
-                            "value": "—"
-                        },
-                        {
-                            "field": "loopSupport.summaryRecording",
+                            "field": "loopSupport.botActsAtOnce",
                             "value": "—"
                         }
                     ]
@@ -2930,6 +2712,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "loopSupport.summaryRecording",
                             "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.botActsAtOnce",
+                            "value": "—"
                         }
                     ]
                 },
@@ -2952,6 +2738,10 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "loopSupport.summaryRecording",
+                            "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.botActsAtOnce",
                             "value": "—"
                         }
                     ]
@@ -2976,6 +2766,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "loopSupport.summaryRecording",
                             "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.botActsAtOnce",
+                            "value": "—"
                         }
                     ]
                 },
@@ -2998,6 +2792,10 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "loopSupport.summaryRecording",
+                            "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.botActsAtOnce",
                             "value": "—"
                         }
                     ]
@@ -3022,6 +2820,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "loopSupport.summaryRecording",
                             "value": "yes"
+                        },
+                        {
+                            "field": "loopSupport.botActsAtOnce",
+                            "value": "—"
                         }
                     ]
                 },
@@ -3044,6 +2846,10 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "loopSupport.summaryRecording",
+                            "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.botActsAtOnce",
                             "value": "—"
                         }
                     ]
@@ -3068,6 +2874,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "loopSupport.summaryRecording",
                             "value": "yes"
+                        },
+                        {
+                            "field": "loopSupport.botActsAtOnce",
+                            "value": "—"
                         }
                     ]
                 },
@@ -3082,7 +2892,7 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "loopSupport.executeVia",
-                            "value": "—"
+                            "value": "solver"
                         },
                         {
                             "field": "takeLastRecording",
@@ -3091,6 +2901,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "loopSupport.summaryRecording",
                             "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.botActsAtOnce",
+                            "value": "yes"
                         }
                     ]
                 }
@@ -3099,7 +2913,8 @@ export const CAPABILITIES = frz({
                 "loopSupport.instant",
                 "loopSupport.executeVia",
                 "takeLastRecording",
-                "loopSupport.summaryRecording"
+                "loopSupport.summaryRecording",
+                "loopSupport.botActsAtOnce"
             ],
             "group": "loop",
             "id": "L7",
@@ -3109,17 +2924,6 @@ export const CAPABILITIES = frz({
             "cells": [
                 {
                     "id": "bounce",
-                    "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "loopSupport.requiresLoopMode",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
-                    "id": "flash",
                     "kind": "yes",
                     "text": null,
                     "why": [
@@ -3239,17 +3043,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "flash",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "sharing.mana",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "flash_seedling",
                     "kind": "no",
                     "text": null,
@@ -3349,17 +3142,6 @@ export const CAPABILITIES = frz({
             "cells": [
                 {
                     "id": "bounce",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "sharing.items",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
-                    "id": "flash",
                     "kind": "no",
                     "text": null,
                     "why": [
@@ -3499,17 +3281,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "flash",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "describeAction",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "flash_seedling",
                     "kind": "no",
                     "text": null,
@@ -3623,25 +3394,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "generateZoneForSpecsGen",
                             "value": "fn"
-                        }
-                    ]
-                },
-                {
-                    "id": "flash",
-                    "kind": "no",
-                    "text": "only as content from its own game",
-                    "why": [
-                        {
-                            "field": "generateRegionCore",
-                            "value": "—"
-                        },
-                        {
-                            "field": "generateZoneForSpecs",
-                            "value": "—"
-                        },
-                        {
-                            "field": "generateZoneForSpecsGen",
-                            "value": "—"
                         }
                     ]
                 },
@@ -3829,25 +3581,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "flash",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "zoneCount",
-                            "value": "—"
-                        },
-                        {
-                            "field": "zoneSourceLabel",
-                            "value": "—"
-                        },
-                        {
-                            "field": "generateRegionCore",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "flash_seedling",
                     "kind": "yes",
                     "text": "4 Atlas rooms",
@@ -4023,17 +3756,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "flash",
-                    "kind": "na",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "generationCost",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "flash_seedling",
                     "kind": "yes",
                     "text": null,
@@ -4143,21 +3865,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "instantiateLibraryEntry",
                             "value": "fn"
-                        }
-                    ]
-                },
-                {
-                    "id": "flash",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "captureLibraryEntry",
-                            "value": "—"
-                        },
-                        {
-                            "field": "instantiateLibraryEntry",
-                            "value": "—"
                         }
                     ]
                 },
@@ -4308,21 +4015,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "flash",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "canHostExitGates",
-                            "value": "—"
-                        },
-                        {
-                            "field": "supportedFeatures",
-                            "value": "arbitrary_ap_locations"
-                        }
-                    ]
-                },
-                {
                     "id": "flash_seedling",
                     "kind": "yes",
                     "text": null,
@@ -4465,17 +4157,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "flash",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "renderProcgenParams",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "flash_seedling",
                     "kind": "yes",
                     "text": null,
@@ -4585,17 +4266,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "flash",
-                    "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "startingInventory",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "flash_seedling",
                     "kind": "yes",
                     "text": null,
@@ -4695,17 +4365,6 @@ export const CAPABILITIES = frz({
             "cells": [
                 {
                     "id": "bounce",
-                    "kind": "na",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "locationCapacity",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
-                    "id": "flash",
                     "kind": "na",
                     "text": null,
                     "why": [
@@ -4825,17 +4484,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "flash",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "roomEditor",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "flash_seedling",
                     "kind": "yes",
                     "text": "on a lab page",
@@ -4941,17 +4589,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "regionRoundTrip",
                             "value": "{open, save}"
-                        }
-                    ]
-                },
-                {
-                    "id": "flash",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "regionRoundTrip",
-                            "value": "—"
                         }
                     ]
                 },
@@ -5065,17 +4702,6 @@ export const CAPABILITIES = frz({
                     ]
                 },
                 {
-                    "id": "flash",
-                    "kind": "no",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "exitSides",
-                            "value": "—"
-                        }
-                    ]
-                },
-                {
                     "id": "flash_seedling",
                     "kind": "yes",
                     "text": "and a side can hold more than one",
@@ -5175,21 +4801,6 @@ export const CAPABILITIES = frz({
             "cells": [
                 {
                     "id": "bounce",
-                    "kind": "yes",
-                    "text": null,
-                    "why": [
-                        {
-                            "field": "apLocationNamesOf",
-                            "value": "fn"
-                        },
-                        {
-                            "field": "apExitNamesOf",
-                            "value": "fn"
-                        }
-                    ]
-                },
-                {
-                    "id": "flash",
                     "kind": "yes",
                     "text": null,
                     "why": [

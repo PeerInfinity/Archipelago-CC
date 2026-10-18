@@ -92,7 +92,7 @@ Headless equivalents live in `scripts/procgen/`: `generate-seedling-level.mjs` a
 
 143 of them drive a real browser; 354 accept at least one `--flag` OF THEIR OWN; 221 are cited by one of these documents; and 0 open with no comment at all.
 
-Each also accepts what a module it IMPORTS parses: `--help` (434, in `argvHelp.js`) · `--wait-for-box` (147, in `boxLock.js`) · `--blocks` (2, in `seedling-divergence-legs.mjs`) · `--ids` (2, in `seedling-divergence-legs.mjs`) · `--keys` (2, in `seedling-divergence-legs.mjs`) · `--presets` (2, in `seedling-divergence-legs.mjs`) · `--child` (1, in `witness-seedling-profile.mjs`) · `--entities` (1, in `seedlingProfileLoader.mjs`) · `--list-defaulted` (1, in `seedlingProfileLoader.mjs`) · `--only` (1, in `rehearsalTree.js`) · `--pct10` (1, in `witness-seedling-profile.mjs`) · `--profile` (1, in `seedlingProfileLoader.mjs`) · `--record` (1, in `rehearsalTree.js`) · `--tapes` (1, in `witness-seedling-profile.mjs`) · `--tier` (1, in `witness-seedling-profile.mjs`) · `--ulp` (1, in `witness-seedling-profile.mjs`) · `--walk-report` (1, in `rehearsalTree.js`). Those are listed per row with the parse site named, so the table says what a file ACCEPTS without losing where the parse lives.
+Each also accepts what a module it IMPORTS parses: `--help` (436, in `argvHelp.js`) · `--wait-for-box` (147, in `boxLock.js`) · `--blocks` (2, in `seedling-divergence-legs.mjs`) · `--ids` (2, in `seedling-divergence-legs.mjs`) · `--keys` (2, in `seedling-divergence-legs.mjs`) · `--presets` (2, in `seedling-divergence-legs.mjs`) · `--child` (1, in `witness-seedling-profile.mjs`) · `--entities` (1, in `seedlingProfileLoader.mjs`) · `--list-defaulted` (1, in `seedlingProfileLoader.mjs`) · `--only` (1, in `rehearsalTree.js`) · `--pct10` (1, in `witness-seedling-profile.mjs`) · `--profile` (1, in `seedlingProfileLoader.mjs`) · `--record` (1, in `rehearsalTree.js`) · `--tapes` (1, in `witness-seedling-profile.mjs`) · `--tier` (1, in `witness-seedling-profile.mjs`) · `--ulp` (1, in `witness-seedling-profile.mjs`) · `--walk-report` (1, in `rehearsalTree.js`). Those are listed per row with the parse site named, so the table says what a file ACCEPTS without losing where the parse lives.
 
 One row each — the one-liner from the file's own docblock, the flags it reads out of `argv`, whether it needs a browser, and which document cites it — is on the [reference page](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/reference.html#section-instruments), which can filter them.
 
@@ -182,12 +182,14 @@ The registry has nine entries:
 | `maze` | `mazeRoom` | `maze:loadRegion` | Grid-room maze with biomes, hazards and an autopather. |
 | `bounce` | `bounceDemo` | `bounce:loadRegion` | Vertical platformer with a physics-verified generator; reuses `flashSubstrate`'s panel code under its own identity. |
 | `text_adventure` | `textAdventureSubstrateWrapper` | `textAdventure:loadRegion` | Iframe-hosted text adventure. |
-| `flash` | `flashSubstrate` | `flash:loadRegion` | Iframe substrate for recompiled Flash games (SWF→WASM), speaking the `__swfBridge` contract. |
 | `runner` | `runnerDemo` | `runner:loadRegion` | Auto-runner platformer with a physics-verified strip generator; like bounce, built on `flashSubstrate`. |
 | `jta` | `jtaSubstrateWrapper` | `jta:loadRegion` | Journey to Ascension as a zone-based substrate. |
 | `omsi` | `omsiSubstrateWrapper` | `omsi:loadRegion` | Idle Loops (the `omsi-loops` fork) as a loop-game substrate; requires loop mode. |
 | `flash_seedling` | `flashPanel` | `flashSeedling:loadRegion` | A real room of the Seedling atlas as a pipeline region. |
 | `flash_seedling_gen` | `flashPanel` | `flashSeedling:loadRegion` | A room built by the Seedling generator to the pipeline's spec. |
+| `noiz2sa` | `noiz2saSubstrate` | `noiz2sa:loadRegion` | Noiz2sa, the BulletML shooter, as a substrate ([noiz2sa.md](./noiz2sa.md)). |
+
+There is no generic `flash` entry (⚖ the user, 2026-10-18: it "isn't really a substrate"). `flashSubstrate/` keeps the `createFlashSubstrateEntry` factory and the iframe machinery that the Seedling, bounce and runner entries are built on; see [Flash Substrate](./flash.md).
 
 The entry contract and the generated capability matrix are in [Substrate Registry Reference](./substrate-registry.md#capability-matrix). `shared/` is a git submodule, so `git log` and `git blame` on the registry must run inside it.
 

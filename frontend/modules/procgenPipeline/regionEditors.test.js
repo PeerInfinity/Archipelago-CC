@@ -19,13 +19,12 @@ import { fileURLToPath } from 'node:url';
 
 const MODULES_DIR = fileURLToPath(new URL('..', import.meta.url));
 
-/** ⛓ The eight libraries the capability matrix loads, in its own order. */
+/** ⛓ The seven libraries the capability matrix loads, in its own order. */
 const LIBRARIES = [
     'mazeRoom/mazeRoomLibrary.js',
     'bounceDemo/bounceDemoLibrary.js',
     'runnerDemo/runnerDemoLibrary.js',
     'textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js',
-    'flashSubstrate/flashSubstrateLibrary.js',
     'flashPanel/flashSeedlingLibrary.js',
     'jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js',
     'omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js',
@@ -35,11 +34,11 @@ let substrateRegistry;
 let mod;
 let labRoomEditor;
 let eventBus;
-/** ⛓ The eight real entries, kept so a PROBE registered by a row can be undone. */
+/** ⛓ The seven real entries, kept so a PROBE registered by a row can be undone. */
 let realEntries;
 
 /**
- * ⛔ IMPORTED ONCE, AND THE STATE IS RESTORED PER ROW instead. The eight
+ * ⛔ IMPORTED ONCE, AND THE STATE IS RESTORED PER ROW instead. The seven
  * libraries cost ~2.8s to import; a `vi.resetModules()` in `beforeEach` paid
  * that ten times over and pushed the file past vitest's 5s per-test timeout the
  * moment it ran beside other files — which is a FLAKE, not a finding.
@@ -65,7 +64,7 @@ beforeAll(async () => {
     realEntries = substrateRegistry.getAll();
     eventBus.registerPublisher('procgenLab:levelChanged', 'testFrame');
 /**
- * ⛔ AND THE HOOK CARRIES ITS OWN TIMEOUT. The eight libraries are ~24s of
+ * ⛔ AND THE HOOK CARRIES ITS OWN TIMEOUT. The seven libraries are ~24s of
  * TRANSFORM the first time vitest sees them, and the default hook budget is
  * 10s — measured: this hook passed alone and timed out two runs in three when
  * the file ran beside `procgenCore/`. A budget the work cannot fit in is a
@@ -197,7 +196,7 @@ describe('regionEditors — the answer comes off the substrate entry', () => {
         // ⛓ Derived, then NAMED — a roster nobody can read is a roster nobody
         //   notices changing.
         expect(declaring.sort()).toEqual(['bounce', 'flash_seedling', 'maze']);
-        expect(silent.sort()).toEqual(['flash', 'jta', 'omsi', 'runner', 'text_adventure']);
+        expect(silent.sort()).toEqual(['jta', 'omsi', 'runner', 'text_adventure']);
         for (const id of declaring) expect(typeof mod.getRegionEditor(id)).toBe('function');
         // ⛔ The pipeline's "No region editor for X yet" stays true for these.
         for (const id of silent) expect(mod.getRegionEditor(id)).toBe(null);

@@ -86,8 +86,11 @@ export function helpText(file) {
         ? (/(?:^|\n)\s*(?:Run|Usage|USAGE|RUN):([\s\S]*?)(?:\n\s*\n|$)/.exec(doc.text) ?? [])[1]
         : null;
     if (run && run.trim()) {
-        lines.push('', 'Run:', ...run.split('\n').map((l) => l.replace(/^\s*/, '  ').trimEnd())
-            .filter((l) => l.trim()));
+        /* ⛓ RELATIVE indentation survives: a flag table's wrapped description
+         *  lines sit under their own column, not flush with the flag. */
+        const body = run.split('\n').map((l) => l.trimEnd()).filter((l) => l.trim());
+        const indent = Math.min(...body.map((l) => /^\s*/.exec(l)[0].length));
+        lines.push('', 'Run:', ...body.map((l) => `  ${l.slice(indent)}`));
     }
 
     const own = flagsIn(text, { file });

@@ -118,6 +118,11 @@ export function coarseOf(entry) {
   return null;
 }
 
+/** A queue action that explores its region (the queue speaks it as an explore `customAction`). */
+function isExploreAction(action) {
+  return action?.type === 'customAction' && action.actionName === 'explore';
+}
+
 export function gateReasonOutOfScope(reason) {
   return reason === 'loopModeOff' || reason === 'noRegion'
     || reason === 'apNative' || reason === 'substrateNotGated';
@@ -2970,14 +2975,19 @@ export class LoopState {
   _shouldBotExecuteCurrentAction() {
     const action = this.currentAction;
     if (!action) return false;
-    if (action.type !== 'regionMove' && action.type !== 'locationCheck') return false;
+    const explore = isExploreAction(action);
+    if (!explore && action.type !== 'regionMove' && action.type !== 'locationCheck') return false;
     const substrate = this._lookupSubstrateId(action.sourceRegion);
     if (!substrate) return false;
     const entry = substrateRegistry?.get?.(substrate);
     const loopSupport = entry?.loopSupport;
     if (loopSupport?.executeVia !== 'solver') return false;
-    if (!loopSupport.queueActions?.includes(action.type)) return false;
-    return typeof entry.getPlaybackController?.()?.walkTo === 'function';
+    if (!loopSupport.queueActions?.includes(explore ? 'explore' : action.type)) return false;
+    const controller = entry.getPlaybackController?.();
+    // An explore has no place to walk to: only a controller that PERFORMS
+    // takes it (the text adventure's — its engine shows the explore).
+    if (explore) return typeof controller?.perform === 'function';
+    return typeof controller?.walkTo === 'function';
   }
 
   /**
@@ -3002,9 +3012,11 @@ export class LoopState {
     const controller = substrate
       ? substrateRegistry?.get?.(substrate)?.getPlaybackController?.()
       : null;
-    const target = action.type === 'locationCheck'
-      ? { kind: 'location', name: action.locationName }
-      : { kind: 'exit', name: action.exitUsed };
+    const explore = isExploreAction(action);
+    const target = explore ? { kind: 'explore', region: action.sourceRegion }
+      : action.type === 'locationCheck'
+        ? { kind: 'location', name: action.locationName }
+        : { kind: 'exit', name: action.exitUsed };
     try {
       // Instant (M6 ruling 4): collapse the walk where the solver really
       // honors it. Set BEFORE walkTo — it is a MODE the substrate reads as
@@ -3024,10 +3036,15 @@ export class LoopState {
       if (this.regionBotHonorsInstant(action.sourceRegion)) {
         controller?.instant?.(this._currentBlockIsInstant());
       }
+      // `perform` where the controller has one (the text adventure's): it acts
+      // NOW, where its `walkTo` only queues the target for a clock this path
+      // never starts.
       // A synchronous `false` is a REFUSAL (the PlaybackController contract):
       // the walk will never happen, so the park would never wake. Stop by
       // name instead, with the controller's own reason when it has one.
-      if (controller?.walkTo?.(target) === false) {
+      const go = typeof controller?.perform === 'function'
+        ? controller.perform(target) : controller?.walkTo?.(target);
+      if (go === false) {
         const why = typeof controller.lastRefusal === 'string' && controller.lastRefusal
           ? controller.lastRefusal
           : `the ${substrate} controller refused ${target.kind} '${target.name}'`;
@@ -3044,10 +3061,14 @@ export class LoopState {
         this._botWalkFailedListener = (data) => this._handleBotWalkFailed(data);
         this.eventBus.subscribe(PLAYBACK_WALK_FAILED_EVENT, this._botWalkFailedListener);
       }
-      log('info', `[LoopState] Bot walking to ${target.kind} '${target.name}' in ${action.sourceRegion}`);
+      log('info', `[LoopState] Bot walking to ${target.kind} '${target.name ?? target.region}' in ${action.sourceRegion}`);
     } catch (err) {
       log('warn', '[LoopState] Bot walkTo threw:', err);
     }
+    // An explore has no event of its own to wake on: the engine has shown it,
+    // and completing it here publishes the loop:exploreCompleted (fromLoop)
+    // that reveals — once.
+    if (explore && this._botExecutedAction === action) this._completeBotExecutedAction();
   }
 
   /**

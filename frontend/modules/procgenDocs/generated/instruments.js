@@ -246,7 +246,8 @@ export const INSTRUMENTS = frz({
         "documented": "/--([a-zA-Z][a-zA-Z0-9-]*)(?=[=\\s]|$)/g",
         "flags": [
             "includes: /\\bincludes\\(\\s*'--([a-zA-Z][a-zA-Z0-9-]*)'/g",
-            "startsWith: /startsWith\\(\\s*[`']--([a-zA-Z][a-zA-Z0-9-]*)=/g"
+            "startsWith: /startsWith\\(\\s*[`']--([a-zA-Z][a-zA-Z0-9-]*)=/g",
+            "case: /\\bcase\\s+'--([a-zA-Z][a-zA-Z0-9-]*)'\\s*:/g"
         ],
         "helperDecl": "/^\\s*(?:export )?const ([a-zA-Z][a-zA-Z0-9]*) = (?:async\\s+)?(?:function\\b|\\([^)]*\\)\\s*=>|[a-zA-Z_$][\\w$]*\\s*=>)/gm — then `<helper>('x')`, within 400 characters of a mention of both `argv` and a `--${…}` template",
         "unresolvedByDesign": "/\\((?:never written|retired)\\)/ within 120 characters after a citation, on the same line — the citation is then of a PLAN or of a RETIRED instrument, and is dropped from both directions of the table"
@@ -1500,7 +1501,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
-            "inheritedFlags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "census-seedling-solver-surface — engine-prep C1's static census of the Seedling solver's surface: everything the solver family reaches in the simulation.",
             "path": "scripts/procgen/census-seedling-solver-surface.mjs"
         },
@@ -7123,7 +7129,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
-            "inheritedFlags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "measure-seedling-solver-surface — the DYNAMIC half of engine-prep C1: what the solver family actually reaches in the simulation while its committed routes are re-solved.",
             "path": "scripts/procgen/measure-seedling-solver-surface.mjs"
         },

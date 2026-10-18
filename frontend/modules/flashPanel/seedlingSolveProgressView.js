@@ -18,6 +18,24 @@
  * where the search is NOW over where it has been in total. The rise is a delta between two drawn snapshots of the
  * same solve, segment and level (a re-render of the same snapshot keeps it; anything else starts from nothing).
  *
+ * ⛓ RK VIEW (slice `seedling-js-rk-view`, reads hammer-phase RK's `v: 2`; the snapshot, the tap and the worker are
+ * unchanged): each tree row shows its `rejectionKinds` as CHIPS (`kind n`, in `REFUSAL_KINDS`' order, a kind not in
+ * the list after them by name — `kindChips`); under the active path, the segment's REFUSALS BY KIND, each counted
+ * once (`kindTotals` — never a sum over every node), and its LAST WHY, `‹kind› at ‹key›: ‹why›`, clamped to one line
+ * (the full sentence in the tooltip; a click opens it). Every why is solver text: it is only ever written as text
+ * (`textContent`, `title`, a text node), never parsed as HTML. A v1 snapshot has none of these fields, so it draws
+ * nothing new: the two lines are inserted on the first snapshot that has them, and a row grows its chip box on the
+ * first kind it shows — a v1 stream's DOM is the S2 view's, byte for byte (pinned).
+ *
+ * ⛓ STAMPS VIEW (slice `seedling-js-stamps-view`, draws S3's Tier B tap stamps; the tap, the worker and the service
+ * are unchanged): under the header, the REQUEST IDENTITY (kept from the solve's first post — `requestText`) and the
+ * PLAN IN HAND (`bestText`); beside the meter, the RATE and its ETAs to the window and the limit, as the tap wrote
+ * them (`etaText`); under that, WHERE THE TIME WENT — `budget.wallBySite`, the most wall first, Σ = the attempt's wall
+ * (per ATTEMPT, so labelled; the asks below are per segment). The lines are inserted on the first snapshot that
+ * carries a stamp, so a snapshot without them draws the RK view's bytes (pinned). Each line is one `_line` write, only
+ * when its text changes; the wall line is one clipped line (its full list in the tooltip), so its moving digits never
+ * change its height; every line is a full-width block, never a flex item sized by its text (S2's lesson).
+ *
  * ⛓ INCREMENTAL (slice S1, ⚖ the user 2026-10-17 — the rate setting `flashPanel.seedlingSolveProgressIntervalMs`
  * depends on it): a note updates the STATE (and the show/hide lifecycle) at once, but the DOM at most once per
  * animation frame (`frame`, default `requestAnimationFrame`) — the notes of one frame coalesce into one render of the
@@ -39,8 +57,9 @@
  */
 
 import {
-    activePath, applyProgress, asksBySite, autoVisibility, createSolveProgressFeed, emptyProgress, meterOf,
-    reasonsText, SOLVE_PROGRESS_TREE_CAP, tileIndex, tileShade, treeRows, workCounters,
+    activePath, applyProgress, asksBySite, autoVisibility, bestText, clampText, createSolveProgressFeed, emptyProgress,
+    etaText, formatMs, kindChips, kindTotals, lastWhyText, meterOf, reasonsText, requestText, SOLVE_PROGRESS_TREE_CAP,
+    tileIndex, tileShade, treeRows, wallBySiteRows, workCounters,
 } from './seedlingSolveProgress.js';
 import { progressIntervalMs, SOLVE_PROGRESS_INTERVAL_MS } from '../seedlingDemo/solveProgressTap.js';
 
@@ -58,6 +77,18 @@ const MAP_BACKGROUND = '#0a0a0a';
  */
 const TREE_ROW_CSS = 'content-visibility:auto;contain-intrinsic-size:auto 14px;';
 const EMPTY_TILES = 'empty';
+/** ⛓ RK VIEW — a refusal-kind chip on a tree row. */
+const CHIP_CSS = 'display:inline-block;margin-left:4px;padding:0 3px;border:1px solid #555;border-radius:3px;'
+    + 'background:#222;color:#ddd;font-size:10px;line-height:12px;';
+/**
+ * ⛓ RK VIEW — the last why's length while it is closed (some whys run to 900+ characters): the line is also clipped
+ * to one line with an ellipsis by its style, and the full sentence is its tooltip.
+ */
+export const LAST_WHY_CHARS = 200;
+const WHY_CLOSED_CSS = 'color:#ccc;margin:0 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;';
+const WHY_OPEN_CSS = 'color:#ccc;margin:0 0 4px;white-space:pre-wrap;overflow-wrap:anywhere;cursor:pointer;';
+/** ⛓ STAMPS VIEW — the site pairs the wall line names before it counts the rest (Σ is always over every pair). */
+export const WALL_SITES_SHOWN = 6;
 
 const el = (tag, css = '', text = null) => {
     const e = document.createElement(tag);
@@ -158,10 +189,38 @@ export class SolveProgressView {
         this.workText = el('div', 'color:#888;white-space:pre-wrap;');
         this.workText.className = 'flash-panel-solve-progress-work';
         this.meter.append(this.meterBar, this.meterText, this.asksText, this.workText);
+        // ⛓ STAMPS VIEW — the request identity and the plan in hand (under the header), the rate/ETA and the wall by
+        // site (under the meter's text): inserted on the first snapshot that carries a Tier B stamp
+        this.requestText = el('div', 'color:#aaa;white-space:pre-wrap;overflow-wrap:anywhere;');
+        this.requestText.className = 'flash-panel-solve-progress-request';
+        this.bestText = el('div', 'color:#aaa;');
+        this.bestText.className = 'flash-panel-solve-progress-best';
+        this.stampsHead = el('div');
+        this.stampsHead.append(this.requestText, this.bestText);
+        this.etaText = el('div', 'color:#888;');
+        this.etaText.className = 'flash-panel-solve-progress-eta';
+        this.wallText = el('div', 'color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;');
+        this.wallText.className = 'flash-panel-solve-progress-wall';
+        this._stampsShown = false;
         // ⛓ TIER A — the active path, one line, with its climb depth
         this.pathText = el('div', 'color:#ccc;margin:2px 0 4px;white-space:pre-wrap;');
         this.pathText.className = 'flash-panel-solve-progress-path';
+        // ⛓ RK VIEW — the refusals by kind and the last why: inserted before the body on the first snapshot that
+        // carries them (a v1 stream never sees them)
+        this.kindsText = el('div', 'color:#888;white-space:pre-wrap;');
+        this.kindsText.className = 'flash-panel-solve-progress-kinds';
+        this.whyText = el('div', WHY_CLOSED_CSS);
+        this.whyText.className = 'flash-panel-solve-progress-why';
+        this._whyOpen = false;
+        this.rkBox = el('div');
+        this.rkBox.append(this.kindsText, this.whyText);
+        this._rkShown = false;
+        this.whyText.addEventListener('click', () => {
+            this._whyOpen = !this._whyOpen;
+            this._renderRK();
+        });
         const body = el('div', 'display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;');
+        this.body = body;
         // ⛓ TIER A — the map box's width is the CANVAS's (at least MAP_WIDTH), set on a resize only, and its caption
         // wraps inside it: a caption that sized the box (its counts change width every note) re-flexed the tree's
         // width every note, which re-laid out every row (S2's bench: churn layout ~6 → ~2 ms)
@@ -300,6 +359,8 @@ export class SolveProgressView {
         this._renderHeader();
         this._renderMeter();
         this._renderTierA();
+        this._renderStamps();
+        this._renderRK();
         this._renderTiles();
         this._renderTree();
     }
@@ -364,6 +425,70 @@ export class SolveProgressView {
             ? `active: ${nodes.map((n) => (n.label && n.label !== n.role ? `${n.role} ${n.label}` : n.role)).join(' › ')}`
                 + ` · climb depth ${climbDepth}`
             : `active: — (${this.state.final ? 'finished' : 'nothing running'})`);
+    }
+
+    /**
+     * ⛓ RK VIEW — the segment's refusals by kind (each once) and its last why, clamped unless opened. Nothing is
+     * drawn or inserted until a snapshot carries `rejectionKinds` or a `lastWhy`.
+     */
+    _renderRK() {
+        const snap = this.state.snapshot;
+        const totals = snap ? kindTotals(snap.tree) : null;
+        const why = snap ? lastWhyText(snap.lastWhy) : null;
+        if (!this._rkShown) {
+            if (totals === null && why === null) return;
+            // before the body: the body is moved after it (append and remove only — every DOM the view meets has them)
+            this.body.remove();
+            this.element.append(this.rkBox, this.body);
+            this._rkShown = true;
+        }
+        this._line(this.kindsText, totals === null ? ''
+            : `refusals by kind (this segment, each once): ${totals.rows.length
+                ? `${totals.rows.map(([k, n]) => `${k} ${n}`).join(' · ')} · Σ ${totals.total}` : 'none yet'}`);
+        const text = why === null ? '' : `last why: ${this._whyOpen ? why : clampText(why, LAST_WHY_CHARS)}`;
+        this._line(this.whyText, text);
+        const title = why ?? '';
+        if (this.whyText.title !== title) this.whyText.title = title;
+        const css = this._whyOpen ? WHY_OPEN_CSS : WHY_CLOSED_CSS;
+        if (this.whyText.style.cssText !== css) this.whyText.style.cssText = css;
+    }
+
+    /**
+     * ⛓ STAMPS VIEW — the request identity, the plan in hand, the rate/ETA and the wall by site. Nothing is drawn or
+     * inserted until a snapshot carries a Tier B stamp (or the solve's kept request): the lines go in with append and
+     * remove only (every DOM the view meets has them), after the header and after the meter's text.
+     */
+    _renderStamps() {
+        const s = this.state;
+        const snap = s.snapshot;
+        const b = snap?.budget ?? {};
+        if (!this._stampsShown) {
+            if (!snap || !(s.request || snap.best || b.wallBySite || b.rate)) return;
+            const after = [this.meter, this.pathText, ...(this._rkShown ? [this.rkBox] : []), this.body];
+            for (const n of after) n.remove();
+            this.element.append(this.stampsHead, ...after);
+            this.asksText.remove();
+            this.workText.remove();
+            this.meter.append(this.etaText, this.wallText, this.asksText, this.workText);
+            this._stampsShown = true;
+        }
+        this._line(this.requestText, requestText(s.request) ?? '');
+        this._line(this.bestText, snap ? bestText(snap.best) : '');
+        this._line(this.etaText, (snap && etaText(snap)) ?? '');
+        const wall = snap ? wallBySiteRows(snap) : null;
+        let text = '';
+        let title = '';
+        if (wall) {
+            const pair = ([k, ms]) => `${k} ${formatMs(ms)}`;
+            const more = wall.rows.length - WALL_SITES_SHOWN;
+            text = `wall by site (this attempt): ${wall.rows.length
+                ? `${wall.rows.slice(0, WALL_SITES_SHOWN).map(pair).join(' · ')}${more > 0 ? ` · +${more} more` : ''}`
+                    + ` · Σ ${formatMs(wall.total)}`
+                : 'none yet'}`;
+            title = wall.rows.map(pair).join('\n');
+        }
+        this._line(this.wallText, text);
+        if (this.wallText.title !== title) this.wallText.title = title;
     }
 
     _cellPx(tiles) {
@@ -520,6 +645,8 @@ export class SolveProgressView {
     /**
      * ⛓ INCREMENTAL — the tree's rows are DIFFED, not rebuilt: row i reuses the i-th element and writes only what
      * changed (each element remembers what it shows); surplus elements are removed; "… N more" stays last.
+     * ⛓ RK VIEW — a row with refusal kinds is [its text, its chips, its inline reasons]: the chip box and the tail
+     * text node are made on the row's first chip (a v1 row is still ONE text node) and kept, emptied, after that.
      */
     _renderTree() {
         const tree = this.state.snapshot?.tree ?? null;
@@ -529,11 +656,16 @@ export class SolveProgressView {
         rows.forEach((row, i) => {
             const n = row.node;
             const mark = row.collapsible ? (row.open ? '▾ ' : '▸ ') : (n.children?.length ? '▾ ' : '  ');
+            const head = `${'  '.repeat(row.depth)}${mark}${n.role}: ${n.label}  ${n.attempts}a ${n.successes}✓`
+                + (row.rejected ? ` ${row.rejected}✗` : '') + (row.hidden ? `  (+${row.hidden})` : '');
+            // ⛓ TIER A — a rung of an active climb says WHY it refused, inline
+            const reasons = row.reasons ? `  — ${reasonsText(n.rejections)}` : '';
+            // ⛓ RK VIEW — the row's refusal kinds as chips, between its counts and its reasons
+            const chips = kindChips(n.rejectionKinds);
             const want = {
-                text: `${'  '.repeat(row.depth)}${mark}${n.role}: ${n.label}  ${n.attempts}a ${n.successes}✓`
-                    + (row.rejected ? ` ${row.rejected}✗` : '') + (row.hidden ? `  (+${row.hidden})` : '')
-                    // ⛓ TIER A — a rung of an active climb says WHY it refused, inline
-                    + (row.reasons ? `  — ${reasonsText(n.rejections)}` : ''),
+                text: chips.length ? head : head + reasons,
+                tail: chips.length ? reasons : '',
+                chips: chips.map(([k, v]) => `${k} ${v}`).join('|'),
                 css: `${TREE_ROW_CSS}color:${n.active ? '#fff' : '#bbb'};${n.active ? 'background:#3a1520;' : ''}`
                     + (row.collapsible ? 'cursor:pointer;' : ''),
                 title: Object.entries(n.rejections ?? {}).map(([k, v]) => `${v}× ${k}`).join('\n'),
@@ -552,8 +684,18 @@ export class SolveProgressView {
             }
             const shown = line._shown;
             if (shown.text === want.text && shown.css === want.css && shown.title === want.title
-                && shown.key === want.key) return;
+                && shown.key === want.key && (shown.chips ?? '') === want.chips && (shown.tail ?? '') === want.tail) return;
             if (shown.text !== want.text) line._text.data = want.text;
+            if ((shown.chips ?? '') !== want.chips) {
+                if (!line._chips) {
+                    line._chips = el('span');
+                    line._tail = document.createTextNode('');
+                    line.append(line._chips, line._tail);
+                }
+                line._chips.textContent = '';
+                for (const [k, v] of chips) line._chips.append(el('span', CHIP_CSS, `${k} ${v}`));
+            }
+            if ((shown.tail ?? '') !== want.tail) line._tail.data = want.tail;
             if (shown.css !== want.css) line.style.cssText = want.css;
             if (shown.title !== want.title) line.title = want.title;
             if (shown.key !== want.key) {

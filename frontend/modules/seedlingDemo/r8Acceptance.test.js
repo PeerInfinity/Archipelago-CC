@@ -727,14 +727,15 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
         // ⛓ KILLLOCK K1: the jellyfish joins (`jellyfishLive`, ON since the wave-8 harvest).
         // ⛓ K2PREP D1: and the lavarunner under K2 — the declaration follows the switch (`pendingSwitchScope`).
         // ⛓ wave-11 harvest: and the Bulb under `contactFidelity.bulbLive` (ON by default) — asked both ways.
-        expect(withContactFidelity({ bulbLive: false }, () => withKillLockBodies({ lavaRunnerLive: false },
+        expect(withContactFidelity({ bulbLive: false, flyerLive: false }, () => withKillLockBodies({ lavaRunnerLive: false },
             () => assertBridgeRosterMatchesScope(bridgedChaserTags))))
             .toEqual({ classes: ['bob', 'bobsoldier', 'jellyfish', 'puncher'] });
-        expect(withContactFidelity({ bulbLive: false }, () => withKillLockBodies({ lavaRunnerLive: true },
+        expect(withContactFidelity({ bulbLive: false, flyerLive: false }, () => withKillLockBodies({ lavaRunnerLive: true },
             () => assertBridgeRosterMatchesScope(bridgedChaserTags))))
             .toEqual({ classes: ['bob', 'bobsoldier', 'jellyfish', 'lavarunner', 'puncher'] });
+        // ⛓ fidelity BEAMTOWER D2 flip: `flyerLive` ON by default bridges the Flyer (`pendingSwitchScope.flyer`).
         expect(assertBridgeRosterMatchesScope(bridgedChaserTags))
-            .toEqual({ classes: ['bob', 'bobsoldier', 'bulb', 'jellyfish', 'lavarunner', 'puncher'] });
+            .toEqual({ classes: ['bob', 'bobsoldier', 'bulb', 'flyer', 'jellyfish', 'lavarunner', 'puncher'] });
     });
 
     it('⛔ MUTATION: a roster that drifts from the declaration reds by name', () => {
@@ -762,7 +763,7 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
         // `lavarunner` — transcribed, no roster row — with its switch K2 asked OFF.
         // ⛓ K2PREP D3: once K2 is ON every transcribed chaser is bridged, so the control is the SWITCH itself, asked
         // both ways: the roster row a switch-bridged chaser lacks is the switch, and turning it off un-bridges it.
-        withContactFidelity({ bulbLive: false }, () => withKillLockBodies({ lavaRunnerLive: false }, () => {
+        withContactFidelity({ bulbLive: false, flyerLive: false }, () => withKillLockBodies({ lavaRunnerLive: false }, () => {
             expect(bridgedChaserTags()).toEqual(['bob', 'bobsoldier', 'jellyfish', 'puncher']);
             expect(bridgedChaserTags()).not.toContain('lavarunner');
         }));
@@ -796,14 +797,14 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
             // its blast billed) and has no contact, so it joins with that pricer.
             // ⛓ K2PREP D1: asked with K2 OFF here; the K2-ON roster is asked below (a switch-bridged tag skips
             // the partition — `KILLLOCK_SWITCHED_CHASERS`).
-            bridged: [...withContactFidelity({ bulbLive: false }, () => withKillLockBodies({ lavaRunnerLive: false }, () => bridgedChaserTags())), 'spinner', 'wallflyer', 'iceturret', 'grenade'],
+            bridged: [...withContactFidelity({ bulbLive: false, flyerLive: false }, () => withKillLockBodies({ lavaRunnerLive: false }, () => bridgedChaserTags())), 'spinner', 'wallflyer', 'iceturret', 'grenade'],
         })).toEqual({ families: 7, bridged: ['bob', 'bobsoldier', 'jellyfish', 'puncher', 'spinner', 'wallflyer', 'iceturret', 'grenade'],
             refused: [] });
         expect(assertSteppedContactPartition({
             families: CONTACT_STEPPED_FAMILIES,
             pricedBy: CONTACT_STEPPED_PRICED_BY,
             why: CONTACT_STEPPED_WHY,
-            bridged: [...withContactFidelity({ bulbLive: false }, () => withKillLockBodies({ lavaRunnerLive: true }, () => bridgedChaserTags())), 'spinner', 'wallflyer', 'iceturret', 'grenade'],
+            bridged: [...withContactFidelity({ bulbLive: false, flyerLive: false }, () => withKillLockBodies({ lavaRunnerLive: true }, () => bridgedChaserTags())), 'spinner', 'wallflyer', 'iceturret', 'grenade'],
         })).toEqual({ families: 7, bridged: ['bob', 'bobsoldier', 'jellyfish', 'lavarunner', 'puncher', 'spinner', 'wallflyer', 'iceturret', 'grenade'],
             refused: [] });
         // ⛓ wave-11 harvest: the defaults (K2 and `bulbLive` ON) — the switch-bridged Bulb skips the partition too.
@@ -812,7 +813,8 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
             pricedBy: CONTACT_STEPPED_PRICED_BY,
             why: CONTACT_STEPPED_WHY,
             bridged: [...bridgedChaserTags(), 'spinner', 'wallflyer', 'iceturret', 'grenade'],
-        })).toEqual({ families: 7, bridged: ['bob', 'bobsoldier', 'bulb', 'jellyfish', 'lavarunner', 'puncher', 'spinner', 'wallflyer', 'iceturret', 'grenade'],
+        // ⛓ fidelity BEAMTOWER D2 flip: and the switch-bridged Flyer (`flyerLive` ON by default) skips it the same way.
+        })).toEqual({ families: 7, bridged: ['bob', 'bobsoldier', 'bulb', 'flyer', 'jellyfish', 'lavarunner', 'puncher', 'spinner', 'wallflyer', 'iceturret', 'grenade'],
             refused: [] });
     });
 
