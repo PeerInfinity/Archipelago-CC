@@ -1035,7 +1035,7 @@ export const DOCS_INDEX = Object.freeze([
         "path": "docs/json/user/tutorials/procgen-loop-mode-everything.md",
         "title": "Procgen: everything, in Loop mode",
         "section": "user/tutorials",
-        "summary": "The last procgen tutorial puts it all together: JtA zones, a generated Seedling room, mazes, a text adventure, a bounce zone, a Noiz2sa stage and *Idle Loops* — another idle game, which only runs in…"
+        "summary": "The last procgen tutorial puts it all together: JtA zones, a generated Seedling room, mazes, a text adventure, a bounce zone, a stretch of Noiz2sa and *Idle Loops* — another idle game, which only…"
     },
     {
         "path": "docs/json/user/tutorials/procgen-loop-mode-jta.md",

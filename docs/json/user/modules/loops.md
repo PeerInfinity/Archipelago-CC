@@ -5,7 +5,7 @@ The Loops panel runs **Loop mode**, which turns a world into an incremental game
 ## Starting Loop mode
 
 - A world generated with **Enable loop mode** in the [Procgen Pipeline](procgenPipeline.md) — for example the preset **Maze hazards + loop mode (sphere growth)** — turns Loop mode on when you load it.
-- For any other world, the panel first says **No cost data loaded** and offers two buttons. **Generate Costs** works out each action's cost from the world's solution; **Accept Defaults** gives the start region's moves no cost and every other move and check a fixed one. Either one enters Loop mode.
+- For any other world, the panel first says **No cost data loaded** and offers two buttons. **Generate Costs** works out each action's cost from the world's solution; **Accept Defaults** gives every move and every check a fixed cost. Either one enters Loop mode.
 - **Enter Loop Mode** / **Exit Loop Mode** (under **Controls**) switches it by hand. A world that only works in Loop mode (one with Journey to Ascension or Idle Loops zones) cannot leave it.
 
 ## Mana and experience
@@ -20,7 +20,7 @@ Below the mana bar there is one block per region the queue visits, starting with
 
 Open a block to add actions:
 
-- **Explore Region** queues an explore of that region. It earns experience and, with Discovery mode on, uncovers the region's hidden exits and locations (shown as **???** until then). Tick **Repeat** to queue it again each time it finishes.
+- **Explore Region** queues an explore of that region. It earns experience and uncovers the region's hidden exits and locations: Loop mode turns Discovery mode on, so what you have not discovered yet is shown as **???**. Tick **Repeat** to queue it again each time it finishes.
 - **Exits** — click an available exit to queue moving through it.
 - **Locations** — click an available location to queue checking it.
 

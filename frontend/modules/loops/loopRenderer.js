@@ -4,6 +4,7 @@ import discoveryStateSingleton from '../discovery/singleton.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { analyzeQueue } from '../shared/queueAnalysis.js';
+import { DEFAULT_REGION_COST, DEFAULT_LOCATION_COST } from '../shared/procgen/loopCostDefaults.js';
 import { getCostDataManager } from './index.js';
 import { resolveQueueBlocks } from './blockIdentity.js';
 import loopStateSingleton from './loopStateSingleton.js';
@@ -329,7 +330,7 @@ export class LoopRenderer {
       </div>
       <div style="margin-bottom: 16px; font-size: 0.9em; color: #999; line-height: 1.5;">
         Cost data determines mana costs for moving between regions and checking locations.<br>
-        Generate costs from the sphere log, or accept default costs (regions: 50, locations: 100).
+        Generate costs from the sphere log, or accept default costs (regions: ${DEFAULT_REGION_COST}, locations: ${DEFAULT_LOCATION_COST}).
       </div>
       <div style="margin-bottom: 8px; font-size: 0.85em; color: #aaa; text-align: center;">
         Either button will automatically enter Loop mode. To exit later, expand the Controls section and click Exit Loop Mode.

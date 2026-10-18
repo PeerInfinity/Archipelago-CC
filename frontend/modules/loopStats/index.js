@@ -86,23 +86,6 @@ export function register(registrationApi) {
   // Register events that loopStats publishes
   registrationApi.registerEventBusPublisher('loopStats:analysisUpdated');
 
-  // Register settings schema
-  registrationApi.registerSettingsSchema({
-    type: 'object',
-    properties: {
-      showManaCost: {
-        type: 'boolean',
-        default: false,
-        label: 'Show Mana Cost',
-      },
-      showRemainingMana: {
-        type: 'boolean',
-        default: true,
-        label: 'Show Remaining Mana',
-      },
-    },
-  });
-
   log('info', `[${moduleInfo.name} Module] Registration complete.`);
 }
 
