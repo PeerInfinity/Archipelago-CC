@@ -29,9 +29,15 @@
  *  - ⛓ HAMMER-PHASE RK — `v: 2`: each rejection is also tallied by its KIND (`progressKind`, `REFUSAL_KINDS`) beside
  *    its reason key, and the segment keeps its last rejection's `why` VERBATIM (`lastWhy`). Both read the payload the
  *    reason key already reads, after the solver computed it; v1's fields are the same bytes.
+ *  - ⛓ HAMMER-PHASE RK2 — v2 ADDITIONS (still `v: 2`): the kind `precondition` (a STATE GATE: the run or the world is
+ *    not in the state the action needs, whatever the search does), `lastWhy.name` (the thrown error's class, or null),
+ *    and rules naming more of the solver's own refusal families (the schema doc's §5, "v2 additions (RK2)").
  */
 
-/** The snapshot's schema version (`v`). ⛓ RK: 2 — `tree.rejectionKinds` and `lastWhy` (the schema doc's §5). */
+/**
+ * The snapshot's schema version (`v`). ⛓ RK: 2 — `tree.rejectionKinds` and `lastWhy` (the schema doc's §5). ⛓ RK2's
+ * additions (`precondition`, `lastWhy.name`) are additive within 2: no consumer gates on `v`.
+ */
 export const SOLVE_PROGRESS_VERSION = 2;
 
 /** The tile map's cell size in px — the A* tile (`TILE_SIZE`). */
@@ -150,7 +156,7 @@ export function progressWhy(x) {
  * recognises. ⛔ `solveProgress.test.js` holds `other` at 0 on the committed solves.
  */
 export const REFUSAL_KINDS = Object.freeze(['deadline', 'pending', 'danger', 'bound', 'exhausted', 'does-not-apply',
-    'already-true', 'unmodelled', 'diverged', 'error', 'other']);
+    'precondition', 'already-true', 'unmodelled', 'diverged', 'error', 'other']);
 
 /**
  * A search's `bound` → its kind: every bound the solver writes (`spaceTimeReach`'s `negative`, `deriveApproach`'s and
@@ -165,10 +171,31 @@ export const BOUND_KINDS = Object.freeze({ deadline: 'deadline', expansions: 'bo
 /**
  * A `clear-tag` refusal's `obstacle.reason` (`solverBot`'s `refuseCT`) → its kind: the reason is the solver's own
  * field, so it decides before the sentence (which, for `unresolved`, wraps the inner refusal's words).
+ * ⛓ RK2: `prerequisite` (a stance reachable only once another obstacle is discharged) and `cannot-act` (the run's bag)
+ * are STATE GATES — `precondition`. `unresolved` is the resolver's GENERIC outcome ("could not bind this obstacle
+ * against live state"), so its field alone says `exhausted`, and only its words can say more: an `unresolved` whose
+ * verbatim why carries a state gate's own words (`PRECONDITION_WORDS`: the seal door's "the door cannot open in this
+ * state:", wrapped from the approach resolver) is `precondition`; every other `unresolved` stays `exhausted`.
  */
 export const CLEAR_TAG_KINDS = Object.freeze({ 'unresolved': 'exhausted', 'no-verb': 'unmodelled',
     'not-written': 'diverged', 'wrong-level': 'does-not-apply', 'cross-room-presser': 'does-not-apply',
-    'prerequisite': 'does-not-apply', 'cannot-act': 'does-not-apply' });
+    'prerequisite': 'precondition', 'cannot-act': 'precondition' });
+
+/**
+ * ⛓ RK2 — a STATE GATE's own words: the action is the right one for its target, but the run or the world is not in
+ * the state it needs (a seal door's predicates, the WAND the Witch reads, a key or a weapon the bag lacks, an opener
+ * not yet discharged, a crusher still charging, a box inside a solid), so no search from here can change the answer.
+ * ⚖ fidelity-9: the seal door is read by its STABLE lead-in, the approach resolver's "the door cannot open in this
+ * state:" — never by its predicate clauses, which may grow (a Watcher clause is a candidate).
+ * ⛔ Contrast `does-not-apply`: there the QUESTION is the wrong one for the target (a KILL question, a static body
+ * with no line to bend, a pit or a placement that is not there, a presser of another room, the wrong level).
+ */
+const PRECONDITION_WORDS = new RegExp([
+    'the door cannot open in this state:', 'only for a player holding\\b', 'this run (?:holds no(?:ne)?|does not hold)\\b',
+    'with this run\'s bag', 'cannot be (?:pushed|burned|opened|broken|struck) by this run', 'the inventory has no \\w+ slot',
+    'has no weapon', 'holds no sword', 'holds NOTHING', 'is a SUB-ORDER\\b', 'reachable only once', 'needs \\S+ discharged',
+    'plans from parks', 'until that solid is gone', 'does not act from inside a solid',
+].join('|'));
 
 /**
  * The sentence's rules, in order: each matches words the solver writes for that kind. Read on the VERBATIM `why`, never
@@ -178,12 +205,13 @@ export const CLEAR_TAG_KINDS = Object.freeze({ 'unresolved': 'exhausted', 'no-ve
 const WHY_KINDS = Object.freeze([
     ['deadline', /⏱ DEADLINE|anytime deadline|caller's deadline|at the deadline/],
     ['already-true', /\balready true\b|\bis ALREADY\b/],
-    ['danger', /\bprobes? (?:DANGEROUS|dangerous)\b|\bwas HIT\b|\bHIT at dwell\b|danger map forbids|UNBILLED DAMAGE/],
-    ['exhausted', /\bno (?:[A-Za-z]+ )?(?:stance|stall|side|state|kill|strike|forced hit|corridor|path)s?\b|\bno (?:walkable|admissible)\b|\bNO LIVE BODY\b|found nothing|\bnone of\b|plans no corridor|left no corridor|every input from here is hit|\bEXHAUSTED\b/],
-    ['bound', /\bUPPER BOUND\b|maxPerSegment|\bbound\b/i],
-    ['does-not-apply', /\bquestion\b|STATIC census body|`speed 0`|is not a live body|is dying|cannot (?:open|act)\b|cannot be (?:pushed|burned|opened|broken|struck)\b|\bholds no\b|\bhas no \w+ (?:slot|tile)\b|is not a presser|does not hold\b|has no weapon|holds NOTHING|resolves to NOTHING|reachable only once|needs \S+ discharged/],
-    ['unmodelled', /unmodelled|not modelled|does not model|unpriced|does not price|[Nn]o strategy row|NOT REGISTERED|not registered|executor is registered|executor does not run/],
-    ['diverged', /diverge|and the RUN rests|does not ARRIVE|does not land|never (?:played|came to rest|armed|touched|ended|opened)\b|still standing|still shut|is not open by|disagree|crossed (?:to|from) level|crossed a door|\bleft level\b|press still down|is not (?:dead|dying)\b|still counted|is not in reach/],
+    ['danger', /\bprobes? (?:DANGEROUS|dangerous)\b|\bwas HIT\b|\bHIT at dwell\b|danger map forbids|UNBILLED DAMAGE|fires a spit before/],
+    ['exhausted', /\b(?:no|NO) (?:[A-Za-z]+ )?(?:stance|stall|side|state|kill|strike|forced hit|corridor|path|cell)s?\b|\bno (?:walkable|admissible)\b|\bNO LIVE BODY\b|found nothing|\bnone of\b|plans no corridor|left no corridor|every input from here is hit|\bEXHAUSTED\b|removed every body it could|would be the first one again/],
+    ['bound', /\bUPPER BOUND\b|maxPerSegment|\bbound\b|\bbounded at\b|strategies for one goal|\bcleared \S+ obstacle\(s\) and\b/i],
+    ['precondition', PRECONDITION_WORDS],
+    ['does-not-apply', /\bquestion\b|STATIC census body|`speed 0`|is not a live body|is not a body\b|is dying|\bholds no\b|\bhas no \w+ tile\b|is not a presser|does not hold\b|resolves to NOTHING/],
+    ['unmodelled', /unmodelled|UNMODELLED|not modelled|does not model|unpriced|does not price|[Nn]o strategy row|NOT REGISTERED|not registered|NOT registered|executor is registered|executor does not run|this run does not step|no choreography|nothing computed the consequence/],
+    ['diverged', /diverge|and the RUN rests|does not ARRIVE|does not land|never (?:played|came to rest|comes to rest|armed|touched|ended|opened)\b|still standing|still shut|is not open by|disagree|crossed (?:to|from) level|crossed a door|\bleft level\b|press still down|is not (?:dead|dying)\b|still counted|is not in reach|\b(?:came|comes) to rest at\b|\bthe walk (?:rests|settled) at\b|does not settle\b|still frozen after|still open after|\bticks? (?:of the [a-z ]+ and no|without the)\b|is not complete\b|added nothing|as route step \S+ requires|before the thrust|ticks after the thrust|left the player (?:facing|at)\b|did not fire\b/],
 ]);
 
 /** How many times `progressKind` was entered in this process — the gate's "unhooked, it never runs" counter. */
@@ -196,7 +224,8 @@ export const kindEntered = () => kindEntries;
  *     `levelRun`'s `undeclaredKillLock` (`pending`);
  *  2. the deadline's words anywhere in the verbatim sentence (a refusal after a trip says it may be the deadline's);
  *  3. an error's `code` (`HAMMER_SAFETY` → `danger`, `STRIKE_BOUND_EXHAUSTED` → `bound`), a search's other `bound`
- *     (`BOUND_KINDS`), a refusal's `obstacle` (`danger`, `unmodelled-*`, a `clear-tag`'s `reason`: `CLEAR_TAG_KINDS`);
+ *     (`BOUND_KINDS`), a refusal's `obstacle` (`danger`, `unmodelled-*`, a `clear-tag`'s `reason`: `CLEAR_TAG_KINDS`,
+ *     where an `unresolved` carrying a state gate's words is `precondition`);
  *  4. the verbatim sentence (`WHY_KINDS`);
  *  5. any other thrown error (not a refusal) is `error`; the rest is `other`.
  * ⛔ PURE: it reads its argument only (no clock, no `shouldStop`), and only an install reaches it.
@@ -224,6 +253,8 @@ export function progressKind(x) {
         if (ob === 'danger') return 'danger';
         if (typeof ob === 'string' && /^(?:unmodelled|unbilled)/.test(ob)) return 'unmodelled';
         if (ob === 'clear-tag' && Object.hasOwn(CLEAR_TAG_KINDS, o.obstacle.reason)) {
+            // ⛓ RK2: `unresolved` is generic — a state gate's own words inside it make it `precondition`
+            if (o.obstacle.reason === 'unresolved' && PRECONDITION_WORDS.test(why)) return 'precondition';
             return CLEAR_TAG_KINDS[o.obstacle.reason];
         }
     }
@@ -233,7 +264,8 @@ export function progressKind(x) {
 }
 
 /**
- * ⛓ HAMMER-PHASE RK — the segment's LAST rejection: its `why` verbatim, its kind, and the node it landed on. ONE
+ * ⛓ HAMMER-PHASE RK — the segment's LAST rejection: its `why` verbatim, its kind, the node it landed on, and (⛓ RK2)
+ * the thrown error's class name (`progressErrorName`; null for a row or a search). ONE
  * object per segment, overwritten (never a list). An error unwinding through several frames is one rejection: it
  * keeps the deepest node it landed on (the frame it was thrown under), not the outermost one it passed — but its
  * words are re-read at each frame, because they can grow on the way out (`withSolveDeadline` appends its
@@ -242,7 +274,21 @@ export function progressKind(x) {
 function noteLast(seg, x, kind, key) {
     const same = typeof x === 'object' && x !== null && seg.lastSource === x;
     seg.lastSource = typeof x === 'object' ? x : null;
-    seg.lastWhy = { why: progressWhy(x), kind, key: same ? seg.lastWhy.key : key };
+    seg.lastWhy = { why: progressWhy(x), kind, key: same ? seg.lastWhy.key : key, name: progressErrorName(x) };
+}
+
+/**
+ * ⛓ HAMMER-PHASE RK2 — `lastWhy.name`: a THROWN rejection's class, as the error names itself (`SolverRefusal`,
+ * `PendingDeclaration`, `SolverBotError`, `Error`, `TypeError`, …), so a thrown non-refusal whose words matched a rule
+ * keeps its class beside its kind. `null` for a rung row or a search leaf: they are not errors. Read off the error
+ * object (its `name`), never off its message.
+ *
+ * @param {*} x  an error, a refused row (`{rung, why}`), a search result, or a `why` string
+ * @returns {?string}
+ */
+export function progressErrorName(x) {
+    if (!(x instanceof Error)) return null;
+    return typeof x.name === 'string' && x.name ? x.name : (x.constructor?.name ?? 'Error');
 }
 
 /**
