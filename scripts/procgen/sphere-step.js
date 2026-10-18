@@ -131,7 +131,10 @@ function parseArgs(argv) {
         // I/O flags
         input: null,
         out: null,
-        params: null,
+        // `--params PATH` (a JSON file). Its own key: it once shared `params`
+        // with the `--param k=v` map above, so the later literal key nulled the
+        // map and every `--param` threw "Cannot set properties of null".
+        paramsFile: null,
         rulesOut: null,
         from: null,
         to: null,
@@ -180,7 +183,7 @@ function parseArgs(argv) {
             case '--region-xp-effect': out.regionXpEffect = next(); break;
             case '-i': case '--input': out.input = next(); break;
             case '-o': case '--out': out.out = next(); break;
-            case '--params': out.params = next(); break;
+            case '--params': out.paramsFile = next(); break;
             case '--rules-out': out.rulesOut = next(); break;
             case '--from': out.from = next(); break;
             case '--to': out.to = next(); break;
@@ -330,7 +333,7 @@ async function main() {
         throw new Error(`step '${sub}' requires -i <envelope.json> (or start with 'plan')`);
     }
     // --params overrides the carried config knobs.
-    if (args.params) Object.assign(env.config, readJson(args.params));
+    if (args.paramsFile) Object.assign(env.config, readJson(args.paramsFile));
 
     const onProgress = (ev) => {
         if (ev?.type) process.stderr.write(`  · ${ev.type}\n`);
