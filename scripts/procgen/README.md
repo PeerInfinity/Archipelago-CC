@@ -4,6 +4,52 @@ Node ESM scripts for running procgen pipelines outside the browser.
 Useful for engine-only debugging where booting the frontend would
 add noise.
 
+## Scripting the pipeline drivers
+
+The six pipeline drivers — `sphere-step.js`, `spiral-step.js`,
+`topdown-step.js`, `dump-sphere-growth.js`, `dump-shuffled-spiral.js` and
+`dump-grid-growth.js` — are scriptable: node-only, seeded and
+byte-deterministic. They share these conventions:
+
+- **stdout is the data channel.** Progress, hints, the dumps' `Wrote …` /
+  summary lines and the frontend's own load-time logging all go to stderr.
+  stdout is empty unless you ask for data on it: `-o -` on a `*-step.js`
+  driver writes the envelope there and nothing else, so it pipes into
+  `JSON.parse` / `jq`. (The `Worker is not defined` stack trace on stderr is
+  expected; see below.)
+- **Exit codes** (`cliRun.js`):
+
+  | code | outcome | when |
+  |---|---|---|
+  | 0 | `ok` | |
+  | 1 | `usage` | bad or unknown flag / value, missing or unknown subcommand, a step without `-i` — refused before any work |
+  | 2 | `oracle_mismatch` | the world was built and its outputs written, but the sphere oracle disagrees with the plan (`sphere-step` compile/run/append, `dump-sphere-growth`). This was exit 1 before 2026-10-18 |
+  | 3 | `input` | an input file (`-i`, `--source`, `--params`, `--sphere-log`, `--atlas`, `--jta-dataset-file`) is missing, is not JSON, or is an envelope of another kind / a newer version |
+  | 4 | `internal` | anything else thrown while the pipeline ran |
+
+  A crash while a module is still loading exits 1 (Node owns that exit).
+- **`--json-status PATH`** writes one JSON object when the run ends, failures
+  included (`-` = stdout; refused as usage when `-o -` already owns stdout):
+  `status_version` (1), `tool`, `subcommand`, `ok`, `exit_code`, `outcome`,
+  `error` (`{message}` or null), `completed` / `next` (step names, step
+  drivers only), `outputs` (`envelope` / `rules` / `dump` → absolute paths, or
+  `<stdout>`), `oracle` (`{checked, errors}` where there is an oracle, else
+  null) and `summary` (seed plus the driver's counts).
+- **`--help` (or `-h`)** prints the driver's usage, flag table and the flags
+  derived from its parser, then exits 0 without running anything.
+- **Format stamp.** Envelopes open with `kind` (`sphere-envelope`,
+  `spiral-envelope`, `topdown-envelope`) and `envelope_version` (1). Dumps
+  carry `kind` `sphere-growth-dump` / `shuffled-spiral-dump` /
+  `grid-growth-dump` with the same `envelope_version`. Reading `-i` refuses
+  another mode's envelope or a newer version by name. An unstamped envelope
+  (written before the stamp, or by hand) still loads. The panel's envelope
+  download and Load envelope use the same stamp.
+- **One substrate set.** Every driver registers the same substrates
+  (`registerPipelineSubstrates.js`: maze, text_adventure, jta, bounce,
+  runner, omsi). Whether a substrate fits a given driver is decided by the
+  driver: a zone substrate on the grid-growth driver is refused by name, not
+  reported as "not registered".
+
 ## dump-grid-growth.js
 
 Runs `growMaze` + `buildRulesJson` and writes the resulting grid,
@@ -33,7 +79,8 @@ Output shape:
 - `rulesJson` — full compiled rules.json
 
 The script imports modules that schedule background timers (the
-state-manager proxy etc.), so it force-exits after writing. Errors
+state-manager proxy etc.), so it force-exits after writing (with the exit
+codes above). Errors
 during import (e.g. "Worker is not defined") are expected and
 harmless in a Node context.
 
@@ -124,7 +171,7 @@ node scripts/procgen/sphere-step.js run --from plan --to compile <world flags> -
 envelope carries the resolved config so later steps need only `-i`.
 `--params FILE` merges a JSON object over the carried config (override
 knobs mid-pipeline). The unedited chain is byte-identical to
-`dump-sphere-growth.js` for the same flags; `compile` exits non-zero on a
+`dump-sphere-growth.js` for the same flags; `compile` exits 2 on a
 sphere-oracle mismatch. The grown grid crosses the boundary in a
 structural (tagged) form — edit the pipeline at `plan`/`allocate`/
 `topology`/`items`, not the grown grid by hand.

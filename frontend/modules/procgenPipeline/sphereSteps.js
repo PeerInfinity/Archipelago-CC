@@ -873,6 +873,7 @@ const STEP_OUTPUT_PRESENT = {
 // nextStep is the batch-aware loop (nextSphereStep); everything else is the
 // step list, runners, presence probes, and the non-plain artifact codecs.
 const SPHERE_DESCRIPTOR = {
+    kind: 'sphere-envelope',
     steps: SPHERE_STEPS,
     runners: RUNNERS,
     present: STEP_OUTPUT_PRESENT,

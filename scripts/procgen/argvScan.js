@@ -33,6 +33,10 @@ import { maskComments } from './maskComments.js';
 export const FLAG_PATTERNS = Object.freeze([
     Object.freeze({ id: 'includes', re: /\bincludes\(\s*'--([a-zA-Z][a-zA-Z0-9-]*)'/g }),
     Object.freeze({ id: 'startsWith', re: /startsWith\(\s*[`']--([a-zA-Z][a-zA-Z0-9-]*)=/g }),
+    /* ⛓ the `switch (a) { case '--seed': … }` parser the headless pipeline
+     *  drivers (`sphere-step.js`, `dump-sphere-growth.js`, …) are written in —
+     *  without it their `--help` reported "reads no argv" (§5au item 2). */
+    Object.freeze({ id: 'case', re: /\bcase\s+'--([a-zA-Z][a-zA-Z0-9-]*)'\s*:/g }),
 ]);
 
 /**
