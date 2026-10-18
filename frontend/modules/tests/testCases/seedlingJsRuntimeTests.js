@@ -927,6 +927,15 @@ export async function seedlingJsRuntimeSolveProgressView(tc) {
             .map(([k, n]) => `${k} ${n}`).sort();
         tc.assertEqual('the root row\'s chips are its rejectionKinds (RK view)', JSON.stringify(rootKinds),
             JSON.stringify(rootChips));
+        // ⛓ STAMPS VIEW — S3's Tier B stamps on the real solve: the request (kept from the solve's FIRST post — the
+        // final snapshot does not carry it), the plan in hand, and where the time went (Σ = the attempt's wall)
+        tc.log(`stamps view: ${view.requestText.textContent} | ${view.bestText.textContent} | ${view.etaText.textContent}`
+            + ` | ${view.wallText.textContent}`);
+        tc.assertEqual('the request identity is drawn, kept from the first post (stamps view)', true,
+            final.request === undefined && /^request: .* · boot L\d+ · /.test(view.requestText.textContent));
+        tc.assertEqual('the plan in hand is drawn (stamps view)', true, /^best: (ok · \d+ ticks|refused|none yet)/.test(view.bestText.textContent));
+        tc.assertEqual('the wall by site is drawn (stamps view)', true,
+            /^wall by site \(this attempt\): .* · Σ [\d.]+ (ms|s)$/.test(view.wallText.textContent));
         if (st.snapshot?.tiles) {
             tc.assertEqual('the tile map is ONE canvas sized to the room', `${st.snapshot.tiles.cols}x${st.snapshot.tiles.rows}`,
                 `${Math.round(view.canvas.width / view._px)}x${Math.round(view.canvas.height / view._px)}`);
