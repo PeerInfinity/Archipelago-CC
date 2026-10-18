@@ -56,9 +56,8 @@ import { fileURLToPath } from 'node:url';
 
 import { argvHelp, helpText } from './argvHelp.js';
 
-// Side-effect: register the maze + bounce substrates.
-import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
-import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
+// Substrate libraries register their adapters on import — one shared list.
+import './registerPipelineSubstrates.js';
 import {
     TOPDOWN_STEPS, runTopDownStep, runTopDownToStep, resumeTDEnvelope,
     nextTopDownStep, detectTDCompleted, buildTopDownEnvelope, tdEditsBehind,

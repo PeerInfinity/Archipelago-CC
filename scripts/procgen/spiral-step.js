@@ -83,13 +83,8 @@ import { fileURLToPath } from 'node:url';
 
 import { argvHelp, helpText } from './argvHelp.js';
 
-// Side-effect: register the spiral-capable substrates.
-import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
-import '../../frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js';
-import '../../frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
-import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
-import '../../frontend/modules/runnerDemo/runnerDemoLibrary.js';
-import '../../frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js';
+// Substrate libraries register their adapters on import — one shared list.
+import './registerPipelineSubstrates.js';
 import { substrateRegistry } from '../../frontend/modules/shared/procgen/substrateRegistry.js';
 import { generateJtaDataset } from '../../frontend/modules/jtaSubstrateWrapper/generateDataset.js';
 import { generateOmsiAwardSchedule } from '../../frontend/modules/omsiSubstrateWrapper/generateAwardSchedule.js';

@@ -47,10 +47,8 @@ import { fileURLToPath } from 'node:url';
 
 import { argvHelp, helpText } from './argvHelp.js';
 
-// Substrate libraries register their adapters on import. growMaze
-// needs at least one registered substrate to build regions.
-import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
-import '../../frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js';
+// Substrate libraries register their adapters on import — one shared list.
+import './registerPipelineSubstrates.js';
 
 import { growMaze, buildRulesJson, getRegionExits } from
     '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';

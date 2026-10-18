@@ -89,11 +89,8 @@ import { fileURLToPath } from 'node:url';
 
 import { argvHelp, helpText } from './argvHelp.js';
 
-// Substrate libraries register their adapters on import.
-import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
-import '../../frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js';
-import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
-import '../../frontend/modules/runnerDemo/runnerDemoLibrary.js';
+// Substrate libraries register their adapters on import — one shared list.
+import './registerPipelineSubstrates.js';
 
 import {
     SPHERE_STEPS, runStep, runToStep, resumeEnvelope, detectCompleted, sphereEditsBehind,
