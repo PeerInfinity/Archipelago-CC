@@ -23422,7 +23422,7 @@ named the lever: `botDriverV2.planWaypoints`' string-pull is ~57 % of the L40 so
 `planWaypoints` is 54 % of the profile, and `plannerObstacleAt` is 96 % of that.
 
 **D1 — where the time goes.** The 881 calls make 92,035 `plannerObstacleAt` asks, and **51 % of them repeat a point
-already asked in the same `planWaypoints` call** (72 % over the campaign, 35–55 % over the generated pairs). An
+already asked in the same `planWaypoints` call** (72 % over the campaign, 39–55 % over the generated pairs). An
 axis-aligned sample asks one point twice, every candidate from one anchor re-asks the anchor and the shared prefix of
 its axis legs, and the next anchor re-walks the same ground. Across calls the repeats rise to 88 %, but there the world
 can move, so that key would need a world version from fidelity's code. A binary search over `j` agreed with
@@ -23440,7 +23440,8 @@ X-first corner sample, and L40/L18/L6/L3 plus the L42 crusher witness OFF = ON e
 killgate census OFF and ON: md5s equal, 1,275 audited `planWaypoints` calls, 0 mismatches. Five mutants (a memo that
 outlives the call, one per options object, a key without `y`, a skipped corner query, nearest-first) are each caught.
 A binary search returns the same answers on the corpus and is caught only by the progress stream, because it asks
-fewer times.
+fewer times. ⚠ The first D4 vitest caught one defect: the silent arm's `beat && activeProgress !== null` guard broke
+the one-null-check form `solveProgressHeartbeat.test.js` pins. It is now `if (beat) { if (activeProgress !== null) … }`.
 
 **D3** (three interleaved rounds, load 1.0–1.6): L40 `planWaypoints` 4.7–5.4 s → **2.5–2.9 s (~1.84×)**, wall
 6.1–7.3 s → 4.4–4.8 s. L18 does not move (its `planWaypoints` is 0.2 %). Digest and `shouldStop` are identical in every
