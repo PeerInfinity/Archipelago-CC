@@ -116,7 +116,7 @@ This project includes several custom Archipelago worlds:
 
 - **[MetaMath](../../../worlds/metamath/docs/README.md):** Turns mathematical proofs from the MetaMath database into playable Archipelago worlds. Each proof step is a location, each proven statement is an item.
 - **[DepGraph](../features/depgraph.md):** Converts any directed acyclic graph (tech trees, skill trees, to-do lists) into a playable world.
-- **[Journey to Ascension](../../../worlds/jta/docs/en_Journey%20to%20Ascension.md):** Archipelago integration for the incremental/idle game, with automatic cost rebalancing for randomized perk placement. [Demo](https://peerinfinity.github.io/Archipelago-CC/?mode=jta)
+- **[Journey to Ascension](../../../worlds/jta/docs/en_Journey%20to%20Ascension.md):** Archipelago integration for the incremental/idle game, with automatic cost rebalancing for randomized perk placement.
 
 ## How Synchronization Works
 
@@ -130,7 +130,7 @@ Some panels include buttons to manually check locations, which sends the check c
 
 ## What's Next?
 
-This tracker is under active development. The core tracking functionality is working, with additional features in progress. See the [Project Roadmap](../project-roadmap.md) for planned features and current priorities.
+This tracker is under active development. The core tracking functionality is working, with additional features in progress.
 
 ## Further Reading
 

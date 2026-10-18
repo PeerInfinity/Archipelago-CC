@@ -11,7 +11,6 @@ The primary and most current documentation for this project is located in the `d
 -   **[Main Documentation Portal (`docs/json/README.md`)](./docs/json/README.md)**: The central hub for all user and developer documentation.
 -   **User Guides (`docs/json/user/`)**: Contains the **[Quick Start Guide](./docs/json/user/quick-start.md)** and other manuals for using the web client.
 -   **Developer Guides (`docs/json/developer/`)**: Contains the **[Developer Getting Started Guide](./docs/json/developer/getting-started.md)**, a deep dive into the **[System Architecture](./docs/json/developer/architecture.md)**, and detailed guides on the **[Module System](./docs/json/developer/guides/module-system.md)**, **[Event System](./docs/json/developer/guides/event-system.md)**, and **[State Management](./docs/json/developer/guides/state-management.md)**.
--   **[Project Roadmap (`docs/json/project-roadmap.md`)](./docs/json/project-roadmap.md)**: Outlines the latest status, known issues, and future plans.
 
 The `CC/` directory contains supplementary design documents and Claude Code collaboration files. The `NewDocs/` directory contains historical planning files. While they provide valuable context, the `docs/json/` directory should be considered the authoritative source for the project's current state.
 

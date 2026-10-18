@@ -219,7 +219,6 @@ npm run test:headed
 - **[Event System](../docs/json/developer/guides/event-system.md)** - EventBus and EventDispatcher
 - **[State Management](../docs/json/developer/guides/state-management.md)** - StateManager details
 - **[JSON Schema](schema/README.md)** - Schema documentation for rules files
-- **[Project Roadmap](../docs/json/project-roadmap.md)** - Development priorities and future features
 
 ## Browser Support
 
