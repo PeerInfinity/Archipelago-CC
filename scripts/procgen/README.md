@@ -61,6 +61,12 @@ byte-deterministic. They share these conventions:
   another mode's envelope or a newer version by name. An unstamped envelope
   (written before the stamp, or by hand) still loads. The panel's envelope
   download and Load envelope use the same stamp.
+- **The contract is tested.** `scripts/procgen/cliContract.test.js` (default
+  vitest tier, so every CI push) spawns the drivers and checks all of the
+  above: empty stdout unless `-o -`, the exit code and status object of each
+  refusal, every envelope at every step against its schema, every rules.json
+  against `frontend/schema/rules.schema.json`, and each dump rebuilt from its
+  own `config`.
 - **Envelope schemas.** `frontend/schema/envelopes/<kind>.schema.json`
   describes every top-level field of an envelope, generated from the mode's
   field table (`node scripts/procgen/generate-envelope-schemas.mjs`, `--check`
