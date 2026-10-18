@@ -939,7 +939,7 @@ export const DOCS_INDEX = Object.freeze([
         "path": "docs/json/user/overview.md",
         "title": "Overview: What Is This?",
         "section": "user",
-        "summary": "The Archipelago JSON Export Tools project provides an advanced tracker for Archipelago multiworld randomizer games. Archipelago is an open-source framework that connects multiple single-player games…"
+        "summary": "The Archipelago JSON Export Tools project generates new Archipelago worlds in the browser and provides an advanced tracker for existing multiworld randomizer games. Archipelago is an open-source…"
     },
     {
         "path": "docs/json/user/quick-start.md",
