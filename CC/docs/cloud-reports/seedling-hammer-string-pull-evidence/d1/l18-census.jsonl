@@ -1,0 +1,2 @@
+{"tape":"r9-solve-18","interval":"none","wall":5551,"digest":"230dc0ff7300b9741e5559abc26ef70f","shouldStops":165,"ok":true,"ticks":445,"hookCalls":0}
+{"pw":4,"pulls":1,"pointsTotal":11,"anchors":1,"cpc":1,"cpcClear":1,"cpcBlocked":0,"poa":463,"poaInClearCalls":463,"poaPerCpcMean":463,"samples":231,"sampleSameY":123,"poaRepeatWithinPlanWaypoints":123,"poaRepeatWithinSolve":123,"cpcRepeatWithinPlanWaypoints":0,"cpcRepeatWithinSolve":0,"cpcRepeatWithinSolveIgnoringOpts":0,"distinctOpts":1,"pwMs":17,"cpcMs":5,"poaMs":3,"poaHit":{}}
