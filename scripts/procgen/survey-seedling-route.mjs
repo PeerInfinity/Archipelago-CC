@@ -123,7 +123,8 @@
  *    entity through the sidecar (`hopEdge`), so a double-wide door or two
  *    stairs between one pair of levels is no longer a refusal;
  *  · a staged row's grant lists what a boot cannot present (`unpresentable`:
- *    Seals, Totem Shards, Health) — such a row is solved WITHOUT them.
+ *    Health) — such a row is solved WITHOUT them. ⛓ RULES survey-save-arrays: Seals and Totem Shards
+ *    are no longer in it — they are COUNTED and staged into `save` (`surveyGrants.stageGrantSave`).
  * Each `--through` writes under `…/through-<sphere>/`; the alternative-leg
  * addendum is the default survey's only.
  *
@@ -146,7 +147,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync } from 
 import { fileURLToPath } from 'node:url';
 
 import { familyOf } from './surveyFamily.js';
-import { deriveStagedGrant, tapeCoversVisit } from './surveyGrants.js';
+import { deriveStagedGrant, stageGrantSave, tapeCoversVisit } from './surveyGrants.js';
 import {
     RESTART_TARGET, deriveLegs, gameStateEventsOf, stagedPersistence, keyItemsOf, makeRuleHolds, pickupsThrough, regionPath as surveyRegionPath,
     ROUTE_MODES, routeOnlyRows,
@@ -1060,8 +1061,9 @@ function stagedGrantFor(step, latchItems) {
         pickups: PICKUP_ROWS,
         game: GAME,
         latchItems,
-        // ⛓ `rules-route-survey`: a Seal, a Totem Shard or Health cannot be
-        //   presented by a boot; the grant names it rather than crashing the row.
+        // ⛓ `rules-route-survey`: Health cannot be presented by a boot; the grant
+        //   names it rather than crashing the row (Seals and Totem Shards are
+        //   counted into `saveCounts` — RULES survey-save-arrays).
         unpresentable: 'report',
     });
     const sword = grant?.from.find((f) => f.item === 'Progressive Sword');
@@ -1145,13 +1147,18 @@ function bootFor(step) {
  * survey grants nothing, so its boots cannot move. A late visit with no Sword would be handed the post-sword latch
  * it never earned; that refuses by name rather than boot.
  */
+function committedGrantFor(step, tape) {
+    if (!THROUGH || typeof step.step !== 'number') return null;
+    return deriveStagedGrant({
+        earlier: route.steps.filter((s) => typeof s.step === 'number' && s.step < step.step),
+        pickups: PICKUP_ROWS, game: GAME, latchItems: committedTape(tape).seam?.items ?? {}, unpresentable: 'report',
+    });
+}
+
 function lateVisitTo(step, tape) {
     if (!THROUGH || typeof step.step !== 'number') return null;
     const raw = committedTape(tape);
-    const grant = deriveStagedGrant({
-        earlier: route.steps.filter((s) => typeof s.step === 'number' && s.step < step.step),
-        pickups: PICKUP_ROWS, game: GAME, latchItems: raw.seam?.items ?? {}, unpresentable: 'report',
-    });
+    const grant = committedGrantFor(step, tape);
     const { covers, beyond } = tapeCoversVisit(grant, raw.save?.keys ?? []);
     if (covers) return null;
     if (!grant.from.some((f) => f.item === 'Progressive Sword')) {
@@ -1189,15 +1196,28 @@ async function solveOneStep(step) {
     if (boot.kind === 'staged') {
         staging.boot = { level: step.level, x: step.arrival.x, y: step.arrival.y };
     }
+    /**
+     * ⛓ RULES survey-save-arrays — **THE DELIVERED SAVE ARRAYS ARE STAGED** (`surveyGrants.stageGrantSave`, through
+     * `saveArrayRules`), under `--through` only (the default survey grants nothing, so its rows cannot move):
+     *  · `staged`: the grant's keys (union, as before) AND its Seal / Totem Shard counts (log-append / count-fill)
+     *    over `STAGED_BASE`'s own block;
+     *  · `committed` / `true-start` (the tape's OWN visit — `lateVisitTo` found it covers every item and key): the
+     *    counts only, SET_IF_MISSING over the tape's own arrays, which stay the authority (never shortened).
+     * Before this, every boot held only the arrays its base tape recorded: step 211 (L113, FinalDoor) booted 0/16.
+     */
     const saveGrant = boot.kind === 'staged'
         ? stagedGrantFor(step, staging.seam?.items ?? null)
-        : null;
-    if (saveGrant?.keys.length) {
-        const save = staging.save ?? { totem_parts: [], keys: [], seal_parts: [] };
-        staging.save = {
-            ...save,
-            keys: [...new Set([...(save.keys ?? []), ...saveGrant.keys])].sort((x, y) => x - y),
-        };
+        : (boot.kind === 'committed' || boot.kind === 'true-start') ? committedGrantFor(step, boot.source) : null;
+    /** the save arrays a merge EXTENDED (`{seal_parts: [..]}`), recorded on the row's boot */
+    let stagedSave = null;
+    if (saveGrant) {
+        const held = stageGrantSave(staging.save, null);
+        const staged = stageGrantSave(staging.save, saveGrant, { keys: boot.kind === 'staged' });
+        const moved = Object.keys(staged).filter((n) => JSON.stringify(staged[n]) !== JSON.stringify(held[n]));
+        if (moved.length > 0) {
+            staging.save = staged;
+            stagedSave = Object.fromEntries(moved.map((n) => [n, staged[n]]));
+        }
     }
     if (saveGrant?.items.length) {
         staging.seam = {
@@ -1462,7 +1482,8 @@ async function solveOneStep(step) {
             block: staging.boot,
             check: bootCheck,
             strippedTimedClears: inheritedTimed.map((r) => `{${r.level},${r.tag}}@${r.at}`),
-            ...(saveGrant ? { saveGrant } : {}),
+            ...(saveGrant && boot.kind === 'staged' ? { saveGrant } : {}),
+            ...(stagedSave ? { stagedSave } : {}),
         },
         withCommittedDeclarations: withCommitted,
         goals: step.goals,
