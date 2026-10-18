@@ -1500,7 +1500,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
-            "inheritedFlags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "census-seedling-solver-surface — engine-prep C1's static census of the Seedling solver's surface: everything the solver family reaches in the simulation.",
             "path": "scripts/procgen/census-seedling-solver-surface.mjs"
         },
@@ -7123,7 +7128,12 @@ export const INSTRUMENTS = frz({
                     "name": "write"
                 }
             ],
-            "inheritedFlags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "measure-seedling-solver-surface — the DYNAMIC half of engine-prep C1: what the solver family actually reaches in the simulation while its committed routes are re-solved.",
             "path": "scripts/procgen/measure-seedling-solver-surface.mjs"
         },
