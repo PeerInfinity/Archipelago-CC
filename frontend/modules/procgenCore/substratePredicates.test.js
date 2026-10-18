@@ -101,12 +101,12 @@ describe('botHonorsInstant', () => {
 });
 
 describe('pipelineLayoutsOf', () => {
-    const { SPHERE, SPIRAL, GRID } = PIPELINE_LAYOUTS;
-    it('procedural: every layout; a zone realiser: sphere only; zoneCount alone: spiral only', () => {
-        expect(pipelineLayoutsOf({ generateRegionCore: fn })).toEqual([SPHERE, SPIRAL, GRID]);
-        expect(pipelineLayoutsOf({ generateZoneForSpecs: fn })).toEqual([SPHERE]);
+    const { SPHERE, SPIRAL, GRID, TOPDOWN } = PIPELINE_LAYOUTS;
+    it('procedural: every layout; a zone realiser: sphere + topdown; zoneCount alone: spiral only', () => {
+        expect(pipelineLayoutsOf({ generateRegionCore: fn })).toEqual([SPHERE, SPIRAL, GRID, TOPDOWN]);
+        expect(pipelineLayoutsOf({ generateZoneForSpecs: fn })).toEqual([SPHERE, TOPDOWN]);
         expect(pipelineLayoutsOf({ zoneCount: 4 })).toEqual([SPIRAL]);
-        expect(pipelineLayoutsOf({ generateZoneForSpecsGen: fn, zoneCount: 4 })).toEqual([SPHERE, SPIRAL]);
+        expect(pipelineLayoutsOf({ generateZoneForSpecsGen: fn, zoneCount: 4 })).toEqual([SPHERE, SPIRAL, TOPDOWN]);
     });
     it('none for no entry or an entry with no realiser and no zones', () => {
         expect(pipelineLayoutsOf(undefined)).toEqual([]);

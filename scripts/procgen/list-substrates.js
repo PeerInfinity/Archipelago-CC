@@ -15,8 +15,8 @@
  *                            unregistered id is a usage error)
  *   --layout L               only substrates a layout can place: sphere
  *                            (sphere-step, dump-sphere-growth), spiral
- *                            (spiral-step, dump-shuffled-spiral) or grid
- *                            (dump-grid-growth)
+ *                            (spiral-step, dump-shuffled-spiral), grid
+ *                            (dump-grid-growth) or topdown (topdown-step)
  *   --fields                 with --json: add every field the entry declares,
  *                            in the docs matrix's cell form (type, value, short)
  *   --json-status PATH       write the run's status object to a file (not
@@ -31,9 +31,9 @@
  * the error it threw if it could not load headless.
  */
 
-import { argvHelp, helpText } from './argvHelp.js';
+import { argvHelp } from './argvHelp.js';
+import { KIND, W, flag, oneOf, parseFlags } from './cliFlags.js';
 import { runCli, parseOrUsage, UsageError } from './cliRun.js';
-import { fileURLToPath } from 'node:url';
 
 // Substrate libraries (procgenCore/substrateLibraries.js) — loaded by main, not on import.
 import { loadPipelineSubstrates } from './registerPipelineSubstrates.js';
@@ -52,31 +52,19 @@ argvHelp(import.meta.url);
 /** ⛓ The JSON's own version; bump when a key changes meaning. */
 export const SUBSTRATE_LIST_VERSION = 1;
 
+/** ⛓ The flags this tool takes (cliFlags.js parses them). */
+const FLAGS = {
+    '--json': flag('json', KIND.on),
+    '--id': flag('ids', KIND.list),
+    '--layout': flag('layout', oneOf(...Object.values(PIPELINE_LAYOUTS))),
+    '--fields': flag('fields', KIND.on),
+    '--json-status': W.jsonStatus,
+    '-h': W.help,
+};
+
 function parseArgs(argv) {
-    const out = { json: false, ids: [], layout: null, fields: false };
-    for (let i = 0; i < argv.length; i++) {
-        const a = argv[i];
-        const next = () => {
-            if (i + 1 >= argv.length) throw new Error(`${a} needs a value`);
-            return argv[++i];
-        };
-        switch (a) {
-            case '--json': out.json = true; break;
-            case '--id': out.ids.push(next()); break;
-            case '--layout': out.layout = next(); break;
-            case '--fields': out.fields = true; break;
-            case '--json-status': next(); break;
-            case '-h': case '--help':
-                process.stdout.write(helpText(fileURLToPath(import.meta.url)));
-                process.exit(0);
-                break;
-            default: throw new Error(`unknown flag: ${a}`);
-        }
-    }
-    const layouts = Object.values(PIPELINE_LAYOUTS);
-    if (out.layout !== null && !layouts.includes(out.layout)) {
-        throw new Error(`--layout ${out.layout}: expected one of ${layouts.join(', ')}`);
-    }
+    const out = parseFlags(argv, FLAGS, { json: false, ids: [], layout: null, fields: false },
+        { metaUrl: import.meta.url });
     if (out.fields && !out.json) throw new Error('--fields needs --json');
     return out;
 }
@@ -133,7 +121,7 @@ function table(list) {
     const lw = Math.max(5, ...list.substrates.map((s) => (s.label ?? '').length));
     for (const s of list.substrates) {
         const can = s.capabilities.filter((c) => c.kind === 'yes' || c.kind === 'partial').length;
-        lines.push(`${s.id.padEnd(w)}  ${(s.label ?? '').padEnd(lw)}  layouts: ${(s.layouts.join(',') || '—').padEnd(17)}`
+        lines.push(`${s.id.padEnd(w)}  ${(s.label ?? '').padEnd(lw)}  layouts: ${(s.layouts.join(',') || '—').padEnd(25)}`
             + `  ${CELL_MARKS.yes} ${can}/${s.capabilities.length}  ${s.library ?? ''}`);
     }
     for (const l of list.libraries.filter((x) => x.error)) lines.push(`⚠ ${l.library} did not load: ${l.error}`);

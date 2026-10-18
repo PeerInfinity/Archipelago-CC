@@ -95,13 +95,13 @@
 
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-import { argvHelp, helpText } from './argvHelp.js';
+import { argvHelp } from './argvHelp.js';
+import { KIND, W, flag, parseFlags } from './cliFlags.js';
 import { runCli, parseOrUsage, readInputJson, InputError } from './cliRun.js';
 
 // Substrate libraries (procgenCore/substrateLibraries.js) — loaded by main, not on import.
-import { loadPipelineSubstrates } from './registerPipelineSubstrates.js';
+import { checkSubstrateIds, loadPipelineSubstrates } from './registerPipelineSubstrates.js';
 
 import { growSpheres, buildRulesJson, getRegionExits, compactSphereTree } from
     '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
@@ -162,8 +162,47 @@ function buildConsumableTileConfig(config) {
 
 // --- CLI parser ---
 
+/** ⛓ The flags this driver takes (cliFlags.js parses them). */
+const FLAGS = {
+    '--seed': W.seed,
+    '--region': W.region,
+    '--grid': W.grid,
+    '--items': W.items,
+    '--spheres': W.spheres,
+    '--items-per-sphere': flag('itemsPerSphere', KIND.int, (o) => { o.spheres = null; }),
+    '--pin': flag('pins', KIND.counts),
+    '--victory': W.victory,
+    '--quota': W.quota,
+    '--atlas': flag('atlasPools', KIND.list),
+    '--atlas-placement': flag('atlasPlacement', KIND.str),
+    '--start': W.start,
+    '--max-items-per-region': W.maxItemsPerRegion,
+    '--fillers': W.fillers,
+    '--revisit': W.revisit,
+    '--no-bidirectional': W.noBidirectional,
+    '--no-arrow-entry': W.noArrowEntry,
+    '--fall-behavior': W.fallBehavior,
+    '--physics-profile': W.physicsProfile,
+    // Generic substrate-param override (e.g. --param bounceBraidWidth=318
+    // --param bounceJitter=0). Numeric values are coerced; everything else
+    // stays a string.
+    '--param': W.param,
+    '--enable-loop-mode': W.enableLoopMode,
+    '--region-xp-effect': W.regionXpEffect,
+    '--consumable-tiles': W.consumableTiles,
+    '--consumable-count': W.consumableCount,
+    '--mana-tiles': W.manaTiles,
+    '--mana-tile-amount': W.manaTileAmount,
+    '--rules-out': W.rulesOut,
+    '-o': W.out,
+    '--out': W.out,
+    // the value is read by cliRun.js; not echoed into the dump's config
+    '--json-status': W.jsonStatus,
+    '-h': W.help,
+};
+
 function parseArgs(argv) {
-    const out = {
+    const out = parseFlags(argv, FLAGS, {
         seed: 1,
         region: { width: 8, height: 6 },
         grid: null,
@@ -196,91 +235,7 @@ function parseArgs(argv) {
         atlasPlacement: 'sorter',
         rulesOut: null,
         out: './sphere-growth-dump.json',
-    };
-    const parseWxH = (s) => {
-        const [w, h] = s.split('x').map((n) => parseInt(n, 10));
-        if (!Number.isFinite(w) || !Number.isFinite(h)) {
-            throw new Error(`expected WxH, got '${s}'`);
-        }
-        return { width: w, height: h };
-    };
-    const parseKv = (s) => {
-        const i = s.indexOf('=');
-        if (i < 0) throw new Error(`expected id=N, got '${s}'`);
-        return [s.slice(0, i), parseInt(s.slice(i + 1), 10)];
-    };
-    const parseStrKv = (s) => {
-        const i = s.indexOf('=');
-        if (i < 0) throw new Error(`expected key=value, got '${s}'`);
-        return [s.slice(0, i), s.slice(i + 1)];
-    };
-    for (let i = 0; i < argv.length; i++) {
-        const a = argv[i];
-        const next = () => argv[++i];
-        switch (a) {
-            case '--seed': out.seed = parseInt(next(), 10); break;
-            case '--region': out.region = parseWxH(next()); break;
-            case '--grid': out.grid = parseWxH(next()); break;
-            case '--items': {
-                const [id, n] = parseKv(next());
-                out.items[id] = n;
-                break;
-            }
-            case '--spheres': out.spheres = parseInt(next(), 10); break;
-            case '--items-per-sphere':
-                out.itemsPerSphere = parseInt(next(), 10);
-                out.spheres = null;
-                break;
-            case '--pin': {
-                const [id, s] = parseKv(next());
-                out.pins[id] = s;
-                break;
-            }
-            case '--victory': out.victory = next(); break;
-            case '--quota': {
-                const [id, n] = parseKv(next());
-                out.quotas[id] = n;
-                break;
-            }
-            case '--atlas': out.atlasPools.push(next()); break;
-            case '--atlas-placement': out.atlasPlacement = next(); break;
-            case '--start': out.start = next(); break;
-            case '--max-items-per-region':
-                out.maxItemsPerRegion = parseInt(next(), 10);
-                break;
-            case '--fillers': out.fillers = parseInt(next(), 10); break;
-            case '--revisit': out.revisit = parseFloat(next()); break;
-            case '--no-bidirectional': out.bidirectional = false; break;
-            case '--no-arrow-entry': out.arrowEntry = false; break;
-            case '--fall-behavior': out.fallBehavior = next(); break;
-            case '--physics-profile': out.physicsProfile = next(); break;
-            case '--param': {
-                // Generic substrate-param override (e.g.
-                // --param bounceBraidWidth=318 --param bounceJitter=0). Numeric
-                // values are coerced; everything else stays a string.
-                const [k, v] = parseStrKv(next());
-                out.params[k] = /^-?\d+(\.\d+)?$/.test(v) ? Number(v) : v;
-                break;
-            }
-            case '--enable-loop-mode': out.enableLoopMode = true; break;
-            case '--region-xp-effect': out.regionXpEffect = next(); break;
-            case '--consumable-tiles': out.consumableTiles = parseInt(next(), 10); break;
-            case '--consumable-count': out.consumableCount = parseInt(next(), 10); break;
-            case '--mana-tiles': out.manaTiles = parseInt(next(), 10); break;
-            case '--mana-tile-amount': out.manaTileAmount = parseFloat(next()); break;
-            case '--rules-out': out.rulesOut = next(); break;
-            case '-o':
-            case '--out': out.out = next(); break;
-            // the value is read by cliRun.js; not echoed into the dump's config
-            case '--json-status': next(); break;
-            case '-h':
-                process.stdout.write(`${helpText(fileURLToPath(import.meta.url))}\n`);
-                process.exit(0);
-                break;
-            default:
-                throw new Error(`unknown flag: ${a}`);
-        }
-    }
+    }, { metaUrl: import.meta.url });
     if (Object.keys(out.items).length === 0) {
         // Sensible default pool for quick runs.
         out.items = { key_red: 1, key_green: 1, key_blue: 1, key_yellow: 1, victory: 1 };
@@ -319,8 +274,11 @@ function shapeRegions(grid) {
 // --- main ---
 
 async function main(status) {
-    await loadPipelineSubstrates();
     const config = parseOrUsage(() => parseArgs(process.argv.slice(2)));
+    await loadPipelineSubstrates();
+    checkSubstrateIds(config, {
+        layout: 'sphere', tool: 'dump-sphere-growth', counts: { quotas: '--quota' }, start: 'start',
+    });
 
     // Merged item library + victory resolution via the shared substrate-hook
     // assembly (same path the panel + sphere-step CLI use).

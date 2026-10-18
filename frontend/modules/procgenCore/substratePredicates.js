@@ -43,8 +43,8 @@ export function regionRealiserKind(entry) {
     return null;
 }
 
-/** ⛓ The pipeline's three layouts, as data (the drivers' families). */
-export const PIPELINE_LAYOUTS = Object.freeze({ SPHERE: 'sphere', SPIRAL: 'spiral', GRID: 'grid' });
+/** ⛓ The pipeline's layouts, as data (the drivers' families). */
+export const PIPELINE_LAYOUTS = Object.freeze({ SPHERE: 'sphere', SPIRAL: 'spiral', GRID: 'grid', TOPDOWN: 'topdown' });
 
 /**
  * ⛓⛓ **WHICH PIPELINE LAYOUTS CAN PLACE A REGION OF THIS ENTRY?** The
@@ -54,6 +54,7 @@ export const PIPELINE_LAYOUTS = Object.freeze({ SPHERE: 'sphere', SPIRAL: 'spira
  *           (`regionRealiserKind`)
  *   spiral  `arrangeShuffledSpiral` — `zoneCount` or `generateRegionCore`
  *   grid    the grid-growth driver's `buildRegion` — `generateRegionCore` only
+ *   topdown the topdown relayout's `generateRegionGen` — a region realiser
  *
  * The CLI drivers refuse a quota naming an entry outside their layout with this
  * before any work runs, and `list-substrates.js` prints it.
@@ -66,6 +67,7 @@ export function pipelineLayoutsOf(entry) {
         out.push(PIPELINE_LAYOUTS.SPIRAL);
     }
     if (typeof entry?.generateRegionCore === 'function') out.push(PIPELINE_LAYOUTS.GRID);
+    if (regionRealiserKind(entry) !== null) out.push(PIPELINE_LAYOUTS.TOPDOWN);
     return out;
 }
 

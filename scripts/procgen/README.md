@@ -22,7 +22,7 @@ byte-deterministic. They share these conventions:
   | code | outcome | when |
   |---|---|---|
   | 0 | `ok` | |
-  | 1 | `usage` | bad or unknown flag / value, missing or unknown subcommand, a step without `-i` — refused before any work |
+  | 1 | `usage` | bad or unknown flag / value (a non-integer `--seed`, `--quota maze=x`, a flag with no value), a substrate that is not registered or that the driver's layout cannot place, missing or unknown subcommand, a step without `-i` — refused before any work |
   | 2 | `oracle_mismatch` | the world was built and its outputs written, but the sphere oracle disagrees with the plan (`sphere-step` compile/run/append, `dump-sphere-growth`). This was exit 1 before 2026-10-18 |
   | 3 | `input` | an input file (`-i`, `--source`, `--params`, `--sphere-log`, `--atlas`, `--jta-dataset-file`) is missing, is not JSON, or is an envelope of another kind / a newer version |
   | 4 | `internal` | anything else thrown while the pipeline ran |
@@ -35,6 +35,12 @@ byte-deterministic. They share these conventions:
   drivers only), `outputs` (`envelope` / `rules` / `dump` → absolute paths, or
   `<stdout>`), `oracle` (`{checked, errors}` where there is an oracle, else
   null) and `summary` (seed plus the driver's counts).
+- **One argv parser** (`cliFlags.js`). Each driver declares the flags it
+  takes as a table keyed by the flag (`'--seed': W.seed`), and `parseFlags`
+  checks every value once: integers are integers, `WxH` is two integers,
+  `id=N` needs both halves, and `--param key=value` turns a plain decimal into
+  a number and leaves anything else a string on every driver. The parse result
+  is the object a dump echoes as its `config`, key order included.
 - **`--help` (or `-h`)** prints the driver's usage, flag table and the flags
   derived from its parser, then exits 0 without running anything.
 - **Format stamp.** Envelopes open with `kind` (`sphere-envelope`,
@@ -50,7 +56,7 @@ byte-deterministic. They share these conventions:
   substrate the app registers can be named, Seedling and noiz2sa included.
   Loading happens when the run starts, not on `--help`. Whether a substrate
   fits a given driver is decided by its layout (`pipelineLayoutsOf`: sphere,
-  spiral or grid): a zone substrate on the grid-growth driver is refused by
+  spiral, grid or topdown): a zone substrate on the grid-growth driver is refused by
   name, not reported as "not registered".
 - **`list-substrates.js`** prints that registry: one line per substrate
   (label, layouts, how many capability statements it answers yes, the

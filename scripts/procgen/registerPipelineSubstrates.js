@@ -19,7 +19,7 @@
  *
  * A library that cannot load headless is recorded (its error's first line)
  * rather than ending the run: its ids are then absent, and a quota naming
- * one is refused as not registered.
+ * one is refused as not registered (`checkSubstrateIds`).
  *
  * Usage (from a driver's main):
  *   import { loadPipelineSubstrates } from './registerPipelineSubstrates.js';
@@ -28,6 +28,9 @@
 
 import { SUBSTRATE_LIBRARIES } from '../../frontend/modules/procgenCore/substrateLibraries.js';
 import { substrateRegistry } from '../../frontend/modules/shared/procgen/substrateRegistry.js';
+import { pipelineLayoutsOf } from '../../frontend/modules/procgenCore/substratePredicates.js';
+import { isLibrarySourceId } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
+import { UsageError } from './cliRun.js';
 
 let loading = null;
 
@@ -54,4 +57,34 @@ export function loadPipelineSubstrates() {
         return Object.freeze(loads);
     })();
     return loading;
+}
+
+/**
+ * ⛓ Refuse, as usage (exit 1) and before any work runs, a substrate id the
+ * argv names that is not registered or that the driver's layout cannot place
+ * (`pipelineLayoutsOf`) — the engine's own refusal, said first and naming
+ * the flag and the substrates that DO fit. A `library:<id>` source, a count of
+ * 0, and a start of `auto` / null pass through to the engine as before.
+ * @param {object} opts the parsed flags
+ * @param {{layout: string, tool: string, counts?: Record<string, string>, start?: string|null}} how
+ *        `counts`: opts key → flag (`{quotas: '--quota'}`); `start`: the opts key of the start id
+ */
+export function checkSubstrateIds(opts, { layout, tool, counts = {}, start = null }) {
+    const all = substrateRegistry.getAll();
+    const fits = all.filter((e) => pipelineLayoutsOf(e).includes(layout)).map((e) => e.id);
+    const check = (id, what) => {
+        if (isLibrarySourceId(id)) return;
+        if (!substrateRegistry.has(id)) {
+            throw new UsageError(`${what}: '${id}' is not a registered substrate (registered: ${all.map((e) => e.id).join(', ')})`);
+        }
+        if (!fits.includes(id)) {
+            throw new UsageError(`${what}: ${tool} cannot place '${id}' (the ${layout} layout places: ${fits.join(', ')}; `
+                + 'see list-substrates.js)');
+        }
+    };
+    for (const [key, flagName] of Object.entries(counts)) {
+        for (const [id, n] of Object.entries(opts[key] ?? {})) if (n > 0) check(id, `${flagName} ${id}=${n}`);
+    }
+    const s = start ? opts[start] : null;
+    if (s != null && s !== 'auto') check(s, `--start ${s}`);
 }
