@@ -20,7 +20,15 @@
 //     nextStep: (env) => name | null,    // the loop shape (linear or batched)
 //     editBinding?: <layoutEdits binding>, // optional; see below
 //     dropOutputs?: { name: (env) => void }, // optional; see invalidateFromStep
+//     kind:     'sphere-envelope' | …,   // the serialized envelope's `kind` stamp
 //   }
+//
+// THE STAMP. A serialized envelope opens with `kind` (which mode wrote it) and
+// `envelope_version` (ENVELOPE_VERSION). Deserializing REFUSES a stamp that
+// names another mode or a newer version (EnvelopeStampError) and strips it
+// from the live envelope; an UNSTAMPED object (written before the stamp, or by
+// hand) is accepted as before. Bump ENVELOPE_VERSION when an envelope written
+// now could not be read by the code that wrote it.
 //
 // RECORDED LAYOUT EDITS (optional). A descriptor that supplies `editBinding`
 // gets the recorded-edit replay for free: after each step runs, every edit in
@@ -179,6 +187,18 @@ export function invalidateFromStep(env, stepName, desc) {
     return env;
 }
 
+/** The serialized-envelope format version; see THE STAMP in the header. */
+export const ENVELOPE_VERSION = 1;
+
+/** A stamped envelope this build cannot read: wrong mode, or a newer version. */
+export class EnvelopeStampError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'EnvelopeStampError';
+        this.code = 'ENVELOPE_STAMP';
+    }
+}
+
 /** A fresh envelope for the given initial fields; `completed: -1` = nothing run. */
 export function newEnvelope(initialFields) {
     return { ...initialFields, completed: -1 };
@@ -190,7 +210,9 @@ export function newEnvelope(initialFields) {
  * (skipped when the field is null/undefined so absent artifacts stay absent).
  */
 export function serializeEnvelope(env, desc) {
-    const out = { ...env };
+    // A deserialized envelope never carries the stamp, but a hand-built one may.
+    const { kind: _kind, envelope_version: _version, ...rest } = env;
+    const out = { kind: desc.kind, envelope_version: ENVELOPE_VERSION, ...rest };
     for (const [field, codec] of Object.entries(desc.codecs ?? {})) {
         if (env[field] != null && codec.encode) out[field] = codec.encode(env[field], env);
     }
@@ -203,7 +225,15 @@ export function serializeEnvelope(env, desc) {
  * `out` (the alias-reconnection contract; see the module header).
  */
 export function deserializeEnvelope(obj, desc) {
-    const out = { ...obj };
+    const { kind, envelope_version: version, ...rest } = obj;
+    if (kind != null && kind !== desc.kind) {
+        throw new EnvelopeStampError(`this is a '${kind}' envelope, not a '${desc.kind}' one`);
+    }
+    if (version != null && !(Number.isInteger(version) && version >= 1 && version <= ENVELOPE_VERSION)) {
+        throw new EnvelopeStampError(`'${desc.kind}' envelope_version ${JSON.stringify(version)} `
+            + `is not one this build reads (1..${ENVELOPE_VERSION})`);
+    }
+    const out = { ...rest };
     for (const [field, codec] of Object.entries(desc.codecs ?? {})) {
         if (obj[field] != null && codec.decode) out[field] = codec.decode(obj[field], out, obj);
     }

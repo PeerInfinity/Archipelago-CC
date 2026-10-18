@@ -13,18 +13,14 @@
  *   node scripts/procgen/spiral-step.js content  -i s1.json -o s2.json
  *   node scripts/procgen/spiral-step.js regions  -i s2.json -o s3.json
  *   node scripts/procgen/spiral-step.js compile  -i s3.json -o s4.json --rules-out rules.json
- *
  *   # run the whole pipeline (or a range) in one process:
  *   node scripts/procgen/spiral-step.js run --quota maze=4 --quota jta=4 --start maze \
  *        --items key_red=2 --rules-out rules.json
- *
  *   # re-run from a step after hand-editing the envelope:
  *   node scripts/procgen/spiral-step.js run -i s1.json --from regions --rules-out rules.json
- *
  *   # auto-resume a partial / hand-edited envelope (no --from): runs from the
  *   # FIRST step whose output is missing (presence = keep, absence = recompute):
  *   node scripts/procgen/spiral-step.js run -i partial.json --rules-out rules.json
- *
  * World flags (arrange / run when starting fresh):
  *   --seed N                rng seed (default 1)
  *   --region WxH            per-region tile size (default 8x6)
@@ -38,7 +34,6 @@
  *   --victory-item NAME     completion item for an envelope whose ③ predates the
  *                           item layer; a fresh ③ names its own goal (`Victory`,
  *                           or none), which ④ uses instead
- *
  * JtA ② content dataset flags (arrange / run; Part 3 — generation is Node-only):
  *   --jta-dataset-file F    install a pre-generated dataset document as ② content
  *   --jta-generate          generate the dataset from the bundled-less fixtures
@@ -50,7 +45,6 @@
  *                                 original item (P2/S3; byte-inert default 1)
  *   --jta-dummy-item-ratio R      per-rep chance an award becomes the minted
  *                                 inert dummy item (P2; byte-inert default 0)
- *
  * Award-schedule knobs, GLOBAL (P2/S3 — one pair governs every generator;
  * the --jta-* spellings above override them for jta only):
  *   --original-item-weight W      per-award chance the original is kept
@@ -64,7 +58,6 @@
  *   --jta-free-zones N      zones requiring no perks (default 1)
  *   --jta-starting-perks N  perks the player starts with (default 0)
  *   --jta-perk-shuffle-seed N   seeded cross-zone perk placement
- *
  * X1 maze consumable-tile knobs (arrange / run; need a maze quota):
  *   --consumable-tiles N    per-maze-region cross-game consumable tiles
  *                           (byte-inert default 0). The foreign pool is the
@@ -76,25 +69,27 @@
  *   --mana-tiles N          per-maze-region mana-refill tiles (default 0)
  *   --mana-tile-amount N    mana per refill tile (default 0; a tile is only
  *                           placed when this is > 0)
- *
  * I/O flags (all subcommands):
  *   -i, --input <envelope.json>   prior step's envelope
  *   -o, --out <envelope.json>     where to write the resulting envelope ('-' = stdout)
  *   --rules-out <rules.json>      (compile / run) also write the bare rules.json
  *   --from <step>                 (run) resume from this step
  *   --to <step>                   (run) stop after this step (default compile)
+ *   --json-status PATH            write the run's status object (`-` = stdout); see cliRun.js
+ *   -h, --help                    print this and exit
+ *
+ * Exit codes (cliRun.js): 0 ok · 1 usage · 2 oracle mismatch · 3 input
+ * rejected · 4 internal.
  */
 import { writeFileSync, readFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// Side-effect: register the spiral-capable substrates.
-import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
-import '../../frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js';
-import '../../frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
-import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
-import '../../frontend/modules/runnerDemo/runnerDemoLibrary.js';
-import '../../frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js';
+import { argvHelp, helpText } from './argvHelp.js';
+import { runCli, UsageError, parseOrUsage, readInputJson } from './cliRun.js';
+
+// Substrate libraries register their adapters on import — one shared list.
+import './registerPipelineSubstrates.js';
 import { substrateRegistry } from '../../frontend/modules/shared/procgen/substrateRegistry.js';
 import { generateJtaDataset } from '../../frontend/modules/jtaSubstrateWrapper/generateDataset.js';
 import { generateOmsiAwardSchedule } from '../../frontend/modules/omsiSubstrateWrapper/generateAwardSchedule.js';
@@ -103,6 +98,8 @@ import {
     nextSpiralStep, detectSpiralCompleted, newSpiralEnvelope,
     serializeSpiralEnvelope, deserializeSpiralEnvelope,
 } from '../../frontend/modules/procgenPipeline/spiralSteps.js';
+
+argvHelp(import.meta.url);
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -195,6 +192,7 @@ function parseArgs(argv) {
             case '--rules-out': out.rulesOut = next(); break;
             case '--from': out.from = next(); break;
             case '--to': out.to = next(); break;
+            case '--json-status': out.jsonStatus = next(); break;
             case '--jta-dataset-file': out.jtaDatasetFile = next(); break;
             case '--jta-generate': out.jtaGenerate = true; break;
             case '--jta-dataset-seed': out.jtaDatasetSeed = parseInt(next(), 10); break;
@@ -214,8 +212,8 @@ function parseArgs(argv) {
             case '--jta-free-zones': out.jtaFreeZones = parseInt(next(), 10); break;
             case '--jta-starting-perks': out.jtaStartingPerks = parseInt(next(), 10); break;
             case '--jta-perk-shuffle-seed': out.jtaPerkShuffleSeed = parseInt(next(), 10); break;
-            case '-h': case '--help':
-                process.stdout.write('See the header comment in scripts/procgen/spiral-step.js\n');
+            case '-h':
+                process.stdout.write(`${helpText(fileURLToPath(import.meta.url))}\n`);
                 process.exit(0);
                 break;
             default: throw new Error(`unknown flag '${a}'`);
@@ -226,8 +224,8 @@ function parseArgs(argv) {
 
 // --- file I/O ---
 
-function readJson(path) {
-    return JSON.parse(readFileSync(resolve(path), 'utf8'));
+function readJson(path, what) {
+    return readInputJson(path, what);
 }
 
 function writeOut(path, obj, fallbackName) {
@@ -270,7 +268,7 @@ function foreignAwardTypes(quotas) {
 function buildJtaSubstrateConfig(args) {
     let datasetDoc = null;
     if (args.jtaDatasetFile) {
-        datasetDoc = readJson(args.jtaDatasetFile);
+        datasetDoc = readJson(args.jtaDatasetFile, '--jta-dataset-file');
     } else if (args.jtaGenerate) {
         // Award-schedule knobs (P2/S3): only built when a knob departs from
         // its byte-inert default; the foreign pool is the co-present
@@ -392,7 +390,7 @@ function buildConsumableTileConfig(args, jtaCfg) {
 // spiralSteps consumes; config is exactly what arrangeShuffledSpiral takes).
 function buildEnv(args) {
     if (Object.keys(args.quotas).length === 0) {
-        throw new Error('arrange/run require at least one --quota id=N (or -i <envelope.json>)');
+        throw new UsageError('arrange/run require at least one --quota id=N (or -i <envelope.json>)');
     }
     const jtaCfg = buildJtaSubstrateConfig(args);
     const omsiCfg = buildOmsiSubstrateConfig(args, jtaCfg);
@@ -428,20 +426,21 @@ function buildEnv(args) {
 
 // --- main ---
 
-async function main() {
-    const args = parseArgs(process.argv.slice(2));
+async function main(status) {
+    const args = parseOrUsage(() => parseArgs(process.argv.slice(2)));
     const sub = args.subcommand;
-    if (!sub) throw new Error(`missing subcommand (one of: ${SPIRAL_STEPS.join(', ')}, run)`);
+    status.subcommand = sub;
+    if (!sub) throw new UsageError(`missing subcommand (one of: ${SPIRAL_STEPS.join(', ')}, run)`);
     const isStep = SPIRAL_STEPS.includes(sub);
-    if (!isStep && sub !== 'run') throw new Error(`unknown subcommand '${sub}'`);
+    if (!isStep && sub !== 'run') throw new UsageError(`unknown subcommand '${sub}'`);
 
     let env;
     if (args.input) {
-        env = deserializeSpiralEnvelope(readJson(args.input));
+        env = deserializeSpiralEnvelope(readJson(args.input, '-i'));
     } else if (sub === 'arrange' || sub === 'run') {
         env = buildEnv(args);
     } else {
-        throw new Error(`step '${sub}' requires -i <envelope.json> (or start with 'arrange')`);
+        throw new UsageError(`step '${sub}' requires -i <envelope.json> (or start with 'arrange')`);
     }
 
     if (sub === 'run') {
@@ -465,9 +464,13 @@ async function main() {
     if (sub !== 'run' || args.out) {
         const outPath = writeOut(args.out, serializeSpiralEnvelope(env), sub);
         process.stderr.write(`[spiral-step] ${sub} → completed=${env.completed} → ${outPath}\n`);
+        status.outputs.envelope = outPath;
     } else {
         process.stderr.write(`[spiral-step] ${sub} → completed=${env.completed}\n`);
     }
+    status.completed = SPIRAL_STEPS[env.completed] ?? null;
+    status.next = nextSpiralStep(env) ?? null;
+    status.summary.seed = env.config?.seed ?? null;
     if (isStep && sub !== 'compile') {
         const n = nextSpiralStep(env);
         if (n) process.stderr.write(`[spiral-step] next: ${n}\n`);
@@ -478,18 +481,13 @@ async function main() {
         if (args.rulesOut) {
             const abs = writeOut(args.rulesOut, rulesJson, 'rules');
             process.stderr.write(`[spiral-step] rules.json → ${abs}\n`);
+            status.outputs.rules = abs;
         }
         const regions = Object.keys(rulesJson.regions?.['1'] ?? {}).length;
+        status.summary.driver = rulesJson.procgen_metadata?.['1']?.driver ?? null;
+        status.summary.regions = regions;
         process.stderr.write(`[spiral-step] driver ${rulesJson.procgen_metadata?.['1']?.driver} · ${regions} regions\n`);
     }
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-    main().catch((e) => {
-        process.stderr.write(`[spiral-step] ERROR: ${e.message}\n`);
-        process.exit(1);
-    });
-    // The engine's module graph leaves an unref'd worker/timer handle alive; the
-    // work is synchronous above, so exit explicitly once main resolves.
-    process.on('beforeExit', () => process.exit(0));
-}
+runCli('spiral-step', import.meta.url, main);
