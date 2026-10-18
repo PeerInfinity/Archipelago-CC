@@ -159,8 +159,8 @@ const parted = (w, on) => withContactFidelity({ flyerLive: on, strikeIframeLapse
 });
 
 describe('LAPSECOST D2 — the Flyer, stepped (`flyerLive`)', () => {
-    it('ships OFF; bridged only ON', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.flyerLive).toBe(false);
+    it('ships ON (⚖ user "BeamTower trio", 2026-10-18, with BEAMTOWER\'s drift); bridged only ON', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.flyerLive).toBe(true);
         withContactFidelity({ flyerLive: false }, () => expect(isBridgedChaser('flyer')).toBe(false));
         withContactFidelity({ flyerLive: true }, () => expect(isBridgedChaser('flyer')).toBe(true));
     });
@@ -251,7 +251,9 @@ describe('LAPSECOST D2 — the Flyer, stepped (`flyerLive`)', () => {
 
     // ⚠ A MODEL row, not a game one: played on p4f this plan parts at t205 (the game's player is blocked at x 66.04 by
     // `beamtower@48,40`, whose Solid drifts in y — `BeamTower.update`'s `y += 0.3 sin(…)`, not modelled; the report's D2).
-    it('ON: leg 773\'s request (its live digest re-derived ON, as a page with the switch sends it) solves in 381 t with no hit', () => {
+    // ⛓ fidelity BEAMTOWER D2: with the defaults flipped the drift is ON too, and the 381-t plan is the one the risen
+    // tower blocks at t205 on the game — the solve now takes 426 t (the model row; the game check is the keyed sweep).
+    it('ON: leg 773\'s request (its live digest re-derived ON, as a page with the switch sends it) solves in 426 t with no hit', () => {
         const req = leg773();
         const out = withContactFidelity({ flyerLive: true, strikeIframeLapse: true }, () => {
             const { passes = ANYTIME_PASSES, source, ...tape } = req;
@@ -260,6 +262,6 @@ describe('LAPSECOST D2 — the Flyer, stepped (`flyerLive`)', () => {
             return solveAnytime({ ...tape, live, source, levelSource }, { passes });
         });
         expect(out.ok).toBe(true);
-        expect(out.plan.solution.length).toBe(381);
+        expect(out.plan.solution.length).toBe(426);
     }, 60000);
 });

@@ -1,0 +1,19 @@
+== r1: 2 red, 18 green
+   RED ⛓⛓ the fidelity switches' rungs classify the same ON and OFF, and none of their refusals is `other`
+       AssertionError: expected [ 'sealDoorApproach', …(1) ] to deeply equal [ 'sealDoorApproach', …(1) ]
+   RED ⛓⛓ the clear-tag reasons: prerequisite and cannot-act are state gates; `unresolved` is one only by a gate's own words
+       AssertionError: expected 'precondition' to be 'exhausted' // Object.is equality
+== r2: 4 red, 16 green
+   RED ⛓⛓⛓ lastWhy is the thrown why VERBATIM: L18's first pass refuses, and its last why is the error's message
+       AssertionError: expected 'levelRun' to be 'Error' // Object.is equality
+   RED ⛓⛓ a REAL sealDoorApproach-ON refusal: the 0-seal L113 door throws clear-tag `unresolved`, and its kind is `precondition`
+       AssertionError: expected 'solverBot' to be 'SolverRefusal' // Object.is equality
+   RED ⛓⛓ RK2 lastWhy.name on the committed solves: each segment's thrown class, null for a row or a search leaf
+       AssertionError: expected { 'r9-solve-18': [ …(3) ], …(3) } to deeply equal { …(4) }
+   RED ⛓⛓ lastWhy is a refused rung's why verbatim: L40's and L6's last rejections are rows of their own traces
+       AssertionError: expected 'no' to be null // Object.is equality
+== r3: 2 red, 18 green
+   RED ⛓⛓ the fidelity switches' rungs classify the same ON and OFF, and none of their refusals is `other`
+       AssertionError: expected [ 'axeTimingRung', …(1) ] to deeply equal [ 'axeTimingRung', …(1) ]
+   RED ⛓⛓ no rule is keyed on a rung: every family's sentence has the same kind under every rung the solver names
+       AssertionError: expected [ …(2) ] to deeply equal [ …(2) ]

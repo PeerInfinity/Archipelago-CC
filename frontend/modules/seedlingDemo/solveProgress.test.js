@@ -35,7 +35,7 @@ import { SPINNER } from './spinner.js';
 import { DEADLINE_SITES, solveSegment, withSolveDeadline, withSolveProgress as reExported } from './solverBot.js';
 import {
     BOUND_KINDS, CLEAR_TAG_KINDS, PROGRESS_POINTS, PROGRESS_TILE, REFUSAL_KINDS, SOLVE_PROGRESS_VERSION, activeProgress,
-    installSolveProgress, kindEntered, progressKind, progressReason, progressWhy, withSolveProgress,
+    installSolveProgress, kindEntered, progressErrorName, progressKind, progressReason, progressWhy, withSolveProgress,
 } from './solveProgress.js';
 import { CONTACT_FIDELITY, withContactFidelity } from './contactFidelity.js';
 import { arrivalStaging } from './fidelityArrival.js';
@@ -399,12 +399,16 @@ const v1Of = (snap) => {
     const { v, lastWhy, tree, ...rest } = snap;
     return { ...rest, tree: strip(tree) };
 };
-/** `lastWhy` is null or ONE plain object `{why, kind, key}`, and its key is a node of the tree it rides with. */
+/**
+ * `lastWhy` is null or ONE plain object `{why, kind, key, name}` (⛓ RK2: `name` ADDED after RK's three, which keep
+ * their names and order — js-7's condition), and its key is a node of the tree it rides with.
+ */
 function expectLastWhy(snap) {
     const lw = snap.lastWhy;
     if (lw === null) return;
     expect(Array.isArray(lw)).toBe(false);
-    expect(Object.keys(lw)).toEqual(['why', 'kind', 'key']);
+    expect(Object.keys(lw)).toEqual(['why', 'kind', 'key', 'name']);
+    expect(lw.name === null || (typeof lw.name === 'string' && lw.name.length > 0)).toBe(true);
     expect(typeof lw.why).toBe('string');
     expect(REFUSAL_KINDS).toContain(lw.kind);
     expect(nodesOf(snap.tree).some((n) => n.key === lw.key)).toBe(true);
@@ -487,6 +491,10 @@ describe('hammer-phase RK — refusal kinds and the last why (v: 2)', () => {
         expect(last.lastWhy.why).toBe(progressWhy(err));
         expect(last.lastWhy.kind).toBe('pending');
         expect(last.lastWhy.key).toBe('segment/goal#0/walk/verb:kill/arm:press');
+        // ⛓ RK2: the thrown CLASS, off the error object — `levelRun`'s plain `Error`, not the sentence's first word
+        expect(last.lastWhy.name).toBe(err.name);
+        expect(last.lastWhy.name).toBe('Error');
+        expect(err.message.startsWith('levelRun')).toBe(true);
         // ⛓ the cut key is not the verbatim why: it is the sentence's first word, and it has no kind of its own
         expect(progressReason(err)).toBe('levelRun');
         expect(progressKind(progressReason(err))).toBe('other');
@@ -494,9 +502,13 @@ describe('hammer-phase RK — refusal kinds and the last why (v: 2)', () => {
         expect(f.stream.filter((x) => x.lastWhy !== null).length).toBeGreaterThan(0);
     }, 300_000);
 
-    it('⛓⛓ a REAL sealDoorApproach-ON refusal: the 0-seal L113 door throws clear-tag `unresolved`, and its kind is `exhausted`', () => {
+    it('⛓⛓ a REAL sealDoorApproach-ON refusal: the 0-seal L113 door throws clear-tag `unresolved`, and its kind is `precondition`', () => {
         // ⛓ fidelity-9's residue row (the harvest): the same call as fidelityClearTag's {113,0} row — a 0-seal,
         // unspoken-Watcher arrival; with the switch ON the `approach` verb resolves and refuses by name
+        // ⛓ RK2 RE-PIN (`exhausted` → `precondition`): the refusal is a STATE GATE (0 of 16 seals, {114,0} SET), not a
+        // search that ran out. `unresolved` is the resolver's generic outcome, so the kind is read on the approach
+        // resolver's own STABLE lead-in inside it — "the door cannot open in this state:" (fidelity-9) — never on the
+        // predicate clauses after it, which may grow.
         const boot = { level: 113, x: 72, y: 128 };
         const goal = { kind: 'clear-tag', tag: { level: 113, tag: 0 }, at: { x: 112, y: 0 }, obstacle: 'finaldoor@112,0' };
         const f = finalsHook(true);
@@ -512,13 +524,26 @@ describe('hammer-phase RK — refusal kinds and the last why (v: 2)', () => {
         const last = f.finals.at(-1);
         expect(last.segment.outcome).toBe('refused');
         expect(last.lastWhy.why).toBe(err.message);
-        expect(last.lastWhy.kind).toBe('exhausted');
-        expect(progressKind(err)).toBe('exhausted');
+        expect(err.message).toContain('the door cannot open in this state:');
+        expect(last.lastWhy.kind).toBe('precondition');
+        expect(progressKind(err)).toBe('precondition');
+        expect(last.lastWhy.name).toBe('SolverRefusal');
         for (const snap of f.stream) expectLastWhy(snap);
         const kinds = nodesOf(last.tree).flatMap((n) => Object.keys(n.rejectionKinds));
         expect(kinds.length).toBeGreaterThan(0);
         expect(kinds).not.toContain('other');
     }, 300_000);
+
+    it('⛓⛓ RK2 lastWhy.name on the committed solves: each segment\'s thrown class, null for a row or a search leaf', async () => {
+        const names = {};
+        for (const s of RK_SOLVES) {
+            names[s.tape] = (await runOf(s)).finals.map((x) => (x.lastWhy === null ? 'no rejection' : x.lastWhy.name));
+        }
+        // L18: `levelRun`'s plain Error (the undeclared kill lock), the PendingDeclaration, then the escape search's
+        // leaf; L40 and L6 end on a refused rung's row; L3 rejects nothing
+        expect(names).toEqual({ 'r9-solve-18': ['Error', 'PendingDeclaration', null], 'r5-l40-part5': [null],
+            'r8-solve-6': [null], 'r8-solve-3': ['no rejection'] });
+    }, 600_000);
 
     it('⛓⛓ lastWhy is a refused rung\'s why verbatim: L40\'s and L6\'s last rejections are rows of their own traces', async () => {
         for (const s of [RK_SOLVES[1], RK_SOLVES[2]]) {
@@ -527,6 +552,7 @@ describe('hammer-phase RK — refusal kinds and the last why (v: 2)', () => {
             const last = finals.at(-1).lastWhy;
             expect(last).not.toBe(null);
             expect(whys).toContain(last.why);
+            expect(last.name).toBe(null);   // ⛓ RK2: a rung row is not an error
             expect(last.key.endsWith(`/rung:${on.value.out.trace.rows.flatMap((r) => r.rejected ?? [])
                 .find((x) => x.why === last.why).option}`)).toBe(true);
         }
@@ -604,8 +630,9 @@ describe('hammer-phase RK — progressKind: the solver\'s own words, read on the
                 + 'not admitted: the crossing takes 3 arrow hit(s), over the budget\'s 1',
             { obstacle: { kind: 'danger', id: 'arrowtrap@16,32' } }), 'danger'],
             // sealDoorApproach — the door's predicate sentence, its stance, its wait, and the clear-tag order's refusals
+            // ⛓ RK2: the door's predicate sentence and the `unresolved` that wraps it are STATE GATES — `precondition`
             ['sealDoorApproach', refusal(`solverBot: approach finaldoor@96,16 in level 113 — ${door}.`,
-                { obstacle: { kind: 'solid', id: 'finaldoor@96,16', tag: 'finaldoor' } }), 'does-not-apply'],
+                { obstacle: { kind: 'solid', id: 'finaldoor@96,16', tag: 'finaldoor' } }), 'precondition'],
             ['sealDoorApproach', refusal('solverBot: no stance to approach finaldoor@96,16 from in level 113 — 4 '
                 + 'walkable cell(s) lie 40..64 px from it and none plans a corridor from (16,16).',
             { obstacle: { kind: 'solid', id: 'finaldoor@96,16' } }), 'exhausted'],
@@ -615,7 +642,7 @@ describe('hammer-phase RK — progressKind: the solver\'s own words, read on the
                 'diverged'],
             ['sealDoorApproach', refusal(`solverBot(t) clear-tag {113,0} finaldoor@96,16: 'approach' could not be `
                 + `resolved from (16,16): ${door}`, { obstacle: { kind: 'clear-tag', reason: 'unresolved' } }),
-            'exhausted'],
+            'precondition'],
             ['sealDoorApproach', refusal('x: \'approach\' is SELECTED and REGISTERED for solid:finaldoor, and the '
                 + 'resolver could not bind this obstacle against live state',
             { obstacle: { kind: 'clear-tag', reason: 'unresolved' } }), 'exhausted'],
@@ -636,10 +663,158 @@ describe('hammer-phase RK — progressKind: the solver\'s own words, read on the
 
     it('⛓⛓ only an install reaches a kind: solverBot never calls the lookup, and the lookup reads no deadline', () => {
         const bot = readFileSync(join(HERE, 'solverBot.js'), 'utf8');
-        expect(bot).not.toMatch(/\bprogress(?:Kind|Why)\(|\bkindEntered\b/);
+        expect(bot).not.toMatch(/\bprogress(?:Kind|Why|ErrorName)\(|\bkindEntered\b/);
         const own = readFileSync(join(HERE, 'solveProgress.js'), 'utf8');
         const body = own.slice(own.indexOf('export function progressKind('), own.indexOf('function noteLast('));
         expect(body.length).toBeGreaterThan(200);
         expect(body).not.toMatch(/shouldStop\(|activeDeadline|performance|Date\./);
+    });
+});
+
+/**
+ * ⛓ HAMMER-PHASE RK2 — the follow-ups: the `precondition` kind (a STATE GATE), `lastWhy.name`, and the rules that
+ * name the static residue's families. Every family row's sentence is READ OUT OF `solverBot.js` (its adjacent
+ * string literals joined, as the solver writes it at run time, each `${…}` filled with `7`), so a reworded site turns
+ * its row red instead of silently falling to `other`.
+ *
+ * ── THE MUTATION LIST (run during development, each row's catcher named) ──
+ *   r1 a `precondition` rule on the FIELD alone (`CLEAR_TAG_KINDS.unresolved = 'precondition'`) -> the
+ *        non-gate-`unresolved` row red (the resolver's "could not bind" and "no stance to approach" are `exhausted`)
+ *   r2 `name` taken from the MESSAGE (`/^[\w$]+/.exec(progressWhy(x))`) -> the L18 first-pass row (`levelRun`, not
+ *        `Error`), the seal row (`solverBot`, not `SolverRefusal`) and the committed solves' names row red
+ *   r3 a family rule keyed on a RUNG name (`if (o.rung === 'dodge') return 'diverged'`) -> the rung-independence row
+ *        red, and the source row (the lookup reads `.rung`)
+ */
+describe('hammer-phase RK2 — precondition, the error\'s name, and the residue\'s families', () => {
+    const SRC = readFileSync(join(HERE, 'solverBot.js'), 'utf8');
+    /** The solver's source with its adjacent string literals joined and its whitespace collapsed. */
+    const JOINED = SRC.replace(/(['"`])\s*\+\s*(['"`])/g, '').replace(/\s+/g, ' ');
+    /**
+     * The sentence from `start` to `end` (inclusive) as `solverBot.js` writes it, each `${…}` filled with `7`. `start`
+     * and `end` are SOURCE text (a raw `${…}` in them pins the site when its words recur elsewhere).
+     */
+    function fromSource(start, end = start) {
+        const i = JOINED.indexOf(start);
+        expect([start, i >= 0]).toEqual([start, true]);
+        const j = JOINED.indexOf(end, i);
+        expect([end, j >= i]).toEqual([end, true]);
+        let s = JOINED.slice(i, j + end.length);
+        for (let k = s.indexOf('${'); k >= 0; k = s.indexOf('${')) {
+            let depth = 0;
+            let e = k + 1;
+            for (; e < s.length; e += 1) {
+                if (s[e] === '{') depth += 1;
+                if (s[e] === '}' && --depth === 0) break;
+            }
+            s = `${s.slice(0, k)}7${s.slice(e + 1)}`;
+        }
+        return s.replace(/\\(['`])/g, '$1');
+    }
+    const refusal = (message, extra = {}) => Object.assign(new Error(message), { name: 'SolverRefusal', ...extra });
+    const botError = (message) => Object.assign(new Error(message), { name: 'SolverBotError', code: null });
+
+    /** [kind, the family, start, end, the payload's maker] — one real sentence per family, from its site. */
+    const FAMILIES = [
+        // precondition — a STATE GATE: the run or the world is not in the state the action needs
+        ['precondition', 'the seal door (fidelity-9\'s stable lead-in)', 'the door cannot open in this state:', 'not this room.', refusal],
+        ['precondition', 'the Witch reads the WAND', 'the Witch adds the dark sword only for a player holding the WAND', 'with nothing added.', refusal],
+        ['precondition', 'the bag lacks a slot', 'the inventory has no Wand slot.', undefined, refusal],
+        ['precondition', 'a key the run does not hold (a contract `fail`)', 'needs a key this run does not hold.', 'no mechanism behind it.', botError],
+        ['precondition', 'the run cannot act on it', 'cannot be broken by this run', undefined, refusal],
+        ['precondition', 'an opener not yet discharged', 's stance needs ${p.id} discharged first', 'the stance is unreachable.', refusal],
+        ['precondition', 'a crusher still charging', 'a crusher in this room is CHARGING', 'is not one.', refusal],
+        ['precondition', 'the teleporter: a box inside a solid', 'inside-solid — the run stands LATCHED on', 'until that solid is gone.', refusal],
+        ['precondition', 'the sword is a sub-order', 'but this run holds no sword', 'refuses every press.', refusal],
+        // diverged — an executor's outcome the run did not reach
+        ['diverged', 'the encounter ran out its ticks', 'the encounter has run', 'without the drop.', refusal],
+        ['diverged', 'the Witch\'s dialogue', 'the Witch\'s dialogue closed', 'and added nothing.', refusal],
+        ['diverged', 'the freeze', 'still frozen after', 'ticks.', refusal],
+        ['diverged', 'the walk rests elsewhere', 'the walk came to rest at', 'not a tree one.', refusal],
+        ['diverged', 'the spear press\'s block', 'after the thrust the block is', 'requires.', refusal],
+        ['diverged', 'the exit trigger', '${what}: reached the exit aim without a transition', 'certified corridor.', refusal],
+        ['diverged', 'the static sword\'s settle', 'the player does not settle at', 'ticks', refusal],
+        // unmodelled — what the model does not compute
+        ['unmodelled', 'the crusher ordering search', 'the ordering search found ${found.ordering.length}', 'in-solver search.', refusal],
+        ['unmodelled', 'a body this run does not step', 'the count waits on', 'does not step it', refusal],
+        ['unmodelled', 'the kill-lock ledger', 'every counted body is gone and the run\'s own kill-lock ledger', 'nothing computed the consequence', refusal],
+        ['unmodelled', 'the spear\'s repeats', 'could walk into the thrust\'s rect', 'SPEAR_HIT_TICKS_UNMODELLED', refusal],
+        ['unmodelled', 'a strategy not registered', 'is selected and NOT registered this slice.', undefined, refusal],
+        // exhausted — a search with nothing left to try
+        ['exhausted', 'the ceiling\'s wait cell', 'NO reachable cell within four tiles', 'it is waiting to drain.', refusal],
+        ['exhausted', 'an arm that removed all it could', 'the ceiling removed every body it could', 'never arms.', refusal],
+        ['exhausted', 'the teleporter: closed', '${whatExit}: closed — the run stands LATCHED on', 'step off it and back on.', refusal],
+        ['exhausted', 'the teleporter: hazard-floor', 'hazard-floor — every way off', 'can be walked to.', refusal],
+        ['exhausted', 'a light arm re-entered', 'the walk to its light stance re-entered', '(LIGHT_REENTRY).', refusal],
+        // bound — a bound the solver names
+        ['bound', 'strategies per goal', 'strategies for one goal', 'not making progress.', refusal],
+        ['bound', 'the placement\'s guard', 'cleared ${guard} obstacle(s)', 'is STILL inside ${blocker.id}.', refusal],
+        ['bound', 'the opener chain\'s depth', 'and redeeming it would be link', 'NESTED_OPENER_DEPTH', refusal],
+        // danger, does-not-apply
+        ['danger', 'a spit at every wait', 'fires a spit before the kill', 'to face it', refusal],
+        ['does-not-apply', 'not a body the run can watch die', 'the danger on this corridor is not a body this run can watch die', 'not of this one.)', refusal],
+        // ⚠ the named residue: a soft-lock is neither damage nor a missing state — no kind is honest, so `other`
+        ['other', 'the Watcher\'s live Seed (a soft-lock)', 'the dialogue opened with the box at', 'is a soft-lock.', refusal],
+    ];
+
+    it('⛓⛓⛓ each family\'s real sentence, read out of solverBot.js, has its kind', () => {
+        const got = FAMILIES.map(([, fam, start, end, make]) => [fam, progressKind(make(`x: ${fromSource(start, end)}`))]);
+        expect(got).toEqual(FAMILIES.map(([kind, fam]) => [fam, kind]));
+        expect(REFUSAL_KINDS).toContain('precondition');
+        expect(REFUSAL_KINDS.indexOf('precondition')).toBe(REFUSAL_KINDS.indexOf('does-not-apply') + 1);
+        expect(REFUSAL_KINDS.at(-1)).toBe('other');
+    });
+
+    it('⛓⛓ the clear-tag reasons: prerequisite and cannot-act are state gates; `unresolved` is one only by a gate\'s own words', () => {
+        const ct = (reason, why) => refusal(`solverBot(t) clear-tag {113,0} finaldoor@112,0: ${why}`,
+            { obstacle: { kind: 'clear-tag', reason } });
+        expect(progressKind(ct('prerequisite', fromSource('stance is reachable only once ${resolved.prerequisite.id}', 'does not chain openers'))))
+            .toBe('precondition');
+        expect(progressKind(ct('cannot-act', fromSource('cannot act on ${id} with this run\'s bag')))).toBe('precondition');
+        // ⛓ r1's catcher: the resolver's GENERIC outcomes stay `exhausted` — they are not state gates
+        const generic = fromSource('is SELECTED and REGISTERED for ${key}, and the resolver could not bind', 'against live state');
+        expect(progressKind(ct('unresolved', `'approach' ${generic}`))).toBe('exhausted');
+        const noStance = fromSource('no stance to approach', 'plans a corridor from');
+        expect(progressKind(ct('unresolved', `'approach' could not be resolved from (16,16): solverBot: ${noStance}`)))
+            .toBe('exhausted');
+        // …and the door's lead-in inside it is a gate, whatever clauses follow it (fidelity-9: they may grow)
+        const lead = fromSource('the door cannot open in this state:');
+        for (const clause of ['the save holds 0 of 16 seal slot(s)', '{114,0} is SET', 'a Watcher clause not yet written']) {
+            expect(progressKind(ct('unresolved', `'approach' could not be resolved from (16,16): ${lead} ${clause}.`)))
+                .toBe('precondition');
+        }
+        // ⚠ the lead-in, not a looser cousin: a door that "cannot open" without "in this state:" is not read as a gate
+        expect(progressKind(ct('unresolved', '\'approach\' could not be resolved: the door cannot open'))).toBe('exhausted');
+    });
+
+    it('⛓⛓ no rule is keyed on a rung: every family\'s sentence has the same kind under every rung the solver names', () => {
+        const rungs = new Set([...SRC.matchAll(/\browFor\('([a-z-]+)'/g), ...SRC.matchAll(/refused = \{ rung: '([a-z-]+)'/g)]
+            .map((m) => m[1]));
+        expect(rungs.size).toBeGreaterThanOrEqual(6);
+        for (const [kind, fam, start, end] of FAMILIES) {
+            const why = fromSource(start, end);
+            expect([fam, [...rungs].map((rung) => progressKind({ rung, why }))]).toEqual([fam, [...rungs].map(() => kind)]);
+        }
+        const own = readFileSync(join(HERE, 'solveProgress.js'), 'utf8');
+        const body = own.slice(own.indexOf('export function progressKind('), own.indexOf('function noteLast('));
+        expect(body).not.toMatch(/\.rung\b|\.option\b/);
+    });
+
+    it('⛓⛓ progressErrorName: the error object\'s class, never its words; null for a row or a search', () => {
+        expect(progressErrorName(Object.assign(new Error('levelRun: x'), { undeclaredKillLock: {} }))).toBe('Error');
+        expect(progressErrorName(refusal('solverBot(t) reach-exit: x'))).toBe('SolverRefusal');
+        expect(progressErrorName(Object.assign(new Error('x'), { name: 'PendingDeclaration' }))).toBe('PendingDeclaration');
+        expect(progressErrorName(botError('x'))).toBe('SolverBotError');
+        expect(progressErrorName(new TypeError('x is undefined'))).toBe('TypeError');
+        expect(progressErrorName({ rung: 'time', why: 'the aim is 64 px away' })).toBe(null);
+        expect(progressErrorName({ ok: false, bound: 'exhausted', why: 'x' })).toBe(null);
+        expect(progressErrorName('a why string')).toBe(null);
+        expect(progressErrorName(null)).toBe(null);
+        // ⛓ a thrown non-refusal whose words match a rule keeps its kind AND its class (RK's residue 3)
+        const planner = new Error('no walkable tile path in level 6 from (16,16)');
+        expect([progressKind(planner), progressErrorName(planner)]).toEqual(['exhausted', 'Error']);
+        const own = readFileSync(join(HERE, 'solveProgress.js'), 'utf8');
+        const body = own.slice(own.indexOf('export function progressErrorName('), own.indexOf('/**', own.indexOf('export function progressErrorName(')));
+        expect(body).not.toMatch(/message|progressWhy|\.why\b/);
+        expect(SRC).not.toMatch(/\bprogressErrorName\(/);
     });
 });

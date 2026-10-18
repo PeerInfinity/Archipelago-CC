@@ -26,7 +26,7 @@ Codecs run in declaration order, so a later field's decode can reconnect an alia
 
 ## The envelope
 
-The unit of state is an **envelope**: a plain, serialisable object that each step reads from and merges into. `serializeEnvelope` / `deserializeEnvelope` cross a process boundary losslessly, so a CLI can run each step in its own invocation with the envelope as a JSON file on disk, and you can edit that file between steps.
+The unit of state is an **envelope**: a plain, serialisable object that each step reads from and merges into. `serializeEnvelope` / `deserializeEnvelope` cross a process boundary losslessly, so a CLI can run each step in its own invocation with the envelope as a JSON file on disk, and you can edit that file between steps. A serialised envelope opens with a format stamp, `kind` (`sphere-envelope` / `spiral-envelope` / `topdown-envelope`) and `envelope_version`; `deserializeEnvelope` refuses another mode's stamp or a newer version, and still accepts an unstamped envelope.
 
 Hand edits are meant for step outputs: the plan, the allocation, the topology, the item assignment. The grown grid is stored in a tagged structural form so that it is not edited by hand; to change it, use the recorded edit ops described below.
 

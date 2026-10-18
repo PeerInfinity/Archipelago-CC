@@ -23331,3 +23331,81 @@ B 39141650170 + the three switches):
 - `contactFidelity.test` defaults (×3);
 - `fidelitySpinningAxe` and `fidelityAxeTiming` "ships ON".
 No `plan-seedling-*` producer names any of the three switches.
+
+### Seedling fidelity BeamTower trio flip — the Flyer, the tower's drifting Solid and its beam, ON together
+
+⚖ The user (2026-10-18): *"BeamTower trio"*. Three switches now ship ON together: LAPSECOST's `flyerLive`, and
+BEAMTOWER's `beamTowerDrift` and `beamTowerBeamHit`. They have to go together: `flyerLive` alone loses survey step 208
+on the game (the tower's risen Solid blocks the shorter plan). This is BEAMTOWER's flip candidate, applied onto today's
+main; the two conflicts were main's newer switches.
+
+**The JS arc's condition** was that the walker either carry `beamTowers` in `botDriverV2.livePerVisitOpts`, or the
+A/B name every `producer:walker` row in a tower room. It was met the second way. Keyed over BEAMTOWER's 22 tower and
+Flyer-room keys on main `004368c2a3`, capture on (A defaults, B + the trio):
+- **Solver** (39149625477 / 39149627430): **760** (L101, the Flyer) **failed → done**; nothing lost. 774 (L103) still
+  refuses at the spinning axe, which is the forced-U item, not the tower.
+- **Walker** (39149629310 / 39149631483): 778 and 787 read crossed → failed in B. A ×2 keyed repeat shows 787 crossed
+  in all four runs and 778 failing once in EACH arm, so both are flakes and no walker row moves. The walker's own
+  probes remain drift-blind (a placement, not the live Solid), which is a known residue for a later slice.
+
+**Pins moved:**
+- `contactFidelity` defaults;
+- `fidelityBeamTower` "ship ON";
+- `fidelityLapseCost` "ships ON", plus leg 773's request 381 → **426 t** (the 381-t plan is the one the risen tower
+  blocks at t205 on the game);
+- `r8Acceptance` ×3 (`pendingSwitchScope.flyer` joins the default roster);
+- identity: ENEMY census `36b59445` → `f0bec576` (the Flyer bridged).
+
+### Seedling hammer-phase RK2 — refusal kinds: precondition, the error's name, the residue
+
+⚖ The user (2026-10-18): *"Let's do the follow ups next"*, meaning the three follow-ups RK left. The report is
+`CC/docs/cloud-reports/seedling-hammer-refusal-kinds-2.md`.
+
+**W0** at `e37e9188a5`. The identity block is byte-equal to RK's D4: the six `--check`s, tapeRunner **617 `8f27f975`**,
+and the censuses 312 · 6,002 · 566 · 138 · 280. The bounded vitest passes 861/861. RK's census, re-run with v2's loader
+anchors, gives 53 payloads in 5 kinds, with no `other`.
+
+**F1 — `precondition`.** The L113 door's refusal (*"the door cannot open in this state: 0 of 16 seals …"*) is a STATE
+GATE. The action is the right one, but the run is not in the state it needs, and no search changes that. It is not
+`exhausted`. RK2 measured every gate site:
+- the door's lead-in;
+- the Witch's WAND;
+- the bag (`the inventory has no … slot`, `cannot be pushed / burned / opened / broken by this run`, `with this run's
+  bag`, `has no weapon`, `this run holds no sword`, `is a SUB-ORDER`);
+- the openers (`reachable only once`, `needs … discharged`);
+- a crusher still charging (`plans from parks`);
+- the teleporter's `inside-solid` cases.
+
+That is 24 static sites. 20 of them were `does-not-apply`, which now means only "the wrong question" (a KILL question, a
+pit that is not there, the wrong level). The `clear-tag` reasons `prerequisite` and `cannot-act` are gates by their
+field. `unresolved` is the resolver's generic outcome, so its words decide: it is `precondition` only when it carries a
+gate's words. The door is read by fidelity-9's stable lead-in, never by its predicate clauses. The real seal-ON row
+moves from `exhausted` to `precondition`. No other pinned total moves.
+
+**F2 — `lastWhy.name`.** The thrown class, read off the error object, beside `{why, kind, key}`. It is `null` for a row
+or a search leaf. L18's three segments give `Error`, `PendingDeclaration`, `null`; L40 and L6 give `null`.
+
+**F3 — the residue.** RK's head-only instrument read the first ~200 source characters. It is replaced by one that reads
+each site's whole argument text with its literals joined. That raised the before-count to 42 sites from RK's 74. The
+families now have rules on the solver's own words:
+- the executors → `diverged`;
+- the model's gaps (`no choreography`, `does not step`, `nothing computed the consequence`, `UNMODELLED`) →
+  `unmodelled`;
+- `NO reachable cell`, `removed every body it could`, `LIGHT_REENTRY` → `exhausted`;
+- `MAX_STRATEGIES_PER_GOAL` and `NESTED_OPENER_DEPTH` → `bound`;
+- a spit at every wait → `danger`.
+
+Four sites are left, each named:
+- the Watcher's live-Seed soft-lock, where no kind is honest;
+- a `planSwordDash` row that never reaches the tree;
+- two whose words match at run time but not in a static head.
+
+`v` stays 2.
+
+**Gates.** The byte-identity, the v1 md5s and the committed kind totals are unchanged. One real sentence per family is
+read out of `solverBot.js`. All three mutants are caught: a field-only `precondition` rule, `name` taken from the
+message, and a rule keyed on a rung. **D3** (24 runs): the digest and `shouldStop` are identical, and the snapshot grows
+by 12–28 bytes per segment.
+
+Lesson: *a static census is only as good as the text it reads.* RK's 200-character heads hid the deciding words of 32
+sites. Those words sat past the cut, or were split by a `' + '`.
