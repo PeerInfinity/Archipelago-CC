@@ -30,7 +30,14 @@
  *    `asksBySite` (the deadline sites' asks, which under a deadline are the work units), `workCounters` (the
  *    segment's other counters), `activePath` (the active path and its climb depth) and `reasonsText` (a node's
  *    rejection tallies inline — `treeRows` marks the rungs of an active climb with `reasons`).
+ *  - ⛓ RK VIEW (slice `seedling-js-rk-view`, reads hammer-phase RK's `v: 2`): `kindChips` (a node's
+ *    `rejectionKinds` in `REFUSAL_KINDS`' order, a kind not in the list after them by name), `kindTotals` (the
+ *    segment's refusals by kind, each counted ONCE: on the node where it was tallied deepest — never a sum over every
+ *    node) and `lastWhyText` (`‹kind› at ‹key›: ‹why›`, the why verbatim). A v1 snapshot has neither field, and each
+ *    reads as "nothing to draw".
  */
+
+import { REFUSAL_KINDS } from '../seedlingDemo/solveProgress.js';
 
 /** The feed's re-resolve interval (ms): also the "last update N s ago" refresh. */
 export const SOLVE_PROGRESS_POLL_MS = 1000;
@@ -170,6 +177,71 @@ export function activePath(tree) {
         if (n) nodes.push(n);
     }
     return { nodes, climbDepth: nodes.filter((x) => x.role === 'climb').length };
+}
+
+/**
+ * ⛓ RK VIEW — a node's `rejectionKinds` as `[[kind, n], …]`: the kinds of `REFUSAL_KINDS` (imported, so a kind the
+ * emitter adds is ordered with it) in that order, then any kind NOT in the list by name — shown, never dropped. Zero
+ * and non-numeric counts are skipped. A node with no kinds (every v1 node) is `[]`.
+ */
+export function kindChips(rejectionKinds) {
+    const kinds = rejectionKinds ?? {};
+    const live = (k) => Number.isFinite(kinds[k]) && kinds[k] > 0;
+    const known = REFUSAL_KINDS.filter(live).map((k) => [k, kinds[k]]);
+    const other = Object.keys(kinds).filter((k) => !REFUSAL_KINDS.includes(k) && live(k)).sort()
+        .map((k) => [k, kinds[k]]);
+    return [...known, ...other];
+}
+
+/**
+ * ⛓ RK VIEW — the segment's refusals by kind, each counted ONCE, as `{rows: [[kind, n], …] (kindChips' order),
+ * total}`; `null` for a v1 tree (no `rejectionKinds` on its root).
+ *
+ * ⛔ NOT a sum over every node: the emitter tallies a refusal on more than one node. A rung's row refusal and a
+ * search's bound are tallied on that node alone, but a THROWN error is tallied on EVERY frame it unwinds through
+ * (`progressLeave`: L18's `levelRun` refusal sits on segment → goal → walk → verb → arm, five times), and a climb
+ * that unwinds also tallies its cursor (the rung, and the arm under it). The node where a refusal was tallied
+ * DEEPEST is where it happened, and every node above it holds the same tally again. So each node counts, per kind,
+ * only what its children do not already hold: `max(0, own − Σ children)`. That is every rung row refusal and
+ * search bound (no child holds them) plus each error's deepest node (its frames above count 0) — what hammer-phase
+ * RK's report asks for, derived from the tally rules rather than from a role list. Its one blind spot: a frame
+ * whose own refusal has the kind of refusals its children took and SURVIVED reads that one as theirs (a lower bound).
+ */
+export function kindTotals(tree) {
+    if (!tree || typeof tree.rejectionKinds !== 'object' || tree.rejectionKinds === null) return null;
+    const totals = {};
+    const visit = (n) => {
+        const kids = n.children ?? [];
+        const below = {};
+        for (const c of kids) {
+            for (const [k, v] of Object.entries(c.rejectionKinds ?? {})) {
+                if (Number.isFinite(v)) below[k] = (below[k] ?? 0) + v;
+            }
+        }
+        for (const [k, v] of Object.entries(n.rejectionKinds ?? {})) {
+            const own = Number.isFinite(v) ? v - (below[k] ?? 0) : 0;
+            if (own > 0) totals[k] = (totals[k] ?? 0) + own;
+        }
+        for (const c of kids) visit(c);
+    };
+    visit(tree);
+    const rows = kindChips(totals);
+    return { rows, total: rows.reduce((a, [, n]) => a + n, 0) };
+}
+
+/**
+ * ⛓ RK VIEW — the segment's last refusal as one line, `‹kind› at ‹key›: ‹why›`, the why VERBATIM (the view clamps
+ * it and escapes it — it only ever writes text); `null` when there is none (`lastWhy: null`, or a v1 snapshot).
+ * Fields the line does not name (`name`, should the emitter add it) are ignored.
+ */
+export function lastWhyText(lastWhy) {
+    if (!lastWhy || typeof lastWhy !== 'object') return null;
+    return `${lastWhy.kind ?? '?'} at ${lastWhy.key ?? '?'}: ${lastWhy.why ?? ''}`;
+}
+
+/** ⛓ RK VIEW — `text` cut to at most `max` characters, the cut marked with `…` (a short text is unchanged). */
+export function clampText(text, max) {
+    return text.length <= max ? text : `${text.slice(0, Math.max(0, max - 1))}…`;
 }
 
 /** The tile map's cells as a lookup and its maximum count: `{max, at(col,row) → [col,row,reached,firstTick]|null}`. */
