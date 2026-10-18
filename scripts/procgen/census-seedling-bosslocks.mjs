@@ -37,39 +37,45 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readFileSync, writeFileSync } from 'node:fs';
 
-import { argvHelp } from './argvHelp.js';
+import { argvHelp, isEntryPoint } from './argvHelp.js';
 
 argvHelp(import.meta.url);
-const HERE = dirname(fileURLToPath(import.meta.url));
-const REPO = join(HERE, '..', '..');
-const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
-const jsonOut = process.argv.find((a) => a.startsWith('--json='))?.slice('--json='.length) ?? null;
-const shield = process.argv.includes('--shield');
 
-const { censusLocks, censusCounts } = await import('./seedlingBossLockCensus.js');
-const { playthroughGridFor } = await import('./make-seedling-playthrough-rules.mjs');
-const { findComponents } = await import('../../frontend/modules/procgenPipeline/regionAtlasAnalyzer.js');
+/** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
+if (isEntryPoint(import.meta.url)) await main();
 
-const MAP = readJson(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'));
-const ATLAS = readJson(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-playthrough.json'));
+async function main() {
+    const HERE = dirname(fileURLToPath(import.meta.url));
+    const REPO = join(HERE, '..', '..');
+    const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
+    const jsonOut = process.argv.find((a) => a.startsWith('--json='))?.slice('--json='.length) ?? null;
+    const shield = process.argv.includes('--shield');
 
-const tags = shield ? ['shieldlock', 'shieldlocknorm'] : ['bosslock'];
-const rows = censusLocks({ levels: MAP.levels, atlas: ATLAS, gridFor: playthroughGridFor, findComponents, tags });
+    const { censusLocks, censusCounts } = await import('./seedlingBossLockCensus.js');
+    const { playthroughGridFor } = await import('./make-seedling-playthrough-rules.mjs');
+    const { findComponents } = await import('../../frontend/modules/procgenPipeline/regionAtlasAnalyzer.js');
 
-console.log(`## ${tags.join(' + ')} census — ${ATLAS.atlas_id} (${rows.length} placements)`);
-console.log('probe side: bosslock S (BossLock.as:61, the row below), shieldlock W (ShieldLock.as:32, x - 1)\n');
-console.log('| level | lock | tile | keyType | tag | N | S | E | W | rule (probe side / far side) | directions | far side\'s other ways in | verdict |');
-console.log('|---|---|---|---|---|---|---|---|---|---|---|---|---|');
-const ruleText = (r) => (r.rule ? `${r.rule.access_rule?.args?.item_name ?? JSON.stringify(r.rule.access_rule)}` : '—');
-for (const r of rows) {
-    const other = [...r.farEntrances, ...r.farOther].join(', ') || '—';
-    console.log(`| L${r.level} | ${r.tag}@${r.at} | ${r.tile.join(',')} | ${r.keyType ?? '—'} | ${r.persistTag ?? '—'} | `
-        + `${r.sides.N} | ${r.sides.S} | ${r.sides.E} | ${r.sides.W} | ${ruleText(r)} (${r.probeSide} / ${r.farSide}) | `
-        + `${r.ruleDirections ?? '—'} | ${other} | ${r.verdict} |`);
-}
-const counts = censusCounts(rows);
-console.log(`\n## COUNTS: ${Object.entries(counts).map(([k, v]) => `${k} ${v}`).join(' · ')}`);
-if (jsonOut) {
-    writeFileSync(jsonOut, `${JSON.stringify({ atlas_id: ATLAS.atlas_id, tags, counts, rows }, null, 2)}\n`);
-    console.log(`wrote ${jsonOut}`);
+    const MAP = readJson(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'));
+    const ATLAS = readJson(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-playthrough.json'));
+
+    const tags = shield ? ['shieldlock', 'shieldlocknorm'] : ['bosslock'];
+    const rows = censusLocks({ levels: MAP.levels, atlas: ATLAS, gridFor: playthroughGridFor, findComponents, tags });
+
+    console.log(`## ${tags.join(' + ')} census — ${ATLAS.atlas_id} (${rows.length} placements)`);
+    console.log('probe side: bosslock S (BossLock.as:61, the row below), shieldlock W (ShieldLock.as:32, x - 1)\n');
+    console.log('| level | lock | tile | keyType | tag | N | S | E | W | rule (probe side / far side) | directions | far side\'s other ways in | verdict |');
+    console.log('|---|---|---|---|---|---|---|---|---|---|---|---|---|');
+    const ruleText = (r) => (r.rule ? `${r.rule.access_rule?.args?.item_name ?? JSON.stringify(r.rule.access_rule)}` : '—');
+    for (const r of rows) {
+        const other = [...r.farEntrances, ...r.farOther].join(', ') || '—';
+        console.log(`| L${r.level} | ${r.tag}@${r.at} | ${r.tile.join(',')} | ${r.keyType ?? '—'} | ${r.persistTag ?? '—'} | `
+            + `${r.sides.N} | ${r.sides.S} | ${r.sides.E} | ${r.sides.W} | ${ruleText(r)} (${r.probeSide} / ${r.farSide}) | `
+            + `${r.ruleDirections ?? '—'} | ${other} | ${r.verdict} |`);
+    }
+    const counts = censusCounts(rows);
+    console.log(`\n## COUNTS: ${Object.entries(counts).map(([k, v]) => `${k} ${v}`).join(' · ')}`);
+    if (jsonOut) {
+        writeFileSync(jsonOut, `${JSON.stringify({ atlas_id: ATLAS.atlas_id, tags, counts, rows }, null, 2)}\n`);
+        console.log(`wrote ${jsonOut}`);
+    }
 }

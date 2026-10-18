@@ -20,10 +20,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { argvHelp, isEntryPoint } from './argvHelp.js';
 import {
     buildTable, census, compareToTable, CORE_FOUR, DOOR, FOLDS, foldKeySites, groupReads,
     staticDrift, surfaceA,
 } from './seedlingSolverSurface.js';
+
+argvHelp(import.meta.url);
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, '../..');
@@ -120,4 +123,5 @@ function main() {
     printTables(c);
 }
 
-main();
+/** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
+if (isEntryPoint(import.meta.url)) main();

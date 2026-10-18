@@ -39,83 +39,89 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 
-import { argvHelp } from './argvHelp.js';
+import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { censusAtlasDoors, swimWitnesses, SWIM_ITEM, ruleItems } from './seedlingAtlasDoorCensus.js';
 
 argvHelp(import.meta.url);
-const HERE = dirname(fileURLToPath(import.meta.url));
-const REPO = join(HERE, '..', '..');
-const ATLAS_DIR = join(REPO, 'frontend/modules/flashPanel/atlases');
-const TAPE_DIR = join(REPO, 'frontend/modules/seedlingDemo/fixtures/tapes');
-const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
-const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
-    ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
 
-const INDEX = readJson(join(ATLAS_DIR, 'atlas_files.json'));
-const PLAYTHROUGH = INDEX.atlases.find((a) => a.file === 'seedling-playthrough.json').atlas_id;
-const atlasArg = arg('atlas', PLAYTHROUGH);
-const byId = INDEX.atlases.find((a) => a.atlas_id === atlasArg);
-const atlasPath = byId ? join(ATLAS_DIR, byId.file) : resolve(atlasArg);
-if (!existsSync(atlasPath)) {
-    console.error(`ERROR: --atlas=${atlasArg} is neither an atlas_id atlas_files.json lists `
-        + `[${INDEX.atlases.map((a) => a.atlas_id).join(', ')}] nor a file`);
-    process.exit(2);
-}
-const atlas = readJson(atlasPath);
+/** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
+if (isEntryPoint(import.meta.url)) await main();
 
-const { ITEM_FOR_TAG } = await import(pathToFileURL(join(REPO, 'frontend/modules/seedlingDemo/seedlingAtlasDerivation.js')));
-const swimTags = Object.entries(ITEM_FOR_TAG).filter(([, item]) => item === SWIM_ITEM).map(([tag]) => tag);
-const tapeFiles = readdirSync(TAPE_DIR).filter((f) => f.endsWith('.json') && f !== 'index.json').sort();
-const tapes = tapeFiles.map((file) => ({ file, tape: readJson(join(TAPE_DIR, file)) }));
-const { witness, noSwim } = swimWitnesses(tapes, swimTags);
+async function main() {
+    const HERE = dirname(fileURLToPath(import.meta.url));
+    const REPO = join(HERE, '..', '..');
+    const ATLAS_DIR = join(REPO, 'frontend/modules/flashPanel/atlases');
+    const TAPE_DIR = join(REPO, 'frontend/modules/seedlingDemo/fixtures/tapes');
+    const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
+    const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
+        ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
 
-const { buildSeedlingContentSource } = await import(pathToFileURL(join(REPO, 'frontend/modules/flashPanel/flashSeedlingLibrary.js')));
-const { boundaryRule } = await import(pathToFileURL(join(REPO, 'frontend/modules/procgenPipeline/regionAtlasPool.js')));
-const source = buildSeedlingContentSource(atlas);
-const placeable = new Set(source.zones.map((z) => `${z.payload.atlas_region}/${z.payload.atlas_sub_region ?? ''}`));
-let contentSourceSwimRules = 0;
-for (const z of source.zones) {
-    for (const d of z.payload.exits) if (ruleItems(boundaryRule(z.region, d.exit_id)).has(SWIM_ITEM)) contentSourceSwimRules += 1;
-    for (const l of z.locations) if (ruleItems(l.access_rule).has(SWIM_ITEM)) contentSourceSwimRules += 1;
-}
+    const INDEX = readJson(join(ATLAS_DIR, 'atlas_files.json'));
+    const PLAYTHROUGH = INDEX.atlases.find((a) => a.file === 'seedling-playthrough.json').atlas_id;
+    const atlasArg = arg('atlas', PLAYTHROUGH);
+    const byId = INDEX.atlases.find((a) => a.atlas_id === atlasArg);
+    const atlasPath = byId ? join(ATLAS_DIR, byId.file) : resolve(atlasArg);
+    if (!existsSync(atlasPath)) {
+        console.error(`ERROR: --atlas=${atlasArg} is neither an atlas_id atlas_files.json lists `
+            + `[${INDEX.atlases.map((a) => a.atlas_id).join(', ')}] nor a file`);
+        process.exit(2);
+    }
+    const atlas = readJson(atlasPath);
 
-const c = censusAtlasDoors(atlas, { witness, noSwim, placeable });
-const out = [];
-const say = (s = '') => out.push(s);
-say('# census-seedling-atlas-doors');
-say(`atlas ${c.atlasId} (${atlasPath.slice(REPO.length + 1)}) · ${c.regions} regions · ${c.regionsWithSubgraph} with a subgraph · `
-    + `${c.subRegions} sub-regions · ${c.internalExits} internal exits`);
-say(`bounds: witnesses = ${tapes.length} committed tapes, boot level only, water armed + a swim tag [${swimTags.join(', ')}] `
-    + `(ITEM_FOR_TAG → ${SWIM_ITEM}); placeable = the content source's ${source.zones.length} rooms with ≥1 wired door `
-    + `(${source.doorless.length} doorless)`);
-say();
-say('## internal exits by rule');
-for (const r of c.byRule) say(`  ${String(r.count).padStart(4)}  ${r.rule}`);
-say();
-say(`## the ${SWIM_ITEM} rows: ${c.swim} of ${c.internalExits} internal exits, over ${c.swimLevels.length} levels`);
-say('  level  region      internal  swim  verdict          witnesses / water-armed tapes with no swim tag');
-for (const r of c.swimLevels) {
-    say(`  ${String(r.level).padStart(5)}  ${r.region_id.padEnd(10)}  ${String(r.internal).padStart(8)}  ${String(r.swim).padStart(4)}  `
-        + `${r.verdict.padEnd(15)}  ${r.witnesses.join(', ') || '—'}${r.noSwimTapes.length ? ` / no-swim: ${r.noSwimTapes.join(', ')}` : ''}`);
-}
-say();
-say(`WITNESSED levels: ${c.witnessedLevels.length} [${c.witnessedLevels.join(', ')}]`);
-say(`BOT-UNCERTIFIED levels: ${c.uncertifiedLevels.length} [${c.uncertifiedLevels.join(', ')}]`);
-say(`swim rows on a WITNESSED level: ${c.swimLevels.filter((r) => r.verdict === 'WITNESSED').reduce((n, r) => n + r.swim, 0)} of ${c.swim}`);
-say();
-say('## the pipeline side');
-say(`swim rows with a placeable side: ${c.swimRowsWithPlaceableSide} of ${c.swim}; with BOTH sides placeable: ${c.swimRowsBothSidesPlaceable}`);
-say(`swim rules the content source's zones carry (bound-door boundaryRule + location rules): ${contentSourceSwimRules}`);
-say('⇒ a swim row is geometry INSIDE a placed room (one sub-region = one AP region); no pipeline world emits it as a door or a rule.');
-console.log(out.join('\n'));
+    const { ITEM_FOR_TAG } = await import(pathToFileURL(join(REPO, 'frontend/modules/seedlingDemo/seedlingAtlasDerivation.js')));
+    const swimTags = Object.entries(ITEM_FOR_TAG).filter(([, item]) => item === SWIM_ITEM).map(([tag]) => tag);
+    const tapeFiles = readdirSync(TAPE_DIR).filter((f) => f.endsWith('.json') && f !== 'index.json').sort();
+    const tapes = tapeFiles.map((file) => ({ file, tape: readJson(join(TAPE_DIR, file)) }));
+    const { witness, noSwim } = swimWitnesses(tapes, swimTags);
 
-const jsonOut = arg('json', '');
-if (jsonOut) {
-    mkdirSync(dirname(resolve(jsonOut)), { recursive: true });
-    const levelsObj = (m) => Object.fromEntries([...m].sort((a, b) => a[0] - b[0]));
-    writeFileSync(resolve(jsonOut), `${JSON.stringify({
+    const { buildSeedlingContentSource } = await import(pathToFileURL(join(REPO, 'frontend/modules/flashPanel/flashSeedlingLibrary.js')));
+    const { boundaryRule } = await import(pathToFileURL(join(REPO, 'frontend/modules/procgenPipeline/regionAtlasPool.js')));
+    const source = buildSeedlingContentSource(atlas);
+    const placeable = new Set(source.zones.map((z) => `${z.payload.atlas_region}/${z.payload.atlas_sub_region ?? ''}`));
+    let contentSourceSwimRules = 0;
+    for (const z of source.zones) {
+        for (const d of z.payload.exits) if (ruleItems(boundaryRule(z.region, d.exit_id)).has(SWIM_ITEM)) contentSourceSwimRules += 1;
+        for (const l of z.locations) if (ruleItems(l.access_rule).has(SWIM_ITEM)) contentSourceSwimRules += 1;
+    }
+
+    const c = censusAtlasDoors(atlas, { witness, noSwim, placeable });
+    const out = [];
+    const say = (s = '') => out.push(s);
+    say('# census-seedling-atlas-doors');
+    say(`atlas ${c.atlasId} (${atlasPath.slice(REPO.length + 1)}) · ${c.regions} regions · ${c.regionsWithSubgraph} with a subgraph · `
+        + `${c.subRegions} sub-regions · ${c.internalExits} internal exits`);
+    say(`bounds: witnesses = ${tapes.length} committed tapes, boot level only, water armed + a swim tag [${swimTags.join(', ')}] `
+        + `(ITEM_FOR_TAG → ${SWIM_ITEM}); placeable = the content source's ${source.zones.length} rooms with ≥1 wired door `
+        + `(${source.doorless.length} doorless)`);
+    say();
+    say('## internal exits by rule');
+    for (const r of c.byRule) say(`  ${String(r.count).padStart(4)}  ${r.rule}`);
+    say();
+    say(`## the ${SWIM_ITEM} rows: ${c.swim} of ${c.internalExits} internal exits, over ${c.swimLevels.length} levels`);
+    say('  level  region      internal  swim  verdict          witnesses / water-armed tapes with no swim tag');
+    for (const r of c.swimLevels) {
+        say(`  ${String(r.level).padStart(5)}  ${r.region_id.padEnd(10)}  ${String(r.internal).padStart(8)}  ${String(r.swim).padStart(4)}  `
+            + `${r.verdict.padEnd(15)}  ${r.witnesses.join(', ') || '—'}${r.noSwimTapes.length ? ` / no-swim: ${r.noSwimTapes.join(', ')}` : ''}`);
+    }
+    say();
+    say(`WITNESSED levels: ${c.witnessedLevels.length} [${c.witnessedLevels.join(', ')}]`);
+    say(`BOT-UNCERTIFIED levels: ${c.uncertifiedLevels.length} [${c.uncertifiedLevels.join(', ')}]`);
+    say(`swim rows on a WITNESSED level: ${c.swimLevels.filter((r) => r.verdict === 'WITNESSED').reduce((n, r) => n + r.swim, 0)} of ${c.swim}`);
+    say();
+    say('## the pipeline side');
+    say(`swim rows with a placeable side: ${c.swimRowsWithPlaceableSide} of ${c.swim}; with BOTH sides placeable: ${c.swimRowsBothSidesPlaceable}`);
+    say(`swim rules the content source's zones carry (bound-door boundaryRule + location rules): ${contentSourceSwimRules}`);
+    say('⇒ a swim row is geometry INSIDE a placed room (one sub-region = one AP region); no pipeline world emits it as a door or a rule.');
+    console.log(out.join('\n'));
+
+    const jsonOut = arg('json', '');
+    if (jsonOut) {
+        mkdirSync(dirname(resolve(jsonOut)), { recursive: true });
+        const levelsObj = (m) => Object.fromEntries([...m].sort((a, b) => a[0] - b[0]));
+        writeFileSync(resolve(jsonOut), `${JSON.stringify({
         ...c, swimTags, tapes: tapes.length, witnessTapes: levelsObj(witness), noSwimTapes: levelsObj(noSwim),
         placeableRooms: source.zones.length, doorlessRooms: source.doorless.length, contentSourceSwimRules,
     }, null, 2)}\n`);
-    console.log(`wrote ${jsonOut}`);
+        console.log(`wrote ${jsonOut}`);
+    }
 }
