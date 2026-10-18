@@ -182,12 +182,14 @@ The registry has nine entries:
 | `maze` | `mazeRoom` | `maze:loadRegion` | Grid-room maze with biomes, hazards and an autopather. |
 | `bounce` | `bounceDemo` | `bounce:loadRegion` | Vertical platformer with a physics-verified generator; reuses `flashSubstrate`'s panel code under its own identity. |
 | `text_adventure` | `textAdventureSubstrateWrapper` | `textAdventure:loadRegion` | Iframe-hosted text adventure. |
-| `flash` | `flashSubstrate` | `flash:loadRegion` | Iframe substrate for recompiled Flash games (SWF→WASM), speaking the `__swfBridge` contract. |
 | `runner` | `runnerDemo` | `runner:loadRegion` | Auto-runner platformer with a physics-verified strip generator; like bounce, built on `flashSubstrate`. |
 | `jta` | `jtaSubstrateWrapper` | `jta:loadRegion` | Journey to Ascension as a zone-based substrate. |
 | `omsi` | `omsiSubstrateWrapper` | `omsi:loadRegion` | Idle Loops (the `omsi-loops` fork) as a loop-game substrate; requires loop mode. |
 | `flash_seedling` | `flashPanel` | `flashSeedling:loadRegion` | A real room of the Seedling atlas as a pipeline region. |
 | `flash_seedling_gen` | `flashPanel` | `flashSeedling:loadRegion` | A room built by the Seedling generator to the pipeline's spec. |
+| `noiz2sa` | `noiz2saSubstrate` | `noiz2sa:loadRegion` | Noiz2sa, the BulletML shooter, as a substrate ([noiz2sa.md](./noiz2sa.md)). |
+
+There is no generic `flash` entry (⚖ the user, 2026-10-18: it "isn't really a substrate"). `flashSubstrate/` keeps the `createFlashSubstrateEntry` factory and the iframe machinery that the Seedling, bounce and runner entries are built on; see [Flash Substrate](./flash.md).
 
 The entry contract and the generated capability matrix are in [Substrate Registry Reference](./substrate-registry.md#capability-matrix). `shared/` is a git submodule, so `git log` and `git blame` on the registry must run inside it.
 

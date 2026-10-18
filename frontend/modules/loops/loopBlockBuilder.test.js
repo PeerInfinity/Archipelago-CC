@@ -199,7 +199,9 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
         const jta = (await import('../jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js')).substrateRegistryEntry;
         const bounce = (await import('../bounceDemo/bounceDemoLibrary.js')).substrateRegistryEntry;
         const runner = (await import('../runnerDemo/runnerDemoLibrary.js')).substrateRegistryEntry;
-        const flash = (await import('../flashSubstrate/flashSubstrateLibrary.js')).substrateRegistryEntry;
+        // The factory's bare shape (not registered: there is no generic `flash` entry).
+        const flash = (await import('../flashSubstrate/flashSubstrateLibrary.js'))
+            .createFlashSubstrateEntry({ id: 'flash_factory_probe' });
         const omsi = (await import('../omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js')).substrateRegistryEntry;
 
         // M2: maze + textAdventure DECLARE record + playback (Record requires
@@ -208,7 +210,7 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
         // pump). M5: runner + bounce declare record + playback + instant too,
         // as the SUMMARY category (`summaryRecording`) — no recorder, so they
         // are not fine-grained. Arc D1: omsi joins as the third FINE-GRAINED
-        // substrate. Only the bare flash entry still doesn't declare.
+        // substrate. Only the bare flash factory entry still doesn't declare.
         expect(maze.loopSupport).toMatchObject({
             manual: true, customQueues: true, record: true, playback: true, instant: true,
         });
@@ -301,7 +303,7 @@ describe('LoopBlockBuilder — loopSupport capability gating', () => {
         expect(flash.loopSupport).toMatchObject({ manual: true, customQueues: false });
         expect(flash.loopSupport.instant ?? false).toBe(false);
         expect([...flash.loopSupport.queueActions]).toEqual(['regionMove']);
-        // The bare flash entry declares no solver: a per-game entry opts in.
+        // The bare flash factory entry declares no solver: a per-game entry opts in.
         expect(flash.loopSupport.executeVia).toBeUndefined();
 
         // Seedling loop mode: flash_seedling (built on the flash factory) is

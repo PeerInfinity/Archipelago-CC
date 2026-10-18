@@ -66,17 +66,16 @@ const DOC_DIR = 'docs/json/developer/procgen';
  * columns are in id order whatever this order is).
  *
  * These are the files the library table at the end of the matrix region in
- * `substrate-registry.md` lists. ⚠ `flash` registers as a side effect of `bounceDemoLibrary`
- * (bounce's entry factory builds on the flash one), so `flash` arrives with
- * bounce's library rather than its own — which is a fact about the code, and
- * the table PRINTS which library each id actually arrived with.
+ * `substrate-registry.md` lists. ⚠ `flashSubstrateLibrary` is NOT one of them:
+ * it holds only the `createFlashSubstrateEntry` FACTORY and registers no entry
+ * (⚖ user, 2026-10-18: the generic `flash` entry "isn't really a substrate").
+ * The table PRINTS which library each id actually arrived with.
  */
 export const REGISTRY_LIBRARIES = Object.freeze([
     'frontend/modules/mazeRoom/mazeRoomLibrary.js',
     'frontend/modules/bounceDemo/bounceDemoLibrary.js',
     'frontend/modules/runnerDemo/runnerDemoLibrary.js',
     'frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js',
-    'frontend/modules/flashSubstrate/flashSubstrateLibrary.js',
     'frontend/modules/flashPanel/flashSeedlingLibrary.js',
     // ⛓ seedling generated G1: the BUILD door (registers the light entry AND
     // installs the generator) — a registry-wide row that drives a core needs it.

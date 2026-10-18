@@ -4,9 +4,10 @@
  *    iframe pointing at a recompiled Flash game page (SWF -> C -> WASM
  *    via SWFRecomp-CC). v1 ships a placeholder page so the module is
  *    testable before the real recompiled-game page lands.
- *  - Registers a substrate registry entry (id: 'flash'), so
- *    procgenPlayer publishes flash:loadRegion when the player enters
- *    a region tagged with this substrate.
+ *  - Registers NO substrate registry entry of its own (⚖ user,
+ *    2026-10-18: the generic 'flash' entry "isn't really a substrate").
+ *    Per-game entries built on createFlashSubstrateEntry register where
+ *    their games are defined.
  *  - Acts as the host-side broker for the in-iframe bridge: relays the
  *    flash:loadRegion activation and brings the panel forward.
  *
@@ -19,13 +20,11 @@
  */
 
 import { FlashSubstratePanel } from './flashSubstratePanel.js';
-import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { substrateRegistryEntry } from './flashSubstrateLibrary.js';
 // createFlashSubstrateEntry is exported for per-game entries (Shape 1):
 // each real Flash game registers its own substrate id + supportedFeatures
 // via the factory, all sharing this module's one panel + 'flash:loadRegion'
-// event. The module itself registers only the generic 'flash' entry;
-// per-game entries are added where real games are defined.
+// event. The module itself registers no entry; per-game entries are
+// added where real games are defined.
 
 export const moduleInfo = {
     name: 'flashSubstrate',
@@ -71,13 +70,6 @@ export function register(registrationApi) {
 
     // Events the host module subscribes to.
     registrationApi.registerEventBusSubscriberIntent('flash:loadRegion');
-
-    // Guarded register so re-registration of the same id is harmless
-    // (mirrors the jtaSubstrateWrapper / textAdventureSubstrateWrapper
-    // pattern; the library's import side-effect may already have run).
-    if (!substrateRegistry.has(substrateRegistryEntry.id)) {
-        substrateRegistry.register(substrateRegistryEntry);
-    }
 }
 
 export function initialize(_moduleId, _priorityIndex, initializationApi) {
