@@ -1,0 +1,7 @@
+== census-seedling-solver-surface
+GREEN: 312 rows match a fresh census
+rc=0
+== census-seedling-constants
+census-seedling-constants --check — 6002 literals; green drift: 0 new + 0 vanished cosmetic/structural, 0 moved
+PASS
+rc=0

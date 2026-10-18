@@ -23409,3 +23409,37 @@ by 12–28 bytes per segment.
 
 Lesson: *a static census is only as good as the text it reads.* RK's 200-character heads hid the deciding words of 32
 sites. Those words sat past the cut, or were split by a `' + '`.
+
+### Seedling hammer-phase EX — the escape-admission cache
+
+⚖ The user (2026-10-18), after WC named the escape as the lever: an EXACT cache of `pressEscape`'s answers behind
+`ESCAPE_ADMISSION_CACHE` (default OFF), a hit replaying the miss's `shouldStop` asks and `onNode` states. **The slice
+stopped at D1 (measured):** at the defaults the honest key repeats on 0.2 % of the calls and would save 0.6 % of the L18
+sweep, against a 10 % bar. No switch was added and no solver code moved. The report is
+`CC/docs/cloud-reports/seedling-hammer-escape-cache.md`.
+
+**W0** at `b3adfad282`: the floor OFF (cap 16), `HAMMER_ESCAPE` and its fallback ON. The bounded vitest over
+`solverBot*`, `hammer*`, `solveProgress*` and `lintGateLabels` was 19 files, 327 / 327.
+
+**D1 — the key.** A scratch lab hashed every `pressEscape` call's inputs, answer and work units over the L18 sweep, one
+L18 residue under a never-tripping deadline, staging A and the L40 kill rung, floor OFF and ON. Its answers were
+byte-equal to the base's.
+- WC's figures reproduce: on L18 ON, 55.5 % of the calls repeat a (body, cell, absolute press tick), and 99.7 % of
+  those return the same certificate. But each of them is asked from a LATER tick. The world it reads (the spinners, the
+  run's tick, the forecast's rows) has moved, so none is a repeat of the full input.
+- What `pressEscape` reads from the run can only be fixed by the run object and its tick, because `levelRun` exposes no
+  state digest. Keyed that way (run, tick, the call's arguments, `CONTACT_FIDELITY` and the deadline's state), 0.2 % of
+  the calls repeat (135 OFF, 159 ON): 0.6 % / 0.5 % of the sweep's wall.
+- The real repeats are ACROSS the two-pass loop's passes: 66.7 % of the calls, 38 % of the wall OFF and 41 % ON. Each
+  residue solves three times, and passes 2 and 3 re-ask pass 1's escapes with the same answer and the same work. But
+  each pass builds a NEW run from different persistence (a declared `at` row in place of `PENDING_AT`). The claim that
+  this row is inert before its tick lives in `levelRun.js` (fidelity's file). So an honest key across passes needs a
+  state digest from `levelRun`, or a proof in it. That is the STOP's named reason.
+- Staging A asks the escape 20 times (≈ 0 s), and the L40 kill rung never asks it.
+
+**D4.** `hammerDashShape.test.js`'s DK whole-solve row moved, byte-identical, to `hammerDashShape.slow.test.js`, so the
+serial `.slow` tier runs it.
+
+Lesson: *a repeat of a key is not a repeat of the input.* "The same press tick" was asked from consecutive ticks of a
+moving world. The input repeated only where a whole solve was redone, and there the key had to name the run's world,
+which the solver cannot see.
