@@ -16,6 +16,11 @@ export const CI_REPO = 'PeerInfinity/Archipelago-CC';
 export const WORKFLOW = 'unittests_frontend.yml';
 /** ⛓ ONE spelling of the marker `ci-gates.mjs` prints and this file reads. */
 export const CI_GATE_MARK = '## CI-GATE |';
+/** ⛓ ci-jsut-split — what a battery planned, and that it finished (see `batteryCompleteness`). */
+export const CI_PLANNED_MARK = '## CI-PLANNED |';
+export const CI_DONE_MARK = '## CI-DONE |';
+/** ⛓ …and the fraction of a step deadline past which a battery WARNS. */
+export const HEADROOM_WARN_FRACTION = 0.75;
 
 /**
  * ⛓ `gh`'s stderr is PIPED, never inherited: a caught 404 must not leak a
@@ -311,7 +316,39 @@ export function jobLog(run) {
  */
 export function gateLogs(run) {
     const { parts, jobs, unreadable } = gateLogParts(run);
-    return { log: parts.map((p) => p.log).join('\n'), jobs, unreadable };
+    return { log: parts.map((p) => p.log).join('\n'), jobs, unreadable,
+        battery: batteryCompleteness(parts) };
+}
+
+/**
+ * ⛓⛓⛓ ci-jsut-split (fidelity-9's asks (b), (c)) — **DID EACH BATTERY FINISH?**
+ *
+ * ⛔ Measured: from 2026-10-10 the one headless job ran past its 20-minute step
+ * deadline on most runs, printed 54–68 of its 80–95 arms, and stayed green under
+ * `continue-on-error` — so a missing line read as "no such line", never as "the
+ * job was cut". A job that printed `## CI-PLANNED |` and no `## CI-DONE |` is
+ * TRUNCATED, by name; one that finished past `HEADROOM_WARN_FRACTION` of its
+ * step deadline is TIGHT. Pure: `parts` is `gateLogParts`' `{job, log}[]`.
+ * A log from before the markers existed carries neither and is not judged.
+ */
+export function batteryCompleteness(parts) {
+    const jobs = [];
+    for (const { job, log } of parts) {
+        const lines = strip(log).split('\n');
+        const at = (mark) => lines.find((l) => l.includes(mark));
+        const planned = at(CI_PLANNED_MARK);
+        if (!planned) continue;
+        const done = at(CI_DONE_MARK);
+        const n = Number((/(\d+) arm\(s\)/.exec(planned) ?? [])[1]);
+        const printed = lines.filter((l) => l.includes(CI_GATE_MARK)).length;
+        const m = done ? /\| ([0-9.]+)s(?: of a (\d+)s step deadline)?/.exec(done) : null;
+        const elapsedS = m ? Number(m[1]) : null;
+        const deadlineS = m?.[2] ? Number(m[2]) : null;
+        jobs.push({ job, planned: n, printed, done: Boolean(done), elapsedS, deadlineS,
+            truncated: !done || printed < n,
+            tight: Boolean(deadlineS) && elapsedS > HEADROOM_WARN_FRACTION * deadlineS });
+    }
+    return { jobs, truncated: jobs.filter((j) => j.truncated), tight: jobs.filter((j) => j.tight) };
 }
 
 /**

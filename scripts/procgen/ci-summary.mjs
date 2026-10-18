@@ -286,7 +286,8 @@ if (ALL_GATES) {
     const moved = rows.filter((r) => r.verdict === 'MOVED');
     if (json) {
         console.log(JSON.stringify({ sha, run: run.databaseId, conclusion: run.conclusion,
-            jobs: gathered.jobs, unreadable: gathered.unreadable, rows, missing }, null, 2));
+            jobs: gathered.jobs, unreadable: gathered.unreadable, rows, missing,
+            battery: gathered.battery }, null, 2));
     } else {
         console.log(`CI gates @ ${sha.slice(0, 9)} — run ${run.databaseId} ${run.conclusion}, `
             + `${gathered.jobs} job(s), ${rows.length} line(s)`);
@@ -298,6 +299,13 @@ if (ALL_GATES) {
             if (r.verdict === 'shallow') console.log(`             ⛔ @ci-shallow: ${r.shallow}`);
         }
         for (const k of missing) console.log(`  MISSING    ${k}`);
+        for (const t of gathered.battery.truncated) {
+            console.log(`  ⛔ TRUNCATED: "${t.job}" planned ${t.planned} arm(s) and printed `
+                + `${t.printed}${t.done ? '' : ' — no CI-DONE line (cut by its step deadline?)'}`);
+        }
+        for (const t of gathered.battery.tight) {
+            console.log(`  ⚠ HEADROOM: "${t.job}" ran ${t.elapsedS}s of its ${t.deadlineS}s step deadline`);
+        }
         /** ⛓ RULE 2 — a docs-only push ran no browser shard; say so beside the MISSING rows. */
         if (missing.length && !browserShardsRan(runJobs(run))) {
             console.log('  ⛓ rule 2: this run SKIPPED its browser shards (a docs-only push), so '
@@ -330,7 +338,7 @@ if (ALL_GATES) {
             + '`shallow` row is outside BOTH (it is excluded from the CI-sourced set by its '
             + 'own declaration, not by a verdict).');
     }
-    process.exit(moved.length || missing.length ? 1 : 0);
+    process.exit(moved.length || missing.length || gathered.battery.truncated.length ? 1 : 0);
 }
 
 /* ── --gate=: one line, read out of the job log ──────────────────────── */
@@ -358,6 +366,10 @@ if (GATE) {
             + `\`## CI-GATE | ${GATE} |\` line across its ${gathered.jobs} job(s). `
             + `${rows.size} gate line(s) present: `
             + `${[...rows.keys()].join(', ') || '(none — the step did not run)'}`
+            + (gathered.battery.truncated.length
+                ? `\n⛔ TRUNCATED battery: ${gathered.battery.truncated.map((t) => `"${t.job}" printed `
+                    + `${t.printed} of ${t.planned}`).join('; ')} — the line may be one it never reached`
+                : '')
             + (gathered.unreadable.length
                 ? `\n⚠ ${gathered.unreadable.length} job log(s) could not be read, so this `
                   + `may be a job that never ran rather than a missing line: `
@@ -456,8 +468,13 @@ else {
  * is `null` there, and reading `null !== 'success'` as red would call a green
  * suite red for the duration of a browser shard.
  */
-const suiteConclusion = run.status === 'completed'
-    ? run.conclusion : (unitJob?.conclusion ?? run.conclusion);
+/**
+ * ⛓ ci-jsut-split — for a SPLIT run the verdict is the suite FAMILY's: since the
+ * "Battery complete?" step a gate job can be red, and a cut gate battery is not
+ * a red suite. A pre-split run keeps the run's conclusion, as before.
+ */
+const suiteConclusion = suite.layout === 'split' && !suite.pending.length ? worst
+    : run.status === 'completed' ? run.conclusion : (unitJob?.conclusion ?? run.conclusion);
 /** ⛓ ci-jsut-split — and every member's own, so a red shard is red by name even
  *  if the run's conclusion were ever to hide it. */
 const redMembers = members.filter((m) => m.conclusion !== 'success');

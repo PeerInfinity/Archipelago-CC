@@ -416,7 +416,27 @@ jobs:
       - name: Run headless procgen gates (shard ${{ matrix.shard }})
         continue-on-error: true
         timeout-minutes: 20
-        run: node scripts/procgen/ci-gates.mjs --set=headless --shard=${{ matrix.shard }}
+        run: |
+          set -o pipefail
+          node scripts/procgen/ci-gates.mjs --set=headless --shard=${{ matrix.shard }} \
+            --deadline-s=1200 2>&1 | tee /tmp/gates.log
+
+      # ⛔⛔ ci-jsut-split (fidelity-9's ask (b)) — A CUT BATTERY IS RED, BY NAME.
+      # From 2026-10-10 to this split the step above hit its 20-minute deadline on
+      # most runs and printed 54–68 of 80–95 arms — green, because
+      # `continue-on-error` also swallows a TIMEOUT. `continue-on-error` stays (a
+      # red GATE is a standing-row fact, not a merge gate); a battery that never
+      # printed `## CI-DONE |` fails the job here, and `ci-summary --gates` names it.
+      - name: Battery complete? (shard ${{ matrix.shard }})
+        if: ${{ !cancelled() }}
+        run: |
+          grep -a '^## CI-PLANNED |' /tmp/gates.log || true
+          if grep -aq '^## CI-DONE |' /tmp/gates.log; then
+            grep -a '^## CI-DONE |' /tmp/gates.log
+          else
+            echo "::error title=gate battery TRUNCATED::shard ${{ matrix.shard }} printed $(grep -ac '^## CI-GATE |' /tmp/gates.log) CI-GATE line(s) and no CI-DONE line — cut by its step deadline or crashed"
+            exit 1
+          fi
 
   # ══════════════════════════════════════════════════════════════════════
   # ⛓⛓⛓ S3 (⚖ RULING 72, 2026-09-01) — **THE BROWSER GATES, IN CI.**
@@ -643,11 +663,23 @@ jobs:
           set +e
           node scripts/procgen/ci-gates.mjs \
             --set=browser --shard=${{ matrix.shard.id }} \
-            --host=http://localhost:8000 2>&1 | tee /tmp/gates.log
+            --host=http://localhost:8000 --deadline-s=2400 2>&1 | tee /tmp/gates.log
           RC=$?
           set -e
           kill "$(cat /tmp/httpd.pid)" 2>/dev/null || true
           exit $RC
+
+      # ⛔ ci-jsut-split — the same check as the headless shards' (see there).
+      - name: 'Battery complete? (shard ${{ matrix.shard.id }})'
+        if: ${{ !cancelled() }}
+        run: |
+          grep -a '^## CI-PLANNED |' /tmp/gates.log || true
+          if grep -aq '^## CI-DONE |' /tmp/gates.log; then
+            grep -a '^## CI-DONE |' /tmp/gates.log
+          else
+            echo "::error title=gate battery TRUNCATED::shard ${{ matrix.shard.id }} printed $(grep -ac '^## CI-GATE |' /tmp/gates.log) CI-GATE line(s) and no CI-DONE line — cut by its step deadline or crashed"
+            exit 1
+          fi
 
       - name: 'Shard ${{ matrix.shard.id }} — summary'
         if: always()

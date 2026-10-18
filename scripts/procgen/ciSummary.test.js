@@ -19,7 +19,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
-    GATE_JOB, GUARD_JOB, gateVerdicts, parseGateLines, parseGateMsLines, pickGateRuns,
+    batteryCompleteness, CI_DONE_MARK, CI_PLANNED_MARK, GATE_JOB, GUARD_JOB, gateVerdicts, parseGateLines, parseGateMsLines, pickGateRuns,
     pickSuiteRun, pickVitestJob, shardNoteIn, SUITE_SHARD_JOB, SUITE_SLOW_JOB, suiteJobs,
     sumSummaries, VITEST_JOB,
 } from './ciSummary.js';
@@ -522,5 +522,53 @@ describe('pickSuiteRun — the split family', () => {
             job('JavaScript Unit Tests (Vitest shard 2/3)', 'in_progress', null)],
         1: [] };
         expect(pickSuiteRun(runs, (x) => jobs[x.databaseId]).run.databaseId).toBe(1);
+    });
+});
+
+/**
+ * ⛓⛓⛓ ci-jsut-split (fidelity-9's asks (b), (c)) — A CUT BATTERY READS TRUNCATED.
+ * Measured: run 39081866066's one headless job printed 63 of 95 and timed out.
+ */
+describe('batteryCompleteness — PLANNED without DONE is a truncated job, by name', () => {
+    const gate = (k) => `## CI-GATE | ${k} | x | exit=0 | ok`;
+    const ts = (l) => `2026-10-18T00:12:15.5310669Z ${l}`;
+    it('a finished battery is complete, and TIGHT past the warn fraction', () => {
+        const log = [`${CI_PLANNED_MARK} 2 arm(s) | step deadline 1200s`, gate('a'), gate('b'),
+            `${CI_DONE_MARK} 2 of 2 arm(s) | 950.0s of a 1200s step deadline`].map(ts).join('\n');
+        const b = batteryCompleteness([{ job: 'Headless procgen gates (shard 0)', log }]);
+        expect(b.truncated).toEqual([]);
+        expect(b.tight.map((j) => j.job)).toEqual(['Headless procgen gates (shard 0)']);
+        expect(b.jobs[0]).toMatchObject({ planned: 2, printed: 2, elapsedS: 950, deadlineS: 1200 });
+    });
+    it('⛔ no DONE line ⇒ TRUNCATED, with planned and printed', () => {
+        const log = [`${CI_PLANNED_MARK} 95 arm(s)`, gate('a'), '##[error]The action has timed out after 20 minutes.']
+            .map(ts).join('\n');
+        const b = batteryCompleteness([{ job: 'Headless procgen gates (shard 1)', log }]);
+        expect(b.truncated).toHaveLength(1);
+        expect(b.truncated[0]).toMatchObject({ planned: 95, printed: 1, done: false });
+    });
+    it('a log from before the markers (or a suite job) is not judged', () => {
+        expect(batteryCompleteness([{ job: 'x', log: gate('a') }]).jobs).toEqual([]);
+    });
+});
+
+describe('unittests_frontend.yml — every gate battery is checked complete', () => {
+    const wf = readFileSync(join(REPO, '.github/workflows/unittests_frontend.yml'), 'utf8');
+    it('each ci-gates step passes --deadline-s = its own timeout-minutes × 60', () => {
+        const steps = wf.split('- name: ').filter((b) => /node scripts\/procgen\/ci-gates\.mjs/.test(b)
+            && /--shard=/.test(b));
+        expect(steps).toHaveLength(2);
+        for (const b of steps) {
+            const min = Number(/timeout-minutes: (\d+)/.exec(b)[1]);
+            expect(Number(/--deadline-s=(\d+)/.exec(b)[1])).toBe(min * 60);
+        }
+    });
+    it('a "Battery complete?" step follows each, failing on a missing CI-DONE', () => {
+        const checks = wf.split('- name: ').filter((b) => /^'?Battery complete\?/.test(b));
+        expect(checks).toHaveLength(2);
+        for (const c of checks) {
+            expect(c).toContain("grep -aq '^## CI-DONE |' /tmp/gates.log");
+            expect(c).toContain('exit 1');
+        }
     });
 });

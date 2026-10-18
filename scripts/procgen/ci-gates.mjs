@@ -76,7 +76,8 @@ import { promisify } from 'node:util';
 import { releaseBoxLock, takeBoxLock } from './boxLock.js';
 import { CI_ARM_COSTS_FILE, CI_FIXED_SHARD_LIMIT_MS, CI_SHARD_BUDGET_MS, auditRunShards, ciGatePlanFor, ciRunnable,
     ciUnrunnableIdentityRows, readCiArmCosts } from './ciGatePlan.js';
-import { recentRuns, runById, runShardCosts } from './ciSummary.js';
+import { CI_DONE_MARK, CI_PLANNED_MARK, HEADROOM_WARN_FRACTION, recentRuns, runById,
+    runShardCosts } from './ciSummary.js';
 import { LOCAL_HOST, REPO, gateRoster } from './gateRoster.js';
 import { headlineOf, runRow } from './standingValues.js';
 
@@ -103,6 +104,10 @@ const HOST = arg('host', LOCAL_HOST);
 const WAIT_FOR_BOX = Number(arg('wait-for-box', '0')) || 0;
 const AUDIT_RUN = arg('run');
 const COST_RUNS = Number(arg('runs', '3')) || 3;
+/** ⛓ ci-jsut-split — the step's own kill deadline, so the battery can say how
+ *  close it ran to being cut (the workflow passes its `timeout-minutes` × 60). */
+const DEADLINE_S = Number(arg('deadline-s', '0')) || 0;
+const T_START = Date.now();
 
 /** ⛓ The marker every consumer greps for — ONE spelling, exported. */
 export const CI_GATE_MARK = '## CI-GATE |';
@@ -331,6 +336,15 @@ console.log(`## ${selected.length} arm(s) run here, out of ${arms.length} the `
     + 'Windows driver or declare `@ci-box`, and are SKIPPED BY NAME below with their own '
     + 'reason — never counted, never implied green.');
 if (shardNote) console.log(`## ${shardNote}`);
+/**
+ * ⛓⛓ ci-jsut-split (fidelity-9's ask (b)) — **A BATTERY SAYS WHAT IT PLANNED, AND
+ * THAT IT FINISHED.** From 2026-10-10 the one headless job hit its 20-minute step
+ * deadline on most runs and printed 54–68 of its 80–95 arms, green under
+ * `continue-on-error`. `ci-summary` and the workflow's "Battery complete?" step
+ * read these two lines: PLANNED without DONE is a TRUNCATED job, by name.
+ */
+console.log(`${CI_PLANNED_MARK} ${selected.length} arm(s)`
+    + `${DEADLINE_S ? ` | step deadline ${DEADLINE_S}s` : ''}`);
 
 /** ⛓ S4c — `arm.browser`, not `arm.gate.browser`: an identity arm has no
  *  gate and `plan-seedling-r7-ends-meet --check` is one of the arms that
@@ -470,5 +484,14 @@ console.log(`\n${rows.length} ${SET} arm(s) reported; `
     + `${rows.filter((r) => r.exit !== 0).length} non-zero; `
     + `${unrunnable.length} skipped by name; ${elsewhereInRun.length} in sibling shard(s). `
     + `${(rows.reduce((s, r) => s + r.ms, 0) / 1000).toFixed(1)}s of arm time here.`);
+const elapsedS = (Date.now() - T_START) / 1000;
+console.log(`${CI_DONE_MARK} ${rows.length} of ${selected.length} arm(s) | ${elapsedS.toFixed(1)}s`
+    + `${DEADLINE_S ? ` of a ${DEADLINE_S}s step deadline` : ''}`);
+/** ⛓ (c) — the headroom warning, as an Actions annotation where the run page shows it. */
+if (DEADLINE_S && elapsedS > HEADROOM_WARN_FRACTION * DEADLINE_S) {
+    console.log(`::warning title=gate battery headroom::${elapsedS.toFixed(0)}s of the `
+        + `${DEADLINE_S}s step deadline (> ${HEADROOM_WARN_FRACTION * 100}%) — split the set before `
+        + 'the deadline truncates it (CI_HEADLESS_SHARDS / the browser budget)');
+}
 releaseBoxLock();
 process.exit(0);
