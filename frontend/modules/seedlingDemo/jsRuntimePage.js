@@ -60,6 +60,13 @@
  * (`createImageBitmap`); until a sheet decodes — or if it never does — its
  * sprites are drawn as their rectangles. The renderer only READS the run.
  *
+ * ⛓ GRAPHICS G2 — with a stack on, the player is drawn from the pack too
+ * (`seedlingPlayerSkin.js`): `skinView(run)` is read after EVERY game tick and
+ * folded into the renderer's own FlashPunk state (`stepPlayerSkin`: the
+ * playing animation, the mirror, the hit/freeze tint, the swing), and each
+ * paint draws `playerOps`. `__seedlingJsGraphics.player` reads back the keys
+ * and frame it drew. With no stack nothing here runs.
+ *
  * ⛓ KILLLOCK HOOK — `?killLockBodies=<keys>|none` (the `SEEDLING_KILLLOCK_BODIES`
  * grammar) sets this page's `killLockBodies` switches before its first run;
  * absent = the defaults. The panel adds it only when its settings are
@@ -81,6 +88,7 @@ import {
     FLOOR_COLOUR, SOLID_COLOUR, TILE_COLOURS, objectSolidColour,
 } from './rectPalette.js';
 import { CAMERA_MODES, cameraView, paintOps, roomOps } from './seedlingSkinRenderer.js';
+import { playerOps, skinView, stepPlayerSkin } from './seedlingPlayerSkin.js';
 import { loadPackStack, packsBaseUrl, parseRegistry } from '../contentPacks/contentPacks.js';
 import { browserDecoder, createArtLibrary, loadSheetImages } from '../artLibrary/artLibrary.js';
 
@@ -167,6 +175,8 @@ export function mountJsRuntimePage(win = window) {
         stack: null, camera: 'room', status: 'off', error: null, failedSheets: [],
         art: null, images: null, counts: null, frames: 0,
         paintMs: { last: 0, avg: 0, max: 0 },
+        // ⛓ G2 — the player picture's own state (one step per game tick) and the last paint's player ops.
+        skin: null, player: null,
     };
     let graphicsLoad = 0;
     function setGraphics({ graphics: stack, camera } = {}) {
@@ -176,7 +186,7 @@ export function mountJsRuntimePage(win = window) {
         }
         if (stack === undefined || stack === graphics.stack) return Promise.resolve(graphics.status);
         const ticket = ++graphicsLoad;
-        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null });
+        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null });
         if (!stack) { graphics.status = 'off'; return Promise.resolve('off'); }
         graphics.status = 'loading';
         return loadGraphicsStack(stack, { win }).then(({ art, images, failed }) => {
@@ -217,6 +227,7 @@ export function mountJsRuntimePage(win = window) {
         get counts() { return graphics.counts ? { ...graphics.counts } : null; },
         get frames() { return graphics.frames; },
         get paintMs() { return { ...graphics.paintMs }; },
+        get player() { return graphics.player ? { ...graphics.player } : null; },
         get packsOfKeys() { return graphics.art ? Object.fromEntries(graphics.art.keys().map((k) => [k, graphics.art.packOf(k)])) : null; },
         set: setGraphics,
     };
@@ -257,6 +268,7 @@ export function mountJsRuntimePage(win = window) {
         let n = 0;
         while (acc >= TICK_MS && n < MAX_TICKS_PER_FRAME) {
             runtime.tick(heldFromCodes(down));
+            if (graphics.stack) graphics.skin = stepPlayerSkin(graphics.skin, skinView(runtime.run), runtime.ticks);
             acc -= TICK_MS;
             n += 1;
         }
@@ -328,11 +340,16 @@ export function mountJsRuntimePage(win = window) {
     function paintSkinned({ world, state, apItems, level }) {
         const t0 = win.performance.now();
         const art = graphics.status === 'ready' ? graphics.art : null;
+        const pv = art ? skinView(runtime.run) : null;
+        const playerSprites = pv ? playerOps(pv, art, { tick: runtime.ticks, skin: graphics.skin }) : [];
+        graphics.player = playerSprites.length
+            ? { anim: graphics.skin?.anim ?? null, ops: playerSprites.map((o) => ({ key: o.key, frame: o.frame, flipX: o.flipX, tint: o.tint ?? null, pack: art.packOf(o.key) })) }
+            : null;
         const ops = roomOps(world, art, {
-            level, tick: runtime.ticks, player: playerBoxAt(state.x, state.y), apItems,
+            level, tick: runtime.ticks, player: playerBoxAt(state.x, state.y), playerSprites, apItems,
         });
         const view = cameraView(graphics.camera, world, state, runtime.run);
-        graphics.counts = { ops: ops.length, ...paintOps(ctx, ops, art ? graphics.images : null, view, canvas) };
+        graphics.counts = { ops: ops.length, ...paintOps(ctx, ops, art ? graphics.images : null, view, canvas, { tinted }) };
         const ms = win.performance.now() - t0;
         graphics.frames += 1;
         const pm = graphics.paintMs;
@@ -341,6 +358,30 @@ export function mountJsRuntimePage(win = window) {
         pm.avg = pm.avg + (ms - pm.avg) / Math.min(graphics.frames, 60);
         const label = graphics.stack ? ` · graphics ${graphics.stack}${graphics.status === 'ready' ? '' : ` (${graphics.status})`}` : '';
         writeStatus(level, label);
+    }
+
+    /**
+     * ⛓ G2 — FlashPunk's `Image.color` MULTIPLIES the sprite (`Image.as` colour transform): the sheet
+     * times the tint, keeping its own alpha. One cached copy per (sheet, tint).
+     */
+    const tintCache = new WeakMap();
+    function tinted(img, tint) {
+        let byTint = tintCache.get(img);
+        if (!byTint) tintCache.set(img, byTint = new Map());
+        if (!byTint.has(tint)) {
+            const c = doc.createElement('canvas');
+            c.width = img.width;
+            c.height = img.height;
+            const t = c.getContext('2d');
+            t.drawImage(img, 0, 0);
+            t.globalCompositeOperation = 'multiply';
+            t.fillStyle = tint;
+            t.fillRect(0, 0, c.width, c.height);
+            t.globalCompositeOperation = 'destination-in';
+            t.drawImage(img, 0, 0);
+            byTint.set(tint, c);
+        }
+        return byTint.get(tint);
     }
 
     life.on(canvas, 'mousedown', () => canvas.focus());

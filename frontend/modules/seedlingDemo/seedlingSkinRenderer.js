@@ -42,8 +42,10 @@
  *     class's own `-(y - originY + k·height)` (`Mobile.as:56` for movers,
  *     `Tile.as:21` LAYER = 100 for tiles). `SCENERY` below carries each k.
  *
- * ⛔ NOT YET (G2+ of the ladder): the player sprite (a white hitbox here),
- * enemies, live pushables / broken rocks / opened chests / burned trees (every
+ * ⛓ G2: the player's sprites come from `seedlingPlayerSkin.js` (`playerOps`)
+ * through `opts.playerSprites`; without them the player is the white hitbox.
+ *
+ * ⛔ NOT YET (G3+ of the ladder): enemies, live pushables / broken rocks / opened chests / burned trees (every
  * solid with a run-changeable id stays a rectangle, at its START position —
  * the rect view's known limitation), grass blades, the bridge's opening, the
  * lighting passes, and the torches' `flip` attribute (the world does not keep
@@ -268,10 +270,12 @@ const sprite = (art, key, frame, at, extra = {}) => {
  * @param {number} opts.level   the room's level (the cosmetic hash's key)
  * @param {number} [opts.tick]  the GAME tick the animations read (0 = their first frame)
  * @param {object} [opts.player] the player's hitbox `{x, y, right, bottom}`
+ * @param {object[]} [opts.playerSprites] the player's sprite ops (`seedlingPlayerSkin.playerOps`, G2); when
+ *   non-empty they replace the white hitbox and are Y-sorted with everything else
  * @param {object[]} [opts.apItems] uncollected AP items (`{rect}`)
  * @param {Function} [opts.mask] the autotiler (a test's MUTANT; default `autotileMask`)
  */
-export function roomOps(world, art, { level, tick = 0, player = null, apItems = [], mask = autotileMask } = {}) {
+export function roomOps(world, art, { level, tick = 0, player = null, playerSprites = null, apItems = [], mask = autotileMask } = {}) {
     const plan = planFor(world, level, mask);
     const ops = [];
     const rectOp = (rect, colour, alpha, layer) => ({ rect, colour, alpha, layer });
@@ -316,7 +320,8 @@ export function roomOps(world, art, { level, tick = 0, player = null, apItems = 
             ? sprite(art, 'archipelago:pickup/item', 0, centre, { layer: -a.rect.bottom, fallback })
             : fallback);
     }
-    if (player) ops.push(rectOp(player, PLAYER_COLOUR, 0.95, -player.bottom));
+    if (playerSprites?.length) ops.push(...playerSprites);
+    else if (player) ops.push(rectOp(player, PLAYER_COLOUR, 0.95, -player.bottom));
 
     // FlashPunk renders the highest layer first; ties keep the order above (stable sort).
     return ops.map((op, i) => [op, i]).sort((a, b) => (b[0].layer - a[0].layer) || (a[1] - b[1])).map(([op]) => op);
@@ -349,8 +354,14 @@ export function cameraView(mode, world, state, run = null) {
  * the canvas and every destination is snapped to whole device pixels (no
  * seams between tiles at a fractional scale). Returns `{ sprites, rects,
  * fallbacks }` — how many of each were drawn — for the page's readout.
+ *
+ * G2's sprite fields, each optional: `alpha`; `tint` (FlashPunk's
+ * multiplying `Image.color`, drawn from `tinted(image, tint)` — the page's
+ * cached copy — and untinted without one); `scaleX`/`scaleY`; and
+ * `pivotX`/`pivotY`, the frame pixel a rotation and a scale turn about
+ * (FlashPunk's origin; the frame's centre when absent, as G1 draws).
  */
-export function paintOps(ctx, ops, images, view, canvas) {
+export function paintOps(ctx, ops, images, view, canvas, { tinted = null } = {}) {
     const scale = Math.min(canvas.width / view.w, canvas.height / view.h);
     const offX = Math.round((canvas.width - view.w * scale) / 2);
     const offY = Math.round((canvas.height - view.h * scale) / 2);
@@ -372,16 +383,27 @@ export function paintOps(ctx, ops, images, view, canvas) {
         const bottom = r.bottom ?? r.y + r.h;
         if (right < view.x || bottom < view.y || r.x > view.x + view.w || r.y > view.y + view.h) continue;
         if (!op.sheetRef) { fillRect(op); counts.rects += 1; continue; }
-        const img = images?.get(op.sheetRef);
+        let img = images?.get(op.sheetRef);
         if (!img) {
             if (op.fallback) { fillRect(op.fallback); counts.fallbacks += 1; }
             continue;
         }
+        if (op.tint && tinted) img = tinted(img, op.tint) ?? img;
+        if (op.alpha !== undefined) ctx.globalAlpha = op.alpha;
         const x = X(op.dx);
         const y = Y(op.dy);
         const w = X(op.dx + op.sw) - x;
         const h = Y(op.dy + op.sh) - y;
-        if (op.rot || op.flipX || op.flipY) {
+        if (op.pivotX !== undefined) {
+            const px = op.pivotX * scale;
+            const py = op.pivotY * scale;
+            ctx.save();
+            ctx.translate(X(op.dx + op.pivotX), Y(op.dy + op.pivotY));
+            if (op.rot) ctx.rotate((op.rot * Math.PI) / 180);
+            ctx.scale((op.scaleX ?? 1) * (op.flipX ? -1 : 1), (op.scaleY ?? 1) * (op.flipY ? -1 : 1));
+            ctx.drawImage(img, op.sx, op.sy, op.sw, op.sh, -px, -py, op.sw * scale, op.sh * scale);
+            ctx.restore();
+        } else if (op.rot || op.flipX || op.flipY) {
             ctx.save();
             ctx.translate(x + w / 2, y + h / 2);
             if (op.rot) ctx.rotate((op.rot * Math.PI) / 180);
@@ -391,6 +413,7 @@ export function paintOps(ctx, ops, images, view, canvas) {
         } else {
             ctx.drawImage(img, op.sx, op.sy, op.sw, op.sh, x, y, w, h);
         }
+        if (op.alpha !== undefined) ctx.globalAlpha = 1;
         counts.sprites += 1;
     }
     return counts;
@@ -402,6 +425,8 @@ export function formatOp(op) {
         const r = op.rect;
         return `fillRect(${op.colour}, ${r.x}, ${r.y}, ${(r.right ?? r.x + r.w) - r.x}, ${(r.bottom ?? r.y + r.h) - r.y})`;
     }
-    const t = [op.rot ? ` rot=${op.rot}` : '', op.flipX ? ' flipX' : '', op.flipY ? ' flipY' : ''].join('');
+    const t = [op.rot ? ` rot=${op.rot}` : '', op.flipX ? ' flipX' : '', op.flipY ? ' flipY' : '',
+        op.scaleX !== undefined ? ` scale=${op.scaleX}x${op.scaleY}` : '',
+        op.alpha !== undefined ? ` alpha=${+op.alpha.toFixed(4)}` : '', op.tint ? ` tint=${op.tint}` : ''].join('');
     return `drawImage(${op.sheetRef}, ${op.sx}, ${op.sy}, ${op.dx}, ${op.dy})${t}`;
 }

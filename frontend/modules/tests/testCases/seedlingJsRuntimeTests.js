@@ -590,6 +590,18 @@ export async function seedlingJsRuntimeGraphicsPackBoots(tc) {
         const packs = g.packsOfKeys ?? {};
         tc.assertEqual('the stack resolved keys from BOTH packs (a ground tile from seedling, the AP item from archipelago)',
             'seedling/archipelago', `${packs['seedling:tile/ground']}/${packs['archipelago:pickup/item']}`);
+        // ── ⛓ G2: the player is a sprite from the pack, and its walk cycle and mirror follow the keys ──
+        const player = await tc.pollForValue(() => g.player, 'the page drew the player from the pack', 10000, 100);
+        const bodyOf = (p) => p?.ops?.at(-1) ?? null;   // the body: the last suit op (a dash's trailing copies come first)
+        tc.assertEqual('the player\'s body resolved to seedling:player/shrum from the seedling pack', 'seedling:player/shrum/seedling',
+            `${bodyOf(player)?.key}/${bodyOf(player)?.pack}`);
+        const SIDE_WALK = [3, 4, 5];   // Player.as:655 side-walk [3,4,5,4]
+        const walksRight = await holdKeyUntil(win, 'ArrowRight', () => g.player?.anim === 'side-walk', 5000);
+        const right = bodyOf(g.player);
+        tc.assertEqual('ArrowRight plays side-walk, unmirrored, on a side-walk frame', 'side-walk/false/true',
+            `${walksRight ? 'side-walk' : g.player?.anim}/${right?.flipX}/${SIDE_WALK.includes(right?.frame)}`);
+        const walksLeft = await holdKeyUntil(win, 'ArrowLeft', () => g.player?.anim === 'side-walk' && bodyOf(g.player)?.flipX === true, 5000);
+        tc.assertEqual('ArrowLeft mirrors it (render(): v.x < 0 → scaleX < 0)', true, walksLeft);
         // ── live switch: camera back to room — applied to THIS page, no re-mount ──
         const framesBefore = g.frames;
         await settingsManager.updateSetting(CAMERA_SETTING_KEY, 'room', { persist: false });
@@ -613,7 +625,8 @@ registerTest({
     name: 'Seedling JS runtime: the original graphics (?graphics=seedling) boot and draw',
     description: 'With flashPanel.runtime = js, seedlingJsGraphics = seedling and seedlingJsCamera = follow, loads '
         + 'seedling_atlas_location: the page boots with the seedling + archipelago pack stack, decodes every sheet, '
-        + 'draws sprites in the 160×160 follow view with no console error; switching the camera to room is applied live '
+        + 'draws sprites in the 160×160 follow view with no console error; the player is drawn from the pack '
+        + '(seedling:player/shrum) and walks/mirrors with the keys (G2); switching the camera to room is applied live '
         + '(no re-mount).',
     testFunction: seedlingJsRuntimeGraphicsPackBoots,
     category: 'Seedling JS runtime',

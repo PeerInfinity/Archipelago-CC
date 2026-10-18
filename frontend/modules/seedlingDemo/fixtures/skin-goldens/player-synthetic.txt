@@ -1,0 +1,49 @@
+t=1000 side-stand | seedling:player/shrum#3 drawImage(seedling/ShrumBlue, 48, 0, 64, 64)
+t=1001 side-stand | seedling:player/shrum#3 drawImage(seedling/ShrumBlue, 48, 0, 64, 64) tint=#ff0000
+t=1002 side-stand | seedling:player/shrum#3 drawImage(seedling/ShrumBlue, 48, 0, 64, 64) tint=#ff0000
+t=1003 side-stand | seedling:player/shrum#3 drawImage(seedling/ShrumBlue, 48, 0, 64, 64) tint=#ff0000
+t=1004 side-stand | seedling:player/shrum#3 drawImage(seedling/ShrumBlue, 48, 0, 64, 64) tint=#ff0000
+t=1005 side-stand | seedling:player/shrum#3 drawImage(seedling/ShrumBlue, 48, 0, 64, 64) tint=#ff0000
+t=1006 side-stand | seedling:player/shrum#3 drawImage(seedling/ShrumBlue, 48, 0, 64, 64) tint=#ff0000
+t=1007 side-stand | seedling:player/shrum#3 drawImage(seedling/ShrumBlue, 48, 0, 64, 64) tint=#ff0000
+t=1008 side-stand | seedling:player/shrum#3 drawImage(seedling/ShrumBlue, 48, 0, 64, 64) tint=#ff0000
+t=1009 side-stand | seedling:player/shrum#3 drawImage(seedling/ShrumBlue, 48, 0, 64, 64) tint=#ff0000
+t=1010 side-stand | seedling:player/shrum#3 drawImage(seedling/ShrumBlue, 48, 0, 64, 64) tint=#ff0000
+t=1011 side-stand | seedling:player/shrum#3 drawImage(seedling/ShrumBlue, 48, 0, 64, 64)
+t=1012 side-stand | seedling:player/shrum#3 drawImage(seedling/ShrumBlue, 48, 0, 64, 64)
+t=1013 side-stand | seedling:player/shrum#3 drawImage(seedling/ShrumBlue, 48, 0, 64, 64)
+t=1014 side-stand | seedling:player/shrum#3 drawImage(seedling/ShrumBlue, 48, 0, 64, 64)
+t=1015 side-stand | seedling:player/shrum#3 drawImage(seedling/ShrumBlue, 48, 0, 64, 64)
+t=1016 side-stand | seedling:player/shrum#3 drawImage(seedling/ShrumBlue, 48, 0, 64, 64)
+t=1017 side-stand | seedling:player/shrum#3 drawImage(seedling/ShrumBlue, 48, 0, 64, 64)
+t=1018 side-stand | seedling:player/shrum#3 drawImage(seedling/ShrumBlue, 48, 0, 64, 64)
+t=1019 side-stand | seedling:player/shrum#3 drawImage(seedling/ShrumBlue, 48, 0, 64, 64)
+t=1020 side-stand | seedling:player/shrum#3 drawImage(seedling/ShrumBlue, 48, 0, 64, 64)
+t=1021 down-stand | seedling:player/shrum#0 drawImage(seedling/ShrumBlue, 0, 0, 64, 64) tint=#0000ff
+t=1022 down-stand | seedling:player/shrum#0 drawImage(seedling/ShrumBlue, 0, 0, 64, 64) tint=#0000ff
+t=1023 down-stand | seedling:player/shrum#0 drawImage(seedling/ShrumBlue, 0, 0, 64, 64) tint=#0000ff
+t=1024 down-stand | seedling:player/shrum#0 drawImage(seedling/ShrumBlue, 0, 0, 64, 64)
+t=1025 down-stand | seedling:player/shrum#0 drawImage(seedling/ShrumBlue, 0, 0, 64, 64)
+t=1026 down-stand | seedling:player/shrum#0 drawImage(seedling/ShrumBlue, 0, 0, 64, 65) rot=-8 alpha=0.95
+t=1027 down-stand | seedling:player/shrum#0 drawImage(seedling/ShrumBlue, 0, 0, 64, 66) rot=-16 alpha=0.9
+t=1028 down-stand | seedling:player/shrum#0 drawImage(seedling/ShrumBlue, 0, 0, 64, 67) rot=-24 alpha=0.85
+t=1029 down-stand | seedling:player/shrum#0 drawImage(seedling/ShrumBlue, 0, 0, 64, 68) rot=-32 alpha=0.8
+t=1030 down-stand | seedling:player/shrum#0 drawImage(seedling/ShrumBlue, 0, 0, 64, 69) rot=-40 alpha=0.75
+t=1031 down-stand | seedling:player/shrum#0 drawImage(seedling/ShrumBlue, 0, 0, 64, 70) rot=-48 alpha=0.7
+t=1032 down-stand | seedling:player/shrum#0 drawImage(seedling/ShrumBlue, 0, 0, 64, 32) rot=-10
+t=1033 down-stand | seedling:player/shrum#0 drawImage(seedling/ShrumBlue, 0, 0, 64, 35) rot=-20
+t=1034 down-stand | seedling:player/shrum#0 drawImage(seedling/ShrumBlue, 0, 0, 64, 38) rot=-30
+t=1035 down-stand | seedling:player/shrum#0 drawImage(seedling/ShrumBlue, 0, 0, 64, 41) rot=-40
+t=1036 down-stand | seedling:player/shrum#0 drawImage(seedling/ShrumBlue, 0, 0, 64, 112)
+t=1037 up-stand | seedling:player/shrum#6 drawImage(seedling/ShrumBlue, 96, 0, 64, 64) ; seedling:player/ghostSword#0 drawImage(seedling/GhostSword, 0, 0, 72, 68.5) rot=-180
+t=1038 up-stand | seedling:player/shrum#6 drawImage(seedling/ShrumBlue, 96, 0, 64, 64) ; seedling:player/ghostSword#1 drawImage(seedling/GhostSword, 24, 0, 72, 68.5) rot=-150
+t=1039 up-stand | seedling:player/shrum#6 drawImage(seedling/ShrumBlue, 96, 0, 64, 64) ; seedling:player/ghostSword#2 drawImage(seedling/GhostSword, 48, 0, 72, 68.5) rot=-120
+t=1040 up-stand | seedling:player/shrum#6 drawImage(seedling/ShrumBlue, 96, 0, 64, 64) ; seedling:player/ghostSword#2 drawImage(seedling/GhostSword, 48, 0, 72, 68.5) rot=-90
+t=1041 up-stand | seedling:player/shrum#6 drawImage(seedling/ShrumBlue, 96, 0, 64, 64) ; seedling:player/ghostSword#3 drawImage(seedling/GhostSword, 72, 0, 72, 68.5) rot=-60
+t=1042 up-stand | seedling:player/shrum#6 drawImage(seedling/ShrumBlue, 96, 0, 64, 64) ; seedling:player/ghostSword#3 drawImage(seedling/GhostSword, 72, 0, 72, 68.5) rot=-30
+t=1043 up-stand | seedling:player/shrum#6 drawImage(seedling/ShrumBlue, 96, 0, 64, 64) ; seedling:player/ghostSword#4 drawImage(seedling/GhostSword, 96, 0, 72, 68.5)
+t=1044 up-stand | seedling:player/shrum#6 drawImage(seedling/ShrumBlue, 96, 0, 64, 64) ; seedling:player/ghostSword#0 drawImage(seedling/GhostSword, 0, 0, 72, 68.5) rot=-180
+t=1045 side-walk | seedling:player/shrumDark#3 drawImage(seedling/ShrumDark, 48, 0, 70, 64) flipX alpha=0.25 ; seedling:player/shrumDark#3 drawImage(seedling/ShrumDark, 48, 0, 68.5, 64) flipX alpha=0.5 ; seedling:player/shrumDark#3 drawImage(seedling/ShrumDark, 48, 0, 67, 64) flipX alpha=0.75 ; seedling:player/shrumDark#3 drawImage(seedling/ShrumDark, 48, 0, 65.5, 64) flipX ; seedling:player/shrumDark#3 drawImage(seedling/ShrumDark, 48, 0, 64, 64) flipX ; seedling:player/slashDark#1 drawImage(seedling/SlashDark, 16, 0, 72, 56) rot=-180 scale=1.5x0.65
+t=1046 side-walk | seedling:player/shrumDark#3 drawImage(seedling/ShrumDark, 48, 0, 70, 64) flipX alpha=0.25 ; seedling:player/shrumDark#3 drawImage(seedling/ShrumDark, 48, 0, 68.5, 64) flipX alpha=0.5 ; seedling:player/shrumDark#3 drawImage(seedling/ShrumDark, 48, 0, 67, 64) flipX alpha=0.75 ; seedling:player/shrumDark#3 drawImage(seedling/ShrumDark, 48, 0, 65.5, 64) flipX ; seedling:player/shrumDark#3 drawImage(seedling/ShrumDark, 48, 0, 64, 64) flipX ; seedling:player/slashDark#2 drawImage(seedling/SlashDark, 32, 0, 72, 56) rot=-180 scale=1.5x0.65
+t=1047 side-walk | seedling:player/shrumDark#4 drawImage(seedling/ShrumDark, 64, 0, 70, 64) flipX alpha=0.25 ; seedling:player/shrumDark#4 drawImage(seedling/ShrumDark, 64, 0, 68.5, 64) flipX alpha=0.5 ; seedling:player/shrumDark#4 drawImage(seedling/ShrumDark, 64, 0, 67, 64) flipX alpha=0.75 ; seedling:player/shrumDark#4 drawImage(seedling/ShrumDark, 64, 0, 65.5, 64) flipX ; seedling:player/shrumDark#4 drawImage(seedling/ShrumDark, 64, 0, 64, 64) flipX ; seedling:player/slashDark#2 drawImage(seedling/SlashDark, 32, 0, 72, 56) rot=-180 scale=1.5x0.65
+t=1048 side-walk | seedling:player/shrumDark#4 drawImage(seedling/ShrumDark, 64, 0, 70, 64) flipX alpha=0.25 ; seedling:player/shrumDark#4 drawImage(seedling/ShrumDark, 64, 0, 68.5, 64) flipX alpha=0.5 ; seedling:player/shrumDark#4 drawImage(seedling/ShrumDark, 64, 0, 67, 64) flipX alpha=0.75 ; seedling:player/shrumDark#4 drawImage(seedling/ShrumDark, 64, 0, 65.5, 64) flipX ; seedling:player/shrumDark#4 drawImage(seedling/ShrumDark, 64, 0, 64, 64) flipX ; seedling:player/slashDark#3 drawImage(seedling/SlashDark, 48, 0, 72, 56) rot=-180 scale=1.5x0.65
