@@ -4,6 +4,32 @@ Node ESM scripts for running procgen pipelines outside the browser.
 Useful for engine-only debugging where booting the frontend would
 add noise.
 
+## Scripting the pipeline drivers
+
+The six pipeline drivers — `sphere-step.js`, `spiral-step.js`,
+`topdown-step.js`, `dump-sphere-growth.js`, `dump-shuffled-spiral.js` and
+`dump-grid-growth.js` — are scriptable: node-only, seeded and
+byte-deterministic. They share these conventions:
+
+- **stdout is the data channel.** Progress, hints and the frontend's own
+  load-time logging go to stderr. `-o -` on a `*-step.js` driver writes the
+  envelope to stdout and nothing else, so it pipes into `JSON.parse` / `jq`.
+  (The `Worker is not defined` stack trace on stderr is expected; see below.)
+- **`--help` (or `-h`)** prints the driver's usage, flag table and the flags
+  derived from its parser, then exits 0 without running anything.
+- **Format stamp.** Envelopes open with `kind` (`sphere-envelope`,
+  `spiral-envelope`, `topdown-envelope`) and `envelope_version` (1). Dumps
+  carry `kind` `sphere-growth-dump` / `shuffled-spiral-dump` /
+  `grid-growth-dump` with the same `envelope_version`. Reading `-i` refuses
+  another mode's envelope or a newer version by name. An unstamped envelope
+  (written before the stamp, or by hand) still loads. The panel's envelope
+  download and Load envelope use the same stamp.
+- **One substrate set.** Every driver registers the same substrates
+  (`registerPipelineSubstrates.js`: maze, text_adventure, jta, bounce,
+  runner, omsi). Whether a substrate fits a given driver is decided by the
+  driver: a zone substrate on the grid-growth driver is refused by name, not
+  reported as "not registered".
+
 ## dump-grid-growth.js
 
 Runs `growMaze` + `buildRulesJson` and writes the resulting grid,
