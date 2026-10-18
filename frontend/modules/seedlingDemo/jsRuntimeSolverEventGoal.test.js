@@ -28,6 +28,7 @@ import { locationGoalServed } from './wasmPlayback.js';
 import { atlasLevelSource } from './levelSource.js';
 import { createRunForStaging } from './tapeRunner.js';
 import { arrivalStaging } from './fidelityArrival.js';
+import { withContactFidelity } from './contactFidelity.js';
 import { assertGoal, OBSTACLE_STRATEGIES, solveSegment, SolverRefusal, STRATEGY_EXECUTORS, WAND_VERB } from './solverBot.js';
 
 const PT = JSON.parse(readFileSync(new URL('../../presets/seedling_playthrough/AP_1/AP_1_rules.json', import.meta.url), 'utf8'));
@@ -122,10 +123,19 @@ describe('⛓ EVENT GOALS — refusals BY THE SOLVER\'S REASON, never a blanket'
             'solid:crusher selects \'bait\', which no clear-tag executor is registered for'));
     });
 
-    it.each([['flag:L112:1', 'rocklock'], ['flag:L113:0', 'finaldoor']])('%s (%s): no-verb (no strategy row)', (id, cls) => {
-        const r = mapIn(goalOf(id));
+    // ⛓ fidelity's sealDoorApproach flip (planning-9; js-7 OK): the FinalDoor row answers no-verb only with the switch
+    // OFF, so it is pinned there; ON it is `approach` (the row below).
+    it.each([['flag:L112:1', 'rocklock', true], ['flag:L113:0', 'finaldoor', false]])('%s (%s): no-verb (no strategy row)', (id, cls, on) => {
+        const r = withContactFidelity({ sealDoorApproach: on }, () => mapIn(goalOf(id)));
         expect(r.refusal.reason).toBe('no-verb');
         expect(r.walker).toContain(`no-verb: no strategy row exists for solid:${cls}`);
+    });
+
+    it('flag:L113:0 (finaldoor), sealDoorApproach ON: the verb is `approach`, registered — no no-verb pre-check', () => {
+        expect(clearTagVerbOf('solid:finaldoor')).toEqual({ verb: 'approach', registered: true });
+        expect(mapIn(goalOf('flag:L113:0')).refusal?.reason).not.toBe('no-verb');
+        withContactFidelity({ sealDoorApproach: false },
+            () => expect(clearTagVerbOf('solid:finaldoor')).toEqual({ verb: null, registered: false }));
     });
 
     it('wrong-level without a presser: L39 flag 8 with its presser dropped, the run in L38', () => {
@@ -150,15 +160,28 @@ describe('⛓ EVENT GOALS — `clearTagVerbOf` agrees with the solver\'s own cle
     });
 
     it.each([
-        ['flag:L112:1', { level: 112, x: 32, y: 208 }],
-        ['flag:L113:0', { level: 113, x: 72, y: 128 }],
-    ])('%s: the SOLVER refuses the mapped goal no-verb too (the pre-check is the solver\'s answer, not a guess)', (id, boot) => {
-        const goal = goalOf(id);
+        ['flag:L112:1', { level: 112, x: 32, y: 208 }, true, 'no-verb'],
+        // ⛓ the FinalDoor with sealDoorApproach OFF (its pre-check no-verb); ON, both sides answer `approach` (below).
+        ['flag:L113:0', { level: 113, x: 72, y: 128 }, false, 'no-verb'],
+    ])('%s: the SOLVER refuses the mapped goal no-verb too (the pre-check is the solver\'s answer, not a guess)', (id, boot, on) => {
+        withContactFidelity({ sealDoorApproach: on }, () => {
+            const goal = goalOf(id);
+            const clearTag = { kind: 'clear-tag', tag: goal.event.tag, at: goal.event.at, obstacle: goal.event.obstacle };
+            const run = createRunForStaging(arrivalStaging(boot, {}), SRC);
+            const e = refusalOf(() => solveSegment({ run, goals: [clearTag], name: `event-goal-${id}`, boot }));
+            expect(e?.obstacle).toMatchObject({ kind: 'clear-tag', reason: 'no-verb' });
+            expect(mapIn(goal, boot.level).refusal.reason).toBe('no-verb');
+        });
+    });
+
+    it('flag:L113:0, sealDoorApproach ON: the solver refuses `unresolved` by the door\'s predicates, and the pre-check agrees it is not no-verb', () => {
+        const boot = { level: 113, x: 72, y: 128 };
+        const goal = goalOf('flag:L113:0');
         const clearTag = { kind: 'clear-tag', tag: goal.event.tag, at: goal.event.at, obstacle: goal.event.obstacle };
         const run = createRunForStaging(arrivalStaging(boot, {}), SRC);
-        const e = refusalOf(() => solveSegment({ run, goals: [clearTag], name: `event-goal-${id}`, boot }));
-        expect(e?.obstacle).toMatchObject({ kind: 'clear-tag', reason: 'no-verb' });
-        expect(mapIn(goal, boot.level).refusal.reason).toBe('no-verb');
+        const e = refusalOf(() => solveSegment({ run, goals: [clearTag], name: 'event-goal-flag:L113:0', boot }));
+        expect(e?.obstacle).toMatchObject({ kind: 'clear-tag', reason: 'unresolved' });
+        expect(mapIn(goal, boot.level).refusal?.reason).not.toBe('no-verb');
     });
 
     it('end to end: L0 flag 4 from L13\'s stairs with the Sword — the mapped goal SOLVES and the flag lands on the ledger', () => {

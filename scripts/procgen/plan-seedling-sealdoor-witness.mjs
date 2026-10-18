@@ -9,7 +9,7 @@
  * location's clear-tag *"no-verb: no strategy row exists for solid:finaldoor"*.
  * The RUN has stepped the door since R6 slice 6c (`r6-final-door` and its
  * unspoken-Watcher control, game-recorded); the solver had no verb.
- * `CONTACT_FIDELITY.sealDoorApproach` (OFF by default) adds one, and these tapes
+ * `CONTACT_FIDELITY.sealDoorApproach` (ON by default since 2026-10-17) adds one, and these tapes
  * are its plans, solved with the switch ON from the staging the R6 witness was
  * recorded under (`r6-final-door`'s block — sixteen seal identities, `{114,0}`
  * declared cleared), re-pointed at the sweep's arrivals:
@@ -160,7 +160,8 @@ async function main() {
         if (!ok) failures += 1;
         console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}${detail ? ` — ${detail}` : ''}`);
     };
-    check('the switch ships OFF (each plan turns it on for its own solve)', CONTACT_FIDELITY.sealDoorApproach === false);
+    // ⛓ planning-9's flip: the switch ships ON (each plan still turns it on for its own solve, so the plans are unmoved).
+    check('the switch ships ON (each plan turns it on for its own solve)', CONTACT_FIDELITY.sealDoorApproach === true);
     const levelSource = atlasLevelSource();
     const byName = new Map();
     for (const w of SEALDOOR_WITNESSES) {
