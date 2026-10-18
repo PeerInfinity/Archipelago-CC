@@ -62,10 +62,11 @@ function applyOps(map, ops) {
         if (!mine.length) return r;
         let ents = r.entities.slice();
         for (const o of mine) {
-            const i = ents.findIndex((e) => e.type === o.type && e.x === o.x && e.y === o.y);
-            if (i < 0) throw new Error(`op ${JSON.stringify(o)}: no such entity`);
+            const i = o.op === 'add' ? -2 : ents.findIndex((e) => e.type === o.type && e.x === o.x && e.y === o.y);
+            if (i === -1) throw new Error(`op ${JSON.stringify(o)}: no such entity`);
             if (o.op === 'remove') ents = ents.filter((_, j) => j !== i);
             else if (o.op === 'move') ents[i] = { ...ents[i], x: o.to.x, y: o.to.y };
+            else if (o.op === 'add') { ents.push({ type: o.add.type, x: o.add.x, y: o.add.y, attrs: o.add.attrs ?? {} }); continue; }
             else if (o.op === 'apitem') ents[i] = { type: 'apitem', x: ents[i].x, y: ents[i].y, attrs: { tag: String(o.tag), look: o.look } };
             else throw new Error(`unknown op ${o.op}`);
         }
