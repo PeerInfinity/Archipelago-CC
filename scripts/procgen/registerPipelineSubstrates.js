@@ -83,8 +83,9 @@ export function checkSubstrateIds(opts, { layout, tool, counts = {}, start = nul
         }
     };
     for (const [key, flagName] of Object.entries(counts)) {
-        for (const [id, n] of Object.entries(opts[key] ?? {})) if (n > 0) check(id, `${flagName} ${id}=${n}`);
+        // ⛓ named by key AND flag: the id may have come from a `--config` file
+        for (const [id, n] of Object.entries(opts[key] ?? {})) if (n > 0) check(id, `${key}.${id}=${n} (${flagName})`);
     }
     const s = start ? opts[start] : null;
-    if (s != null && s !== 'auto') check(s, `--start ${s}`);
+    if (s != null && s !== 'auto') check(s, `${start}=${s} (--start)`);
 }

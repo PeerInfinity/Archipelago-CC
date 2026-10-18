@@ -75,6 +75,10 @@
  *   --rules-out <rules.json>      (compile / run) also write the bare rules.json
  *   --from <step>                 (run) resume from this step
  *   --to <step>                   (run) stop after this step (default compile)
+ *   --config PATH                 read flags from a JSON object (the keys a dump
+ *                                 echoes as `config`; flags given here win; exit 3
+ *                                 if it fails the schema); see cliFlags.js
+ *   --config-schema               print that JSON Schema and exit
  *   --json-status PATH            write the run's status object (`-` = stdout); see cliRun.js
  *   -h, --help                    print this and exit
  *
@@ -144,6 +148,8 @@ const FLAGS = {
     '--rules-out': W.rulesOut,
     '--from': W.from,
     '--to': W.to,
+    '--config': W.config,
+    '--config-schema': W.configSchema,
     '--json-status': W.jsonStatus,
     '--jta-dataset-file': flag('jtaDatasetFile', KIND.str),
     '--jta-generate': flag('jtaGenerate', KIND.on),
@@ -413,6 +419,7 @@ function buildEnv(args) {
 
 async function main(status) {
     const args = parseOrUsage(() => parseArgs(process.argv.slice(2)));
+    status.config = args;
     const sub = args.subcommand;
     status.subcommand = sub;
     if (!sub) throw new UsageError(`missing subcommand (one of: ${SPIRAL_STEPS.join(', ')}, run)`);

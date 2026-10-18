@@ -80,6 +80,10 @@
  *                            tile is only placed when this is > 0)
  *   --rules-out PATH         additionally write the bare rules.json here
  *   -o, --out PATH           output JSON path (default ./sphere-growth-dump.json)
+ *   --config PATH            read flags from a JSON object (the keys a dump
+ *                            echoes as `config`; flags given here win; exit 3
+ *                            if it fails the schema); see cliFlags.js
+ *   --config-schema          print that JSON Schema and exit
  *   --json-status PATH       write the run's status object (`-` = stdout); see cliRun.js
  *   -h, --help               print this and exit
  *
@@ -169,7 +173,7 @@ const FLAGS = {
     '--grid': W.grid,
     '--items': W.items,
     '--spheres': W.spheres,
-    '--items-per-sphere': flag('itemsPerSphere', KIND.int, (o) => { o.spheres = null; }),
+    '--items-per-sphere': flag('itemsPerSphere', KIND.int, { clears: ['spheres'] }),
     '--pin': flag('pins', KIND.counts),
     '--victory': W.victory,
     '--quota': W.quota,
@@ -197,6 +201,8 @@ const FLAGS = {
     '-o': W.out,
     '--out': W.out,
     // the value is read by cliRun.js; not echoed into the dump's config
+    '--config': W.config,
+    '--config-schema': W.configSchema,
     '--json-status': W.jsonStatus,
     '-h': W.help,
 };
@@ -275,6 +281,7 @@ function shapeRegions(grid) {
 
 async function main(status) {
     const config = parseOrUsage(() => parseArgs(process.argv.slice(2)));
+    status.config = config;
     await loadPipelineSubstrates();
     checkSubstrateIds(config, {
         layout: 'sphere', tool: 'dump-sphere-growth', counts: { quotas: '--quota' }, start: 'start',

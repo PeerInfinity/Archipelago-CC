@@ -24,6 +24,10 @@
  *                            default — byte-identical to prior jta dumps)
  *   -o, --out PATH           output JSON path
  *                            (default ./shuffled-spiral-dump.json)
+ *   --config PATH            read flags from a JSON object (the keys a dump
+ *                            echoes as `config`; flags given here win; exit 3
+ *                            if it fails the schema); see cliFlags.js
+ *   --config-schema          print that JSON Schema and exit
  *   --json-status PATH       write the run's status object (`-` = stdout); see cliRun.js
  *   -h, --help               print this and exit
  *
@@ -63,6 +67,8 @@ const FLAGS = {
     '-o': W.out,
     '--out': W.out,
     // the value is read by cliRun.js; not echoed into the dump's config
+    '--config': W.config,
+    '--config-schema': W.configSchema,
     '--json-status': W.jsonStatus,
     '-h': W.help,
 };
@@ -120,6 +126,7 @@ function shapeRegions(grid) {
 
 async function main(status) {
     const config = parseOrUsage(() => parseArgs(process.argv.slice(2)));
+    status.config = config;
     await loadPipelineSubstrates();
     checkSubstrateIds(config, {
         layout: 'spiral', tool: 'dump-shuffled-spiral', counts: { quotas: '--quota' }, start: 'start',
