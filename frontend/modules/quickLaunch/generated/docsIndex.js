@@ -804,6 +804,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The Locations panel shows a grid of all item locations in the game, providing a real-time view of which locations you can reach based on your current items."
     },
     {
+        "path": "docs/json/user/modules/loops.md",
+        "title": "Loops Panel",
+        "section": "user/modules",
+        "summary": "The Loops panel runs Loop mode, which turns a world into an incremental game. Instead of acting directly, you build a queue of actions — move to a region, explore it, check a location — and the…"
+    },
+    {
         "path": "docs/json/user/modules/mazeRoom.md",
         "title": "Maze Room Panel",
         "section": "user/modules",
@@ -1113,6 +1119,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/modules/inventory.md",
             "docs/json/user/modules/json.md",
             "docs/json/user/modules/locations.md",
+            "docs/json/user/modules/loops.md",
             "docs/json/user/modules/mazeRoom.md",
             "docs/json/user/modules/metaGamePanel.md",
             "docs/json/user/modules/modules.md",
