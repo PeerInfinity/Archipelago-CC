@@ -911,6 +911,22 @@ export async function seedlingJsRuntimeSolveProgressView(tc) {
             /^asks by site \(this segment\): /.test(view.asksText.textContent));
         tc.assertEqual('the work counters are drawn (Tier A)', true, /^work: ticks \d+ · /.test(view.workText.textContent));
         tc.assertEqual('the active path reads finished (Tier A)', 'active: — (finished)', view.pathText.textContent);
+        // ⛓ RK VIEW — the v2 snapshot's refusals by kind and last why are drawn, and each listed row's chips are its
+        // `rejectionKinds` (the in-app solve may refuse nothing: then the line reads `none yet` and no row has chips)
+        const final = st.snapshot ?? {};
+        tc.log(`RK view: v ${final.v}; ${view.kindsText.textContent} | ${view.whyText.textContent.slice(0, 160)}`);
+        tc.assertEqual('the snapshot is v: 2 (hammer-phase RK)', true, final.v >= 2);
+        tc.assertEqual('the refusals by kind are drawn (RK view)', true,
+            /^refusals by kind \(this segment, each once\): /.test(view.kindsText.textContent));
+        const why = final.lastWhy ?? null;
+        tc.assertEqual('the last why is drawn iff the segment has one (RK view)', true, why === null
+            ? view.whyText.textContent === '' : view.whyText.textContent.startsWith(`last why: ${why.kind} at ${why.key}: `));
+        // the finished tree is one collapsed root row: its chips are the root's kinds (their ORDER is the unit rows')
+        const rootChips = (view._lines[0]?._chips?.children ?? []).map((c) => c.textContent).sort();
+        const rootKinds = Object.entries(final.tree?.rejectionKinds ?? {}).filter(([, n]) => n > 0)
+            .map(([k, n]) => `${k} ${n}`).sort();
+        tc.assertEqual('the root row\'s chips are its rejectionKinds (RK view)', JSON.stringify(rootKinds),
+            JSON.stringify(rootChips));
         if (st.snapshot?.tiles) {
             tc.assertEqual('the tile map is ONE canvas sized to the room', `${st.snapshot.tiles.cols}x${st.snapshot.tiles.rows}`,
                 `${Math.round(view.canvas.width / view._px)}x${Math.round(view.canvas.height / view._px)}`);
