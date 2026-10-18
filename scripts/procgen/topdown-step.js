@@ -106,7 +106,7 @@ const FLAGS = {
     '-h': W.help,
 };
 
-function parseArgs(argv) {
+function parseArgs(argv, { configDoc = null } = {}) {
     const out = parseFlags(argv, FLAGS, {
         subcommand: null,
         source: null,
@@ -125,7 +125,7 @@ function parseArgs(argv) {
         rulesOut: null,
         from: null,
         to: null,
-    }, { subcommand: true, metaUrl: import.meta.url });
+    }, { subcommand: true, metaUrl: import.meta.url, configDoc });
     if (Object.keys(out.mix).length === 0) out.mix = { maze: 1 };
     return out;
 }
@@ -165,8 +165,8 @@ function writeOut(path, obj, fallbackName) {
 
 // Build a fresh envelope from --source + world flags (mirrors the panel's
 // _buildTDEnvelope: substrate params via the shared hooks, mode 'topDown').
-function buildEnv(args) {
-    const source = readJson(args.source, '--source');
+function buildEnv(args, { sourceDoc = null } = {}) {
+    const source = sourceDoc ?? readJson(args.source, '--source');
     const params = defaultProcgenParams({});
     if (args.physicsProfile != null) params.bouncePhysicsProfile = args.physicsProfile;
     if (args.fallBehavior != null) params.bounceFallBehavior = args.fallBehavior;
@@ -191,6 +191,72 @@ function buildEnv(args) {
 
 // --- main ---
 
+// Recorded layout edits (layoutEdits.js) replay after the step each one
+// addresses. Say so — and, crucially, name the ones this run's START POINT
+// is already past, because those will NOT fire (the step that replays them
+// is not going to run). Re-run with --from <stage> to apply them.
+function announceEdits(env, firstStep, log) {
+    if (!env.edits?.length) return;
+    log(`[topdown-step] ${env.edits.length} recorded edit`
+        + `${env.edits.length === 1 ? '' : 's'} on the envelope\n`);
+    for (const e of tdEditsBehind(env, firstStep)) {
+        log(`[topdown-step] ⚠ '${e.op}' is staged before `
+            + `${firstStep} — NOT replayed on this run (re-run with --from <its stage>)\n`);
+    }
+}
+
+/**
+ * The `run` subcommand's body: run `env` to `args.to` (default compile), from
+ * `args.from` or, without it, from the first step whose output is missing.
+ */
+async function runToEnd(env, args, { log, onProgress }) {
+    const to = args.to ?? 'compile';
+    if (args.from) {
+        announceEdits(env, args.from, log);
+        env.completed = TOPDOWN_STEPS.indexOf(args.from) - 1;
+        await runTopDownToStep(env, to, { onProgress });
+    } else {
+        const at = detectTDCompleted(env) + 1;
+        if (at < TOPDOWN_STEPS.length) {
+            log(`[topdown-step] auto-resume from ${TOPDOWN_STEPS[at]}\n`);
+        }
+        announceEdits(env, TOPDOWN_STEPS[Math.min(at, TOPDOWN_STEPS.length - 1)], log);
+        await resumeTDEnvelope(env, to, { onProgress });
+    }
+}
+
+/** ⛓ A config OBJECT (the `--config` keys) → the parsed config of a `run`; for `runPipeline`. */
+export const resolveConfig = (doc) => ({ ...parseArgs([], { configDoc: doc }), subcommand: 'run' });
+
+/** ⛓ The substrate ids this driver's config names, and the layout that must place them. */
+export const SUBSTRATE_CHECK = Object.freeze({ layout: 'topdown', tool: 'topdown-step', counts: { mix: '--mix' } });
+
+/**
+ * `run`, in-process: a new envelope laid out from `source` (a rules.json
+ * OBJECT; else `config.source`, a path) or `envelope` (a serialized one to
+ * resume), run to `config.to` (default compile). Writes nothing; the
+ * substrate libraries must already be loaded.
+ * @returns {Promise<{envelope: object, rulesJson: object|null, summary: object}>}
+ */
+export async function build(config, { envelope = null, source = null, log = () => {}, onProgress = null } = {}) {
+    let env;
+    if (envelope) env = deserializeTDEnvelope(structuredClone(envelope));
+    else if (source || config.source) env = buildEnv(config, { sourceDoc: source ? structuredClone(source) : null });
+    else throw new UsageError('topdown-step needs a source rules.json (`source`) or an `envelope` to resume');
+    await runToEnd(env, config, { log, onProgress });
+    const rulesJson = env.compile?.rulesJson ?? null;
+    return {
+        envelope: serializeTDEnvelope(env),
+        rulesJson,
+        summary: {
+            seed: env.opts?.seed ?? null,
+            completed: TOPDOWN_STEPS[env.completed] ?? null,
+            driver: rulesJson?.procgen_metadata?.['1']?.driver ?? null,
+            regions: rulesJson ? Object.keys(rulesJson.regions?.['1'] ?? {}).length : null,
+        },
+    };
+}
+
 async function main(status) {
     const args = parseOrUsage(() => parseArgs(process.argv.slice(2)));
     status.config = args;
@@ -200,7 +266,7 @@ async function main(status) {
     const isStep = TOPDOWN_STEPS.includes(sub);
     if (!isStep && sub !== 'run') throw new UsageError(`unknown subcommand '${sub}'`);
     await loadPipelineSubstrates();
-    checkSubstrateIds(args, { layout: 'topdown', tool: 'topdown-step', counts: { mix: '--mix' } });
+    checkSubstrateIds(args, SUBSTRATE_CHECK);
 
     let env;
     if (args.input) {
@@ -217,36 +283,12 @@ async function main(status) {
         else if (ev?.type) process.stderr.write(`  · ${ev.type}\n`);
     };
 
-    // Recorded layout edits (layoutEdits.js) replay after the step each one
-    // addresses. Say so — and, crucially, name the ones this run's START POINT
-    // is already past, because those will NOT fire (the step that replays them
-    // is not going to run). Re-run with --from <stage> to apply them.
-    const announceEdits = (firstStep) => {
-        if (!env.edits?.length) return;
-        process.stderr.write(`[topdown-step] ${env.edits.length} recorded edit`
-            + `${env.edits.length === 1 ? '' : 's'} on the envelope\n`);
-        for (const e of tdEditsBehind(env, firstStep)) {
-            process.stderr.write(`[topdown-step] ⚠ '${e.op}' is staged before `
-                + `${firstStep} — NOT replayed on this run (re-run with --from <its stage>)\n`);
-        }
-    };
 
+    const log = (m) => process.stderr.write(m);
     if (sub === 'run') {
-        const to = args.to ?? 'compile';
-        if (args.from) {
-            announceEdits(args.from);
-            env.completed = TOPDOWN_STEPS.indexOf(args.from) - 1;
-            await runTopDownToStep(env, to, { onProgress });
-        } else {
-            const at = detectTDCompleted(env) + 1;
-            if (at < TOPDOWN_STEPS.length) {
-                process.stderr.write(`[topdown-step] auto-resume from ${TOPDOWN_STEPS[at]}\n`);
-            }
-            announceEdits(TOPDOWN_STEPS[Math.min(at, TOPDOWN_STEPS.length - 1)]);
-            await resumeTDEnvelope(env, to, { onProgress });
-        }
+        await runToEnd(env, args, { log, onProgress });
     } else {
-        announceEdits(sub);
+        announceEdits(env, sub, log);
         await runTopDownStep(sub, env, { onProgress });
     }
 

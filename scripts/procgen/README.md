@@ -61,6 +61,24 @@ byte-deterministic. They share these conventions:
   another mode's envelope or a newer version by name. An unstamped envelope
   (written before the stamp, or by hand) still loads. The panel's envelope
   download and Load envelope use the same stamp.
+- **The same drivers as a function.** `runPipeline.js` runs any of the six
+  in-process and returns what the CLI would have written:
+
+  ```js
+  import { runPipeline } from './scripts/procgen/runPipeline.js';
+  const { rulesJson, dump } = await runPipeline({
+      driver: 'dump-shuffled-spiral', config: { seed: 3, quotas: { maze: 3, jta: 2 } },
+  });
+  const { envelope } = await runPipeline({ driver: 'topdown-step', config: {}, source: rulesJson });
+  ```
+
+  `config` takes the driver's `--config` keys (same schema, same defaults); a
+  `*-step` driver runs its `run` subcommand, from `envelope` when given. It
+  returns `{rulesJson, dump, envelope, summary, oracleErrors}` and writes no
+  file. Importing the module loads nothing (the engine and substrate
+  libraries load on the first call), it never calls `process.exit`, and a
+  bad request throws `UsageError` / `InputError` — `EXIT[outcomeOf(err)]` is
+  the code the CLI would have exited with.
 - **The contract is tested.** `scripts/procgen/cliContract.test.js` (default
   vitest tier, so every CI push) spawns the drivers and checks all of the
   above: empty stdout unless `-o -`, the exit code and status object of each

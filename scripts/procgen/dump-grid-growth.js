@@ -87,7 +87,7 @@ const FLAGS = {
     '-h': W.help,
 };
 
-function parseArgs(argv) {
+function parseArgs(argv, { configDoc = null } = {}) {
     const out = parseFlags(argv, FLAGS, {
         seed: 1,
         grid: { width: 3, height: 3 },
@@ -103,7 +103,7 @@ function parseArgs(argv) {
         bidirectional: true,
         asymmetric: 'add',
         out: './grid-growth-dump.json',
-    }, { metaUrl: import.meta.url });
+    }, { metaUrl: import.meta.url, configDoc });
     if (Object.keys(out.quotas).length > 0 && Object.keys(out.mix).length > 0) {
         throw new Error('--quota and --mix are mutually exclusive');
     }
@@ -144,14 +144,20 @@ function shapeRegions(grid) {
 
 // --- main ---
 
-async function main(status) {
-    const config = parseOrUsage(() => parseArgs(process.argv.slice(2)));
-    status.config = config;
-    await loadPipelineSubstrates();
-    checkSubstrateIds(config, {
-        layout: 'grid', tool: 'dump-grid-growth', counts: { quotas: '--quota', mix: '--mix' }, start: 'start',
-    });
+/** ⛓ A config OBJECT (the `--config` keys) → the parsed config; for `runPipeline`. */
+export const resolveConfig = (doc) => parseArgs([], { configDoc: doc });
 
+/** ⛓ The substrate ids this driver's config names, and the layout that must place them. */
+export const SUBSTRATE_CHECK = Object.freeze({
+    layout: 'grid', tool: 'dump-grid-growth', counts: { quotas: '--quota', mix: '--mix' }, start: 'start',
+});
+
+/**
+ * Build the dump from a parsed config. Writes nothing; the substrate
+ * libraries must already be loaded (`loadPipelineSubstrates`).
+ * @returns {Promise<{dump: object, rulesJson: object, summary: object}>}
+ */
+export async function build(config) {
     const growthParams = {
         branchProbability: config.branch,
         assumeBidirectional: config.bidirectional,
@@ -188,16 +194,27 @@ async function main(status) {
         regions: shapeRegions(grid),
         rulesJson,
     };
+    const summary = {
+        seed: config.seed, regionsBuilt: stats.regionsBuilt,
+        stopReason: stats.stopReason ?? null, substrateCounts: stats.substrateCounts ?? null,
+    };
+    return { dump, rulesJson, summary };
+}
+
+async function main(status) {
+    const config = parseOrUsage(() => parseArgs(process.argv.slice(2)));
+    status.config = config;
+    await loadPipelineSubstrates();
+    checkSubstrateIds(config, SUBSTRATE_CHECK);
+    const { dump, summary } = await build(config);
+    const { stats } = dump;
 
     const outPath = resolve(process.cwd(), config.out);
     mkdirSync(dirname(outPath), { recursive: true });
     writeFileSync(outPath, JSON.stringify(dump, null, 2));
     console.error(`Wrote ${outPath}`);
     status.outputs.dump = outPath;
-    status.summary = {
-        seed: config.seed, regionsBuilt: stats.regionsBuilt,
-        stopReason: stats.stopReason ?? null, substrateCounts: stats.substrateCounts ?? null,
-    };
+    status.summary = summary;
     console.error(`  regionsBuilt: ${stats.regionsBuilt}`
         + `  stopReason: ${stats.stopReason}`
         + `  substrateCounts: ${JSON.stringify(stats.substrateCounts)}`);
