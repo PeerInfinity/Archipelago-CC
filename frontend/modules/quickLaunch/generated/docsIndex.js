@@ -804,6 +804,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The Locations panel shows a grid of all item locations in the game, providing a real-time view of which locations you can reach based on your current items."
     },
     {
+        "path": "docs/json/user/modules/mazeRoom.md",
+        "title": "Maze Room Panel",
+        "section": "user/modules",
+        "summary": "The Maze Room is where a generated world's maze regions are played. Each maze region is a small grid of floor and walls: walk to the pickups to check their locations, use keys on their doors, and…"
+    },
+    {
         "path": "docs/json/user/modules/metaGamePanel.md",
         "title": "MetaGame Panel",
         "section": "user/modules",
@@ -1107,6 +1113,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/modules/inventory.md",
             "docs/json/user/modules/json.md",
             "docs/json/user/modules/locations.md",
+            "docs/json/user/modules/mazeRoom.md",
             "docs/json/user/modules/metaGamePanel.md",
             "docs/json/user/modules/modules.md",
             "docs/json/user/modules/pathAnalyzerPanel.md",

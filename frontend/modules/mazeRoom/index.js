@@ -22,6 +22,7 @@ export const moduleInfo = {
     name: 'mazeRoom',
     title: 'Maze Room',
     componentType: 'mazeRoomPanel',
+    docs: 'docs/json/user/modules/mazeRoom.md',
     icon: '🧩',
     column: 3,
     category: 'Procgen Substrate Panels',

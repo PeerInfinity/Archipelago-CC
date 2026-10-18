@@ -35,6 +35,7 @@ User-friendly guides still to be written. See the corresponding technical refere
 - [Procgen Pipeline](./procgenPipeline.md) — Generating a procgen world and loading it to play
 - [Playback Bot](./playbackBot.md) — Letting the bot play a world's sphere log
 - [APWorld Editor](./apworldEditor.md) — Editing a world's rules and building a .apworld
+- [Maze Room](./mazeRoom.md) — Playing a generated world's maze regions
 
 ## Core Service Modules
 
