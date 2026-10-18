@@ -25,7 +25,9 @@
  *                  `progressIntervalMs` beside it (⚖ the panel's setting
  *                  `flashPanel.seedlingSolveProgressIntervalMs`) is the post
  *                  ceiling, clamped to `SOLVE_PROGRESS_INTERVALS_MS`; absent =
- *                  `SOLVE_PROGRESS_INTERVAL_MS`.
+ *                  `SOLVE_PROGRESS_INTERVAL_MS`. ⛓ S3 `progressAttempt`
+ *                  (`{retry, budgets}`, the service's held-retry label) is
+ *                  stamped into the first post's `request` identity.
  *   worker → page  `{type: 'started', id}` the moment the solve begins (the
  *                  budget runs from here, not from a cold module load);
  *                  ⛓ ANYTIME `{type: 'pass', id, index, pass, answer, best}`
@@ -54,7 +56,7 @@ import { normalizeKillLockBodies, withKillLockBodies } from './killLockBodies.js
 import { normalizeContactFidelity, withContactFidelity } from './contactFidelity.js';
 import { withAxeDodgeAsk } from './axeDodgeAskHook.js';
 import { withSolveProgress } from './solveProgress.js';
-import { createProgressTap, progressIntervalMs, SOLVE_PROGRESS_MESSAGE } from './solveProgressTap.js';
+import { createProgressTap, progressIntervalMs, requestIdentity, SOLVE_PROGRESS_MESSAGE } from './solveProgressTap.js';
 
 /** source id -> `{levelSource, records}`: the room records this worker has been sent. */
 const sources = new Map();
@@ -92,10 +94,13 @@ self.onmessage = (event) => {
         // ⛓ SOLVE PROGRESS — ⛔ the hook is installed ONLY when the page asked (`progress` on the envelope); the
         // tap's clock decides only when to post, and nothing it computes reaches the solve. Its interval rides the
         // envelope too (`progressIntervalMs`), so a rate change never touches the request.
+        // ⛓ SOLVE-PROGRESS S3 — the `request` stamp is READ from the request (and the envelope's `progressAttempt`,
+        // the service's held-retry label); it is built only for a tap, and nothing is written back.
         const budgetWork = tape.budgetWork ?? null;
-        const tap = progress ? createProgressTap({ passes, clock, budgetWork,
+        const windowAt = budgetWork !== null ? upgradeWindowWork(budgetWork, tape.upgradeWindowWork ?? null) : null;
+        const tap = progress ? createProgressTap({ passes, clock, budgetWork, windowAt,
             minIntervalMs: progressIntervalMs(msg.progressIntervalMs),
-            windowAt: budgetWork !== null ? upgradeWindowWork(budgetWork, tape.upgradeWindowWork ?? null) : null,
+            request: requestIdentity(tape, { passes, windowAt, attempt: msg.progressAttempt ?? null }),
             post: (snapshot, final) => self.postMessage({ type: SOLVE_PROGRESS_MESSAGE, id, snapshot, final }) }) : null;
         const solve = () => solveAnytime({ ...tape, levelSource: held.levelSource, clock }, {
             passes, clock,

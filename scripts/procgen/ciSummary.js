@@ -17,11 +17,16 @@ export const WORKFLOW = 'unittests_frontend.yml';
 /** ⛓ ONE spelling of the marker `ci-gates.mjs` prints and this file reads. */
 export const CI_GATE_MARK = '## CI-GATE |';
 
-const gh = (...a) => execFileSync('gh', ['--repo', CI_REPO, ...a],
-    { encoding: 'utf8', maxBuffer: 1 << 28 });
+/**
+ * ⛓ `gh`'s stderr is PIPED, never inherited: a caught 404 must not leak a
+ * `gh: HTTP 404` line into the reader's own output (a `--json` consumer that
+ * merged the streams KEPT every CI-sourced row on it, 2026-10-17). A failure
+ * still throws, and its message carries what gh said.
+ */
+const GH_OPTS = { encoding: 'utf8', maxBuffer: 1 << 28, stdio: ['ignore', 'pipe', 'pipe'] };
+const gh = (...a) => execFileSync('gh', ['--repo', CI_REPO, ...a], GH_OPTS);
 /** `gh api` takes the repo in the endpoint, not as `--repo` (it rejects the flag). */
-const ghApi = (endpoint) => execFileSync('gh', ['api', endpoint],
-    { encoding: 'utf8', maxBuffer: 1 << 28 });
+const ghApi = (endpoint) => execFileSync('gh', ['api', endpoint], GH_OPTS);
 
 export const strip = (s) => s.replace(/\x1b\[[0-9;]*m/g, '');
 
@@ -251,6 +256,14 @@ export function gateLogParts(run) {
     const parts = [];
     const unreadable = [];
     for (const job of jobs) {
+        /**
+         * ⛓ A SKIPPED job has no log (the endpoint 404s), so it is named
+         * without asking. Rule 1's guard is skipped on every branch push.
+         */
+        if (job.conclusion === 'skipped') {
+            unreadable.push(`${job.name} (${job.status}/skipped)`);
+            continue;
+        }
         try {
             parts.push({ job: job.name,
                 log: ghApi(`repos/${CI_REPO}/actions/jobs/${job.id}/logs`) });
