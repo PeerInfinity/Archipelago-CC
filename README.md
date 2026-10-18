@@ -1,8 +1,12 @@
 # Archipelago JSON Export Tools
 
-Procedural generation and logic-aware tracking for [Archipelago](https://archipelago.gg/) multiworld randomizers.
+A set of tools for working with Archipelago multiworld logic in JSON format.
 
-This project **generates** complete Archipelago worlds in the browser: the regions, items and access rules, with each region drawn as a small playable game. It also **exports** the full logic of any Archipelago seed to JSON and **tracks** it in a browser-based, logic-aware client. Both sides share one `rules.json` format, so a generated world plays, tracks and joins a multiworld like any other game.
+An **exporter** runs during Archipelago multiworld generation and saves the multiworld's full logic to a `rules.json` file. A **frontend web page** holds a suite of tools that use this data: it connects to an Archipelago server as a logic-aware tracker, and it is the game client for several games in this repository. Its **APWorld Editor** edits a world's regions, exits, locations, access rules and items, and builds a working Python `.apworld` from any `rules.json`, directly in the browser.
+
+The frontend also **generates** worlds. A collection of games act as procedural-generation **substrates**. In the **Procgen Pipeline** panel you choose the settings for a whole world; in its Sphere Growth mode the pipeline builds the contents of each region with that substrate's own procedural generation, then assembles the regions into a complete world with valid Archipelago progression logic. The pipeline hands the world to the APWorld Editor, which exports it as a `.apworld`. Several substrates can be combined in one world, so an exit in a maze region can lead to the entrance of a platformer region. Editors let you change a region's contents and the connections between regions by hand. These tools also work from the command line. Some substrates share stats and resources directly, without each update going through an Archipelago server.
+
+**Loop mode** plays any of these worlds as an incremental game in the style of Idle Loops: player actions spend a pool of mana, the game restarts when it runs out, and XP and some other resources carry over between runs. Every procgen substrate supports it. Every substrate also has a **Playback Bot** that plays a region or the whole world. For Seedling, Bounce and Maze the pipeline checks each region it generates with the same game code the bot plays with, so a generated region is one a player can complete. Combined with Loop mode, the bot turns a substrate into an incremental game, or a fully idle one.
 
 **AI disclosure:** The code and documentation in this repository are predominantly AI-generated, written with [Claude Code](https://claude.ai/code). This applies to the Archipelago-CC project's own work; bundled upstream projects (see Credits) remain the work of their original authors.
 
@@ -14,11 +18,9 @@ This project **generates** complete Archipelago worlds in the browser: the regio
 
 ## Procedural Generation
 
-The procgen pipeline builds complete multi-region worlds: regions, entrances, items, and access rules. Each region is drawn by a pluggable **substrate**: a grid maze, a text adventure, a Doodle-Jump-style platformer, a Noiz2sa shoot-'em-up stage, or a room of *Seedling*, a Flash game recompiled to run in the browser. One world can mix them freely. For physics-based substrates the access rules are derived from the game's physics and verified, so if the logic says you need an item to reach an exit, that is true in play.
+Substrates include a grid maze, a text adventure, a Doodle-Jump-style platformer, a Noiz2sa shoot-'em-up stage, rooms of *Seedling*, a Flash game recompiled to run in the browser, and, in Loop mode, zones of the idle games *Journey to Ascension* and *Idle Loops*. For physics-based substrates the access rules are derived from the game's physics and verified, so if the logic says you need an item to reach an exit, that is true in play.
 
-The primary driver, **sphere growth**, plans the item-progression spheres first and then grows a world guaranteed to realise them; the plan doubles as a verification oracle. Other modes lay worlds out as a shuffled spiral, or start from an existing game's `rules.json` and realise each of its regions as a generated room.
-
-Generated worlds compile to the same `rules.json` format as exported games, so everything below applies to them: they play in the browser, convert to Python APWorlds and run through real Archipelago multiworld generation. A **Playback Bot** can play any generated world from its solution path, driving each substrate's real gameplay. **Loop mode** turns a world into an incremental game, and a generated world can ship with its loop costs built in, including regions that are zones of the idle games *Journey to Ascension* and *Idle Loops*.
+The primary driver, **sphere growth**, plans the item-progression spheres first and then grows a world guaranteed to realise them; the plan doubles as a verification oracle. Other modes lay worlds out as a shuffled spiral, or start from an existing game's `rules.json` and realise each of its regions as a generated room. Generated worlds compile to the same `rules.json` format as exported games, so they play in the browser, track, and run through real Archipelago multiworld generation.
 
 **From the command line:** the pipeline also runs headless in Node, so external tools can script it. The scripts in [`scripts/procgen/`](./scripts/procgen/README.md) generate a world from command-line options and write a standard `rules.json`; the same options and seed always produce the same file.
 
