@@ -59,6 +59,8 @@ import {
     newEnvelope as newEnvelopeGeneric,
     serializeEnvelope as serializeEnvelopeGeneric,
     deserializeEnvelope as deserializeEnvelopeGeneric,
+    FIELD_VISIBILITY,
+    envelopeSchema,
 } from './steppedPipeline.js';
 
 /** Step names in run order; index === the `completed` value the step yields. */
@@ -317,6 +319,23 @@ function spiralOnContentEdit(env) {
 }
 
 // The spiral mode descriptor — the whole per-mode surface the harness needs.
+/**
+ * ⛓ EVERY TOP-LEVEL FIELD a serialized spiral envelope may carry (§5au item
+ * 9; the contract is THE FIELDS in steppedPipeline.js). `step` is the first
+ * step that writes the field; the schema under `frontend/schema/envelopes/`
+ * is generated from this table.
+ */
+export const SPIRAL_ENVELOPE_FIELDS = Object.freeze({
+    config: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: null, required: true, about: 'The resolved world config (seed, regionSize, quotas, pools, …).' },
+    compileIn: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: null, nullable: true, about: 'The compile inputs (seed, loop mode, completion item).' },
+    completed: { type: 'integer', visibility: FIELD_VISIBILITY.PUBLIC, step: null, required: true, about: 'Index into SPIRAL_STEPS of the last step run; -1 = none.' },
+    arrange: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: 'arrange', about: 'The spiral arrangement: sequence, cells, startCell, gridDims, items.' },
+    rng: { type: 'object', visibility: FIELD_VISIBILITY.INTERNAL, step: 'arrange', about: 'The rng position after the shuffle and deal.' },
+    content: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: 'content', about: 'The generated content dataset (jta), or null.' },
+    regions: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: 'regions', internalKeys: ['grid'], about: 'The built regions: stats, startCell, goalItem (public) and the tagged Grid encoding (grid, internal).' },
+    compile: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: 'compile', about: 'The compiled result: rulesJson.' },
+});
+
 const SPIRAL_DESCRIPTOR = {
     kind: 'spiral-envelope',
     steps: SPIRAL_STEPS,
@@ -325,7 +344,11 @@ const SPIRAL_DESCRIPTOR = {
     codecs: SPIRAL_CODECS,
     nextStep: nextSpiralStep,
     onContentEdit: spiralOnContentEdit,
+    fields: SPIRAL_ENVELOPE_FIELDS,
 };
+
+/** The JSON Schema of a serialized envelope of this mode (from its `fields`). */
+export const spiralEnvelopeSchema = () => envelopeSchema(SPIRAL_DESCRIPTOR);
 
 // --- public API (delegates to the shared harness) ---------------------
 

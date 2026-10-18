@@ -54,6 +54,8 @@ import {
     deserializeEnvelope as deserializeEnvelopeGeneric,
     invalidateFromStep as invalidateFromStepGeneric,
     editsBehindStep as editsBehindStepGeneric,
+    FIELD_VISIBILITY,
+    envelopeSchema,
 } from './steppedPipeline.js';
 // Recorded layout edits — the op vocabulary + replay. This module supplies the
 // TOP-DOWN binding (below); layoutEdits.js stays envelope-agnostic.
@@ -476,6 +478,26 @@ const TD_STEP_OUTPUT_PRESENT = {
 };
 
 // The top-down mode descriptor — the whole per-mode surface the harness needs.
+/**
+ * ⛓ EVERY TOP-LEVEL FIELD a serialized top-down envelope may carry (§5au
+ * item 9; the contract is THE FIELDS in steppedPipeline.js). `step` is the
+ * first step that writes the field; the schema under
+ * `frontend/schema/envelopes/` is generated from this table.
+ */
+export const TOPDOWN_ENVELOPE_FIELDS = Object.freeze({
+    source: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: null, required: true, about: 'The source rules.json the top-down world is laid out from.' },
+    opts: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: null, required: true, about: 'The resolved layout options (gridDims, seed, substrateMix, sphereLog, …).' },
+    compileIn: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: null, required: true, about: 'The compile inputs.' },
+    regionSize: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: null, required: true, about: 'Region size {width, height}.' },
+    completed: { type: 'integer', visibility: FIELD_VISIBILITY.PUBLIC, step: null, required: true, about: 'Index into TOPDOWN_STEPS of the last step run; -1 = none.' },
+    edits: { type: 'array', visibility: FIELD_VISIBILITY.PUBLIC, step: null, about: 'Recorded layout edits, replayed after the step each one belongs to.' },
+    layout: { type: 'object', visibility: FIELD_VISIBILITY.INTERNAL, step: 'layout', about: 'The layout state: the tagged Grid encoding, placement order, per-region seeds and substrates.' },
+    rng: { type: 'object', visibility: FIELD_VISIBILITY.INTERNAL, step: 'layout', about: 'The rng position after layout.' },
+    realise: { type: 'object', visibility: FIELD_VISIBILITY.INTERNAL, step: 'realise', about: 'Realise bookkeeping (aliases the layout Grid).' },
+    finalize: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: 'finalize', internalKeys: ['grid'], about: 'startCell, stats, the sphere tree and plan, and warnings.' },
+    compile: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: 'compile', about: 'The compiled result: rulesJson and its warnings.' },
+});
+
 const TD_DESCRIPTOR = {
     kind: 'topdown-envelope',
     steps: TOPDOWN_STEPS,
@@ -485,7 +507,11 @@ const TD_DESCRIPTOR = {
     nextStep: nextTopDownStep,
     editBinding: TD_EDIT_BINDING,
     dropOutputs: TD_DROP_OUTPUTS,
+    fields: TOPDOWN_ENVELOPE_FIELDS,
 };
+
+/** The JSON Schema of a serialized envelope of this mode (from its `fields`). */
+export const topDownEnvelopeSchema = () => envelopeSchema(TD_DESCRIPTOR);
 
 /**
  * Roll the envelope back so `stepName` (and everything after it) re-runs — the

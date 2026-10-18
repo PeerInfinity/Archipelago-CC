@@ -61,6 +61,13 @@ byte-deterministic. They share these conventions:
   another mode's envelope or a newer version by name. An unstamped envelope
   (written before the stamp, or by hand) still loads. The panel's envelope
   download and Load envelope use the same stamp.
+- **Envelope schemas.** `frontend/schema/envelopes/<kind>.schema.json`
+  describes every top-level field of an envelope, generated from the mode's
+  field table (`node scripts/procgen/generate-envelope-schemas.mjs`, `--check`
+  to gate). Fields marked `"x-visibility": "internal"` (`rng`, `regionsRng`,
+  `batchStart`, `nodes`, the tagged `grid`, …) are resume state: carry them
+  through untouched and do not read them; their shape may change without a
+  version bump.
 - **One substrate set, read from the registry.** Every driver loads the
   libraries `frontend/modules/procgenCore/substrateLibraries.js` lists (the
   same list the matrix generator and the regenerate worker read), so every
