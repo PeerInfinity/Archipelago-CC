@@ -23160,3 +23160,29 @@ Lessons:
 - route survey step 79 SOLVED **199 → 204 t** (DASHSTEP D3: the OFF plan walks into the dialogue on the game);
 - the JS arc's 851-leg A/B, tip vs main.
 Pins: `contactFidelity.test` defaults and `fidelityStatueTalk` "ships ON".
+
+### Seedling fidelity sealDoorApproach flip — the FinalDoor's `approach` verb, ON by default
+
+⚖ The user (2026-10-17): *"Build the flip"*. SEALDOOR's switch (`CONTACT_FIDELITY.sealDoorApproach`, section above) now
+ships ON. The JS arc's `jsRuntimeSolver.clearTagVerbOf` gives `solid:finaldoor` the same `approach` verb, registered
+while the switch is on. That one line rides in this flip (the JS arc reviewed it), so the location goal's pre-check
+and the solver agree.
+
+**Why now.** SEALDOOR found its nine legs honest: the game save held 0 of 16 seal slots, because an AP Seal never
+reached the game. JS §5.86 now stages delivered seals into the request's `save.seal_parts`, and totems into
+`totem_parts`. §5.88 stages the Watcher's {114,0}.
+
+**Measured** (keyed sweep on main `edb2e28f0d`, captures on; A 39085250982 defaults, B 39085252976 + the switch):
+- L113 legs 810, 811, 817, 818, 824 and 825 went **failed → done** on the game.
+- Each of those requests staged `seal_parts` 16/16 and `totem_parts` [0..4].
+- Legs 812, 819 and 826 (the {113,0} event goal) stayed `no-verb` on main. The verb line above is what they wait on.
+- Legs 843 and 846 (the L114 Watcher as a goal) need a solver `talk` row and executor. That is a separate gap.
+
+**Pins moved:**
+- `contactFidelity.test` defaults and `fidelitySealDoor` "ships ON";
+- `fidelityClearTag` {113,0}: `no-verb` → `unresolved` (the door's predicates on a 0-seal, unspoken-Watcher state);
+- `fidelityFrontier3` L113: the predicate sentence ON, with the ITEM-GATE sentence kept as the switch-OFF row;
+- `jsRuntimeSolverEventGoal`: the finaldoor `no-verb` rows pinned OFF, plus an ON row (`approach`, registered; the
+  solver says `unresolved`);
+- `plan-seedling-sealdoor-witness.mjs`'s "the switch ships ON" check. Its plans turn the switch on for their own
+  solves, so the tapes don't move.
