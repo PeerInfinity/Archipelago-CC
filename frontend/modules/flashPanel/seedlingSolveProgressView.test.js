@@ -49,6 +49,18 @@
  *   k8 a row with chips rewritten every render        -> 'CHIPS: …' reds
  *   k9 the why written with innerHTML                 -> 'ESCAPING: …' reds (the source scan)
  *   k10 the why's tooltip not set                     -> 'CLAMP: …' reds
+ *
+ * ⛓ STAMPS VIEW — S3's Tier B stamps drawn (the request, best, the rate/ETA, the wall by site). Its mutants (all RED):
+ *   w1 the wall by site smallest first                -> 'WALL: …' reds
+ *   w2 the window's ETA read from `toLimitMs`         -> 'ETA: …' reds
+ *   w3 the request dropped after the first post       -> 'REQUEST: … KEPT …' and 'written only when …' red
+ *   w4 the request kept across solves                 -> 'REQUEST: … KEPT …' reds
+ *   w5 best's pass read from the segment's pass       -> 'BEST: …' reds
+ *   w6 the stamp lines inserted without a stamp       -> both no-stamps identity rows red
+ *   w7 the wall line written every render             -> 'written only when …' reds
+ *   w8 Σ over the listed pairs only                   -> 'WALL: …' reds
+ *   w9 the default switches (`{}`) drawn               -> both 'REQUEST: …' rows red
+ *   w10 a 0 ms ETA drawn as `≈ 0 ms to …`             -> 'ETA: …' reds
  */
 import { createHash } from 'node:crypto';
 
@@ -728,6 +740,221 @@ describe('⛓ RK VIEW — v1 after v2, and v2 on the same row elements', () => {
             t.runFrames();
             expect(t.view.tree.children.every((c) => chipsOf(c).length === 0)).toBe(true);
             expect([t.view.kindsText.textContent, t.view.whyText.textContent]).toEqual(['', '']);
+        } finally { t.restore(); }
+    });
+});
+
+// ── ⛓ STAMPS VIEW — S3's Tier B tap stamps drawn: the request identity, the plan in hand, the rate/ETA, the wall ──
+
+/** A v2 stream with no Tier B stamps: every RK and Tier A line drawn (kinds, a why, asks, work, tiles). */
+function v2NoStampsStream() {
+    return [1, 2, 3].map((seq) => {
+        const tree = node2('s', 'segment', { danger: seq }, [node2('s/c', 'climb', { danger: seq }, [
+            node2('s/c/avoid', 'rung', { danger: seq }), node2('s/c/time', 'rung', {}, [], { active: seq < 3 })],
+        { active: seq < 3 })], { active: seq < 3 });
+        const s = snap2(seq, { tree, lastWhy: { why: `the corridor probes dangerous at ${seq}`, kind: 'danger', key: 's/c/avoid' },
+            outcome: seq < 3 ? 'running' : 'solved', tiles: tilesOf([[0, 0, 2 * seq, 0], [3, 1, 1, seq]]) });
+        s.budget = { asks: { walk: 2 * seq }, work: { shouldStop: 2 * seq, ticks: 30 * seq },
+            spent: { shouldStop: 2 * seq }, limit: { shouldStop: 640 } };
+        return { solveId: 1, snapshot: s, final: seq === 3 };
+    });
+}
+/** ⛓ STAMPS VIEW — the md5 of each no-stamps v2 note's drawing, measured with the RK view (main 004368c2a3). */
+const V2_NO_STAMPS_MD5S = ['d0fda5497aa4ecc11328462081a4db29', 'da679ac03775dbdce5ff31416fe8376a',
+    '7cac294851810d5aa033d11bd680b782'];
+
+describe('⛓ STAMPS VIEW — a snapshot without the stamps draws exactly as before', () => {
+    it('a v1 stream and a v2 stream with no Tier B stamps draw the RK view\'s bytes, note by note; no stamp line is inserted', () => {
+        for (const [stream, want] of [[v1Stream, V1_MD5S], [v2NoStampsStream, V2_NO_STAMPS_MD5S]]) {
+            const t = setup();
+            try {
+                const md5s = [];
+                for (const n of stream()) {
+                    t.emit(n);
+                    t.runFrames();
+                    md5s.push(createHash('md5').update(serialize(t.view.element)).digest('hex'));
+                }
+                expect(md5s).toEqual(want);
+                expect(t.view.element.children.includes(t.view.stampsHead)).toBe(false);
+                expect(t.view.meter.children.includes(t.view.wallText)).toBe(false);
+            } finally { t.restore(); }
+        }
+    });
+});
+
+/**
+ * A stamped snapshot (the tap's S3 stamps on a v2 snapshot): `request` only where given (the tap stamps it on the
+ * solve's first post), `wall`, `rate` and `best` as given (`null` = not stamped).
+ */
+const stamped = (seq, { request, wall = { 'start→walk': 3, 'walk→walk': 40 }, rate = { unitsPerSec: 20, toLimitMs: 31000 },
+    best, index = 0, pass = 'quick' } = {}) => {
+    const s = snap2(seq, { tree: node2('s', 'segment', {}, [], { active: true }), index });
+    s.segment.pass = pass;
+    s.budget = { work: { shouldStop: seq }, asks: { walk: seq }, spent: { shouldStop: 10 + seq },
+        limit: { shouldStop: 640 }, ...(wall ? { wallBySite: wall } : {}), ...(rate ? { rate } : {}) };
+    if (request) s.request = request;
+    if (best) s.best = best;
+    return s;
+};
+const REQUEST = { name: 'r9-solve-18', level: 18, seamTime: 412.5, goal: 'reach-exit', passes: ['quick', 'full'],
+    budgetWork: 640, windowAt: 85, switches: {}, attempt: { retry: 0, budgets: [640], label: '640' } };
+
+describe('⛓ STAMPS VIEW — where did the time go (budget.wallBySite)', () => {
+    it('WALL: the most wall first (ties by name), ms or s, Σ over EVERY pair = the attempt\'s wall; labelled per attempt; the full list in the tooltip', async () => {
+        const { WALL_SITES_SHOWN } = await import('./seedlingSolveProgressView.js');
+        const { formatMs, wallBySiteRows } = await import('./seedlingSolveProgress.js');
+        expect([formatMs(0.4), formatMs(850), formatMs(4249), formatMs(37400)]).toEqual(['0 ms', '850 ms', '4.2 s', '37 s']);
+        expect(wallBySiteRows(snap(1))).toBeNull();
+        const wall = { 'a→b': 5, 'start→walk': 3, 'walk→walk': 12000, 'walk→hammer-escape': 900, 'b→a': 5, 'x→y': 1,
+            'y→z': 2, 'z→end': 4 };
+        expect(wallBySiteRows({ budget: { wallBySite: wall } }).rows.map(([k]) => k))
+            .toEqual(['walk→walk', 'walk→hammer-escape', 'a→b', 'b→a', 'z→end', 'start→walk', 'y→z', 'x→y']);
+        expect(wallBySiteRows({ budget: { wallBySite: wall } }).total).toBe(12920);   // every pair, the 2 unlisted too
+        const t = setup();
+        try {
+            t.emit({ solveId: 1, snapshot: stamped(1, { wall }), final: false });
+            t.runFrames();
+            expect(WALL_SITES_SHOWN).toBe(6);
+            expect(t.view.wallText.textContent).toBe('wall by site (this attempt): walk→walk 12 s · walk→hammer-escape 900 ms'
+                + ' · a→b 5 ms · b→a 5 ms · z→end 4 ms · start→walk 3 ms · +2 more · Σ 13 s');
+            expect(t.view.wallText.title.split('\n')).toHaveLength(8);
+            expect(t.view.wallText.style.cssText).toMatch(/white-space:nowrap;overflow:hidden;text-overflow:ellipsis;/);
+            // under the meter's text, before the (per segment) asks
+            const kids = t.view.meter.children;
+            expect(kids.map((c) => c.className || c)).toEqual([kids[0], kids[1], 'flash-panel-solve-progress-eta',
+                'flash-panel-solve-progress-wall', 'flash-panel-solve-progress-asks', 'flash-panel-solve-progress-work']);
+            t.emit({ solveId: 1, snapshot: stamped(2, { wall: {} }), final: false });
+            t.runFrames();
+            expect(t.view.wallText.textContent).toBe('wall by site (this attempt): none yet');
+        } finally { t.restore(); }
+    });
+});
+
+describe('⛓ STAMPS VIEW — the ETA beside the meter (budget.rate, as the tap wrote it)', () => {
+    it('ETA: units/s and the ms left to the window and the limit, READ (never recomputed); an absent field says nothing; 0 = reached', async () => {
+        const { etaText } = await import('./seedlingSolveProgress.js');
+        const at = (rate) => etaText({ budget: { rate } });
+        // the rate disagrees with spent/limit on purpose: the line is the stamp's, not a recomputation
+        expect(at({ unitsPerSec: 41.25, toWindowMs: 3100, toLimitMs: 12400 })).toBe('41.25 units/s · ≈ 3.1 s to window · ≈ 12 s to limit');
+        expect(at({ unitsPerSec: 20, toLimitMs: 900 })).toBe('20 units/s · ≈ 900 ms to limit');
+        expect(at({ unitsPerSec: 20, toWindowMs: 0, toLimitMs: 5000 })).toBe('20 units/s · window reached · ≈ 5.0 s to limit');
+        expect(at({ unitsPerSec: 0 })).toBeNull();        // nothing spent yet: no ETA
+        expect(etaText({ budget: {} })).toBeNull();        // no rate (0 ms, or no stamps)
+        expect(at({ unitsPerSec: 7.5 })).toBe('7.5 units/s');   // in place: no budget, no ETA
+        const t = setup();
+        try {
+            t.emit({ solveId: 1, snapshot: stamped(1, { rate: { unitsPerSec: 41.25, toWindowMs: 3100, toLimitMs: 12400 } }), final: false });
+            t.runFrames();
+            expect(t.view.etaText.textContent).toBe('41.25 units/s · ≈ 3.1 s to window · ≈ 12 s to limit');
+            expect(t.view.meterText.textContent).toBe('work 11 / 640 units');   // the meter's own line is untouched
+            t.emit({ solveId: 1, snapshot: stamped(2, { rate: null }), final: false });
+            t.runFrames();
+            expect(t.view.etaText.textContent).toBe('');
+        } finally { t.restore(); }
+    });
+});
+
+describe('⛓ STAMPS VIEW — the request identity in the header (first post only — KEPT for the solve)', () => {
+    it('REQUEST: drawn from the first post and KEPT while later posts lack it; a new solve forgets it', () => {
+        const t = setup();
+        try {
+            t.emit({ solveId: 1, snapshot: stamped(1, { request: REQUEST }), final: false });
+            t.runFrames();
+            const line = 'request: r9-solve-18 · boot L18 · seamTime 412.5 · goal reach-exit · passes quick → full · attempt 640';
+            expect(t.view.requestText.textContent).toBe(line);
+            for (const seq of [2, 3]) {
+                t.emit({ solveId: 1, snapshot: stamped(seq, { index: seq - 1 }), final: seq === 3 });
+                t.runFrames();
+                expect(t.view.state.request).toBe(REQUEST);
+                expect(t.view.requestText.textContent).toBe(line);
+            }
+            // a new solve whose first post carried no request (say it was dropped) has NO identity — not the old one's
+            t.emit({ solveId: 2, snapshot: stamped(1), final: false });
+            t.runFrames();
+            expect(t.view.state.request).toBeNull();
+            expect(t.view.requestText.textContent).toBe('');
+            // header order: the request and the plan sit under the header, above the meter
+            const kids = t.view.element.children;
+            expect(kids.indexOf(t.view.stampsHead)).toBe(kids.indexOf(t.view.header) + 1);
+            expect(kids.indexOf(t.view.meter)).toBe(kids.indexOf(t.view.stampsHead) + 1);
+        } finally { t.restore(); }
+    });
+
+    it('REQUEST: the switches only when OFF-default ({} says nothing), the held retry\'s label, no seamTime when null; solver text stays TEXT', async () => {
+        const { requestText } = await import('./seedlingSolveProgress.js');
+        expect(requestText(null)).toBeNull();
+        const retry = { ...REQUEST, seamTime: null, switches: { dashOnlyWindow: false, killLockBodies: { spinner: true } },
+            attempt: { retry: 1, budgets: [640, 2560], label: '640 → 2560' } };
+        expect(requestText(retry)).toBe('request: r9-solve-18 · boot L18 · goal reach-exit · passes quick → full'
+            + ' · switches dashOnlyWindow=false, killLockBodies={"spinner":true} · attempt 640 → 2560 (retry 1)');
+        expect(requestText({ ...REQUEST, attempt: undefined })).not.toMatch(/attempt|switches/);
+        const evil = '<img src=x onerror="alert(1)">';
+        const t = setup();
+        try {
+            t.emit({ solveId: 1, snapshot: stamped(1, { request: { ...REQUEST, name: evil } }), final: false });
+            t.runFrames();
+            expect(t.view.requestText.textContent.startsWith(`request: ${evil} · `)).toBe(true);
+            expect(t.view.requestText.children).toEqual([]);
+        } finally { t.restore(); }
+    });
+});
+
+describe('⛓ STAMPS VIEW — the plan in hand (best)', () => {
+    it('BEST: `best: ok · N ticks (pass P)` from the stamp\'s own pass (not the segment\'s), `refused`, or `none yet`', () => {
+        const t = setup();
+        try {
+            t.emit({ solveId: 1, snapshot: stamped(1, { pass: 'quick' }), final: false });
+            t.runFrames();
+            expect(t.view.bestText.textContent).toBe('best: none yet');
+            // the full pass is running; the best so far is the quick pass's plan
+            t.emit({ solveId: 1, snapshot: stamped(2, { pass: 'full', best: { ok: true, ticks: 412, pass: 'quick' } }), final: false });
+            t.runFrames();
+            expect(t.view.bestText.textContent).toBe('best: ok · 412 ticks (pass quick)');
+            t.emit({ solveId: 2, snapshot: stamped(1, { best: { ok: false, ticks: null, pass: 'quick' } }), final: false });
+            t.runFrames();
+            expect(t.view.bestText.textContent).toBe('best: refused (pass quick)');
+        } finally { t.restore(); }
+    });
+});
+
+describe('⛓ STAMPS VIEW — a stamp line is written only when its text changes', () => {
+    it('re-posts with the same stamps write no stamp line; one changed stamp writes one line', () => {
+        const t = setup();
+        try {
+            const same = { request: REQUEST, best: { ok: true, ticks: 9, pass: 'quick' } };
+            t.emit({ solveId: 1, snapshot: stamped(1, same), final: false });
+            t.runFrames();
+            const lines = [t.view.requestText, t.view.bestText, t.view.etaText, t.view.wallText];
+            const sets = lines.map(() => 0);
+            lines.forEach((n, i) => {
+                let v = n.textContent;
+                Object.defineProperty(n, 'textContent', { get: () => v, set: (x) => { v = x; sets[i] += 1; } });
+            });
+            for (const seq of [2, 3, 4]) {
+                t.emit({ solveId: 1, snapshot: stamped(seq, { best: same.best }), final: false });
+                t.runFrames();
+            }
+            expect(sets).toEqual([0, 0, 0, 0]);
+            t.emit({ solveId: 1, snapshot: stamped(5, { best: same.best, wall: { 'walk→walk': 41 } }), final: false });
+            t.runFrames();
+            expect(sets).toEqual([0, 0, 0, 1]);
+        } finally { t.restore(); }
+    });
+});
+
+describe('⛓ STAMPS VIEW — stamps after the RK lines, and on a view that drew a no-stamps stream', () => {
+    it('the stamp lines go in once, in place, whichever stream came first; the RK box keeps its place under the path', () => {
+        const t = setup();
+        try {
+            for (const n of v2NoStampsStream()) { t.emit(n); t.runFrames(); }
+            t.emit({ solveId: 2, snapshot: stamped(1, { request: REQUEST }), final: false });
+            t.runFrames();
+            t.emit({ solveId: 2, snapshot: stamped(2), final: false });
+            t.runFrames();
+            const order = t.view.element.children.map((c) => c === t.view.header ? 'header' : c === t.view.stampsHead ? 'stamps'
+                : c === t.view.meter ? 'meter' : c === t.view.pathText ? 'path' : c === t.view.rkBox ? 'rk'
+                    : c === t.view.body ? 'body' : 'title');
+            expect(order).toEqual(['title', 'header', 'stamps', 'meter', 'path', 'rk', 'body']);
         } finally { t.restore(); }
     });
 });

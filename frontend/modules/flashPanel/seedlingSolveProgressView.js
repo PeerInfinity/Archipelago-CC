@@ -27,6 +27,15 @@
  * nothing new: the two lines are inserted on the first snapshot that has them, and a row grows its chip box on the
  * first kind it shows — a v1 stream's DOM is the S2 view's, byte for byte (pinned).
  *
+ * ⛓ STAMPS VIEW (slice `seedling-js-stamps-view`, draws S3's Tier B tap stamps; the tap, the worker and the service
+ * are unchanged): under the header, the REQUEST IDENTITY (kept from the solve's first post — `requestText`) and the
+ * PLAN IN HAND (`bestText`); beside the meter, the RATE and its ETAs to the window and the limit, as the tap wrote
+ * them (`etaText`); under that, WHERE THE TIME WENT — `budget.wallBySite`, the most wall first, Σ = the attempt's wall
+ * (per ATTEMPT, so labelled; the asks below are per segment). The lines are inserted on the first snapshot that
+ * carries a stamp, so a snapshot without them draws the RK view's bytes (pinned). Each line is one `_line` write, only
+ * when its text changes; the wall line is one clipped line (its full list in the tooltip), so its moving digits never
+ * change its height; every line is a full-width block, never a flex item sized by its text (S2's lesson).
+ *
  * ⛓ INCREMENTAL (slice S1, ⚖ the user 2026-10-17 — the rate setting `flashPanel.seedlingSolveProgressIntervalMs`
  * depends on it): a note updates the STATE (and the show/hide lifecycle) at once, but the DOM at most once per
  * animation frame (`frame`, default `requestAnimationFrame`) — the notes of one frame coalesce into one render of the
@@ -48,9 +57,9 @@
  */
 
 import {
-    activePath, applyProgress, asksBySite, autoVisibility, clampText, createSolveProgressFeed, emptyProgress,
-    kindChips, kindTotals, lastWhyText, meterOf, reasonsText, SOLVE_PROGRESS_TREE_CAP, tileIndex, tileShade, treeRows,
-    workCounters,
+    activePath, applyProgress, asksBySite, autoVisibility, bestText, clampText, createSolveProgressFeed, emptyProgress,
+    etaText, formatMs, kindChips, kindTotals, lastWhyText, meterOf, reasonsText, requestText, SOLVE_PROGRESS_TREE_CAP,
+    tileIndex, tileShade, treeRows, wallBySiteRows, workCounters,
 } from './seedlingSolveProgress.js';
 import { progressIntervalMs, SOLVE_PROGRESS_INTERVAL_MS } from '../seedlingDemo/solveProgressTap.js';
 
@@ -78,6 +87,8 @@ const CHIP_CSS = 'display:inline-block;margin-left:4px;padding:0 3px;border:1px 
 export const LAST_WHY_CHARS = 200;
 const WHY_CLOSED_CSS = 'color:#ccc;margin:0 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;';
 const WHY_OPEN_CSS = 'color:#ccc;margin:0 0 4px;white-space:pre-wrap;overflow-wrap:anywhere;cursor:pointer;';
+/** ⛓ STAMPS VIEW — the site pairs the wall line names before it counts the rest (Σ is always over every pair). */
+export const WALL_SITES_SHOWN = 6;
 
 const el = (tag, css = '', text = null) => {
     const e = document.createElement(tag);
@@ -178,6 +189,19 @@ export class SolveProgressView {
         this.workText = el('div', 'color:#888;white-space:pre-wrap;');
         this.workText.className = 'flash-panel-solve-progress-work';
         this.meter.append(this.meterBar, this.meterText, this.asksText, this.workText);
+        // ⛓ STAMPS VIEW — the request identity and the plan in hand (under the header), the rate/ETA and the wall by
+        // site (under the meter's text): inserted on the first snapshot that carries a Tier B stamp
+        this.requestText = el('div', 'color:#aaa;white-space:pre-wrap;overflow-wrap:anywhere;');
+        this.requestText.className = 'flash-panel-solve-progress-request';
+        this.bestText = el('div', 'color:#aaa;');
+        this.bestText.className = 'flash-panel-solve-progress-best';
+        this.stampsHead = el('div');
+        this.stampsHead.append(this.requestText, this.bestText);
+        this.etaText = el('div', 'color:#888;');
+        this.etaText.className = 'flash-panel-solve-progress-eta';
+        this.wallText = el('div', 'color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;');
+        this.wallText.className = 'flash-panel-solve-progress-wall';
+        this._stampsShown = false;
         // ⛓ TIER A — the active path, one line, with its climb depth
         this.pathText = el('div', 'color:#ccc;margin:2px 0 4px;white-space:pre-wrap;');
         this.pathText.className = 'flash-panel-solve-progress-path';
@@ -335,6 +359,7 @@ export class SolveProgressView {
         this._renderHeader();
         this._renderMeter();
         this._renderTierA();
+        this._renderStamps();
         this._renderRK();
         this._renderTiles();
         this._renderTree();
@@ -426,6 +451,44 @@ export class SolveProgressView {
         if (this.whyText.title !== title) this.whyText.title = title;
         const css = this._whyOpen ? WHY_OPEN_CSS : WHY_CLOSED_CSS;
         if (this.whyText.style.cssText !== css) this.whyText.style.cssText = css;
+    }
+
+    /**
+     * ⛓ STAMPS VIEW — the request identity, the plan in hand, the rate/ETA and the wall by site. Nothing is drawn or
+     * inserted until a snapshot carries a Tier B stamp (or the solve's kept request): the lines go in with append and
+     * remove only (every DOM the view meets has them), after the header and after the meter's text.
+     */
+    _renderStamps() {
+        const s = this.state;
+        const snap = s.snapshot;
+        const b = snap?.budget ?? {};
+        if (!this._stampsShown) {
+            if (!snap || !(s.request || snap.best || b.wallBySite || b.rate)) return;
+            const after = [this.meter, this.pathText, ...(this._rkShown ? [this.rkBox] : []), this.body];
+            for (const n of after) n.remove();
+            this.element.append(this.stampsHead, ...after);
+            this.asksText.remove();
+            this.workText.remove();
+            this.meter.append(this.etaText, this.wallText, this.asksText, this.workText);
+            this._stampsShown = true;
+        }
+        this._line(this.requestText, requestText(s.request) ?? '');
+        this._line(this.bestText, snap ? bestText(snap.best) : '');
+        this._line(this.etaText, (snap && etaText(snap)) ?? '');
+        const wall = snap ? wallBySiteRows(snap) : null;
+        let text = '';
+        let title = '';
+        if (wall) {
+            const pair = ([k, ms]) => `${k} ${formatMs(ms)}`;
+            const more = wall.rows.length - WALL_SITES_SHOWN;
+            text = `wall by site (this attempt): ${wall.rows.length
+                ? `${wall.rows.slice(0, WALL_SITES_SHOWN).map(pair).join(' · ')}${more > 0 ? ` · +${more} more` : ''}`
+                    + ` · Σ ${formatMs(wall.total)}`
+                : 'none yet'}`;
+            title = wall.rows.map(pair).join('\n');
+        }
+        this._line(this.wallText, text);
+        if (this.wallText.title !== title) this.wallText.title = title;
     }
 
     _cellPx(tiles) {
