@@ -38,6 +38,7 @@ import {
     installSolveProgress, kindEntered, progressKind, progressReason, progressWhy, withSolveProgress,
 } from './solveProgress.js';
 import { CONTACT_FIDELITY, withContactFidelity } from './contactFidelity.js';
+import { arrivalStaging } from './fidelityArrival.js';
 
 const SOURCE = atlasLevelSource();
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -491,6 +492,32 @@ describe('hammer-phase RK — refusal kinds and the last why (v: 2)', () => {
         expect(progressKind(progressReason(err))).toBe('other');
         for (const snap of f.stream) expectLastWhy(snap);
         expect(f.stream.filter((x) => x.lastWhy !== null).length).toBeGreaterThan(0);
+    }, 300_000);
+
+    it('⛓⛓ a REAL sealDoorApproach-ON refusal: the 0-seal L113 door throws clear-tag `unresolved`, and its kind is `exhausted`', () => {
+        // ⛓ fidelity-9's residue row (the harvest): the same call as fidelityClearTag's {113,0} row — a 0-seal,
+        // unspoken-Watcher arrival; with the switch ON the `approach` verb resolves and refuses by name
+        const boot = { level: 113, x: 72, y: 128 };
+        const goal = { kind: 'clear-tag', tag: { level: 113, tag: 0 }, at: { x: 112, y: 0 }, obstacle: 'finaldoor@112,0' };
+        const f = finalsHook(true);
+        let err = null;
+        withContactFidelity({ sealDoorApproach: true }, () => {
+            try {
+                solveSegment({ run: createRunForStaging(arrivalStaging(boot), SOURCE), goals: [goal],
+                    name: 'rk-seal-113', boot, onProgress: f.hook });
+            } catch (e) { err = e; }
+        });
+        expect(err?.name).toBe('SolverRefusal');
+        expect(err.obstacle).toMatchObject({ kind: 'clear-tag', reason: 'unresolved' });
+        const last = f.finals.at(-1);
+        expect(last.segment.outcome).toBe('refused');
+        expect(last.lastWhy.why).toBe(err.message);
+        expect(last.lastWhy.kind).toBe('exhausted');
+        expect(progressKind(err)).toBe('exhausted');
+        for (const snap of f.stream) expectLastWhy(snap);
+        const kinds = nodesOf(last.tree).flatMap((n) => Object.keys(n.rejectionKinds));
+        expect(kinds.length).toBeGreaterThan(0);
+        expect(kinds).not.toContain('other');
     }, 300_000);
 
     it('⛓⛓ lastWhy is a refused rung\'s why verbatim: L40\'s and L6\'s last rejections are rows of their own traces', async () => {
