@@ -29,6 +29,7 @@
  *   --asymmetric add|remove  cross-branch one-way exit reconciliation
  *                            (default add)
  *   -o, --out PATH           output JSON path (default ./grid-growth-dump.json)
+ *   --json-status PATH       write the run's status object (`-` = stdout); see cliRun.js
  *   -h, --help               print this and exit
  *
  * Output JSON shape:
@@ -46,6 +47,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { argvHelp, helpText } from './argvHelp.js';
+import { runCli, parseOrUsage } from './cliRun.js';
 
 // Substrate libraries register their adapters on import — one shared list.
 import './registerPipelineSubstrates.js';
@@ -128,6 +130,8 @@ function parseArgs(argv) {
             }
             case '-o':
             case '--out': out.out = next(); break;
+            // the value is read by cliRun.js; not echoed into the dump's config
+            case '--json-status': next(); break;
             case '-h':
                 process.stdout.write(`${helpText(fileURLToPath(import.meta.url))}\n`);
                 process.exit(0);
@@ -176,8 +180,8 @@ function shapeRegions(grid) {
 
 // --- main ---
 
-async function main() {
-    const config = parseArgs(process.argv.slice(2));
+async function main(status) {
+    const config = parseOrUsage(() => parseArgs(process.argv.slice(2)));
 
     const growthParams = {
         branchProbability: config.branch,
@@ -219,8 +223,13 @@ async function main() {
     const outPath = resolve(process.cwd(), config.out);
     mkdirSync(dirname(outPath), { recursive: true });
     writeFileSync(outPath, JSON.stringify(dump, null, 2));
-    console.log(`Wrote ${outPath}`);
-    console.log(`  regionsBuilt: ${stats.regionsBuilt}`
+    console.error(`Wrote ${outPath}`);
+    status.outputs.dump = outPath;
+    status.summary = {
+        seed: config.seed, regionsBuilt: stats.regionsBuilt,
+        stopReason: stats.stopReason ?? null, substrateCounts: stats.substrateCounts ?? null,
+    };
+    console.error(`  regionsBuilt: ${stats.regionsBuilt}`
         + `  stopReason: ${stats.stopReason}`
         + `  substrateCounts: ${JSON.stringify(stats.substrateCounts)}`);
 }
@@ -229,9 +238,4 @@ async function main() {
 // The substrate libraries we import pull in modules with background
 // timers (stateManagerProxy etc.), which keeps Node alive after main
 // returns. Force-exit on success so the script doesn't hang.
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-    main().then(() => process.exit(0)).catch((e) => {
-        console.error(`ERROR: ${e.message}`);
-        process.exit(1);
-    });
-}
+runCli('dump-grid-growth', import.meta.url, main);

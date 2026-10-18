@@ -48,13 +48,18 @@
  *   --rules-out <rules.json>      (compile / run) also write the bare rules.json
  *   --from <step>                 (run) resume from this step
  *   --to <step>                   (run) stop after this step (default compile)
+ *   --json-status PATH            write the run's status object (`-` = stdout); see cliRun.js
  *   -h, --help                    print this and exit
+ *
+ * Exit codes (cliRun.js): 0 ok · 1 usage · 2 oracle mismatch · 3 input
+ * rejected · 4 internal.
  */
 import { writeFileSync, readFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { argvHelp, helpText } from './argvHelp.js';
+import { runCli, UsageError, InputError, parseOrUsage, readInputJson } from './cliRun.js';
 
 // Substrate libraries register their adapters on import — one shared list.
 import './registerPipelineSubstrates.js';
@@ -129,6 +134,7 @@ function parseArgs(argv) {
             case '--rules-out': out.rulesOut = next(); break;
             case '--from': out.from = next(); break;
             case '--to': out.to = next(); break;
+            case '--json-status': out.jsonStatus = next(); break;
             case '-h':
                 process.stdout.write(`${helpText(fileURLToPath(import.meta.url))}\n`);
                 process.exit(0);
@@ -142,18 +148,25 @@ function parseArgs(argv) {
 
 // --- file I/O ---
 
-function readJson(path) {
-    return JSON.parse(readFileSync(resolve(path), 'utf8'));
+function readJson(path, what) {
+    return readInputJson(path, what);
 }
 
 // Sphere log: a JSON array, or JSONL (one entry per line).
 function readSphereLog(path) {
-    const text = readFileSync(resolve(path), 'utf8').trim();
-    if (text.startsWith('[')) {
-        const j = JSON.parse(text);
-        if (Array.isArray(j)) return j;
+    let text;
+    try { text = readFileSync(resolve(path), 'utf8').trim(); } catch (e) {
+        throw new InputError(`--sphere-log ${path}: ${e.code === 'ENOENT' ? 'no such file' : e.message}`);
     }
-    return text.split('\n').map((l) => l.trim()).filter(Boolean).map((l) => JSON.parse(l));
+    try {
+        if (text.startsWith('[')) {
+            const j = JSON.parse(text);
+            if (Array.isArray(j)) return j;
+        }
+        return text.split('\n').map((l) => l.trim()).filter(Boolean).map((l) => JSON.parse(l));
+    } catch (e) {
+        throw new InputError(`--sphere-log ${path}: not a JSON array or JSONL (${e.message})`);
+    }
 }
 
 function writeOut(path, obj, fallbackName) {
@@ -169,7 +182,7 @@ function writeOut(path, obj, fallbackName) {
 // Build a fresh envelope from --source + world flags (mirrors the panel's
 // _buildTDEnvelope: substrate params via the shared hooks, mode 'topDown').
 function buildEnv(args) {
-    const source = readJson(args.source);
+    const source = readJson(args.source, '--source');
     const params = defaultProcgenParams({});
     if (args.physicsProfile != null) params.bouncePhysicsProfile = args.physicsProfile;
     if (args.fallBehavior != null) params.bounceFallBehavior = args.fallBehavior;
@@ -194,21 +207,22 @@ function buildEnv(args) {
 
 // --- main ---
 
-async function main() {
-    const args = parseArgs(process.argv.slice(2));
+async function main(status) {
+    const args = parseOrUsage(() => parseArgs(process.argv.slice(2)));
     const sub = args.subcommand;
-    if (!sub) throw new Error(`missing subcommand (one of: ${TOPDOWN_STEPS.join(', ')}, run)`);
+    status.subcommand = sub;
+    if (!sub) throw new UsageError(`missing subcommand (one of: ${TOPDOWN_STEPS.join(', ')}, run)`);
     const isStep = TOPDOWN_STEPS.includes(sub);
-    if (!isStep && sub !== 'run') throw new Error(`unknown subcommand '${sub}'`);
+    if (!isStep && sub !== 'run') throw new UsageError(`unknown subcommand '${sub}'`);
 
     let env;
     if (args.input) {
-        env = deserializeTDEnvelope(readJson(args.input));
+        env = deserializeTDEnvelope(readJson(args.input, '-i'));
     } else if (sub === 'layout' || sub === 'run') {
-        if (!args.source) throw new Error(`${sub} requires --source <rules.json> (or -i <envelope.json>)`);
+        if (!args.source) throw new UsageError(`${sub} requires --source <rules.json> (or -i <envelope.json>)`);
         env = buildEnv(args);
     } else {
-        throw new Error(`step '${sub}' requires -i <envelope.json> (or start with 'layout')`);
+        throw new UsageError(`step '${sub}' requires -i <envelope.json> (or start with 'layout')`);
     }
 
     const onProgress = (ev) => {
@@ -255,9 +269,13 @@ async function main() {
     if (sub !== 'run' || args.out) {
         const outPath = writeOut(args.out, serializeTDEnvelope(env), sub);
         process.stderr.write(`[topdown-step] ${sub} → completed=${env.completed} → ${outPath}\n`);
+        status.outputs.envelope = outPath;
     } else {
         process.stderr.write(`[topdown-step] ${sub} → completed=${env.completed}\n`);
     }
+    status.completed = TOPDOWN_STEPS[env.completed] ?? null;
+    status.next = nextTopDownStep(env) ?? null;
+    status.summary.seed = env.opts?.seed ?? null;
     if (isStep && sub !== 'compile') {
         const n = nextTopDownStep(env);
         if (n) process.stderr.write(`[topdown-step] next: ${n}\n`);
@@ -268,18 +286,13 @@ async function main() {
         if (args.rulesOut) {
             const abs = writeOut(args.rulesOut, rulesJson, 'rules');
             process.stderr.write(`[topdown-step] rules.json → ${abs}\n`);
+            status.outputs.rules = abs;
         }
         const regions = Object.keys(rulesJson.regions?.['1'] ?? {}).length;
+        status.summary.driver = rulesJson.procgen_metadata?.['1']?.driver ?? null;
+        status.summary.regions = regions;
         process.stderr.write(`[topdown-step] driver ${rulesJson.procgen_metadata?.['1']?.driver} · ${regions} regions\n`);
     }
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-    main().catch((e) => {
-        process.stderr.write(`[topdown-step] ERROR: ${e.message}\n`);
-        process.exit(1);
-    });
-    // The engine's module graph leaves an unref'd worker/timer handle alive;
-    // the work is synchronous above, so exit explicitly once main resolves.
-    process.on('beforeExit', () => process.exit(0));
-}
+runCli('topdown-step', import.meta.url, main);

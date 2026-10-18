@@ -49,6 +49,7 @@
  *     --rules-out PATH            `compile`/`run`/`append`: also write the bare rules.json
  *     --from STEP                 `run`: start at this step (default: auto-resume)
  *     --to STEP                   `run`: stop after this step (default compile)
+ *     --json-status PATH          write the run's status object (`-` = stdout); see cliRun.js
  *     -h, --help                  print this and exit
  *
  * Recorded layout edits (envelope `edits[]`, see layoutEdits.js) replay after
@@ -73,8 +74,10 @@
  * spheres), the byte-identical default.
  *
  * World flags build the resolved config (via the shared substrate hooks, like
- * the panel) carried in the envelope. `compile` exits non-zero if the sphere
+ * the panel) carried in the envelope. `compile` exits 2 if the sphere
  * oracle reports a mismatch.
+ * Exit codes (cliRun.js): 0 ok · 1 usage · 2 oracle mismatch · 3 input
+ * rejected · 4 internal.
  *
  * The envelope is self-contained (it embeds the resolved item library), so a
  * step can run in its own process without re-deriving world state. The grown
@@ -83,11 +86,12 @@
  * the pipeline at steps ①–②c, or a grown region via the in-app editor.
  */
 
-import { writeFileSync, readFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { argvHelp, helpText } from './argvHelp.js';
+import { runCli, UsageError, parseOrUsage, readInputJson } from './cliRun.js';
 
 // Substrate libraries register their adapters on import — one shared list.
 import './registerPipelineSubstrates.js';
@@ -197,6 +201,7 @@ function parseArgs(argv) {
             case '--rules-out': out.rulesOut = next(); break;
             case '--from': out.from = next(); break;
             case '--to': out.to = next(); break;
+            case '--json-status': out.jsonStatus = next(); break;
             case '-h':
                 process.stdout.write(`${helpText(fileURLToPath(import.meta.url))}\n`);
                 process.exit(0);
@@ -281,8 +286,8 @@ function buildConfig(args) {
 
 // --- file I/O ---
 
-function readJson(path) {
-    return JSON.parse(readFileSync(resolve(path), 'utf8'));
+function readJson(path, what) {
+    return readInputJson(path, what);
 }
 
 function writeOut(path, obj, fallbackName) {
@@ -311,15 +316,16 @@ function announceEdits(env, firstStep) {
 
 // --- main ---
 
-async function main() {
-    const args = parseArgs(process.argv.slice(2));
+async function main(status) {
+    const args = parseOrUsage(() => parseArgs(process.argv.slice(2)));
     const sub = args.subcommand;
-    if (!sub) throw new Error('missing subcommand (one of: '
+    status.subcommand = sub;
+    if (!sub) throw new UsageError('missing subcommand (one of: '
         + `${SPHERE_STEPS.join(', ')}, run, append)`);
 
     const isStep = SPHERE_STEPS.includes(sub);
     if (!isStep && sub !== 'run' && sub !== 'append') {
-        throw new Error(`unknown subcommand '${sub}'`);
+        throw new UsageError(`unknown subcommand '${sub}'`);
     }
 
     // Load or create the envelope. `append` accepts EITHER a saved envelope or a
@@ -327,8 +333,8 @@ async function main() {
     // procedural substrates only; zone substrates must use a saved envelope).
     let env;
     if (sub === 'append') {
-        if (!args.input) throw new Error('append requires -i <rules.json | envelope.json>');
-        const raw = readJson(args.input);
+        if (!args.input) throw new UsageError('append requires -i <rules.json | envelope.json>');
+        const raw = readJson(args.input, '-i');
         env = raw.procgen_metadata?.['1']
             ? rebuildEnvelopeFromRulesJson(raw, {
                 ...(Object.keys(args.quotas).length ? { substrateQuotas: args.quotas } : {}),
@@ -336,14 +342,14 @@ async function main() {
             })
             : deserializeEnvelope(raw);
     } else if (args.input) {
-        env = deserializeEnvelope(readJson(args.input));
+        env = deserializeEnvelope(readJson(args.input, '-i'));
     } else if (sub === 'plan' || sub === 'run') {
         env = newEnvelope(buildConfig(args));
     } else {
-        throw new Error(`step '${sub}' requires -i <envelope.json> (or start with 'plan')`);
+        throw new UsageError(`step '${sub}' requires -i <envelope.json> (or start with 'plan')`);
     }
     // --params overrides the carried config knobs.
-    if (args.paramsFile) Object.assign(env.config, readJson(args.paramsFile));
+    if (args.paramsFile) Object.assign(env.config, readJson(args.paramsFile, '--params'));
 
     const onProgress = (ev) => {
         if (ev?.type) process.stderr.write(`  · ${ev.type}\n`);
@@ -387,6 +393,10 @@ async function main() {
 
     const outPath = writeOut(args.out, serializeEnvelope(env), sub);
     process.stderr.write(`[sphere-step] ${sub} → completed=${env.completed} → ${outPath}\n`);
+    status.outputs.envelope = outPath;
+    status.completed = SPHERE_STEPS[env.completed] ?? null;
+    status.next = nextSphereStep(env) ?? null;
+    status.summary.seed = env.config?.seed ?? null;
 
     // Sphere-major hint: when batch < all the pipeline LOOPS the middle four
     // phases per batch, so after ③ the next per-step invocation is ②a again
@@ -412,19 +422,19 @@ async function main() {
         if (args.rulesOut) {
             const abs = writeOut(args.rulesOut, rulesJson, 'rules');
             process.stderr.write(`[sphere-step] rules.json → ${abs}\n`);
+            status.outputs.rules = abs;
         }
+        status.summary.driver = rulesJson.procgen_metadata?.['1']?.driver ?? null;
+        status.summary.regions = Object.keys(rulesJson.regions?.['1'] ?? {}).length;
+        status.oracle = { checked: true, errors: oracleErrors };
         if (oracleErrors.length > 0) {
+            // ⛓ exit 2 (oracle mismatch), set by runCli from status.oracle.errors.
             process.stderr.write('SPHERE ORACLE FAILED:\n');
             for (const e of oracleErrors) process.stderr.write(`  ${e}\n`);
-            process.exit(1);
+            return;
         }
         process.stderr.write('[sphere-step] oracle OK\n');
     }
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-    main().then(() => process.exit(0)).catch((e) => {
-        console.error(`ERROR: ${e.message}`);
-        process.exit(1);
-    });
-}
+runCli('sphere-step', import.meta.url, main);

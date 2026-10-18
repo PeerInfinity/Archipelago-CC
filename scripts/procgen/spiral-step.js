@@ -75,13 +75,18 @@
  *   --rules-out <rules.json>      (compile / run) also write the bare rules.json
  *   --from <step>                 (run) resume from this step
  *   --to <step>                   (run) stop after this step (default compile)
+ *   --json-status PATH            write the run's status object (`-` = stdout); see cliRun.js
  *   -h, --help                    print this and exit
+ *
+ * Exit codes (cliRun.js): 0 ok · 1 usage · 2 oracle mismatch · 3 input
+ * rejected · 4 internal.
  */
 import { writeFileSync, readFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { argvHelp, helpText } from './argvHelp.js';
+import { runCli, UsageError, parseOrUsage, readInputJson } from './cliRun.js';
 
 // Substrate libraries register their adapters on import — one shared list.
 import './registerPipelineSubstrates.js';
@@ -187,6 +192,7 @@ function parseArgs(argv) {
             case '--rules-out': out.rulesOut = next(); break;
             case '--from': out.from = next(); break;
             case '--to': out.to = next(); break;
+            case '--json-status': out.jsonStatus = next(); break;
             case '--jta-dataset-file': out.jtaDatasetFile = next(); break;
             case '--jta-generate': out.jtaGenerate = true; break;
             case '--jta-dataset-seed': out.jtaDatasetSeed = parseInt(next(), 10); break;
@@ -218,8 +224,8 @@ function parseArgs(argv) {
 
 // --- file I/O ---
 
-function readJson(path) {
-    return JSON.parse(readFileSync(resolve(path), 'utf8'));
+function readJson(path, what) {
+    return readInputJson(path, what);
 }
 
 function writeOut(path, obj, fallbackName) {
@@ -262,7 +268,7 @@ function foreignAwardTypes(quotas) {
 function buildJtaSubstrateConfig(args) {
     let datasetDoc = null;
     if (args.jtaDatasetFile) {
-        datasetDoc = readJson(args.jtaDatasetFile);
+        datasetDoc = readJson(args.jtaDatasetFile, '--jta-dataset-file');
     } else if (args.jtaGenerate) {
         // Award-schedule knobs (P2/S3): only built when a knob departs from
         // its byte-inert default; the foreign pool is the co-present
@@ -384,7 +390,7 @@ function buildConsumableTileConfig(args, jtaCfg) {
 // spiralSteps consumes; config is exactly what arrangeShuffledSpiral takes).
 function buildEnv(args) {
     if (Object.keys(args.quotas).length === 0) {
-        throw new Error('arrange/run require at least one --quota id=N (or -i <envelope.json>)');
+        throw new UsageError('arrange/run require at least one --quota id=N (or -i <envelope.json>)');
     }
     const jtaCfg = buildJtaSubstrateConfig(args);
     const omsiCfg = buildOmsiSubstrateConfig(args, jtaCfg);
@@ -420,20 +426,21 @@ function buildEnv(args) {
 
 // --- main ---
 
-async function main() {
-    const args = parseArgs(process.argv.slice(2));
+async function main(status) {
+    const args = parseOrUsage(() => parseArgs(process.argv.slice(2)));
     const sub = args.subcommand;
-    if (!sub) throw new Error(`missing subcommand (one of: ${SPIRAL_STEPS.join(', ')}, run)`);
+    status.subcommand = sub;
+    if (!sub) throw new UsageError(`missing subcommand (one of: ${SPIRAL_STEPS.join(', ')}, run)`);
     const isStep = SPIRAL_STEPS.includes(sub);
-    if (!isStep && sub !== 'run') throw new Error(`unknown subcommand '${sub}'`);
+    if (!isStep && sub !== 'run') throw new UsageError(`unknown subcommand '${sub}'`);
 
     let env;
     if (args.input) {
-        env = deserializeSpiralEnvelope(readJson(args.input));
+        env = deserializeSpiralEnvelope(readJson(args.input, '-i'));
     } else if (sub === 'arrange' || sub === 'run') {
         env = buildEnv(args);
     } else {
-        throw new Error(`step '${sub}' requires -i <envelope.json> (or start with 'arrange')`);
+        throw new UsageError(`step '${sub}' requires -i <envelope.json> (or start with 'arrange')`);
     }
 
     if (sub === 'run') {
@@ -457,9 +464,13 @@ async function main() {
     if (sub !== 'run' || args.out) {
         const outPath = writeOut(args.out, serializeSpiralEnvelope(env), sub);
         process.stderr.write(`[spiral-step] ${sub} → completed=${env.completed} → ${outPath}\n`);
+        status.outputs.envelope = outPath;
     } else {
         process.stderr.write(`[spiral-step] ${sub} → completed=${env.completed}\n`);
     }
+    status.completed = SPIRAL_STEPS[env.completed] ?? null;
+    status.next = nextSpiralStep(env) ?? null;
+    status.summary.seed = env.config?.seed ?? null;
     if (isStep && sub !== 'compile') {
         const n = nextSpiralStep(env);
         if (n) process.stderr.write(`[spiral-step] next: ${n}\n`);
@@ -470,18 +481,13 @@ async function main() {
         if (args.rulesOut) {
             const abs = writeOut(args.rulesOut, rulesJson, 'rules');
             process.stderr.write(`[spiral-step] rules.json → ${abs}\n`);
+            status.outputs.rules = abs;
         }
         const regions = Object.keys(rulesJson.regions?.['1'] ?? {}).length;
+        status.summary.driver = rulesJson.procgen_metadata?.['1']?.driver ?? null;
+        status.summary.regions = regions;
         process.stderr.write(`[spiral-step] driver ${rulesJson.procgen_metadata?.['1']?.driver} · ${regions} regions\n`);
     }
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-    main().catch((e) => {
-        process.stderr.write(`[spiral-step] ERROR: ${e.message}\n`);
-        process.exit(1);
-    });
-    // The engine's module graph leaves an unref'd worker/timer handle alive; the
-    // work is synchronous above, so exit explicitly once main resolves.
-    process.on('beforeExit', () => process.exit(0));
-}
+runCli('spiral-step', import.meta.url, main);

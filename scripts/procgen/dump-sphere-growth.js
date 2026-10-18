@@ -80,6 +80,7 @@
  *                            tile is only placed when this is > 0)
  *   --rules-out PATH         additionally write the bare rules.json here
  *   -o, --out PATH           output JSON path (default ./sphere-growth-dump.json)
+ *   --json-status PATH       write the run's status object (`-` = stdout); see cliRun.js
  *   -h, --help               print this and exit
  *
  * Output JSON shape:
@@ -92,11 +93,12 @@
  *   }
  */
 
-import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
+import { writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { argvHelp, helpText } from './argvHelp.js';
+import { runCli, parseOrUsage, readInputJson, InputError } from './cliRun.js';
 
 // Substrate libraries register their adapters on import — one shared list.
 import './registerPipelineSubstrates.js';
@@ -269,6 +271,8 @@ function parseArgs(argv) {
             case '--rules-out': out.rulesOut = next(); break;
             case '-o':
             case '--out': out.out = next(); break;
+            // the value is read by cliRun.js; not echoed into the dump's config
+            case '--json-status': next(); break;
             case '-h':
                 process.stdout.write(`${helpText(fileURLToPath(import.meta.url))}\n`);
                 process.exit(0);
@@ -314,8 +318,8 @@ function shapeRegions(grid) {
 
 // --- main ---
 
-async function main() {
-    const config = parseArgs(process.argv.slice(2));
+async function main(status) {
+    const config = parseOrUsage(() => parseArgs(process.argv.slice(2)));
 
     // Merged item library + victory resolution via the shared substrate-hook
     // assembly (same path the panel + sphere-step CLI use).
@@ -382,13 +386,13 @@ async function main() {
     const substrateConfig = {};
     const atlasAssignments = [];
     for (const p of config.atlasPools) {
-        const pool = JSON.parse(readFileSync(resolve(process.cwd(), p), 'utf8'));
+        const pool = readInputJson(resolve(process.cwd(), p), '--atlas');
         const vr = validateAtlasPool(pool);
         if (!vr.ok) {
-            throw new Error(`atlas pool ${p} is invalid: ${vr.errors.join('; ')}`);
+            throw new InputError(`atlas pool ${p} is invalid: ${vr.errors.join('; ')}`);
         }
         substrateConfig[pool.game] = { atlasDoc: pool };
-        console.log(`  atlas pool: ${pool.pool_id} (${pool.entries.length} regions) `
+        console.error(`  atlas pool: ${pool.pool_id} (${pool.entries.length} regions) `
             + `-> substrateConfig['${pool.game}'].atlasDoc`);
         if (config.atlasPlacement === 'sorter') {
             // MUTATES `plan` — the required items are scheduled into earlier
@@ -399,7 +403,7 @@ async function main() {
                 quota: config.quotas[`atlas:${pool.game}`],
             });
             atlasAssignments.push(...sorted.assignments);
-            for (const line of formatAtlasSortReport(sorted)) console.log(`  ${line}`);
+            for (const line of formatAtlasSortReport(sorted)) console.error(`  ${line}`);
         }
     }
 
@@ -489,24 +493,30 @@ async function main() {
     const outPath = resolve(process.cwd(), config.out);
     mkdirSync(dirname(outPath), { recursive: true });
     writeFileSync(outPath, JSON.stringify(dump, null, 2));
-    console.log(`Wrote ${outPath}`);
+    console.error(`Wrote ${outPath}`);
+    status.outputs.dump = outPath;
+    status.summary = {
+        seed: config.seed, regionsBuilt: stats.regionsBuilt,
+        stopReason: stats.stopReason ?? null, substrateCounts: stats.substrateCounts ?? null,
+    };
     if (config.rulesOut) {
         const rulesPath = resolve(process.cwd(), config.rulesOut);
         mkdirSync(dirname(rulesPath), { recursive: true });
         writeFileSync(rulesPath, JSON.stringify(rulesJson, null, 2));
-        console.log(`Wrote ${rulesPath}`);
+        console.error(`Wrote ${rulesPath}`);
+        status.outputs.rules = rulesPath;
     }
-    console.log(`  regionsBuilt: ${stats.regionsBuilt}`
+    console.error(`  regionsBuilt: ${stats.regionsBuilt}`
         + `  teleporters: ${stats.teleportersPlaced}`
         + `  substrateCounts: ${JSON.stringify(stats.substrateCounts)}`);
-    console.log(`  plan: ${plan.spheres.map((s) => `S${s.sphere}=[${s.items.join(',')}]`).join(' ')}`);
-    if (arrowNote) console.log(`  arrow entry: ${arrowNote}`);
+    console.error(`  plan: ${plan.spheres.map((s) => `S${s.sphere}=[${s.items.join(',')}]`).join(' ')}`);
+    if (arrowNote) console.error(`  arrow entry: ${arrowNote}`);
     if (startingItems.length > 0) {
-        console.log(`  starting items: ${startingItems.join(', ')}`);
+        console.error(`  starting items: ${startingItems.join(', ')}`);
     }
     if (config.enableLoopMode) {
         const lc = rulesJson.loop_costs?.['1'];
-        console.log(`  loop mode: ON — loop_costs ${lc ? 'embedded' : 'MISSING'}`
+        console.error(`  loop mode: ON — loop_costs ${lc ? 'embedded' : 'MISSING'}`
             + (lc ? ` (${Object.keys(lc.regions ?? {}).length} regions,`
                 + ` ${Object.keys(lc.locations ?? {}).length} locations,`
                 + ` xpEffect=${config.regionXpEffect})` : ''));
@@ -515,17 +525,14 @@ async function main() {
                 + ' (sphere_log missing?)');
         }
     }
+    status.oracle = { checked: true, errors: oracleErrors };
     if (oracleErrors.length > 0) {
+        // ⛓ exit 2 (oracle mismatch), set by runCli from status.oracle.errors.
         console.error('SPHERE ORACLE FAILED:');
         for (const e of oracleErrors) console.error(`  ${e}`);
-        process.exit(1);
+        return;
     }
-    console.log('  sphere oracle: OK (computed spheres == plan)');
+    console.error('  sphere oracle: OK (computed spheres == plan)');
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-    main().then(() => process.exit(0)).catch((e) => {
-        console.error(`ERROR: ${e.message}`);
-        process.exit(1);
-    });
-}
+runCli('dump-sphere-growth', import.meta.url, main);

@@ -24,6 +24,7 @@
  *                            default — byte-identical to prior jta dumps)
  *   -o, --out PATH           output JSON path
  *                            (default ./shuffled-spiral-dump.json)
+ *   --json-status PATH       write the run's status object (`-` = stdout); see cliRun.js
  *   -h, --help               print this and exit
  *
  * The grid is auto-sized to fit sum(quotas) regions; --grid is not
@@ -37,6 +38,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { argvHelp, helpText } from './argvHelp.js';
+import { runCli, parseOrUsage } from './cliRun.js';
 
 // Substrate libraries register their adapters on import — one shared list.
 import './registerPipelineSubstrates.js';
@@ -98,6 +100,8 @@ function parseArgs(argv) {
             }
             case '-o':
             case '--out': out.out = next(); break;
+            // the value is read by cliRun.js; not echoed into the dump's config
+            case '--json-status': next(); break;
             case '-h':
                 process.stdout.write(`${helpText(fileURLToPath(import.meta.url))}\n`);
                 process.exit(0);
@@ -145,8 +149,8 @@ function shapeRegions(grid) {
     return out;
 }
 
-async function main() {
-    const config = parseArgs(process.argv.slice(2));
+async function main(status) {
+    const config = parseOrUsage(() => parseArgs(process.argv.slice(2)));
     // Opt-in jta zone-locations channel (Phase 1 skeleton). Off by
     // default so jta dumps stay byte-identical to prior runs.
     setJtaEmitZoneLocations(config.jtaLocations);
@@ -185,15 +189,15 @@ async function main() {
     const outPath = resolve(process.cwd(), config.out);
     mkdirSync(dirname(outPath), { recursive: true });
     writeFileSync(outPath, JSON.stringify(dump, null, 2));
-    console.log(`Wrote ${outPath}`);
-    console.log(`  regionsBuilt: ${stats.regionsBuilt}`
+    console.error(`Wrote ${outPath}`);
+    status.outputs.dump = outPath;
+    status.summary = {
+        seed: config.seed, regionsBuilt: stats.regionsBuilt,
+        stopReason: stats.stopReason ?? null, substrateCounts: stats.substrateCounts ?? null,
+    };
+    console.error(`  regionsBuilt: ${stats.regionsBuilt}`
         + `  stopReason: ${stats.stopReason}`
         + `  substrateCounts: ${JSON.stringify(stats.substrateCounts)}`);
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-    main().then(() => process.exit(0)).catch((e) => {
-        console.error(`ERROR: ${e.message}`);
-        process.exit(1);
-    });
-}
+runCli('dump-shuffled-spiral', import.meta.url, main);
