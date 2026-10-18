@@ -56,7 +56,7 @@ function replay(w, over) {
 }
 
 describe('BEAMTOWER — the switches', () => {
-    it('ship ON (⚖ <the licence>), and `hazards.js` re-exports the moved transcription unchanged', () => {
+    it('ship ON (⚖ user "BeamTower trio", 2026-10-18), and `hazards.js` re-exports the moved transcription unchanged', () => {
         expect(CONTACT_FIDELITY_DEFAULTS.beamTowerDrift).toBe(true);
         expect(CONTACT_FIDELITY_DEFAULTS.beamTowerBeamHit).toBe(true);
         for (const k of ['BEAM_TOWER', 'beamAnimSpeed', 'beamIsBeaming', 'beamRect', 'createBeamTower', 'stepBeamTower']) {

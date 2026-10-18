@@ -159,7 +159,7 @@ const parted = (w, on) => withContactFidelity({ flyerLive: on, strikeIframeLapse
 });
 
 describe('LAPSECOST D2 — the Flyer, stepped (`flyerLive`)', () => {
-    it('ships ON (⚖ <the licence>, with BEAMTOWER\'s drift); bridged only ON', () => {
+    it('ships ON (⚖ user "BeamTower trio", 2026-10-18, with BEAMTOWER\'s drift); bridged only ON', () => {
         expect(CONTACT_FIDELITY_DEFAULTS.flyerLive).toBe(true);
         withContactFidelity({ flyerLive: false }, () => expect(isBridgedChaser('flyer')).toBe(false));
         withContactFidelity({ flyerLive: true }, () => expect(isBridgedChaser('flyer')).toBe(true));
