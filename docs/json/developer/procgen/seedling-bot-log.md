@@ -23409,3 +23409,40 @@ by 12–28 bytes per segment.
 
 Lesson: *a static census is only as good as the text it reads.* RK's 200-character heads hid the deciding words of 32
 sites. Those words sat past the cut, or were split by a `' + '`.
+
+### Seedling hammer-phase TC2 — the active frame (solve-progress)
+
+⚖ The user (2026-10-17): *"I want to implement all of these features, if possible"* (the solve-progress reports). This is
+Tier C's "active frame's detail", hammer #2 and fidelity #6 on the investigation's wishlist. The report is
+`CC/docs/cloud-reports/seedling-hammer-active-frame.md`.
+
+**W0** at `b3adfad282`. The six `--check`s, tapeRunner **617 `8f27f975`** and the censuses 312 · 6,002 · 566 · 138 ·
+280 are RK2's. The identity block is RK2's D4 but for ENEMY (`f0bec576`, banked at the BeamTower trio flip,
+`68b81a1a`). The bounded vitest over RK2's 30 files passes 883/883. RK's L18 / L40 digests, `shouldStop` and asks are
+unchanged.
+
+**D1 — where the values live.** Nothing has to be computed. The trace already writes all three:
+- a climb's danger is its `hit`, the walk probe's (`obstacle.id` on every rung row);
+- a rung row's `extra` carries `target` and `stance` (the kill rung's arms, BAIT, the light arm, PULL's rope);
+- the chaser arm's hunted body is chosen before its stance scan, which is 254 of L40's 372 snapshots;
+- a frontier verb has `plan.obstacle.id` and `plan.resolved.stance`;
+- the press arm's strike is `{body: plan.id, cell}` (`execKillByPressOnce`'s `cycles`, outside EX's `pressEscape`).
+
+A walk, a goal and a search carry none. Nothing lives in fidelity's files or in SP's `planWaypoints`.
+
+**D2 — `frame`.** `frame: {key, target, stance, danger} | null`, additive within `v: 2`. It is the innermost open frame
+that has detail, so a nested climb shows its own and the outer one returns when it closes. `key` is that frame's active
+node. `stance` and `danger.at` are the tile map's `[col, row]`. `danger` is `{source, tick, kind, at}`: one source,
+never the list, and `kind` is `forecast`, `volume` or `phase`, read off the source's own fields (`phase` / `axe`, then
+`kind`). `target` takes the trace's own word (`strategy.target`), because a verb's target is an obstacle (L18's
+`lock@144,112`), not always a body. `solverBot.js` gets six guarded emit-only lines.
+
+**Gates.** The digest, `shouldStop`, asks and `budget.work` are equal hooked and unhooked. Unhooked, `frameEntered()`
+stays at 0. The md5 of every snapshot with `frame` dropped is the base's on L18, L40, L6 and L3, and so are RK's v1 md5s
+and kind totals. L40's kill rung names `puncher@128,624`, the walkable tile `[8, 38]` and the trace's danger
+(`forecast`). Every L18 press frame is a strike the record kept, in order. Mutants caught: `frame` as a list, a fresh
+probe for the danger, and a read outside the null check. **D3** (24 runs): the digest and `shouldStop` are identical.
+The final snapshot grows 13 bytes (`"frame":null`), and a posted one grows 80–250 bytes.
+
+Lesson: *the trace is the instrument's first source.* Every value the view wanted was already a field of a trace row.
+The work was choosing which open frame's row is "current".
