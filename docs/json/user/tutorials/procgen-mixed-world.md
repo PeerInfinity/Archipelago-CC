@@ -27,7 +27,7 @@ Hover a substrate's name to see its card: what it can hold and how its exits are
 
 1. The **Text Adventure** tab plays text-adventure regions: rooms described in words, exits and items you click.
 2. The **Bounce Demo** tab plays bounce zones: a platformer whose jumps are the progression.
-3. The **Noiz2sa** tab plays Noiz2sa stages: a bullet-hell shooter, where surviving a stage opens its exit.
+3. The **Noiz2sa** tab plays Noiz2sa regions: a bullet-hell shooter, where each region is a run of the game's scenes — choose an exit, then survive the run to leave by it.
 4. The **Flash Panel** plays the generated Seedling room in the original game.
 5. Open the **Flash Panel** tab and wait for the game page: the panel's status reads *click ▶ Start in the game* (the first time, the browser fetches the game's runtime).
 6. Press **▶ Start** in the game. The panel's status moves on to *configured*, and it loads the world's Seedling rooms into the game.

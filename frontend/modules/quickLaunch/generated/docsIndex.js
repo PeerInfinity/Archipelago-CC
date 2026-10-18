@@ -732,6 +732,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The APWorld Editor opens a world's rules — its regions, exits, locations, access rules and items — and lets you change them, with undo, a map, and a check that flags anything broken. When you are…"
     },
     {
+        "path": "docs/json/user/modules/bounceDemo.md",
+        "title": "Bounce Demo Panel",
+        "section": "user/modules",
+        "summary": "The Bounce Demo plays a generated world's bounce regions: a climb in the style of Doodle Jump. The player bounces automatically whenever it lands on a platform; you steer left and right to land on…"
+    },
+    {
         "path": "docs/json/user/modules/discoveryPanel.md",
         "title": "Discovery Panel",
         "section": "user/modules",
@@ -804,6 +810,24 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The Locations panel shows a grid of all item locations in the game, providing a real-time view of which locations you can reach based on your current items."
     },
     {
+        "path": "docs/json/user/modules/loopStats.md",
+        "title": "Loop Stats Panel",
+        "section": "user/modules",
+        "summary": "The Loop Stats panel is a ledger for the Loops queue: for each queued action, what it costs and how much mana will be left after it — in this loop, and as it was at the start of the last one, so you…"
+    },
+    {
+        "path": "docs/json/user/modules/loops.md",
+        "title": "Loops Panel",
+        "section": "user/modules",
+        "summary": "The Loops panel runs Loop mode, which turns a world into an incremental game. Instead of acting directly, you build a queue of actions — move to a region, explore it, check a location — and the…"
+    },
+    {
+        "path": "docs/json/user/modules/mazeRoom.md",
+        "title": "Maze Room Panel",
+        "section": "user/modules",
+        "summary": "The Maze Room is where a generated world's maze regions are played. Each maze region is a small grid of floor and walls: walk to the pickups to check their locations, use keys on their doors, and…"
+    },
+    {
         "path": "docs/json/user/modules/metaGamePanel.md",
         "title": "MetaGame Panel",
         "section": "user/modules",
@@ -814,6 +838,12 @@ export const DOCS_INDEX = Object.freeze([
         "title": "Modules Panel",
         "section": "user/modules",
         "summary": "The Modules panel shows all loaded frontend modules and lets you enable or disable them at runtime."
+    },
+    {
+        "path": "docs/json/user/modules/noiz2sa.md",
+        "title": "Noiz2sa Panel",
+        "section": "user/modules",
+        "summary": "The Noiz2sa panel plays a generated world's Noiz2sa regions. Noiz2sa is Kenta Cho's bullet-hell shoot-'em-up: you fly a small ship through waves of patterned bullets. Each region is a stretch of the…"
     },
     {
         "path": "docs/json/user/modules/pathAnalyzerPanel.md",
@@ -1005,7 +1035,7 @@ export const DOCS_INDEX = Object.freeze([
         "path": "docs/json/user/tutorials/procgen-loop-mode-everything.md",
         "title": "Procgen: everything, in Loop mode",
         "section": "user/tutorials",
-        "summary": "The last procgen tutorial puts it all together: JtA zones, a generated Seedling room, mazes, a text adventure, a bounce zone, a Noiz2sa stage and *Idle Loops* — another idle game, which only runs in…"
+        "summary": "The last procgen tutorial puts it all together: JtA zones, a generated Seedling room, mazes, a text adventure, a bounce zone, a stretch of Noiz2sa and *Idle Loops* — another idle game, which only…"
     },
     {
         "path": "docs/json/user/tutorials/procgen-loop-mode-jta.md",
@@ -1095,6 +1125,7 @@ export const HELP_SECTIONS = Object.freeze([
         "audience": "panel",
         "docs": [
             "docs/json/user/modules/apworldEditor.md",
+            "docs/json/user/modules/bounceDemo.md",
             "docs/json/user/modules/discoveryPanel.md",
             "docs/json/user/modules/dungeons.md",
             "docs/json/user/modules/editor.md",
@@ -1107,8 +1138,12 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/modules/inventory.md",
             "docs/json/user/modules/json.md",
             "docs/json/user/modules/locations.md",
+            "docs/json/user/modules/loopStats.md",
+            "docs/json/user/modules/loops.md",
+            "docs/json/user/modules/mazeRoom.md",
             "docs/json/user/modules/metaGamePanel.md",
             "docs/json/user/modules/modules.md",
+            "docs/json/user/modules/noiz2sa.md",
             "docs/json/user/modules/pathAnalyzerPanel.md",
             "docs/json/user/modules/playbackBot.md",
             "docs/json/user/modules/presets.md",

@@ -35,6 +35,11 @@ User-friendly guides still to be written. See the corresponding technical refere
 - [Procgen Pipeline](./procgenPipeline.md) — Generating a procgen world and loading it to play
 - [Playback Bot](./playbackBot.md) — Letting the bot play a world's sphere log
 - [APWorld Editor](./apworldEditor.md) — Editing a world's rules and building a .apworld
+- [Maze Room](./mazeRoom.md) — Playing a generated world's maze regions
+- [Loops](./loops.md) — Running a world in Loop mode: the queue, mana and experience
+- [Loop Stats](./loopStats.md) — Each queued action's cost and the mana left, this loop and the last
+- [Bounce Demo](./bounceDemo.md) — Playing a generated world's bounce regions
+- [Noiz2sa](./noiz2sa.md) — Playing a generated world's Noiz2sa regions, and training its bot
 
 ## Core Service Modules
 

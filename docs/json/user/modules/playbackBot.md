@@ -1,6 +1,6 @@
 # Playback Bot Panel
 
-The Playback Bot plays the loaded world for you. It follows the world's sphere log — the solution path, sphere by sphere — walking to each location in order and checking it, moving between regions on the way. In a generated world it drives each room's own game: it walks the mazes, plays the text adventures, jumps through the bounce zones, flies the Noiz2sa stages and plays the Seedling and Journey to Ascension rooms. Open the room's panel beside it to watch.
+The Playback Bot plays the loaded world for you. It follows the world's sphere log — the solution path, sphere by sphere — walking to each location in order and checking it, moving between regions on the way. In a generated world it drives each room's own game: it walks the mazes, plays the text adventures, jumps through the bounce zones, survives the Noiz2sa runs and plays the Seedling and Journey to Ascension rooms. Open the room's panel beside it to watch.
 
 ## Before you start
 
