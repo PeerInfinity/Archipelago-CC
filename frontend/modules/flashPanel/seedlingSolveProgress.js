@@ -35,6 +35,11 @@
  *    segment's refusals by kind, each counted ONCE: on the node where it was tallied deepest — never a sum over every
  *    node) and `lastWhyText` (`‹kind› at ‹key›: ‹why›`, the why verbatim). A v1 snapshot has neither field, and each
  *    reads as "nothing to draw".
+ *  - ⛓ STAMPS VIEW (slice `seedling-js-stamps-view`, draws S3's Tier B tap stamps; the tap is unchanged):
+ *    `wallBySiteRows` (`budget.wallBySite`, the most wall first, Σ = the attempt's wall), `etaText` (`budget.rate`
+ *    as written — never recomputed), `requestText` (the request identity, which `applyProgress` KEEPS from the solve's
+ *    first post for the rest of that solve, and drops on a new solve) and `bestText` (the plan in hand). A snapshot
+ *    without the stamps reads as "nothing to draw" for each.
  */
 
 import { REFUSAL_KINDS } from '../seedlingDemo/solveProgress.js';
@@ -47,7 +52,7 @@ export const SOLVE_PROGRESS_TREE_CAP = 160;
 /** The empty state: nothing received yet. */
 export function emptyProgress() {
     return { service: null, solveId: null, snapshot: null, final: false, seq: null, segmentIndex: null,
-        receivedAt: null, received: 0, dropped: { stale: 0, order: 0 } };
+        request: null, receivedAt: null, received: 0, dropped: { stale: 0, order: 0 } };
 }
 
 /**
@@ -72,6 +77,9 @@ export function applyProgress(state, note, now) {
     return {
         service: note.service, solveId: note.solveId, snapshot: snap, final: note.final === true,
         seq: Number.isFinite(snap.seq) ? snap.seq : null, segmentIndex: snap.segment?.index ?? null,
+        // ⛓ STAMPS VIEW — the tap stamps `request` on a solve's FIRST post only: kept for the rest of the solve, and
+        // forgotten by a new one (a new solve whose first post was dropped has no identity — never the old one's)
+        request: snap.request && typeof snap.request === 'object' ? snap.request : (fresh ? null : state.request ?? null),
         // a new segment (or solve) is a new tree: the viewer's expansions belong to the old one
         segmentChanged: fresh || (snap.segment?.index ?? null) !== state.segmentIndex,
         receivedAt: now, received: fresh ? 1 : state.received + 1,
@@ -242,6 +250,81 @@ export function lastWhyText(lastWhy) {
 /** ⛓ RK VIEW — `text` cut to at most `max` characters, the cut marked with `…` (a short text is unchanged). */
 export function clampText(text, max) {
     return text.length <= max ? text : `${text.slice(0, Math.max(0, max - 1))}…`;
+}
+
+/**
+ * ⛓ STAMPS VIEW — a wall-clock span for a line: `850 ms`, `4.2 s` (under 10 s), `37 s`. Never a budget: the
+ * budgets are work units.
+ */
+export function formatMs(ms) {
+    if (!Number.isFinite(ms)) return '?';
+    if (ms < 1000) return `${Math.round(ms)} ms`;
+    return ms < 10000 ? `${(ms / 1000).toFixed(1)} s` : `${Math.round(ms / 1000)} s`;
+}
+
+/**
+ * ⛓ STAMPS VIEW — `budget.wallBySite` as `{rows: [['from→to', ms], …], total}`, the most wall first (ties by name);
+ * `total` is the sum over EVERY pair (the attempt's wall ms so far — the tap charges every hook call). The stamp is
+ * per ATTEMPT (summed across segments), unlike the asks (per segment). `null` when the snapshot has no stamp.
+ */
+export function wallBySiteRows(snapshot) {
+    const wall = snapshot?.budget?.wallBySite;
+    if (!wall || typeof wall !== 'object') return null;
+    const rows = Object.entries(wall).filter(([, ms]) => Number.isFinite(ms) && ms > 0)
+        .sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
+    return { rows, total: rows.reduce((a, [, ms]) => a + ms, 0) };
+}
+
+/**
+ * ⛓ STAMPS VIEW — `budget.rate` as one line: `41.2 units/s · ≈ 3.1 s to window · ≈ 12 s to limit`, each ETA only
+ * when the tap wrote it (`toWindowMs` only while the window bounds the pass; neither before anything is spent),
+ * `0` as `reached`. Read as written, never recomputed from `spent`/`limit`. `null` when there is nothing to say
+ * (no `rate`, or nothing spent and no ETA).
+ */
+export function etaText(snapshot) {
+    const rate = snapshot?.budget?.rate;
+    if (!rate || typeof rate !== 'object') return null;
+    const eta = (ms, what) => (ms > 0 ? `≈ ${formatMs(ms)} to ${what}` : `${what} reached`);
+    const parts = [];
+    if (Number.isFinite(rate.unitsPerSec) && rate.unitsPerSec > 0) parts.push(`${rate.unitsPerSec} units/s`);
+    if (Number.isFinite(rate.toWindowMs)) parts.push(eta(rate.toWindowMs, 'window'));
+    if (Number.isFinite(rate.toLimitMs)) parts.push(eta(rate.toLimitMs, 'limit'));
+    return parts.length ? parts.join(' · ') : null;
+}
+
+/** ⛓ STAMPS VIEW — a switch stamp's value for the header: a scalar as is, an object as compact JSON (clamped). */
+const switchValue = (v) => (v !== null && typeof v === 'object' ? clampText(JSON.stringify(v), 80) : String(v));
+
+/**
+ * ⛓ STAMPS VIEW — the request identity (S3's `request`, the solve's first post) as one line: the tape name, the boot
+ * level, `seamTime` (when the staging has one), the goal kind, the passes, the OFF-DEFAULT switches (`{}` = the
+ * defaults → not mentioned) and the attempt (`request.attempt.label`; `retry N` when it is a held retry). Solver text
+ * is returned as is: the view writes it as text only. `null` without a request.
+ */
+export function requestText(request) {
+    if (!request || typeof request !== 'object') return null;
+    const parts = [`${request.name ?? '?'}`];
+    if (request.level !== null && request.level !== undefined) parts.push(`boot L${request.level}`);
+    if (Number.isFinite(request.seamTime)) parts.push(`seamTime ${request.seamTime}`);
+    if (request.goal) parts.push(`goal ${request.goal}`);
+    if (Array.isArray(request.passes) && request.passes.length) {
+        parts.push(`passes ${request.passes.map((p) => p ?? '?').join(' → ')}`);
+    }
+    const switches = Object.entries(request.switches ?? {});
+    if (switches.length) parts.push(`switches ${switches.map(([k, v]) => `${k}=${switchValue(v)}`).join(', ')}`);
+    const a = request.attempt;
+    if (a && typeof a === 'object' && a.label) parts.push(`attempt ${a.label}${a.retry > 0 ? ` (retry ${a.retry})` : ''}`);
+    return `request: ${parts.join(' · ')}`;
+}
+
+/**
+ * ⛓ STAMPS VIEW — the plan in hand (S3's `best`, `onPass`'s best so far — not a pass's own answer): `best: ok · N
+ * ticks (pass P)`, `best: refused (pass P)`, or `best: none yet` when no pass has landed.
+ */
+export function bestText(best) {
+    if (!best || typeof best !== 'object') return 'best: none yet';
+    const pass = best.pass ? ` (pass ${best.pass})` : '';
+    return best.ok === true ? `best: ok · ${best.ticks ?? '?'} ticks${pass}` : `best: refused${pass}`;
 }
 
 /** The tile map's cells as a lookup and its maximum count: `{max, at(col,row) → [col,row,reached,firstTick]|null}`. */

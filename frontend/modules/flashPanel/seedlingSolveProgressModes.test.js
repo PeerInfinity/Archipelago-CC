@@ -121,5 +121,15 @@ describe('⛓ AUTO-SHOW — the view\'s modes on a real L6 solve (the panel\'s s
         expect(auto.view.state.snapshot?.segment?.outcome).toBe('solved');
         // always: never hidden
         expect([always.view.isOpen, always.view.lifecycle.map((e) => e.event)]).toEqual([true, ['show']]);
+        // ⛓ STAMPS VIEW — the real tap's Tier B stamps, drawn: the request KEPT from the first post to the final one,
+        // the plan in hand, and the wall by site (Σ over the attempt)
+        always.view.flush();
+        const final = always.view.state;
+        expect(final.snapshot.request).toBeUndefined();
+        expect(final.request?.level).toBe(SOLVE_DEMOS['l6-enemy-room'].level);
+        expect(always.view.requestText.textContent).toMatch(new RegExp(`^request: .* · boot L${final.request.level} · `));
+        expect(always.view.bestText.textContent).toMatch(/^best: ok · \d+ ticks/);
+        expect(always.view.wallText.textContent).toMatch(/^wall by site \(this attempt\): .* · Σ [\d.]+ (ms|s)$/);
+        expect(always.view.wallText.title).toMatch(/(^|\n)done→end \d/);
     }, 180000);
 });
