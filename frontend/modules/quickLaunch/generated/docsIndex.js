@@ -732,6 +732,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The APWorld Editor opens a world's rules — its regions, exits, locations, access rules and items — and lets you change them, with undo, a map, and a check that flags anything broken. When you are…"
     },
     {
+        "path": "docs/json/user/modules/bounceDemo.md",
+        "title": "Bounce Demo Panel",
+        "section": "user/modules",
+        "summary": "The Bounce Demo plays a generated world's bounce regions: a climb in the style of Doodle Jump. The player bounces automatically whenever it lands on a platform; you steer left and right to land on…"
+    },
+    {
         "path": "docs/json/user/modules/discoveryPanel.md",
         "title": "Discovery Panel",
         "section": "user/modules",
@@ -1113,6 +1119,7 @@ export const HELP_SECTIONS = Object.freeze([
         "audience": "panel",
         "docs": [
             "docs/json/user/modules/apworldEditor.md",
+            "docs/json/user/modules/bounceDemo.md",
             "docs/json/user/modules/discoveryPanel.md",
             "docs/json/user/modules/dungeons.md",
             "docs/json/user/modules/editor.md",
