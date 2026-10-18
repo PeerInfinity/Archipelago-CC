@@ -304,8 +304,8 @@ The predictions were written first (`d3/mutant-predictions.json`):
 
 | row | BEFORE (W0, `b73f3181`) | AFTER (`f247c8a2` tree) |
 |---|---|---|
-| identity block | as W0 | **AFTER_IDENTITY** |
-| six `--check`s | `405d9c4b b76f6483 465a8b46 35456fbc 6cd35fe1 3d41b9fb` | **AFTER_CHECKS** |
+| identity block | as W0 | **byte-identical to W0** (`diff` empty; `after/identity-after.txt`), generated set OK, reference ALL 7 + 5 MATCH |
+| six `--check`s | `405d9c4b b76f6483 465a8b46 35456fbc 6cd35fe1 3d41b9fb` | **identical**, all exit 0 |
 | tapeRunner pairs | 617 `8f27f975` | **617 `8f27f975`**, 0 non-pass |
 | L18 sweep norm-md5 OFF / ON | `de6f6e4e` / `bae5c6de` (base) | **`de6f6e4e` / `bae5c6de`** (head) |
 | surface / constants / entities / profile / roster | 312 · 6,002 · 566 · 138 · 280 | 312 · **6,028** (`--write`: 26 structural literals) · 566 · 138 · 280, all green |
@@ -383,13 +383,17 @@ The predictions were written first (`d3/mutant-predictions.json`):
      `live-state`).
 2. **`PRESS_KILL_COST`'s "a skipped call could only have returned null" is a docblock, not a row.** The cache key
    should carry the switch until one exists.
-3. **CI.** I cannot dispatch it (403). The `JavaScript Unit Tests` push run at my last head is to be read with
-   `node scripts/procgen/ci-vitest-summary.mjs <head>` (below). No solver code moved, so no divergence sweep is needed.
-   Dispatches worth naming: none required. `test-substrates-manual.yml` is untouched by this slice.
+3. **CI.** I cannot dispatch it (403). The push run of `JavaScript Unit Tests` at `f247c8a2` (the last head carrying
+   code; every later commit is docs/evidence only) read through `ci-vitest-summary.mjs f247c8a2 --wait`:
+   - **suite: vitest (unfiltered): 20,942 passed, 0 skipped, 0 failed**;
+   - **slow battery: 253 / 253**.
+
+   The planner should read the report head the same way. No solver code moved, so no divergence sweep is needed, and
+   no dispatch is owed.
 4. **Not run:** `standing-values --write`, `pytest`, the unfiltered local vitest (⚖ 52). No AS3, wasm, gitlink or
    rules edit. No `git stash`, nothing to `main`, no force-push. `solverBot.js`, `twoPassSolve.js`, the press-kill code
    and `jsRuntime*` / `flashPanel/*` were read, never edited (the lab's `solverBot.js` was a scratch worktree's).
 5. **Tree hygiene.**
    - The scratch worktrees (`wt`, `mut`, `lab`) live under the scratchpad and are removed by name at the end.
    - The raw lab records (~17 MB + ~25 MB) are not committed; `evidence/tools/` reproduces them.
-   - The dev server on :8000 was killed by PID.
+   - The dev server on :8000 (PID 886) was killed by PID.
