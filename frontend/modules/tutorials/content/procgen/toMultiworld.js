@@ -48,14 +48,14 @@ export const PROCGEN_TO_MULTIWORLD = Object.freeze({
                 {
                     step: {
                         id: 'open-editor',
-                        text: 'Press **Open in APWorld Editor** (under the result). The world opens in the **APWorld Editor** tab: its regions, locations, items and rules, as tabs you can browse and edit.',
+                        text: 'Press **Open in APWorld Editor** (beside **Load into frontend**). The world opens in the **APWorld Editor** tab: its regions, locations, items and rules, as tabs you can browse and edit.',
                         actions: [{ click: { ...PIPELINE, selector: 'button.procgen-pipeline-btn', text: 'Open in APWorld Editor' } }],
                         done: (ctx) => ctx.publishedSinceStep('apworldEditor:loadRules') && ctx.isPanelShowing(EDITOR)
                             && !ctx.text(editorStatus).startsWith('No rules loaded'),
                         doneTimeoutMs: 30000,
                     },
                 },
-                { prose: 'Browse a little: the **Regions** tab lists the mazes the pipeline built, **Locations** the pickups in them, **Items** the keys and Victory. Every edit you make is checked as you make it, and **↶ Undo** takes it back.' },
+                { prose: 'Browse a little: the **Regions** tab lists the mazes the pipeline built, each with its exits and the locations (pickups) in it; **Items** lists the keys and Victory. Every edit you make is checked as you make it, and **↶ Undo** takes it back.' },
                 {
                     step: {
                         id: 'name-game',

@@ -318,7 +318,7 @@ export class PlaybackBotPanel {
             placeholder.innerHTML = `
                 <div class="playback-bot-empty-state-heading">No sphere log loaded.</div>
                 <div class="playback-bot-empty-state-body">
-                    Open the Presets panel and pick a preset with a sphere log to begin.
+                    Generate a world in the Procgen Pipeline and press Load into frontend, or pick a preset with a sphere log in the Presets panel, to begin.
                 </div>
             `;
             this.rootElement.appendChild(placeholder);
