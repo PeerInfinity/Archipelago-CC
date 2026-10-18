@@ -23409,3 +23409,36 @@ by 12–28 bytes per segment.
 
 Lesson: *a static census is only as good as the text it reads.* RK's 200-character heads hid the deciding words of 32
 sites. Those words sat past the cut, or were split by a `' + '`.
+
+### Seedling fidelity DIGEST — `run.stateDigest()`, the key for a cross-pass escape cache
+
+⚖ The user (2026-10-18): *"I agree with that plan"*. Fidelity's digest lands first; hammer's cross-pass `strikeEscape`
+cache is then built on top of it. The need came from hammer's EX:
+- across `twoPassSolve`'s passes, 66.7 % of escape calls repeat with identical answers;
+- that is ~40 % of the L18 sweep's wall;
+- each pass is a new `createLevelRun`, so a cache needs a state key `levelRun` owns.
+The report is `CC/docs/cloud-reports/seedling-fidelity-digest.md`.
+
+**What it is.** `run.stateDigest()` is a stable hash over exactly the run state the escape can read.
+- Two AST censuses (`evidence/tools/`) found it, by code: the escape reaches 49 functions and 8 run members, and
+  through them 74 `createLevelRun` bindings.
+- It is **emit-only**. Nothing calls it by default; the identity block, the six `--check`s, tapeRunner's 617 pairs and
+  the L18 sweep's norm-md5 are all unchanged.
+- It is an **escape key, not a run equivalence**: the persistence channel and the ledgers are not in the escape's reach.
+  In particular, the kill-lock ledger's `declaredAt` differs between a `PENDING_AT` pass and an `at = T` pass from the
+  removal on, but no escape reads it.
+
+**Gates.**
+- **0 false-equal pairs** (equal digest + arguments + globals, different answer) on EX's L18 lab, OFF and floor-ON.
+- It matches **99.9 %** of EX's cross-pass repeats.
+- 98/98 field mutants behave as predicted.
+- `levelRunStateDigest.test.js` pins the `PENDING_AT` rows.
+- One digest costs 0.17 ms against a 0.70–0.86 ms median escape (≈ 43 s / 69 s net on the lab sweep).
+
+**Also fixed:** the forecast memo's comment claimed `advance` was the run's only mutator. `equipNow` (through
+`replayOntoFork`) also writes.
+
+**Hand-over to hammer** (report D4). The cache keys on the digest, plus the call's arguments by value, plus the
+solverBot-side globals: `HAMMER_ESCAPE_BOUNDS`, `GHOST_SPINNER_PRESS`, `PRESS_KILL_COST`, the deadline state and the
+progress hook. It is scoped to one `twoPassSolve`. The spinning axes' and lava chains' visit state are outside the
+escape's reach today; a slice that teaches the escape about them adds them to `stateDigestParts`.
