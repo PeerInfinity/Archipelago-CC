@@ -14,16 +14,18 @@
  * `terminate()` away: the budget is a page-side timer, and a timed-out or
  * cancelled worker is killed, so no second answer can arrive.
  *
- * ⛓ The worker starts with an EMPTY registry. It imports the eight substrate
- * libraries itself (`REGENERATE_WORKER_LIBRARIES` — the same list
- * `scripts/procgen/reference/registry.mjs` declares as `REGISTRY_LIBRARIES`,
- * held equal by a row), then `regionRegenerate.js`. A library that refuses to
+ * ⛓ The worker starts with an EMPTY registry. It imports the substrate
+ * libraries itself (`REGENERATE_WORKER_LIBRARIES` — the one list,
+ * `procgenCore/substrateLibraries.js`, that the docs generator and the
+ * pipeline drivers read too), then `regionRegenerate.js`. A library that refuses to
  * load is REPORTED, and a target none of the loaded ones registers is answered
  * by name — the list of what the worker can generate is derived, not typed.
  *
  * ⛔ No DOM here and no substrate named: this module is imported by the panel,
  * by the worker, and by node rows alike.
  */
+
+import { SUBSTRATE_LIBRARIES } from '../procgenCore/substrateLibraries.js';
 
 /** ⛓ The setting's key under the module's block, and its full settings path. */
 export const REGION_GENERATION_TIMEOUT_KEY = 'regionGenerationTimeoutSeconds';
@@ -139,21 +141,10 @@ export const REGION_GENERATION_CANCELLED = 'generation cancelled — the worker 
 export const REGION_GENERATION_WORKER_FAILED = 'the generation worker failed';
 
 /**
- * ⛓⛓ **THE LIBRARIES THE WORKER IMPORTS**, relative to `frontend/modules/`.
- * ⛔ Equal to `REGISTRY_LIBRARIES` (`scripts/procgen/reference/registry.mjs`),
- * which a browser cannot import (it reads the disk) — a row holds the two equal.
+ * ⛓⛓ **THE LIBRARIES THE WORKER IMPORTS**, relative to `frontend/modules/` —
+ * the one list every headless caller reads (`procgenCore/substrateLibraries.js`).
  */
-export const REGENERATE_WORKER_LIBRARIES = Object.freeze([
-    'mazeRoom/mazeRoomLibrary.js',
-    'bounceDemo/bounceDemoLibrary.js',
-    'runnerDemo/runnerDemoLibrary.js',
-    'textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js',
-    'flashPanel/flashSeedlingLibrary.js',
-    'flashPanel/flashSeedlingGenBuild.js',
-    'jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js',
-    'omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js',
-    'noiz2saSubstrate/noiz2saSubstrateLibrary.js',
-]);
+export const REGENERATE_WORKER_LIBRARIES = SUBSTRATE_LIBRARIES;
 
 /** ⛓ The worker file, relative to `frontend/modules/`. The bundler copies it. */
 export const REGENERATE_WORKER_PATH = 'apworldEditor/regionRegenerateWorker.js';

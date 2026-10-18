@@ -24,6 +24,10 @@
  *                            default — byte-identical to prior jta dumps)
  *   -o, --out PATH           output JSON path
  *                            (default ./shuffled-spiral-dump.json)
+ *   --config PATH            read flags from a JSON object (the keys a dump
+ *                            echoes as `config`; flags given here win; exit 3
+ *                            if it fails the schema); see cliFlags.js
+ *   --config-schema          print that JSON Schema and exit
  *   --json-status PATH       write the run's status object (`-` = stdout); see cliRun.js
  *   -h, --help               print this and exit
  *
@@ -35,13 +39,13 @@
 
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-import { argvHelp, helpText } from './argvHelp.js';
+import { argvHelp } from './argvHelp.js';
+import { KIND, W, flag, parseFlags } from './cliFlags.js';
 import { runCli, parseOrUsage } from './cliRun.js';
 
-// Substrate libraries register their adapters on import — one shared list.
-import './registerPipelineSubstrates.js';
+// Substrate libraries (procgenCore/substrateLibraries.js) — loaded by main, not on import.
+import { checkSubstrateIds, loadPipelineSubstrates } from './registerPipelineSubstrates.js';
 
 import { arrangeShuffledSpiral, buildRulesJson, getRegionExits } from
     '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
@@ -50,8 +54,27 @@ import { setJtaEmitZoneLocations } from
 
 argvHelp(import.meta.url);
 
+/** ⛓ The flags this driver takes (cliFlags.js parses them). */
+const FLAGS = {
+    '--seed': W.seed,
+    '--region': W.region,
+    '--quota': W.quota,
+    '--start': W.start,
+    '--no-bidirectional': W.noBidirectional,
+    '--jta-locations': flag('jtaLocations', KIND.on),
+    '--items': W.items,
+    '--obstacles': W.obstacles,
+    '-o': W.out,
+    '--out': W.out,
+    // the value is read by cliRun.js; not echoed into the dump's config
+    '--config': W.config,
+    '--config-schema': W.configSchema,
+    '--json-status': W.jsonStatus,
+    '-h': W.help,
+};
+
 function parseArgs(argv) {
-    const out = {
+    const out = parseFlags(argv, FLAGS, {
         seed: 1,
         region: { width: 8, height: 6 },
         quotas: {},
@@ -61,55 +84,7 @@ function parseArgs(argv) {
         obstacles: {},
         jtaLocations: false,
         out: './shuffled-spiral-dump.json',
-    };
-    const parseWxH = (s) => {
-        const [w, h] = s.split('x').map((n) => parseInt(n, 10));
-        if (!Number.isFinite(w) || !Number.isFinite(h)) {
-            throw new Error(`expected WxH, got '${s}'`);
-        }
-        return { width: w, height: h };
-    };
-    const parseKv = (s) => {
-        const i = s.indexOf('=');
-        if (i < 0) throw new Error(`expected id=N, got '${s}'`);
-        return [s.slice(0, i), parseInt(s.slice(i + 1), 10)];
-    };
-    for (let i = 0; i < argv.length; i++) {
-        const a = argv[i];
-        const next = () => argv[++i];
-        switch (a) {
-            case '--seed': out.seed = parseInt(next(), 10); break;
-            case '--region': out.region = parseWxH(next()); break;
-            case '--quota': {
-                const [id, n] = parseKv(next());
-                out.quotas[id] = n;
-                break;
-            }
-            case '--start': out.start = next(); break;
-            case '--no-bidirectional': out.bidirectional = false; break;
-            case '--jta-locations': out.jtaLocations = true; break;
-            case '--items': {
-                const [id, n] = parseKv(next());
-                out.items[id] = n;
-                break;
-            }
-            case '--obstacles': {
-                const [id, n] = parseKv(next());
-                out.obstacles[id] = n;
-                break;
-            }
-            case '-o':
-            case '--out': out.out = next(); break;
-            // the value is read by cliRun.js; not echoed into the dump's config
-            case '--json-status': next(); break;
-            case '-h':
-                process.stdout.write(`${helpText(fileURLToPath(import.meta.url))}\n`);
-                process.exit(0);
-                break;
-            default:
-                throw new Error(`unknown flag: ${a}`);
-        }
-    }
+    }, { metaUrl: import.meta.url });
     if (Object.keys(out.quotas).length === 0) {
         throw new Error('at least one --quota is required');
     }
@@ -151,6 +126,11 @@ function shapeRegions(grid) {
 
 async function main(status) {
     const config = parseOrUsage(() => parseArgs(process.argv.slice(2)));
+    status.config = config;
+    await loadPipelineSubstrates();
+    checkSubstrateIds(config, {
+        layout: 'spiral', tool: 'dump-shuffled-spiral', counts: { quotas: '--quota' }, start: 'start',
+    });
     // Opt-in jta zone-locations channel (Phase 1 skeleton). Off by
     // default so jta dumps stay byte-identical to prior runs.
     setJtaEmitZoneLocations(config.jtaLocations);
