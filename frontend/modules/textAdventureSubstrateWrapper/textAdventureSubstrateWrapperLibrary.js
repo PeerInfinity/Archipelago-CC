@@ -109,6 +109,18 @@ export const substrateRegistryEntry = Object.freeze({
         // loops generic executor honors the per-block Instant flag when
         // running the block interior (M3b: no substrate replay involved).
         instant: true,
+        // Bot (⚖ user 2026-10-18, "walkTo solver"): a Bot block hands each
+        // queued move, check and explore to the PlaybackController. Its
+        // `perform` (TextAdventurePlaybackProxy) has the iframe bridge act at
+        // once; a move or check comes back as the engine's own event, an
+        // explore is shown by the engine and completed by loops.
+        executeVia: 'solver',
+        // ⛓ …and each of those lands in one step, so a Bot block has nothing
+        // for Instant to skip (chart L7 reads n/a, ⚖ user 2026-10-18).
+        // MEASURED on `playback-bot-loop-mode-text-adventure`, six interleaved
+        // runs with the block's Instant forced ON vs OFF: median 31–36 ms per
+        // action either way, and no `instant` call was ever sent.
+        botActsAtOnce: true,
     }),
 
     // Cross-substrate sharing: participates in the shared-mana channel

@@ -402,6 +402,15 @@ describe('the n/a cells that are the ANSWER\'s, not a prerequisite\'s (S3, ⚖ p
         expect([...kinds].sort()).toEqual([CELL_KINDS.NA, CELL_KINDS.NO, CELL_KINDS.YES].sort());
     });
 
+    it('L7: n/a where a Bot declares botActsAtOnce (nothing for Instant to skip) — the text adventure', () => {
+        const atOnce = ENTRIES.filter((e) => e.loopSupport?.botActsAtOnce === true);
+        expect(atOnce.map((e) => e.id)).toContain('text_adventure');
+        for (const e of atOnce) {
+            expect(cellOf('L6', e.id).kind, e.id).toBe(CELL_KINDS.YES);
+            expect(cellOf('L7', e.id).kind, e.id).toBe(CELL_KINDS.NA);
+        }
+    });
+
     it('L7: n/a where a replay is a summary (Instant is always); still n/a where L6 is ✗; ✓ somewhere', () => {
         const summary = ENTRIES.filter((e) => e.loopSupport?.summaryRecording === true);
         expect(summary.length).toBeGreaterThan(0);
