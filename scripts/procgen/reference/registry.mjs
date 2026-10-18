@@ -20,8 +20,8 @@
  * Entries self-register as a SIDE EFFECT of importing their `*Library.js`
  * (`substrate-registry.md` § *Registry mechanics*: "that first bullet is
  * load-bearing"), which is how every `scripts/procgen/` CLI gets a populated
- * registry with no panel and no eventBus. This file imports the same eight
- * libraries the doc's own "Entry sources" line names, IN A DECLARED ORDER.
+ * registry with no panel and no eventBus. This file imports the libraries
+ * `procgenCore/substrateLibraries.js` lists, IN A DECLARED ORDER.
  * The import order does NOT set the column order: `getAll()` sorts by id
  * (registration order is not observable — the page imports its modules in
  * parallel, so it varied by page load), so the columns are the same here,
@@ -51,6 +51,7 @@ import { join } from 'node:path';
 import { REPO, src } from './lib.mjs';
 import { M } from './sources.mjs';
 import { fieldNamesOf, shapeRows } from '../../../frontend/modules/procgenDocs/registryShape.js';
+import { SUBSTRATE_LIBRARIES } from '../../../frontend/modules/procgenCore/substrateLibraries.js';
 
 /** ⛓ THE DOC THIS TABLE LIVES IN — its headings group the rows, and its
  *  "Capability matrix" section is the region the generator writes. */
@@ -66,25 +67,14 @@ const DOC_DIR = 'docs/json/developer/procgen';
  * columns are in id order whatever this order is).
  *
  * These are the files the library table at the end of the matrix region in
- * `substrate-registry.md` lists. ⚠ `flash` registers as a side effect of `bounceDemoLibrary`
+ * `substrate-registry.md` lists — `procgenCore/substrateLibraries.js`, the one
+ * list the regenerate worker and the pipeline drivers read too, rooted at the
+ * repo. ⚠ `flash` registers as a side effect of `bounceDemoLibrary`
  * (bounce's entry factory builds on the flash one), so `flash` arrives with
  * bounce's library rather than its own — which is a fact about the code, and
  * the table PRINTS which library each id actually arrived with.
  */
-export const REGISTRY_LIBRARIES = Object.freeze([
-    'frontend/modules/mazeRoom/mazeRoomLibrary.js',
-    'frontend/modules/bounceDemo/bounceDemoLibrary.js',
-    'frontend/modules/runnerDemo/runnerDemoLibrary.js',
-    'frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js',
-    'frontend/modules/flashSubstrate/flashSubstrateLibrary.js',
-    'frontend/modules/flashPanel/flashSeedlingLibrary.js',
-    // ⛓ seedling generated G1: the BUILD door (registers the light entry AND
-    // installs the generator) — a registry-wide row that drives a core needs it.
-    'frontend/modules/flashPanel/flashSeedlingGenBuild.js',
-    'frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js',
-    'frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js',
-    'frontend/modules/noiz2saSubstrate/noiz2saSubstrateLibrary.js',
-]);
+export const REGISTRY_LIBRARIES = Object.freeze(SUBSTRATE_LIBRARIES.map((rel) => `frontend/modules/${rel}`));
 
 /** ⛓ THE REGISTRY ITSELF — in the `shared/` submodule, imported read-only. */
 const REGISTRY_MODULE = 'frontend/modules/shared/procgen/substrateRegistry.js';

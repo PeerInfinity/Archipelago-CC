@@ -88,8 +88,8 @@ import { fileURLToPath } from 'node:url';
 import { argvHelp, helpText } from './argvHelp.js';
 import { runCli, UsageError, parseOrUsage, readInputJson } from './cliRun.js';
 
-// Substrate libraries register their adapters on import — one shared list.
-import './registerPipelineSubstrates.js';
+// Substrate libraries (procgenCore/substrateLibraries.js) — loaded by main, not on import.
+import { loadPipelineSubstrates } from './registerPipelineSubstrates.js';
 import { substrateRegistry } from '../../frontend/modules/shared/procgen/substrateRegistry.js';
 import { generateJtaDataset } from '../../frontend/modules/jtaSubstrateWrapper/generateDataset.js';
 import { generateOmsiAwardSchedule } from '../../frontend/modules/omsiSubstrateWrapper/generateAwardSchedule.js';
@@ -427,6 +427,7 @@ function buildEnv(args) {
 // --- main ---
 
 async function main(status) {
+    await loadPipelineSubstrates();
     const args = parseOrUsage(() => parseArgs(process.argv.slice(2)));
     const sub = args.subcommand;
     status.subcommand = sub;

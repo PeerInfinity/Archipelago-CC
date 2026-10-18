@@ -100,8 +100,8 @@ import { fileURLToPath } from 'node:url';
 import { argvHelp, helpText } from './argvHelp.js';
 import { runCli, parseOrUsage, readInputJson, InputError } from './cliRun.js';
 
-// Substrate libraries register their adapters on import — one shared list.
-import './registerPipelineSubstrates.js';
+// Substrate libraries (procgenCore/substrateLibraries.js) — loaded by main, not on import.
+import { loadPipelineSubstrates } from './registerPipelineSubstrates.js';
 
 import { growSpheres, buildRulesJson, getRegionExits, compactSphereTree } from
     '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
@@ -319,6 +319,7 @@ function shapeRegions(grid) {
 // --- main ---
 
 async function main(status) {
+    await loadPipelineSubstrates();
     const config = parseOrUsage(() => parseArgs(process.argv.slice(2)));
 
     // Merged item library + victory resolution via the shared substrate-hook

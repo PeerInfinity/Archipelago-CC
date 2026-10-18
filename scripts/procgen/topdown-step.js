@@ -61,8 +61,8 @@ import { fileURLToPath } from 'node:url';
 import { argvHelp, helpText } from './argvHelp.js';
 import { runCli, UsageError, InputError, parseOrUsage, readInputJson } from './cliRun.js';
 
-// Substrate libraries register their adapters on import — one shared list.
-import './registerPipelineSubstrates.js';
+// Substrate libraries (procgenCore/substrateLibraries.js) — loaded by main, not on import.
+import { loadPipelineSubstrates } from './registerPipelineSubstrates.js';
 import {
     TOPDOWN_STEPS, runTopDownStep, runTopDownToStep, resumeTDEnvelope,
     nextTopDownStep, detectTDCompleted, buildTopDownEnvelope, tdEditsBehind,
@@ -208,6 +208,7 @@ function buildEnv(args) {
 // --- main ---
 
 async function main(status) {
+    await loadPipelineSubstrates();
     const args = parseOrUsage(() => parseArgs(process.argv.slice(2)));
     const sub = args.subcommand;
     status.subcommand = sub;

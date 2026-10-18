@@ -40,8 +40,8 @@ import { fileURLToPath } from 'node:url';
 import { argvHelp, helpText } from './argvHelp.js';
 import { runCli, parseOrUsage } from './cliRun.js';
 
-// Substrate libraries register their adapters on import — one shared list.
-import './registerPipelineSubstrates.js';
+// Substrate libraries (procgenCore/substrateLibraries.js) — loaded by main, not on import.
+import { loadPipelineSubstrates } from './registerPipelineSubstrates.js';
 
 import { arrangeShuffledSpiral, buildRulesJson, getRegionExits } from
     '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
@@ -150,6 +150,7 @@ function shapeRegions(grid) {
 }
 
 async function main(status) {
+    await loadPipelineSubstrates();
     const config = parseOrUsage(() => parseArgs(process.argv.slice(2)));
     // Opt-in jta zone-locations channel (Phase 1 skeleton). Off by
     // default so jta dumps stay byte-identical to prior runs.

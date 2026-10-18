@@ -44,11 +44,21 @@ byte-deterministic. They share these conventions:
   another mode's envelope or a newer version by name. An unstamped envelope
   (written before the stamp, or by hand) still loads. The panel's envelope
   download and Load envelope use the same stamp.
-- **One substrate set.** Every driver registers the same substrates
-  (`registerPipelineSubstrates.js`: maze, text_adventure, jta, bounce,
-  runner, omsi). Whether a substrate fits a given driver is decided by the
-  driver: a zone substrate on the grid-growth driver is refused by name, not
-  reported as "not registered".
+- **One substrate set, read from the registry.** Every driver loads the
+  libraries `frontend/modules/procgenCore/substrateLibraries.js` lists (the
+  same list the matrix generator and the regenerate worker read), so every
+  substrate the app registers can be named, Seedling and noiz2sa included.
+  Loading happens when the run starts, not on `--help`. Whether a substrate
+  fits a given driver is decided by its layout (`pipelineLayoutsOf`: sphere,
+  spiral or grid): a zone substrate on the grid-growth driver is refused by
+  name, not reported as "not registered".
+- **`list-substrates.js`** prints that registry: one line per substrate
+  (label, layouts, how many capability statements it answers yes, the
+  library that registered it), or with `--json` a `substrate-list` object
+  (`list_version` 1) carrying each entry's `layouts`, `realiser`,
+  `defaultProcgenParams` and every capability statement with its answer.
+  `--layout spiral` keeps the ones a layout can place, `--id ID` picks
+  substrates, and `--json --fields` adds every field the entry declares.
 
 ## dump-grid-growth.js
 
@@ -67,7 +77,7 @@ node scripts/procgen/dump-grid-growth.js \
 
 `--help` lists every flag. Use `--mix id=W` instead of `--quota id=N`
 to drive weighted-mix mode. The script stays headless — substrate
-libraries are imported for the registry side-effects but no UI or
+libraries are imported for their registry entries but no UI or
 state-manager wiring runs.
 
 Output shape:
