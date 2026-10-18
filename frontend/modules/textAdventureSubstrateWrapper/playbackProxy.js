@@ -63,4 +63,17 @@ export class PlaybackProxy {
     }
 }
 
+/**
+ * The text adventure's own proxy: the shared methods plus `perform(target)`,
+ * which the iframe bridge acts on at once (`walkTo` only queues the target
+ * for the bridge's clock). The loops Bot block prefers `perform` where a
+ * controller has it — it drives one action at a time and calls no
+ * play/step — and only a `perform` controller takes an explore. The other
+ * iframe substrates reuse the base class, whose receivers do not know the
+ * method, so it lives here and not there.
+ */
+export class TextAdventurePlaybackProxy extends PlaybackProxy {
+    perform(target) { this._send('perform', [target]); }
+}
+
 export const PLAYBACK_CONTROL_EVENT = CONTROL_EVENT;

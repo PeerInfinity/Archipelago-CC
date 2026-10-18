@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-import { PlaybackProxy, PLAYBACK_CONTROL_EVENT } from './playbackProxy.js';
+import { PlaybackProxy, TextAdventurePlaybackProxy, PLAYBACK_CONTROL_EVENT } from './playbackProxy.js';
 
 function makeFakeEventBus() {
     const publish = vi.fn();
@@ -98,5 +98,23 @@ describe('PlaybackProxy — publishes control events for each method', () => {
         proxy.stop();
         const methods = bus._published().map(([, payload]) => payload.method);
         expect(methods).toEqual(['walkTo', 'play', 'stop']);
+    });
+});
+
+describe('TextAdventurePlaybackProxy', () => {
+    it('perform(target) publishes with the target verbatim', () => {
+        const bus = makeFakeEventBus();
+        const target = { kind: 'explore', region: 'Cave' };
+        new TextAdventurePlaybackProxy({ eventBus: bus }).perform(target);
+        expect(bus.publish).toHaveBeenCalledWith(
+            PLAYBACK_CONTROL_EVENT,
+            { method: 'perform', args: [target] },
+        );
+    });
+
+    it('the shared base has NO perform — the other substrates\' receivers do not know it', () => {
+        // loops prefers `perform` wherever it exists, so a base-class perform
+        // would send jta / bounce / runner / omsi a method they drop.
+        expect(new PlaybackProxy({ eventBus: makeFakeEventBus() }).perform).toBeUndefined();
     });
 });

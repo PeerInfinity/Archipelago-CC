@@ -321,10 +321,13 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
     {
         id: 'L7', group: 'loop', requires: 'L6',
         statement: 'The Bot honours Instant',
-        fields: ['loopSupport.instant', 'loopSupport.executeVia', 'takeLastRecording', 'loopSupport.summaryRecording'],
-        /* ⛓ n/a where a replay is a summary: its Instant is *always* (L5
-         * says so), so there is no toggle for the Bot to honour. */
-        answer: (e) => (captureShapeOf(e) === CAPTURE_SHAPES.SUMMARY
+        fields: ['loopSupport.instant', 'loopSupport.executeVia', 'takeLastRecording', 'loopSupport.summaryRecording',
+            'loopSupport.botActsAtOnce'],
+        /* ⛓ n/a where there is nothing for Instant to skip: a summary
+         * replay is *always* instant (L5 says so), and a `botActsAtOnce`
+         * Bot lands each action in one step (the text adventure: Instant ON
+         * and OFF measured the same, ta-loop-bot 2026-10-18). */
+        answer: (e) => (captureShapeOf(e) === CAPTURE_SHAPES.SUMMARY || e.loopSupport?.botActsAtOnce === true
             ? cell(CELL_KINDS.NA) : yesNo(botHonorsInstant(e))),
     },
     {

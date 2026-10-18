@@ -15,7 +15,7 @@ The wrapper mounts the engine in a same-origin iframe and owns everything Archip
 | File | Role |
 |------|------|
 | `bridge.js` | Runs inside the iframe. Turns host AP state into engine calls, and engine clicks into dispatcher events. |
-| `playbackProxy.js` / `playbackBridge.js` | The PlaybackController contract across the iframe boundary, used by the playback bot ([Playback and Debugging Tools](./playback-and-debugging.md#the-playbackcontroller-contract-and-iframe-proxies)). |
+| `playbackProxy.js` / `playbackBridge.js` | The PlaybackController contract across the iframe boundary, used by the playback bot ([Playback and Debugging Tools](./playback-and-debugging.md#the-playbackcontroller-contract-and-iframe-proxies)) and by a loops Bot block (`TextAdventurePlaybackProxy.perform`). |
 | `mana.js` | Shows loop-mode mana in the engine header, and charges a region's move cost on departure when loop mode is off. |
 | `textAdventureRoom.js` | Build-time hooks and the payload serializer (below). |
 | `textAdventureRegionRoundTrip.js` | Document round trip for the APWorld hub. |
@@ -84,6 +84,8 @@ The entry (in `textAdventureSubstrateWrapperLibrary.js`) declares `textAdventure
 `regionRoundTrip` lets the APWorld hub's **Re-derive rules** reach every text-adventure region: `open` deserializes the room; `save` serializes it, re-adds `fogEnabled`/`manaEnabled`, and compiles the rules. It declares `rules: 'authored'`, so `scripts/procgen/check-sidecar-fields.mjs` fails a document rule the payload does not carry. **Edit** stays disabled because the entry has no `roomEditor`.
 
 Loop support: `regionMove`/`locationCheck`/`explore` queue actions, manual play, and `record`/`playback`/`instant`, with `customQueues: false`. Every engine action is already a basic loop-queue action, so a custom queue would add nothing. For the same reason this is a coarse-only substrate for recording; see [Loop recording](./loop-recording.md#the-capture-contract-coarse-only-vs-fine-grained-vs-summary-substrates).
+
+**Bot blocks.** The entry declares `executeVia: 'solver'`, so a Bot block plays the region through the walkTo solver. Its controller, `TextAdventurePlaybackProxy`, adds `perform(target)` to the shared proxy. The iframe bridge acts on a `perform` at once, while a `walkTo` waits for the bridge's clock, which only the standalone Playback Bot runs. A move or check comes back as the bridge's `user:regionMove` / `user:locationCheck`, and loops charges it at completion like any coarse action. An explore prints *You explore …* in the engine and publishes nothing; loops completes it and its `loop:exploreCompleted` does the revealing, so nothing is revealed twice. Each action lands in one step, so the entry declares `botActsAtOnce` and a Bot block has no Instant to honour. The loop-mode Playback Bot gives text-adventure blocks Bot mode. The row `playback-bot-loop-mode-text-adventure` plays a text-adventure-only world to Victory that way.
 
 ## Who reads the room
 

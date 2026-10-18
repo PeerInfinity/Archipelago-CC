@@ -50,6 +50,8 @@ Every group after Identity is optional; consumers check for the fields they need
 
 A **PlaybackController** has `play(rateHz?)`, `stop()`, `step()`, `instant()`, `reset()`, `setRate(rateHz)`, `walkTo(target)` with target `{ kind: 'location'|'exit'|'tile', name?, region?, x?, y? }`, and optional `replayActions(actions, { onComplete, departureExitId, instant })`, which replays a visit's interior and then crosses `departureExitId` itself. Methods return `void` or `Promise<void>`; progress comes back as `user:locationCheck` / `user:regionMove` events. Iframe substrates implement it as a host-side proxy to a bridge in the iframe.
 
+An optional `perform(target)` acts on the target at once, where `walkTo` may only queue it for the controller's own clock (the text adventure's bridge does that). It also takes `{ kind: 'explore', region }`. A loops Bot block calls `perform` when the controller has it and never calls `play` or `step`.
+
 `walkTo` may return `false` when the controller cannot take the target; the bot then stops on a named `error:` status instead of waiting. A controller can say why in a `lastRefusal` string, which the bot puts in the status. A controller that accepted a target and only later finds it cannot walk it publishes `playback:walkFailed` (`{ substrate, target, reason }`, `procgenCore/playbackEvents.js`) on the event bus, and the bot shows the same status. A controller with something to say about a walk that is still live publishes `playback:walkNote` (`{ substrate, target, note }`, same file). The bot shows the note after its status, and `note: null` clears it. The Seedling controller uses it for the solver mode's *solving…*.
 
 ### Action labelling
@@ -83,7 +85,8 @@ The composite map is the grid-of-regions canvas in the Procgen Pipeline panel an
 | `loopSupport.playClock` | boolean | The substrate's page reports whether its own clock runs (`substrate:playClock` {region, running[, stats]}, through `flashSubstrate/bridge.js` `setPlayClock`); a summary region whose last report says stopped is not drained and its seconds are not recorded. A report whose `stats` carry `gameSeconds` is charged per game second played instead, and a summary keeps the last `stats` as `playStats`. Without it, reports are ignored. See [loop-recording.md](./loop-recording.md#the-play-clock). |
 | `loopSupport.customQueues` | boolean | The legacy custom-queue dropdown (attach a saved queue as a `customQueue` action). |
 | `loopSupport.requiresLoopMode` | boolean | A loop game whose regions only work in loop mode; loops refuses a user loop-mode disable while one is loaded. See [loop-recording.md](./loop-recording.md#requiresloopmode--loop-game-substrates). |
-| `loopSupport.executeVia` | `'solver'` (optional) | A Bot-mode block drives the substrate's PlaybackController (`walkTo`) and waits for the resulting event. If absent, actions run on the generic timer. |
+| `loopSupport.executeVia` | `'solver'` (optional) | A Bot-mode block drives the substrate's PlaybackController and waits for the resulting event: its `perform(target)` where the controller has one, else `walkTo`. An `explore` action engages only a `perform` controller, and loops completes it at once. If absent, actions run on the generic timer. |
+| `loopSupport.botActsAtOnce` | boolean | Each Bot action lands in one step, so the Bot has nothing for Instant to skip: the chart's "The Bot honours Instant" reads n/a, as it does for summary substrates. Declare it from a measurement (Instant ON and OFF take the same time), not as a way to hide a ✗. |
 | `priceRegions` | `({rulesJson, sphereLog, playerId, params}) → any` (top-level entry field) | Generation-time pricing (bulletml N5; Noiz2sa). When the pipeline builds a LOOP-MODE world, `buildRulesJson` calls the hook of every substrate the slot uses (`procgenPipelineEngine.js` `priceSubstrateRegions`, sorted by id) after the sphere log is embedded and BEFORE `generateLoopCosts`: it rewrites its regions' `playable_payload`s against the planned walk. A payload's `timeDrainPerSecond` is then the region's rate in `loop_costs` (the shared writer's SUMMARY rule; the runtime's Generate Costs reads it through `procgenPlayer.getRegionInfo`). `params` is the procgen params bag's part the entry's `defaultProcgenParams` names (`sphereConfigHooks.js` `pricingParamsOf`). A hook that throws leaves its payloads unchanged. See [noiz2sa.md](./noiz2sa.md#pricing-n5). |
 | `takeLastRecording` | `() → SavedQueue \| null` (top-level entry field) | Pull and clear the recorder's last visit. Loops pulls it only when a Record block leaves through its expected exit. Its presence marks the substrate fine-grained, so declare it together with `record`/`playback`; otherwise loops treats the substrate as coarse and charges `loop_costs` on top of its own economy. |
 
@@ -228,7 +231,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**10 registered entries · 91 fields · 15 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**10 registered entries · 92 fields · 15 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: `getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them.
 
@@ -282,9 +285,10 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `bounce` | `flash` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `runner` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `loopSupport` | 8 keys | {customQueues, manual, queueActions} | 5 keys | 5 keys | 8 keys | 6 keys | 9 keys | 8 keys | 8 keys | 6 keys |
+| `loopSupport` | 8 keys | {customQueues, manual, queueActions} | 5 keys | 5 keys | 8 keys | 6 keys | 9 keys | 8 keys | 8 keys | 8 keys |
+| `loopSupport.botActsAtOnce` | — | — | — | — | — | — | — | — | — | yes |
 | `loopSupport.customQueues` | no | no | no | no | no | yes | no | no | no | no |
-| `loopSupport.executeVia` | solver | — | solver | solver | solver | — | solver | solver | solver | — |
+| `loopSupport.executeVia` | solver | — | solver | solver | solver | — | solver | solver | solver | solver |
 | `loopSupport.instant` | yes | — | — | — | yes | yes | yes | yes | yes | yes |
 | `loopSupport.manual` | yes | yes | yes | yes | yes | yes | yes | yes | yes | yes |
 | `loopSupport.playClock` | — | — | yes | yes | — | — | yes | — | — | — |
