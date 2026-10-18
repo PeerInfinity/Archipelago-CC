@@ -75,6 +75,10 @@
  *   --rules-out <rules.json>      (compile / run) also write the bare rules.json
  *   --from <step>                 (run) resume from this step
  *   --to <step>                   (run) stop after this step (default compile)
+ *   --config PATH                 read flags from a JSON object (the keys a dump
+ *                                 echoes as `config`; flags given here win; exit 3
+ *                                 if it fails the schema); see cliFlags.js
+ *   --config-schema               print that JSON Schema and exit
  *   --json-status PATH            write the run's status object (`-` = stdout); see cliRun.js
  *   -h, --help                    print this and exit
  *
@@ -85,11 +89,12 @@ import { writeFileSync, readFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { argvHelp, helpText } from './argvHelp.js';
+import { argvHelp } from './argvHelp.js';
+import { KIND, W, flag, parseFlags } from './cliFlags.js';
 import { runCli, UsageError, parseOrUsage, readInputJson } from './cliRun.js';
 
-// Substrate libraries register their adapters on import — one shared list.
-import './registerPipelineSubstrates.js';
+// Substrate libraries (procgenCore/substrateLibraries.js) — loaded by main, not on import.
+import { checkSubstrateIds, loadPipelineSubstrates } from './registerPipelineSubstrates.js';
 import { substrateRegistry } from '../../frontend/modules/shared/procgen/substrateRegistry.js';
 import { generateJtaDataset } from '../../frontend/modules/jtaSubstrateWrapper/generateDataset.js';
 import { generateOmsiAwardSchedule } from '../../frontend/modules/omsiSubstrateWrapper/generateAwardSchedule.js';
@@ -124,8 +129,52 @@ function generateJtaDatasetFromFixtures({ seed = 1, zones, theme, valueMode, awa
 
 // --- CLI parser ---
 
+/** ⛓ The flags this driver takes (cliFlags.js parses them). */
+const FLAGS = {
+    '--seed': W.seed,
+    '--region': W.region,
+    '--quota': W.quota,
+    '--start': W.start,
+    '--items': W.items,
+    '--obstacles': W.obstacles,
+    '--no-bidirectional': W.noBidirectional,
+    '--enable-loop-mode': W.enableLoopMode,
+    '--region-xp-effect': W.regionXpEffect,
+    '--victory-item': flag('victoryItem', KIND.str),
+    '-i': W.input,
+    '--input': W.input,
+    '-o': W.out,
+    '--out': W.out,
+    '--rules-out': W.rulesOut,
+    '--from': W.from,
+    '--to': W.to,
+    '--config': W.config,
+    '--config-schema': W.configSchema,
+    '--json-status': W.jsonStatus,
+    '--jta-dataset-file': flag('jtaDatasetFile', KIND.str),
+    '--jta-generate': flag('jtaGenerate', KIND.on),
+    '--jta-dataset-seed': flag('jtaDatasetSeed', KIND.int),
+    '--jta-dataset-zones': flag('jtaDatasetZones', KIND.int),
+    '--jta-dataset-theme': flag('jtaDatasetTheme', KIND.str),
+    '--jta-dataset-value-mode': flag('jtaDatasetValueMode', KIND.str),
+    '--jta-original-item-weight': flag('jtaOriginalItemWeight', KIND.float),
+    '--jta-dummy-item-ratio': flag('jtaDummyItemRatio', KIND.float),
+    '--original-item-weight': flag('originalItemWeight', KIND.float),
+    '--dummy-item-ratio': flag('dummyItemRatio', KIND.float),
+    '--consumable-tiles': W.consumableTiles,
+    '--consumable-count': W.consumableCount,
+    '--mana-tiles': W.manaTiles,
+    '--mana-tile-amount': W.manaTileAmount,
+    '--jta-emit-locations': flag('jtaEmitLocations', KIND.on),
+    '--jta-goal-zone': flag('jtaGoalZone', KIND.int),
+    '--jta-free-zones': flag('jtaFreeZones', KIND.int),
+    '--jta-starting-perks': flag('jtaStartingPerks', KIND.int),
+    '--jta-perk-shuffle-seed': flag('jtaPerkShuffleSeed', KIND.int),
+    '-h': W.help,
+};
+
 function parseArgs(argv) {
-    const out = {
+    return parseFlags(argv, FLAGS, {
         subcommand: null,
         seed: 1,
         region: { width: 8, height: 6 },
@@ -161,65 +210,7 @@ function parseArgs(argv) {
         jtaFreeZones: undefined,
         jtaStartingPerks: undefined,
         jtaPerkShuffleSeed: undefined,
-    };
-    const parseWxH = (s) => {
-        const [w, h] = s.split('x').map((n) => parseInt(n, 10));
-        if (!Number.isFinite(w) || !Number.isFinite(h)) throw new Error(`expected WxH, got '${s}'`);
-        return { width: w, height: h };
-    };
-    const parseKv = (s) => {
-        const i = s.indexOf('=');
-        if (i < 0) throw new Error(`expected id=N, got '${s}'`);
-        return [s.slice(0, i), parseInt(s.slice(i + 1), 10)];
-    };
-    for (let i = 0; i < argv.length; i++) {
-        const a = argv[i];
-        const next = () => argv[++i];
-        if (i === 0 && !a.startsWith('-')) { out.subcommand = a; continue; }
-        switch (a) {
-            case '--seed': out.seed = parseInt(next(), 10); break;
-            case '--region': out.region = parseWxH(next()); break;
-            case '--quota': { const [id, n] = parseKv(next()); out.quotas[id] = n; break; }
-            case '--start': out.start = next(); break;
-            case '--items': { const [id, n] = parseKv(next()); out.items[id] = n; break; }
-            case '--obstacles': { const [id, n] = parseKv(next()); out.obstacles[id] = n; break; }
-            case '--no-bidirectional': out.bidirectional = false; break;
-            case '--enable-loop-mode': out.enableLoopMode = true; break;
-            case '--region-xp-effect': out.regionXpEffect = next(); break;
-            case '--victory-item': out.victoryItem = next(); break;
-            case '-i': case '--input': out.input = next(); break;
-            case '-o': case '--out': out.out = next(); break;
-            case '--rules-out': out.rulesOut = next(); break;
-            case '--from': out.from = next(); break;
-            case '--to': out.to = next(); break;
-            case '--json-status': out.jsonStatus = next(); break;
-            case '--jta-dataset-file': out.jtaDatasetFile = next(); break;
-            case '--jta-generate': out.jtaGenerate = true; break;
-            case '--jta-dataset-seed': out.jtaDatasetSeed = parseInt(next(), 10); break;
-            case '--jta-dataset-zones': out.jtaDatasetZones = parseInt(next(), 10); break;
-            case '--jta-dataset-theme': out.jtaDatasetTheme = next(); break;
-            case '--jta-dataset-value-mode': out.jtaDatasetValueMode = next(); break;
-            case '--jta-original-item-weight': out.jtaOriginalItemWeight = parseFloat(next()); break;
-            case '--jta-dummy-item-ratio': out.jtaDummyItemRatio = parseFloat(next()); break;
-            case '--original-item-weight': out.originalItemWeight = parseFloat(next()); break;
-            case '--dummy-item-ratio': out.dummyItemRatio = parseFloat(next()); break;
-            case '--consumable-tiles': out.consumableTiles = parseInt(next(), 10); break;
-            case '--consumable-count': out.consumableCount = parseInt(next(), 10); break;
-            case '--mana-tiles': out.manaTiles = parseInt(next(), 10); break;
-            case '--mana-tile-amount': out.manaTileAmount = parseFloat(next()); break;
-            case '--jta-emit-locations': out.jtaEmitLocations = true; break;
-            case '--jta-goal-zone': out.jtaGoalZone = parseInt(next(), 10); break;
-            case '--jta-free-zones': out.jtaFreeZones = parseInt(next(), 10); break;
-            case '--jta-starting-perks': out.jtaStartingPerks = parseInt(next(), 10); break;
-            case '--jta-perk-shuffle-seed': out.jtaPerkShuffleSeed = parseInt(next(), 10); break;
-            case '-h':
-                process.stdout.write(`${helpText(fileURLToPath(import.meta.url))}\n`);
-                process.exit(0);
-                break;
-            default: throw new Error(`unknown flag '${a}'`);
-        }
-    }
-    return out;
+    }, { subcommand: true, metaUrl: import.meta.url });
 }
 
 // --- file I/O ---
@@ -428,11 +419,14 @@ function buildEnv(args) {
 
 async function main(status) {
     const args = parseOrUsage(() => parseArgs(process.argv.slice(2)));
+    status.config = args;
     const sub = args.subcommand;
     status.subcommand = sub;
     if (!sub) throw new UsageError(`missing subcommand (one of: ${SPIRAL_STEPS.join(', ')}, run)`);
     const isStep = SPIRAL_STEPS.includes(sub);
     if (!isStep && sub !== 'run') throw new UsageError(`unknown subcommand '${sub}'`);
+    await loadPipelineSubstrates();
+    checkSubstrateIds(args, { layout: 'spiral', tool: 'spiral-step', counts: { quotas: '--quota' }, start: 'start' });
 
     let env;
     if (args.input) {
