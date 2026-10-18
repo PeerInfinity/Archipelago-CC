@@ -1,0 +1,27 @@
+[
+ {
+  "arm": "remove+button",
+  "set_id": "seedling-vanilla-record-189a2694",
+  "game": {
+   "obs": 421,
+   "transitions": [],
+   "final": {
+    "t": 420,
+    "level": 29,
+    "x": 120,
+    "y": 284.85000000000014
+   },
+   "cleared": []
+  },
+  "model": {
+   "refused": null,
+   "transitions": [],
+   "final": {
+    "t": 420,
+    "level": 29,
+    "x": 120,
+    "y": 284.85000000000014
+   }
+  }
+ }
+]

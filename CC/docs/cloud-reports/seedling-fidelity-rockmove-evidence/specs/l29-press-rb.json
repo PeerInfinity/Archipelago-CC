@@ -1,0 +1,47 @@
+{
+ "name": "l29-press-rb",
+ "levels": [
+  29
+ ],
+ "tape": {
+  "boot": {
+   "level": 29,
+   "x": 112,
+   "y": 160
+  },
+  "tick_count": 420,
+  "inputs": [
+   {
+    "key": "up",
+    "from": 0,
+    "to": 50
+   },
+   {
+    "key": "down",
+    "from": 50,
+    "to": 420
+   }
+  ]
+ },
+ "arms": [
+  {
+   "name": "remove+button",
+   "ops": [
+    {
+     "op": "remove",
+     "level": 29,
+     "type": "fallrock",
+     "x": 112,
+     "y": 112
+    },
+    {
+     "op": "remove",
+     "level": 29,
+     "type": "button",
+     "x": 112,
+     "y": 128
+    }
+   ]
+  }
+ ]
+}
