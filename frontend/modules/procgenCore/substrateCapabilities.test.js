@@ -408,6 +408,15 @@ describe('the n/a cells that are the ANSWER\'s, not a prerequisite\'s (S3, ⚖ p
         expect(CAPABILITY_STATEMENTS.find((s) => s.id === 'G2').answer(bare).kind).toBe(CELL_KINDS.NO);
     });
 
+    it('L7: n/a where a Bot declares botActsAtOnce (nothing for Instant to skip) — the text adventure', () => {
+        const atOnce = ENTRIES.filter((e) => e.loopSupport?.botActsAtOnce === true);
+        expect(atOnce.map((e) => e.id)).toContain('text_adventure');
+        for (const e of atOnce) {
+            expect(cellOf('L6', e.id).kind, e.id).toBe(CELL_KINDS.YES);
+            expect(cellOf('L7', e.id).kind, e.id).toBe(CELL_KINDS.NA);
+        }
+    });
+
     it('L7: n/a where a replay is a summary (Instant is always); still n/a where L6 is ✗; ✓ somewhere', () => {
         const summary = ENTRIES.filter((e) => e.loopSupport?.summaryRecording === true);
         expect(summary.length).toBeGreaterThan(0);
@@ -419,6 +428,14 @@ describe('the n/a cells that are the ANSWER\'s, not a prerequisite\'s (S3, ⚖ p
             expect(cellOf('L7', e.id).kind, e.id).toBe(CELL_KINDS.NA);
         }
         expect(rowOf('L7').cells.some((c) => c.kind === CELL_KINDS.YES)).toBe(true);
+    });
+
+    it('L6: every real entry answers ✓ (declared universal); the ✗ arm holds on the flash factory\'s bare shape', () => {
+        for (const e of ENTRIES) expect(cellOf('L6', e.id).kind, e.id).toBe(CELL_KINDS.YES);
+        const bare = createFlashSubstrateEntry({ id: 'flash_factory_probe' });
+        const s = CAPABILITY_STATEMENTS.find((x) => x.id === 'L6');
+        expect(s.universal).toBe(true);
+        expect(s.answer(bare).kind).toBe(CELL_KINDS.NO);
     });
 });
 

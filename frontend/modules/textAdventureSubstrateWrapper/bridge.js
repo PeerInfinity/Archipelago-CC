@@ -715,6 +715,7 @@ async function main() {
         getWorld: () => world,
         getCurrentRegion: () => lastSeenRegion,
         log,
+        showMessage: (text, kind) => engine.displayMessage(text, kind),
     });
 
     client.notifyAppReady();

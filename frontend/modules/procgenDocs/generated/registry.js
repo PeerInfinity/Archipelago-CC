@@ -125,6 +125,7 @@ export const REGISTRY = frz({
         {
             "rows": [
                 "loopSupport",
+                "loopSupport.botActsAtOnce",
                 "loopSupport.customQueues",
                 "loopSupport.executeVia",
                 "loopSupport.instant",
@@ -3968,10 +3969,12 @@ export const REGISTRY = frz({
                 {
                     "id": "text_adventure",
                     "present": true,
-                    "short": "6 keys",
+                    "short": "8 keys",
                     "type": "object",
                     "value": [
+                        "botActsAtOnce",
                         "customQueues",
+                        "executeVia",
                         "instant",
                         "manual",
                         "playback",
@@ -3983,6 +3986,79 @@ export const REGISTRY = frz({
             "documentedHow": "table",
             "group": "Loop mode",
             "name": "loopSupport"
+        },
+        {
+            "carriedBy": [
+                "text_adventure"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Loop mode",
+            "name": "loopSupport.botActsAtOnce"
         },
         {
             "carriedBy": [
@@ -4073,7 +4149,8 @@ export const REGISTRY = frz({
                 "jta",
                 "noiz2sa",
                 "omsi",
-                "runner"
+                "runner",
+                "text_adventure"
             ],
             "cells": [
                 {
@@ -4134,10 +4211,10 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "text_adventure",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "solver",
+                    "type": "string",
+                    "value": "solver"
                 }
             ],
             "documentedHow": "table",

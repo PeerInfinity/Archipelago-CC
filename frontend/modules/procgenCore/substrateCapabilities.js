@@ -310,9 +310,11 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
         },
     },
     {
-        id: 'L6', group: 'loop',
+        id: 'L6', group: 'loop', universal: true,
         statement: 'A Bot block can play it for you',
         fields: ['loopSupport.executeVia', 'sharing.mana.loopActionDelegation'],
+        /* ⛓ UNIVERSAL since 2026-10-18: ta-loop-bot gave the text adventure a Bot
+         * block and the generic `flash` entry (the last ✗) was removed. */
         answer: (e) => {
             const kind = solverKindOf(e);
             return kind ? cell(CELL_KINDS.YES, SOLVER_WORDING[kind] ?? kind) : cell(CELL_KINDS.NO);
@@ -321,10 +323,13 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
     {
         id: 'L7', group: 'loop', requires: 'L6',
         statement: 'The Bot honours Instant',
-        fields: ['loopSupport.instant', 'loopSupport.executeVia', 'takeLastRecording', 'loopSupport.summaryRecording'],
-        /* ⛓ n/a where a replay is a summary: its Instant is *always* (L5
-         * says so), so there is no toggle for the Bot to honour. */
-        answer: (e) => (captureShapeOf(e) === CAPTURE_SHAPES.SUMMARY
+        fields: ['loopSupport.instant', 'loopSupport.executeVia', 'takeLastRecording', 'loopSupport.summaryRecording',
+            'loopSupport.botActsAtOnce'],
+        /* ⛓ n/a where there is nothing for Instant to skip: a summary
+         * replay is *always* instant (L5 says so), and a `botActsAtOnce`
+         * Bot lands each action in one step (the text adventure: Instant ON
+         * and OFF measured the same, ta-loop-bot 2026-10-18). */
+        answer: (e) => (captureShapeOf(e) === CAPTURE_SHAPES.SUMMARY || e.loopSupport?.botActsAtOnce === true
             ? cell(CELL_KINDS.NA) : yesNo(botHonorsInstant(e))),
     },
     {

@@ -886,6 +886,11 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "loop",
+                    "statement": "A Bot block can play it for you",
+                    "text": "the game's own automation walks it"
+                },
+                {
+                    "group": "loop",
                     "statement": "You can play it outside loop mode",
                     "text": null
                 },
@@ -976,8 +981,8 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 91,
-        "fieldsRead": 38,
+        "fields": 92,
+        "fieldsRead": 39,
         "fieldsUnread": 50,
         "statements": 29,
         "substrates": 9
@@ -1000,6 +1005,7 @@ export const CAPABILITIES = frz({
         "instantiateLibraryEntry",
         "libraryItems",
         "locationCapacity",
+        "loopSupport.botActsAtOnce",
         "loopSupport.executeVia",
         "loopSupport.instant",
         "loopSupport.manual",
@@ -2635,12 +2641,12 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "text_adventure",
-                    "kind": "no",
-                    "text": null,
+                    "kind": "yes",
+                    "text": "the game's own automation walks it",
                     "why": [
                         {
                             "field": "loopSupport.executeVia",
-                            "value": "—"
+                            "value": "solver"
                         },
                         {
                             "field": "sharing.mana.loopActionDelegation",
@@ -2679,6 +2685,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "loopSupport.summaryRecording",
                             "value": "yes"
+                        },
+                        {
+                            "field": "loopSupport.botActsAtOnce",
+                            "value": "—"
                         }
                     ]
                 },
@@ -2701,6 +2711,10 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "loopSupport.summaryRecording",
+                            "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.botActsAtOnce",
                             "value": "—"
                         }
                     ]
@@ -2725,6 +2739,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "loopSupport.summaryRecording",
                             "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.botActsAtOnce",
+                            "value": "—"
                         }
                     ]
                 },
@@ -2747,6 +2765,10 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "loopSupport.summaryRecording",
+                            "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.botActsAtOnce",
                             "value": "—"
                         }
                     ]
@@ -2771,6 +2793,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "loopSupport.summaryRecording",
                             "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.botActsAtOnce",
+                            "value": "—"
                         }
                     ]
                 },
@@ -2794,6 +2820,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "loopSupport.summaryRecording",
                             "value": "yes"
+                        },
+                        {
+                            "field": "loopSupport.botActsAtOnce",
+                            "value": "—"
                         }
                     ]
                 },
@@ -2816,6 +2846,10 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "loopSupport.summaryRecording",
+                            "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.botActsAtOnce",
                             "value": "—"
                         }
                     ]
@@ -2840,6 +2874,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "loopSupport.summaryRecording",
                             "value": "yes"
+                        },
+                        {
+                            "field": "loopSupport.botActsAtOnce",
+                            "value": "—"
                         }
                     ]
                 },
@@ -2854,7 +2892,7 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "loopSupport.executeVia",
-                            "value": "—"
+                            "value": "solver"
                         },
                         {
                             "field": "takeLastRecording",
@@ -2863,6 +2901,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "loopSupport.summaryRecording",
                             "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.botActsAtOnce",
+                            "value": "yes"
                         }
                     ]
                 }
@@ -2871,7 +2913,8 @@ export const CAPABILITIES = frz({
                 "loopSupport.instant",
                 "loopSupport.executeVia",
                 "takeLastRecording",
-                "loopSupport.summaryRecording"
+                "loopSupport.summaryRecording",
+                "loopSupport.botActsAtOnce"
             ],
             "group": "loop",
             "id": "L7",

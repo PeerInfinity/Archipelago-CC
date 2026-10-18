@@ -10,7 +10,7 @@ The columns here are in id order. In the app, every list of substrates — the p
 
 <!-- GENERATED:substrate-capability-chart BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**29 statements · 9 substrates · 38 registry fields read (41 of the developer matrix's 91, counting the parents of the fields read) · 50 not yet read.**
+**29 statements · 9 substrates · 39 registry fields read (42 of the developer matrix's 92, counting the parents of the fields read) · 50 not yet read.**
 
 ## Play
 
@@ -32,7 +32,7 @@ The columns here are in id order. In the app, every list of substrates — the p
 | L3 | You can record a visit and replay it | ✓ | ✗ | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | L4 | How a replay works | ✓ applies the result instantly | n/a | n/a | ✓ replays your exact moves | ✓ replays your exact moves | ✓ applies the result instantly | ✓ replays your exact moves | ✓ applies the result instantly | ✓ re-runs the queued actions |
 | L5 | Instant fast-forward | ✓ always — a replay is already instant | ✗ | ✗ | ✓ a per-block toggle | ✓ a per-block toggle | ✓ always — a replay is already instant | ✓ a per-block toggle | ✓ always — a replay is already instant | ✓ a per-block toggle |
-| L6 | A Bot block can play it for you | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the substrate walks it itself | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✗ |
+| L6 | A Bot block can play it for you | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the substrate walks it itself | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it |
 | L7 | The Bot honours Instant | n/a | ✗ | ✗ | ✓ | ✗ | n/a | ✓ | n/a | n/a |
 | L8 | You can play it outside loop mode | ✓ | ✓ | ✓ | ✗ (note 1) | ✓ | ✓ | ✗ (note 2) | ✓ | ✓ |
 | L9 | It shares the loop-mode mana pool | ✗ | ✗ | ✗ | ✓ | ✓ | ✗ | ✓ | ✗ | ✓ |
@@ -86,7 +86,7 @@ Each row is answered from these fields of the substrate's registry entry — the
 - **L4** — `takeLastRecording`, `loopSupport.summaryRecording`
 - **L5** — `loopSupport.instant`, `loopSupport.summaryRecording`
 - **L6** — `loopSupport.executeVia`, `sharing.mana.loopActionDelegation`
-- **L7** — `loopSupport.instant`, `loopSupport.executeVia`, `takeLastRecording`, `loopSupport.summaryRecording`
+- **L7** — `loopSupport.instant`, `loopSupport.executeVia`, `takeLastRecording`, `loopSupport.summaryRecording`, `loopSupport.botActsAtOnce`
 - **L8** — `loopSupport.requiresLoopMode`
 - **L9** — `sharing.mana`
 - **L10** — `sharing.items`
@@ -296,6 +296,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Loop mode* — You can record a visit and replay it
 - *Loop mode* — How a replay works: re-runs the queued actions
 - *Loop mode* — Instant fast-forward: a per-block toggle
+- *Loop mode* — A Bot block can play it for you: the game's own automation walks it
 - *Loop mode* — You can play it outside loop mode
 - *Loop mode* — It shares the loop-mode mana pool
 - *Generate* — The pipeline can build regions of it: grown to order
