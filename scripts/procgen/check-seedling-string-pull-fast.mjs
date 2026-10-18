@@ -14,7 +14,10 @@
  * Rows: the identity block's six producers (`--check`) and the killgate census (seeds 2, 5, 9). `--full` adds the
  * acceptance batch and the three generated-pair dumps (tens of thousands of calls, several minutes each).
  *
- *   node scripts/procgen/check-seedling-string-pull-fast.mjs [--full] [--only=<row>,…]
+ * Run:
+ *   node scripts/procgen/check-seedling-string-pull-fast.mjs
+ *   node scripts/procgen/check-seedling-string-pull-fast.mjs --full
+ *   node scripts/procgen/check-seedling-string-pull-fast.mjs --only=killgate s2,solve-seedling-r9-l3
  *
  * Exit 0 when every row holds, 1 otherwise. Prints one row per command and a total.
  */
@@ -24,6 +27,10 @@ import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+
+import { argvHelp } from './argvHelp.js';
+
+argvHelp(import.meta.url);
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
@@ -83,12 +90,6 @@ function runRow(row, fast, auditFile) {
 
 function main() {
     const argv = process.argv.slice(2);
-    if (argv.includes('--help') || argv.includes('-h')) {
-        console.log('check-seedling-string-pull-fast [--full] [--only=<row>,…] — runs each corpus row OFF and ON '
-            + '(SEEDLING_STRING_PULL_FAST), ON under the planWaypoints audit; exit 1 on any difference or < '
-            + `${MIN_CALLS} audited calls.\nrows: ${[...ROWS, ...FULL_ROWS].map((r) => r.name).join(', ')}`);
-        return 0;
-    }
     const only = argv.find((a) => a.startsWith('--only='))?.slice(7).split(',') ?? null;
     const rows = [...ROWS, ...(argv.includes('--full') ? FULL_ROWS : [])]
         .filter((r) => only === null || only.includes(r.name));
