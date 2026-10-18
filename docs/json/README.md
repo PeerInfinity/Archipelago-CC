@@ -1,19 +1,29 @@
 # Archipelago JSON Export Tools - Documentation
 
-This is the official documentation for the Archipelago JSON Export Tools and its associated web client. This documentation provides comprehensive guides for both users of the application and developers looking to contribute or understand its architecture.
+This is the documentation for the Archipelago JSON Export Tools and its web client, for both users of the application and developers who want to contribute or understand its architecture.
 
-This project is a fork of the main Archipelago project that focuses on two key areas:
+This project is a fork of the main Archipelago project that focuses on three areas:
 
-1.  A Python-based system to export a game's logic (location access rules, region connections, item data) into a standardized JSON format.
-2.  A modular, feature-rich web client that consumes this JSON to provide advanced tracking, accessibility analysis, and other tools.
+1.  **Procedural generation**: a pipeline that generates complete, playable randomizer worlds in the browser, with each region drawn by a pluggable *substrate*: a maze, a text adventure, a platformer, a shoot-'em-up stage, or a room of a recompiled Flash game.
+2.  **Export**: a Python-based system that writes a game's logic (location access rules, region connections, item data) to a standardized JSON format, the same `rules.json` that generated worlds compile to.
+3.  **The web client**: a modular, feature-rich client that loads this JSON to play, track and visualize a world, with logic-aware tracking, accessibility analysis, and other tools.
 
-**Try the Live Demo:** Either the **[Latest Stable Version](https://peerinfinity.github.io/Archipelago/)** or the **[Latest Development Version](https://peerinfinity.github.io/Archipelago-CC/)**
+**Try the Live Demo:** the **[Development Version](https://peerinfinity.github.io/Archipelago-CC/)** (includes procedural generation) or the **[Stable Version](https://peerinfinity.github.io/Archipelago/)** (an older snapshot: tracking only)
 
 For the main project overview and credits, please see the [README.md at the project root](../../README.md).
+
+## Start Here
+
+One introduction per reader, each saying what the project offers you and what to read next: **[Introduction to Archipelago](./intro/introduction-to-archipelago.md)** (new to Archipelago and randomizers) · **[For Players](./intro/for-players.md)** · **[For World Builders](./intro/for-world-builders.md)** · **[For Developers](./intro/for-developers.md)**.
 
 ## Features
 
 For an overview of all major features in this project, see the **[Features Index](./features/README.md)**. Highlights include:
+
+**Procedural Generation:**
+- [Procgen Pipeline](./features/procgen.md) — Generate complete playable worlds in the browser, compiled to standard `rules.json`
+- [What each substrate can do](./features/procgen-substrates.md) — The substrate capability chart, generated from the code
+- [Procgen developer documentation](./developer/procgen/README.md) — Architecture, substrates, and playback tooling
 
 **Core Tools:**
 - [JSON Exporter](../../exporter/README.md) — Export multiworld game logic to JSON
@@ -30,7 +40,6 @@ For an overview of all major features in this project, see the **[Features Index
 **New Games & Modes:**
 - [MetaMath](../../worlds/metamath/docs/README.md) — Mathematical proofs as playable Archipelago worlds
 - [DepGraph](./features/depgraph.md) — Any dependency graph as an Archipelago world
-- [Journey to Ascension](../../worlds/jta/docs/en_Journey%20to%20Ascension.md) — Incremental game integration with cost rebalancing
 - [Loops](./features/loops.md) — Incremental/idle game mode on top of the tracker
 
 ## Documentation Sections
@@ -41,7 +50,6 @@ This documentation is organized into the following main sections:
 
 This section is for anyone who wants to use the JSON Web Client to play or track their Archipelago games. These guides cover the application's features from a user's perspective.
 
-- **[Introduction to Archipelago](./intro/introduction-to-archipelago.md)**: New to Archipelago and randomizers entirely? Start here — the rest of the docs assume these basics.
 - **[Guided Tour](./user/guided-tour.md)**: See the highlights in ten minutes, directly in the live demo — nothing to install. Or [start it inside the app](https://peerinfinity.github.io/Archipelago-CC/?game=procgen_maze&seed=1&tutorial=guided-tour), where the Tutorial panel can do each step for you.
 - **[Overview: What Is This?](./user/overview.md)**: Learn what this project does, see game compatibility, and understand how to use the tracker.
 - **[Quick Start Guide](./user/quick-start.md)**: A fast-paced introduction to getting the client running.
