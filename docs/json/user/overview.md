@@ -108,7 +108,7 @@ Beyond standard tracking, the frontend supports several alternate game modes:
 
 ## Procedural Generation
 
-The frontend can also **generate** randomizer worlds, not just track them. The [Procgen Pipeline](../features/procgen.md) builds complete multi-region worlds where each region is a small playable game — a grid maze, a Doodle-Jump-style platformer, a text adventure, a Noiz2sa shoot-'em-up stage, a room of the recompiled Flash game *Seedling*, freely mixed — with access rules derived from the actual gameplay. Generated worlds use the same `rules.json` format as exported games, so they work with every tracking feature, can run in loop mode, and can even be converted into real Archipelago worlds for multiworld play. Start with [For Players](../intro/for-players.md) or [For World Builders](../intro/for-world-builders.md).
+The frontend can also **generate** randomizer worlds, not just track them. The [Procgen Pipeline](../features/procgen.md) builds complete multi-region worlds where each region is a small playable game — a grid maze, a Doodle-Jump-style platformer, a text adventure, a run of scenes from the Noiz2sa shoot-'em-up, a room of the recompiled Flash game *Seedling*, freely mixed — with access rules derived from the actual gameplay. Generated worlds use the same `rules.json` format as exported games, so they work with every tracking feature, can run in loop mode, and can even be converted into real Archipelago worlds for multiworld play. Start with [For Players](../intro/for-players.md) or [For World Builders](../intro/for-world-builders.md).
 
 ## New APWorlds
 

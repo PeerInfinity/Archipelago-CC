@@ -4,7 +4,7 @@ This page is for people who want to play. Everything here runs in the browser at
 
 ## Play a generated world
 
-The project generates complete randomizer worlds. Each region is drawn by a *[substrate](../features/procgen-substrates.md)*, a small game of its own: a maze to walk, a platformer to climb, a text adventure to read, a shoot-'em-up stage, or a room of *Seedling*, a Flash game recompiled to run in the browser. One world can mix them. When you leave one region, the next one opens in its own game.
+The project generates complete randomizer worlds. Each region is drawn by a *[substrate](../features/procgen-substrates.md)*, a small game of its own: a maze to walk, a platformer to climb, a text adventure to read, a run of shoot-'em-up scenes to survive, or a room of *Seedling*, a Flash game recompiled to run in the browser. One world can mix them. When you leave one region, the next one opens in its own game.
 
 - **[Guided Tour](../user/guided-tour.md)** — ten minutes: watch a generated world play itself, look at the logic underneath, then generate a world of your own. Or [start it inside the app](https://peerinfinity.github.io/Archipelago-CC/?game=procgen_maze&seed=1&tutorial=guided-tour), where the Tutorial panel can do each step for you.
 - **[Procgen: a mixed world](../user/tutorials/procgen-mixed-world.md)** — one world made of several substrates.

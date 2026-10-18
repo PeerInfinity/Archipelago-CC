@@ -18,7 +18,7 @@ The frontend also **generates** worlds. A collection of games act as procedural-
 
 ## Procedural Generation
 
-Substrates include a grid maze, a text adventure, a Doodle-Jump-style platformer, a Noiz2sa shoot-'em-up stage, rooms of *Seedling*, a Flash game recompiled to run in the browser, and, in Loop mode, zones of the idle games *Journey to Ascension* and *Idle Loops*. For physics-based substrates the access rules are derived from the game's physics and verified, so if the logic says you need an item to reach an exit, that is true in play.
+Substrates include a grid maze, a text adventure, a Doodle-Jump-style platformer, a run of scenes from the Noiz2sa shoot-'em-up, rooms of *Seedling*, a Flash game recompiled to run in the browser, and, in Loop mode, zones of the idle games *Journey to Ascension* and *Idle Loops*. For physics-based substrates the access rules are derived from the game's physics and verified, so if the logic says you need an item to reach an exit, that is true in play.
 
 The primary driver, **sphere growth**, plans the item-progression spheres first and then grows a world guaranteed to realise them; the plan doubles as a verification oracle. Other modes lay worlds out as a shuffled spiral, or start from an existing game's `rules.json` and realise each of its regions as a generated room. Generated worlds compile to the same `rules.json` format as exported games, so they play in the browser, track, and run through real Archipelago multiworld generation.
 
