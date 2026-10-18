@@ -28,7 +28,6 @@
  * per-region gameId + optional params and the location<->objective map.
  */
 
-import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { SIDES } from '../shared/procgen/spatialPrimitives.js';
 import {
     REQUIRED_ENVELOPE_FIELD, envelopeExitNames, nameMapValues,
@@ -101,7 +100,7 @@ function serializeWorld(world) {
  * The Mode-1 shape above, as the in-iframe bridge's `configure()` reads it
  * (`bridge.js`: `gameId params ap_items ap_locations` + the capabilities, and
  * `gate_rules` for authored locks). ⚠ No committed preset has a region of the
- * generic `flash` substrate, so nothing here is read off a corpus: `gameId` is
+ * factory's default shape (and no generic `flash` entry exists), so nothing here is read off a corpus: `gameId` is
  * required because the bridge cannot pick a game without it, and every other
  * key is optional. `serializeWorld` is a pass-through (only `exits` is
  * converted), so it emits whatever the payload held. ⚠ `ap_items` is read by
@@ -296,7 +295,7 @@ export function flashZoneExitSides({ keys = [], also = null } = {}) {
  * here so every flash game routes through the one panel/bridge.
  *
  * @param {object} opts
- * @param {string}   opts.id               unique substrate id (e.g. 'flash', 'flash_seedling')
+ * @param {string}   opts.id               unique substrate id (e.g. 'flash_seedling')
  * @param {string}  [opts.label]           display name (defaults to id)
  * @param {string[]}[opts.supportedFeatures] procgen-pipeline features (default: arbitrary_ap_locations)
  * @param {object}  [opts.sidecarFields]   the payload declaration (default: the
@@ -371,22 +370,4 @@ export function createFlashSubstrateEntry({
         // internal content; it just records gameId + params in the
         // sidecar. Mode 2 (AVM2-gated) adds them.
     });
-}
-
-// The default generic 'flash' entry — a region whose game is identified
-// purely by the payload's gameId, with no game-specific capability
-// declaration. Per-game entries (e.g. 'flash_seedling') are registered
-// alongside it via createFlashSubstrateEntry.
-export const substrateRegistryEntry = createFlashSubstrateEntry({
-    id: 'flash',
-    label: 'Flash',
-});
-
-// Side-effect on import: register the default substrate so the procgen
-// pipeline can resolve it without booting the panel module. Same pattern
-// as mazeRoom / textAdventureSubstrateWrapper / jtaSubstrateWrapper libraries —
-// idempotent because index.js's host hook also calls register() in the
-// live app.
-if (!substrateRegistry.has(substrateRegistryEntry.id)) {
-    substrateRegistry.register(substrateRegistryEntry);
 }

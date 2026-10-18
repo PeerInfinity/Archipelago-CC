@@ -287,20 +287,23 @@ describe('the corpus census — printed, then pinned', () => {
          *              § The item layer (`doc` 278 → 280).
          *   362 → 364  Noiz2sa measured final span (2026-10-15): noiz2sa.md's § Pricing → the cloud
          *              measurement report under CC/docs/cloud-reports/, twice (`repo` 38 → 40).
+         *   364 → 366  generic `flash` entry removed (2026-10-18): architecture.md's substrate table
+         *              gains its `noiz2sa` row → noiz2sa.md and the no-generic-entry note → flash.md
+         *              (`doc` 280 → 282).
          */
         expect(by).toEqual({
             'same-doc': 22,
-            doc: 280,
+            doc: 282,
             external: 22,
             repo: 40,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(364);
+        expect(CORPUS.length).toBe(366);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(280);
+        expect(docs).toHaveLength(282);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

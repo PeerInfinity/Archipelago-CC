@@ -148,7 +148,6 @@ export const REGENERATE_WORKER_LIBRARIES = Object.freeze([
     'bounceDemo/bounceDemoLibrary.js',
     'runnerDemo/runnerDemoLibrary.js',
     'textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js',
-    'flashSubstrate/flashSubstrateLibrary.js',
     'flashPanel/flashSeedlingLibrary.js',
     'flashPanel/flashSeedlingGenBuild.js',
     'jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js',
