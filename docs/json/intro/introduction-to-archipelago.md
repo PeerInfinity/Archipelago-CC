@@ -31,10 +31,13 @@ More vocabulary you'll meet in these docs:
 
 ## Where this project fits
 
-Archipelago itself provides the framework, the generator, the server, and clients for the supported games. **This project builds tooling on top of it**: it exports the full logic of a generated seed to JSON, and provides a browser-based, logic-aware tracker that can visualize the whole world as a graph, explain exactly why a location is or isn't reachable, and quite a bit more — including game modes that turn any seed into an incremental game, and a generator that builds new playable worlds from scratch.
+Archipelago itself provides the framework, the generator, the server, and clients for the supported games. **This project builds on top of it** in two ways:
+
+- **It generates new games.** A procedural generator builds complete randomizer worlds in the browser: the regions, the items, and the access rules that connect them. Each region is a small playable game of its own, such as a maze, a platformer, a text adventure, or a room of a recompiled Flash game, and one world can mix them. A generated world is a real Archipelago game: you can play it in the browser, watch a bot play it, or package it so that Archipelago can host it in a multiworld.
+- **It tracks existing games.** It exports the full logic of an Archipelago seed to JSON. A browser-based, logic-aware tracker then shows the whole world as a graph and explains exactly why a location is or isn't reachable.
 
 Continue with:
 
-- **[Guided Tour](./guided-tour.md)** — see the highlights in about ten minutes, nothing to install
-- **[Overview](./overview.md)** — what this project does, feature by feature
+- **[Guided Tour](../user/guided-tour.md)** — see the highlights in about ten minutes, nothing to install
+- **[For Players](./for-players.md)**, **[For World Builders](./for-world-builders.md)** or **[For Developers](./for-developers.md)** — where to go next, depending on what you want to do
 - **[archipelago.gg](https://archipelago.gg/)** — the official Archipelago site, with setup guides for playing real multiworlds
