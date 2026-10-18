@@ -54,8 +54,9 @@ const replay = (W, on) => withContactFidelity({ spinningAxePlayerHit: on }, () =
 });
 
 describe('SPINNINGAXE D1 — the switch and the move', () => {
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.spinningAxePlayerHit).toBe(false);
+    // ⛓ shipped OFF (SPINNINGAXE D1); ON by default since planning-9's axe flip (⚖ user "Axe flip", 2026-10-18).
+    it('ships ON', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.spinningAxePlayerHit).toBe(true);
     });
     it('hazards.js and the door re-export the SAME function objects the simulation module defines', () => {
         for (const name of ['axeCanReach', 'axeHitsPlayer', 'axeLine', 'collideLinePlayer', 'SPINNING_AXE']) {
