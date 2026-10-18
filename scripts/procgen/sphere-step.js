@@ -12,27 +12,51 @@
  *   node scripts/procgen/sphere-step.js topology -i s2a.json -o s2b.json
  *   node scripts/procgen/sphere-step.js items    -i s2b.json -o s2c.json
  *   node scripts/procgen/sphere-step.js regions  -i s2c.json -o s3.json
- *   node scripts/procgen/sphere-step.js compile  -i s3.json  -o rules.json
- *
- *   # run a contiguous range in one process:
- *   node scripts/procgen/sphere-step.js run --from plan --to compile ...args -o rules.json
- *
- *   # auto-resume a partial / hand-edited envelope (no --from): runs from the
- *   # FIRST step whose output is missing (presence = keep, absence = recompute):
- *   node scripts/procgen/sphere-step.js run -i partial.json -o rules.json
- *
- *   # RECORDED LAYOUT EDITS (envelope `edits[]`, see layoutEdits.js) replay
- *   # after the step each one addresses — layout ops and re-roll after
- *   # `regions`, set-substrate after `items`. An edit hand-added to an envelope
- *   # whose stage has ALREADY run does nothing until that step runs again, so:
- *   node scripts/procgen/sphere-step.js run -i s3.json --from regions -o rules.json
- *   # (the run names any edit it is skipping, so the no-op is never silent).
- *
- *   # append a sphere to a FINISHED envelope (grow one wave further + recompile):
- *   #   --items id=N → the new sphere's content; the goal is relocated into it.
- *   #   --truncate-to-wave K → rewind to K leading waves before regrowing.
+ *   node scripts/procgen/sphere-step.js compile  -i s3.json  -o env.json --rules-out rules.json
+ *   # a contiguous range in one process (world flags as for `plan`):
+ *   node scripts/procgen/sphere-step.js run --from plan --to compile ...args -o env.json
+ *   # auto-resume a partial / hand-edited envelope from its first missing step:
+ *   node scripts/procgen/sphere-step.js run -i partial.json -o env.json
+ *   # replay recorded layout edits whose stage already ran:
+ *   node scripts/procgen/sphere-step.js run -i s3.json --from regions -o env.json
+ *   # append a sphere to a FINISHED envelope (or a bare rules.json):
  *   node scripts/procgen/sphere-step.js append -i done.json --items gem=1 \
  *        -o appended.json --rules-out rules.json
+ *   World flags (`plan` / `run` from scratch; later steps read the config from -i):
+ *     --seed N                    rng seed (default 1)
+ *     --region WxH                region tile size (default 8x6)
+ *     --items id=N                item pool entry, repeatable (default: four keys + victory;
+ *                                 for `append`, the NEW sphere's content)
+ *     --spheres N                 sphere count (default 3)
+ *     --victory id                goal item (default: a victory item from the pool)
+ *     --quota id=N                per-substrate region quota, repeatable
+ *     --start id                  start substrate
+ *     --max-items-per-region N    (default 2)
+ *     --fillers N                 filler regions, no items (default 0)
+ *     --revisit P                 revisit ratio for attachments (default 0.25)
+ *     --spheres-per-batch N       grow sphere-major in batches of N (default: all at once)
+ *     --no-arrow-entry            skip bounce's free-arrow prep
+ *     --fall-behavior B           bounce bounceFallBehavior (default: substrate default)
+ *     --physics-profile P         bounce bouncePhysicsProfile (default: substrate default)
+ *     --param key=value           any substrate procgen param, repeatable (numbers coerced)
+ *     --enable-loop-mode          embed loop_costs in the rules.json
+ *     --region-xp-effect E        loop-mode xp effect: cost (default) | speed | both | none
+ *     --truncate-to-wave K        `append` only: keep K leading waves before regrowing
+ *   I/O flags (all subcommands):
+ *     -i, --input PATH            prior envelope JSON (required except for `plan`/`run`)
+ *     -o, --out PATH              next envelope JSON (default ./sphere-<step>.json; `-` = stdout)
+ *     --params PATH               JSON object merged over the envelope's config
+ *     --rules-out PATH            `compile`/`run`/`append`: also write the bare rules.json
+ *     --from STEP                 `run`: start at this step (default: auto-resume)
+ *     --to STEP                   `run`: stop after this step (default compile)
+ *     --json-status PATH          write the run's status object (`-` = stdout); see cliRun.js
+ *     -h, --help                  print this and exit
+ *
+ * Recorded layout edits (envelope `edits[]`, see layoutEdits.js) replay after
+ * the step each one addresses — layout ops and re-roll after `regions`,
+ * set-substrate after `items`. An edit hand-added to an envelope whose stage
+ * has ALREADY run does nothing until that step runs again; the run names any
+ * edit it is skipping, so the no-op is never silent.
  *
  * Append semantics: a wave gates on the prior sphere, so the goal can only move
  * one tier later when the kept final sphere has a non-goal item. Default: a
@@ -49,23 +73,11 @@
  * or compile. --spheres-per-batch unset / ≥ sphere count = one batch (all
  * spheres), the byte-identical default.
  *
- * Step subcommands:
- *   plan accepts the same world flags as dump-sphere-growth.js (--seed,
- *   --items, --spheres, --victory, --quota, --start, --region, --fillers,
- *   --revisit, --spheres-per-batch, --max-items-per-region, --physics-profile,
- *   --fall-behavior,
- *   --param key=value, --enable-loop-mode, --region-xp-effect,
- *   --no-arrow-entry). Those flags build the resolved config (via the shared
- *   substrate hooks, like the panel) carried in the envelope; later steps read
- *   the config from -i and don't re-parse world flags.
- *
- * I/O flags (all subcommands):
- *   -i, --input PATH     prior envelope JSON (required except for `plan`/`run`)
- *   -o, --out PATH       next envelope JSON (default ./sphere-<step>.json; `-`=stdout)
- *   --params PATH        JSON object merged over the envelope's config (override knobs)
- *   --rules-out PATH     `compile`/`run`: additionally write the bare rules.json
- *
- * `compile` exits non-zero if the sphere oracle reports a mismatch.
+ * World flags build the resolved config (via the shared substrate hooks, like
+ * the panel) carried in the envelope. `compile` exits 2 if the sphere
+ * oracle reports a mismatch.
+ * Exit codes (cliRun.js): 0 ok · 1 usage · 2 oracle mismatch · 3 input
+ * rejected · 4 internal.
  *
  * The envelope is self-contained (it embeds the resolved item library), so a
  * step can run in its own process without re-deriving world state. The grown
@@ -74,15 +86,15 @@
  * the pipeline at steps ①–②c, or a grown region via the in-app editor.
  */
 
-import { writeFileSync, readFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// Substrate libraries register their adapters on import.
-import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
-import '../../frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js';
-import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
-import '../../frontend/modules/runnerDemo/runnerDemoLibrary.js';
+import { argvHelp, helpText } from './argvHelp.js';
+import { runCli, UsageError, parseOrUsage, readInputJson } from './cliRun.js';
+
+// Substrate libraries register their adapters on import — one shared list.
+import './registerPipelineSubstrates.js';
 
 import {
     SPHERE_STEPS, runStep, runToStep, resumeEnvelope, detectCompleted, sphereEditsBehind,
@@ -96,6 +108,8 @@ import {
     collectSphereGrowthPrep, assembleRegionParams,
     mergeSubstrateItemLib, resolveSphereGoal,
 } from '../../frontend/modules/procgenPipeline/sphereConfigHooks.js';
+
+argvHelp(import.meta.url);
 
 // --- CLI parser ---
 
@@ -131,7 +145,10 @@ function parseArgs(argv) {
         // I/O flags
         input: null,
         out: null,
-        params: null,
+        // `--params PATH` (a JSON file). Its own key: it once shared `params`
+        // with the `--param k=v` map above, so the later literal key nulled the
+        // map and every `--param` threw "Cannot set properties of null".
+        paramsFile: null,
         rulesOut: null,
         from: null,
         to: null,
@@ -180,12 +197,13 @@ function parseArgs(argv) {
             case '--region-xp-effect': out.regionXpEffect = next(); break;
             case '-i': case '--input': out.input = next(); break;
             case '-o': case '--out': out.out = next(); break;
-            case '--params': out.params = next(); break;
+            case '--params': out.paramsFile = next(); break;
             case '--rules-out': out.rulesOut = next(); break;
             case '--from': out.from = next(); break;
             case '--to': out.to = next(); break;
-            case '-h': case '--help':
-                console.log('See the docblock in scripts/procgen/sphere-step.js');
+            case '--json-status': out.jsonStatus = next(); break;
+            case '-h':
+                process.stdout.write(`${helpText(fileURLToPath(import.meta.url))}\n`);
                 process.exit(0);
                 break;
             default: throw new Error(`unknown flag: ${a}`);
@@ -268,8 +286,8 @@ function buildConfig(args) {
 
 // --- file I/O ---
 
-function readJson(path) {
-    return JSON.parse(readFileSync(resolve(path), 'utf8'));
+function readJson(path, what) {
+    return readInputJson(path, what);
 }
 
 function writeOut(path, obj, fallbackName) {
@@ -298,15 +316,16 @@ function announceEdits(env, firstStep) {
 
 // --- main ---
 
-async function main() {
-    const args = parseArgs(process.argv.slice(2));
+async function main(status) {
+    const args = parseOrUsage(() => parseArgs(process.argv.slice(2)));
     const sub = args.subcommand;
-    if (!sub) throw new Error('missing subcommand (one of: '
+    status.subcommand = sub;
+    if (!sub) throw new UsageError('missing subcommand (one of: '
         + `${SPHERE_STEPS.join(', ')}, run, append)`);
 
     const isStep = SPHERE_STEPS.includes(sub);
     if (!isStep && sub !== 'run' && sub !== 'append') {
-        throw new Error(`unknown subcommand '${sub}'`);
+        throw new UsageError(`unknown subcommand '${sub}'`);
     }
 
     // Load or create the envelope. `append` accepts EITHER a saved envelope or a
@@ -314,8 +333,8 @@ async function main() {
     // procedural substrates only; zone substrates must use a saved envelope).
     let env;
     if (sub === 'append') {
-        if (!args.input) throw new Error('append requires -i <rules.json | envelope.json>');
-        const raw = readJson(args.input);
+        if (!args.input) throw new UsageError('append requires -i <rules.json | envelope.json>');
+        const raw = readJson(args.input, '-i');
         env = raw.procgen_metadata?.['1']
             ? rebuildEnvelopeFromRulesJson(raw, {
                 ...(Object.keys(args.quotas).length ? { substrateQuotas: args.quotas } : {}),
@@ -323,14 +342,14 @@ async function main() {
             })
             : deserializeEnvelope(raw);
     } else if (args.input) {
-        env = deserializeEnvelope(readJson(args.input));
+        env = deserializeEnvelope(readJson(args.input, '-i'));
     } else if (sub === 'plan' || sub === 'run') {
         env = newEnvelope(buildConfig(args));
     } else {
-        throw new Error(`step '${sub}' requires -i <envelope.json> (or start with 'plan')`);
+        throw new UsageError(`step '${sub}' requires -i <envelope.json> (or start with 'plan')`);
     }
     // --params overrides the carried config knobs.
-    if (args.params) Object.assign(env.config, readJson(args.params));
+    if (args.paramsFile) Object.assign(env.config, readJson(args.paramsFile, '--params'));
 
     const onProgress = (ev) => {
         if (ev?.type) process.stderr.write(`  · ${ev.type}\n`);
@@ -374,6 +393,10 @@ async function main() {
 
     const outPath = writeOut(args.out, serializeEnvelope(env), sub);
     process.stderr.write(`[sphere-step] ${sub} → completed=${env.completed} → ${outPath}\n`);
+    status.outputs.envelope = outPath;
+    status.completed = SPHERE_STEPS[env.completed] ?? null;
+    status.next = nextSphereStep(env) ?? null;
+    status.summary.seed = env.config?.seed ?? null;
 
     // Sphere-major hint: when batch < all the pipeline LOOPS the middle four
     // phases per batch, so after ③ the next per-step invocation is ②a again
@@ -399,19 +422,19 @@ async function main() {
         if (args.rulesOut) {
             const abs = writeOut(args.rulesOut, rulesJson, 'rules');
             process.stderr.write(`[sphere-step] rules.json → ${abs}\n`);
+            status.outputs.rules = abs;
         }
+        status.summary.driver = rulesJson.procgen_metadata?.['1']?.driver ?? null;
+        status.summary.regions = Object.keys(rulesJson.regions?.['1'] ?? {}).length;
+        status.oracle = { checked: true, errors: oracleErrors };
         if (oracleErrors.length > 0) {
+            // ⛓ exit 2 (oracle mismatch), set by runCli from status.oracle.errors.
             process.stderr.write('SPHERE ORACLE FAILED:\n');
             for (const e of oracleErrors) process.stderr.write(`  ${e}\n`);
-            process.exit(1);
+            return;
         }
         process.stderr.write('[sphere-step] oracle OK\n');
     }
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-    main().then(() => process.exit(0)).catch((e) => {
-        console.error(`ERROR: ${e.message}`);
-        process.exit(1);
-    });
-}
+runCli('sphere-step', import.meta.url, main);

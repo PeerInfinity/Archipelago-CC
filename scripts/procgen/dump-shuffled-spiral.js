@@ -10,7 +10,6 @@
  *       --quota jta=5 \
  *       --start jta \
  *       -o /tmp/spiral.json
- *
  * Flags:
  *   --seed N                 RNG seed (default 1)
  *   --region WxH             region dims (default 8x6)
@@ -21,8 +20,12 @@
  *   --items id=N             item pool entry (procedural substrates
  *                            only); repeat per item
  *   --obstacles id=N         obstacle pool entry; repeat per obstacle
+ *   --jta-locations          emit jta zone tasks as AP locations (off by
+ *                            default — byte-identical to prior jta dumps)
  *   -o, --out PATH           output JSON path
  *                            (default ./shuffled-spiral-dump.json)
+ *   --json-status PATH       write the run's status object (`-` = stdout); see cliRun.js
+ *   -h, --help               print this and exit
  *
  * The grid is auto-sized to fit sum(quotas) regions; --grid is not
  * accepted. Cross-branch asymmetric exits do not arise (every cell
@@ -34,17 +37,18 @@ import { writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// Substrate libraries register on import.
-import '../../frontend/modules/mazeRoom/mazeRoomLibrary.js';
-import '../../frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js';
-import '../../frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
-import '../../frontend/modules/bounceDemo/bounceDemoLibrary.js';
-import '../../frontend/modules/runnerDemo/runnerDemoLibrary.js';
+import { argvHelp, helpText } from './argvHelp.js';
+import { runCli, parseOrUsage } from './cliRun.js';
+
+// Substrate libraries register their adapters on import — one shared list.
+import './registerPipelineSubstrates.js';
 
 import { arrangeShuffledSpiral, buildRulesJson, getRegionExits } from
     '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 import { setJtaEmitZoneLocations } from
     '../../frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js';
+
+argvHelp(import.meta.url);
 
 function parseArgs(argv) {
     const out = {
@@ -96,9 +100,10 @@ function parseArgs(argv) {
             }
             case '-o':
             case '--out': out.out = next(); break;
+            // the value is read by cliRun.js; not echoed into the dump's config
+            case '--json-status': next(); break;
             case '-h':
-            case '--help':
-                console.log(extractHelpText());
+                process.stdout.write(`${helpText(fileURLToPath(import.meta.url))}\n`);
                 process.exit(0);
                 break;
             default:
@@ -111,21 +116,6 @@ function parseArgs(argv) {
     return out;
 }
 
-function extractHelpText() {
-    return [
-        'Usage: node scripts/procgen/dump-shuffled-spiral.js [flags]',
-        '',
-        '  --seed N                   (default 1)',
-        '  --region WxH               (default 8x6)',
-        '  --quota id=N               required; repeat per substrate',
-        '  --start id                 substrate id or "auto" (default auto)',
-        '  --no-bidirectional',
-        '  --jta-locations            emit jta zone tasks as AP locations',
-        '  --items id=N',
-        '  --obstacles id=N',
-        '  -o, --out PATH             (default ./shuffled-spiral-dump.json)',
-    ].join('\n');
-}
 
 function shapeRegions(grid) {
     const out = [];
@@ -159,8 +149,8 @@ function shapeRegions(grid) {
     return out;
 }
 
-async function main() {
-    const config = parseArgs(process.argv.slice(2));
+async function main(status) {
+    const config = parseOrUsage(() => parseArgs(process.argv.slice(2)));
     // Opt-in jta zone-locations channel (Phase 1 skeleton). Off by
     // default so jta dumps stay byte-identical to prior runs.
     setJtaEmitZoneLocations(config.jtaLocations);
@@ -186,6 +176,10 @@ async function main() {
         completionConditionItem: goalItem,
     });
     const dump = {
+        // The format stamp (§5au item 4): bump the version when a reader of
+        // the old shape would misread the new one.
+        kind: 'shuffled-spiral-dump',
+        envelope_version: 1,
         config,
         startCell,
         stats,
@@ -195,15 +189,15 @@ async function main() {
     const outPath = resolve(process.cwd(), config.out);
     mkdirSync(dirname(outPath), { recursive: true });
     writeFileSync(outPath, JSON.stringify(dump, null, 2));
-    console.log(`Wrote ${outPath}`);
-    console.log(`  regionsBuilt: ${stats.regionsBuilt}`
+    console.error(`Wrote ${outPath}`);
+    status.outputs.dump = outPath;
+    status.summary = {
+        seed: config.seed, regionsBuilt: stats.regionsBuilt,
+        stopReason: stats.stopReason ?? null, substrateCounts: stats.substrateCounts ?? null,
+    };
+    console.error(`  regionsBuilt: ${stats.regionsBuilt}`
         + `  stopReason: ${stats.stopReason}`
         + `  substrateCounts: ${JSON.stringify(stats.substrateCounts)}`);
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-    main().then(() => process.exit(0)).catch((e) => {
-        console.error(`ERROR: ${e.message}`);
-        process.exit(1);
-    });
-}
+runCli('dump-shuffled-spiral', import.meta.url, main);
