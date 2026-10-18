@@ -26,10 +26,13 @@
  *  - ⛔ WITH NO HOOK INSTALLED, every count point in `solverBot` is ONE null check (`activeProgress !== null`): the
  *    functions below are reached only through it.
  *  - A SNAPSHOT IS A COPY: plain JSON (structured-clone safe), built fresh by every `peek()`.
+ *  - ⛓ HAMMER-PHASE RK — `v: 2`: each rejection is also tallied by its KIND (`progressKind`, `REFUSAL_KINDS`) beside
+ *    its reason key, and the segment keeps its last rejection's `why` VERBATIM (`lastWhy`). Both read the payload the
+ *    reason key already reads, after the solver computed it; v1's fields are the same bytes.
  */
 
-/** The snapshot's schema version (`v`). */
-export const SOLVE_PROGRESS_VERSION = 1;
+/** The snapshot's schema version (`v`). ⛓ RK: 2 — `tree.rejectionKinds` and `lastWhy` (the schema doc's §5). */
+export const SOLVE_PROGRESS_VERSION = 2;
 
 /** The tile map's cell size in px — the A* tile (`TILE_SIZE`). */
 export const PROGRESS_TILE = 16;
@@ -107,7 +110,7 @@ function installOf(onProgress, pass, who) {
 // ── the tree ───────────────────────────────────────────────────────────
 
 const nodeOf = (key, role, label) => ({ key, role, label, attempts: 0, successes: 0, rejections: new Map(),
-    kids: new Map() });
+    kinds: new Map(), kids: new Map() });
 
 /** The child of `parent` keyed `key` (a ROLE key: one node however many times the role is derived there). */
 function childOf(parent, key, role, label) {
@@ -119,7 +122,128 @@ function childOf(parent, key, role, label) {
     return n;
 }
 
-const reject = (node, reason) => node.rejections.set(reason, (node.rejections.get(reason) ?? 0) + 1);
+/** One rejection on `node`: its reason key and its kind, tallied together (so Σ kinds = Σ reasons on every node). */
+const reject = (node, reason, kind) => {
+    node.rejections.set(reason, (node.rejections.get(reason) ?? 0) + 1);
+    node.kinds.set(kind, (node.kinds.get(kind) ?? 0) + 1);
+};
+
+/**
+ * ⛓ HAMMER-PHASE RK — the sentence a rejection carries, VERBATIM: an error's `message`, a refused row's or a search's
+ * `why`, else a search's `bound`. Nothing is cut, masked or capped (`progressReason` does that, for the key).
+ *
+ * @param {*} x  an error, a refused row (`{rung, why}`), a search result, or a `why` string
+ * @returns {?string}
+ */
+export function progressWhy(x) {
+    if (x === null || x === undefined) return null;
+    if (typeof x !== 'object') return String(x);
+    if (typeof x.message === 'string') return x.message;
+    if (typeof x.why === 'string') return x.why;
+    if (typeof x.bound === 'string') return x.bound;
+    return typeof x.name === 'string' ? x.name : null;
+}
+
+/**
+ * ⛓ HAMMER-PHASE RK — THE REFUSAL KINDS: a CLOSED list, each named with a word the solver already uses for it (the
+ * schema doc's §2, "Rejection kinds", names the source of each). `other` is the residue: a rejection no rule below
+ * recognises. ⛔ `solveProgress.test.js` holds `other` at 0 on the committed solves.
+ */
+export const REFUSAL_KINDS = Object.freeze(['deadline', 'pending', 'danger', 'bound', 'exhausted', 'does-not-apply',
+    'already-true', 'unmodelled', 'diverged', 'error', 'other']);
+
+/**
+ * A search's `bound` → its kind: every bound the solver writes (`spaceTimeReach`'s `negative`, `deriveApproach`'s and
+ * `deriveFight`'s `done`, `pressEscapeOnce`'s results; `solveProgress.test.js` reads them out of the source). A bound
+ * not listed falls through to the sentence (`why`).
+ */
+export const BOUND_KINDS = Object.freeze({ deadline: 'deadline', expansions: 'bound', horizon: 'bound',
+    exhausted: 'exhausted', start: 'danger', window: 'danger', death: 'danger', approach: 'danger', train: 'danger',
+    body: 'does-not-apply', dying: 'does-not-apply', line: 'does-not-apply', 'no-landing': 'does-not-apply',
+    unmodelled: 'unmodelled' });
+
+/**
+ * A `clear-tag` refusal's `obstacle.reason` (`solverBot`'s `refuseCT`) → its kind: the reason is the solver's own
+ * field, so it decides before the sentence (which, for `unresolved`, wraps the inner refusal's words).
+ */
+export const CLEAR_TAG_KINDS = Object.freeze({ 'unresolved': 'exhausted', 'no-verb': 'unmodelled',
+    'not-written': 'diverged', 'wrong-level': 'does-not-apply', 'cross-room-presser': 'does-not-apply',
+    'prerequisite': 'does-not-apply', 'cannot-act': 'does-not-apply' });
+
+/**
+ * The sentence's rules, in order: each matches words the solver writes for that kind. Read on the VERBATIM `why`, never
+ * on the cut key — a refusal raised after a deadline trip carries `deadlineClause` (`⏱ DEADLINE: …`) at its END,
+ * past every separator the key cuts at.
+ */
+const WHY_KINDS = Object.freeze([
+    ['deadline', /⏱ DEADLINE|anytime deadline|caller's deadline|at the deadline/],
+    ['already-true', /\balready true\b|\bis ALREADY\b/],
+    ['danger', /\bprobes? (?:DANGEROUS|dangerous)\b|\bwas HIT\b|\bHIT at dwell\b|danger map forbids|UNBILLED DAMAGE/],
+    ['exhausted', /\bno (?:[A-Za-z]+ )?(?:stance|stall|side|state|kill|strike|forced hit|corridor|path)s?\b|\bno (?:walkable|admissible)\b|\bNO LIVE BODY\b|found nothing|\bnone of\b|plans no corridor|left no corridor|every input from here is hit|\bEXHAUSTED\b/],
+    ['bound', /\bUPPER BOUND\b|maxPerSegment|\bbound\b/i],
+    ['does-not-apply', /\bquestion\b|STATIC census body|`speed 0`|is not a live body|is dying|cannot (?:open|act)\b|cannot be (?:pushed|burned|opened|broken|struck)\b|\bholds no\b|\bhas no \w+ (?:slot|tile)\b|is not a presser|does not hold\b|has no weapon|holds NOTHING|resolves to NOTHING|reachable only once|needs \S+ discharged/],
+    ['unmodelled', /unmodelled|not modelled|does not model|unpriced|does not price|[Nn]o strategy row|NOT REGISTERED|not registered|executor is registered|executor does not run/],
+    ['diverged', /diverge|and the RUN rests|does not ARRIVE|does not land|never (?:played|came to rest|armed|touched|ended|opened)\b|still standing|still shut|is not open by|disagree|crossed (?:to|from) level|crossed a door|\bleft level\b|press still down|is not (?:dead|dying)\b|still counted|is not in reach/],
+]);
+
+/** How many times `progressKind` was entered in this process — the gate's "unhooked, it never runs" counter. */
+let kindEntries = 0;
+export const kindEntered = () => kindEntries;
+
+/**
+ * ⛓ HAMMER-PHASE RK — a rejection's KIND (one of `REFUSAL_KINDS`), from the payload `progressReason` reads, in order:
+ *  1. the solver's fields — a search's `bound` `deadline`; a `PendingDeclaration`, a refusal's `pending`, or
+ *     `levelRun`'s `undeclaredKillLock` (`pending`);
+ *  2. the deadline's words anywhere in the verbatim sentence (a refusal after a trip says it may be the deadline's);
+ *  3. an error's `code` (`HAMMER_SAFETY` → `danger`, `STRIKE_BOUND_EXHAUSTED` → `bound`), a search's other `bound`
+ *     (`BOUND_KINDS`), a refusal's `obstacle` (`danger`, `unmodelled-*`, a `clear-tag`'s `reason`: `CLEAR_TAG_KINDS`);
+ *  4. the verbatim sentence (`WHY_KINDS`);
+ *  5. any other thrown error (not a refusal) is `error`; the rest is `other`.
+ * ⛔ PURE: it reads its argument only (no clock, no `shouldStop`), and only an install reaches it.
+ *
+ * @param {*} x  an error, a refused row (`{rung, why}`), a search result, or a `why` string
+ * @returns {string}
+ */
+export function progressKind(x) {
+    kindEntries += 1;
+    if (x === null || x === undefined) return 'other';
+    const o = typeof x === 'object' ? x : null;
+    if (o !== null) {
+        if (o.bound === 'deadline') return 'deadline';
+        if (o.name === 'PendingDeclaration' || (o.pending !== null && o.pending !== undefined) || o.undeclaredKillLock) {
+            return 'pending';
+        }
+    }
+    const why = progressWhy(x) ?? '';
+    if (WHY_KINDS[0][1].test(why)) return 'deadline';
+    if (o !== null) {
+        if (o.code === 'HAMMER_SAFETY') return 'danger';
+        if (o.code === 'STRIKE_BOUND_EXHAUSTED') return 'bound';
+        if (typeof o.bound === 'string' && Object.hasOwn(BOUND_KINDS, o.bound)) return BOUND_KINDS[o.bound];
+        const ob = o.obstacle?.kind;
+        if (ob === 'danger') return 'danger';
+        if (typeof ob === 'string' && /^(?:unmodelled|unbilled)/.test(ob)) return 'unmodelled';
+        if (ob === 'clear-tag' && Object.hasOwn(CLEAR_TAG_KINDS, o.obstacle.reason)) {
+            return CLEAR_TAG_KINDS[o.obstacle.reason];
+        }
+    }
+    for (let i = 1; i < WHY_KINDS.length; i += 1) if (WHY_KINDS[i][1].test(why)) return WHY_KINDS[i][0];
+    if (x instanceof Error && o.name !== 'SolverRefusal') return 'error';
+    return 'other';
+}
+
+/**
+ * ⛓ HAMMER-PHASE RK — the segment's LAST rejection: its `why` verbatim, its kind, and the node it landed on. ONE
+ * object per segment, overwritten (never a list). An error unwinding through several frames is one rejection: it
+ * keeps the deepest node it landed on (the frame it was thrown under), not the outermost one it passed — but its
+ * words are re-read at each frame, because they can grow on the way out (`withSolveDeadline` appends its
+ * `deadlineClause` to a refusal raised after a trip, inside a segment that installed its own `shouldStop`).
+ */
+function noteLast(seg, x, kind, key) {
+    const same = typeof x === 'object' && x !== null && seg.lastSource === x;
+    seg.lastSource = typeof x === 'object' ? x : null;
+    seg.lastWhy = { why: progressWhy(x), kind, key: same ? seg.lastWhy.key : key };
+}
 
 /**
  * The tally key of a rejection, from the words the solver already wrote — nothing is invented:
@@ -187,6 +311,8 @@ export function progressLeave(frame, err = null) {
     const at = seg.stack.lastIndexOf(frame);
     if (at < 0) return;
     const reason = err === null ? null : progressReason(err);
+    const kind = err === null ? null : progressKind(err);
+    if (err !== null) noteLast(seg, err, kind, seg.stack[seg.stack.length - 1].node.key);
     while (seg.stack.length > at) {
         const f = seg.stack.pop();
         if (reason === null) {
@@ -196,15 +322,15 @@ export function progressLeave(frame, err = null) {
                 if (f.rung !== null && f.rung !== f.cursor) f.rung.successes += 1;
             }
         } else {
-            const why = reason;
-            reject(f.node, why);
+            reject(f.node, reason, kind);
             if (f.cursor !== null) {
-                // ⛓ an EXHAUSTED climb names its last rung's own reason (`considered`'s last row)
+                // ⛓ an EXHAUSTED climb names its last rung's own reason (`considered`'s last row), and its own kind
                 const last = err?.considered?.[err.considered.length - 1];
-                const own = last && f.rung !== null && f.rung.role === 'rung' && f.rung.label === last.option
-                    ? progressReason(last.why) : why;
-                reject(f.cursor, own);
-                if (f.rung !== null && f.rung !== f.cursor) reject(f.rung, own);
+                const mine = last && f.rung !== null && f.rung.role === 'rung' && f.rung.label === last.option;
+                const own = mine ? progressReason(last.why) : reason;
+                const ownKind = mine ? progressKind(last.why) : kind;
+                reject(f.cursor, own, ownKind);
+                if (f.rung !== null && f.rung !== f.cursor) reject(f.rung, own, ownKind);
             }
         }
     }
@@ -254,7 +380,10 @@ export function progressRow(rung, refused, extra) {
     if (f === null) return;
     if (refused && refused !== f.lastRefused) {
         f.lastRefused = refused;
-        reject(childOf(f.node, `rung:${refused.rung}`, 'rung', refused.rung), progressReason(refused.why));
+        const node = childOf(f.node, `rung:${refused.rung}`, 'rung', refused.rung);
+        const kind = progressKind(refused);
+        reject(node, progressReason(refused.why), kind);
+        noteLast(p.seg, refused, kind, node.key);
     }
     if (f.rung === null || f.rung.label !== rung) {
         f.rung = childOf(f.node, `rung:${rung}`, 'rung', rung);
@@ -275,7 +404,11 @@ export function progressSearch(phase, r) {
     const node = childOf(parentOf(p.seg), `search:${phase}`, 'search', phase);
     node.attempts += 1;
     if (r.ok) node.successes += 1;
-    else reject(node, progressReason(r.bound ?? r));
+    else {
+        const kind = progressKind(r);
+        reject(node, progressReason(r.bound ?? r), kind);
+        noteLast(p.seg, r, kind, node.key);
+    }
     if (Number.isFinite(r.expansions)) work(p.seg, 'expansions', r.expansions);
     emit(p, 'search');
 }
@@ -417,7 +550,7 @@ export function progressSegment(name, run, fn) {
         root, stack: [{ node: root, cursor: null, rung: null, lastRefused: null }], goal: null,
         tiles: new Map(), tileLevel: null,
         asks: {}, work: { shouldStop: 0, ticks: 0, previews: 0, previewStates: 0, searchStates: 0, expansions: 0 },
-        readers: null,
+        readers: null, lastWhy: null, lastSource: null,
     };
     p.segments += 1;
     p.seg = seg;
@@ -449,9 +582,11 @@ export function progressReaders(readers) {
 function nodeJson(n, active) {
     const rejections = {};
     for (const [k, v] of n.rejections) rejections[k] = v;
+    const rejectionKinds = {};
+    for (const [k, v] of n.kinds) rejectionKinds[k] = v;
     return {
         key: n.key, role: n.role, label: n.label, attempts: n.attempts, successes: n.successes, rejections,
-        active: active.has(n), children: [...n.kids.values()].map((c) => nodeJson(c, active)),
+        rejectionKinds, active: active.has(n), children: [...n.kids.values()].map((c) => nodeJson(c, active)),
     };
 }
 
@@ -476,6 +611,7 @@ function snapshotOf(p) {
         tree: nodeJson(seg.root, active),
         tiles: t === null ? null : { level: t.level, tile: PROGRESS_TILE, cols: t.cols, rows: t.rows, cells },
         budget: { asks: { ...seg.asks }, work: { ...seg.work, ...counted } },
+        lastWhy: seg.lastWhy === null ? null : { ...seg.lastWhy },
         ...(p.beat.count > 0 ? { heartbeat: { at: p.beat.at, count: p.beat.count } } : {}),
     };
 }

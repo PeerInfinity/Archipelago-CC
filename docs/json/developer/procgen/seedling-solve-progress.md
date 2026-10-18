@@ -20,19 +20,21 @@ A snapshot is a copy. It is plain JSON (structured-clone safe), built fresh on e
 
 Where the JS arc installs it: `solveAnytime` runs one `solveSegment` per pass, synchronously. So `withSolveProgress(hook, () => solveAnytime(…))` in the worker covers every pass. Alternatively, `solveFromTape` can hand `onProgress` to `solveSegment`. Each `solveSegment` under the install is one **segment** (§2). `segment.index` counts them from 0, so a caller that knows its pass order can map the index to a pass name, or install with `{pass}` around each pass.
 
-## 2. The snapshot (`v: 1`)
+## 2. The snapshot (`v: 2`)
 
 ```
-{ v: 1,
+{ v: 2,
   seq,
   segment: { name, index, level, pass?, outcome },
-  tree:    { key, role, label, attempts, successes, rejections: { <reason>: n }, active, children: [ … ] },
+  tree:    { key, role, label, attempts, successes, rejections: { <reason>: n }, rejectionKinds: { <kind>: n },
+             active, children: [ … ] },
   tiles:   { level, tile: 16, cols, rows, cells: [ [col, row, reached, firstTick], … ] } | null,
   budget:  { asks: { <site>: n }, work: { <unit>: n } },
+  lastWhy: { why, kind, key } | null,
   heartbeat?: { at, count } }
 ```
 
-`heartbeat` is present once the install has beaten at least once (§3.1). It is an optional field added under `v: 1`: a reader that does not know it loses nothing, so it does not take `v: 2` (which is reserved for the plan's Tier C fields).
+`heartbeat` is present once the install has beaten at least once (§3.1). It is an optional field added under `v: 1`: a reader that does not know it loses nothing. `v: 2` (hammer-phase RK, the first Tier C slice) adds `rejectionKinds` on every node and `lastWhy`; every v1 field is the same bytes (§5, §6).
 
 ### `seq`
 
@@ -61,6 +63,7 @@ Nodes are keyed by **role**, not by call. Repeating a derivation at the same pla
 | `attempts` | the times the role was entered at this place |
 | `successes` | the times it returned (a walk arrived, a rung produced a corridor or changed the world, a search found its certificate) |
 | `rejections` | `{reason: count}`, the times it refused or threw, keyed as below |
+| `rejectionKinds` | `{kind: count}`, the same rejections by **kind** (below). Each rejection has exactly one kind, so on every node the two sum to the same count. `v: 2` |
 | `active` | the node is on the path the solver is working on now |
 | `children` | in the order they were first entered |
 
@@ -72,6 +75,38 @@ Nodes are keyed by **role**, not by call. Repeating a derivation at the same pla
 3. otherwise the sentence that decides. The walk's own label (`solverBot(<tape>) … : `) is dropped. The text is cut at the first ` — `, `: `, `; `, ` (`, `. ` or line break, every number becomes `#`, and it is capped at 96 characters.
 
 Rule 3 is why the same reason met at two positions counts as one key: `breakablerock@#,# cannot be broken by this run`.
+
+**Rejection kinds** (`v: 2`, `solveProgress.progressKind`). The key is a *reason*: two refusals of the same class at two different sentences are two keys, and the cut drops the sentence's tail. The kind is a *class*, from a closed list (`REFUSAL_KINDS`), each named with a word the solver already uses for it. It is read from the same payload as the key (the error, the refused rung's row, or the search result), but on the **verbatim** sentence, never on the cut key: a refusal raised after a deadline trip carries the solver's `deadlineClause` (`⏱ DEADLINE: …`) at its end, past every separator the key cuts at. The first rule that matches decides:
+
+| Kind | From the solver's fields | From the verbatim sentence |
+|---|---|---|
+| `deadline` | a search's `bound: 'deadline'` | `⏱ DEADLINE`, `anytime deadline`, `caller's deadline`, `at the deadline` (checked right after `pending`, so a refusal after a trip is the deadline's) |
+| `pending` | a `PendingDeclaration`, a refusal's `pending`, `levelRun`'s `undeclaredKillLock` (the two-pass loop's by-design first pass) | — |
+| `danger` | `code: HAMMER_SAFETY`; `obstacle.kind: 'danger'` (the ARROWLANE and AXETIMING refusals); search bounds `start`, `window`, `death`, `approach`, `train` | `probes dangerous` / `probes DANGEROUS`, `was HIT`, `HIT at dwell`, `danger map forbids`, `UNBILLED DAMAGE` |
+| `bound` | `code: STRIKE_BOUND_EXHAUSTED`; search bounds `expansions`, `horizon` | `UPPER BOUND`, `maxPerSegment`, `bound` |
+| `exhausted` | search bound `exhausted`; a `clear-tag` refusal's `unresolved` | `no walkable` / `admissible` / `stance` / `stall` / `side` / `state` / `kill` / `strike` / `forced hit` / `corridor` / `path`, `NO LIVE BODY`, `found nothing`, `none of`, `plans no corridor`, `left no corridor`, `every input from here is hit`, `EXHAUSTED` (*no REACHABLE stance* counts: one word may sit between `no` and the noun) |
+| `does-not-apply` | search bounds `body`, `dying`, `line`, `no-landing`; `clear-tag` reasons `wrong-level`, `cross-room-presser`, `prerequisite`, `cannot-act` | `question` (*"That is a KILL question"*), `STATIC census body`, `` `speed 0` ``, `is not a live body`, `is dying`, `cannot open` / `act`, `cannot be pushed` / `burned` / `opened` / `broken` / `struck`, `holds no`, `has no … slot` / `tile`, `is not a presser`, `does not hold`, `has no weapon`, `holds NOTHING`, `resolves to NOTHING`, `reachable only once`, `needs … discharged` |
+| `already-true` | — | `already true`, `is ALREADY` |
+| `unmodelled` | `obstacle.kind` `unmodelled-*` / `unbilled-*`; search bound `unmodelled`; `clear-tag` reason `no-verb` | `unmodelled`, `not modelled`, `does not model`, `unpriced`, `does not price`, `no strategy row`, `NOT REGISTERED`, `executor is registered`, `executor does not run` |
+| `diverged` | `clear-tag` reason `not-written` | the run did not do what the plan said: `diverge`, `and the RUN rests`, `does not ARRIVE`, `does not land`, `never played` / `came to rest` / `armed` / `touched` / `ended` / `opened`, `still standing`, `still shut`, `is not open by`, `disagree`, `crossed to` / `from level`, `crossed a door`, `left level`, `press still down`, `is not dead` / `dying`, `still counted`, `is not in reach` |
+| `error` | any other thrown error that is not a refusal (a `SolverBotError` with no code, a module's own error, a `TypeError`) | — |
+| `other` | the residue: a refusal or row that no rule recognises | — |
+
+The field rules come first (the deadline's sentence second), then the sentence's rules in the table's order. The search bounds (`BOUND_KINDS`) and the `clear-tag` reasons (`CLEAR_TAG_KINDS`) are read out of the solver's source by a gate row, so a bound or reason added later without a kind fails it. No rung or verb name enters a rule: a rung's refusals are classified by their own words, so a rung that exists only behind a fidelity switch (`axeTimingRung`, `arrowLaneCrossing`, `sealDoorApproach`'s `approach`) classifies the same ON or OFF. OFF, it is just absent. On the committed solves (L18's hammer room, L40's kill rung, L6's climb, L3's walk) every rejection has a kind and none is `other` (§6). Over the solver's whole source the rules are a census, not a proof: of `solverBot.js`'s 358 refusal and rejection sites, 41 are wrappers whose sentence is another's (`${what}: ${why}`, `why = detour.why`), so their kind is the inner sentence's, and 75 have fixed words no rule names yet. Those would read `other` if a solve met them (the RK report lists them by line).
+
+⚠ **Not every kind the investigation listed reaches the tree.** `not-faster`, `leg-bound`, `stalled`, `crossing`, `shake-room`, `unpriced-hit` and the window `danger` are `planSwordDash`'s per-window rows (`row.kind`). A window rejected inside a dash plan is not a rejection of a tree node, and `planSwordDash` has no count point (§3). The deadline's `window` and `budget` are the JS arc's `limit.first`, which the tap knows and the solver does not. The solver sees only that its caller's `shouldStop` said yes, so its kind is `deadline`, and the first site that tripped is in the verbatim sentence (*first at `walk`*).
+
+### `lastWhy`
+
+The segment's **last** rejection, `{why, kind, key}`, or `null` before the first one (`v: 2`).
+
+| Field | Meaning |
+|---|---|
+| `why` | the rejection's sentence, **verbatim**: an error's `message`, a refused row's or a search's `why` (a search with no `why` gives its `bound`). Nothing is cut, masked or capped |
+| `kind` | its kind (above) |
+| `key` | the node it landed on: a refused rung's node, a search's leaf, or, for an error, the **deepest** frame it was thrown under |
+
+It is one object per segment, overwritten at each rejection, never a list, so the snapshot does not grow with the solve. An error that unwinds through several frames is one rejection. It keeps the deepest node, but its words are re-read at each frame, because they can grow on the way out: inside a segment that installed its own `shouldStop`, `withSolveDeadline` appends the deadline clause to a refusal raised after a trip.
 
 ### `tiles`
 
@@ -151,7 +186,7 @@ r9-solve-18 L18 hook=peek deadline=never run 1/1: 8278 ms — SOLVED 445 t (3 pa
   answer 230dc0ff7300b9741e5559abc26ef70f · hook calls 1441 · snapshots 8 · final 1960 bytes · peek ms median 0.098 max 4.479
 ```
 
-The solve takes three passes. Pass 1 discovers the kill lock and pass 2 measures it, so the third segment (`index: 2`) solves in 445 ticks, the witness tape's own length. Its final snapshot, with the cells cut to six:
+The solve takes three passes. Pass 1 discovers the kill lock and pass 2 measures it, so the third segment (`index: 2`) solves in 445 ticks, the witness tape's own length. Its final snapshot, with the cells cut to six (shown as v1 emitted it; v2 adds `"rejectionKinds"` beside each `"rejections"`, here `{}` everywhere but the last leaf's `{ "exhausted": 1 }`, and `"lastWhy"`: that leaf's verbatim *"depth first (deepest 35) and then breadth first: no state reachable from index 31 survives to index 37 …"*, kind `exhausted`):
 
 ```json
 { "v": 1,
@@ -200,6 +235,18 @@ A longer climb, for the tree's ladder shape: `r5-l40-part5`'s staging toward the
 | `budget.limit?` | not written by the solver | the budget is the caller's (`budgetWork`) |
 | `budget.work` | named units, plus `shouldStop` | `shouldStop` is the JS arc's work unit, measured where it is spent |
 
+### v1 → v2 (hammer-phase RK, 2026-10-18)
+
+| Field | v1 | v2 | Why |
+|---|---|---|---|
+| `v` | 1 | **2** | the first Tier C field; later Tier C slices add fields to v2 without changing `v` again |
+| `tree.*.rejectionKinds` | — | `{kind: n}` beside `rejections` | the reason key splits one class of refusal into one key per sentence and cuts away the tail. The kind gives the class, from a closed list read on the verbatim sentence |
+| `lastWhy` | — | `{why, kind, key} \| null` | the verbatim sentence the key cuts down. One per segment, overwritten, so the snapshot stays bounded |
+| `tree.*.rejections` and every other v1 field | | **unchanged, byte for byte** | pinned: the v1 projection of every segment's final snapshot (no `v`, no `lastWhy`, no `rejectionKinds`) has the md5 measured with the v1 emitter, on L18, L40, L6 and L3 (§6) |
+| the S3 tap stamps (§7: `budget.spent`, `budget.limit`, `budget.wallBySite`, `budget.rate`, `request`, `best`, `progressAttempt`) | | **unchanged at v2** | they are the tap's, written on the posted copy; v2 does not touch the tap, the worker or the service |
+
+No consumer gates on `v`: the view, the tap, the worker and the service read fields by name, so a v2 snapshot shows in the v1 view with the new fields ignored. The view half (kind tallies on each node, the last `why` line) is the JS arc's slice.
+
 ## 6. Pins
 
 `frontend/modules/seedlingDemo/solveProgressHeartbeat.test.js` covers the heartbeat (§3.1): `previewWalk`'s output is byte-identical with a hook and without, on solverBot.test.js's L6 room; on L18 and L40 the answer digest and the `shouldStop` count are equal with no hook and under the real tap at 1000, 100, 50 and 0 ms; `budget.asks` holds deadline sites only and sums to the unhooked `shouldStop` count; L40 beats at least 40 times; with no hook the heartbeat never runs; and every call site is one null check with a literal key. Its three mutants are named in its header.
@@ -208,6 +255,7 @@ A longer climb, for the tree's ladder shape: `r5-l40-part5`'s staging toward the
 - byte-identity with and without a hook (a peeking hook and a silent one) on the L18 hammer room, an L40 climb and a plain walk;
 - that roles are stable keys, that `tiles` counts never fall, and that `firstTick` never rises across a stream;
 - that a snapshot survives `structuredClone`, and that mutating it leaves the next snapshot unchanged.
+- **`v: 2` (hammer-phase RK).** On L18 and L40 under a deadline that never trips, the answer digest is equal hooked and unhooked, and the `shouldStop` totals (165, 167) and each segment's `budget.asks` are the values the v1 emitter gave. Unhooked, no kind is looked up (`kindEntered()` does not move). On L18, L40, L6 and L3, the v1 projection of every segment's final snapshot has the md5 the v1 emitter gave. Every node's kinds sum to its rejections, none is `other`, and each solve's kind totals are pinned (L18 `pending` 10 + `exhausted` 3, L40 `danger`/`bound`/`exhausted` 1 each, L6 `exhausted`/`bound` 1 each, L3 none; ≥ 15 rejections in ≥ 4 kinds). `lastWhy` is the thrown error's `message` on L18's refused first pass (`pending`, under the press arm), and a row of the solve's own trace on L40 and L6. It is always one `{why, kind, key}` object whose key is a node of its tree. `progressKind` reads a deadline clause at a sentence's end (the cut key cannot). Every search bound and `clear-tag` reason in the source has a kind. The three fidelity switches' rungs classify the same ON and OFF, never as `other`. `solverBot.js` never calls the lookup, and the lookup reads no deadline or clock. Its four mutants are named in its header.
 
 `scripts/procgen/probe-seedling-solve-progress.mjs --compare` checks byte-identity for any staging. `--hook=tap` solves under the JS worker's own tap and prints its posts and the time spent inside it.
 

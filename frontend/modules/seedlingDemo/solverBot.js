@@ -12155,7 +12155,7 @@ export function deriveFight(run, { targets, lastPressAt, caller, bounds = HAMMER
             HAMMER_FIGHT_TRACE.sink({ run, ...record, ms: globalThis.performance.now() - t0, out });
         }
         // ⛓ hammer-phase D1 — the fight search is a progress leaf (its expansions, its bound)
-        if (activeProgress !== null) progressSearch('fight', { ok: out.ok, bound: out.bound, expansions: stats.expansions });
+        if (activeProgress !== null) progressSearch('fight', { ok: out.ok, bound: out.bound, why: out.why, expansions: stats.expansions });
         return { ...out, record };
     };
     const no = (claim, bound, why) => done({ ok: false, claim, bound, why });

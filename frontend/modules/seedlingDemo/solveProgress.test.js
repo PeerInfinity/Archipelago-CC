@@ -23,6 +23,9 @@
  */
 import { describe, expect, it } from 'vitest';
 import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { loadTape } from './fixtures/index.js';
 import { atlasLevelSource } from './levelSource.js';
@@ -31,11 +34,13 @@ import { twoPassSolve } from './twoPassSolve.js';
 import { SPINNER } from './spinner.js';
 import { DEADLINE_SITES, solveSegment, withSolveDeadline, withSolveProgress as reExported } from './solverBot.js';
 import {
-    PROGRESS_POINTS, PROGRESS_TILE, SOLVE_PROGRESS_VERSION, activeProgress, installSolveProgress, progressReason,
-    withSolveProgress,
+    BOUND_KINDS, CLEAR_TAG_KINDS, PROGRESS_POINTS, PROGRESS_TILE, REFUSAL_KINDS, SOLVE_PROGRESS_VERSION, activeProgress,
+    installSolveProgress, kindEntered, progressKind, progressReason, progressWhy, withSolveProgress,
 } from './solveProgress.js';
+import { CONTACT_FIDELITY, withContactFidelity } from './contactFidelity.js';
 
 const SOURCE = atlasLevelSource();
+const HERE = dirname(fileURLToPath(import.meta.url));
 
 /** A fixture's staging, honest, the persistence rows without an `at`, no equips (the hammer rows' shape). */
 function stagingOf(name, residue = null) {
@@ -322,5 +327,292 @@ describe('hammer-phase D1 — progressReason: the solver\'s own words', () => {
             .toBe('the danger-forbidden corridor STILL probes dangerous at');
         expect(progressReason('a'.repeat(200))).toHaveLength(96);
         expect(progressReason(null)).toBe('unknown');
+    });
+});
+
+/**
+ * ── HAMMER-PHASE RK — REFUSAL KINDS AND THE LAST `why` (`v: 2`) ─────────
+ *
+ * The W0 values below were measured at `3f5c3ff0fd` with the v1 emitter (the report:
+ * `CC/docs/cloud-reports/seedling-hammer-refusal-kinds.md`): L18's and L40's `shouldStop` totals and each segment's
+ * asks under a deadline that never trips (fine checkpoints on), and the md5 of every segment's final snapshot (peeked
+ * at `done`) with `v` dropped — at v2 also `lastWhy` and every node's `rejectionKinds`. Equal ⇒ v1's fields are the
+ * same bytes at v2.
+ *
+ * ── THE MUTATION LIST (run during development, each row's catcher named) ──
+ *   k1 the kind is read off the CUT key (`progressKind(progressReason(err))` in `progressLeave`) -> the committed-solves
+ *        row red (L18's `levelRun` key is `other`), and the deadline-clause row
+ *   k2 `lastWhy` kept as a growing list (`seg.lastWhy = [...(seg.lastWhy ?? []), {…}]`) -> the lastWhy rows red
+ *   k3 a kind lookup that calls `shouldStop` (`rowFor`: `activeDeadline?.shouldStop('walk')` before `progressRow`)
+ *        -> the L40 byte-identity row red (`shouldStop` 167 -> 171)
+ *   k4 a kind lookup unhooked (`rowFor`: `progressKind(refused)` outside the null check) -> the L40 row red
+ *        (`kindEntered()` moves with no hook) and the source row
+ */
+const RK_SOLVES = [
+    { what: 'L18 hammer room (residue 21)', tape: 'r9-solve-18', residue: 21, deadline: true,
+        goals: [{ kind: 'reach-exit', exit: { x: 176, y: 112 } }], ticks: 445, shouldStop: 165,
+        asks: [{ 'walk': 13, 'hammer-escape': 37 }, { 'walk': 14, 'hammer-escape': 37 },
+            { 'walk': 18, 'hammer-escape': 37, 'sword-dash': 9 }],
+        v1: '84b55e41f71e00298238dbd053ba464e', kinds: { pending: 10, exhausted: 3 } },
+    { what: 'L40 kill rung (the totem part at (160,640))', tape: 'r5-l40-part5', deadline: true,
+        goals: [{ kind: 'collect-placement', placement: { x: 160, y: 640 } }], ticks: 679, shouldStop: 167,
+        asks: [{ 'walk': 61, 'kill-chaser': 97, 'sword-dash': 9 }],
+        v1: '642785a181d63fba342dea4906adc76a', kinds: { danger: 1, bound: 1, exhausted: 1 } },
+    { what: 'L6 ladder climb', tape: 'r8-solve-6', deadline: false, goals: SOLVES[1].goals, ticks: 294,
+        v1: 'c2d3c373186a656b56bead7fe1a9530b', kinds: { exhausted: 1, bound: 1 } },
+    { what: 'L3 plain walk', tape: 'r8-solve-3', deadline: false, goals: SOLVES[2].goals, ticks: 245,
+        v1: 'd87fd4b1e894b5a6662eb329ce035610', kinds: {} },
+];
+
+/** One `twoPassSolve` of `s` (under a deadline that never trips when `s.deadline`), `hook` or none, its finals. */
+async function solveRk(s, hook = null) {
+    const staging = stagingOf(s.tape, s.residue ?? null);
+    let shouldStops = 0;
+    const go = () => twoPassSolve({ makeRun: (rows) => createRunForStaging({ ...staging, persistence: rows }, SOURCE),
+        goals: s.goals, name: s.tape, boot: staging.boot, persistence: staging.persistence,
+        gameTick: () => { throw new Error('no game oracle here'); } });
+    const deadlined = () => (s.deadline
+        ? withSolveDeadline({ shouldStop: () => { shouldStops += 1; return false; }, fineCheckpoints: true }, go) : go());
+    let settled = null;
+    const p = hook === null ? deadlined() : withSolveProgress(hook, deadlined);
+    await p.then((value) => { settled = { ok: true, value }; }, (error) => { settled = { ok: false, error }; });
+    return { ...settled, shouldStops };
+}
+
+/** A hook that keeps every segment's final snapshot (peeked at `done`) and, with `all`, every snapshot. */
+function finalsHook(all = false) {
+    const finals = [];
+    const stream = [];
+    const hook = (site, peek) => {
+        if (all) { const x = peek(); if (x !== null) stream.push(x); }
+        if (site === 'done') finals.push(peek());
+    };
+    return { hook, finals, stream };
+}
+
+const nodesOf = (n, out = []) => { out.push(n); for (const c of n.children) nodesOf(c, out); return out; };
+const sum = (o) => Object.values(o).reduce((a, b) => a + b, 0);
+/** v1's bytes of a v2 snapshot: no `v`, no `lastWhy`, no `rejectionKinds`. */
+const v1Of = (snap) => {
+    const strip = (n) => { const { rejectionKinds, children, ...rest } = n; return { ...rest, children: children.map(strip) }; };
+    const { v, lastWhy, tree, ...rest } = snap;
+    return { ...rest, tree: strip(tree) };
+};
+/** `lastWhy` is null or ONE plain object `{why, kind, key}`, and its key is a node of the tree it rides with. */
+function expectLastWhy(snap) {
+    const lw = snap.lastWhy;
+    if (lw === null) return;
+    expect(Array.isArray(lw)).toBe(false);
+    expect(Object.keys(lw)).toEqual(['why', 'kind', 'key']);
+    expect(typeof lw.why).toBe('string');
+    expect(REFUSAL_KINDS).toContain(lw.kind);
+    expect(nodesOf(snap.tree).some((n) => n.key === lw.key)).toBe(true);
+}
+
+describe('hammer-phase RK — refusal kinds and the last why (v: 2)', () => {
+    const runs = new Map();
+    const runOf = async (s) => {
+        if (!runs.has(s.tape)) {
+            const entered = kindEntered();
+            const off = await solveRk(s);
+            const enteredOff = kindEntered() - entered;
+            const f = finalsHook();
+            const on = await solveRk(s, f.hook);
+            runs.set(s.tape, { off, on, finals: f.finals, enteredOff });
+        }
+        return runs.get(s.tape);
+    };
+
+    for (const s of RK_SOLVES.slice(0, 2)) {
+        it(`⛓⛓⛓ ${s.what}: the answer, the shouldStop total and the asks are W0's, hooked and unhooked; unhooked, no kind is looked up`, async () => {
+            const { off, on, finals, enteredOff } = await runOf(s);
+            expect(enteredOff).toBe(0);
+            expect(off.ok && on.ok).toBe(true);
+            expect(off.value.out.perTick.length).toBe(s.ticks);
+            expect(digest(on)).toBe(digest(off));
+            expect([off.shouldStops, on.shouldStops]).toEqual([s.shouldStop, s.shouldStop]);
+            expect(finals.map((x) => x.budget.asks)).toEqual(s.asks);
+            expect(sum(Object.assign({}, ...finals.map((x, i) => ({ [i]: sum(x.budget.asks) }))))).toBe(s.shouldStop);
+            expect(activeProgress).toBe(null);
+        }, 600_000);
+    }
+
+    for (const s of RK_SOLVES) {
+        it(`⛓⛓⛓ ${s.what}: v1's fields are W0's bytes; every rejection has ONE kind, none of them \`other\``, async () => {
+            const { finals } = await runOf(s);
+            expect(finals.every((x) => x.v === 2 && SOLVE_PROGRESS_VERSION === 2)).toBe(true);
+            expect(md5(JSON.stringify(finals.map(v1Of)))).toBe(s.v1);
+            const kinds = {};
+            for (const snap of finals) {
+                expectLastWhy(snap);
+                for (const n of nodesOf(snap.tree)) {
+                    expect(Object.keys(n.rejectionKinds).every((k) => REFUSAL_KINDS.includes(k))).toBe(true);
+                    expect(sum(n.rejectionKinds)).toBe(sum(n.rejections));
+                    for (const [k, v] of Object.entries(n.rejectionKinds)) kinds[k] = (kinds[k] ?? 0) + v;
+                }
+            }
+            expect(kinds.other ?? 0).toBe(0);
+            expect(kinds).toEqual(s.kinds);
+        }, 600_000);
+    }
+
+    it('⛓⛓ non-vacuous: the committed solves reject at least K = 15 times, in at least four kinds', async () => {
+        const kinds = {};
+        for (const s of RK_SOLVES) {
+            for (const snap of (await runOf(s)).finals) {
+                for (const n of nodesOf(snap.tree)) {
+                    for (const [k, v] of Object.entries(n.rejectionKinds)) kinds[k] = (kinds[k] ?? 0) + v;
+                }
+            }
+        }
+        expect(sum(kinds)).toBeGreaterThanOrEqual(15);
+        expect(Object.keys(kinds).length).toBeGreaterThanOrEqual(4);
+    }, 600_000);
+
+    it('⛓⛓⛓ lastWhy is the thrown why VERBATIM: L18\'s first pass refuses, and its last why is the error\'s message', () => {
+        // ⛓ twoPassSolve's first pass, alone: the undeclared kill lock's `levelRun` throw, from under the press arm
+        const s = RK_SOLVES[0];
+        const staging = stagingOf(s.tape, s.residue);
+        const f = finalsHook(true);
+        let err = null;
+        try {
+            solveSegment({ run: createRunForStaging(staging, SOURCE), goals: s.goals, name: s.tape, boot: staging.boot,
+                onProgress: f.hook });
+        } catch (e) { err = e; }
+        expect(err).not.toBe(null);
+        const last = f.finals.at(-1);
+        expect(last.segment.outcome).toBe('threw');
+        expect(last.lastWhy.why).toBe(err.message);
+        expect(last.lastWhy.why).toBe(progressWhy(err));
+        expect(last.lastWhy.kind).toBe('pending');
+        expect(last.lastWhy.key).toBe('segment/goal#0/walk/verb:kill/arm:press');
+        // ⛓ the cut key is not the verbatim why: it is the sentence's first word, and it has no kind of its own
+        expect(progressReason(err)).toBe('levelRun');
+        expect(progressKind(progressReason(err))).toBe('other');
+        for (const snap of f.stream) expectLastWhy(snap);
+        expect(f.stream.filter((x) => x.lastWhy !== null).length).toBeGreaterThan(0);
+    }, 300_000);
+
+    it('⛓⛓ lastWhy is a refused rung\'s why verbatim: L40\'s and L6\'s last rejections are rows of their own traces', async () => {
+        for (const s of [RK_SOLVES[1], RK_SOLVES[2]]) {
+            const { on, finals } = await runOf(s);
+            const whys = on.value.out.trace.rows.flatMap((r) => (r.rejected ?? []).map((x) => x.why));
+            const last = finals.at(-1).lastWhy;
+            expect(last).not.toBe(null);
+            expect(whys).toContain(last.why);
+            expect(last.key.endsWith(`/rung:${on.value.out.trace.rows.flatMap((r) => r.rejected ?? [])
+                .find((x) => x.why === last.why).option}`)).toBe(true);
+        }
+    }, 600_000);
+});
+
+describe('hammer-phase RK — progressKind: the solver\'s own words, read on the verbatim why', () => {
+    it('⛓⛓ a deadline clause at the END is read (the cut key would drop it)', () => {
+        const why = 'solverBot(t) reach-exit (1,2)->L3: no stance within bob@1,2\'s leash (80) — 0 cell(s). '
+            + ' ⏱ DEADLINE: the caller\'s `shouldStop` tripped (first at `walk`) and refused 1 `walk` scan(s) — this '
+            + 'refusal may be the deadline\'s, not the room\'s.';
+        const err = Object.assign(new Error(why), { name: 'SolverRefusal' });
+        expect(progressKind(err)).toBe('deadline');
+        expect(progressKind(progressReason(err))).not.toBe('deadline');
+        expect(progressKind(why.slice(0, why.indexOf(' ⏱')))).toBe('exhausted');
+    });
+
+    it('⛓ fields first: a search\'s bound, a pending declaration, a code, an obstacle, a clear-tag reason', () => {
+        expect(progressKind({ ok: false, bound: 'deadline', why: 'no stance' })).toBe('deadline');
+        expect(progressKind({ ok: false, bound: 'exhausted', why: 'x' })).toBe('exhausted');
+        expect(progressKind({ ok: false, bound: 'expansions' })).toBe('bound');
+        expect(progressKind(Object.assign(new Error('levelRun: x'), { undeclaredKillLock: {} }))).toBe('pending');
+        expect(progressKind(Object.assign(new Error('x'), { name: 'PendingDeclaration' }))).toBe('pending');
+        expect(progressKind(Object.assign(new Error('x'), { code: 'HAMMER_SAFETY' }))).toBe('danger');
+        expect(progressKind(Object.assign(new Error('x'), { code: 'STRIKE_BOUND_EXHAUSTED' }))).toBe('bound');
+        expect(progressKind(Object.assign(new Error('x'), { name: 'SolverRefusal', obstacle: { kind: 'danger' } })))
+            .toBe('danger');
+        expect(progressKind(new TypeError('x is undefined'))).toBe('error');
+        expect(progressKind(Object.assign(new Error('x'), { name: 'SolverRefusal' }))).toBe('other');
+        expect(progressKind(null)).toBe('other');
+        expect(progressWhy({ ok: false, bound: 'exhausted' })).toBe('exhausted');
+        expect(progressWhy({ rung: 'time', why: 'the aim is 64 px away' })).toBe('the aim is 64 px away');
+    });
+
+    it('⛓⛓ closed over the source: every search bound and every clear-tag reason the solver writes has its kind', () => {
+        const src = (f) => readFileSync(join(HERE, f), 'utf8');
+        const bounds = new Set();
+        for (const f of ['solverBot.js', 'spaceTimeReach.js']) {
+            for (const re of [/\bbound: '([a-z-]+)'/g, /\bno\((?:true|false), '([a-z-]+)'/g, /\bnegative\('([a-z-]+)'/g]) {
+                for (const m of src(f).matchAll(re)) bounds.add(m[1]);
+            }
+        }
+        expect(bounds.size).toBeGreaterThanOrEqual(10);
+        for (const b of bounds) expect([b, Object.hasOwn(BOUND_KINDS, b)]).toEqual([b, true]);
+        const reasons = new Set([...src('solverBot.js').matchAll(/\brefuseCT\('([a-z-]+)'/g)].map((m) => m[1]));
+        expect(reasons.size).toBeGreaterThanOrEqual(5);
+        for (const r of reasons) expect([r, Object.hasOwn(CLEAR_TAG_KINDS, r)]).toEqual([r, true]);
+        for (const k of [...Object.values(BOUND_KINDS), ...Object.values(CLEAR_TAG_KINDS)]) {
+            expect(REFUSAL_KINDS).toContain(k);
+        }
+        expect(REFUSAL_KINDS.at(-1)).toBe('other');
+    });
+
+    it('⛓⛓ the fidelity switches\' rungs classify the same ON and OFF, and none of their refusals is `other`', () => {
+        // ⛓ each payload is the shape its site in solverBot.js writes (the sentence's fixed words, the fields)
+        const refusal = (message, extra = {}) => Object.assign(new Error(message), { name: 'SolverRefusal', ...extra });
+        const door = 'the door cannot open in this state: the run holds 2 of the 3 seal parts. The game plays the '
+            + 'SealController\'s ceremony on approach ("Face the Watcher and return") and the door stays shut';
+        const CORPUS = [
+            // axeTimingRung — the AXE arm's blade-gap rows and the crossing's refusal (`AXETIMING —`)
+            ['axeTimingRung', { rung: 'dodge', why: 'no stall of one revolution or less at the doorstep or 7 earlier '
+                + 'walk-offset(s) (step 4) clears the corridor of axe:axe@64,32 (12 preview(s)); and on the axe\'s '
+                + 'clock at dash speed (AXETIMING, 40 preview(s)): no gap of the chain is wide enough' }, 'exhausted'],
+            ['axeTimingRung', { rung: 'dodge', why: 'the AXE arm\'s search stopped at the deadline after 9 preview(s) '
+                + '(`axe-dodge`) without a stall that clears axe@64,32' }, 'deadline'],
+            ['axeTimingRung', { rung: 'dodge', why: 'this segment has already stalled 4 time(s) for a clocked danger '
+                + '(AXE_DODGE_RUNG.maxPerSegment 4) — a walk that keeps meeting one is not converging' }, 'bound'],
+            ['axeTimingRung', refusal('solverBot(t) reach-exit (1,2)->L3: AXETIMING — the crossing of axe@64,32 '
+                + 'certified clean (stall 3 at sample 5, the dash chain 2 t after the resume) was HIT on the run at t40 '
+                + 'by axe@64,32 — the run bills what the certificate priced clean, so it is not walked on (driven '
+                + 't30..t41).', { obstacle: { kind: 'danger', id: 'axe@64,32' } }), 'danger'],
+            // arrowLaneCrossing — the ARMED lane's refusal (`ARROWLANE —`)
+            ['arrowLaneCrossing', refusal('solverBot(t) reach-exit (1,2)->L3: ARROWLANE — the corridor crosses an '
+                + 'ARMED lane (separated: arrowtrap@16,32; arrows are not dodged, they are billed) and the crossing is '
+                + 'not admitted: the crossing takes 3 arrow hit(s), over the budget\'s 1',
+            { obstacle: { kind: 'danger', id: 'arrowtrap@16,32' } }), 'danger'],
+            // sealDoorApproach — the door's predicate sentence, its stance, its wait, and the clear-tag order's refusals
+            ['sealDoorApproach', refusal(`solverBot: approach finaldoor@96,16 in level 113 — ${door}.`,
+                { obstacle: { kind: 'solid', id: 'finaldoor@96,16', tag: 'finaldoor' } }), 'does-not-apply'],
+            ['sealDoorApproach', refusal('solverBot: no stance to approach finaldoor@96,16 from in level 113 — 4 '
+                + 'walkable cell(s) lie 40..64 px from it and none plans a corridor from (16,16).',
+            { obstacle: { kind: 'solid', id: 'finaldoor@96,16' } }), 'exhausted'],
+            ['sealDoorApproach', refusal('x: held toward finaldoor@96,16 for 120 tick(s) and it never played "open" '
+                + '(closest 30.00 px; the circle is 36; ceremonies 1).'), 'diverged'],
+            ['sealDoorApproach', refusal('x: finaldoor@96,16 was still standing 90 tick(s) after "open" played.'),
+                'diverged'],
+            ['sealDoorApproach', refusal(`solverBot(t) clear-tag {113,0} finaldoor@96,16: 'approach' could not be `
+                + `resolved from (16,16): ${door}`, { obstacle: { kind: 'clear-tag', reason: 'unresolved' } }),
+            'exhausted'],
+            ['sealDoorApproach', refusal('x: \'approach\' is SELECTED and REGISTERED for solid:finaldoor, and the '
+                + 'resolver could not bind this obstacle against live state',
+            { obstacle: { kind: 'clear-tag', reason: 'unresolved' } }), 'exhausted'],
+            ['sealDoorApproach', refusal('x: solid:finaldoor selects \'approach\', which is NOT REGISTERED — no '
+                + 'executor clears this flag yet', { obstacle: { kind: 'clear-tag', reason: 'no-verb' } }), 'unmodelled'],
+        ];
+        for (const sw of ['axeTimingRung', 'arrowLaneCrossing', 'sealDoorApproach']) {
+            expect(Object.hasOwn(CONTACT_FIDELITY, sw)).toBe(true);
+            const rows = CORPUS.filter((c) => c[0] === sw);
+            expect(rows.length).toBeGreaterThan(0);
+            const on = withContactFidelity({ [sw]: true }, () => rows.map((c) => progressKind(c[1])));
+            const off = withContactFidelity({ [sw]: false }, () => rows.map((c) => progressKind(c[1])));
+            expect([sw, on]).toEqual([sw, off]);
+            expect([sw, on]).toEqual([sw, rows.map((c) => c[2])]);
+            expect(on).not.toContain('other');
+        }
+    });
+
+    it('⛓⛓ only an install reaches a kind: solverBot never calls the lookup, and the lookup reads no deadline', () => {
+        const bot = readFileSync(join(HERE, 'solverBot.js'), 'utf8');
+        expect(bot).not.toMatch(/\bprogress(?:Kind|Why)\(|\bkindEntered\b/);
+        const own = readFileSync(join(HERE, 'solveProgress.js'), 'utf8');
+        const body = own.slice(own.indexOf('export function progressKind('), own.indexOf('function noteLast('));
+        expect(body.length).toBeGreaterThan(200);
+        expect(body).not.toMatch(/shouldStop\(|activeDeadline|performance|Date\./);
     });
 });
