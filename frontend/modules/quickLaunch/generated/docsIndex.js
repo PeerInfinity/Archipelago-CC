@@ -816,6 +816,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The Path Analyzer panel is a standalone tool for analyzing what's required to reach any region in the game. Unlike the integrated \"Analyze Paths\" feature in the Regions panel, this dedicated panel…"
     },
     {
+        "path": "docs/json/user/modules/playbackBot.md",
+        "title": "Playback Bot Panel",
+        "section": "user/modules",
+        "summary": "The Playback Bot plays the loaded world for you. It follows the world's sphere log — the solution path, sphere by sphere — walking to each location in order and checking it, moving between regions…"
+    },
+    {
         "path": "docs/json/user/modules/presets.md",
         "title": "Presets Panel",
         "section": "user/modules",
@@ -1097,6 +1103,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/modules/metaGamePanel.md",
             "docs/json/user/modules/modules.md",
             "docs/json/user/modules/pathAnalyzerPanel.md",
+            "docs/json/user/modules/playbackBot.md",
             "docs/json/user/modules/presets.md",
             "docs/json/user/modules/procgenPipeline.md",
             "docs/json/user/modules/progressBarPanel.md",

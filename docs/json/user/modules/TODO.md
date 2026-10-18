@@ -33,6 +33,7 @@ User-friendly guides still to be written. See the corresponding technical refere
 - [Proof Queue](./proofQueue.md) — Table-based proof interface for MetaMath games
 - [Proof Graph](./proofGraph.md) — Visual graph of proof dependencies for MetaMath games
 - [Procgen Pipeline](./procgenPipeline.md) — Generating a procgen world and loading it to play
+- [Playback Bot](./playbackBot.md) — Letting the bot play a world's sphere log
 
 ## Core Service Modules
 
