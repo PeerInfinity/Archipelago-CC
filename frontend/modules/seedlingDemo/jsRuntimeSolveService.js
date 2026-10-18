@@ -38,11 +38,15 @@
  * to `SOLVE_PROGRESS_INTERVALS_MS` (`progressIntervalMs`). Never the request:
  * a rate change moves no plan. It applies from the next solve.
  * ⛓ SOLVE-PROGRESS S3 — and `progressAttempt: {retry, budgets}`: the HELD
- * RETRY's label (`640 → 2560`). The service is not told a start is a retry;
- * it RECOGNISES one: the same `staging` and `solverGoal` objects, the same
- * `perTick` length, asked again at a LARGER `budgetWork` than the start before
- * (`seedlingWasmPlayback.retrySolve` spreads the request it asked before).
- * Anything else is attempt 0. Envelope only, so the request is unchanged.
+ * RETRY's label (`640 → 2560`). ⛓ RETRY ATTEMPT — the CALLER says which
+ * attempt a start is: `start(request, {attempt: {retry, budgets}})`
+ * (`seedlingWasmPlayback` on every start and held retry, `jsRuntimeSolver`'s
+ * starts as attempt 0). Given, it wins. Not given (a probe, a node row), the
+ * service RECOGNISES a retry as S3 did: the same `staging` and `solverGoal`
+ * objects, the same `perTick` length, asked again at a LARGER `budgetWork` than
+ * the start before; anything else is attempt 0. Metadata only: the request,
+ * its budgets and the plan are unchanged, and without a listener the envelope
+ * is too.
  *
  * One solve is in flight at a time (the solver keeps one). The room records
  * are posted once per worker, by id. A worker that errors (a module that
@@ -87,6 +91,17 @@ export function stampHooks(tape) {
     return tape;
 }
 
+/**
+ * ⛓ RETRY ATTEMPT — a caller's `{retry, budgets}` as the service keeps it (a copy; the finite budgets only), or null
+ * when it gave none or one that is not an attempt (a non-integer or negative `retry`): then the service recognises.
+ */
+export function explicitAttempt(attempt) {
+    if (!attempt || typeof attempt !== 'object') return null;
+    const { retry, budgets } = attempt;
+    if (!Number.isInteger(retry) || retry < 0) return null;
+    return { retry, budgets: Array.isArray(budgets) ? budgets.filter(Number.isFinite) : [] };
+}
+
 export const SOLVE_WORKER_URL = new URL('./jsRuntimeSolveWorker.js', import.meta.url);
 
 const defaultCreateWorker = () => new Worker(SOLVE_WORKER_URL, { type: 'module', name: 'seedling-js-solver' });
@@ -115,15 +130,19 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
     /** ⛓ S3 — the last start's identity and its attempt (`{staging, solverGoal, ticks, retry, budgets}`), or null. */
     let lastAsk = null;
 
-    /** ⛓ S3 — this start's attempt: a held retry of the last start (see the header), else attempt 0. */
-    function attemptOf(request) {
+    /**
+     * ⛓ S3 — this start's attempt: the caller's when it said (⛓ RETRY ATTEMPT), else a held retry of the last start
+     * (see the header), else attempt 0.
+     */
+    function attemptOf(request, explicit) {
         const budget = request.budgetWork;
         const ticks = request.perTick?.length ?? null;
-        const again = lastAsk !== null && request.staging !== undefined && request.staging === lastAsk.staging
+        const given = explicitAttempt(explicit);
+        const again = given === null && lastAsk !== null && request.staging !== undefined && request.staging === lastAsk.staging
             && request.solverGoal === lastAsk.solverGoal && ticks === lastAsk.ticks
             && Number.isFinite(budget) && Number.isFinite(lastAsk.budgets.at(-1)) && budget > lastAsk.budgets.at(-1);
-        const attempt = again ? { retry: lastAsk.retry + 1, budgets: [...lastAsk.budgets, budget] }
-            : { retry: 0, budgets: Number.isFinite(budget) ? [budget] : [] };
+        const attempt = given ?? (again ? { retry: lastAsk.retry + 1, budgets: [...lastAsk.budgets, budget] }
+            : { retry: 0, budgets: Number.isFinite(budget) ? [budget] : [] });
         lastAsk = { staging: request.staging, solverGoal: request.solverGoal, ticks, ...attempt };
         return attempt;
     }
@@ -215,7 +234,8 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
         get stats() { return { ...stats, live: worker !== null }; },
         /** Build the worker now (the module graph loads while nobody waits on it). */
         warm() { ensure(); },
-        start(request) {
+        /** `opts.attempt` — ⛓ RETRY ATTEMPT: which attempt this start is (`{retry, budgets}`; see the header). */
+        start(request, { attempt: askedAttempt } = {}) {
             if (current && !current.settled) current.cancel();
             const handle = {
                 id: nextId++, settled: false, started: false, result: null, startedAt: null,
@@ -232,7 +252,7 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
             current = handle;
             const { levelSource, source, ...tape } = request;
             stampHooks(tape);
-            const attempt = attemptOf(request);
+            const attempt = attemptOf(request, askedAttempt);
             const id = sourceIdOf(source?.records);
             const msg = { type: 'solve', id: handle.id, request: { ...tape, source: { id, ...(sent.has(id) ? {} : { records: source?.records ?? null }) } } };
             // ⛓ SOLVE PROGRESS — on the ENVELOPE, and only while someone listens (absent = today's message exactly);
