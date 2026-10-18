@@ -1,0 +1,21 @@
+    012345678901
+  0 xxxxxxxxxxxx
+  1 xxxxxxxxxxxx
+  2 xx....@S..xx
+  3 xx##..xxx.xx
+  4 #####.....xx
+  5 T@.##.x.x.xx
+  6 #..##......x
+  7 #####..R...x
+  8 xx##xxxbxxxx
+  9 xx#.xx..xxxx
+ 10 xxxx......xx
+ 11 xxxx......xx
+ 12 xx........xx
+ 13 xx........xx
+ 14 T@........xx
+ 15 x.........xx
+ 16 xxxx....xxxx
+ 17 xxxx....xxxx
+ 18 xxxxxxxxxxxx
+ 19 xxxxxxxxxxxx
