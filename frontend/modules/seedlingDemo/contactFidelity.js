@@ -454,10 +454,11 @@ export const CONTACT_FIDELITY = {
      * walk under a flyer that had chased it. MEASURED (sweep leg 773, L105, the lapse ON): `flyer@104,8` hovers above
      * the walk from t96, its "fall" reaches frame 10 at t103 and drops on the player (game `hits` 0 → 2, Δy +0.82), where
      * the model billed nothing. ON: the flyer chases, falls and drops as above (run and forecast), and the danger map
-     * prices its drop (timed) instead of a placement. ⛔ OFF by default (no licence); `SEEDLING_FLYER_LIVE=0|1` for a
+     * prices its drop (timed) instead of a placement. ✅ ON by default (the BeamTower trio flip, 2026-10-18); `SEEDLING_FLYER_LIVE=0|1` for a
      * node measurement.
      */
-    flyerLive: false,
+    // ⚖ ON with `beamTowerDrift` and `beamTowerBeamHit` since planning-9's flip (user "BeamTower trio", 2026-10-18).
+    flyerLive: true,
     /**
      * fidelity BEAMTOWER D1 — THE BEAM TOWER'S SOLID DRIFTS WITH ITS `y` (`beamTower.stepBeamTowerFrame`).
      *
@@ -470,9 +471,9 @@ export const CONTACT_FIDELITY = {
      * time). MEASURED (LAPSECOST D2, leg 773 `flyerLive` plan, L105): the game's player holding `left` is blocked at
      * x 66.04 from t205 by `beamtower@48,40`, risen ~4.7 px, where the model walked through. ON: the run steps every
      * tower once per tick in its update slot (`Game.time` = `clock.now()`, no drift on a frozen tick), and the
-     * tower's Solid is `liveRectOf`'s `beamTowers` arm. ⛔ OFF by default (no licence); `SEEDLING_BEAMTOWER_DRIFT=0|1`.
+     * tower's Solid is `liveRectOf`'s `beamTowers` arm. ✅ ON by default (the trio flip, 2026-10-18); `SEEDLING_BEAMTOWER_DRIFT=0|1`.
      */
-    beamTowerDrift: false,
+    beamTowerDrift: true,
     /**
      * fidelity BEAMTOWER D3 — THE BEAM TOWER'S BEAM HITS THE PLAYER IN THE RUN (`levelRun.stepBeamTowersNow`).
      *
@@ -484,9 +485,9 @@ export const CONTACT_FIDELITY = {
      * leg 773's witness): on the first L104 tick after the crossing, `beamtower@16,56`'s UP beam (x 22..26, y 0..53)
      * takes the player at (24, 39.2): `hits` 1, Δy −4.275. ON: the run steps the tower's anim and fires the beam on
      * the player's PRE-move box, inclusively (`Entity.collideRect`), from the tower's pre-drift point; the shake is the
-     * `beamTowerBeam` writer. ⛔ OFF by default (no licence); `SEEDLING_BEAMTOWER_BEAM_HIT=0|1`.
+     * `beamTowerBeam` writer. ✅ ON by default (the trio flip, 2026-10-18); `SEEDLING_BEAMTOWER_BEAM_HIT=0|1`.
      */
-    beamTowerBeamHit: false,
+    beamTowerBeamHit: true,
     /**
      * fidelity SPINNINGAXE D1 — A SPINNING AXE HITS THE PLAYER (`levelRun.stepSpinningAxesNow`).
      *

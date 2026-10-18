@@ -138,10 +138,12 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⚖ (user, 2026-10-14, "Flip now") ON since the wave-16 harvest.
             ceremonyShove: true,
             // ⛓ fidelity LAPSECOST D2: `flyerLive` (the Flyer stepped: its chase, its "fall" and its drop) ships OFF.
-            flyerLive: false,
+            // ⛓ fidelity LAPSECOST D2: `flyerLive` (the Flyer stepped: its chase, its "fall" and its drop) shipped OFF;
             // ⛓ fidelity BEAMTOWER: `beamTowerDrift` (D1, the tower's Solid drifts with its `y`) and `beamTowerBeamHit`
-            // (D3, the run bills the beam on the player) ship OFF.
-            beamTowerDrift: false, beamTowerBeamHit: false,
+            // (D3, the run bills the beam on the player) shipped OFF — ⚖ ON together since planning-9's flip (user
+            // "BeamTower trio", 2026-10-18).
+            flyerLive: true,
+            beamTowerDrift: true, beamTowerBeamHit: true,
             // ⛓ fidelity SPINNINGAXE D1: `spinningAxePlayerHit` (a spinning axe bills the player) ships OFF.
             // ⛓ planning-9's axe flip (⚖ user "Axe flip", 2026-10-18) turns it ON.
             spinningAxePlayerHit: true,
