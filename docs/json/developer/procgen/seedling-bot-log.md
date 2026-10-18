@@ -23331,3 +23331,27 @@ B 39141650170 + the three switches):
 - `contactFidelity.test` defaults (×3);
 - `fidelitySpinningAxe` and `fidelityAxeTiming` "ships ON".
 No `plan-seedling-*` producer names any of the three switches.
+
+### Seedling fidelity BeamTower trio flip — the Flyer, the tower's drifting Solid and its beam, ON together
+
+⚖ The user (2026-10-18): *"BeamTower trio"*. Three switches now ship ON together: LAPSECOST's `flyerLive`, and
+BEAMTOWER's `beamTowerDrift` and `beamTowerBeamHit`. They have to go together: `flyerLive` alone loses survey step 208
+on the game (the tower's risen Solid blocks the shorter plan). This is BEAMTOWER's flip candidate, applied onto today's
+main; the two conflicts were main's newer switches.
+
+**The JS arc's condition** was that the walker either carry `beamTowers` in `botDriverV2.livePerVisitOpts`, or the
+A/B name every `producer:walker` row in a tower room. It was met the second way. Keyed over BEAMTOWER's 22 tower and
+Flyer-room keys on main `004368c2a3`, capture on (A defaults, B + the trio):
+- **Solver** (39149625477 / 39149627430): **760** (L101, the Flyer) **failed → done**; nothing lost. 774 (L103) still
+  refuses at the spinning axe, which is the forced-U item, not the tower.
+- **Walker** (39149629310 / 39149631483): 778 and 787 read crossed → failed in B. A ×2 keyed repeat shows 787 crossed
+  in all four runs and 778 failing once in EACH arm, so both are flakes and no walker row moves. The walker's own
+  probes remain drift-blind (a placement, not the live Solid), which is a known residue for a later slice.
+
+**Pins moved:**
+- `contactFidelity` defaults;
+- `fidelityBeamTower` "ship ON";
+- `fidelityLapseCost` "ships ON", plus leg 773's request 381 → **426 t** (the 381-t plan is the one the risen tower
+  blocks at t205 on the game);
+- `r8Acceptance` ×3 (`pendingSwitchScope.flyer` joins the default roster);
+- identity: ENEMY census `36b59445` → `f0bec576` (the Flyer bridged).
