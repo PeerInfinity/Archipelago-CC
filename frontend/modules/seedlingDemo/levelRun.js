@@ -34,7 +34,7 @@
  */
 
 import {
-    PLAYER_SOLID_TYPES, TILE_SIZE,
+    NEAREST_TILE_INDEX, PLAYER_SOLID_TYPES, SOLID_GRID, TILE_SIZE,
     addedTimeKey, buildLevelWorld, normalizeLiveOpts, rect, rectsOverlap, tagOf, withTileWrites,
 } from './levelWorld.js';
 import {
@@ -76,7 +76,7 @@ import {
     distanceRectPoint, slashRect, spearRect,
 } from './presses.js';
 import { FIRE_PRESS_CADENCE, FIRE_WINDOW, fireRect } from './fireVerb.js';
-import { hitPushableFromPoint } from './pushables.js';
+import { PUSH_SPEAR_DIRECTION, hitPushableFromPoint } from './pushables.js';
 import {
     TAGS_PER_LEVEL, brokenRockIds, createRockState, hitRock, outOfBandFlagFor, rockBreaksUnder,
 } from './breakableRocks.js';
@@ -110,11 +110,11 @@ import {
 } from './bulb.js';
 // ⛓⛓⛓ seedling-fidelity-ghostsword D2: the ghost sword's press — its rect, reach, Spear arm and window.
 import {
-    GHOSTSWORD_PRESS, GHOST_PRESS_ARMS, GHOST_SWORD_DAMAGE, GHOST_SWORD_REACH,
+    GHOSTSWORD_MOTION, GHOSTSWORD_PRESS, GHOST_PRESS_ARMS, GHOST_SWORD_DAMAGE, GHOST_SWORD_REACH,
     ghostSlashRect, ghostSwingRefusal, slashEndTicksFor,
 } from './ghostSword.js';
 // ⛓⛓⛓ hammer-phase C2: the spinner forecasts carry a ghost press (behind `GHOST_SPINNER_PRESS`, ON by default).
-import { ghostSpinnerPressFor } from './ghostSpinnerPress.js';
+import { GHOST_SPINNER_PRESS, ghostSpinnerPressFor } from './ghostSpinnerPress.js';
 import { PRESS_KILL_COST, PRESS_KILL_COST_COUNTS, UNCACHEABLE, sameValue, snapshotValue } from './pressKillCost.js';
 import {
     createBossTotem, bossTotemClampY, bossTotemSolidRect, renderBossTotem, stepBossTotem,
@@ -530,6 +530,94 @@ export const LEDGER_KIND_NAMES = Object.freeze([
  * unchanged, while `{...st}` still copies it.
  */
 const PREVIEW_DAMAGE = Symbol('previewDamage');
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY DIGEST (D2) — **A VALUE'S CANONICAL TEXT**, the one spelling `run.stateDigest()` hashes.
+ *
+ * Deterministic across runs and processes: no object identity reaches the text (an object met again on its own path
+ * is `^` + its depth, a cycle's position), a `Map`/`Set`/array/object keeps the order the run built it in (the run's
+ * history is deterministic, so two runs that agree on the history agree on the order; two that built one map in two
+ * orders differ — at worst a missed match, never a false one), numbers are `String(n)` (the shortest round trip, so
+ * `0.1 + 0.2` and `0.3` differ) with `-0` its own token, and a getter is never invoked (`get`: reading it could build
+ * state). A function is `fn` — the components below name the two kinds that carry them (a ctx's closures, a world's
+ * methods) and why the data beside them says what they do. `hook(v)` may answer a token for an object (a world's
+ * memoised hash) or `undefined` to serialise it here.
+ */
+export function canonicalDigestText(value, hook = null) {
+    const out = [];
+    const path = [];
+    const put = (v) => {
+        if (v === null) { out.push('n'); return; }
+        switch (typeof v) {
+            case 'undefined': out.push('u'); return;
+            case 'boolean': out.push(v ? 'T' : 'F'); return;
+            case 'number': out.push(Object.is(v, -0) ? '-0' : String(v)); return;
+            case 'bigint': out.push(`${v}n`); return;
+            case 'string': out.push(JSON.stringify(v)); return;
+            case 'symbol': out.push(`@${String(v.description)}`); return;
+            case 'function': out.push('fn'); return;
+            default: break;
+        }
+        const seen = path.indexOf(v);
+        if (seen >= 0) { out.push(`^${path.length - seen}`); return; }
+        if (hook !== null) {
+            const token = hook(v);
+            if (token !== undefined) { out.push(token); return; }
+        }
+        path.push(v);
+        if (Array.isArray(v) || ArrayBuffer.isView(v)) {
+            out.push('[');
+            for (let i = 0; i < v.length; i += 1) { if (i > 0) out.push(','); put(v[i]); }
+            out.push(']');
+        } else if (v instanceof Map) {
+            out.push('M{');
+            for (const [k, x] of v) { put(k); out.push(':'); put(x); out.push(','); }
+            out.push('}');
+        } else if (v instanceof Set) {
+            out.push('S{');
+            for (const x of v) { put(x); out.push(','); }
+            out.push('}');
+        } else {
+            const proto = Object.getPrototypeOf(v);
+            // ⚠ a non-plain object names its class: two classes with one shape are two values
+            if (proto !== Object.prototype && proto !== null) out.push(`<${proto?.constructor?.name ?? '?'}>`);
+            out.push('{');
+            for (const k of Reflect.ownKeys(v)) {
+                const d = Object.getOwnPropertyDescriptor(v, k);
+                put(k);
+                out.push(':');
+                if ('get' in d || 'set' in d) out.push('get'); else put(d.value);
+                out.push(',');
+            }
+            out.push('}');
+        }
+        path.pop();
+    };
+    put(value);
+    return out.join('');
+}
+
+/**
+ * ⛓ fidelity digest (D2) — a 106-bit hash of a string as 28 hex digits: two 53-bit lanes (`cyrb53`'s mixing, two
+ * seeds). Pure JS (the run is also a page's), no `crypto`. Collision odds over N distinct states ≈ N² / 2¹⁰⁷.
+ */
+export function digestOfText(text) {
+    const lane = (seed) => {
+        let h1 = 0xdeadbeef ^ seed;
+        let h2 = 0x41c6ce57 ^ seed;
+        for (let i = 0; i < text.length; i += 1) {
+            const c = text.charCodeAt(i);
+            h1 = Math.imul(h1 ^ c, 2654435761);
+            h2 = Math.imul(h2 ^ c, 1597334677);
+        }
+        h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507);
+        h1 ^= Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+        h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507);
+        h2 ^= Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+        return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(16).padStart(14, '0');
+    };
+    return lane(0x9e3779b9) + lane(0x85ebca6b);
+}
 
 export function createLevelRun({
     levelSource, boot, noclip = false, noHazards = [], noDamage = false, grants = [],
@@ -15791,6 +15879,90 @@ export function createLevelRun({
         beamTowerTrace: () => beamTowerTrace.map((r) => ({ ...r })),
     });
 
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY DIGEST (D2) — **WHAT A `strikeEscape` / `pressEscape` CALL CAN READ OF THIS RUN, AS ONE
+     * VALUE** (`run.stateDigest()`; the census, the gates and the hand-over are `CC/docs/cloud-reports/
+     * seedling-fidelity-digest.md`).
+     *
+     * ⛔ THE FIELD LIST IS THE CENSUS, NOT A CHOICE. The escape reads eight members of this object (`ticksCompleted`,
+     * `state`, `level`, `world`, `previewStepper`, `spinnerForecastWithPress`, `gameTimeAt`, `progress`); the closure
+     * functions those reach, followed by name, read the 74 bindings below — every one is here or is named under
+     * EXCLUDED with its reason. A binding added to that reach later is a binding this list must gain, and the census
+     * tool in the report's evidence is how to tell.
+     *
+     * ⛔ `persistence`, `timedClears` AND `declaredClears` ARE NOT IN THAT REACH. A declared row reaches the escape
+     * only through what `applyTimedClears` WRITES — `clearedByLevel` and the rebuilt `world`, both digested — and it
+     * writes at `c.at === tick` only. So a run whose row is `PENDING_AT` and one whose row is `at = T` digest EQUAL
+     * below T (nothing either escape reads differs) and DIFFERENT from T on (the clear landed in one of them). The
+     * kill-lock arms DO read `declaredClears` — inside `advance`, which no escape call reaches — so two runs with one
+     * digest are two runs whose ESCAPES agree, not two runs whose next `advance` must (a run with NO row throws at
+     * the removal where a `PENDING_AT` one does not).
+     *
+     * EXCLUDED, by name: `levelSource` (a function — the caller keys on the staging it came from);
+     * `crossRoomWriterIndex` (a memo of `levelSource`); `PROGRESS_FIELDS` (a frozen constant); `seamBoot`,
+     * `clockDeclared`, `bootCutscene`, `bootSave`, `cutscene` and `spawn` (each a pure function of the `seam` / `save`
+     * / `boot` parameters, which are digested).
+     *
+     * ⚠ A WORLD IS HASHED ONCE PER OBJECT (`digestWorldMemo`): every world is built by `worldFor` and replaced, never
+     * edited (`applyClearNow`, `applyTimedDespawns`, `applyEarnedClears` and `fireStaticRemovals` drop the memo and
+     * rebuild; a tile write wraps it, `withTileWrites`). A world met inside another component is its token, so a
+     * state that holds a world costs nothing more. `{fresh: true}` re-hashes every world — the gate that the claim
+     * still holds.
+     *
+     * READ-ONLY, and nothing calls it by default: no getter is invoked, no lazy `…StateFor` is asked (a visit state
+     * not yet built is absent here, and a run that built it reads differently — a missed match, never a false one).
+     */
+    const digestWorldMemo = new WeakMap();
+    const stateDigestParts = ({ fresh = false } = {}) => {
+        const known = new Set([...worlds.values(), world]);
+        const memo = fresh ? new WeakMap() : digestWorldMemo;
+        const worldToken = (w) => {
+            if (!memo.has(w)) {
+                // ⚠ a tile-write world is `Object.create(base)` with its own tiles: the base's hash, then its own fields
+                const base = Object.getPrototypeOf(w);
+                const own = {};
+                for (const k of Reflect.ownKeys(w)) {
+                    const d = Object.getOwnPropertyDescriptor(w, k);
+                    own[typeof k === 'symbol' ? `@${String(k.description)}` : k] = 'get' in d ? 'get' : d.value;
+                }
+                const head = base !== Object.prototype && base !== null && known.has(base) ? worldToken(base) : '';
+                memo.set(w, `W(${head}${digestOfText(canonicalDigestText(own, hook))})`);
+            }
+            return memo.get(w);
+        };
+        const hook = (v) => {
+            if (known.has(v) || memo.has(v)) return worldToken(v);
+            return undefined;
+        };
+        const part = (v) => digestOfText(canonicalDigestText(v, hook));
+        return {
+            /** the parameters the reach reads (constant for the run; another run's may differ) */
+            staging: part({ boot, noclip, noHazards, noDamage, grants, equips, roles, pins, save, seam }),
+            /** where the run is, and when */
+            place: part({ level, ticksCompleted, firstTickInWorld, world, worlds }),
+            /** the clock `gameTimeAt` reads, and why it may be null */
+            clock: part({ now: clock.now(), clockRefusal }),
+            /** the player: the body, the hit, the swing, the freeze, the items, the slots and the queued equips */
+            player: part({ state, damage, frozenTimer, swordWindow, slashState, slashEndsAt, spearEndsAt, ceremony,
+                bobArena, bobNoInput, primary, slotOrder, inventory, grantsByLevel, equipsByTick }),
+            /** the save-side state the builds and the activators read */
+            persist: part({ clearedByLevel, pendingEarnedClears, despawnedByLevel, staticRemovedTags, unreadRoomWrites,
+                totemParts, keys, collectedPickups, lockSnap, moonrockSet, chestOpens, rockFalls }),
+            /** the per-visit runtime state: every `…States` map the reach reads, and the windows */
+            visit: part({ activatorStates, bridgeStates, pushableStates, rockStates, burnStates, ropeStates,
+                fallRockStates, moonrockStates, crusherStates, bossStates, shieldBossStates, finalDoorStates,
+                turretStates, beamTowerStates, magicalLockStates, chestStates, pulserStates, spinnerStates,
+                pullsByLevel, wandWindows, fireWindows }),
+            /**
+             * the module switches this file's import closure consults — a separate component because a reader of
+             * them reads no run: the caller keys on solverBot's own (see the report's hand-over)
+             */
+            globals: part({ CONTACT_FIDELITY, KILLLOCK_BODIES, PRESS_KILL_COST, GHOST_SPINNER_PRESS, GHOSTSWORD_PRESS,
+                GHOSTSWORD_MOTION, STATIC_SWORD_ARM, PUSH_SPEAR_DIRECTION, WAND_VERB, PICKUP_REMOVED_NEXT_FRAME,
+                NEAREST_TILE_INDEX, SOLID_GRID }),
+        };
+    };
+
     return {
         get level() { return level; },
         get world() { return world; },
@@ -16044,13 +16216,21 @@ export function createLevelRun({
          *   5. `ticksCompleted` — everything else `spinnerCtx()` reads (the
          *      pushables, the open activators, the bridges, the ceremony
          *      freeze, and the whole `liveSolidOpts` bag underneath them)
-         *      moves ONLY inside `advance`. ⛓ THAT IS A CLAIM ABOUT THIS
-         *      OBJECT'S SURFACE AND IT WAS CHECKED: `advance` is its only
-         *      mutating member. Every other one is a getter returning copies,
-         *      there are NO setters, and the two function members that are
-         *      not `advance` are pure — `previewStepper` hands out `stepV2`
-         *      bound to a snapshot and the CALLER owns the state it steps, so
-         *      a preview cannot move a pushable here.
+         *      moves ONLY inside `advance`. ⛓ THAT IS A CLAIM ABOUT WHAT THE
+         *      FORECAST READS, NOT "`advance` is the only mutator" — which this
+         *      line used to say, and which is false. ⛓ SEEDLING FIDELITY
+         *      DIGEST (D1) counted, by code, the members that write run state
+         *      outside `advance`: `equipNow` (the weapon slot: `primary`,
+         *      `equipsByTick` — `solverBot.replayOntoFork` and a segment's
+         *      equip call it), `addEquips`, `addTimedClears` (the declared
+         *      rows), `takeApItem` (the view's apitem take: a banked clear)
+         *      and `adoptWindowClock` (the clock). None of what they write is
+         *      read by this forecast's reach; what the reach itself writes is
+         *      a lazy first build (`worldFor`, a `…StateFor` asked for the
+         *      first time), the state `advance` would build. And
+         *      `previewStepper` hands out `stepV2` bound to a snapshot — the
+         *      CALLER owns the state it steps, so a preview cannot move a
+         *      pushable here.
          *
          * ⛔ AND THE KEY IS THE BELT, NOT THE BRACES: `advance` NULLS this
          * memo as its FIRST statement, before `applyTimedClears` or anything
@@ -16282,6 +16462,24 @@ export function createLevelRun({
                     killed: landing.killed } : null,
                 why, lineBlocked,
             };
+        },
+        /**
+         * ⛓⛓⛓ SEEDLING FIDELITY DIGEST (D2) — **THE RUN'S STATE AS AN ESCAPE CAN READ IT, ONE VALUE**: the components
+         * of `stateDigestParts` (staging, place, clock, player, persist, visit, globals), each a hash of its canonical
+         * text, hashed together. Two runs with one digest at one tick answer every `strikeEscape` / `pressEscape` call
+         * alike — given the same arguments and the same solverBot switches, which the caller keys on itself (the
+         * report's hand-over). ⚠ It says nothing about the next `advance` (see `stateDigestParts`).
+         *
+         * Nothing calls it by default; it writes nothing a reader reads (its world memo is its own).
+         *
+         * @param {{parts?: boolean, fresh?: boolean}} [o]  `parts`: also return the components; `fresh`: re-hash
+         *   every world instead of taking its memo.
+         * @returns {string|{digest: string, parts: object}}
+         */
+        stateDigest({ parts = false, fresh = false } = {}) {
+            const p = stateDigestParts({ fresh });
+            const digest = digestOfText(Object.entries(p).map(([k, v]) => `${k}=${v}`).join(';'));
+            return parts ? { digest, parts: p } : digest;
         },
         /**
          * ⛓⛓⛓ SEEDLING HAMMER-PHASE B2 — **THE FORECAST AS A FUNCTION OF THE PATH: A CURSOR THAT FORKS AT A PRESS.**
