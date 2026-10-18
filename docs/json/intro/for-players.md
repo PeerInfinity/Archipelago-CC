@@ -11,7 +11,7 @@ The project generates complete randomizer worlds. Each region is drawn by a *[su
 - **[Procgen: Seedling rooms](../user/tutorials/procgen-seedling.md)** — rooms of the real Seedling game, and new rooms generated in its style, as regions.
 - **[Seedling: watch the bot play](../user/tutorials/seedling-bot.md)** — the whole original game as an Archipelago world, played by the Playback Bot.
 
-The **[Playback Bot](../user/tutorials/procgen-settings-and-bot.md)** can play any generated world from its solution path, driving each substrate's real gameplay, so you can always see that a world can be finished.
+The **[Playback Bot](../user/modules/playbackBot.md)** can play any generated world from its solution path, driving each substrate's real gameplay, so you can always see that a world can be finished.
 
 ## Play in Loop mode
 
@@ -22,7 +22,7 @@ The **[Playback Bot](../user/tutorials/procgen-settings-and-bot.md)** can play a
 
 ## Play in a multiworld
 
-A generated world is a real Archipelago game. The [APWorld Editor](../user/tutorials/procgen-to-multiworld.md) packages it as an `.apworld`, Archipelago's own generator and server load it, and the browser app is its client.
+A generated world is a real Archipelago game. The [APWorld Editor](../user/modules/apworldEditor.md) packages it as an `.apworld`, Archipelago's own generator and server load it, and the browser app is its client.
 
 - **[Procgen: from a generated world to a multiworld](../user/tutorials/procgen-to-multiworld.md)** — generate, package, host it on your own computer, connect and play. This one needs a local Archipelago installation.
 - **[Seedling: in a multiworld](../user/tutorials/seedling-multiworld.md)** — the same for the Seedling world.
