@@ -47,7 +47,7 @@ import { Worker as NodeWorker } from 'node:worker_threads';
 import { createJsRuntime } from './jsRuntimeCore.js';
 import { WALK_STATES } from './jsRuntimeWalker.js';
 import { runDigest, SOLVER_BUDGET_WORK } from './jsRuntimeSolver.js';
-import { createWorkerSolveService } from './jsRuntimeSolveService.js';
+import { createWorkerSolveService, explicitAttempt } from './jsRuntimeSolveService.js';
 import { SOLVE_PROGRESS_INTERVAL_MS, SOLVE_PROGRESS_MESSAGE } from './solveProgressTap.js';
 import { returnKey, returnSpawnTable } from '../flashPanel/seedlingReturnSpawns.js';
 
@@ -340,6 +340,76 @@ describe('solve progress — the stale drop (scripted worker)', () => {
         service.start({ ...first, budgetWork: 2560 });
         expect(workers.at(-1).sent.at(-1).progressAttempt).toEqual({ retry: 1, budgets: [640, 2560] });
         off();
+    });
+
+    it('⛓ RETRY ATTEMPT — an EXPLICIT attempt WINS over the recognition, both ways (a told retry 0 on a recognisable retry, a told retry 3 on a fresh start)', () => {
+        const { service, workers } = scripted();
+        service.subscribeProgress(() => {});
+        const staging = {};
+        const first = { staging, budgetWork: 640, source: { records: {} } };
+        service.start(first);
+        service.start({ ...first, budgetWork: 2560 }, { attempt: { retry: 0, budgets: [2560] } });
+        expect(workers.at(-1).sent.at(-1).progressAttempt).toEqual({ retry: 0, budgets: [2560] });
+        service.start({ staging: {}, budgetWork: 10240, source: { records: {} } }, { attempt: { retry: 3, budgets: [10, 40, 160, 640] } });
+        expect(workers.at(-1).sent.at(-1).progressAttempt).toEqual({ retry: 3, budgets: [10, 40, 160, 640] });
+    });
+
+    it('⛓ RETRY ATTEMPT — a REBUILT retry (new objects, the same values) at a larger budget reads its TRUE retry when told (recognition calls it retry 0)', () => {
+        const { service, workers } = scripted();
+        service.subscribeProgress(() => {});
+        const build = (budgetWork) => ({ staging: { boot: { level: 16 } }, solverGoal: { kind: 'exit' }, perTick: [[], []],
+            budgetWork, source: { records: {} } });
+        service.start(build(640), { attempt: { retry: 0, budgets: [640] } });
+        service.start(build(2560), { attempt: { retry: 1, budgets: [640, 2560] } });
+        expect(workers.at(-1).sent.at(-1).progressAttempt).toEqual({ retry: 1, budgets: [640, 2560] });
+        // the same rebuilt pair, NOT told: the recognition's answer (the case it gets wrong)
+        service.start(build(640));
+        service.start(build(2560));
+        expect(workers.at(-1).sent.at(-1).progressAttempt).toEqual({ retry: 0, budgets: [2560] });
+    });
+
+    it('⛓ RETRY ATTEMPT — metadata only: the posted REQUEST is byte-identical told or not, and a told attempt is a COPY (the caller\'s array mutated later moves nothing)', () => {
+        const run = (attempt) => {
+            const { service, workers } = scripted();
+            service.subscribeProgress(() => {});
+            const budgets = [640];
+            service.start({ staging: { boot: { level: 6 } }, budgetWork: 640, passes: [{ pass: 'full' }], source: { records: {} } },
+                attempt ? { attempt: { retry: 0, budgets } } : undefined);
+            budgets.push(99);
+            return workers.at(-1).sent.at(-1);
+        };
+        const told = run(true);
+        const untold = run(false);
+        expect(JSON.stringify(told.request)).toBe(JSON.stringify(untold.request));
+        expect(told.progressAttempt).toEqual({ retry: 0, budgets: [640] });
+        expect(Object.keys(told.request)).not.toContain('attempt');
+    });
+
+    it('⛓ RETRY ATTEMPT — no listener: a told attempt is NOT on the envelope (today\'s message exactly), and the recognition CHAINS from what was told', () => {
+        const { service, workers } = scripted();
+        const staging = {};
+        const first = { staging, budgetWork: 2560, source: { records: {} } };
+        service.start(first, { attempt: { retry: 1, budgets: [640, 2560] } });
+        expect(workers.at(-1).sent.at(-1)).not.toHaveProperty('progressAttempt');
+        expect(Object.keys(workers.at(-1).sent.at(-1)).sort()).toEqual(['id', 'request', 'type']);
+        service.subscribeProgress(() => {});
+        service.start({ ...first, budgetWork: 10240 });
+        expect(workers.at(-1).sent.at(-1).progressAttempt).toEqual({ retry: 2, budgets: [640, 2560, 10240] });
+    });
+
+    it('⛓ RETRY ATTEMPT — what is not an attempt (a negative or fractional retry, a non-object) falls back to the recognition; non-finite budgets are dropped', () => {
+        expect(explicitAttempt(undefined)).toBeNull();
+        expect(explicitAttempt(3)).toBeNull();
+        expect(explicitAttempt({ retry: -1, budgets: [1] })).toBeNull();
+        expect(explicitAttempt({ retry: 1.5, budgets: [1] })).toBeNull();
+        expect(explicitAttempt({ retry: 2, budgets: [640, NaN, '2560', 2560] })).toEqual({ retry: 2, budgets: [640, 2560] });
+        expect(explicitAttempt({ retry: 0 })).toEqual({ retry: 0, budgets: [] });
+        const { service, workers } = scripted();
+        service.subscribeProgress(() => {});
+        const first = { staging: {}, budgetWork: 640, source: { records: {} } };
+        service.start(first);
+        service.start({ ...first, budgetWork: 2560 }, { attempt: { retry: -1, budgets: [] } });
+        expect(workers.at(-1).sent.at(-1).progressAttempt).toEqual({ retry: 1, budgets: [640, 2560] });
     });
 
     it('unsubscribed: the next solve does not ask (no flag on its envelope), and a late note is dropped', () => {

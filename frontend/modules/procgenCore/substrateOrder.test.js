@@ -8,7 +8,7 @@ import { reorderIds as panelReorderIds } from '../substrateRegistryPanel/substra
 import { playableSubstrateIds } from '../apworldEditor/sidecarForm.js';
 import { substrateEditorLinks } from '../apworldEditor/documentLinks.js';
 
-const IDS = ['bounce', 'flash', 'maze', 'runner'];
+const IDS = ['bounce', 'flash_seedling', 'maze', 'runner'];
 
 /** A fake registry: `getAll()` in id order, as the real one (RO1). */
 const fakeRegistry = (entries) => ({
@@ -31,7 +31,7 @@ describe('substrateOrder — the user\'s substrate order (REGISTRATION ORDER RO2
 
     it('a saved order leads; ids it does not name follow in their own order; stale ids and repeats drop', () => {
         setSubstrateOrder(['runner', 'gone', 'maze', 'runner']);
-        expect(inSubstrateOrder(IDS)).toEqual(['runner', 'maze', 'bounce', 'flash']);
+        expect(inSubstrateOrder(IDS)).toEqual(['runner', 'maze', 'bounce', 'flash_seedling']);
         expect(substrateOrder()).toEqual(['runner', 'gone', 'maze', 'runner']);
     });
 
@@ -40,13 +40,13 @@ describe('substrateOrder — the user\'s substrate order (REGISTRATION ORDER RO2
         expect(substrateOrder()).toEqual([]);
         setSubstrateOrder(null);
         expect(substrateOrder()).toEqual([]);
-        setSubstrateOrder(['maze', 3, '', null, 'flash']);
-        expect(substrateOrder()).toEqual(['maze', 'flash']);
+        setSubstrateOrder(['maze', 3, '', null, 'flash_seedling']);
+        expect(substrateOrder()).toEqual(['maze', 'flash_seedling']);
     });
 
     it('substrateOrder() is a copy — mutating it moves nothing', () => {
         setSubstrateOrder(['maze']);
-        substrateOrder().push('flash');
+        substrateOrder().push('flash_seedling');
         expect(substrateOrder()).toEqual(['maze']);
     });
 
@@ -54,7 +54,7 @@ describe('substrateOrder — the user\'s substrate order (REGISTRATION ORDER RO2
         const entries = IDS.map((id) => ({ id }));
         setSubstrateOrder(['maze']);
         const out = entriesInSubstrateOrder(entries);
-        expect(out.map((e) => e.id)).toEqual(['maze', 'bounce', 'flash', 'runner']);
+        expect(out.map((e) => e.id)).toEqual(['maze', 'bounce', 'flash_seedling', 'runner']);
         expect(out[0]).toBe(entries[2]);
     });
 

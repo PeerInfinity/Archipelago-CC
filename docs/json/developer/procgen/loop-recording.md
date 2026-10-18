@@ -21,7 +21,7 @@ A **solver** is the per-action agent that drives a substrate to a queued target.
 
 | Solver | Declared by | How it works | Substrates |
 |--------|-------------|--------------|------------|
-| `'walkTo'` | `loopSupport.executeVia: 'solver'` | Loops calls the PlaybackController's `walkTo` and completes the action on the resulting `user:locationCheck` or `gameState:regionChanged`. | jta, omsi, runner, bounce, noiz2sa |
+| `'walkTo'` | `loopSupport.executeVia: 'solver'` | Loops calls the PlaybackController's `walkTo` (its `perform` where it has one) and completes the action on the resulting `user:locationCheck` or `gameState:regionChanged`. An explore engages only a `perform` controller, which shows it; loops completes the explore at once and reveals through its own `loop:exploreCompleted`. | jta, omsi, runner, bounce, noiz2sa, text adventure |
 | `'delegation'` | `sharing.mana.loopActionDelegation: true`, and the region has `manaEnabled` | The substrate panel walks the action tile by tile, charging natively, and publishes `loops:substrateActionCompleted`. | maze |
 
 `walkTo` wins if an entry declares both. The maze uses delegation because its controller's `walkTo` drives the visualizer, not the charging panel engine.
@@ -32,7 +32,7 @@ A Bot block whose solver cannot engage (no solver, controller not mounted, or th
 
 **Instant** is a per-block toggle, not a mode. A Playback or Bot block whose substrate declares `loopSupport.instant` drains its replay in one frame instead of animating per tick, and suppresses panel focus-stealing meanwhile. The generic timer path honors it too.
 
-For a Bot block the checkbox appears only where the solver honors it (`loopState.regionBotHonorsInstant`: `instant`, the `walkTo` solver and a fine capture shape), which is jta and omsi. For summary blocks it is hidden: their Playback is always instant.
+For a Bot block the checkbox appears only where the solver honors it (`loopState.regionBotHonorsInstant`: `instant`, the `walkTo` solver and a fine capture shape), which is jta and omsi. For summary blocks it is hidden: their Playback is always instant. The text adventure's Bot has nothing to skip, because each action lands in one step (`loopSupport.botActsAtOnce`).
 
 ### Resolving a block's mode
 

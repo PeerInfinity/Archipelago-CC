@@ -1,0 +1,19 @@
+diff --git a/frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json b/frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json
+index a3f2f098..5e4fe159 100644
+--- a/frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json
++++ b/frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json
+@@ -12529,7 +12529,13 @@
+       },
+       "set_patches": [
+         "moonrock-removed",
+-        "l37-fallrock-removed"
++        "l37-fallrock-removed",
++        "l29-fallrock-removed",
++        "l39-fallrock-removed",
++        "l43-fallrock-2-removed",
++        "l43-fallrock-1-removed",
++        "l43-fallrock-3-removed",
++        "l74-fallrock-removed"
+       ],
+       "pit_chains": "frontend/modules/seedlingDemo/fidelityDescent.js censusFallsOntoDoors",
+       "semantics": "frontend/modules/flashPanel/seedlingSemantics.js",

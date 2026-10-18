@@ -1,16 +1,21 @@
 import { describe, it, expect } from 'vitest';
 
+import * as flashSubstrateLibrary from './flashSubstrateLibrary.js';
 import {
-    substrateRegistryEntry,
     createFlashSubstrateEntry,
     FLASH_PANEL_COMPONENT_TYPE,
     FLASH_LOAD_REGION_EVENT,
 } from './flashSubstrateLibrary.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
-describe('flashSubstrateLibrary substrateRegistryEntry', () => {
+// The factory's bare shape. ⚖ user, 2026-10-18: the generic `flash` entry
+// "isn't really a substrate", so the library no longer exports or registers one;
+// these rows pin the factory defaults every per-game entry starts from.
+const substrateRegistryEntry = createFlashSubstrateEntry({ id: 'flash_factory_probe' });
+
+describe('createFlashSubstrateEntry — the factory defaults', () => {
     it('declares the flash identity, panel type, and load event', () => {
-        expect(substrateRegistryEntry.id).toBe('flash');
+        expect(substrateRegistryEntry.id).toBe('flash_factory_probe');
         expect(substrateRegistryEntry.panelComponentType).toBe('flashSubstratePanel');
         expect(substrateRegistryEntry.loadRegionEvent).toBe('flash:loadRegion');
     });
@@ -23,9 +28,9 @@ describe('flashSubstrateLibrary substrateRegistryEntry', () => {
         expect(substrateRegistryEntry.supportedFeatures).not.toContain('region_topology_from_source');
     });
 
-    it('registers itself on import (idempotent)', () => {
-        expect(substrateRegistry.has('flash')).toBe(true);
-        expect(substrateRegistry.get('flash')).toBe(substrateRegistryEntry);
+    it('the library registers NO entry and exports none (the generic `flash` entry is gone)', () => {
+        expect(substrateRegistry.has('flash')).toBe(false);
+        expect('substrateRegistryEntry' in flashSubstrateLibrary).toBe(false);
     });
 
     it('defers playback: NO getPlaybackController at all (its absence is the capability readout)', () => {
@@ -117,7 +122,7 @@ describe('createFlashSubstrateEntry (Shape 1 — per-game entry factory)', () =>
         expect(a.loadRegionEvent).toBe(FLASH_LOAD_REGION_EVENT);
     });
 
-    it('shares the same de/serialize + playback contract as the default entry', () => {
+    it('shares the same de/serialize + playback contract as the factory defaults', () => {
         const e = createFlashSubstrateEntry({ id: 'flash_c' });
         const w = e.deserializeWorld({ gameId: 'g', exits: [{ exitName: 'n', targetRegion: 'R' }] });
         expect(w.exits).toBeInstanceOf(Map);
@@ -125,16 +130,16 @@ describe('createFlashSubstrateEntry (Shape 1 — per-game entry factory)', () =>
         expect(e.getPlaybackController).toBeUndefined();
     });
 
-    it('multiple per-game entries can register alongside the default in one registry', () => {
+    it('multiple per-game entries can register side by side in one registry', () => {
         const ids = ['flash_reg_a', 'flash_reg_b'];
         for (const id of ids) {
             if (!substrateRegistry.has(id)) {
                 substrateRegistry.register(createFlashSubstrateEntry({ id }));
             }
         }
-        // The default 'flash' plus both per-game ids all coexist, each
+        // Several per-game ids coexist, each
         // resolving to the shared panel/event.
-        for (const id of ['flash', ...ids]) {
+        for (const id of ids) {
             expect(substrateRegistry.has(id)).toBe(true);
             expect(substrateRegistry.get(id).panelComponentType).toBe(FLASH_PANEL_COMPONENT_TYPE);
             expect(substrateRegistry.get(id).loadRegionEvent).toBe(FLASH_LOAD_REGION_EVENT);

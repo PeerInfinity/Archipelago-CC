@@ -19,7 +19,7 @@ import { getDiscoverySettings } from '../discovery/index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { substrateRegistryEntry } from './textAdventureSubstrateWrapperLibrary.js';
-import { PlaybackProxy, PLAYBACK_CONTROL_EVENT } from './playbackProxy.js';
+import { TextAdventurePlaybackProxy, PLAYBACK_CONTROL_EVENT } from './playbackProxy.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { initManaWiring, getHeaderInfoEvent } from './mana.js';
 import { pickAutoLoadCustomDataUrl } from './customData.js';
@@ -228,8 +228,9 @@ export async function initialize(_moduleId, _priorityIndex, initializationApi) {
 
     // Build the host-side PlaybackProxy. Returned by the substrate
     // registry entry's getPlaybackController; publishes control events
-    // that the in-iframe playbackBridge subscribes to.
-    _playbackProxy = new PlaybackProxy({ eventBus });
+    // that the in-iframe playbackBridge subscribes to. Its `perform` is
+    // what the loops Bot block drives.
+    _playbackProxy = new TextAdventurePlaybackProxy({ eventBus });
 
     // Mana display + deduction wiring. Publishes a header-info event
     // the bridge subscribes to; deducts mana on observed user actions

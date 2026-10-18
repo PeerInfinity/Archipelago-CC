@@ -349,13 +349,27 @@ async function playbackBotLoopModeMazeTest(testController) {
 }
 
 /**
- * ⛓ loop-mode-bot S5 — a MIXED world in Loop mode: maze (Bot / delegation), text adventure (coarse → Playback) and
+ * ⛓ loop-mode-bot S5 — a MIXED world in Loop mode: maze (Bot / delegation), text adventure (Bot / walkTo since ta-loop-bot) and
  * bounce (Bot / walkTo). Same contract as the maze row: every sphere-log location checked by the queue.
  */
 async function playbackBotLoopModeMixedTest(testController) {
   return playbackBotLoopModeWorld(testController, {
     quotas: { maze: 2, text_adventure: 2, bounce: 1 }, start: 'maze', seed: 11, solvers: null, watchPanel: null,
     itemPool: { victory: 1, key_red: 1, key_green: 1, key_blue: 1 },
+  });
+}
+
+/**
+ * ⛓ ta-loop-bot (⚖ user 2026-10-18: "walkTo solver") — a TEXT-ADVENTURE-only world in Loop mode, played to Victory
+ * by Bot blocks: the runner gives every block Bot (the walkTo solver wins over the coarse shape), and Loops hands
+ * each queued move, check and explore to the text adventure's `perform`. Every region must resolve the walkTo solver,
+ * and the per-action Bot times are logged (the chart's L7 measurement).
+ */
+async function playbackBotLoopModeTextAdventureTest(testController) {
+  return playbackBotLoopModeWorld(testController, {
+    quotas: { text_adventure: 4 }, start: 'text_adventure', seed: 13, solvers: ['walkTo'],
+    watchPanel: 'textAdventureSubstrateWrapperPanel', itemPool: { victory: 1, key_red: 1, key_green: 1 },
+    expectVictory: true, timeBotActions: true, performEvent: 'textAdventureSubstrateWrapper:control',
   });
 }
 
@@ -395,7 +409,10 @@ async function playbackBotLoopModeJtaStartTest(testController) {
   }
 }
 
-async function playbackBotLoopModeWorld(testController, { quotas, start, seed, solvers, watchPanel, itemPool, budgetMs = 120000 }) {
+async function playbackBotLoopModeWorld(testController, {
+  quotas, start, seed, solvers, watchPanel, itemPool, budgetMs = 120000, expectVictory = false, timeBotActions = false,
+  performEvent = null,
+}) {
   const api = (mod, fn) => centralRegistry.getPublicFunction(mod, fn);
   const loopModeOn = () => api('loops', 'isLoopModeActive')?.() === true;
   testController.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
@@ -449,15 +466,35 @@ async function playbackBotLoopModeWorld(testController, { quotas, start, seed, s
     testController.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
     const trace = [];
     const onRC = (d) => trace.push(`RC ${d?.oldRegion}->${d?.newRegion}${d?.fromReset ? ' reset' : ''}${d?.exitName ? ` via ${d.exitName}` : ''}`);
-    const onAC = (d) => trace.push(`AC ${d?.action?.type}${d?.action?.actionName ? `:${d.action.actionName}` : ''} ${d?.action?.sourceRegion}${d?.action?.destinationRegion ? `->${d.action.destinationRegion}` : ''}`);
+    // Per-action wall time of the Bot's actions: from the frame the Bot dispatched it to its completion.
+    const botTimes = [];
+    let lastAt = null;
+    const onAC = (d) => {
+      trace.push(`AC ${d?.action?.type}${d?.action?.actionName ? `:${d.action.actionName}` : ''} ${d?.action?.sourceRegion}${d?.action?.destinationRegion ? `->${d.action.destinationRegion}` : ''}`);
+      const now = performance.now();
+      const a = d?.action;
+      if (timeBotActions && lastAt !== null && loopState.getBlockMode?.(a?.sourceRegion, a?.instanceNumber) === 'bot') {
+        botTimes.push(now - lastAt);
+      }
+      lastAt = now;
+    };
     testController.eventBus.subscribe('gameState:regionChanged', onRC, 'tests');
     testController.eventBus.subscribe('loopState:actionCompleted', onAC, 'tests');
+    // The controller methods the substrate was sent (a `perform` substrate's proof that the Bot drove it).
+    const sent = {};
+    const onControl = (d) => { sent[d?.method] = (sent[d?.method] ?? 0) + 1; };
+    if (performEvent) testController.eventBus.subscribe(performEvent, onControl, 'tests');
     trace.push(`start=${api('loops', 'getLoopStartRegion')?.()} here=${api('gameState', 'getCurrentRegion')?.()}`);
     await bot.play();
     const finished = await testController.pollForCondition(
       () => (bot.getStatus() || '').startsWith('finished'), 'bot finishes the world in loop mode', budgetMs, 500);
     testController.eventBus.unsubscribe('gameState:regionChanged', onRC, 'tests');
     testController.eventBus.unsubscribe('loopState:actionCompleted', onAC, 'tests');
+    if (performEvent) {
+      testController.eventBus.unsubscribe(performEvent, onControl, 'tests');
+      testController.reportCondition(`the Bot drove the substrate by perform (sent: ${JSON.stringify(sent)})`,
+        (sent.perform ?? 0) > 0 && !sent.walkTo);
+    }
     if (!finished) testController.log(`TRACE ${JSON.stringify(trace.slice(0, 60))}`);
     if (!finished) {
       const maze = getMazePanel();
@@ -489,6 +526,16 @@ async function playbackBotLoopModeWorld(testController, { quotas, start, seed, s
     testController.reportCondition(
       `every sphere-log location checked (missing: ${missing.slice(0, 5).join(', ') || 'none'})`, missing.length === 0);
     testController.log(`Bot loop log: ${JSON.stringify((bot.getLog?.() ?? []).map((e) => e.text ?? e).slice(-40))}`);
+    if (timeBotActions) {
+      const sorted = [...botTimes].sort((x, y) => x - y);
+      const at = (q) => (sorted.length ? sorted[Math.min(sorted.length - 1, Math.floor(q * sorted.length))].toFixed(1) : '-');
+      testController.log(`BOT ACTION TIMES (ms, n=${sorted.length}): median ${at(0.5)} p90 ${at(0.9)} max ${at(1)}`);
+    }
+    if (expectVictory) {
+      const inv = testController.stateManager.getLatestStateSnapshot()?.inventory ?? {};
+      const won = Object.entries(inv).some(([name, n]) => /victory/i.test(name) && Number(n) > 0);
+      testController.reportCondition(`Victory collected (inventory: ${JSON.stringify(inv)})`, won);
+    }
     if (missing.length) {
       const disc = (await import('../../discovery/singleton.js')).default;
       testController.log(`DIAG discovery: locations ${JSON.stringify([...(disc.getDiscoveredLocations?.() ?? [])])} `
@@ -527,6 +574,17 @@ registerTest({
     'Generates a small loop-mode world of maze, text adventure and bounce regions and presses the bot\'s Play: '
     + 'the runner gives each block the mode that lets the queue play it, until every sphere-log location is checked.',
   testFunction: playbackBotLoopModeMixedTest,
+  category: 'Playback Bot',
+  enabled: false,
+});
+
+registerTest({
+  id: 'playback-bot-loop-mode-text-adventure',
+  name: 'Playback Bot: Loop mode on a text adventure world (Bot blocks, to Victory)',
+  description:
+    'Generates a small text-adventure-only world with loop mode on and presses the bot\'s Play: every block runs '
+    + 'as Bot, so the text adventure performs each queued move, check and explore, until Victory is collected.',
+  testFunction: playbackBotLoopModeTextAdventureTest,
   category: 'Playback Bot',
   enabled: false,
 });
