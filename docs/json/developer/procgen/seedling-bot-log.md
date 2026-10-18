@@ -23239,3 +23239,47 @@ Lessons:
 - route survey step 79 SOLVED **199 → 204 t** (DASHSTEP D3: the OFF plan walks into the dialogue on the game);
 - the JS arc's 851-leg A/B, tip vs main.
 Pins: `contactFidelity.test` defaults and `fidelityStatueTalk` "ships ON".
+
+### Seedling hammer-phase RK — refusal kinds and the last why (solve-progress v2)
+
+⚖ The user (2026-10-17): *"I want to implement all of these features, if possible"*. ⚖ (2026-10-18): Tier C next,
+starting with **refusal kinds and the last `why`**. This is the plan's S5, the first Tier C slice, so it also carries the
+`v: 2` groundwork. The report is `CC/docs/cloud-reports/seedling-hammer-refusal-kinds.md`.
+
+**W0** at `3f5c3ff0fd`. The identity block, the six `--check`s, tapeRunner pairs **617 `8f27f975`** and the censuses
+(312 · 6,002 · 566 · 138 · 280) are all green. The bounded vitest passes 353/353. Under the real tap at 100 ms: L18 digest
+`230dc0ff`, `shouldStop` 165; L40 `3addc379`, 167 (= HB). The md5 of the v1 projection of every segment's final snapshot
+is the byte-identity baseline.
+
+**D1 — the census.** A loader hook injects a recorder into `solveProgress.js` at load time, so no tracked edit, under
+the six producers and four probe solves. The committed solves reject in five classes: the two-pass loop's undeclared
+kill lock (`levelRun`'s `undeclaredKillLock`, then the `PendingDeclaration`), AVOID's danger and no-path rows, TIME's
+`MOVER_RANGE` upper bound, BAIT's no-stance and static-body rows, and one exhausted escape search. Statically,
+`solverBot.js` has 358 refusal sites (`refuse` 130, `SolverRefusal` 58, `fail` 60, rung `why`s 64, …) plus 7
+`planSwordDash` window kinds.
+
+**D2 — `v: 2`.**
+- `tree.*.rejectionKinds {kind: n}` beside `rejections`.
+- The kinds are a closed `REFUSAL_KINDS`: `deadline`, `pending`, `danger`, `bound`, `exhausted`, `does-not-apply`,
+  `already-true`, `unmodelled`, `diverged`, `error`, `other`.
+- `progressKind` reads them on the **verbatim** payload: the solver's fields first, then the deadline's words, then the
+  sentence's.
+- `lastWhy {why, kind, key}`: the segment's last rejection verbatim, overwritten, on the deepest node.
+- No rung or verb name enters a rule, so the three fidelity-switch rungs classify the same ON and OFF.
+- One line in `solverBot.js`: the fight leaf also hands out its `why`.
+
+Gate rows are in `solveProgress.test.js`. The v1 projection is W0's md5 on L18, L40, L6 and L3. The digest,
+`shouldStop` and asks are W0's. `other` is 0 on the four committed solves (18 rejections in 4 kinds). Across the six producers' `--check`s it is 0 as well (55 rejection events in 5 kinds). Its four mutants are all
+caught: a kind read off the cut key, `lastWhy` kept as a list, a lookup that calls `shouldStop` (167 → 171), and a
+lookup unhooked.
+
+**D3** (three interleaved rounds, load 0.6–1.3). Digests and `shouldStop` are identical in all 24 runs. Wall medians:
+L18 5.5 s unhooked in both, 5.4 s (v1) and 5.9 s (v2) under the tap; L40 8.5 s unhooked in both, 8.8 s and 8.3 s under
+the tap. The round-to-round spread is about ±0.6 s. The final snapshot grows by 430–860 bytes per segment, mostly the
+verbatim `lastWhy`.
+
+Lessons:
+1. *The kinds the investigation listed were not all the tree's.* `not-faster` and `leg-bound` are `planSwordDash`'s
+   window rows, which never reach a tree node. The deadline's `window` and `budget` are the JS arc's `limit.first`.
+2. *A sentence can grow after the tree has seen it.* `withSolveDeadline` appends its clause on the way out, so
+   `lastWhy` re-reads its words at each frame and keeps the deepest key.
