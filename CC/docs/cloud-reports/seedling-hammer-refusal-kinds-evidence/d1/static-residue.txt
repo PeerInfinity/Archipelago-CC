@@ -1,0 +1,76 @@
+# static `other` residue after the rules (line, form, head) — a WRAPPER head (the sentence is a variable or `${what}: ${why}`) is excluded: its runtime kind is its inner sentence's
+769	SolverRefusal	`solverBot: bait ${obstacle.id} in level ${run.level} — ${why}`, { obstacle: { kind: 'solid', tag: 'crusher', id: obstacle.id } }); };
+773	refuse	'a crusher in this room is CHARGING; the ordering search plans from parks, and a ' + 'body in motion is not one.'); }
+788	refuse	`the ordering search found ${found.ordering.length} charge(s) in ${plan.length} chain(s) ` + `[${plan.map((p) => `${p.chain.id} ${p.chain.ch
+882	refuse	`${label}: the player never comes to rest outside every live lane.`); } for (const held of chosen.ticks) {
+1060	refuse	`${what}: the encounter has run ${ENCOUNTER_MAX_TICKS} ticks without the ` + 'drop.', { goal, obstacle: { kind: 'encounter', id: `encounter@
+1149	refuse	`${what}: form ${boss.form} at (${boss.x.toFixed(2)},${boss.y.toFixed(2)}) — no ` + `strike lands untouched (${plan.tried} plans forecast) a
+1215	refuse	`${what}: the drop is not complete — hasFire ${run.progress('inventory')?.hasFire}, ` + `writes [${writes.join(', ')}].`, { goal }); } else 
+1315	refuse	`${what}: the Witch adds the dark sword only for a player holding the WAND ` + '(`Witch.doneTalking`: `Main.hasWand && !Main.hasDarkSword`);
+1346	refuse	`${what}: the walk rests at (${run.state.x},${run.state.y}), outside ${witch.id}'s talk circle.`, { goal, obstacle: { kind: 'encounter', id:
+1360	refuse	`${what}: ${WITCH_TALK_MAX} ticks of the talk cadence and no dark sword ` + `(${run.ledger('witchEvents').map((r) => r.what).join(', ') || '
+1369	refuse	`${what}: the Witch's dialogue closed (${close.cause}) and added nothing.`, { goal }); closedAt = perTick.length; records.push({ goal: 'enco
+1724	refuse	`${ctx.what}: the lean toward ${resolved.tree} crossed to ` + `level ${transition.to_level}.`); if (run.state.x === before.x && run.state.y 
+1732	refuse	`${ctx.what}: the walk came to rest at (${run.state.x},${run.state.y}) and a fire ` + `press from there reaches [${reach.trees.join(', ')}] 
+1937	refuse	`${ctx.what}: the lean came to rest at (${run.state.x},${run.state.y}) facing ${run.direction}, and a ` + `shot from there stops on ${shot.e
+2140	refuse	`the dialogue opened with the box at (${run.state.x},${run.state.y}) on the live Seed ` + `the watcher holds out on pages ${WATCHER_SEED_PAG
+2148	refuse	`${resolved.watcher}'s dialogue was still open after ${TALK_PAGE_MAX} tick(s) ` + `(page ${watcher().page} of ${watcher().pages}).`); }
+6019	refuse	'deadline'); /** * ⛓⛓ R9 SLICE 12c‴, ⚖ RULING 45(a) — the two things a modelled hit is still
+8660	SolverRefusal	`${what}: the hold stands still for up to ${ticks} tick(s) at (${at.x},${at.y}), ` + `inside ${lobber}'s 256 px reach — ${bomb.why}. A hold 
+8770	SolverRefusal	`${what}: the hold stands still for up to ${hold.ticks} tick(s) at ` + `(${run.state.x},${run.state.y}), inside ${lobber}'s 256 px reach — $
+8957	refuse	`${label}: after the lean the block is ${!live || live.removed ? 'GONE' : `on (${tileOf(live).tx},${tileOf(live).ty})`}, not ` + `${step.des
+8971	refuse	`${label}: after the thrust the block is ${!live || live.removed ? 'GONE' : `on (${tileOf(live).tx},${tileOf(live).ty})`}, not ` + `${step.d
+9037	refuse	`${p.blockId} is ${l0 ? 'GONE' : 'not in the run'} before the thrust.`); const facing = PRESS_FACING[p.dir]; settle('the walk to the thrust 
+9047	refuse	`still frozen after ${i} ticks.`); step(IDLE, 'the freeze wait'); }
+9051	refuse	`the face tap left the player facing ${run.state.direction}, not ${facing} — the stance is ` + 'pinned against something in the facing direc
+9055	refuse	`the walk settled at (${run.state.x},${run.state.y}) and the spear's 32x5 rect facing ${p.dir} ` + `from there misses ${p.blockId} at (${l0.
+9074	refuse	`${SPEAR_PRESS_BOUND} ticks after the thrust (tick ${pressTick}) ${p.blockId} is ` + `${!l || l.removed ? 'GONE' : `at (${l.rect.x},${l.rect
+12791	SolverRefusal	`${ctx.what}: the ceiling's column is still falling ` + `(${inFlight()} arrow(s) in flight) and NO reachable cell within four tiles ` + `of 
+13055	SolverRefusal	`${ctx.what}: ${body.id} survives the ceiling and no ` + `bait stance pulls it into a lane — ${bait.why}`, { goal: ctx.goal, obstacle: { kin
+13094	SolverRefusal	`${ctx.what}: the ceiling removed every body it could and ` + `[${left.map((b) => `${b.tag}@${b.x},${b.y}`).join(', ')}] remain, so ` + '`Ga
+13129	SolverRefusal	`${ctx.what}: every counted body is gone and the run's own ` + 'kill-lock ledger (`chaserKillLockOpens`) recorded NOTHING — so nothing ' + '
+13320	SolverRefusal	`${ctx.what}: the count waits on ${id} and this run does not step it`, { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock?.i
+13636	refuse	`the facing tap left the player at (${run.state.x.toFixed(1)},${run.state.y.toFixed(1)}), where the ` + `thrust misses ${id}`); }
+13641	refuse	`${near} could walk into the thrust's rect during its repeats (T+1/T+3/T+5 on the game, ` + '`presses.SPEAR_HIT_TICKS_UNMODELLED`): the game
+13808	refuse	`the player does not settle at ${id}'s ${side.key} stance (gap ${gapNow().toFixed(2)} px, ` + `velocity (${run.state.vx},${run.state.vy}), s
+13819	refuse	`${id} fires a spit before the kill at every wait up to ${STATIC_SWORD_WAIT_MAX} ticks ` + `from the ${side.key} side (${plan.why}), and the
+13980	SolverRefusal	`${ctx.what}: the count is still waiting on [${[...ids].join(', ')}] and no ` + `stance derives for any of them — ${tried.map((t) => t.why).
+14054	SolverRefusal	`${ctx.what}: the chaser arm removed every body it could and ` + `[${left.map((b) => `${b.tag}@${b.x},${b.y}`).join(', ')}] remain, so ` + '
+14066	SolverRefusal	`${ctx.what}: every counted body is gone and the run's own kill-lock ledger ` + '(`chaserKillLockOpens`) recorded NOTHING — so nothing compu
+16263	SolverRefusal	refusal({ candidates, outOfReach, noRect, unsafe }), { obstacle: { kind: 'solid', id: target.id } }); }
+16449	SolverRefusal	`${what}: ${t.id}'s lane is priced as danger while its ` + `group t=${t.t} is LATCHED in the live run (${rope.ropeId} has published ` + 'it)
+19596	why=	`${body.id}: the walk to its light stance re-entered the same light arm at tick ` + `${perTick.length} with nothing spent between, so a seco
+19645	refuse	`${what} -> light (${d.pole.id}): the stance settled at (${run.state.x},${run.state.y}) facing ` + `${run.state.direction}, and the spear re
+19651	refuse	`${what} -> light: still frozen after ${i} ticks.`, { goal }); step(IDLE, 'the freeze wait'); }
+19713	refused=	 'avoid', why: 'every reason the probe gave is a TurretSpit ' + `(${reasonsOf(hit).slice(0, 160)}); a spit is the walk's own timing, not a `
+19736	refused=	 'avoid', why: 'the danger-forbidden corridor STILL probes ' + `dangerous at (${still.x.toFixed(1)},${still.y.toFixed(1)}) — ` + `${reasonsO
+19813	refused=	 'dodge', why: dodgeWhy }; } 
+20266	refused=	 'dodge', why: dodgeWhy }; } 
+20454	refused=	 'dodge', why: dodgeWhy }; } 
+20545	why=	`${ropeId} silences [${silencer.traps.join(', ')}] (group ` + `t=${silencer.group}), but ${e.message}`; }
+20568	refused=	 'pull', why: pullWhy }; } 
+20637	refused=	 'time', why: timeWhy };  /**
+20747	refused=	 'bait', why: baitWhy };  // ── rung 4: KILL — the room's own weapon, held until the count moves ─
+20797	why=	swordWhy ? `static sword arm: ${swordWhy} · the ceiling: ${weapon.why}` : weapon.why; } else { rowFor('kill', refused, { presser: weapon.pre
+20937	why=	`${target.id} is a live Spinner, and the press arm refused: ` + press.rejected.map((r) => `${r.option}: ${r.why}`).join(' · '); admitted = {
+20948	why=	`${target.id} is a live Spinner whose removal the run OBSERVES (the ` + '`spinnerBodies` roster, and `spinnerWrites` for a tagged body), but
+20954	why=	`${target.id} is a live Spinner, and the press arm refused: ` + press.rejected.map((r) => `${r.option}: ${r.why}`).join(' · ') // ⛓ hammer-p
+20986	why=	`${admittedOffWhy} ${fightFallbackSentence(admitted)}`; } HAMMER_FIGHT_FALLBACK_TRACE.sink?.({ ...admitted, ms: performance.now() - started 
+21002	why=	`${target.id} is a live Spinner and the press arm's schedule swung ` + 'through a Solid — the run refused the hit by name: ' + `${String(e.m
+21046	why=	'the danger on this corridor is not a body this run can watch die — ' + 'a kill needs a target whose removal the model OBSERVES (a live chas
+21279	why=	`${kill.why}\n         chaser arm: ${hunt.why}`; } if (!killWhy) killWhy = kill.why;
+21598	refuse	`${what}: ARROWLANE — the corridor crosses an ARMED lane (${laneWalk.why}: ` + `${laneWalk.lanes.join(', ')}; arrows are not dodged, they ar
+21848	refuse	`${what}: STANCE_REENTRY — the walk to ${plan.obstacle.id}'s ` + `\`${plan.strategy}\` stance (${aim.x},${aim.y}) is itself blocked by ` + `
+21874	refuse	`${what}: applied ${applied.length} strategies for one goal ` + `[${applied.join(', ')}] and the corridor still does not plan. ` + 'A policy
+22052	refuse	`${what}: CORRIDOR — the corridor meets ${reasonsOf(hit)} inside a climb already ` + `${corridorClimbDepth} deep (CORRIDOR_LADDER_NEST ${COR
+22226	refuse	`${what}: reached the exit aim without a transition — the ` + 'trigger did not fire from the certified corridor.', { goal }); }
+22234	refuse	`${what}: the re-planned corridor failed too — ${e.message}`, { goal, considered: [
+22341	refuse	`${whatExit}: the ${chosen.dir} step-off held ${chosen.ticks} tick(s) and the box ` + `is still on ${id} at (${run.state.x},${run.state.y}) 
+22412	refuse	`${whatExit}: hazard-floor — every way off ${id}'s rect crosses ` + `${floors.join(' or ')} the run cannot stand on (${need}); without that,
+22432	refuse	`${whatExit}: inside-solid — the run stands LATCHED on ${id} in level ${run.level} ` + `with its box INSIDE ${inside.join(', ')}: no directi
+22438	refuse	`${whatExit}: closed — the run stands LATCHED on ${id} in level ${run.level} ` + '(`Teleporter.check()` latched it on the arrival frame) and
+22591	refuse	`${name}: arrival-inside-solid — the run's box at (${run.state.x},${run.state.y}) in level ` + `${run.level} is INSIDE ${ids.join(', ')} and
+23140	refuse	`${whatA}: the walk reached the apitem's centre (${centre.x},${centre.y}) ` + `in level ${run.level} and the contact rule never fired. A box
+23205	refuse	`${what}: cleared ${guard} obstacle(s) and the placement is STILL ` + `inside ${blocker.id}.`, { goal, obstacle: blocker }); }
+23219	refuse	`${what}: the placement is INSIDE ${key} (${blocker.id}) — a ` + 'pickup in a solid is an obstacle, not a stance problem. ' + `${strategy ? 
+23286	refuse	`${what}: strategy '${resolved.strategy}' is selected and NOT ` + 'registered this slice.', { goal, considered: resolved.rejected,
