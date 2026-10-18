@@ -2,6 +2,8 @@
 
 This guide provides a detailed walkthrough of the JSON Web Client when used as an advanced tracker and client for Archipelago multiworld games. It uses your game's `rules.json` file to offer insights into location accessibility, helping you understand your world's logic and track your progress.
 
+The same client also plays worlds this project generates; see [For Players](../intro/for-players.md).
+
 ## Core Concepts
 
 -   **Logic-Aware Tracking:** Unlike a simple item tracker, this client understands your game's rules. When you receive an item, it instantly re-evaluates the entire game world to show you exactly which locations and exits are now accessible.
