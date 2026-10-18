@@ -1018,6 +1018,16 @@ export function planTilePath(level, from, to, allowTeleporter = null, opts = {})
  * is not.
  */
 export function controllerPathClear(level, a, b, allowTeleporter = null, opts = {}) {
+    return controllerPathClearBy(
+        (x, y) => plannerObstacleAt(level, x, y, allowTeleporter, opts), a, b);
+}
+
+/**
+ * `controllerPathClear`'s sampling, over any point query: `blockedAt(x, y)` is
+ * truthy where `plannerObstacleAt` would be. The ONE copy of the two-leg
+ * geometry — `STRING_PULL_FAST` changes only the query, never the samples.
+ */
+function controllerPathClearBy(blockedAt, a, b) {
     const dx = b.x - a.x;
     const dy = b.y - a.y;
     const diagonal = Math.min(Math.abs(dx), Math.abs(dy));
@@ -1025,7 +1035,7 @@ export function controllerPathClear(level, a, b, allowTeleporter = null, opts = 
         x: a.x + Math.sign(dx) * diagonal,
         y: a.y + Math.sign(dy) * diagonal,
     };
-    if (plannerObstacleAt(level, a.x, a.y, allowTeleporter, opts)) return false;
+    if (blockedAt(a.x, a.y)) return false;
     for (const [from, to] of [[a, corner], [corner, b]]) {
         const dist = Math.hypot(to.x - from.x, to.y - from.y);
         const steps = Math.max(1, Math.ceil(dist / SEGMENT_SAMPLE_STEP));
@@ -1033,12 +1043,117 @@ export function controllerPathClear(level, a, b, allowTeleporter = null, opts = 
         for (let i = 1; i <= steps; i++) {
             const f = i / steps;
             const p = { x: from.x + (to.x - from.x) * f, y: from.y + (to.y - from.y) * f };
-            if (plannerObstacleAt(level, p.x, prev.y, allowTeleporter, opts)) return false;
-            if (plannerObstacleAt(level, p.x, p.y, allowTeleporter, opts)) return false;
+            if (blockedAt(p.x, prev.y)) return false;
+            if (blockedAt(p.x, p.y)) return false;
             prev = p;
         }
     }
     return true;
+}
+
+/**
+ * ⛓⛓ SEEDLING HAMMER-PHASE SP — **THE STRING-PULL'S POINT MEMO, behind a switch
+ * (default OFF).** The string-pull asks `controllerPathClear` from the farthest
+ * point inward, and its samples overlap: every axis-aligned sample asks the same
+ * point twice (`(p.x, prev.y)` IS `(p.x, p.y)` when `dy` is 0), every candidate
+ * from one anchor re-asks the anchor and the shared prefix of its axis legs, and
+ * the next anchor re-walks ground the last one walked. Measured (SP D1): of the
+ * pull's `plannerObstacleAt` asks, 51 % on L40 and 72 % over the campaign repeat a
+ * point already asked IN THE SAME `planWaypoints` CALL.
+ *
+ * ⛔ THE KEY IS `(x, y)` AND ITS SCOPE IS ONE CALL — that is the completeness
+ * proof, not a shortcut. `plannerObstacleAt`'s answer is a function of the point
+ * and of `(level, allowTeleporter, opts)` plus whatever live state those reach
+ * (`opts.liveBag`'s crusher snapshot, beam towers, pushables, open bridges, every
+ * other family; `level`'s tiles and teleporters' `deactivated`). Within one
+ * `planWaypoints` call the three bindings are fixed and NOTHING advances the run:
+ * the pull's loop runs only `controllerPathClear` (read-only queries) and the
+ * emit-only `plan-pull` heartbeat. So every family is constant over the memo's
+ * life without being named in the key, and a family added later is covered the
+ * same way. The memo is built inside the call and dropped with it: a crusher
+ * step, a push or a bridge opening happens BETWEEN calls, never inside one.
+ *
+ * ⚠ ANSWER-IDENTICAL BY CONSTRUCTION: the same samples are asked in the same
+ * order (`controllerPathClearBy` is the one copy), only a REPEAT is answered from
+ * the memo, and the first ask of any point is computed — so a throwing query
+ * throws at the same ask ON and OFF. Truthiness is all `controllerPathClear`
+ * reads, so the memo stores `!!answer`. Number keys are SameValueZero: `-0` and
+ * `0` share a row, and `plannerObstacleAt` reads a coordinate only through
+ * arithmetic and comparisons, which do not see the sign of zero.
+ *
+ * `audit` is the gate's seam (`stringPullFast.test.js`,
+ * `check-seedling-string-pull-fast.mjs`): when a function, `planWaypoints` runs
+ * BOTH pulls on the same points and hands `{ off, on }` to it, returning the
+ * switch's arm. The other arm runs silent (no heartbeats), so a hooked solve
+ * beats as it would unaudited. `SEEDLING_STRING_PULL_FAST=1` turns it ON for a
+ * node measurement; `withStringPullFast(on, fn)` for a test. The browser has no
+ * `process` and takes the default.
+ */
+export const STRING_PULL_FAST = {
+    enabled: globalThis.process?.env?.SEEDLING_STRING_PULL_FAST === '1',
+    audit: null,
+};
+
+/** Run `fn` with the switch set to `enabled`, restoring the previous value. */
+export function withStringPullFast(enabled, fn) {
+    const was = STRING_PULL_FAST.enabled;
+    STRING_PULL_FAST.enabled = enabled === true;
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') {
+            return out.finally(() => { STRING_PULL_FAST.enabled = was; });
+        }
+        STRING_PULL_FAST.enabled = was;
+        return out;
+    } catch (e) {
+        STRING_PULL_FAST.enabled = was;
+        throw e;
+    }
+}
+
+/** `plannerObstacleAt`'s truthiness at a point, memoised for ONE `planWaypoints` call (see `STRING_PULL_FAST`). */
+function stringPullBlockedAt(level, allowTeleporter, opts) {
+    const rows = new Map();
+    return (x, y) => {
+        let row = rows.get(x);
+        if (row === undefined) {
+            row = new Map();
+            rows.set(x, row);
+        }
+        let v = row.get(y);
+        if (v === undefined) {
+            v = !!plannerObstacleAt(level, x, y, allowTeleporter, opts);
+            row.set(y, v);
+        }
+        return v;
+    };
+}
+
+/**
+ * The greedy string-pull over `points` (see `planWaypoints`): from each anchor,
+ * the FARTHEST later point whose controller path is clear, else the next one.
+ * `fast` picks the query (`STRING_PULL_FAST`); `beat` emits the HB heartbeat.
+ */
+function stringPull(level, points, allowTeleporter, opts, fast, beat) {
+    const clear = fast
+        ? ((blockedAt) => (a, b) => controllerPathClearBy(blockedAt, a, b))(
+            stringPullBlockedAt(level, allowTeleporter, opts))
+        : (a, b) => controllerPathClear(level, a, b, allowTeleporter, opts);
+    const kept = [];
+    let anchor = 0;
+    while (anchor < points.length - 1) {
+        let next = anchor + 1;
+        for (let j = points.length - 1; j > anchor; j--) {
+            if (beat && activeProgress !== null) progressHeartbeat('plan-pull'); // ⛓ HB: emit-only, once a string-pull ask
+            if (clear(points[anchor], points[j])) {
+                next = j;
+                break;
+            }
+        }
+        kept.push(points[next]);
+        anchor = next;
+    }
+    return kept;
 }
 
 /**
@@ -1338,21 +1453,14 @@ export function planWaypoints(level, from, to, allowTeleporter = null, opts = {}
         });
     }
 
-    const kept = [];
-    let anchor = 0;
-    while (anchor < points.length - 1) {
-        let next = anchor + 1;
-        for (let j = points.length - 1; j > anchor; j--) {
-            if (activeProgress !== null) progressHeartbeat('plan-pull'); // ⛓ HB: emit-only, once a string-pull ask
-            if (controllerPathClear(level, points[anchor], points[j], allowTeleporter, opts)) {
-                next = j;
-                break;
-            }
-        }
-        kept.push(points[next]);
-        anchor = next;
+    const fast = STRING_PULL_FAST.enabled;
+    if (typeof STRING_PULL_FAST.audit === 'function') {
+        const off = stringPull(level, points, allowTeleporter, opts, false, !fast);
+        const on = stringPull(level, points, allowTeleporter, opts, true, fast);
+        STRING_PULL_FAST.audit({ world: level, from, to, allowTeleporter, points: points.length, off, on });
+        return fast ? on : off;
     }
-    return kept;
+    return stringPull(level, points, allowTeleporter, opts, fast, true);
 }
 
 /** Locate the teleporter a leg's `exit` names, by its OEL coordinates. */
