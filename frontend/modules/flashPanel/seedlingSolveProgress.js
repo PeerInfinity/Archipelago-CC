@@ -26,6 +26,10 @@
  *    SUBSCRIBED while the view is hidden (the progress ask rides the solve's envelope, so a listener made mid-solve
  *    would only hear the NEXT solve); a solve's first note shows the view and its FINAL note hides it at once. Hiding
  *    is NOT closing: the feed keeps listening, so the next solve is asked too. `always` never auto-hides.
+ *  - ⛓ TIER A (slice S2, ⚖ the user 2026-10-17 — what the snapshot ALREADY carries, shown; no schema change):
+ *    `asksBySite` (the deadline sites' asks, which under a deadline are the work units), `workCounters` (the
+ *    segment's other counters), `activePath` (the active path and its climb depth) and `reasonsText` (a node's
+ *    rejection tallies inline — `treeRows` marks the rungs of an active climb with `reasons`).
  */
 
 /** The feed's re-resolve interval (ms): also the "last update N s ago" refresh. */
@@ -86,25 +90,86 @@ function hasActive(n) {
 }
 
 /**
- * The tree as display rows `{key, depth, node, open, hidden, collapsible, rejected}`: an active subtree is always
- * open; a finished one is collapsed unless `expanded` has its key; `hidden` counts the nodes a collapsed row hides.
+ * The tree as display rows `{key, depth, node, open, hidden, collapsible, rejected, reasons}`: an active subtree is
+ * always open; a finished one is collapsed unless `expanded` has its key; `hidden` counts the nodes a collapsed row
+ * hides. ⛓ TIER A — `reasons` is true for a rung with rejections whose parent is an ACTIVE climb (the view writes
+ * its `reasonsText` inline, not only in the tooltip).
  * At most `cap` rows; the result is `{rows, more}` (`more` = rows not listed).
  */
 export function treeRows(tree, { expanded = new Set(), cap = SOLVE_PROGRESS_TREE_CAP } = {}) {
     const rows = [];
     let more = 0;
     const count = (n) => (n.children ?? []).reduce((a, c) => a + 1 + count(c), 0);
-    const walk = (n, depth) => {
+    // ⛓ TIER A — `inClimb`: the parent is an ACTIVE climb, so a rung row carries its reasons inline (`reasons`)
+    const walk = (n, depth, inClimb) => {
         const kids = n.children ?? [];
         const live = hasActive(n);
+        const inActiveClimb = inClimb && n.role === 'rung' && rejectedOf(n) > 0;
         const open = kids.length > 0 && (live || expanded.has(n.key));
-        if (rows.length >= cap) { more += 1 + (open ? 0 : count(n)); if (open) for (const c of kids) walk(c, depth + 1); return; }
+        if (rows.length >= cap) {
+            more += 1 + (open ? 0 : count(n));
+            if (open) for (const c of kids) walk(c, depth + 1, false);
+            return;
+        }
         rows.push({ key: n.key, depth, node: n, open, collapsible: kids.length > 0 && !live,
-            hidden: open ? 0 : count(n), rejected: rejectedOf(n) });
-        if (open) for (const c of kids) walk(c, depth + 1);
+            hidden: open ? 0 : count(n), rejected: rejectedOf(n), reasons: inActiveClimb });
+        if (open) for (const c of kids) walk(c, depth + 1, n.role === 'climb' && n.active === true);
     };
-    if (tree) walk(tree, 0);
+    if (tree) walk(tree, 0, false);
     return { rows, more };
+}
+
+/** ⛓ TIER A — a node's rejection tallies as one line, the most frequent first (ties by reason): `4× a · 1× b`. */
+export function reasonsText(rejections) {
+    return Object.entries(rejections ?? {}).filter(([, n]) => n > 0)
+        .sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
+        .map(([k, n]) => `${n}× ${k}`).join(' · ');
+}
+
+/**
+ * ⛓ TIER A — `budget.asks` as `{rows: [[site, n], …], total}`, the most asked site first (ties by name). The asks
+ * are the segment's (a new segment starts them over); under a deadline they are the work units (`shouldStop` =
+ * their sum, §4 of the schema page).
+ */
+export function asksBySite(snapshot) {
+    const rows = Object.entries(snapshot?.budget?.asks ?? {}).filter(([, n]) => Number.isFinite(n) && n > 0)
+        .sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
+    return { rows, total: rows.reduce((a, [, n]) => a + n, 0) };
+}
+
+/** ⛓ TIER A — the work counters `workCounters` lists, in this order, with their display names. */
+export const WORK_COUNTER_LABELS = Object.freeze({
+    ticks: 'ticks', previews: 'previews', previewStates: 'preview states', searchStates: 'search states',
+    expansions: 'expansions', waypointsPlanned: 'waypoints', replans: 'replans', dashesPressed: 'dashes',
+});
+
+/**
+ * ⛓ TIER A — `budget.work` but `shouldStop` (the meter's) as `[[label, n], …]`: the known units in
+ * `WORK_COUNTER_LABELS`' order, then any unit this view does not know by its own name (sorted), so a counter added
+ * to the schema is shown, not lost.
+ */
+export function workCounters(snapshot) {
+    const work = snapshot?.budget?.work ?? {};
+    const known = Object.keys(WORK_COUNTER_LABELS).filter((k) => Number.isFinite(work[k]))
+        .map((k) => [WORK_COUNTER_LABELS[k], work[k]]);
+    const other = Object.keys(work).filter((k) => k !== 'shouldStop' && !(k in WORK_COUNTER_LABELS)
+        && Number.isFinite(work[k])).sort().map((k) => [k, work[k]]);
+    return [...known, ...other];
+}
+
+/**
+ * ⛓ TIER A — the ACTIVE path: from the root, the active child at each step (the first, should two be marked), as
+ * `{nodes, climbDepth}` — `nodes` excludes the root (the header names the segment); `climbDepth` counts the
+ * `climb` roles on it (a climb nested inside a rung's stance walk is depth 2). An idle tree is `{nodes: [], 0}`.
+ */
+export function activePath(tree) {
+    const nodes = [];
+    let n = tree?.active ? tree : null;
+    while (n) {
+        n = (n.children ?? []).find((c) => c.active) ?? null;
+        if (n) nodes.push(n);
+    }
+    return { nodes, climbDepth: nodes.filter((x) => x.role === 'climb').length };
 }
 
 /** The tile map's cells as a lookup and its maximum count: `{max, at(col,row) → [col,row,reached,firstTick]|null}`. */

@@ -18,6 +18,8 @@
  *        -> 'auto: two solves in a row …' reds (the second solve is never shown; the service has no listener)
  *   v7 ⛓ AUTO-SHOW: a stored legacy `true` reads as the default instead of `always`
  *        -> 'solveProgressMode …' reds
+ *   (⛓ S2's Tier A mutants a1–a8 are listed in seedlingSolveProgressView.test.js; the Tier A rows below run the
+ *   model on D1's real streams)
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -25,8 +27,9 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    applyProgress, autoVisibility, createSolveProgressFeed, emptyProgress, meterOf, nextSolveProgressMode,
-    SOLVE_PROGRESS_DEFAULT_MODE, solveProgressMode, tileIndex, tileShade, treeRows,
+    activePath, applyProgress, asksBySite, autoVisibility, createSolveProgressFeed, emptyProgress, meterOf,
+    nextSolveProgressMode, reasonsText, SOLVE_PROGRESS_DEFAULT_MODE, solveProgressMode, tileIndex, tileShade, treeRows,
+    workCounters,
 } from './seedlingSolveProgress.js';
 import { SolveProgressView } from './seedlingSolveProgressView.js';
 
@@ -118,6 +121,61 @@ describe('treeRows — collapse and cap', () => {
         expect(rows).toHaveLength(50);
         expect(rows.length + more).toBe(501);
         expect(rows[1].rejected).toBe(1);
+    });
+});
+
+describe('⛓ S2 — TIER A on D1\'s real streams', () => {
+    const STREAMS = ['l18-hammer-escape-kill.jsonl', 'l40-climb-kill-chaser.jsonl', 'l3-plain-walk.jsonl'];
+
+    it('asksBySite: Σ asks = the segment\'s shouldStop at its end, and leads it by at most the ONE ask in flight', () => {
+        for (const name of STREAMS) {
+            const snaps = stream(name);
+            for (const snap of snaps) {
+                const lead = asksBySite(snap).total - snap.budget.work.shouldStop;
+                expect([0, 1]).toContain(lead);
+            }
+            expect(asksBySite(snaps.at(-1)).total).toBe(snaps.at(-1).budget.work.shouldStop);
+        }
+        expect(asksBySite(stream('l18-hammer-escape-kill.jsonl').at(-1)).rows)
+            .toEqual([['hammer-escape', 37], ['walk', 18], ['sword-dash', 9]]);
+    });
+
+    it('workCounters: L18\'s final counters, in order, without shouldStop', () => {
+        expect(workCounters(stream('l18-hammer-escape-kill.jsonl').at(-1))).toEqual([['ticks', 445], ['previews', 411],
+            ['preview states', 26472], ['search states', 18362], ['expansions', 10444], ['waypoints', 1],
+            ['replans', 0], ['dashes', 6]]);
+    });
+
+    it('activePath on L40: the climb appears, then the kill rung\'s chaser arm, at depth 1; the final tree is idle', () => {
+        const snaps = stream('l40-climb-kill-chaser.jsonl');
+        const paths = snaps.map((x) => activePath(x.tree));
+        const lines = new Set(paths.map((p) => p.nodes.map((n) => `${n.role}:${n.label}`).join('/')));
+        expect([...lines].some((l) => l.endsWith('climb:climb/rung:kill/arm:chaser/walk:walk'))).toBe(true);
+        expect(Math.max(...paths.map((p) => p.climbDepth))).toBe(1);
+        // every path node is active, and each is a child of the one before
+        for (const [i, p] of paths.entries()) {
+            let parent = snaps[i].tree;
+            for (const n of p.nodes) { expect(n.active).toBe(true); expect(parent.children).toContain(n); parent = n; }
+            expect((parent.children ?? []).some((c) => c.active)).toBe(false);
+        }
+        expect(paths.at(-1)).toEqual({ nodes: [], climbDepth: 0 });
+    });
+
+    it('treeRows marks `reasons` exactly on the rejecting rungs of an ACTIVE climb (L40: avoid … bait while kill runs)', () => {
+        const snaps = stream('l40-climb-kill-chaser.jsonl');
+        let seen = 0;
+        for (const snap of snaps) {
+            const { rows } = treeRows(snap.tree);
+            const byKey = new Map(rows.map((r) => [r.key, r]));
+            for (const r of rows) {
+                const parent = byKey.get(r.key.slice(0, r.key.lastIndexOf('/')));
+                const want = r.node.role === 'rung' && r.rejected > 0 && parent?.node.role === 'climb' && parent.node.active === true;
+                expect(r.reasons).toBe(want);
+                if (want) seen += 1;
+            }
+        }
+        expect(seen).toBeGreaterThan(0);
+        expect(reasonsText({ b: 1, a: 1, c: 4, z: 0 })).toBe('4× c · 1× a · 1× b');
     });
 });
 

@@ -25,10 +25,22 @@
  *        -> 'ROW DIFF: …' reds
  *   r7 a row that stops being collapsible keeps its `data-key`
  *        -> 'ROW DIFF: … a row that stops being collapsible loses its data-key' reds
+ *
+ * ⛓ S2 — TIER A (asks by site, the work counters, the active path and climb depth, inline rung reasons, tile
+ * recency). Its mutants (all RED; the model's rows on D1's streams in seedlingSolveProgress.test.js catch a1 too):
+ *   a1 the asks sorted least-asked first            -> 'ASKS BY SITE: …' reds
+ *   a2 a work unit the view does not know is dropped -> 'ASKS BY SITE: … an unknown unit kept' reds
+ *   a3 a rung's reasons inline under ANY climb       -> 'INLINE REASONS: …' reds
+ *   a4 the climb depth counts every climb in the tree -> 'ACTIVE PATH: …' reds
+ *   a5 the recency base advances on every render     -> 'a RE-RENDER of the same snapshot …' reds
+ *   a6 the recency base kept across segments/solves  -> 'a new SEGMENT or solve starts recency over …' reds
+ *   a7 a Tier A line written on every render          -> 'an unchanged Tier A line is not written again …' reds
+ *   a8 reasons inline on every rejecting row          -> 'INLINE REASONS: …' reds
+ *   a9 no recency palette (a rise ignored)            -> 'a cell that ROSE …' and 'only CHANGED cells …' red
  */
 import { describe, expect, it } from 'vitest';
 
-import { cellColour, levelColour, shadeLevel, SolveProgressView } from './seedlingSolveProgressView.js';
+import { cellColour, levelColour, recentLevel, shadeLevel, SolveProgressView } from './seedlingSolveProgressView.js';
 import { SOLVE_PROGRESS_INTERVAL_MS } from '../seedlingDemo/solveProgressTap.js';
 
 /** A recording DOM: elements with parent links, canvases that count resizes and record their `fillRect`s. */
@@ -198,21 +210,32 @@ describe('⛓ S1 — the canvas: SIZE-ONLY RESIZE, changed cells only', () => {
             const cells = [[0, 0, 9, 0], [1, 0, 3, 0], [2, 0, 1, 0]];
             t.emit({ solveId: 1, snapshot: snap(1, { tiles: tilesOf(cells) }), final: false });
             t.runFrames();
-            // the identical map again: nothing painted
+            // ⛓ S2 — the identical map again: its cells stopped RISING, so each goes from the recency palette to
+            // its total shade (three cells, once); the identical map a third time paints nothing
+            const px = t.view._px;
             t.rec.fills.length = 0;
             t.emit({ solveId: 1, snapshot: snap(2, { tiles: tilesOf(cells.map((c) => [...c])) }), final: false });
             t.runFrames();
+            expect(t.rec.fills).toHaveLength(3);
+            t.rec.fills.length = 0;
+            t.emit({ solveId: 1, snapshot: snap(3, { tiles: tilesOf(cells.map((c) => [...c])) }), final: false });
+            t.runFrames();
             expect(t.rec.fills).toEqual([]);
-            // one cell's count changes (the max does not): exactly that cell
-            const px = t.view._px;
-            t.emit({ solveId: 1, snapshot: snap(3, { tiles: tilesOf([[0, 0, 9, 0], [1, 0, 5, 0], [2, 0, 1, 0]]) }), final: false });
+            // one cell's count changes (the max does not): exactly that cell, in the recency palette (the only rise)
+            t.emit({ solveId: 1, snapshot: snap(4, { tiles: tilesOf([[0, 0, 9, 0], [1, 0, 5, 0], [2, 0, 1, 0]]) }), final: false });
+            t.runFrames();
+            expect(t.rec.fills).toEqual([[px, 0, px, px, levelColour(recentLevel(1))]]);
+            // the same map: that cell goes back to its total shade
+            t.rec.fills.length = 0;
+            t.emit({ solveId: 1, snapshot: snap(5, { tiles: tilesOf([[0, 0, 9, 0], [1, 0, 5, 0], [2, 0, 1, 0]]) }), final: false });
             t.runFrames();
             expect(t.rec.fills).toEqual([[px, 0, px, px, levelColour(shadeLevel(Math.log1p(5) / Math.log1p(9)))]]);
-            // a new segment in the same room reached fewer cells: the lost one goes back to the background
+            // a new segment in the same room reached fewer cells: the lost one goes back to the background (and the
+            // new segment's cells are all new — recency starts over)
             t.rec.fills.length = 0;
-            t.emit({ solveId: 1, snapshot: snap(4, { index: 1, tiles: tilesOf([[0, 0, 9, 0], [1, 0, 5, 0]]) }), final: false });
+            t.emit({ solveId: 1, snapshot: snap(6, { index: 1, tiles: tilesOf([[0, 0, 9, 0], [1, 0, 5, 0]]) }), final: false });
             t.runFrames();
-            expect(t.rec.fills).toEqual([[2 * px, 0, px, px, '#0a0a0a']]);
+            expect(t.rec.fills.filter((f) => f[4] === '#0a0a0a')).toEqual([[2 * px, 0, px, px, '#0a0a0a']]);
         } finally { t.restore(); }
     });
 
@@ -267,6 +290,175 @@ describe('⛓ S1 — the tree: ROW DIFF', () => {
             t.runFrames();
             expect(t.view.tree.children.map((c) => c.dataset.key ?? null)).toEqual([null, null, null, null]);
             expect(t.view.tree.children.some((c) => /more node/.test(c.textContent))).toBe(false);
+        } finally { t.restore(); }
+    });
+});
+
+// ── ⛓ S2 — TIER A: what the snapshot already carries, shown (no schema change) ──
+const rung = (key, label, rejections, { active = false } = {}) => ({ key, role: 'rung', label, attempts: 3,
+    successes: 0, rejections, active, children: [] });
+const climb = (key, children, { active = true } = {}) => ({ key, role: 'climb', label: 'climb', attempts: 1,
+    successes: 0, rejections: {}, active, children });
+
+describe('⛓ S2 — TIER A: asks by site and the work counters', () => {
+    it('ASKS BY SITE: the most asked site first, with their sum; WORK: the counters in order, shouldStop left to the meter, an unknown unit kept', () => {
+        const t = setup();
+        try {
+            const s = snap(1);
+            s.budget = { asks: { walk: 18, 'hammer-escape': 37, 'sword-dash': 9 },
+                work: { shouldStop: 64, ticks: 445, previews: 411, previewStates: 26472, searchStates: 18362,
+                    expansions: 10444, waypointsPlanned: 1, replans: 0, dashesPressed: 6, zNewUnit: 3 } };
+            t.emit({ solveId: 1, snapshot: s, final: false });
+            t.runFrames();
+            expect(t.view.asksText.textContent)
+                .toBe('asks by site (this segment): hammer-escape 37 · walk 18 · sword-dash 9 · Σ 64');
+            expect(t.view.workText.textContent).toBe('work: ticks 445 · previews 411 · preview states 26472 · '
+                + 'search states 18362 · expansions 10444 · waypoints 1 · replans 0 · dashes 6 · zNewUnit 3');
+            // the meter's own line is untouched (the in-app row reads it)
+            expect(t.view.meterText.textContent).toBe('work 64 units (no budget: in place)');
+            const s2 = snap(2);
+            s2.budget = { asks: {}, work: {} };
+            t.emit({ solveId: 1, snapshot: s2, final: false });
+            t.runFrames();
+            expect(t.view.asksText.textContent).toBe('asks by site (this segment): none yet');
+        } finally { t.restore(); }
+    });
+
+    it('an unchanged Tier A line is not written again (one text write per changed line)', () => {
+        const t = setup();
+        try {
+            t.emit({ solveId: 1, snapshot: snap(1, { tree: treeOf(2) }), final: false });
+            t.runFrames();
+            const lines = t.view.stats.linesWritten;
+            const s = snap(2, { tree: treeOf(2) });
+            s.budget = { work: { shouldStop: 1 } };   // the meter moves, the asks / work / path lines do not
+            t.emit({ solveId: 1, snapshot: s, final: false });
+            t.runFrames();
+            expect(t.view.stats.linesWritten).toBe(lines);
+        } finally { t.restore(); }
+    });
+});
+
+describe('⛓ S2 — TIER A: the active path, climb depth, inline rung reasons', () => {
+    // segment → goal → walk → climb (active) → [rung:avoid ✗, rung:pull (passed over), rung:kill (active) → walk →
+    // climb (active, nested) → rung:time ✗]; plus a FINISHED earlier climb whose rung's reasons stay in the tooltip
+    const tree = () => ({ key: 's', role: 'segment', label: 'tape', attempts: 1, successes: 0, rejections: {},
+        active: true, children: [{ key: 's/g', role: 'goal', label: 'reach-exit (1,2)', attempts: 1, successes: 0,
+            rejections: {}, active: true, children: [{ key: 's/g/w', role: 'walk', label: 'walk', attempts: 2,
+                successes: 0, rejections: {}, active: true, children: [
+                    climb('s/g/w/c0', [rung('s/g/w/c0/r', 'avoid', { old: 2 })], { active: false }),
+                    climb('s/g/w/c', [
+                        rung('s/g/w/c/r:avoid', 'avoid', { 'no stance within puncher@#,#\'s leash': 1,
+                            'the danger-forbidden corridor STILL probes dangerous at': 4 }),
+                        rung('s/g/w/c/r:pull', 'pull', {}),
+                        { ...rung('s/g/w/c/r:kill', 'kill', {}, { active: true }), children: [
+                            { key: 's/g/w/c/r:kill/w', role: 'walk', label: 'walk', attempts: 1, successes: 0,
+                                rejections: {}, active: true, children: [climb('s/g/w/c/r:kill/w/c', [
+                                    rung('s/g/w/c/r:kill/w/c/r:time', 'time', { 'wait exhausted': 2 })])] }] },
+                    ]),
+                ] }] }] });
+
+    it('ACTIVE PATH: one line from the goal down, and the CLIMB DEPTH counts only the climbs ON it', () => {
+        const t = setup();
+        try {
+            t.emit({ solveId: 1, snapshot: snap(1, { tree: tree() }), final: false });
+            t.runFrames();
+            expect(t.view.pathText.textContent).toBe('active: goal reach-exit (1,2) › walk › climb › rung kill › walk'
+                + ' › climb · climb depth 2');
+            const done = tree();
+            const idle = (n) => { n.active = false; (n.children ?? []).forEach(idle); };
+            idle(done);
+            t.emit({ solveId: 1, snapshot: snap(2, { tree: done, outcome: 'solved' }), final: true });
+            t.runFrames();
+            expect(t.view.pathText.textContent).toBe('active: — (finished)');
+        } finally { t.restore(); }
+    });
+
+    it('INLINE REASONS: a rung of an ACTIVE climb says why inline (most frequent first); a finished climb\'s rung keeps them in the tooltip only', () => {
+        const t = setup();
+        try {
+            t.view.expanded.add('s/g/w/c0');
+            t.emit({ solveId: 1, snapshot: snap(1, { tree: tree() }), final: false });
+            t.view.expanded.add('s/g/w/c0');   // a new segment clears expansions: open the finished climb again
+            t.runFrames();
+            const row = (label) => t.view.tree.children.find((c) => new RegExp(`rung: ${label} `).test(c.textContent));
+            const rows = t.view.tree.children.filter((c) => /rung: avoid /.test(c.textContent));
+            expect(rows).toHaveLength(2);
+            const [old, live] = rows;
+            expect(old.textContent).not.toMatch(/ — /);
+            expect(old.title).toBe('2× old');
+            expect(live.textContent).toMatch(/ 5✗ {2}— 4× the danger-forbidden corridor STILL probes dangerous at · 1× no stance within puncher@#,#'s leash$/);
+            expect(row('pull').textContent).not.toMatch(/ — /);         // passed over: nothing to say
+            expect(row('time').textContent).toMatch(/ — 2× wait exhausted$/);   // the nested active climb's rung
+            expect(row('kill').textContent).not.toMatch(/ — /);
+        } finally { t.restore(); }
+    });
+});
+
+describe('⛓ S2 — TIER A: tile RECENCY (a delta between two drawn snapshots)', () => {
+    const gold = (rise, max) => levelColour(recentLevel(Math.log1p(rise) / Math.log1p(max)));
+
+    it('a cell that ROSE since the last drawn snapshot is gold, shaded by its rise; the count says how many rose', () => {
+        const t = setup();
+        try {
+            t.emit({ solveId: 1, snapshot: snap(1, { tiles: tilesOf([[0, 0, 4, 0], [1, 0, 4, 0], [2, 0, 4, 0]]) }), final: false });
+            t.runFrames();
+            expect(t.view.recent).toEqual({ cells: 3, max: 4 });   // the first map: every cell is new
+            t.rec.fills.length = 0;
+            t.emit({ solveId: 1, snapshot: snap(2, { tiles: tilesOf([[0, 0, 5, 0], [1, 0, 4, 0], [2, 0, 12, 0]]) }), final: false });
+            t.runFrames();
+            const px = t.view._px;
+            expect(t.view.recent).toEqual({ cells: 2, max: 8 });
+            const byX = Object.fromEntries(t.rec.fills.map((f) => [f[0] / px, f[4]]));
+            // cell 2 rose the most: the top gold, which it already was (every cell of a first map is top gold), so
+            // it is not repainted; cell 1 stopped rising: back to its total shade
+            expect(byX).toEqual({ 0: gold(1, 8), 1: levelColour(shadeLevel(Math.log1p(4) / Math.log1p(12))) });
+            expect(t.view._painted[2]).toBe(recentLevel(1));
+            expect(t.view.tileText.textContent).toMatch(/ · 2 rose since the last update drawn \(gold; max \+8\)$/);
+        } finally { t.restore(); }
+    });
+
+    it('a RE-RENDER of the same snapshot (a catch-up, a mode change) keeps its recency: the base moves only with a new snapshot', () => {
+        const t = setup();
+        try {
+            t.emit({ solveId: 1, snapshot: snap(1, { tiles: tilesOf([[0, 0, 4, 0]]) }), final: false });
+            t.runFrames();
+            t.emit({ solveId: 1, snapshot: snap(2, { tiles: tilesOf([[0, 0, 9, 0]]) }), final: false });
+            t.runFrames();
+            expect(t.view.recent).toEqual({ cells: 1, max: 5 });
+            t.rec.fills.length = 0;
+            t.view.render();
+            t.view.render();
+            expect(t.view.recent).toEqual({ cells: 1, max: 5 });
+            expect(t.rec.fills).toEqual([]);
+        } finally { t.restore(); }
+    });
+
+    it('a new SEGMENT or solve starts recency over (an old stream\'s counts are not the base); while hidden, the rise is since the last DRAWN map', () => {
+        const t = setup();
+        try {
+            t.emit({ solveId: 1, snapshot: snap(1, { tiles: tilesOf([[0, 0, 4, 0], [1, 0, 4, 0]]) }), final: false });
+            t.runFrames();
+            t.emit({ solveId: 1, snapshot: snap(2, { tiles: tilesOf([[0, 0, 4, 0], [1, 0, 4, 0]]) }), final: false });
+            t.runFrames();
+            expect(t.view.recent.cells).toBe(0);
+            // a new segment in the same room, with the same counts: every cell is new to it
+            t.emit({ solveId: 1, snapshot: snap(3, { index: 1, tiles: tilesOf([[0, 0, 4, 0], [1, 0, 4, 0]]) }), final: false });
+            t.runFrames();
+            expect(t.view.recent).toEqual({ cells: 2, max: 4 });
+            // a new solve, too
+            t.emit({ solveId: 2, snapshot: snap(1, { index: 1, tiles: tilesOf([[0, 0, 4, 0], [1, 0, 4, 0]]) }), final: false });
+            t.runFrames();
+            expect(t.view.recent).toEqual({ cells: 2, max: 4 });
+            t.emit({ solveId: 2, snapshot: snap(2, { index: 1, tiles: tilesOf([[0, 0, 4, 0], [1, 0, 4, 0]]) }), final: false });
+            t.runFrames();
+            expect(t.view.recent.cells).toBe(0);
+            // three notes while coalesced into one frame: the rise is against the map drawn before them
+            for (let i = 3; i <= 5; i += 1) {
+                t.emit({ solveId: 2, snapshot: snap(i, { index: 1, tiles: tilesOf([[0, 0, 4 + i, 0], [1, 0, 4, 0]]) }), final: false });
+            }
+            t.runFrames();
+            expect(t.view.recent).toEqual({ cells: 1, max: 5 });
         } finally { t.restore(); }
     });
 });
