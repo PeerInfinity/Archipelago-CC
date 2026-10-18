@@ -143,7 +143,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // (D3, the run bills the beam on the player) ship OFF.
             beamTowerDrift: false, beamTowerBeamHit: false,
             // ⛓ fidelity SPINNINGAXE D1: `spinningAxePlayerHit` (a spinning axe bills the player) ships OFF.
-            spinningAxePlayerHit: false,
+            // ⛓ planning-9's axe flip (⚖ user "Axe flip", 2026-10-18) turns it ON.
+            spinningAxePlayerHit: true,
             // ⛓ fidelity SPINNINGAXE D2: `partialDodgeReprobe` (a phase dodge's partial stall re-probed) ships OFF.
             partialDodgeReprobe: false,
 
@@ -159,9 +160,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity ARROWLANE D2: `arrowLaneCrossing` (an ARMED lane crossed, its arrows billed) ships OFF.
             arrowLaneCrossing: false,
             // ⛓ fidelity AXETIMING D2: `axeTimingRung` (a spinning axe's gap crossed on its clock at dash speed) ships OFF.
-            axeTimingRung: false,
+            // ⛓ planning-9's axe flip (⚖ user "Axe flip", 2026-10-18) turns it ON.
+            axeTimingRung: true,
             // ⛓ fidelity AXETIMING D2b: `axeGateTransit` (the walk's gate times a spinning axe's blade) ships OFF.
-            axeGateTransit: false,
+            // ⛓ planning-9's axe flip (⚖ user "Axe flip", 2026-10-18) turns it ON.
+            axeGateTransit: true,
             // ⛓ fidelity DASHSTEP D2: `statueTalkRange` (a statue's talk circle is its class's 32 px) shipped OFF;
             // ⛓ planning-9's flip (⚖ user "Harvest, then flip it ON", 2026-10-17) turns it ON.
             statueTalkRange: true });

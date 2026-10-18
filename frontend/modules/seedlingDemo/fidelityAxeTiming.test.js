@@ -56,9 +56,10 @@ const replay = (W, axeHit) => withContactFidelity({ spinningAxePlayerHit: axeHit
 });
 
 describe('AXETIMING D2 — the switch', () => {
-    it('ships OFF (both switches), appended after every older key', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.axeTimingRung).toBe(false);
-        expect(CONTACT_FIDELITY_DEFAULTS.axeGateTransit).toBe(false);
+    // ⛓ shipped OFF (AXETIMING D2/D2b); ON by default since planning-9's axe flip (⚖ user "Axe flip", 2026-10-18).
+    it('ships ON (both switches), appended after every older key', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.axeTimingRung).toBe(true);
+        expect(CONTACT_FIDELITY_DEFAULTS.axeGateTransit).toBe(true);
         // ⛓ fidelity DASHSTEP: `statueTalkRange` lands after them, so "the last two" became "right after arrowLaneCrossing".
         const at = CONTACT_FIDELITY_KEYS.indexOf('arrowLaneCrossing') + 1;
         expect(CONTACT_FIDELITY_KEYS.slice(at, at + 2)).toEqual(['axeTimingRung', 'axeGateTransit']);
