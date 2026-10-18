@@ -1,0 +1,148 @@
+[
+ {
+  "arm": "vanilla",
+  "set_id": "seedling-vanilla-record-eb8cc643",
+  "game": {
+   "obs": 481,
+   "transitions": [
+    {
+     "t": 7,
+     "from": 73,
+     "to": 74,
+     "at": {
+      "x": 296,
+      "y": 136
+     }
+    }
+   ],
+   "final": {
+    "t": 480,
+    "level": 74,
+    "x": 296,
+    "y": 140.74999999999997
+   },
+   "cleared": [
+    {
+     "tag": 2,
+     "level": 74
+    }
+   ]
+  },
+  "model": {
+   "refused": null,
+   "transitions": [
+    {
+     "t": 7,
+     "from": 73,
+     "to": 74,
+     "at": {
+      "x": 296,
+      "y": 136
+     }
+    }
+   ],
+   "final": {
+    "t": 480,
+    "level": 74,
+    "x": 296,
+    "y": 140.74999999999997
+   }
+  }
+ },
+ {
+  "arm": "remove",
+  "set_id": "seedling-vanilla-record-ad8e7681",
+  "game": {
+   "obs": 481,
+   "transitions": [
+    {
+     "t": 7,
+     "from": 73,
+     "to": 74,
+     "at": {
+      "x": 296,
+      "y": 136
+     }
+    },
+    {
+     "t": 40,
+     "from": 74,
+     "to": 73,
+     "at": {
+      "x": 72,
+      "y": 24
+     }
+    }
+   ],
+   "final": {
+    "t": 480,
+    "level": 73,
+    "x": 72,
+    "y": 44.949999999999996
+   },
+   "cleared": []
+  },
+  "model": {
+   "refused": null,
+   "transitions": [
+    {
+     "t": 7,
+     "from": 73,
+     "to": 74,
+     "at": {
+      "x": 296,
+      "y": 136
+     }
+    },
+    {
+     "t": 40,
+     "from": 74,
+     "to": 73,
+     "at": {
+      "x": 72,
+      "y": 24
+     }
+    }
+   ],
+   "final": {
+    "t": 480,
+    "level": 73,
+    "x": 72,
+    "y": 44.949999999999996
+   }
+  }
+ },
+ {
+  "arm": "move-288-128",
+  "set_id": "seedling-vanilla-record-6f0677bd",
+  "game": {
+   "obs": 481,
+   "transitions": [
+    {
+     "t": 7,
+     "from": 73,
+     "to": 74,
+     "at": {
+      "x": 296,
+      "y": 136
+     }
+    }
+   ],
+   "final": {
+    "t": 480,
+    "level": 74,
+    "x": 296,
+    "y": 125
+   },
+   "cleared": [
+    {
+     "tag": 2,
+     "level": 74
+    }
+   ]
+  },
+  "model": {
+   "refused": "levelRun: [fallrock@288,128] landed on the player at tick 9 in level 74 and wrote y = 125. The button that drops it is not the cell it lands in in either room that pairs them (L29, L74), so a snap here is a stance nobody derived. Move the stance."
+  }
+ }
+]

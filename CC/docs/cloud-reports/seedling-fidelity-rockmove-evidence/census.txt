@@ -1,0 +1,166 @@
+L28 fallrock@112,240 {"tset":"1","tag":"1"} [assets/levels/Dungeon3/7.oel 20x20] onDoor=[] nearest=teleporter@128,304->L27 (5 tiles) edge=bottom (4 tiles)
+  writers: rope@160,64 t1 (same room)
+  L25 teleporter@96,128 -> (96,16): parked 52t [tp@0,96->L26 tp@96,0->L25] | fallen 52t lost []
+  L26 teleporter@144,208 -> (16,96): parked 52t [tp@0,96->L26 tp@96,0->L25] | fallen 52t lost []
+  L27 teleporter@168,16 -> (128,288): parked 65t [tp@128,304->L27] | fallen 64t lost []
+  L30 teleporter@0,128 -> (288,16): parked 50t [tp@304,16->L30] | fallen 50t lost []
+L29 fallrock@112,112 {"tset":"0","tag":"0"} [assets/levels/Dungeon3/8.oel 12x20] onDoor=[] nearest=stairsdown@112,32->L31 (5 tiles) edge=right (4 tiles)
+  writers: button@112,128 t0 (same room)
+  L21 teleporter@160,80 -> (16,80): parked 5t [tp@0,80->L21] | fallen 5t lost []
+  L22 teleporter@192,64 -> (16,224): parked 89t [stairs@112,32->L31 tp@0,224->L22] | fallen 58t lost [stairs@112,32->L31]
+  L31 stairsup@384,96 -> (96,32): parked 89t [stairs@112,32->L31 tp@0,224->L22] | fallen 30t lost [tp@0,224->L22]
+  MOVE -> (128,112) one tile right, off the 1-tile neck (7,8)->(7,7) into [128,112:open]
+     L21 teleporter@160,80 -> (16,80): 5t lostVsParked [] gainedVsFallen [] gap 0
+     L22 teleporter@192,64 -> (16,224): 88t lostVsParked [] gainedVsFallen [stairs@112,32->L31] gap 30
+     L31 stairsup@384,96 -> (96,32): 88t lostVsParked [] gainedVsFallen [tp@0,224->L22] gap 59
+L32 fallrocklarge@64,128 {"tset":"0","tag":"1","bossrock":"1","thirdboss":"1"} [assets/levels/Dungeon3/11.oel 10x10] onDoor=["stairsdown@72,136->L30"] nearest=stairsdown@72,136->L30 (1 tiles) edge=bottom (0 tiles)
+  writers: self: bossrock, player above it (FallRockLarge.as:70-79)
+  L30 stairsup@224,160 -> (72,120): parked 39t [door@80,144 stairs@72,136->L30] | fallen 37t lost [door@80,144 stairs@72,136->L30]
+  Lin_L30_224_160 sweep-arrival -> (64,112): parked 38t [door@80,128 stairs@72,136->L30] | fallen 36t lost [door@80,128 stairs@72,136->L30]
+L39 fallrock@144,624 {"tset":"6","tag":"10"} [assets/levels/Dungeon4/1.oel 19x40] onDoor=["teleporter@144,624->L38"] nearest=teleporter@144,624->L38 (0 tiles) edge=bottom (0 tiles)
+  writers: rope@96,384 t6 (same room)
+  L38 teleporter@144,0 -> (144,608): parked 2t [tp@144,624->L38] | fallen 1t lost [tp@144,624->L38]
+  L40 teleporter@480,912 -> (144,16): parked 10t [tp@144,0->L40] | fallen 10t lost []
+  MOVE -> (144,608) one tile up = the L38 arrival tile, the only interior neighbour (1-wide shaft) into [144,608:open]
+     L38 teleporter@144,0 -> (144,608): 2t lostVsParked [] gainedVsFallen [tp@144,624->L38] gap 1
+     L40 teleporter@480,912 -> (144,16): 10t lostVsParked [] gainedVsFallen [] gap 0
+L43 fallrock@96,336 {"tset":"0","tag":"2"} [assets/levels/Dungeon4/Boss.oel 19x35] onDoor=[] nearest=stairsup@176,464->L40 (13 tiles) edge=left (6 tiles)
+  writers: wand@144,224 pickup (Wand.as:58-68, tset 0)
+  L40 stairsdown@320,576 -> (176,448): parked 75t [stairs@176,464->L40] | fallen 66t lost []
+  Lin_pit_L40_4_20 sweep-arrival -> (64,320): parked 75t [stairs@176,464->L40] | fallen 8t lost [stairs@176,464->L40]
+  Lin_pit_L40_5_20 sweep-arrival -> (80,320): parked 75t [stairs@176,464->L40] | fallen 8t lost [stairs@176,464->L40]
+  Lin_pit_L40_13_20 sweep-arrival -> (208,320): parked 75t [stairs@176,464->L40] | fallen 66t lost []
+  Lin_pit_L40_14_20 sweep-arrival -> (224,320): parked 75t [stairs@176,464->L40] | fallen 66t lost []
+  Lin_pit_L40_4_21 sweep-arrival -> (64,336): parked 75t [stairs@176,464->L40] | fallen 8t lost [stairs@176,464->L40]
+  Lin_pit_L40_5_21 sweep-arrival -> (80,336): parked 75t [stairs@176,464->L40] | fallen 8t lost [stairs@176,464->L40]
+  Lin_pit_L40_13_21 sweep-arrival -> (208,336): parked 75t [stairs@176,464->L40] | fallen 66t lost []
+  Lin_pit_L40_14_21 sweep-arrival -> (224,336): parked 75t [stairs@176,464->L40] | fallen 66t lost []
+  Lin_pit_L40_4_22 sweep-arrival -> (64,352): parked 75t [stairs@176,464->L40] | fallen 8t lost [stairs@176,464->L40]
+  Lin_pit_L40_5_22 sweep-arrival -> (80,352): parked 75t [stairs@176,464->L40] | fallen 8t lost [stairs@176,464->L40]
+  Lin_pit_L40_4_23 sweep-arrival -> (64,368): parked 75t [stairs@176,464->L40] | fallen 8t lost [stairs@176,464->L40]
+  Lin_pit_L40_5_23 sweep-arrival -> (80,368): parked 75t [stairs@176,464->L40] | fallen 8t lost [stairs@176,464->L40]
+  MOVE -> (112,336) one tile in (east), the alcove mouth's only neighbour into [112,336:open]
+     L40 stairsdown@320,576 -> (176,448): 65t lostVsParked [] gainedVsFallen [] gap 0
+     Lin_pit_L40_4_20 sweep-arrival -> (64,320): 9t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 1
+     Lin_pit_L40_5_20 sweep-arrival -> (80,320): 9t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 1
+     Lin_pit_L40_13_20 sweep-arrival -> (208,320): 65t lostVsParked [] gainedVsFallen [] gap 0
+     Lin_pit_L40_14_20 sweep-arrival -> (224,320): 65t lostVsParked [] gainedVsFallen [] gap 0
+     Lin_pit_L40_4_21 sweep-arrival -> (64,336): 9t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 1
+     Lin_pit_L40_5_21 sweep-arrival -> (80,336): 9t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 1
+     Lin_pit_L40_13_21 sweep-arrival -> (208,336): 65t lostVsParked [] gainedVsFallen [] gap 0
+     Lin_pit_L40_14_21 sweep-arrival -> (224,336): 65t lostVsParked [] gainedVsFallen [] gap 0
+     Lin_pit_L40_4_22 sweep-arrival -> (64,352): 9t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 1
+     Lin_pit_L40_5_22 sweep-arrival -> (80,352): 9t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 1
+     Lin_pit_L40_4_23 sweep-arrival -> (64,368): 9t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 1
+     Lin_pit_L40_5_23 sweep-arrival -> (80,368): 9t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 1
+  MOVE -> (128,336) two tiles in into [128,336:open]
+     L40 stairsdown@320,576 -> (176,448): 74t lostVsParked [] gainedVsFallen [] gap 9
+     Lin_pit_L40_4_20 sweep-arrival -> (64,320): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 66
+     Lin_pit_L40_5_20 sweep-arrival -> (80,320): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 66
+     Lin_pit_L40_13_20 sweep-arrival -> (208,320): 74t lostVsParked [] gainedVsFallen [] gap 9
+     Lin_pit_L40_14_20 sweep-arrival -> (224,320): 74t lostVsParked [] gainedVsFallen [] gap 9
+     Lin_pit_L40_4_21 sweep-arrival -> (64,336): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 66
+     Lin_pit_L40_5_21 sweep-arrival -> (80,336): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 66
+     Lin_pit_L40_13_21 sweep-arrival -> (208,336): 74t lostVsParked [] gainedVsFallen [] gap 9
+     Lin_pit_L40_14_21 sweep-arrival -> (224,336): 74t lostVsParked [] gainedVsFallen [] gap 9
+     Lin_pit_L40_4_22 sweep-arrival -> (64,352): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 66
+     Lin_pit_L40_5_22 sweep-arrival -> (80,352): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 66
+     Lin_pit_L40_4_23 sweep-arrival -> (64,368): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 66
+     Lin_pit_L40_5_23 sweep-arrival -> (80,368): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 66
+L43 fallrock@192,336 {"tset":"0","tag":"1"} [assets/levels/Dungeon4/Boss.oel 19x35] onDoor=[] nearest=stairsup@176,464->L40 (9 tiles) edge=right (6 tiles)
+  writers: wand@144,224 pickup (Wand.as:58-68, tset 0)
+  L40 stairsdown@320,576 -> (176,448): parked 75t [stairs@176,464->L40] | fallen 70t lost []
+  Lin_pit_L40_4_20 sweep-arrival -> (64,320): parked 75t [stairs@176,464->L40] | fallen 70t lost []
+  Lin_pit_L40_5_20 sweep-arrival -> (80,320): parked 75t [stairs@176,464->L40] | fallen 70t lost []
+  Lin_pit_L40_13_20 sweep-arrival -> (208,320): parked 75t [stairs@176,464->L40] | fallen 4t lost [stairs@176,464->L40]
+  Lin_pit_L40_14_20 sweep-arrival -> (224,320): parked 75t [stairs@176,464->L40] | fallen 4t lost [stairs@176,464->L40]
+  Lin_pit_L40_4_21 sweep-arrival -> (64,336): parked 75t [stairs@176,464->L40] | fallen 70t lost []
+  Lin_pit_L40_5_21 sweep-arrival -> (80,336): parked 75t [stairs@176,464->L40] | fallen 70t lost []
+  Lin_pit_L40_13_21 sweep-arrival -> (208,336): parked 75t [stairs@176,464->L40] | fallen 4t lost [stairs@176,464->L40]
+  Lin_pit_L40_14_21 sweep-arrival -> (224,336): parked 75t [stairs@176,464->L40] | fallen 4t lost [stairs@176,464->L40]
+  Lin_pit_L40_4_22 sweep-arrival -> (64,352): parked 75t [stairs@176,464->L40] | fallen 70t lost []
+  Lin_pit_L40_5_22 sweep-arrival -> (80,352): parked 75t [stairs@176,464->L40] | fallen 70t lost []
+  Lin_pit_L40_4_23 sweep-arrival -> (64,368): parked 75t [stairs@176,464->L40] | fallen 70t lost []
+  Lin_pit_L40_5_23 sweep-arrival -> (80,368): parked 75t [stairs@176,464->L40] | fallen 70t lost []
+  MOVE -> (176,336) one tile in (west), the alcove mouth's only neighbour into [176,336:open]
+     L40 stairsdown@320,576 -> (176,448): 69t lostVsParked [] gainedVsFallen [] gap 0
+     Lin_pit_L40_4_20 sweep-arrival -> (64,320): 69t lostVsParked [] gainedVsFallen [] gap 0
+     Lin_pit_L40_5_20 sweep-arrival -> (80,320): 69t lostVsParked [] gainedVsFallen [] gap 0
+     Lin_pit_L40_13_20 sweep-arrival -> (208,320): 5t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 1
+     Lin_pit_L40_14_20 sweep-arrival -> (224,320): 5t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 1
+     Lin_pit_L40_4_21 sweep-arrival -> (64,336): 69t lostVsParked [] gainedVsFallen [] gap 0
+     Lin_pit_L40_5_21 sweep-arrival -> (80,336): 69t lostVsParked [] gainedVsFallen [] gap 0
+     Lin_pit_L40_13_21 sweep-arrival -> (208,336): 5t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 1
+     Lin_pit_L40_14_21 sweep-arrival -> (224,336): 5t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 1
+     Lin_pit_L40_4_22 sweep-arrival -> (64,352): 69t lostVsParked [] gainedVsFallen [] gap 0
+     Lin_pit_L40_5_22 sweep-arrival -> (80,352): 69t lostVsParked [] gainedVsFallen [] gap 0
+     Lin_pit_L40_4_23 sweep-arrival -> (64,368): 69t lostVsParked [] gainedVsFallen [] gap 0
+     Lin_pit_L40_5_23 sweep-arrival -> (80,368): 69t lostVsParked [] gainedVsFallen [] gap 0
+  MOVE -> (160,336) two tiles in into [160,336:open]
+     L40 stairsdown@320,576 -> (176,448): 74t lostVsParked [] gainedVsFallen [] gap 5
+     Lin_pit_L40_4_20 sweep-arrival -> (64,320): 74t lostVsParked [] gainedVsFallen [] gap 5
+     Lin_pit_L40_5_20 sweep-arrival -> (80,320): 74t lostVsParked [] gainedVsFallen [] gap 5
+     Lin_pit_L40_13_20 sweep-arrival -> (208,320): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 70
+     Lin_pit_L40_14_20 sweep-arrival -> (224,320): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 70
+     Lin_pit_L40_4_21 sweep-arrival -> (64,336): 74t lostVsParked [] gainedVsFallen [] gap 5
+     Lin_pit_L40_5_21 sweep-arrival -> (80,336): 74t lostVsParked [] gainedVsFallen [] gap 5
+     Lin_pit_L40_13_21 sweep-arrival -> (208,336): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 70
+     Lin_pit_L40_14_21 sweep-arrival -> (224,336): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 70
+     Lin_pit_L40_4_22 sweep-arrival -> (64,352): 74t lostVsParked [] gainedVsFallen [] gap 5
+     Lin_pit_L40_5_22 sweep-arrival -> (80,352): 74t lostVsParked [] gainedVsFallen [] gap 5
+     Lin_pit_L40_4_23 sweep-arrival -> (64,368): 74t lostVsParked [] gainedVsFallen [] gap 5
+     Lin_pit_L40_5_23 sweep-arrival -> (80,368): 74t lostVsParked [] gainedVsFallen [] gap 5
+L43 fallrock@176,384 {"tset":"0","tag":"3"} [assets/levels/Dungeon4/Boss.oel 19x35] onDoor=[] nearest=stairsup@176,464->L40 (5 tiles) edge=right (7 tiles)
+  writers: wand@144,224 pickup (Wand.as:58-68, tset 0)
+  L40 stairsdown@320,576 -> (176,448): parked 75t [stairs@176,464->L40] | fallen 5t lost []
+  Lin_pit_L40_4_20 sweep-arrival -> (64,320): parked 75t [stairs@176,464->L40] | fallen 69t lost [stairs@176,464->L40]
+  Lin_pit_L40_5_20 sweep-arrival -> (80,320): parked 75t [stairs@176,464->L40] | fallen 69t lost [stairs@176,464->L40]
+  Lin_pit_L40_13_20 sweep-arrival -> (208,320): parked 75t [stairs@176,464->L40] | fallen 69t lost [stairs@176,464->L40]
+  Lin_pit_L40_14_20 sweep-arrival -> (224,320): parked 75t [stairs@176,464->L40] | fallen 69t lost [stairs@176,464->L40]
+  Lin_pit_L40_4_21 sweep-arrival -> (64,336): parked 75t [stairs@176,464->L40] | fallen 69t lost [stairs@176,464->L40]
+  Lin_pit_L40_5_21 sweep-arrival -> (80,336): parked 75t [stairs@176,464->L40] | fallen 69t lost [stairs@176,464->L40]
+  Lin_pit_L40_13_21 sweep-arrival -> (208,336): parked 75t [stairs@176,464->L40] | fallen 69t lost [stairs@176,464->L40]
+  Lin_pit_L40_14_21 sweep-arrival -> (224,336): parked 75t [stairs@176,464->L40] | fallen 69t lost [stairs@176,464->L40]
+  Lin_pit_L40_4_22 sweep-arrival -> (64,352): parked 75t [stairs@176,464->L40] | fallen 69t lost [stairs@176,464->L40]
+  Lin_pit_L40_5_22 sweep-arrival -> (80,352): parked 75t [stairs@176,464->L40] | fallen 69t lost [stairs@176,464->L40]
+  Lin_pit_L40_4_23 sweep-arrival -> (64,368): parked 75t [stairs@176,464->L40] | fallen 69t lost [stairs@176,464->L40]
+  Lin_pit_L40_5_23 sweep-arrival -> (80,368): parked 75t [stairs@176,464->L40] | fallen 69t lost [stairs@176,464->L40]
+  MOVE -> (176,368) one tile up, the neck's only interior neighbour into [176,368:open]
+     L40 stairsdown@320,576 -> (176,448): 6t lostVsParked [] gainedVsFallen [] gap 1
+     Lin_pit_L40_4_20 sweep-arrival -> (64,320): 68t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 0
+     Lin_pit_L40_5_20 sweep-arrival -> (80,320): 68t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 0
+     Lin_pit_L40_13_20 sweep-arrival -> (208,320): 68t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 0
+     Lin_pit_L40_14_20 sweep-arrival -> (224,320): 68t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 0
+     Lin_pit_L40_4_21 sweep-arrival -> (64,336): 68t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 0
+     Lin_pit_L40_5_21 sweep-arrival -> (80,336): 68t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 0
+     Lin_pit_L40_13_21 sweep-arrival -> (208,336): 68t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 0
+     Lin_pit_L40_14_21 sweep-arrival -> (224,336): 68t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 0
+     Lin_pit_L40_4_22 sweep-arrival -> (64,352): 68t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 0
+     Lin_pit_L40_5_22 sweep-arrival -> (80,352): 68t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 0
+     Lin_pit_L40_4_23 sweep-arrival -> (64,368): 68t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 0
+     Lin_pit_L40_5_23 sweep-arrival -> (80,368): 68t lostVsParked [stairs@176,464->L40] gainedVsFallen [] gap 0
+  MOVE -> (160,368) up-left, off the neck column into [160,368:open]
+     L40 stairsdown@320,576 -> (176,448): 74t lostVsParked [] gainedVsFallen [] gap 69
+     Lin_pit_L40_4_20 sweep-arrival -> (64,320): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 6
+     Lin_pit_L40_5_20 sweep-arrival -> (80,320): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 6
+     Lin_pit_L40_13_20 sweep-arrival -> (208,320): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 6
+     Lin_pit_L40_14_20 sweep-arrival -> (224,320): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 6
+     Lin_pit_L40_4_21 sweep-arrival -> (64,336): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 6
+     Lin_pit_L40_5_21 sweep-arrival -> (80,336): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 6
+     Lin_pit_L40_13_21 sweep-arrival -> (208,336): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 6
+     Lin_pit_L40_14_21 sweep-arrival -> (224,336): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 6
+     Lin_pit_L40_4_22 sweep-arrival -> (64,352): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 6
+     Lin_pit_L40_5_22 sweep-arrival -> (80,352): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 6
+     Lin_pit_L40_4_23 sweep-arrival -> (64,368): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 6
+     Lin_pit_L40_5_23 sweep-arrival -> (80,368): 74t lostVsParked [] gainedVsFallen [stairs@176,464->L40] gap 6
+L74 fallrock@288,144 {"tset":"0","tag":"2"} [assets/levels/Dungeon7/3.oel 20x10] onDoor=["teleporter@288,144->L73"] nearest=teleporter@288,144->L73 (0 tiles) edge=bottom (0 tiles)
+  writers: button@288,128 t0 (same room)
+  L73 teleporter@64,0 -> (288,128): parked 54t [tp@16,144->L75 tp@288,144->L73] | fallen 53t lost [tp@288,144->L73]
+  L75 teleporter@64,0 -> (16,128): parked 54t [tp@16,144->L75 tp@288,144->L73] | fallen 53t lost [tp@288,144->L73]
+  MOVE -> (288,128) one tile up = the button / L73 arrival tile, the door's only neighbour into [288,128:open]
+     L73 teleporter@64,0 -> (288,128): 54t lostVsParked [] gainedVsFallen [tp@288,144->L73] gap 1
+     L75 teleporter@64,0 -> (16,128): 52t lostVsParked [tp@288,144->L73] gainedVsFallen [] gap 0
+L82 fallrocklarge@128,224 {"tset":"0","tag":"1","bossrock":"1","thirdboss":"0"} [assets/levels/Dungeon7/Boss.oel 20x24] onDoor=[] nearest=teleporter@144,0->L96 (15 tiles) edge=left (8 tiles)
+  writers: self: bossrock, player above it (FallRockLarge.as:70-79)
+  L96 teleporter@32,64 -> (144,16): parked 1t [] | fallen 1t lost []
+  Lin_pit_L71_10_17 sweep-arrival -> (160,272): parked 62t [] | fallen 12t lost []
