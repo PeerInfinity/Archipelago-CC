@@ -1,0 +1,13 @@
+const m = await import('/home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverView.js');
+const { applyFriction, applyInput, DEFAULT_FRICTION, SLASH_DASH_FORCE: F, DASH_CHAIN, GHOST_DASH_CHAIN, MOVE_SPEEDS, WALK_SPEED } = m;
+const walk = (T, held, ms, v0, dashAt) => { let v = { x: v0, y: held.size > 1 ? v0 : 0 }; let x = 0; const xs = [];
+  for (let t = 0; t < T; t++) { v = applyInput(applyFriction(v, DEFAULT_FRICTION), held, ms); if (dashAt.has(t)) { const l = Math.hypot(v.x, v.y); if (l > 0) v = { x: v.x + F * v.x / l, y: v.y + F * v.y / l }; } x += v.x; xs.push(x); } return xs; };
+const H = [new Set(['right']), new Set(['right', 'down'])];
+for (const T of [300, 600, 1200, 2400]) {
+  let stride = 0; const per = [];
+  for (const ms of new Set(MOVE_SPEEDS)) for (const h of H) { const b = walk(T, h, ms, 0, new Set()); let best = 0; for (let t = T / 2; t < T; t++) best = Math.max(best, b[t] / (t + 1)); per.push([ms, h.size, (b[T - 1] / T).toFixed(5), best.toFixed(5)]); stride = Math.max(stride, b[T - 1] / T); }
+  let C = 0, at = null;
+  for (const ms of new Set(MOVE_SPEEDS)) for (const h of H) for (let v0 = 0; v0 <= 2 * WALK_SPEED + 1e-9; v0 += 0.1) for (const ch of [[], DASH_CHAIN.at, GHOST_DASH_CHAIN.at]) for (let s = 0; s < 40; s += 1) {
+    const xs = walk(Math.min(T, 300), h, ms, v0, new Set(ch.map((c) => s + c))); for (let t = 0; t < xs.length; t++) { const c = xs[t] - stride * (t + 1); if (c > C) { C = c; at = { ms, d: h.size, v0, ch: ch.length, s, t }; } } }
+  console.log(T, 'stride', stride.toFixed(6), 'C', C.toFixed(3), JSON.stringify(at), per.filter((p) => p[0] === 0.8 || p[0] === 0.4).map((p) => p.join('/')).join(' '));
+}

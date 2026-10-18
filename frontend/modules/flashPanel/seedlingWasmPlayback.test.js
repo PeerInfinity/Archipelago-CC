@@ -769,34 +769,36 @@ describe('⛓ ANYTIME / O2 / O3 → DETERMINISTIC BUDGET — a solve cut at its 
         } finally { applyAxeDodgeAsk(null); }
     });
 
-    it('⛓ DASH-ONLY WINDOW — the knob (`getDashOnlyWindow`, the setting) reaches the solve: `on` is applied to the engine\'s own instance at the solve\'s start and stamped on its answer; `default` stamps nothing', () => {
-        let knob = 'on';
+    // ⛓ dash flip (the user, 2026-10-16): the switch ships ON, so the off-default knob value is `off`.
+    it('⛓ DASH-ONLY WINDOW — the knob (`getDashOnlyWindow`, the setting) reaches the solve: `off` is applied to the engine\'s own instance at the solve\'s start and stamped on its answer; `default` stamps nothing', () => {
+        let knob = 'off';
         try {
             const e = engineOver(A, { getDashOnlyWindow: () => knob });
             e.engine.walkTo(CHEST);
             runUntil(e, () => e.service.seen.length > 0, 20000);
-            expect(e.service.seen[0].result.dashOnlyWindow).toBe(true);
+            expect(e.service.seen[0].result.dashOnlyWindow).toBe(false);
             knob = 'default';
             const d = engineOver(A, { getDashOnlyWindow: () => knob });
             d.engine.walkTo(CHEST);
             runUntil(d, () => d.service.seen.length > 0, 20000);
             expect(d.service.seen[0].result.dashOnlyWindow).toBeUndefined();
-            expect(DASH_ONLY_WINDOW.enabled).toBe(false);
+            expect(DASH_ONLY_WINDOW.enabled).toBe(true);
         } finally { applyDashOnlyWindow(null); }
     });
 
     it('⛓ DASH-SHAPE STAMP — the knob (`getDashShape`, the three settings) reaches the solve: each `on` / `off` is applied to the engine\'s own instance at the solve\'s start, the solve runs inside solverBot\'s scopes, and its answer carries the shape READ; all `default` stamps nothing', () => {
-        let knob = { legPrecheck: 'on', noSwingPrefix: 'default', keepPartial: 'on' };
+        // ⛓ dash flip (the user, 2026-10-16): legPrecheck and keepPartial ship ON, so their off-default value is `off`.
+        let knob = { legPrecheck: 'off', noSwingPrefix: 'default', keepPartial: 'off' };
         try {
             const e = engineOver(A, { getDashShape: () => knob });
             e.engine.walkTo(CHEST);
             runUntil(e, () => e.service.seen.length > 0, 20000);
-            expect(e.service.seen[0].result.dashShape).toEqual({ legPrecheck: true, noSwingPrefix: false, keepPartial: true });
+            expect(e.service.seen[0].result.dashShape).toEqual({ legPrecheck: false, noSwingPrefix: false, keepPartial: false });
             knob = { legPrecheck: 'default', noSwingPrefix: 'on', keepPartial: 'default' };
             const n = engineOver(A, { getDashShape: () => knob });
             n.engine.walkTo(CHEST);
             runUntil(n, () => n.service.seen.length > 0, 20000);
-            expect(n.service.seen[0].result.dashShape).toEqual({ legPrecheck: false, noSwingPrefix: true, keepPartial: false });
+            expect(n.service.seen[0].result.dashShape).toEqual({ legPrecheck: true, noSwingPrefix: true, keepPartial: true });
             knob = { legPrecheck: 'default', noSwingPrefix: 'default', keepPartial: 'default' };
             const d = engineOver(A, { getDashShape: () => knob });
             d.engine.walkTo(CHEST);

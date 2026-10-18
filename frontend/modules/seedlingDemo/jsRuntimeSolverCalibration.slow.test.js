@@ -44,6 +44,7 @@ import { FINE_CHECKPOINTS, solveAnytime, SOLVER_BUDGET_WORK, SOLVER_UPGRADE_WIND
 import { arrivalSolveRequest, arrivalSolverGoal } from './wasmArrival.js';
 import { stageItems } from './wasmDelivery.js';
 import { indexLevels, levelSourceFromAtlas } from './atlasSource.js';
+import { withDashOnlyWindow } from './dashOnlyWindowHook.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '../../..');
 const MAP = JSON.parse(readFileSync(join(ROOT, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
@@ -100,8 +101,10 @@ describe('⛓ RECALIBRATE — the anchor legs at the shipped defaults (fine unit
     }, 600000);
 
     it('L40 with the sword at a window of 84 (one unit short of the whole full pass): the full pass is cut at the window — the dashless 417 t ships', () => {
-        const r = solveAnytime({ ...leg({ level: 40, at: { x: 480, y: 896 }, tiles: [[20, 36]], sword: true }),
-            budgetWork: SOLVER_BUDGET_WORK, upgradeWindowWork: 84 });
+        // ⛓ dash flip (the user, 2026-10-16): the dash-only window ships ON; this calibration row pins the WHOLE-PASS
+        // window it was written for (`dashOnlyWindow` OFF).
+        const r = withDashOnlyWindow(false, () => solveAnytime({ ...leg({ level: 40, at: { x: 480, y: 896 }, tiles: [[20, 36]], sword: true }),
+            budgetWork: SOLVER_BUDGET_WORK, upgradeWindowWork: 84 }));
         expect(r.ok).toBe(true);
         expect(rows(r)).toEqual([{ pass: 'dashless', ok: true, kind: null, ticks: 417, work: 28 },
             { pass: 'full', ok: false, kind: 'refusal', ticks: null, work: 57, deadline: 'walk', limit: 'window' }]);

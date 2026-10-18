@@ -1,0 +1,10 @@
+start 120 296 trunc null
+{"wp":0,"n":26,"path":23,"still":2,"line":16.4,"span":16.4,"floor":null}
+{"wp":1,"n":20,"path":23.4,"still":1,"line":23.4,"span":16.5,"floor":-38}
+{"wp":2,"n":56,"path":66.4,"still":1,"line":62.9,"span":62.9,"floor":null}
+{"wp":3,"n":17,"path":15.6,"still":1,"line":15.6,"span":15.6,"floor":-36}
+{"wp":4,"n":30,"path":32.1,"still":1,"line":32.1,"span":32.1,"floor":-15}
+{"wp":5,"n":305,"path":304.8,"still":4,"line":192.4,"span":192.4,"floor":null}
+{"wp":6,"n":39,"path":47.3,"still":1,"line":47.2,"span":47.2,"floor":-1}
+verdict null
+OFF scan 84 228 11 335 ms

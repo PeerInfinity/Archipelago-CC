@@ -50,6 +50,7 @@ import {
     passNote, passShouldStop, solveAnytime, solveFromTape, SOLVER_BUDGET_WORK, SOLVER_UPGRADE_WINDOW_WORK, upgradeWindowWork,
 } from './jsRuntimeSolver.js';
 import { DEADLINE_SITES } from './solverBot.js';
+import { withDashOnlyWindow } from './dashOnlyWindowHook.js';
 import { indexLevels, levelSourceFromAtlas } from './atlasSource.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '../../..');
@@ -198,7 +199,9 @@ describe('⛓ SHOULD-STOP — L4 stairs with the sword (dashless 255 t, full 219
     }, 120000);
 
     it('L4: a 1-unit window — the WHOLE full pass stops at its first ask (⛓ WINDOW WHOLE PASS: `walk`, a refusal), and the plan in hand ships (lossless)', () => {
-        const r = solveAnytime({ ...l4StairsSword(), budgetWork: 1e9, upgradeWindowWork: 1 }, { clock: counter() });
+        // ⛓ dash flip (the user, 2026-10-16): the dash-only window ships ON; this row pins the WHOLE-PASS window it was
+        // written for (`dashOnlyWindow` OFF). ON, the window counts only `sword-dash` asks (`dashOnlyWindow.test.js`).
+        const r = withDashOnlyWindow(false, () => solveAnytime({ ...l4StairsSword(), budgetWork: 1e9, upgradeWindowWork: 1 }, { clock: counter() }));
         expect(r.ok).toBe(true);
         expect(r.plan.pass).toBe('dashless');
         expect(r.plan.solution.length).toBe(255);
@@ -210,7 +213,9 @@ describe('⛓ SHOULD-STOP — L4 stairs with the sword (dashless 255 t, full 219
     }, 60000);
 
     it('L4: the window that holds the WHOLE full pass (19 dashless + 57 full = 76 units) upgrades to 219 t; one unit less ships the dashless 255 t — the window bounds the pass, not its last dash ask', () => {
-        const at = (w) => solveAnytime({ ...l4StairsSword(), budgetWork: SOLVER_BUDGET_WORK, upgradeWindowWork: w }, { clock: counter() });
+        // ⛓ dash flip (the user, 2026-10-16): pinned to the WHOLE-PASS window (`dashOnlyWindow` OFF), as written; ON the
+        // full pass's dash asks need 39 of it (`dashOnlyWindow.test.js`), so 75 already upgrades.
+        const at = (w) => withDashOnlyWindow(false, () => solveAnytime({ ...l4StairsSword(), budgetWork: SOLVER_BUDGET_WORK, upgradeWindowWork: w }, { clock: counter() }));
         const fits = at(76);
         expect(rows(fits)).toEqual([{ pass: 'dashless', ok: true, kind: null, ticks: 255, work: 19 },
             { pass: 'full', ok: true, kind: null, ticks: 219, work: 57 }]);

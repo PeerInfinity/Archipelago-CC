@@ -39,7 +39,7 @@ import { ROLES } from './levelWorld.js';
 import {
     DEADLINE_SITES, SolverRefusal, WALK_CHECK_TICKS, deriveBlockRoute, deriveKillByChaser, solveSegment,
     withSolveDeadline,
-    withBaitForecast,
+    withBaitForecast, withDashKeepPartial,
 } from './solverBot.js';
 import { DEFAULT_TOLERANCE } from './botDriverV1.js';
 import { DEFAULT_CHECK_EVERY, chebyshevHeuristic, findEarliestArrival } from './mover.js';
@@ -109,7 +109,9 @@ describe('SF2: the anytime deadline — `sword-dash` is an UPGRADE, so a trip ke
         }
     });
 
-    it('a counter that trips ANYWHERE in the scan plays the `dashMode: none` plan, in L0, with no death, and says `deadline`', () => {
+    // ⛓ dash flip (the user, 2026-10-16): `DASH_KEEP_PARTIAL` ships ON, so a `sword-dash` trip keeps the windows already
+    // accepted (`hammerDashShape.test.js` (iii)). This row pins the drop-the-schedule scan it was written for (OFF).
+    it('a counter that trips ANYWHERE in the scan plays the `dashMode: none` plan, in L0, with no death, and says `deadline`', () => withDashKeepPartial(false, () => {
         const total = counter(Number.MAX_SAFE_INTEGER);
         const full = solveRoom(...DASH_ROOM, { shouldStop: total.shouldStop });
         const dashless = solveRoom(...DASH_ROOM, { dashMode: 'none' });
@@ -129,7 +131,7 @@ describe('SF2: the anytime deadline — `sword-dash` is an UPGRADE, so a trip ke
             const walk = got.out.trace.rows.find((r) => r.strategy?.swordDash);
             expect(walk.strategy.swordDash).toMatchObject({ planned: false, why: 'deadline' });
         }
-    });
+    }));
 
     it('the site is named, so a caller that bounds only OTHER sites leaves the dash untouched', () => {
         const bare = solveRoom(...DASH_ROOM);

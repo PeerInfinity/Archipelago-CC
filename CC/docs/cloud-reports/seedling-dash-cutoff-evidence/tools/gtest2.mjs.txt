@@ -1,0 +1,10 @@
+const m = await import('/home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverView.js');
+const { applyFriction, applyInput, DEFAULT_FRICTION, SLASH_DASH_FORCE: F, DASH_CHAIN, GHOST_DASH_CHAIN, MOVE_SPEEDS, ORDINARY_SWING_PERIOD: P } = m;
+const T = 400;
+const walk = (held, ms, dashAt) => { let v = { x: 0, y: 0 }; let x = 0; const xs = [];
+  for (let t = 0; t < T; t++) { v = applyInput(applyFriction(v, DEFAULT_FRICTION), held, ms); if (dashAt.has(t)) { const l = Math.hypot(v.x, v.y); if (l > 0) v = { x: v.x + F * v.x / l, y: v.y + F * v.y / l }; } x += v.x; xs.push(x); } return xs; };
+const prefixes = [DASH_CHAIN.at, GHOST_DASH_CHAIN.at].flatMap((at) => at.map((_, k) => at.slice(0, k + 1)));
+for (const H of [2, 3, 5, 8]) { let G = 0, at;
+  for (const ms of new Set(MOVE_SPEEDS)) for (const h of [new Set(['right']), new Set(['right', 'down'])]) { const b = walk(h, ms, new Set());
+    for (const pre of prefixes) for (let s = 100; s < 100 + P; s++) { const xs = walk(h, ms, new Set(pre.map((c) => s + c))); for (let t = s; t < Math.min(T, s + H * P); t++) if (xs[t] - b[t] > G) { G = xs[t] - b[t]; at = { ms, d: h.size, pre, s, t: t - s }; } } }
+  console.log('horizon', H, 'periods: G', G.toFixed(3), JSON.stringify(at)); }

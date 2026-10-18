@@ -1,0 +1,22 @@
+// DK: build fixtures/dash-shape/sweep-<id>-l<L>.json from a captured request (DB's shape), with only `levels`.
+import { readFileSync, writeFileSync } from 'node:fs';
+const [file, key, levelsArg, out] = process.argv.slice(2);
+const [id, i] = key.split(':').map(Number);
+const R = '/home/user/Archipelago-CC';
+const { restoreRequest } = await import(`${R}/scripts/procgen/seedlingSolveRequestCodec.js`);
+let line = null;
+for (const l of readFileSync(file, 'utf8').split('\n')) if (l.startsWith(`{"id":${id},`)) { line = JSON.parse(l); break; }
+const req = restoreRequest(line.requests.find((r) => r.i === i).request);
+const recs = req.source.records;
+const all = recs instanceof Map ? [...recs.keys()] : Object.keys(recs);
+console.log('levels in capture:', all.length, 'goal', JSON.stringify(req.solverGoal), 'name', req.name, 'budget', req.budgetWork, 'window', req.upgradeWindowWork);
+if (!levelsArg) process.exit(0);
+const levels = levelsArg.split(',').map(Number);
+const get = (L) => (recs instanceof Map ? recs.get(L) : recs[L]);
+const fixture = {
+    from: { run: 38845773709, request: key, name: req.name, levels, why: process.env.WHY ?? '' },
+    staging: req.staging, live: req.live, solverGoal: req.solverGoal, scratchPersistence: req.scratchPersistence,
+    budgetWork: req.budgetWork, records: levels.map((L) => ({ ...get(L), level: L })),
+};
+writeFileSync(out, `${JSON.stringify(fixture)}\n`);
+console.log('wrote', out, JSON.stringify(fixture).length);

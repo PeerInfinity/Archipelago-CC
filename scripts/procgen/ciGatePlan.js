@@ -134,6 +134,31 @@ import { gateStandingRows, standingRows } from './standingValues.js';
 export const CI_SHARD_BUDGET_MS = 600000;
 
 /**
+ * ⛓⛓⛓ ci-jsut-split (⚖ user, 2026-10-17) — **THE HEADLESS SET RUNS IN A FIXED
+ * NUMBER OF JOBS, NOT IN BUDGET-SIZED BINS.**
+ *
+ * ⛔ MEASURED AT 06b6b754a6 (run 39081866066): the ONE headless job ran 63 of
+ * its 95 arms and then hit its 20-minute step deadline — `continue-on-error`
+ * kept the job green, and 32 producer arms printed no line at all. The browser
+ * rule (a bin per 600 s of budget) would give the headless set ~3 jobs of
+ * setup for arms that are mostly sub-second; the ruling is TWO, longest-first
+ * into the lighter bin, so the wall clock is half the set and a new arm lands
+ * somewhere without anyone typing it.
+ *
+ * ⛓ `unittests_frontend.yml`'s headless matrix lists `[0, 1]`;
+ * `ciGatePlan.test.js` pins that list to this number.
+ */
+export const CI_HEADLESS_SHARDS = 2;
+
+/**
+ * ⛓ …and what a fixed shard may measure before the audit calls it FAIL: three
+ * quarters of the headless step's 30-minute kill deadline. A fixed shard has no
+ * budget to be packed under, so the only number that matters is the one that
+ * truncates the battery — and the audit must say so BEFORE it does.
+ */
+export const CI_FIXED_SHARD_LIMIT_MS = 1350000;
+
+/**
  * ⛓⛓⛓ **WHAT EACH ARM COSTS THE RUNNER** — written by `ci-gates.mjs
  * --write-costs` out of finished runs' own `here=` lines, read here.
  *
@@ -557,6 +582,46 @@ export function planCiShards({ arms, costs = {}, budgetMs = CI_SHARD_BUDGET_MS }
 }
 
 /**
+ * ⛓⛓ ci-jsut-split — THE FIXED-COUNT PARTITION (the headless set): longest
+ * first, each arm into the currently LIGHTEST of `bins` shards (LPT).
+ *
+ * ⛔ SORTED BY COST DESCENDING AND THEN BY KEY, and ties between bins go to the
+ * lower id, for `planCiShards`' reason: the matrix job and `--shard=` agree
+ * without talking.
+ *
+ * ⛔ AN UNPRICED ARM IS PRICED AT THE MEDIAN OF THE PRICED ONES, NOT AT THE
+ * BUDGET. The budget is the right pessimism where it buys an arm a job of its
+ * own; here the job count is fixed, and a 600 s phantom would tip the other
+ * shard into carrying ~600 s more than it should. The plan still COUNTS the
+ * unpriced arms per shard, so `--plan` names them until `--write-costs` has.
+ *
+ * @returns same shape as `planCiShards`, each shard with `fixed: true`
+ */
+export function planFixedShards({ arms, costs = {}, bins = CI_HEADLESS_SHARDS }) {
+    const known = arms.map((a) => costs?.[a.key]?.ms).filter(Number.isFinite).sort((a, b) => a - b);
+    const median = known.length ? known[Math.floor((known.length - 1) / 2)] : 0;
+    const priced = arms.map((arm) => {
+        const ms = costs?.[arm.key]?.ms;
+        return { arm, name: armName(arm), ms: Number.isFinite(ms) ? ms : median,
+            unpriced: !Number.isFinite(ms) };
+    }).sort((a, b) => (b.ms - a.ms) || a.name.localeCompare(b.name));
+    const out = Array.from({ length: bins }, () => ({ rows: [], ms: 0 }));
+    for (const row of priced) {
+        const lightest = out.reduce((best, b) => (b.ms < best.ms ? b : best), out[0]);
+        lightest.rows.push(row); lightest.ms += row.ms;
+    }
+    return out.filter((b) => b.rows.length).map((b, id) => ({
+        id,
+        name: `${b.rows[0].name}${b.rows.length > 1 ? ` +${b.rows.length - 1}` : ''}`,
+        ms: b.ms,
+        headroomMs: 0,
+        unpriced: b.rows.filter((r) => r.unpriced).length,
+        keys: b.rows.map((r) => r.arm.key),
+        fixed: true,
+    }));
+}
+
+/**
  * ⛓⛓⛓ S5b — **THE AUDIT: DID THE PARTITION HOLD, MEASURED BY THE RUNNER
  * ITSELF?** (trap 1068.)
  *
@@ -600,13 +665,19 @@ export function auditRunShards({ jobs, budgetMs = CI_SHARD_BUDGET_MS }) {
         const heaviest = j.arms.slice().sort((a, b) => b.ms - a.ms)[0] ?? null;
         return { name: j.name, shard: j.shard, arms: j.arms.length, ms, heaviest,
             sharded: Boolean(j.shard),
-            /** ⛓ over budget AND holding more than one arm — see above. */
-            over: Boolean(j.shard) && j.arms.length > 1 && ms > budgetMs };
+            /** ⛓ over budget AND holding more than one arm — see above.
+             *  ⛓ ci-jsut-split: a FIXED shard (the headless pair) was never packed
+             *  under the budget; it is judged against the limit below its step's
+             *  kill deadline instead, because that deadline truncates silently. */
+            /** ⛔ `=== true`: a string shard note has `String.prototype.fixed`. */
+            over: j.shard?.fixed === true
+                ? ms > CI_FIXED_SHARD_LIMIT_MS
+                : Boolean(j.shard) && j.arms.length > 1 && ms > budgetMs };
     });
     const over = rows.filter((r) => r.over);
     /** ⛓ the other direction, reported: multi-arm shards that would have fitted
      *  in one job. Never red — it costs a runner, not wall clock. */
-    const multi = rows.filter((r) => r.sharded && r.arms > 1 && !r.over);
+    const multi = rows.filter((r) => r.sharded && r.shard.fixed !== true && r.arms > 1 && !r.over);
     const loose = multi.length > 1
         && multi.reduce((n, r) => n + r.ms, 0) <= budgetMs
         ? { jobs: multi.map((r) => r.name), ms: multi.reduce((n, r) => n + r.ms, 0) }
@@ -688,7 +759,11 @@ export function ciGatePlanFor({ repo = REPO, host = LOCAL_HOST, set = 'browser',
     budgetMs = CI_SHARD_BUDGET_MS } = {}) {
     const arms = ciGateArms({ repo, host, set });
     const doc = readCiArmCosts({ repo });
-    const shards = planCiShards({ arms, costs: doc?.arms ?? {}, budgetMs });
+    /** ⛓ ci-jsut-split — the headless set is a FIXED pair; the browser set (and
+     *  `all`, which nothing shards) keeps the budget packing. */
+    const shards = set === 'headless'
+        ? planFixedShards({ arms, costs: doc?.arms ?? {} })
+        : planCiShards({ arms, costs: doc?.arms ?? {}, budgetMs });
     return { arms, shards, budgetMs,
         measuredAt: doc?.measuredAt ?? null,
         pricedFrom: doc?.runs ?? [] };

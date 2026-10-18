@@ -116,7 +116,7 @@ on:
         default: ''
       dash_only_window:
         description: >-
-          Empty = the solver's DASH_ONLY_WINDOW at its own default, OFF (today's run). Otherwise on / off — set through
+          Empty = the solver's DASH_ONLY_WINDOW at its own default, ON since the dash flip (today's run). Otherwise on / off — set through
           the flashPanel setting seedlingDashOnlyWindow (on = the upgrade window counts only sword-dash asks and stops
           only that search), read back as a DASH_ONLY_WINDOW line, stamped on each plan the worker solved off-default,
           on every row and on the plan; the merge refuses a mixed merge by name.
@@ -124,7 +124,7 @@ on:
         default: ''
       dash_shape:
         description: >-
-          Empty = solverBot's three SEEDLING DB dash switches at their own defaults, OFF (today's run). Otherwise a spec:
+          Empty = solverBot's three SEEDLING DB dash switches at their own defaults (legPrecheck and keepPartial ON, noSwingPrefix OFF, since the dash flip; today's run). Otherwise a spec:
           a comma list of <key>:on|off over legPrecheck, noSwingPrefix, keepPartial (a bare key = on), or all — set
           through the flashPanel settings seedlingDash{LegPrecheck,NoSwingPrefix,KeepPartial}, read back as a DASH_SHAPE
           line, stamped dashShape on each request the engine makes off-default (capture_requests reads it back), on

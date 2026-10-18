@@ -1,0 +1,8 @@
+#!/bin/bash
+# W0 again: the 62 producers' --check in the frozen W0 copy (w0lab, served on 9594). $1=scratch
+S=$1; O=$S/w0b; mkdir -p $O/plans; cd $S/w0lab
+for p in $(cat $S/plans61.txt); do n=$(basename $p .mjs); s=$(date +%s)
+  SEEDLING_PORT=9594 timeout 2400 node $p --check > $O/plans/$n.out 2>&1; rc=$?
+  echo "$n rc=$rc s=$(( $(date +%s)-s )) md5=$(grep -av '^# box lock:' $O/plans/$n.out | md5sum | cut -c1-8)" >> $O/plans.txt
+done
+echo DONE >> $O/plans.txt

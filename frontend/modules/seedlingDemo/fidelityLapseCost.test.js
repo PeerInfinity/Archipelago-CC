@@ -93,19 +93,21 @@ describe('LAPSECOST D1 — the narrow strike policy', () => {
         expect(LAPSE_NARROW_RETRY.enabled).toBe(true);
     });
 
-    it('ON: leg 403 solves inside the page budget, with OFF\'s plan key for key (776 t)', () => {
+    // ⛓ dash flip (the user, 2026-10-16): at the flipped dash defaults (the dash-only window, keep-partial, the leg
+    // pre-check) the page's full pass keeps its dashes here: leg 403 776 → 642 t, leg 265 215 → 116 t (DF's D1 movers).
+    it('ON: leg 403 solves inside the page budget, with OFF\'s plan key for key (642 t)', () => {
         const req = leg403();
         expect(req.budgetWork).toBe(640);
         const off = withContactFidelity({ strikeIframeLapse: false }, () => solve(req));
         const on = withContactFidelity({ strikeIframeLapse: true }, () => solve(req));
         expect(off.ok).toBe(true);
         expect(on.ok).toBe(true);
-        expect(on.plan.solution.length).toBe(776);
+        expect(on.plan.solution.length).toBe(642);
         expect(on.work).toBeLessThan(req.budgetWork);
         expect(keysOf(on)).toEqual(keysOf(off));
     }, 60000);
 
-    it('ON: a corridor the cheap rungs cross is not shadowed — leg 265 (L22) solves with or without the rung (215 t)', () => {
+    it('ON: a corridor the cheap rungs cross is not shadowed — leg 265 (L22) solves with or without the rung (116 t)', () => {
         const req = leg265();
         const on = withContactFidelity({ strikeIframeLapse: true }, () => solve(req));
         LAPSE_NARROW_RETRY.enabled = false;
@@ -116,7 +118,7 @@ describe('LAPSECOST D1 — the narrow strike policy', () => {
             LAPSE_NARROW_RETRY.enabled = true;
         }
         expect(on.ok).toBe(true);
-        expect(on.plan.solution.length).toBe(215);
+        expect(on.plan.solution.length).toBe(116);
         expect(keysOf(on)).toEqual(keysOf(base));
     }, 60000);
 

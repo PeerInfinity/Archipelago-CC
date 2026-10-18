@@ -1,0 +1,2 @@
+CHECK CLEAN — the committed chain is what the game produces today
+r7-ends-meet --check in a git worktree of 0314f824 (port 9596): rc=0 md5=f1675cfc

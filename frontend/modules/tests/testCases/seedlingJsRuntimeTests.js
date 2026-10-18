@@ -905,6 +905,12 @@ export async function seedlingJsRuntimeSolveProgressView(tc) {
         tc.assertEqual('the tree is drawn (≥ 1 row)', true, rows >= 1);
         tc.assertEqual('the meter reads the attempt against the budget', true,
             /^work \d+ \/ \d+ units/.test(view.meterText.textContent));
+        // ⛓ S2 — TIER A: the final snapshot's asks by site and work counters are drawn, and nothing is active
+        view.flush();
+        tc.assertEqual('the asks by site are drawn (Tier A)', true,
+            /^asks by site \(this segment\): /.test(view.asksText.textContent));
+        tc.assertEqual('the work counters are drawn (Tier A)', true, /^work: ticks \d+ · /.test(view.workText.textContent));
+        tc.assertEqual('the active path reads finished (Tier A)', 'active: — (finished)', view.pathText.textContent);
         if (st.snapshot?.tiles) {
             tc.assertEqual('the tile map is ONE canvas sized to the room', `${st.snapshot.tiles.cols}x${st.snapshot.tiles.rows}`,
                 `${Math.round(view.canvas.width / view._px)}x${Math.round(view.canvas.height / view._px)}`);

@@ -1,0 +1,11 @@
+import { readFileSync } from 'node:fs';
+const R = '/home/user/Archipelago-CC/frontend/modules/seedlingDemo';
+const { levelSourceFromAtlas } = await import(`${R}/atlasSource.js`);
+const { solveAnytime } = await import(`${R}/jsRuntimeSolver.js`);
+const sb = await import(`${R}/solverBot.js`);
+const F = JSON.parse(readFileSync(process.argv[2], 'utf8'));
+const src = levelSourceFromAtlas({ levels: F.records });
+const solve = () => solveAnytime({ staging: F.staging, perTick: [], live: F.live, solverGoal: F.solverGoal, name: F.from.name,
+    scratchPersistence: F.scratchPersistence, equips: null, budgetWork: F.budgetWork, upgradeWindowWork: null, levelSource: src });
+for (const on of [false, true]) { const t = Date.now(); const a = sb.withDashLegPrecheck(on, solve);
+    console.log(on ? 'ON ' : 'OFF', a.ok, a.ok ? a.plan.solution.length : a.kind, 'work', a.work, JSON.stringify(a.passes.map((p) => [p.pass, p.ok, p.ticks, p.work, p.deadline, p.limit])), Date.now() - t, 'ms'); }

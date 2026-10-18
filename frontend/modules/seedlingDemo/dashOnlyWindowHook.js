@@ -3,9 +3,9 @@
  * hammer's dash economics (DS) → *"Build the best shape, OFF"*; the AXE_DODGE hook's pattern, `axeDodgeAskHook.js`).
  * The switch `DASH_ONLY_WINDOW` changes what the full pass's UPGRADE WINDOW counts (`jsRuntimeSolver.passShouldStop`):
  *
- *   OFF (the default) — ⛓ WINDOW WHOLE PASS exactly (⚖ 2026-10-06, *"Yes, stop the whole pass"*): with a plan in
+ *   OFF — ⛓ WINDOW WHOLE PASS exactly (⚖ 2026-10-06, *"Yes, stop the whole pass"*): with a plan in
  *       hand, EVERY site of the full pass trips once the attempt has spent the window's units.
- *   ON — DS's shape (c): the window counts only the full pass's `sword-dash` asks (one dash preview = one unit) and
+ *   ON (the default since the dash flip, ⚖ the user 2026-10-16: *"Prepare the flip"*) — DS's shape (c): the window counts only the full pass's `sword-dash` asks (one dash preview = one unit) and
  *       trips only there; every other site of the full pass runs on the whole budget, as the dashless pass does. The
  *       budget still counts every ask. It partly reverses WINDOW WHOLE PASS, so the flip is the user's call.
  *
@@ -21,10 +21,11 @@
  */
 
 /**
- * THE SWITCH. OFF in the browser and its worker (no env read there); under node `SEEDLING_DASH_ONLY_WINDOW=1` turns
- * the default ON for a producer run (its workers inherit the env, so both sides share one default).
+ * THE SWITCH. ⛓ dash flip (the user, 2026-10-16: *"Prepare the flip"*): ON by default, in the browser and its worker
+ * (no env read there); under node `SEEDLING_DASH_ONLY_WINDOW=0` turns the default OFF for a producer run (its workers
+ * inherit the env, so both sides share one default).
  */
-export const DASH_ONLY_WINDOW = { enabled: globalThis.process?.env?.SEEDLING_DASH_ONLY_WINDOW === '1' };
+export const DASH_ONLY_WINDOW = { enabled: globalThis.process?.env?.SEEDLING_DASH_ONLY_WINDOW !== '0' };
 
 /** The switch's OWN default, read once at import (never restated). */
 export const DASH_ONLY_WINDOW_DEFAULT = DASH_ONLY_WINDOW.enabled;

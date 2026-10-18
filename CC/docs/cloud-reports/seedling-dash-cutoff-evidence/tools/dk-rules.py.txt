@@ -1,0 +1,69 @@
+# DK D1: evaluate candidate refusal rules offline over every recorded corridor (battery tags + producers).
+import json, sys, math, collections
+S = sys.argv[1]; tags = sys.argv[2].split(',')
+B = 195; G = 27  # PREVIEW_AGREEMENT_BOUND; DASH_CHAIN_MAX (3) x DASH_DISPLACEMENT.total (9 px)
+cors = []
+for l in open(f'{S}/d1/battery.jsonl'):
+    r = json.loads(l)
+    if r.get('tag') not in tags: continue
+    for k, c in enumerate(r.get('corridors') or []):
+        c['key'] = f"{r['tag']}:{r['id']}:{r['i']}#{k}"; cors.append(c)
+try:
+    for l in open(f'{S}/d1/producers/corridors.jsonl'):
+        c = json.loads(l); c['key'] = f"P:{c['producer']}"; cors.append(c)
+except FileNotFoundError: pass
+cors = [c for c in cors if c.get('baseLegs') is not None and c.get('truncated') in (None, 'crossed')]
+def legs(c):
+    for i, n in enumerate(c['baseLegs']):
+        s = (c['legStats'] or [None] * 99)[i] if c['legStats'] and i < len(c['legStats']) else None
+        yield i, n, s
+def net(s): return math.hypot(s['x1'] - s['x0'], s['y1'] - s['y0'])
+RULES = {
+    'Kmin': lambda c: False,
+    'K40': lambda c: c['L'] > B + 40,
+    'K110': lambda c: c['L'] > B + 110,
+    'K120': lambda c: c['L'] > B + 120,
+}
+def travel(V, slack):
+    def f(c):
+        for i, n, s in legs(c):
+            if n <= B or s is None: continue
+            if (net(s) - G) / V - slack > B: return True
+        return False
+    return f
+def span_rule(V=1.2002088, G=56.4, lead=1.2677, tol=1, skip_crossed_last=False):
+    def f(c):
+        n_legs = len(c['baseLegs'])
+        for i, n, s in legs(c):
+            if n <= B or s is None: continue
+            if skip_crossed_last and c.get('truncated') == 'crossed' and i == n_legs - 1: continue
+            span = max(abs(s['x1'] - s['x0']), abs(s['y1'] - s['y0']))
+            if math.ceil(max(0, span - 2 * tol - lead - G) / V) > B: return True
+        return False
+    return f
+RULES['(a) span floor'] = span_rule()
+RULES['(a) span floor, not crossed last'] = span_rule(skip_crossed_last=True)
+RULES['(a) cap 1.6 (instantaneous)'] = span_rule(V=1.6, G=39.0, lead=0)
+def clean_rule(gain=48.8, path=1.05, still=2):
+    def f(c):
+        n_legs = len(c['baseLegs'])
+        for i, n, s in legs(c):
+            if n <= B or s is None: continue
+            if c.get('truncated') == 'crossed' and i == n_legs - 1: continue
+            line = net(s); span = max(abs(s['x1'] - s['x0']), abs(s['y1'] - s['y0']))
+            if s['still'] > still or s['px'] > path * line or span <= 0: continue
+            if math.ceil(n - gain / (span / n)) > B: return True
+        return False
+    return f
+RULES['(c) clean run, G 48.8'] = clean_rule()
+RULES['(c) G x1.5'] = clean_rule(gain=73.2)
+RULES['(c) G x2'] = clean_rule(gain=97.6)
+print(f'{len(cors)} corridors ({tags} + producers); planned {sum(c["planned"] for c in cors)}')
+planL = sorted([c['L'] for c in cors if c['planned']])[-5:]
+print('largest L that planned:', planL, '=> smallest safe K =', max(planL) - B)
+for name, rule in RULES.items():
+    ref = [c for c in cors if rule(c)]
+    bad = [c for c in ref if c['planned']]
+    if len(sys.argv) > 3 and name == sys.argv[3]:
+        for c in ref: print('    ', c['key'], c['L'], c['planned'])
+    print(f'{name:>34}: refused {len(ref):4d}  of which PLANNED {len(bad)}  previews saved {sum(c["scanned"] for c in ref)}  {[c["key"] for c in bad][:6]}')

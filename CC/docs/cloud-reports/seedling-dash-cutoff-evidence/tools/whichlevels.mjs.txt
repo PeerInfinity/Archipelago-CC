@@ -1,0 +1,12 @@
+import { readFileSync } from 'node:fs';
+const R = '/home/user/Archipelago-CC';
+const { restoreRequest } = await import(`${R}/scripts/procgen/seedlingSolveRequestCodec.js`);
+const { levelSourceFromAtlas } = await import(`${R}/frontend/modules/seedlingDemo/atlasSource.js`);
+const { solveAnytime } = await import(`${R}/frontend/modules/seedlingDemo/jsRuntimeSolver.js`);
+const [file, key] = process.argv.slice(2); const [id, i] = key.split(':').map(Number);
+let line; for (const l of readFileSync(file, 'utf8').split('\n')) if (l.startsWith(`{"id":${id},`)) { line = JSON.parse(l); break; }
+const req = restoreRequest(line.requests.find((r) => r.i === i).request);
+const src = levelSourceFromAtlas(req.source.records); const seen = new Set();
+const { passes, source, ...tape } = req; tape.upgradeWindowWork = null;
+const a = solveAnytime({ ...tape, source, levelSource: (L) => { seen.add(L); return src(L); } }, { passes: [passes[0]] });
+console.log('levels read', [...seen], a.ok, a.ok && a.plan.solution.length);

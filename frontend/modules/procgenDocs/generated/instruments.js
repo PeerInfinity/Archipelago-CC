@@ -5201,6 +5201,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "deadline-s"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "host"
                 },
                 {

@@ -1,0 +1,12 @@
+const ROOT = process.argv[2];
+const { AXE_WITNESSES, axePlan } = await import(`${ROOT}/scripts/procgen/plan-seedling-axe-witness.mjs`);
+const { withContactFidelity } = await import(`${ROOT}/frontend/modules/seedlingDemo/contactFidelity.js`);
+const sb = await import(`${ROOT}/frontend/modules/seedlingDemo/solverBot.js`);
+const w = AXE_WITNESSES.find((x) => x.name === 'axe-l48-reach-l49');
+for (const on of [false, true]) {
+    const { solved } = await withContactFidelity({ waypointSlide: false }, () => sb.withDashLegPrecheck(on, () => axePlan(w)));
+    const s = JSON.stringify(solved.out.trace);
+    console.log(`legPrecheck ${on ? 'ON' : 'OFF'}: ${solved.out.perTick.length} t; dashes ${JSON.stringify(solved.out.dashes).slice(0, 300)}; passes ${JSON.stringify(solved.passes).slice(0, 300)}`);
+    const i = s.indexOf('DASH_LEG_PRECHECK'); if (i >= 0) console.log('  precheck why:', s.slice(Math.max(0, i - 300), i + 260));
+    const j = s.indexOf('swordDash'); console.log('  first swordDash:', j >= 0 ? s.slice(j, j + 400) : 'none');
+}

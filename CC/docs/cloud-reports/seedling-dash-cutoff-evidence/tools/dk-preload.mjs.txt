@@ -1,0 +1,16 @@
+// DK: record every planSwordDash corridor of a producer run (lab tree). Out: $DK_OUT (jsonl, appended at exit).
+import { appendFileSync } from 'node:fs';
+const recs = [];
+globalThis.__DK = { cur: null, pass: null, done: (rec, out) => {
+    const o = out ?? {};
+    const cands = o.candidates ?? [];
+    const cert = cands.filter((c) => c.certified);
+    const L = Math.max(0, ...(rec.baseLegs ?? [0]));
+    recs.push({ wps: rec.wps, baseline: rec.baseline ?? null, truncated: rec.truncated ?? null, baseLegs: rec.baseLegs ?? null, L,
+        li: (rec.baseLegs ?? []).indexOf(L), legStats: rec.legStats ?? null, wpsXY: rec.wpsXY ?? null,
+        planned: !!o.plan, ticks: o.ticks ?? null, saved: o.saved ?? null, windows: o.windows ?? null, finalLegs: o.legs ?? null,
+        scanned: o.scanned ?? cands.length, why: (o.why ?? '').slice(0, 70),
+        kinds: cands.reduce((m, c) => { const k = c.certified ? 'CERT' : c.kind; m[k] = (m[k] ?? 0) + 1; return m; }, {}),
+        firstCert: cert.length ? { at: cert[0].at, prefix: cert[0].prefix, longest: cert[0].longest, ticks: cert[0].ticks } : null });
+} };
+process.on('exit', () => { for (const r of recs) appendFileSync(process.env.DK_OUT, `${JSON.stringify({ producer: process.env.DK_NAME, ...r })}\n`); });
