@@ -1,0 +1,4 @@
+{"name":"l29-key-return","tapeFile":"frontend/modules/seedlingDemo/fixtures/tapes/prox-l29-key-return.json","levels":[29],
+ "arms":[{"name":"vanilla"},
+  {"name":"remove","ops":[{"op":"remove","level":29,"type":"fallrock","x":112,"y":112}]},
+  {"name":"move-128-112","ops":[{"op":"move","level":29,"type":"fallrock","x":112,"y":112,"to":{"x":128,"y":112}}]}]}

@@ -1,0 +1,5 @@
+{"name":"l29-press","levels":[29],
+ "tape":{"boot":{"level":29,"x":112,"y":160},"tick_count":420,"inputs":[{"key":"up","from":0,"to":50},{"key":"down","from":50,"to":420}]},
+ "arms":[{"name":"vanilla"},
+  {"name":"remove","ops":[{"op":"remove","level":29,"type":"fallrock","x":112,"y":112}]},
+  {"name":"move-128-112","ops":[{"op":"move","level":29,"type":"fallrock","x":112,"y":112,"to":{"x":128,"y":112}}]}]}
