@@ -68,6 +68,12 @@ async function withPersistedDiscovery(testController, persisted, body) {
   const key = `${PREFIX}enableDiscoveryMode`;
   const before = settingsManager.settings?.moduleSettings?.discovery?.enableDiscoveryMode;
   await settingsManager.updateSetting(key, persisted);
+  // ⚠ Settle first with a neutral world: loops' rulesLoaded handler awaits a
+  // fetch for a URL-path load (a previous row's preset reload), and an
+  // in-memory load landing inside that await has its fresh-cost flag consumed
+  // by the stale handler (pre-existing race, recorded as B4) — measured: loop
+  // mode never auto-enabled right after test_region_graph_node_picker.
+  await loadWorld(testController, mazeWorld({ enableLoopMode: false }), 'discoveryModeSettle');
   try {
     return await body();
   } finally {
@@ -152,12 +158,36 @@ async function clickExitMoves(testController, sourceRegion, exit) {
   const { getExitsModuleDispatcher } = await import('../../exits/index.js');
   const dispatcher = getExitsModuleDispatcher();
   if (!dispatcher) return null;
+  const reach = testController.stateManager.getLatestStateSnapshot?.()?.regionReachability ?? {};
+  testController.log(`click ${sourceRegion} → ${exit.connected_region}: current=${gs.currentRegion} `
+    + `world=${api('discovery', 'getWorldDiscoveryMode')?.()} loop=${loopModeOn()} `
+    + `discovered=${discoveryStateSingleton.isExitDiscovered(sourceRegion, exit.name)} `
+    + `reach=${reach[sourceRegion]}/${reach[exit.connected_region]} `
+    + `showAll=${document.querySelector('#show-all-regions')?.checked}`);
   dispatcher.publish('user:exitClicked', {
     exitName: exit.name, sourceRegion, destinationRegion: exit.connected_region, accessRule: exit.access_rule,
     isDiscovered: discoveryStateSingleton.isExitDiscovered(sourceRegion, exit.name),
   });
   return testController.pollForCondition(() => gs.currentRegion === exit.connected_region,
     `moved to ${exit.connected_region}`, 3000, 100);
+}
+
+/**
+ * Run `body` with the Regions panel's *Show All Regions* off: with it on, the
+ * regions module NAVIGATES to an exit's region instead of moving the player,
+ * and another row may leave it on (measured: the run after
+ * test_region_graph_node_picker). Restored after.
+ */
+async function withShowAllOff(body) {
+  const box = document.querySelector('#show-all-regions');
+  const was = !!box?.checked;
+  const set = (v) => { if (box && box.checked !== v) { box.checked = v; box.dispatchEvent(new Event('change')); } };
+  set(false);
+  try {
+    return await body();
+  } finally {
+    set(was);
+  }
 }
 
 /** The player's region and one of its exits into a region reachable now. */
@@ -190,7 +220,7 @@ async function worldOnWithoutLoops(testController) {
     if (!exit) return testController.getOverallResult();
     testController.reportCondition('that exit is discovered (start-region exits are)',
       discoveryStateSingleton.isExitDiscovered(from, exit.name));
-    const moved = await clickExitMoves(testController, from, exit);
+    const moved = await withShowAllOff(() => clickExitMoves(testController, from, exit));
     testController.reportCondition('B2: clicking the discovered exit moves the player', moved === true);
     const arrived = exit.connected_region;
     const revealed = await testController.pollForCondition(
@@ -202,7 +232,8 @@ async function worldOnWithoutLoops(testController) {
     await expectOverrides(testController, {}, 'a world without the block forces nothing');
     await settingsManager.updateSetting(`${PREFIX}enableDiscoveryMode`, true);
     const second = startExit(testController);
-    const movedByHand = second.exit ? await clickExitMoves(testController, second.from, second.exit) : null;
+    const movedByHand = second.exit
+      ? await withShowAllOff(() => clickExitMoves(testController, second.from, second.exit)) : null;
     testController.reportCondition('hand-enabled discovery: the click does NOT move (unchanged)', movedByHand === false);
     return testController.getOverallResult();
   });
