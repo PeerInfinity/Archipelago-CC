@@ -105,14 +105,10 @@ export async function l30keylockPlan(x, { rescan, waitPriced }) {
 }
 
 /**
- * ⚖ PINNED `strikeIframeLapse` OFF — an INTERIM (seedling-fidelity-producers, 2026-10-16).
- * Both pit tapes were recorded on the game under the PRE-LAPSE strike gate. The lapse flip (`19aaa5cce4`, ⚖ user
- * "Flip after DD lands") turned `strikeIframeLapse` ON and pinned `fidelityL30KeyLock`'s rows OFF for exactly that
- * reason; its re-pin list missed this producer (no CI job runs it). ON, both plans move.
- * ⛔ RETIRE THIS PIN with a re-record ON: the plan re-derived under the flipped default, recorded on the game
- * (p4f, 0 px), and its roster rows re-pinned — a roster move, so the user's licence.
+ * ⚖ RETIRED 2026-10-19 (seedling-fidelity-interims): the `strikeIframeLapse` OFF INTERIM pin (seedling-fidelity-producers,
+ * 2026-10-16). Planned at the defaults (the lapse ON) and recorded on the game (p4f, headless; the model reproduces each
+ * recording): l30keylock-pit224 347 → 320 t, l30keylock-pit240 360 → 341; l30keylock-pit224-before does not move.
  */
-const PINNED_FIDELITY = Object.freeze({ strikeIframeLapse: false });
 
 // ⚠ A bare import does nothing (`check-procgen-help`'s import door): the work is `main()`'s.
 async function main() {
@@ -226,7 +222,4 @@ async function main() {
     console.log('\nall checks green');
 }
 
-if (isEntryPoint(import.meta.url)) {
-    const { withContactFidelity } = await import(join(MODULE, 'contactFidelity.js'));
-    await withContactFidelity(PINNED_FIDELITY, main);
-}
+if (isEntryPoint(import.meta.url)) await main();

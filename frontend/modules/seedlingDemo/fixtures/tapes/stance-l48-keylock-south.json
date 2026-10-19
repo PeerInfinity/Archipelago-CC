@@ -90,7 +90,7 @@
             "index": 1
         }
     },
-    "tick_count": 369,
+    "tick_count": 322,
     "inputs": [
         {
             "key": "primary",
@@ -310,69 +310,19 @@
         {
             "key": "up",
             "from": 272,
-            "to": 274
+            "to": 275
         },
         {
             "key": "down",
-            "from": 277,
-            "to": 278
-        },
-        {
-            "key": "up",
-            "from": 284,
-            "to": 285
-        },
-        {
-            "key": "down",
-            "from": 287,
-            "to": 289
-        },
-        {
-            "key": "up",
-            "from": 290,
-            "to": 292
-        },
-        {
-            "key": "down",
-            "from": 295,
-            "to": 297
-        },
-        {
-            "key": "up",
-            "from": 298,
-            "to": 300
-        },
-        {
-            "key": "down",
-            "from": 303,
-            "to": 305
-        },
-        {
-            "key": "primary",
-            "from": 305,
-            "to": 306
-        },
-        {
-            "key": "up",
-            "from": 306,
-            "to": 308
-        },
-        {
-            "key": "down",
-            "from": 310,
-            "to": 311
-        },
-        {
-            "key": "primary",
-            "from": 319,
-            "to": 320
+            "from": 279,
+            "to": 280
         },
         {
             "key": "left",
-            "from": 319,
-            "to": 369
+            "from": 267,
+            "to": 322
         }
     ],
     "tape_version": 8,
-    "description": "⛓⛓⛓ SEEDLING FIDELITY STANCE — the CONTROL for the shut state: the same `bosslock@48,144`, flag held, approached from its OWN side (the L47 door south of it, route step 93's arrival). The solver's `keylock` stance lands on the key line (y 161), the lock opens (`keyTimer` 60, then the fade) and the walk goes north through its cell to the west door (L53). The survey's staging (`r8-solve-11`'s committed block re-pointed at L48 (112,288), keys [0, 1, 2, 3], items [hasShield, hasFire, canSwim, hasTorch]). The solver's own plan: 369 t, equips []. Authored by scripts/procgen/plan-seedling-stance-witness.mjs."
+    "description": "⛓⛓⛓ SEEDLING FIDELITY STANCE — the CONTROL for the shut state: the same `bosslock@48,144`, flag held, approached from its OWN side (the L47 door south of it, route step 93's arrival). The solver's `keylock` stance lands on the key line (y 161), the lock opens (`keyTimer` 60, then the fade) and the walk goes north through its cell to the west door (L53). The survey's staging (`r8-solve-11`'s committed block re-pointed at L48 (112,288), keys [0, 1, 2, 3], items [hasShield, hasFire, canSwim, hasTorch]). The solver's own plan: 322 t, equips []. Authored by scripts/procgen/plan-seedling-stance-witness.mjs."
 }

@@ -84,8 +84,10 @@ describe('L30KEYLOCK D1 — the game witnesses', () => {
     });
 
     for (const [name, at] of [
-        ['l30keylock-pit224', { touch: 252, open: 331, bodyGone: 191 }],
-        ['l30keylock-pit240', { touch: 265, open: 344, bodyGone: 207 }],
+        // ⛓ seedling-fidelity-interims (2026-10-19): re-recorded at the defaults (the lapse ON) on the game; were
+        // { touch: 252, open: 331, bodyGone: 191 } / { touch: 265, open: 344, bodyGone: 207 } under the lapse-OFF pin.
+        ['l30keylock-pit224', { touch: 225, open: 304, bodyGone: 184 }],
+        ['l30keylock-pit240', { touch: 246, open: 325, bodyGone: 197 }],
     ]) {
         it(`\`${name}\`: the body dies first, then the key line, then the crossing into L22 — zero hits`, () => {
             const got = landmarks(name);
@@ -96,9 +98,10 @@ describe('L30KEYLOCK D1 — the game witnesses', () => {
     }
 });
 
-// ⛓ fidelity FLIP14: the switch-by-switch rows are CONTROLS measured (and the both-ON plans game-witnessed) under the
-// pre-flip strike gate, so they run `strikeIframeLapse` OFF. ON (⚖ the wave-14 flip, user 2026-10-12) both landings still
-// solve hitless, shorter and unwitnessed: (224,80) 320 t, (240,80) 341 t, the chaser stance (88,88) (FLIP14 report, D1).
+// ⛓ fidelity FLIP14: the switch-by-switch rows are CONTROLS measured under the pre-flip strike gate, so they run
+// `strikeIframeLapse` OFF. ⛓ seedling-fidelity-interims (2026-10-19): the both-ON rows run at the DEFAULTS (the lapse ON)
+// — their plans are the re-recorded witnesses, game-checked: (224,80) 320 t, (240,80) 341 t, the chaser stance (88,88)
+// (under the lapse-OFF pin they were 347 t / 360 t from (88,120)).
 describe('L30KEYLOCK D2 — the solver, switch by switch, from both pit landings', () => {
     const verdict = ({ solved, refusal, run }) => ({
         solved: solved ? solved.out.perTick.length : null,
@@ -137,15 +140,15 @@ describe('L30KEYLOCK D2 — the solver, switch by switch, from both pit landings
         expect(v.refusal).toMatch(/keylock stance \(bosslock@64,32\): the combat ladder is EXHAUSTED/);
     }), 120_000);
 
-    for (const [x, kill] of [[224, { ticks: 26, bound: 57 }], [240, { ticks: 31, bound: 62 }]]) {
-        it(`both ON, (${x},80): the solver's own plan IS the witness \`l30keylock-pit${x}\` (kill, lock, crossing)`, () => withContactFidelity({ strikeIframeLapse: false }, async () => {
+    for (const [x, kill] of [[224, { ticks: 25, bound: 56 }], [240, { ticks: 23, bound: 54 }]]) {
+        it(`both ON, (${x},80): the solver's own plan IS the witness \`l30keylock-pit${x}\` (kill, lock, crossing)`, async () => {
             const p = await l30keylockPlan(x, { rescan: true, waitPriced: true });
             expect(verdict(p)).toMatchObject({ solved: tape(`l30keylock-pit${x}`).tick_count, hits: 0 });
             const rec = p.solved.out.records;
             const k = rec.find((r) => r.strategy === 'kill' && r.arm === 'chaser');
-            expect(k).toMatchObject({ target: BODY, stance: { x: 88, y: 120 }, ...kill });
+            expect(k).toMatchObject({ target: BODY, stance: { x: 88, y: 88 }, ...kill });
             expect(rec.findIndex((r) => r.strategy === 'keylock')).toBeGreaterThan(rec.indexOf(k));
-        }), 120_000);
+        }, 120_000);
     }
 });
 

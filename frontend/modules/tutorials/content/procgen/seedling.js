@@ -44,8 +44,7 @@ export const PROCGEN_SEEDLING = Object.freeze({
             id: 'play',
             title: 'Play it',
             blocks: [
-                ...look('look-flash', { panel: 'flashPanel' }, 'Open the **Flash Panel** tab: the Seedling regions play here, in the original game.'),
-                ...look('look-flash-substrate', { panel: 'flashSubstratePanel' }, 'The **Flash Substrate** tab is the other way a SWF can be a region — a plain recompiled SWF, without Seedling\'s room model (the bot cannot walk those).'),
+                { prose: 'The Seedling regions play in the **Flash Panel**, in the original game.' },
                 ...startSeedlingGame('start-game'),
                 ...botPlaysToTheEnd('bot-plays'),
             ],
@@ -59,7 +58,7 @@ export const PROCGEN_SEEDLING = Object.freeze({
                 {
                     step: {
                         id: 'lab-take',
-                        text: 'Press **TAKE — the page\'s level**: the room the lab is showing comes into the box below, as data. **SEND** does the reverse — load a room you paste into the box.',
+                        text: 'Press **TAKE — the page\'s level**: the room the lab is showing comes into the box below, as data. **SEND — load this payload** does the reverse — load a room you paste into the box.',
                         actions: [{ click: { ...LAB, selector: 'button.procgen-lab-take' } }],
                         done: (ctx) => Boolean(ctx.query({ ...LAB, selector: 'textarea.procgen-lab-box' })?.value.trim()),
                     },

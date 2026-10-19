@@ -22,6 +22,7 @@ export const moduleInfo = {
     name: 'substrateRegistryPanel',
     title: 'Substrate Registry',
     componentType: 'substrateRegistryPanel',
+    docs: 'docs/json/user/modules/substrateRegistry.md',
     icon: '🗂️',
     column: 3,
     category: 'Procgen Infrastructure Panels',

@@ -1,0 +1,15 @@
+PASS: ⛓⛓⛓ the FORECAST admits the stance: no punch box and no body meets the previewed player at any tick of the dwell — 200 samples clear
+PASS: ⛔ the STATIC PAD refuses the same stance — the pricing this witness relaxes — t 45: inside leash 80 (d=11.8), box grown 1 px/tick x 0 + pad 8
+PASS: the dwell outlasts both the kill and the key wait (140) — the forecast removes puncher@416,256 at t 124; stand 200
+PASS: ⛓⛓⛓ the MODEL, driven by those keys, takes ZERO hits (punch or contact) — []
+PASS: ⛓ three presses land and the puncher is gone by the end — [14,47,80]
+PASS: ⛓ the committed u10-puncher-dwell is what this script produces today — byte-identical
+## u10-puncher-dwell: 200 ticks, presses landed at t 14, 47, 80, removed by t 124, hits 0
+PASS: ⛓⛓⛓ the FORECAST refuses the stance BY THE PUNCH at a named tick — t 34: chaser:puncher@416,256 (the punch: the `attackPlayer` box off the body's edge ends its wind-up THIS tick, and the body's own hitsTimer does not refuse it)
+PASS: ⛓⛓⛓ the MODEL, driven by those keys, is PUNCHED at exactly that tick — ["punch@34"]
+PASS: the player is alive at the end
+PASS: ⛓ the committed u10-puncher-dwell-refused is what this script produces today — byte-identical
+## u10-puncher-dwell-refused: 34 ticks, forecast punch at t 34, hits ["punch@34"]
+
+all checks green
+exit 0 at 00:44:13
