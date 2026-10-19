@@ -5,6 +5,13 @@ import discoveryStateSingleton from './singleton.js'; // <<< IMPORT SINGLETON
 // Import singletons needed for injection
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import settingsManager from '../../app/core/settingsManager.js';
+import { getLastRawJsonData } from '../stateManager/index.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
+import {
+  createOverrideApplier,
+  readWorldDiscoveryMode,
+  resolveDiscoveryOverrides,
+} from './worldDiscoveryMode.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -23,6 +30,13 @@ function log(level, message, ...data) {
 let _moduleEventBus = null;
 let _moduleDispatcher = null;
 let _unsubscribeHandles = []; // Renamed for clarity
+
+// The loaded world's `discovery_mode` choice for its slot: 'on', 'off', or
+// null (no block — "same as loop mode"). See worldDiscoveryMode.js.
+let _worldDiscoveryMode = null;
+// Every discovery-settings session override goes through this one serialised
+// writer (Loop mode's included — loops calls syncDiscoveryOverrides).
+const _applyOverrides = createOverrideApplier(settingsManager);
 
 // Module settings cache
 let _settings = {
@@ -126,6 +140,14 @@ export function register(registrationApi) {
     }
   });
 
+  // Loops calls this on every loop-mode transition (and once the state
+  // manager is ready) in place of writing the overrides itself, so the
+  // world's `discovery_mode` choice and the serialisation live in one place.
+  registrationApi.registerPublicFunction(moduleInfo.name, 'syncDiscoveryOverrides',
+    ({ loopActive = false } = {}) => syncDiscoveryOverrides(loopActive));
+  registrationApi.registerPublicFunction(moduleInfo.name, 'getWorldDiscoveryMode',
+    () => _worldDiscoveryMode);
+
   // Register dispatcher receivers for loop events
   registrationApi.registerDispatcherReceiver(
     moduleInfo.name,
@@ -228,6 +250,14 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
       handleRulesLoaded
     );
     _unsubscribeHandles.push(rulesLoadedUnsubscribe);
+
+    // The world's `discovery_mode` block rides on the raw rules payload.
+    _unsubscribeHandles.push(
+      _moduleEventBus.subscribe('stateManager:rawJsonDataLoaded', handleRawJsonDataLoaded)
+    );
+    // Catch up on a payload published before this subscription existed.
+    const lastRaw = getLastRawJsonData();
+    if (lastRaw) handleRawJsonDataLoaded(lastRaw);
 
     // Subscribe to settings changes
     log('info', '[Discovery Module] Subscribing to settings:changed');
@@ -517,6 +547,15 @@ function handleExitClickedForDiscovery(eventData) {
     return;
   }
 
+  // A walk-to-reveal world (its `discovery_mode` block says on, loop mode
+  // off): an exit the player already knows is a real move. Scoped to such
+  // worlds — hand-enabled discovery, the discovery-* settings modes and loop
+  // mode keep the click-only-discovers behaviour below.
+  const { exitName: clickedExit, sourceRegion: clickedSource } = eventData || {};
+  const walkMove = _worldDiscoveryMode === 'on'
+    && !isLoopModeActive()
+    && !!discoveryStateSingleton?.isExitDiscovered(clickedSource, clickedExit);
+
   // Discovery mode is active - discover the exit if settings allow
   if (_settings.clickDiscoversLocation && discoveryStateSingleton) {
     const { exitName, sourceRegion } = eventData || {};
@@ -534,6 +573,16 @@ function handleExitClickedForDiscovery(eventData) {
         }
       }
     }
+  }
+
+  if (walkMove && _moduleDispatcher) {
+    _moduleDispatcher.publishToNextModule(
+      moduleInfo.name,
+      'user:exitClicked',
+      eventData,
+      { direction: 'up' }
+    );
+    return;
   }
 
   // Block propagation - don't let regions module perform a move in discovery mode
@@ -582,6 +631,52 @@ function handlePlayerRegionChanged(eventData) {
     autoDiscoverLocationsInRegion(regionName);
     autoDiscoverExitsInRegion(regionName);
   }
+}
+
+// --- World discovery mode --- //
+
+function isLoopModeActive() {
+  try {
+    return centralRegistry.getPublicFunction('loops', 'isLoopModeActive')?.() === true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Apply the session overrides for the current world choice and the given
+ * loop-mode state (worldDiscoveryMode.js has the table). Serialised: the
+ * last call's bundle is the final state.
+ */
+function syncDiscoveryOverrides(loopActive) {
+  return _applyOverrides(resolveDiscoveryOverrides({
+    worldMode: _worldDiscoveryMode,
+    loopActive: !!loopActive,
+  }));
+}
+
+/**
+ * A new world arrived: read its slot's `discovery_mode` choice. A world
+ * without the block, replacing another without it, changes nothing here —
+ * loop mode's own transitions drive the overrides as before.
+ */
+function handleRawJsonDataLoaded(payload) {
+  const playerId = payload?.selectedPlayerInfo?.playerId;
+  const next = readWorldDiscoveryMode(payload?.rawJsonData, playerId);
+  const previous = _worldDiscoveryMode;
+  _worldDiscoveryMode = next;
+  if (next === null && previous === null) return;
+
+  log('info', `[Discovery Module] World discovery mode: ${next ?? 'same as loop mode'}`);
+  const allDiscovered = next === 'off';
+  if (discoveryStateSingleton && discoveryStateSingleton.allDiscovered !== allDiscovered) {
+    discoveryStateSingleton.allDiscovered = allDiscovered;
+    // Static data may still be the previous world's; rulesLoaded re-clears.
+    if (discoveryStateSingleton.stateManager?.getStaticData?.()?.regions) {
+      discoveryStateSingleton.clearDiscovery();
+    }
+  }
+  syncDiscoveryOverrides(isLoopModeActive());
 }
 
 // --- Settings Functions ---
