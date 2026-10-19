@@ -1,0 +1,59 @@
+== L18 sweep, floor OFF (defaults)
+calls 56655, solves (scopes) 45, runs (passes) 135, escape 60.1 s; pristine wall 89.1 s
+key repeats (any): same-run 0 (0.00%), cross-run 37770 (66.7%)
+HITS (modelled cache): 37770 = 66.7% of calls — cross-pass 37770, same-pass 0; misses 18885 (not stored: digest moved 0, tripped 0); entries 18885, max per scope 595
+FALSE (a hit whose answer|asks|nodes differ from its entry's): 0; answer alone: 0
+escape time of the hits 40.1 s = 66.8% of escape, 45.1% of the pristine wall
+cost: digest before every call 8.5 s (median 0.123 ms), digest after every miss 3.3 s; escape median 0.544 ms
+NET ≈ 28.3 s = 31.8% of the pristine wall (the args' canonical text is not in this lab: D3 times it)
+== L18 sweep, floor ON
+calls 81525, solves (scopes) 45, runs (passes) 135, escape 88.5 s; pristine wall 131.3 s
+key repeats (any): same-run 0 (0.00%), cross-run 54350 (66.7%)
+HITS (modelled cache): 54350 = 66.7% of calls — cross-pass 54350, same-pass 0; misses 27175 (not stored: digest moved 0, tripped 0); entries 27175, max per scope 747
+FALSE (a hit whose answer|asks|nodes differ from its entry's): 0; answer alone: 0
+escape time of the hits 59.1 s = 66.9% of escape, 45.0% of the pristine wall
+cost: digest before every call 11.8 s (median 0.119 ms), digest after every miss 4.8 s; escape median 0.656 ms
+NET ≈ 42.6 s = 32.4% of the pristine wall (the args' canonical text is not in this lab: D3 times it)
+== staging A sword, floor off
+calls 20, solves (scopes) 1, runs (passes) 1, escape 0.0 s; pristine wall 97.6 s
+key repeats (any): same-run 0 (0.00%), cross-run 0 (0.0%)
+HITS (modelled cache): 0 = 0.0% of calls — cross-pass 0, same-pass 0; misses 20 (not stored: digest moved 0, tripped 0); entries 20, max per scope 20
+FALSE (a hit whose answer|asks|nodes differ from its entry's): 0; answer alone: 0
+escape time of the hits 0.0 s = 0.0% of escape, 0.0% of the pristine wall
+cost: digest before every call 0.1 s (median 0.379 ms), digest after every miss 0.0 s; escape median 0.227 ms
+NET ≈ -0.1 s = -0.1% of the pristine wall (the args' canonical text is not in this lab: D3 times it)
+== staging A sword, floor on
+calls 15, solves (scopes) 1, runs (passes) 1, escape 0.0 s; pristine wall 44.1 s
+key repeats (any): same-run 1 (6.67%), cross-run 0 (0.0%)
+HITS (modelled cache): 1 = 6.7% of calls — cross-pass 0, same-pass 1; misses 14 (not stored: digest moved 0, tripped 0); entries 14, max per scope 14
+FALSE (a hit whose answer|asks|nodes differ from its entry's): 0; answer alone: 0
+escape time of the hits 0.0 s = 15.2% of escape, 0.0% of the pristine wall
+cost: digest before every call 0.1 s (median 0.404 ms), digest after every miss 0.0 s; escape median 0.234 ms
+NET ≈ -0.1 s = -0.2% of the pristine wall (the args' canonical text is not in this lab: D3 times it)
+== L40 kill rung (r5-l40-part5): 0 escape calls OFF and ON
+== norm-md5 lab vs pristine
+82834f2483d202a8e577e8dba03d97d2 /tmp/claude-0/-home-user-Archipelago-CC/2f4d6e0e-1690-55e4-985b-1d7061ddd905/scratchpad/runs/d1-lab-off/A-sword.out
+de6f6e4e0dffa7bb8ee524e8e79688b7 /tmp/claude-0/-home-user-Archipelago-CC/2f4d6e0e-1690-55e4-985b-1d7061ddd905/scratchpad/runs/d1-lab-off/l18.out
+78e5d9cf9502702195d359ffd460f165 /tmp/claude-0/-home-user-Archipelago-CC/2f4d6e0e-1690-55e4-985b-1d7061ddd905/scratchpad/runs/d1-lab-off/p40.out
+7d8e280ea44d9ec0416d47b91ff9b5bf /tmp/claude-0/-home-user-Archipelago-CC/2f4d6e0e-1690-55e4-985b-1d7061ddd905/scratchpad/runs/d1-lab-on/A-sword.out
+bae5c6de0f9d512c76f75155c3256dc4 /tmp/claude-0/-home-user-Archipelago-CC/2f4d6e0e-1690-55e4-985b-1d7061ddd905/scratchpad/runs/d1-lab-on/l18.out
+78e5d9cf9502702195d359ffd460f165 /tmp/claude-0/-home-user-Archipelago-CC/2f4d6e0e-1690-55e4-985b-1d7061ddd905/scratchpad/runs/d1-lab-on/p40.out
+82834f2483d202a8e577e8dba03d97d2 /tmp/claude-0/-home-user-Archipelago-CC/2f4d6e0e-1690-55e4-985b-1d7061ddd905/scratchpad/runs/d1-pristine-off/A-sword.out
+de6f6e4e0dffa7bb8ee524e8e79688b7 /tmp/claude-0/-home-user-Archipelago-CC/2f4d6e0e-1690-55e4-985b-1d7061ddd905/scratchpad/runs/d1-pristine-off/l18.out
+78e5d9cf9502702195d359ffd460f165 /tmp/claude-0/-home-user-Archipelago-CC/2f4d6e0e-1690-55e4-985b-1d7061ddd905/scratchpad/runs/d1-pristine-off/p40.out
+7d8e280ea44d9ec0416d47b91ff9b5bf /tmp/claude-0/-home-user-Archipelago-CC/2f4d6e0e-1690-55e4-985b-1d7061ddd905/scratchpad/runs/d1-pristine-on/A-sword.out
+bae5c6de0f9d512c76f75155c3256dc4 /tmp/claude-0/-home-user-Archipelago-CC/2f4d6e0e-1690-55e4-985b-1d7061ddd905/scratchpad/runs/d1-pristine-on/l18.out
+f885a5ec99e9a75137a2562bef47d2fe /tmp/claude-0/-home-user-Archipelago-CC/2f4d6e0e-1690-55e4-985b-1d7061ddd905/scratchpad/runs/d1-pristine-on/p40.out
+== walls
+{"mode":"d1-lab-off","wl":"A-sword","rc":0,"load":1.16,"wall":106.2}
+{"mode":"d1-lab-off","wl":"l18","rc":0,"load":1.21,"wall":122.7}
+{"mode":"d1-lab-off","wl":"p40","rc":0,"load":1.09,"wall":4.9}
+{"mode":"d1-lab-on","wl":"A-sword","rc":0,"load":1.15,"wall":47.6}
+{"mode":"d1-lab-on","wl":"l18","rc":0,"load":1.08,"wall":170.8}
+{"mode":"d1-lab-on","wl":"p40","rc":0,"load":1.10,"wall":4.9}
+{"mode":"d1-pristine-off","wl":"A-sword","rc":0,"load":1.10,"wall":97.6}
+{"mode":"d1-pristine-off","wl":"l18","rc":0,"load":0.70,"wall":89.1}
+{"mode":"d1-pristine-off","wl":"p40","rc":0,"load":1.16,"wall":4.9}
+{"mode":"d1-pristine-on","wl":"A-sword","rc":0,"load":1.47,"wall":44.1}
+{"mode":"d1-pristine-on","wl":"l18","rc":0,"load":1.25,"wall":131.3}
+{"mode":"d1-pristine-on","wl":"p40","rc":0,"load":1.30,"wall":4.4}
