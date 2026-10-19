@@ -156,6 +156,8 @@ import {
     // ⛓⛓⛓ seedling-fidelity-wand D2: the `wand` verb (behind `WAND_VERB`).
     WAND_VERB, WAND_WINDOW, wandShotSpawn, wandShotVelocity, withWandVerb,
     createWandShot, stepWandShot, wandShotRect, MAGICAL_LOCK_OPEN_TICK_OFFSET,
+    // ⛓⛓⛓ hammer-phase XC: the cross-pass escape cache's key spells its arguments as the digest spells the run.
+    canonicalDigestText,
 } from './solverView.js';
 import {
     bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
@@ -11433,12 +11435,12 @@ export function noStrikeMove({ next, following, refuge, fallback = HAMMER_ESCAPE
  *   A claimed negative names its `bound` (A3): the kernel's own (`exhausted`, `start`, `horizon`), or `death`,
  *   `line`, `no-landing`, `approach`, `train`.
  */
-function pressEscape(run, opts) {
+export function pressEscape(run, opts) {
     const sink = HAMMER_ESCAPE_TRACE.sink;
-    if (sink === null) return pressEscapeOnce(run, opts, null);
+    if (sink === null) return pressEscapeScoped(run, opts, null);
     const searches = [];
     const t0 = globalThis.performance.now();
-    const out = pressEscapeOnce(run, opts, searches);
+    const out = pressEscapeScoped(run, opts, searches);
     sink({ run, caller: opts.caller ?? 'aim', t: run.ticksCompleted, pressAt: opts.pressAt, id: opts.id,
         ok: out.ok, claim: out.claim, bound: out.bound ?? null, why: out.why ?? null, searches,
         expansions: searches.reduce((a, x) => a + x.expansions, 0), ms: globalThis.performance.now() - t0 });
@@ -11455,7 +11457,378 @@ function pressEscape(run, opts) {
  */
 export const HAMMER_ESCAPE_TRACE = { sink: null };
 
-function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = true }, trace) {
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE XC — **THE CROSS-PASS ESCAPE CACHE** (`ESCAPE_CROSS_PASS_CACHE`, OFF;
+ * `SEEDLING_ESCAPE_CROSS_PASS_CACHE=1` opts a process in). EX measured that two thirds of L18's escape calls repeat
+ * ACROSS `twoPassSolve`'s passes with equal answers and work (passes 2 and 3 replay pass 1 below the declared tick),
+ * and that no key the solver could build alone was exact. Fidelity's `run.stateDigest()` is that key's missing half.
+ *
+ * THE KEY (DIGEST's D4, `CC/docs/cloud-reports/seedling-fidelity-digest.md`), per call, before it:
+ *   1. `run.stateDigest()` — everything the escape's reach reads of the run (⚠ an ESCAPE key, not a run-equivalence:
+ *      two runs with one digest may part at the next `advance`; nothing else may read this cache);
+ *   2. the call's arguments by value (`state` with its symbol keys, `at`, `keys` in order, `pressAt`, `id`,
+ *      `deadline`) — `caller` is not stored and not read;
+ *   3. what levelRun cannot see: `HAMMER_ESCAPE_BOUNDS`, `GHOST_SPINNER_PRESS.enabled`, `PRESS_KILL_COST.enabled`,
+ *      the deadline (none / live, and `fine`; a TRIPPED one bypasses the cache, below) and the progress install
+ *      (none / outside a segment / inside one).
+ * The digest is taken once per CALL, never once per tick: `equipNow` and the lazy `…StateFor` builds write inside a
+ * tick (DIGEST's 45 / 53 tick-0 misses are exactly that).
+ *
+ * THE SCOPE is one `twoPassSolve` call (`escapeCrossPassScope`, installed around each pass by `twoPassSolve.js`), and
+ * only the runs its own `makeRun` built (`adopt`). Not wider: the digest leaves the `levelSource` out (a function),
+ * so two solves over two sources could share a digest and differ; and nothing survives into the next worker solve or
+ * leg. Not narrower: a pass's repeats are across its own passes (same-pass repeats are 0.2 %, EX's EXACT row).
+ *
+ * WHAT IS STORED: a miss records its WORK as it happens — every ask of `deadlineReached('hammer-escape')`, every
+ * `onNode` (x, y, index) through `progressStatesFor`, every finished search (the trace row and `progressSearch`) —
+ * plus its answer (a copy) and the `…_COUNTS` instruments it moved. It is NOT stored when:
+ *   - a deadline tripped inside it (a trip is never an answer, js-7 condition 1);
+ *   - the digest moved across it (the call built a lazy visit state: a hit could not rebuild it, so a later call or
+ *     `advance` would read a run OFF never had);
+ *   - the scope is at its cap (`maxEntries` entries, or `maxNodes` recorded nodes): a miss, never an eviction, so no
+ *     answer depends on what was evicted first (js-7 condition 3).
+ *
+ * A HIT REPLAYS THE MISS'S WORK, in its order: each ask is a real `deadlineReached('hammer-escape')` (so the deadline's
+ * own counts, `budget.asks` by site and `shouldStop` totals are OFF's), each node goes through `progressStatesFor`,
+ * each search's row is emitted as the miss emitted it, the instruments' deltas are added back. A trip at ask k
+ * re-derives the call SILENTLY with a `shouldStop` that answers true at its k-th ask (no ask, node or emit of its own)
+ * and emits the tripped search's row: exactly what OFF returns at that ask, its expansions, nodes and deepest. Only
+ * the wall clock may differ — and memos outside the digest (the spinner forecast's one-entry memo) may be extended by
+ * a miss and not by a hit; they are exact either way, so the instruments that count their reuse can drift.
+ *
+ * `verify: true` (`SEEDLING_ESCAPE_CROSS_PASS_CACHE_VERIFY=1`, js-7 condition 2): every hit is recomputed as a miss
+ * and compared — the answer, the ask/node/search stream and the instruments' deltas. A mismatch is counted
+ * (`verifyMismatches`) and kept (`ESCAPE_CROSS_PASS_CACHE_MISMATCHES`, the first 16); the recomputed answer is the one
+ * returned, so a verify run is OFF's run plus the comparisons.
+ */
+export const ESCAPE_CROSS_PASS_CACHE = {
+    enabled: globalThis.process?.env?.SEEDLING_ESCAPE_CROSS_PASS_CACHE === '1',
+    verify: globalThis.process?.env?.SEEDLING_ESCAPE_CROSS_PASS_CACHE_VERIFY === '1',
+    maxEntries: 4096,
+    maxNodes: 2_000_000,
+};
+
+/** Run `fn` with the cache's switch set to `enabled`, restoring the previous value (`withHammerEscape`'s shape). */
+export function withEscapeCrossPassCache(enabled, fn) {
+    const was = ESCAPE_CROSS_PASS_CACHE.enabled;
+    ESCAPE_CROSS_PASS_CACHE.enabled = enabled === true;
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') {
+            return out.finally(() => { ESCAPE_CROSS_PASS_CACHE.enabled = was; });
+        }
+        ESCAPE_CROSS_PASS_CACHE.enabled = was;
+        return out;
+    } catch (e) {
+        ESCAPE_CROSS_PASS_CACHE.enabled = was;
+        throw e;
+    }
+}
+
+/**
+ * The cache's instrument (`PRESS_KILL_COST_COUNTS`' shape): every lookup's outcome, summed over every scope in the
+ * process. Read by the gate rows and the report; nothing reads it to decide. `resetEscapeCrossPassCacheCounts()`.
+ */
+export const ESCAPE_CROSS_PASS_CACHE_COUNTS = {
+    lookups: 0, hits: 0, crossPassHits: 0, misses: 0, stored: 0,
+    notStoredTripped: 0, notStoredMoved: 0, notStoredCap: 0, bypassedTripped: 0, tripReplays: 0,
+    verified: 0, verifyMismatches: 0, verifySkippedTripped: 0,
+};
+export function resetEscapeCrossPassCacheCounts() {
+    for (const k of Object.keys(ESCAPE_CROSS_PASS_CACHE_COUNTS)) ESCAPE_CROSS_PASS_CACHE_COUNTS[k] = 0;
+    ESCAPE_CROSS_PASS_CACHE_MISMATCHES.length = 0;
+}
+
+/** Verify mode's mismatches, the first 16: `{scope, t, caller, what}`. */
+export const ESCAPE_CROSS_PASS_CACHE_MISMATCHES = [];
+
+/**
+ * ⛓ The cache's trace (`HAMMER_ESCAPE_TRACE`'s shape): `null`, or handed one record per escape call on an adopted
+ * run, `{scope, run, t, caller, outcome, opts}` — `outcome` is `hit`, `miss`, `bypass` (a tripped deadline),
+ * `verified`; `opts` is the call's own argument object (a gate row re-asks a call by it). `scope` and `run` number
+ * the scopes and their runs in creation order.
+ */
+export const ESCAPE_CROSS_PASS_CACHE_TRACE = { sink: null };
+
+/** The scope the solve in hand runs under (`withEscapeCrossPassScope`) — `null` is "no cache". */
+let activeEscapeScope = null;
+let escapeScopes = 0;
+
+/**
+ * One `twoPassSolve` call's cache: empty, and it serves only the runs it `adopt`s — reached as the segment drives
+ * them, through its `Object.create(run)` view (`solveSegmentUnder`'s `viewOf`); a Proxy over a run is not reached,
+ * and is not served.
+ */
+export function escapeCrossPassScope() {
+    const runs = new WeakMap();
+    let adopted = 0;
+    return {
+        id: (escapeScopes += 1),
+        entries: new Map(),
+        nodes: 0,
+        counts: { lookups: 0, hits: 0, crossPassHits: 0, stored: 0 },
+        /** Serve `run` (a run this scope's `makeRun` built); returns it. */
+        adopt(run) {
+            if (typeof run?.stateDigest === 'function' && !runs.has(run)) runs.set(run, (adopted += 1));
+            return run;
+        },
+        /** The adopted run `run` is (or views), or `null`. */
+        innerOf(run) {
+            for (let r = run; r !== null && typeof r === 'object'; r = Object.getPrototypeOf(r)) {
+                if (runs.has(r)) return r;
+            }
+            return null;
+        },
+        indexOf: (inner) => runs.get(inner) ?? null,
+    };
+}
+
+/** Run `fn` (synchronous) under `scope` (`null`: under none — an outer scope does not reach in), restored after. */
+export function withEscapeCrossPassScope(scope, fn) {
+    const was = activeEscapeScope;
+    activeEscapeScope = scope;
+    try {
+        return fn();
+    } finally {
+        activeEscapeScope = was;
+    }
+}
+
+const ESCAPE_EV_SEARCH = 0;
+const ESCAPE_EV_ASK = 1;
+const ESCAPE_EV_NODE = 2;
+const ESCAPE_EV_END = 3;
+const ESCAPE_INSTRUMENTS = [PRESS_KILL_COST_COUNTS, STRIKE_SCAN_COST_COUNTS, PRESS_KILL_BOMBS_COUNTS,
+    REFUGE_ETA_CUT_COUNTS];
+
+const instrumentsNow = () => ESCAPE_INSTRUMENTS.map((c) => Object.values(c));
+const instrumentsSince = (before) => ESCAPE_INSTRUMENTS.map((c, j) => Object.values(c).map((v, k) => v - before[j][k]));
+const addInstruments = (delta) => ESCAPE_INSTRUMENTS.forEach((c, j) => Object.keys(c).forEach((k, i) => {
+    c[k] += delta[j][i];
+}));
+
+/** A finished escape search's row: the trace's (when one is collected) and the progress leaf's. */
+function escapeSearchEmit(trace, phase, r) {
+    if (trace !== null) trace.push({ phase, expansions: r.expansions, ok: r.ok, bound: r.bound ?? null });
+    // ⛓ hammer-phase D1 — the escape search is a progress leaf
+    if (activeProgress !== null) progressSearch(`escape-${phase}`, r);
+}
+
+/** An answer's own copy: arrays, plain objects (symbol keys too), Sets and Maps are copied, aliasing kept. */
+function copyEscapeValue(v, seen = new Map()) {
+    if (v === null || typeof v !== 'object') return v;
+    if (seen.has(v)) return seen.get(v);
+    let out;
+    if (Array.isArray(v)) {
+        out = new Array(v.length);
+        seen.set(v, out);
+        for (let i = 0; i < v.length; i += 1) out[i] = copyEscapeValue(v[i], seen);
+    } else if (v instanceof Set) {
+        out = new Set();
+        seen.set(v, out);
+        for (const x of v) out.add(copyEscapeValue(x, seen));
+    } else if (v instanceof Map) {
+        out = new Map();
+        seen.set(v, out);
+        for (const [k, x] of v) out.set(k, copyEscapeValue(x, seen));
+    } else {
+        const proto = Object.getPrototypeOf(v);
+        if (proto !== Object.prototype && proto !== null) return v;
+        out = proto === null ? Object.create(null) : {};
+        seen.set(v, out);
+        for (const k of Reflect.ownKeys(v)) {
+            if (Object.prototype.propertyIsEnumerable.call(v, k)) out[k] = copyEscapeValue(v[k], seen);
+        }
+    }
+    return out;
+}
+
+/** The cache key of one call (the docblock's 1–3), and the digest alone (the after-check compares it). */
+function escapeKeyOf(run, { state, at, keys = [], pressAt, id, deadline = true }) {
+    const digest = run.stateDigest();
+    const d = activeDeadline;
+    const p = activeProgress;
+    const { horizon, follow, cell, maxExpansions } = HAMMER_ESCAPE_BOUNDS;
+    const globals = [horizon, follow, cell, maxExpansions, GHOST_SPINNER_PRESS.enabled, PRESS_KILL_COST.enabled,
+        d === null ? 'none' : `live:${d.fine === true}`, p === null ? 'none' : (p.seg === null ? 'outside' : 'segment')];
+    return { digest, key: `${digest}|${canonicalDigestText(globals)}|${
+        canonicalDigestText({ state, at, keys, pressAt, id, deadline })}` };
+}
+
+/** A miss's recorder: the work stream it emits, and whether a deadline tripped inside it. */
+function escapeRecorder(run) {
+    const rec = { ev: [], rs: [], nodes: 0, tripped: false };
+    rec.tap = {
+        silent: false,
+        ask: () => {
+            rec.ev.push(ESCAPE_EV_ASK);
+            const stop = deadlineReached('hammer-escape');
+            if (stop) rec.tripped = true;
+            return stop;
+        },
+        onNodeFor: (n) => {
+            rec.ev.push(ESCAPE_EV_SEARCH);
+            const on = activeProgress === null ? null : progressStatesFor(run, n);
+            if (on === null) return null;
+            return (q, i) => {
+                rec.ev.push(ESCAPE_EV_NODE, q.x, q.y, i);
+                rec.nodes += 1;
+                on(q, i);
+            };
+        },
+        searched: (phase, r) => {
+            rec.ev.push(ESCAPE_EV_END, rec.rs.length);
+            rec.rs.push([phase, r]);
+        },
+    };
+    return rec;
+}
+
+/** The miss path: the escape, recorded. */
+function escapeRecorded(run, opts, trace) {
+    const rec = escapeRecorder(run);
+    const before = instrumentsNow();
+    const answer = pressEscapeOnce(run, opts, trace, rec.tap);
+    return { answer, rec, counts: instrumentsSince(before) };
+}
+
+/** OFF's answer at the k-th ask, which tripped: the call re-derived silently, the tripped search's row emitted. */
+function escapeTrippedAt(run, opts, trace, k) {
+    let asked = 0;
+    let last = null;
+    const answer = pressEscapeOnce(run, opts, null, {
+        silent: true,
+        ask: () => {
+            asked += 1;
+            return asked === k;
+        },
+        onNodeFor: () => null,
+        searched: (phase, r) => { last = [phase, r]; },
+    });
+    if (last !== null) escapeSearchEmit(trace, last[0], last[1]);
+    return answer;
+}
+
+/** A hit: the stored work stream replayed in order, then the answer's own copy. */
+function escapeReplayed(entry, run, opts, trace) {
+    const n = run.ticksCompleted;
+    const ev = entry.ev;
+    let onNode = null;
+    let asks = 0;
+    for (let p = 0; p < ev.length;) {
+        switch (ev[p]) {
+            case ESCAPE_EV_SEARCH:
+                onNode = activeProgress === null ? null : progressStatesFor(run, n);
+                p += 1;
+                break;
+            case ESCAPE_EV_ASK:
+                asks += 1;
+                if (deadlineReached('hammer-escape')) {
+                    ESCAPE_CROSS_PASS_CACHE_COUNTS.tripReplays += 1;
+                    return escapeTrippedAt(run, opts, trace, asks);
+                }
+                p += 1;
+                break;
+            case ESCAPE_EV_NODE:
+                if (onNode !== null) onNode({ x: ev[p + 1], y: ev[p + 2] }, ev[p + 3]);
+                p += 4;
+                break;
+            default: {
+                const [phase, r] = entry.rs[ev[p + 1]];
+                escapeSearchEmit(trace, phase, { ...r });
+                p += 2;
+            }
+        }
+    }
+    addInstruments(entry.counts);
+    return copyEscapeValue(entry.answer);
+}
+
+/** Verify mode: what differs between a stored entry and the same call recomputed (`null`: nothing). */
+function escapeEntryDiffers(entry, got) {
+    if (canonicalDigestText(entry.answer) !== canonicalDigestText(got.answer)) return 'answer';
+    const a = entry.ev;
+    const b = got.rec.ev;
+    if (a.length !== b.length || a.some((x, i) => !Object.is(x, b[i]))) return 'work (asks, nodes or searches)';
+    const row = ([phase, r]) => [phase, r.ok, r.bound ?? null, r.why ?? null, r.expansions, r.nodes ?? null,
+        r.deepest ?? null];
+    if (canonicalDigestText(entry.rs.map(row)) !== canonicalDigestText(got.rec.rs.map(row))) return 'search rows';
+    if (canonicalDigestText(entry.counts) !== canonicalDigestText(got.counts)) return 'instruments';
+    return null;
+}
+
+/** `pressEscapeOnce` through the scope in hand, when there is one and it adopted `run`. */
+function pressEscapeScoped(run, opts, trace) {
+    const scope = activeEscapeScope;
+    const inner = scope === null ? null : scope.innerOf(run);
+    if (inner === null) return pressEscapeOnce(run, opts, trace, null);
+    const C = ESCAPE_CROSS_PASS_CACHE_COUNTS;
+    const sink = ESCAPE_CROSS_PASS_CACHE_TRACE.sink;
+    const note = (outcome) => {
+        if (sink !== null) {
+            sink({ scope: scope.id, run: scope.indexOf(inner), t: run.ticksCompleted, caller: opts.caller ?? 'aim',
+                outcome, opts });
+        }
+    };
+    // ⛔ after a trip, nothing is read or stored (js-7 condition 1): the deadline's answers are no longer the key's
+    if (activeDeadline !== null && activeDeadline.tripped.size > 0) {
+        C.bypassedTripped += 1;
+        note('bypass');
+        return pressEscapeOnce(run, opts, trace, null);
+    }
+    C.lookups += 1;
+    scope.counts.lookups += 1;
+    const { digest, key } = escapeKeyOf(run, opts);
+    const entry = scope.entries.get(key);
+    if (entry !== undefined) {
+        C.hits += 1;
+        scope.counts.hits += 1;
+        if (entry.run !== inner) {
+            C.crossPassHits += 1;
+            scope.counts.crossPassHits += 1;
+        }
+        if (!ESCAPE_CROSS_PASS_CACHE.verify) {
+            note('hit');
+            return escapeReplayed(entry, run, opts, trace);
+        }
+        const got = escapeRecorded(run, opts, trace);
+        if (got.rec.tripped) {
+            C.verifySkippedTripped += 1;
+        } else {
+            C.verified += 1;
+            const what = escapeEntryDiffers(entry, got);
+            if (what !== null) {
+                C.verifyMismatches += 1;
+                if (ESCAPE_CROSS_PASS_CACHE_MISMATCHES.length < 16) {
+                    ESCAPE_CROSS_PASS_CACHE_MISMATCHES.push({ scope: scope.id, t: run.ticksCompleted,
+                        caller: opts.caller ?? 'aim', what });
+                }
+            }
+        }
+        note('verified');
+        return got.answer;
+    }
+    C.misses += 1;
+    note('miss');
+    const got = escapeRecorded(run, opts, trace);
+    if (got.rec.tripped) {
+        C.notStoredTripped += 1;
+    } else if (run.stateDigest() !== digest) {
+        C.notStoredMoved += 1;
+    } else if (scope.entries.size >= ESCAPE_CROSS_PASS_CACHE.maxEntries
+        || scope.nodes + got.rec.nodes > ESCAPE_CROSS_PASS_CACHE.maxNodes) {
+        C.notStoredCap += 1;
+    } else {
+        scope.entries.set(key, { run: inner, answer: copyEscapeValue(got.answer), ev: got.rec.ev, rs: got.rec.rs,
+            counts: got.counts });
+        scope.nodes += got.rec.nodes;
+        C.stored += 1;
+        scope.counts.stored += 1;
+    }
+    return got.answer;
+}
+
+function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = true }, trace, tap) {
     const n = run.ticksCompleted;
     const step = run.previewStepper();
     const NO_KEYS = new Set();
@@ -11504,10 +11877,10 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
     const safeIn = (rows) => (q, i) => q !== null && !lethalFloor(q)
         && clearOfHammersAt(run, playerBoxAt(q.x, q.y), rows, i);
     const safe = safeIn(first.rows);
+    // ⛓ hammer-phase XC: `tap` (the cache's recorder or its silent re-derivation) sees each search; `null` is today's
     const traced = (phase, r) => {
-        if (trace !== null) trace.push({ phase, expansions: r.expansions, ok: r.ok, bound: r.bound ?? null });
-        // ⛓ hammer-phase D1 — the escape search is a progress leaf
-        if (activeProgress !== null) progressSearch(`escape-${phase}`, r);
+        if (tap !== null) tap.searched(phase, r);
+        if (tap === null || !tap.silent) escapeSearchEmit(trace, phase, r);
         return r;
     };
     for (let t = at + 1; t <= L; t += 1) {
@@ -11522,8 +11895,9 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
         // ⛓ of two states with one coarse key, keep the one farther from every hammer's disc (the refuge's
         // preference, `discClearanceAt` — a robustness score, never the safety test)
         rank: (q, i) => discClearanceAt(playerBoxAt(q.x, q.y), rows, i),
-        shouldStop: deadline && activeDeadline !== null ? () => deadlineReached('hammer-escape') : null,
-        onNode: activeProgress === null ? null : progressStatesFor(run, n),
+        shouldStop: !deadline || activeDeadline === null ? null
+            : (tap === null ? () => deadlineReached('hammer-escape') : tap.ask),
+        onNode: tap !== null ? tap.onNodeFor(n) : (activeProgress === null ? null : progressStatesFor(run, n)),
     }));
     const verdict = (r, from, pre) => {
         if (r.ok) return null;
