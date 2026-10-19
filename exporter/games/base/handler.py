@@ -2099,10 +2099,13 @@ class BaseGameExportHandler(
         what the flash panel boots (`flash_panel`) and what the Seedling page
         and bot anchor the atlas on (`region_atlas`), so without them a
         Generate.py export of a Seedling world cannot drive the wasm game.
+        `_worldgen_discovery_mode.json` (the world's Discovery-mode choice,
+        `{"enabled": bool}`) re-injects the same way.
         """
         for key, filename in (
             ('flash_panel', '_worldgen_flash_panel.json'),
             ('region_atlas', '_worldgen_region_atlas.json'),
+            ('discovery_mode', '_worldgen_discovery_mode.json'),
         ):
             block = self._read_worldgen_package_json(world, filename, f'worldgen {key}')
             if block is not None:

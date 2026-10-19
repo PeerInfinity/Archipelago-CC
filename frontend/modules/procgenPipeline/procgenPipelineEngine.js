@@ -5044,6 +5044,7 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
         pinnedCanonicalItems: [],
         enableLoopMode: !!rulesJson.loop_costs?.[playerId],
         regionXpEffect: opts.regionXpEffect ?? 'cost',
+        ...discoveryModeConfig(discoveryModeOf(rulesJson, playerId)),
         itemPool,
     };
 
@@ -7261,6 +7262,24 @@ export function sphereLogRefusal(rulesJson, playerId = '1') {
 }
 
 /**
+ * A world's Discovery-mode choice for `playerId`, read back off its
+ * `discovery_mode` block: 'on' / 'off', or 'follow' when the slot has none.
+ */
+export function discoveryModeOf(rulesJson, playerId) {
+    const enabled = rulesJson?.discovery_mode?.[String(playerId)]?.enabled;
+    return enabled === true ? 'on' : enabled === false ? 'off' : 'follow';
+}
+
+/**
+ * The `discoveryMode` key a config / envelope carries: absent at 'follow', so
+ * every config written before the knob — and every default one since — keeps
+ * its bytes.
+ */
+export function discoveryModeConfig(discoveryMode) {
+    return discoveryMode && discoveryMode !== 'follow' ? { discoveryMode } : {};
+}
+
+/**
  * ⛓ bulletml N5 — call every `priceRegions` registry hook of a substrate the slot
  * uses (sorted by id): `hook({rulesJson, sphereLog, playerId, params})` writes its
  * regions' payloads against the planned walk of the embedded sphere log. A hook
@@ -7330,6 +7349,11 @@ export function buildRulesJson(grid, opts = {}) {
         // Threaded through to generateLoopCosts when enableLoopMode is
         // true.
         regionXpEffect = 'cost',
+        // The world's Discovery-mode choice for its slot: 'follow' (default —
+        // write nothing; discovery follows loop mode, as before the knob),
+        // 'on' or 'off' → `discovery_mode[playerId] = { enabled }`, which the
+        // discovery module applies on load (discovery/worldDiscoveryMode.js).
+        discoveryMode = 'follow',
         // Items granted to the player at game start (from the source
         // rules.json's `starting_items[playerId]`). Filtered to items
         // present in the compiled items pool, with `sourceItems`
@@ -7709,6 +7733,11 @@ export function buildRulesJson(grid, opts = {}) {
             };
         }
         scaffold.loop_costs = { [String(playerId)]: block };
+    }
+    if (discoveryMode === 'on' || discoveryMode === 'off') {
+        scaffold.discovery_mode = { [String(playerId)]: { enabled: discoveryMode === 'on' } };
+    } else if (discoveryMode !== 'follow' && discoveryMode != null) {
+        throw new Error(`buildRulesJson: discoveryMode must be 'follow', 'on' or 'off', got ${JSON.stringify(discoveryMode)}`);
     }
 
     return scaffold;

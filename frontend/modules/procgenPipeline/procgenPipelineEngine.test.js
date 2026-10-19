@@ -24,6 +24,8 @@ import {
     computeSourceCounts,
     moveSphereRegion, swapSphereRegions, relayoutSphereGrid,
     getRegionExits,
+    discoveryModeConfig,
+    discoveryModeOf,
 } from './procgenPipelineEngine.js';
 import { deserializeMazeWorld } from '../mazeRoom/mazeRoomEngine.js';
 import { generateSphereLog } from '../shared/procgen/forwardSimulator.js';
@@ -1945,6 +1947,25 @@ describe('buildRulesJson', () => {
         const { grid, startCell } = smallGrid();
         const out = buildRulesJson(grid, { startCell });
         expect(out).not.toHaveProperty('loop_costs');
+    });
+
+    it('discoveryMode: the default writes no discovery_mode block (byte-inert), on/off write the SLOT\'s', () => {
+        const { grid, startCell } = smallGrid();
+        const plain = buildRulesJson(grid, { startCell, enableLoopMode: true });
+        expect(plain).not.toHaveProperty('discovery_mode');
+        expect(JSON.stringify(buildRulesJson(grid, { startCell, enableLoopMode: true, discoveryMode: 'follow' })))
+            .toBe(JSON.stringify(plain));
+        const off = buildRulesJson(grid, { startCell, playerId: '3', discoveryMode: 'off' });
+        expect(off.discovery_mode).toEqual({ 3: { enabled: false } });
+        const on = buildRulesJson(grid, { startCell, discoveryMode: 'on' });
+        expect(on.discovery_mode).toEqual({ 1: { enabled: true } });
+        expect(() => buildRulesJson(grid, { startCell, discoveryMode: 'yes' })).toThrow(/discoveryMode/);
+        // Read back for an append: the config carries the key only off 'follow'.
+        expect(discoveryModeOf(off, '3')).toBe('off');
+        expect(discoveryModeOf(off, '1')).toBe('follow');
+        expect(discoveryModeConfig('follow')).toEqual({});
+        expect(discoveryModeConfig(undefined)).toEqual({});
+        expect(discoveryModeConfig('on')).toEqual({ discoveryMode: 'on' });
     });
 
     it('embeds loop_costs when enableLoopMode is true', () => {
