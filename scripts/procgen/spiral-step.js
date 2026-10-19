@@ -31,6 +31,7 @@
  *   --no-bidirectional      disable assumeBidirectional (default on)
  *   --enable-loop-mode      compute loop_costs in the rules.json
  *   --region-xp-effect E    loop-mode xp effect (default cost)
+ *   --discovery-mode M      follow (default: discovery follows loop mode) | on | off
  *   --victory-item NAME     completion item for an envelope whose ③ predates the
  *                           item layer; a fresh ③ names its own goal (`Victory`,
  *                           or none), which ④ uses instead
@@ -103,6 +104,7 @@ import {
     nextSpiralStep, detectSpiralCompleted, newSpiralEnvelope,
     serializeSpiralEnvelope, deserializeSpiralEnvelope,
 } from '../../frontend/modules/procgenPipeline/spiralSteps.js';
+import { discoveryModeConfig } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 
 argvHelp(import.meta.url);
 
@@ -140,6 +142,7 @@ const FLAGS = {
     '--no-bidirectional': W.noBidirectional,
     '--enable-loop-mode': W.enableLoopMode,
     '--region-xp-effect': W.regionXpEffect,
+    '--discovery-mode': W.discoveryMode,
     '--victory-item': flag('victoryItem', KIND.str),
     '-i': W.input,
     '--input': W.input,
@@ -410,6 +413,7 @@ function buildEnv(args) {
         seed: args.seed,
         enableLoopMode: args.enableLoopMode,
         regionXpEffect: args.regionXpEffect,
+        ...discoveryModeConfig(args.discoveryMode),
         completionConditionItem: args.victoryItem ?? resolveVictory(args.quotas),
     };
     return newSpiralEnvelope({ config, compileIn });

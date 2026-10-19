@@ -334,9 +334,12 @@ class WorldGenerator:
         # Seedling world could not boot the wasm game. The source's
         # `provenance` is NOT carried: it describes how the SOURCE document
         # was made (no page reads it), so it would mislabel an export.
+        # `discovery_mode` (the world's Discovery-mode choice) rides the same
+        # way; a slot without one writes no file (the default).
         for key, filename in (
             ('flash_panel', '_worldgen_flash_panel.json'),
             ('region_atlas', '_worldgen_region_atlas.json'),
+            ('discovery_mode', '_worldgen_discovery_mode.json'),
         ):
             block = source_json.get(key, {}).get(self.player_id)
             if not block:

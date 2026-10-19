@@ -510,7 +510,7 @@
             "id": "seedling-js-runtime-graphics-pack-boots",
             "enabled": true,
             "category": "Seedling JS runtime",
-            "_comment": "GRAPHICS G1. flashPanel.runtime = js + seedlingJsGraphics = seedling + seedlingJsCamera = follow on seedling_atlas_location: the page boots with the seedling + archipelago content packs (frontend/packs), every sheet decodes, sprites are drawn in the follow view, zero console errors; the camera switch back to room is applied live (no re-mount). seedling-js batch."
+            "_comment": "GRAPHICS G1. flashPanel.runtime = js + seedlingJsGraphics = seedling + seedlingJsCamera = follow on seedling_atlas_location: the page boots with the seedling + archipelago content packs (frontend/packs), every sheet decodes, sprites are drawn in the follow view, zero console errors; G2: the player is drawn from the pack (seedling:player/shrum) and ArrowRight/ArrowLeft play side-walk unmirrored/mirrored; the camera switch back to room is applied live (no re-mount). seedling-js batch."
         },
         {
             "id": "seedling-js-runtime-solver-opens-kill-lock",
@@ -1820,6 +1820,26 @@
             "enabled": true,
             "category": "Playback Bot",
             "_comment": "loop-mode-bot S1: the Playback Bot plays a PLAIN rules.json directly (Adventure, loop mode off, no substrate, no controller): its own checks and moves, counted only when they land. Done = every sphere-log location checked. Fast batch."
+        },
+        {
+            "id": "discovery-default-loop-override-unchanged",
+            "enabled": true,
+            "category": "discoveryMode"
+        },
+        {
+            "id": "discovery-world-off-in-loop-mode",
+            "enabled": true,
+            "category": "discoveryMode"
+        },
+        {
+            "id": "discovery-world-on-in-loop-mode",
+            "enabled": true,
+            "category": "discoveryMode"
+        },
+        {
+            "id": "discovery-world-on-without-loops",
+            "enabled": true,
+            "category": "discoveryMode"
         },
         {
             "id": "playback-bot-loop-mode-adventure",

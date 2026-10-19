@@ -6,6 +6,10 @@ Games and game modes playable through the Archipelago JSON Tools web client.
 
 Each game has its own documentation covering how to play, game mechanics, and configuration. For technical module documentation, see the [Frontend Module Reference](../modules/README.md). For the broader feature overview (including non-game features), see the [Features Index](../features/README.md).
 
+## Generated Worlds
+
+The web client generates new worlds in the browser: each region is a small playable game (a maze, a text adventure, a platformer, a run of shoot-'em-up scenes, a room of the recompiled Flash game *Seedling*), and one world can mix them. See [Procedural Generation](../features/procgen.md) and [What each substrate can do](../features/procgen-substrates.md).
+
 ## Game Modes
 
 These are alternate ways to interact with the tracker. They work with any Archipelago world.

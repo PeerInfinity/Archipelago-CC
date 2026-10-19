@@ -492,6 +492,7 @@ function stepCompile(env) {
         } : {}),
         enableLoopMode: c.enableLoopMode,
         regionXpEffect: c.regionXpEffect,
+        discoveryMode: c.discoveryMode ?? 'follow',
         procgenParams: c.procgenParams ?? null,
         completionConditionItem: c.victoryItem,
         procgenMetadata: {

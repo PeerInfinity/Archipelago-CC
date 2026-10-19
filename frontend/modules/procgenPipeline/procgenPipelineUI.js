@@ -18,6 +18,7 @@ import {
     sphereRebuildRefusal,
     Grid,
     DEFAULT_SUBSTRATE_ID,
+    discoveryModeConfig,
 } from './procgenPipelineEngine.js';
 // The sphere-growth pipeline steps + envelope serde live in the shared
 // runner now; the panel delegates each step to it (no drift with the CLI).
@@ -114,6 +115,12 @@ const REGION_XP_EFFECT_OPTIONS = [
     { value: 'speed', label: 'Speed (v2)', disabled: true },
     { value: 'both', label: 'Both (v2)', disabled: true },
     { value: 'none', label: 'None', disabled: false },
+];
+
+const DISCOVERY_MODE_OPTIONS = [
+    { value: 'follow', label: 'Same as loop mode' },
+    { value: 'on', label: 'On' },
+    { value: 'off', label: 'Off' },
 ];
 
 const DEFAULT_SCENARIO = {
@@ -2224,6 +2231,34 @@ export class ProcgenPipelineUI {
         loopModeRow.appendChild(loopModeLabel);
         loopModeRow.appendChild(loopModeInput);
         section.appendChild(loopModeRow);
+
+        // Discovery mode, separate from loop mode. 'Same as loop mode'
+        // (default) writes nothing into the world: it comes up in Discovery
+        // mode exactly when it is in loop mode. 'On' / 'Off' write the
+        // rules.json discovery_mode block, so a saved world reopens the same.
+        const discoveryRow = document.createElement('div');
+        discoveryRow.className = 'procgen-pipeline-field procgen-pipeline-discovery-mode';
+        const discoveryLabel = document.createElement('label');
+        discoveryLabel.textContent = 'Discovery mode';
+        discoveryLabel.title = 'Same as loop mode: Discovery is on exactly while loop mode is. '
+            + 'On: in loop mode, as with loop mode; without it, walking into a region reveals it. '
+            + 'Off: no Discovery, and Loops can plan through every region.';
+        const discoverySelect = document.createElement('select');
+        discoverySelect.dataset.paramKey = 'discoveryMode';
+        for (const opt of DISCOVERY_MODE_OPTIONS) {
+            const optEl = document.createElement('option');
+            optEl.value = opt.value;
+            optEl.textContent = opt.label;
+            discoverySelect.appendChild(optEl);
+        }
+        discoverySelect.value = this.params.discoveryMode ?? 'follow';
+        discoverySelect.addEventListener('change', () => {
+            this.params.discoveryMode = discoverySelect.value;
+            this._saveToLocalStorage();
+        });
+        discoveryRow.appendChild(discoveryLabel);
+        discoveryRow.appendChild(discoverySelect);
+        section.appendChild(discoveryRow);
 
         // Per-substrate parameter subsections — one per selected
         // substrate that declares panel parameters (maze: hazards;
@@ -4617,6 +4652,7 @@ export class ProcgenPipelineUI {
         this.params.startSubstrate = config.startSubstrate ?? 'auto';
         this.params.enableLoopMode = !!config.enableLoopMode;
         this.params.regionXpEffect = config.regionXpEffect ?? 'cost';
+        this.params.discoveryMode = config.discoveryMode ?? 'follow';
         if (config.substrateQuotas) this.substrateQuotas = { ...config.substrateQuotas };
         if (config.itemPool) this.scenario.items = { ...config.itemPool };
         this._saveToLocalStorage();
@@ -4661,6 +4697,7 @@ export class ProcgenPipelineUI {
             victoryItemId: config.victoryItem ?? null,
             enableLoopMode: !!config.enableLoopMode,
             regionXpEffect: config.regionXpEffect ?? 'cost',
+            ...discoveryModeConfig(config.discoveryMode),
             hazardOpts: config.hazardOpts ?? null,
         };
         const prep = {

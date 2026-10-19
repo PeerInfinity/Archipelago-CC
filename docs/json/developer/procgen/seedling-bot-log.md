@@ -23409,3 +23409,161 @@ by 12–28 bytes per segment.
 
 Lesson: *a static census is only as good as the text it reads.* RK's 200-character heads hid the deciding words of 32
 sites. Those words sat past the cut, or were split by a `' + '`.
+
+### Seedling hammer-phase SP — the string-pull lever
+
+⚖ The user (2026-10-18): *"Please launch whichever of these can run in parallel in cloud sessions."* HB's residue (2)
+named the lever: `botDriverV2.planWaypoints`' string-pull is ~57 % of the L40 solve. The report is
+`CC/docs/cloud-reports/seedling-hammer-string-pull.md`.
+
+**W0** at `b3adfad282`: the six producers' `--check`s equal HB's md5s, tapeRunner **617 `8f27f975`**, censuses
+312 · 6,002 · 566 · 138 · 280, and the bounded vitest passes 461/461. L40 (`r5-l40-part5` → (160,640)) reproduces HB:
+27 `planWaypoints` calls, 881 string-pull `controllerPathClear` calls, digest `3addc379`, `shouldStop` 167;
+`planWaypoints` is 54 % of the profile, and `plannerObstacleAt` is 96 % of that.
+
+**D1 — where the time goes.** The 881 calls make 92,035 `plannerObstacleAt` asks, and **51 % of them repeat a point
+already asked in the same `planWaypoints` call** (72 % over the campaign, 39–55 % over the generated pairs). An
+axis-aligned sample asks one point twice, every candidate from one anchor re-asks the anchor and the shared prefix of
+its axis legs, and the next anchor re-walks the same ground. Across calls the repeats rise to 88 %, but there the world
+can move, so that key would need a world version from fidelity's code. A binary search over `j` agreed with
+farthest-first at every one of 1,124 measured anchors, but monotonicity is not provable, so it was not used.
+
+**D2 — `STRING_PULL_FAST` (default OFF).** The string-pull asks `plannerObstacleAt` through a memo keyed `(x, y)` that
+lives for ONE `planWaypoints` call. That scope is the completeness proof. Inside one call, `level`, `allowTeleporter`
+and `opts` are fixed and nothing advances the run (the loop runs only read-only queries and the emit-only `plan-pull`
+heartbeat). So every live family is constant over the memo's life without being named in the key: crushers, beam towers,
+pushables, bridges, and any family added later. The same samples are asked in the same order (`controllerPathClearBy`
+is the one copy of the geometry), and only a repeat is answered from the memo. Gate rows: `stringPullFast.test.js` has
+a crusher step (L42, 1 px) and a push (L8) through ONE options object mutated in place, four plans decided by the
+X-first corner sample, and L40/L18/L6/L3 plus the L42 crusher witness OFF = ON end to end (digest, `shouldStop`,
+`budget.asks`, the whole progress stream). `check-seedling-string-pull-fast.mjs` runs the six producers and the
+killgate census OFF and ON: md5s equal, 1,275 audited `planWaypoints` calls, 0 mismatches. Five mutants (a memo that
+outlives the call, one per options object, a key without `y`, a skipped corner query, nearest-first) are each caught.
+A binary search returns the same answers on the corpus and is caught only by the progress stream, because it asks
+fewer times. ⚠ The first D4 vitest caught one defect: the silent arm's `beat && activeProgress !== null` guard broke
+the one-null-check form `solveProgressHeartbeat.test.js` pins. It is now `if (beat) { if (activeProgress !== null) … }`.
+
+**D3** (three interleaved rounds, load 1.0–1.6): L40 `planWaypoints` 4.7–5.4 s → **2.5–2.9 s (~1.84×)**, wall
+6.1–7.3 s → 4.4–4.8 s. L18 does not move (its `planWaypoints` is 0.2 %). Digest and `shouldStop` are identical in every
+run. On the page, the JS runtime's planner-walk rows pass on base and head with no difference.
+
+Lessons:
+1. *Scope can be the key.* A memo whose life ends before anything can change needs no field for what might change.
+   The time-varying families are covered by the memo's scope, not by being listed in the key.
+2. *A real corpus can miss a whole branch.* No committed solve has a plan that turns on the X-first corner sample, so
+   the mutant that skipped it passed 1,275 calls. Sampled atlas queries found four in 1,505 plans.
+### Seedling hammer-phase TC2 — the active frame (solve-progress)
+
+⚖ The user (2026-10-17): *"I want to implement all of these features, if possible"* (the solve-progress reports). This is
+Tier C's "active frame's detail", hammer #2 and fidelity #6 on the investigation's wishlist. The report is
+`CC/docs/cloud-reports/seedling-hammer-active-frame.md`.
+
+**W0** at `b3adfad282`. The six `--check`s, tapeRunner **617 `8f27f975`** and the censuses 312 · 6,002 · 566 · 138 ·
+280 are RK2's. The identity block is RK2's D4 but for ENEMY (`f0bec576`, banked at the BeamTower trio flip,
+`68b81a1a`). The bounded vitest over RK2's 30 files passes 883/883. RK's L18 / L40 digests, `shouldStop` and asks are
+unchanged.
+
+**D1 — where the values live.** Nothing has to be computed. The trace already writes all three:
+- a climb's danger is its `hit`, the walk probe's (`obstacle.id` on every rung row);
+- a rung row's `extra` carries `target` and `stance` (the kill rung's arms, BAIT, the light arm, PULL's rope);
+- the chaser arm's hunted body is chosen before its stance scan, which is 254 of L40's 372 snapshots;
+- a frontier verb has `plan.obstacle.id` and `plan.resolved.stance`;
+- the press arm's strike is `{body: plan.id, cell}` (`execKillByPressOnce`'s `cycles`, outside EX's `pressEscape`).
+
+A walk, a goal and a search carry none. Nothing lives in fidelity's files or in SP's `planWaypoints`.
+
+**D2 — `frame`.** `frame: {key, target, stance, danger} | null`, additive within `v: 2`. It is the innermost open frame
+that has detail, so a nested climb shows its own and the outer one returns when it closes. `key` is that frame's active
+node. `stance` and `danger.at` are the tile map's `[col, row]`. `danger` is `{source, tick, kind, at}`: one source,
+never the list, and `kind` is `forecast`, `volume` or `phase`, read off the source's own fields (`phase` / `axe`, then
+`kind`). `target` takes the trace's own word (`strategy.target`), because a verb's target is an obstacle (L18's
+`lock@144,112`), not always a body. `solverBot.js` gets six guarded emit-only lines.
+
+**Gates.** The digest, `shouldStop`, asks and `budget.work` are equal hooked and unhooked. Unhooked, `frameEntered()`
+stays at 0. The md5 of every snapshot with `frame` dropped is the base's on L18, L40, L6 and L3, and so are RK's v1 md5s
+and kind totals. L40's kill rung names `puncher@128,624`, the walkable tile `[8, 38]` and the trace's danger
+(`forecast`). Every L18 press frame is a strike the record kept, in order. Mutants caught: `frame` as a list, a fresh
+probe for the danger, and a read outside the null check. **D3** (24 runs): the digest and `shouldStop` are identical.
+The final snapshot grows 13 bytes (`"frame":null`), and a posted one grows 80–250 bytes.
+
+Lesson: *the trace is the instrument's first source.* Every value the view wanted was already a field of a trace row.
+The work was choosing which open frame's row is "current".
+
+### Seedling hammer-phase EX — the escape-admission cache
+
+⚖ The user (2026-10-18), after WC named the escape as the lever: an EXACT cache of `pressEscape`'s answers behind
+`ESCAPE_ADMISSION_CACHE` (default OFF), a hit replaying the miss's `shouldStop` asks and `onNode` states. **The slice
+stopped at D1 (measured):** at the defaults the honest key repeats on 0.2 % of the calls and would save 0.6 % of the L18
+sweep, against a 10 % bar. No switch was added and no solver code moved. The report is
+`CC/docs/cloud-reports/seedling-hammer-escape-cache.md`.
+
+**W0** at `b3adfad282`: the floor OFF (cap 16), `HAMMER_ESCAPE` and its fallback ON. The bounded vitest over
+`solverBot*`, `hammer*`, `solveProgress*` and `lintGateLabels` was 19 files, 327 / 327.
+
+**D1 — the key.** A scratch lab hashed every `pressEscape` call's inputs, answer and work units over the L18 sweep, one
+L18 residue under a never-tripping deadline, staging A and the L40 kill rung, floor OFF and ON. Its answers were
+byte-equal to the base's.
+- WC's figures reproduce: on L18 ON, 55.5 % of the calls repeat a (body, cell, absolute press tick), and 99.7 % of
+  those return the same certificate. But each of them is asked from a LATER tick. The world it reads (the spinners, the
+  run's tick, the forecast's rows) has moved, so none is a repeat of the full input.
+- What `pressEscape` reads from the run can only be fixed by the run object and its tick, because `levelRun` exposes no
+  state digest. Keyed that way (run, tick, the call's arguments, `CONTACT_FIDELITY` and the deadline's state), 0.2 % of
+  the calls repeat (135 OFF, 159 ON): 0.6 % / 0.5 % of the sweep's wall.
+- The real repeats are ACROSS the two-pass loop's passes: 66.7 % of the calls, 38 % of the wall OFF and 41 % ON. Each
+  residue solves three times, and passes 2 and 3 re-ask pass 1's escapes with the same answer and the same work. But
+  each pass builds a NEW run from different persistence (a declared `at` row in place of `PENDING_AT`). The claim that
+  this row is inert before its tick lives in `levelRun.js` (fidelity's file). So an honest key across passes needs a
+  state digest from `levelRun`, or a proof in it. That is the STOP's named reason.
+- Staging A asks the escape 20 times (≈ 0 s), and the L40 kill rung never asks it.
+
+**D4.** `hammerDashShape.test.js`'s DK whole-solve row moved, byte-identical, to `hammerDashShape.slow.test.js`, so the
+serial `.slow` tier runs it.
+
+Lesson: *a repeat of a key is not a repeat of the input.* "The same press tick" was asked from consecutive ticks of a
+moving world. The input repeated only where a whole solve was redone, and there the key had to name the run's world,
+which the solver cannot see.
+
+### Seedling fidelity DIGEST — `run.stateDigest()`, the key for a cross-pass escape cache
+
+⚖ The user (2026-10-18): *"I agree with that plan"*. Fidelity's digest lands first; hammer's cross-pass `strikeEscape`
+cache is then built on top of it. The need came from hammer's EX:
+- across `twoPassSolve`'s passes, 66.7 % of escape calls repeat with identical answers;
+- that is ~40 % of the L18 sweep's wall;
+- each pass is a new `createLevelRun`, so a cache needs a state key `levelRun` owns.
+The report is `CC/docs/cloud-reports/seedling-fidelity-digest.md`.
+
+**What it is.** `run.stateDigest()` is a stable hash over exactly the run state the escape can read.
+- Two AST censuses (`evidence/tools/`) found it, by code: the escape reaches 49 functions and 8 run members, and
+  through them 74 `createLevelRun` bindings.
+- It is **emit-only**. Nothing calls it by default; the identity block, the six `--check`s, tapeRunner's 617 pairs and
+  the L18 sweep's norm-md5 are all unchanged.
+- It is an **escape key, not a run equivalence**: the persistence channel and the ledgers are not in the escape's reach.
+  In particular, the kill-lock ledger's `declaredAt` differs between a `PENDING_AT` pass and an `at = T` pass from the
+  removal on, but no escape reads it.
+
+**Gates.**
+- **0 false-equal pairs** (equal digest + arguments + globals, different answer) on EX's L18 lab, OFF and floor-ON.
+- It matches **99.9 %** of EX's cross-pass repeats.
+- 98/98 field mutants behave as predicted.
+- `levelRunStateDigest.test.js` pins the `PENDING_AT` rows.
+- One digest costs 0.17 ms against a 0.70–0.86 ms median escape (≈ 43 s / 69 s net on the lab sweep).
+
+**Also fixed:** the forecast memo's comment claimed `advance` was the run's only mutator. `equipNow` (through
+`replayOntoFork`) also writes.
+
+**Hand-over to hammer** (report D4). The cache keys on the digest, plus the call's arguments by value, plus the
+solverBot-side globals: `HAMMER_ESCAPE_BOUNDS`, `GHOST_SPINNER_PRESS`, `PRESS_KILL_COST`, the deadline state and the
+progress hook. It is scoped to one `twoPassSolve`. The spinning axes' and lava chains' visit state are outside the
+escape's reach today; a slice that teaches the escape about them adds them to `stateDigestParts`.
+
+### Seedling hammer-phase SP flip — `STRING_PULL_FAST` ON by default
+
+⚖ The user (2026-10-18): flip it ON. `botDriverV2.js`'s `STRING_PULL_FAST.enabled` now defaults ON;
+`SEEDLING_STRING_PULL_FAST=0` turns it OFF for a node measurement (the corpus gate `check-seedling-string-pull-fast`
+already runs its OFF arm with `0`). The evidence is the full divergence sweep, ON (a measurement-only branch) against
+OFF at the SP head:
+- 851 / 851 legs, good 756 → 756, 0 good↔bad movers;
+- first plans equal on every leg whose seam time and arrival clock are equal;
+- solve time −10 % overall, L12 −35 %, L40's finished p90 1.1 → 0.57 s.
+
+It does **not** clear L40's 397 / 414 band: those solves run past 84 s, and ~1.4× does not bring them under 90 s.

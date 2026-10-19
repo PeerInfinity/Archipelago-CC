@@ -31,10 +31,12 @@ Where the JS arc installs it: `solveAnytime` runs one `solveSegment` per pass, s
   tiles:   { level, tile: 16, cols, rows, cells: [ [col, row, reached, firstTick], … ] } | null,
   budget:  { asks: { <site>: n }, work: { <unit>: n } },
   lastWhy: { why, kind, key, name } | null,
+  frame:   { key, target, stance: [col, row] | null,
+             danger: { source, tick, kind, at: [col, row] | null } | null } | null,
   heartbeat?: { at, count } }
 ```
 
-`heartbeat` is present once the install has beaten at least once (§3.1). It is an optional field added under `v: 1`: a reader that does not know it loses nothing. `v: 2` (hammer-phase RK, the first Tier C slice) adds `rejectionKinds` on every node and `lastWhy`; every v1 field is the same bytes (§5, §6). Hammer-phase RK2 adds, within `v: 2`, the kind `precondition` and `lastWhy.name` (§5, "v2 additions (RK2)").
+`heartbeat` is present once the install has beaten at least once (§3.1). It is an optional field added under `v: 1`: a reader that does not know it loses nothing. `v: 2` (hammer-phase RK, the first Tier C slice) adds `rejectionKinds` on every node and `lastWhy`; every v1 field is the same bytes (§5, §6). Hammer-phase RK2 adds, within `v: 2`, the kind `precondition` and `lastWhy.name` (§5, "v2 additions (RK2)"). Hammer-phase TC2 adds, within `v: 2`, `frame` (§5, "v2 additions (TC2)").
 
 ### `seq`
 
@@ -110,6 +112,32 @@ The segment's **last** rejection, `{why, kind, key, name}`, or `null` before the
 
 It is one object per segment, overwritten at each rejection, never a list, so the snapshot does not grow with the solve. An error that unwinds through several frames is one rejection. It keeps the deepest node, but its words are re-read at each frame, because they can grow on the way out: inside a segment that installed its own `shouldStop`, `withSolveDeadline` appends the deadline clause to a refusal raised after a trip.
 
+### `frame`
+
+The **active frame's detail** (hammer-phase TC2, within `v: 2`): what the frame the solver is working in now is aimed at, for the tile map to mark. It is the innermost open frame that has detail. It is `null` when no open frame has any: before the first climb, verb or strike, on a plain walk, and on every segment's final snapshot (a closed segment has no open frame). It is one object, recomputed at each `peek()` and overwritten as the active path moves. It is never a list and never aggregated.
+
+| Field | Meaning |
+|---|---|
+| `key` | the frame's active node: for a climb, its cursor (the rung or arm it is on, `…/climb/rung:kill/arm:chaser`); for a verb or an arm, its own node. It is always an `active` node of the `tree` it rides with |
+| `target` | the id the frame acts on, in the solver's own trace word (`strategy.target`): a body (`puncher@128,624`, `spinner@48,96`), or for a frontier verb its obstacle (`lock@144,112`); a rope for the PULL rung. `null` when the frame has none (the AVOID and TIME rungs) |
+| `stance` | `[col, row]`, the tile of the stance the frame's derivation chose: a kill or bait rung's stance, a light arm's pole stance, a verb's resolved stance, or the press arm's strike cell. Same tiles as `tiles.cells` (`col = floor(x / 16)` of the player's point). `null` when none is chosen yet |
+| `danger` | the danger blocking the corridor, for a climb: the walk probe's hit that opened it (`probeCorridor`). `null` for a frame with no climb (a verb, the press arm) |
+| `danger.source` | the probe's first source id: the same id as the trace row's `obstacle.id` |
+| `danger.tick` | the absolute run tick of the previewed sample that met it |
+| `danger.kind` | `forecast` (a body stepped or carried to that tick: an arrow, a chaser, a spinner, a spit, a bomb's blast), `volume` (a static volume: a hazard's census volume, a static enemy, a crusher, a lethal tile or pit, an armed lane), or `phase` (a chain's or beam's rect, or an axe's blade, at that tick). It is read off the source's own fields (`phase` / `axe`, then `kind`), never by asking the probe again |
+| `danger.at` | `[col, row]`, the tile of the sample that met it |
+
+Which frames carry which values:
+
+| Frame | `target` | `stance` | `danger` | Written where (`solverBot.js`) |
+|---|---|---|---|---|
+| a climb (`climb`, its cursor) | the rung row's `target`; the chaser arm's hunted body as soon as it is chosen | the rung row's `stance` | the climb's `hit` | `climbLadderUnder`'s head; `rowFor`'s `extra` (via `progressRow`); the chaser arm, after `interceptOrder` |
+| a frontier verb (`verb:*`) | `plan.obstacle.id` | `plan.resolved.stance` | — | after its `progressEnter` |
+| the press arm (`arm:press`) | the strike's body (`plan.id`) | the strike's cell | — | where `execKillByPressOnce` adopts a strike (the seeded and approach strikes, and each derived one) |
+| a walk, a goal, a search | — | — | — | — |
+
+A climb's `target` and `stance` belong to its rung: they reset to `null` when the cursor moves to another rung, and the climb's `danger` stays. Every value is one the solver had already computed, and `solveProgress.progressFrame` only copies it. Like the count points, each site is one line behind `activeProgress !== null`, and it calls no hook, asks no `shouldStop` and counts no work.
+
 ### `tiles`
 
 The map holds the **previewed player states** of the level the solver previewed in most recently. `null` until the first preview.
@@ -155,6 +183,8 @@ The map holds the **previewed player states** of the level the solver previewed 
 | `heartbeat` | `previewWalk`'s `combatBefore`; `deriveKillByChaser`'s `scoreAll` (§3.1) | every `HEARTBEAT_EVERY[at]`-th pass of a long loop. Emit-only: not an ask, not a work unit |
 | a deadline site | `deadlineReached`, `fineDeadlineReached`, and the `walk` check every `WALK_CHECK_TICKS` driven ticks | one ask point reached |
 | `done` | `progressSegment` | the segment's last call, after its outcome is known |
+
+`frame`'s six setter lines (§2) are not count points: they call no hook and count nothing, and only record the detail a later `peek()` reads.
 
 Under C2 and the fidelity waves, no count point sits inside `spinnerFightForecast`, `spinnerForecastWithPress`, `deriveStrike`, `execKillByPress`, `execClearTag`, `pendingEarnedClears` or `planSwordDash`. Their callers count them.
 
@@ -262,6 +292,19 @@ Additive within `v: 2` (`v` stays 2: no consumer gates on it, and a reader that 
 | the sentence rules | 75 static sites unnamed (RK's count) | 4 (RK2's fuller read: 42 → 4) | the families in the table above, each marked RK2 |
 | every v1 field; RK's kind totals on the committed solves | | **unchanged** | the v1 projection md5s and the per-solve kind totals are RK's pins, unmoved. One pinned kind moved, by design: the real `sealDoorApproach`-ON row (L113's door), `exhausted` → `precondition` |
 
+### v2 additions (hammer-phase TC2, 2026-10-18)
+
+Additive within `v: 2`, for the same reason as RK2's.
+
+| Field | before | now | Why |
+|---|---|---|---|
+| `frame` | — | `{key, target, stance, danger} \| null` at the top level | the investigation's hammer #2 / fidelity #6: what the active frame is aimed at, for the tile map. One object for the current frame only, so the snapshot stays bounded |
+| `frame.key` | — | the active node's key | ties the detail to the `tree` row it belongs to |
+| `frame.target` | — | an id or `null` | the solver's trace already writes it (`strategy.target`) |
+| `frame.stance` | — | `[col, row]` or `null` | the tile map's own cells, so the view needs no second grid |
+| `frame.danger` | — | `{source, tick, kind, at}` or `null` | a bounded summary of the climb's hit: one source (the trace's `obstacle.id`), never the source list |
+| every other field of every snapshot | | **unchanged, byte for byte** | pinned: the md5 of every snapshot of a peek-at-every-call stream with `frame` dropped is the base's, on L18, L40, L6 and L3 (§6), and so are RK's v1 projection md5s and kind totals |
+
 ## 6. Pins
 
 `frontend/modules/seedlingDemo/solveProgressHeartbeat.test.js` covers the heartbeat (§3.1): `previewWalk`'s output is byte-identical with a hook and without, on solverBot.test.js's L6 room; on L18 and L40 the answer digest and the `shouldStop` count are equal with no hook and under the real tap at 1000, 100, 50 and 0 ms; `budget.asks` holds deadline sites only and sums to the unhooked `shouldStop` count; L40 beats at least 40 times; with no hook the heartbeat never runs; and every call site is one null check with a literal key. Its three mutants are named in its header.
@@ -272,6 +315,7 @@ Additive within `v: 2` (`v` stays 2: no consumer gates on it, and a reader that 
 - that a snapshot survives `structuredClone`, and that mutating it leaves the next snapshot unchanged.
 - **`v: 2` (hammer-phase RK).** On L18 and L40 under a deadline that never trips, the answer digest is equal hooked and unhooked, and the `shouldStop` totals (165, 167) and each segment's `budget.asks` are the values the v1 emitter gave. Unhooked, no kind is looked up (`kindEntered()` does not move). On L18, L40, L6 and L3, the v1 projection of every segment's final snapshot has the md5 the v1 emitter gave. Every node's kinds sum to its rejections, none is `other`, and each solve's kind totals are pinned (L18 `pending` 10 + `exhausted` 3, L40 `danger`/`bound`/`exhausted` 1 each, L6 `exhausted`/`bound` 1 each, L3 none; ≥ 15 rejections in ≥ 4 kinds). `lastWhy` is the thrown error's `message` on L18's refused first pass (`pending`, under the press arm), and a row of the solve's own trace on L40 and L6. It is always one `{why, kind, key}` object whose key is a node of its tree. `progressKind` reads a deadline clause at a sentence's end (the cut key cannot). Every search bound and `clear-tag` reason in the source has a kind. The three fidelity switches' rungs classify the same ON and OFF, never as `other`. `solverBot.js` never calls the lookup, and the lookup reads no deadline or clock. Its four mutants are named in its header.
 - **v2 additions (hammer-phase RK2).** The real `sealDoorApproach`-ON refusal (L113's 0-seal door, clear-tag `unresolved`) is `precondition`, and its `lastWhy.name` is `SolverRefusal`. `lastWhy.name` per segment: L18 `Error` (`levelRun`'s undeclared kill lock), `PendingDeclaration`, `null` (the escape search's leaf); L40 and L6 `null` (a rung's row); L3 has no rejection. `lastWhy` keeps RK's three keys first, in order. A row per family reads one real sentence out of `solverBot.js` (its literals joined, each `${…}` filled) and pins its kind, so a reworded site turns red instead of falling to `other`. `prerequisite` and `cannot-act` are `precondition`; `unresolved` is `precondition` only by the door's lead-in (with any predicate clause after it), and the resolver's generic outcomes stay `exhausted`. Each family's sentence has the same kind under every rung name the solver writes, and the lookup reads no `.rung`. `progressErrorName` reads the error object, never its message. Its three mutants are named in the RK2 header.
+- **`frame` (hammer-phase TC2).** On L18 and L40 under a deadline that never trips, the answer digest is equal hooked and unhooked, the `shouldStop` totals and `budget.asks` are RK's, and each segment's final `budget.work` is the base's, unit for unit. Unhooked, no frame is read (`frameEntered()` does not move). On L18, L40, L6 and L3, the md5 of every snapshot of a peek-at-every-call stream with `frame` dropped is the base's, and `frame` is `null` or one object of the declared shape at every snapshot, never a list: its key is an active node of its tree, its cells are two integers, and a danger's kind is `forecast`, `volume` or `phase`. Every segment's final `frame` is `null`. On L40's kill rung, the chaser arm's frame names a body of the room (`puncher@128,624`), a walkable stance tile (`[8, 38]`) and the trace row's danger, and the rungs below it carry that danger and no target. On L18, every press-arm frame is a strike the kill's record kept (its body and its cell), shown in the record's order. The danger's kind is read off the source's fields, over every source kind `dangerMap.js` writes. Every setter site in `solverBot.js` is one guarded line, and the setter reads no deadline, clock or probe. Its three mutants are named in the TC2 header.
 
 `scripts/procgen/probe-seedling-solve-progress.mjs --compare` checks byte-identity for any staging. `--hook=tap` solves under the JS worker's own tap and prints its posts and the time spent inside it.
 

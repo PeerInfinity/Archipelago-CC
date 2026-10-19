@@ -33,6 +33,7 @@ import {
     realiseTopDownGen,
     finalizeTopDown,
     buildRulesJson,
+    discoveryModeConfig,
     computeSourceCounts,
     ruleItemWarnings,
     sphereLogRefusal,
@@ -123,6 +124,7 @@ function stepCompile(env, { onProgress = null } = {}) {
         seed: c.seed,
         enableLoopMode: !!c.enableLoopMode,
         regionXpEffect: c.regionXpEffect ?? 'cost',
+        discoveryMode: c.discoveryMode ?? 'follow',
         assumeBidirectional: c.assumeBidirectional,
         startingItems: c.startingItems,
         // ⛓ M1 — the source Menu ③ kept (null → the synthetic one).
@@ -264,7 +266,7 @@ export function grantedLibraryItems(source, playerId, substrateIds, { avoidIds =
 export function buildTopDownEnvelope({
     source, seed = 1, gridDims, regionSizeBase,
     substrateMix = null, regionParams = null, hazardOpts = null, consumableTileOpts = null,
-    sphereLog = null, enableLoopMode = false, regionXpEffect = 'cost',
+    sphereLog = null, enableLoopMode = false, regionXpEffect = 'cost', discoveryMode = 'follow',
 }) {
     const inMix = Object.entries(substrateMix ?? {}).filter(([, w]) => Number(w) > 0).map(([id]) => id);
     const { sourceItemDefs, grantedItems, startingItems } = grantedLibraryItems(source, '1', inMix);
@@ -288,6 +290,7 @@ export function buildTopDownEnvelope({
             seed,
             enableLoopMode,
             regionXpEffect,
+            ...discoveryModeConfig(discoveryMode),
             assumeBidirectional: source?.exporter?.['1']?.assume_bidirectional_exits !== false,
             startingItems,
             grantedItems,

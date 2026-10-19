@@ -41,6 +41,7 @@
  *     --param key=value           any substrate procgen param, repeatable (numbers coerced)
  *     --enable-loop-mode          embed loop_costs in the rules.json
  *     --region-xp-effect E        loop-mode xp effect: cost (default) | speed | both | none
+ *     --discovery-mode M          follow (default: discovery follows loop mode) | on | off
  *     --truncate-to-wave K        `append` only: keep K leading waves before regrowing
  *   I/O flags (all subcommands):
  *     -i, --input PATH            prior envelope JSON (required except for `plan`/`run`)
@@ -106,7 +107,7 @@ import {
     serializeEnvelope, deserializeEnvelope, newEnvelope,
 } from '../../frontend/modules/procgenPipeline/sphereSteps.js';
 import { DEFAULT_ITEMS } from '../../frontend/modules/shared/procgen/library.js';
-import { rebuildEnvelopeFromRulesJson } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
+import { discoveryModeConfig, rebuildEnvelopeFromRulesJson } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 import {
     defaultProcgenParams, activeSubstrateIds,
     collectSphereGrowthPrep, assembleRegionParams,
@@ -137,6 +138,7 @@ const FLAGS = {
     '--param': W.param,
     '--enable-loop-mode': W.enableLoopMode,
     '--region-xp-effect': W.regionXpEffect,
+    '--discovery-mode': W.discoveryMode,
     '-i': W.input,
     '--input': W.input,
     '-o': W.out,
@@ -261,6 +263,7 @@ function buildConfig(args) {
         pinnedCanonicalItems: prep.pinnedCanonicalItems,
         enableLoopMode: args.enableLoopMode,
         regionXpEffect: args.regionXpEffect,
+        ...discoveryModeConfig(args.discoveryMode),
         spheresPerBatch: args.spheresPerBatch,
         itemPool,
     };

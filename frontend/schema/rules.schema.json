@@ -523,6 +523,26 @@
       },
       "additionalProperties": false
     },
+    "discovery_mode": {
+      "type": "object",
+      "description": "Each slot's Discovery-mode choice, keyed by player slot ID (string) — the shape `loop_costs` uses (a block at the document level is not read). A slot WITHOUT an entry is the default: Discovery follows loop mode (on exactly while loop mode is, as Loop mode's session overrides). Producer: frontend/modules/procgenPipeline/procgenPipelineEngine.js `buildRulesJson` (its `discoveryMode` option — the Procgen Pipeline's \"Discovery mode\" select, the drivers' `--discovery-mode`), and exporter/games/base/handler.py (the worldgen `_worldgen_discovery_mode.json` round-trip, under the exporting player). Consumed by frontend/modules/discovery (worldDiscoveryMode.js `readWorldDiscoveryMode` reads the loaded slot's entry).",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "object",
+          "description": "One slot's choice. enabled:true — Discovery on: with loop mode, Loop mode's overrides as for a world without the block; without it, walk-to-reveal (entering a region reveals it, its locations and its exits; a click on a discovered exit moves). enabled:false — Discovery off in and out of loop mode, and every region, location and exit counts as discovered, so Loops can plan through all of them.",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "enabled"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
     "region_atlas": {
       "type": "object",
       "description": "Which region atlas each slot's graph was compiled from, keyed by player slot ID (string) — the shape `procgen_metadata`, `loop_costs` and `preset_sidecars` use (rules F2, 2026-10-05; a block at the document level is refused by name: stateManager/core/initialization.js `RETIRED_TOP_LEVEL_KEYS`, and `scripts/procgen/migrate-per-player-blocks.mjs` moves an old document). Producers: frontend/modules/procgenPipeline/regionAtlasCompiler.js `compileRegionAtlas` (via `regionAtlasReference`), the procgen pipeline's `buildRulesJson` and the APWorld Editor's initialise op (a substrate's `rulesJsonBlocks`, landed under the slot by rulesDocOps.js), and the hub's player-scope `set-key region_atlas` (the marking tool's Save, documentKeys.js `regionAtlasSetKeyOp`).",

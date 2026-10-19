@@ -1,6 +1,5 @@
 // eventCoordinator.js
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
-import settingsManager from '../../app/core/settingsManager.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { SubscriptionTracker } from '../shared/subscriptionTracker.js';
@@ -612,49 +611,34 @@ export class EventCoordinator {
   /**
    * Enable discovery mode with loop-appropriate settings.
    *
-   * Uses settingsManager session overrides ({persist: false}) so the
-   * forced values don't get baked into localStorage. When loop mode
-   * exits (or the page reloads), the user's actual saved settings
-   * resurface unchanged. Replaced the previous "save current values
-   * → overwrite → restore on exit" plumbing — that race-conditioned
-   * on reload because the saved-values map was session-only and
-   * captured the already-overridden values on the second session.
+   * The discovery module owns the overrides (discovery/worldDiscoveryMode.js
+   * — the bundle, and the loaded world's `discovery_mode` choice). They are
+   * settingsManager session overrides ({persist: false}), so the forced values
+   * never reach localStorage: when loop mode exits (or the page reloads), the
+   * user's saved settings resurface unchanged. Its writer is serialised; the
+   * enable/restore pair this replaced could interleave and leave
+   * enableDiscoveryMode stuck on after loop mode ended.
    * @private
    */
   async _enableDiscoveryForLoopMode() {
-    const prefix = 'moduleSettings.discovery.';
-    const opts = { persist: false };
-    await settingsManager.updateSetting(`${prefix}enableDiscoveryMode`, true, opts);
-    await settingsManager.updateSetting(`${prefix}regionDiscoveryTrigger`, 'onExitDiscovered', opts);
-    await settingsManager.updateSetting(`${prefix}autoDiscoverLocations`, false, opts);
-    await settingsManager.updateSetting(`${prefix}autoDiscoverExits`, false, opts);
-    await settingsManager.updateSetting(`${prefix}undiscoveredDisplay`, 'placeholder', opts);
-    await settingsManager.updateSetting(`${prefix}showUndiscoveredRegionNames`, false, opts);
-    await settingsManager.updateSetting(`${prefix}clickDiscoversRegion`, false, opts);
-    await settingsManager.updateSetting(`${prefix}disableLocationCheckUI`, true, opts);
+    await this._syncDiscoveryOverrides(true);
     logger.info('Discovery mode overridden for loop mode (session-only)');
   }
 
   /**
-   * Drop the session overrides so the user's actual saved discovery
-   * settings resurface.
+   * Drop the loop-mode overrides so the user's saved discovery settings (or
+   * the world's own discovery choice) resurface.
    * @private
    */
   async _restoreDiscoverySettings() {
-    const prefix = 'moduleSettings.discovery.';
-    for (const key of [
-      'enableDiscoveryMode',
-      'regionDiscoveryTrigger',
-      'autoDiscoverLocations',
-      'autoDiscoverExits',
-      'undiscoveredDisplay',
-      'showUndiscoveredRegionNames',
-      'clickDiscoversRegion',
-      'disableLocationCheckUI',
-    ]) {
-      await settingsManager.clearOverride(`${prefix}${key}`);
-    }
+    await this._syncDiscoveryOverrides(false);
     logger.info('Discovery overrides cleared');
+  }
+
+  /** @private */
+  async _syncDiscoveryOverrides(loopActive) {
+    const sync = centralRegistry.getPublicFunction('discovery', 'syncDiscoveryOverrides');
+    if (typeof sync === 'function') await sync({ loopActive });
   }
 }
 

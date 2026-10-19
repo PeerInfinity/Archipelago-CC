@@ -54,7 +54,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 61,
-            "count": 100,
+            "count": 101,
             "id": "check"
         },
         {
@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 78,
-            "count": 125,
+            "browser": 79,
+            "count": 126,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 426,
-        "browser": 143,
-        "cited": 222,
-        "files": 439,
+        "blockStyle": 428,
+        "browser": 144,
+        "cited": 223,
+        "files": 441,
         "lineStyle": 13,
-        "withDocblock": 439,
-        "withFlags": 355
+        "withDocblock": 441,
+        "withFlags": 357
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -4455,6 +4455,44 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling in the pipeline, T2: the ONE real Seedling room that the shuffled spiral placed among three maze rooms PLAYS in the Seedling wasm.",
             "path": "scripts/procgen/check-seedling-spiral-room-play.mjs"
+        },
+        {
+            "argvHelpers": [
+                "body"
+            ],
+            "browser": false,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "full",
+                "only"
+            ],
+            "file": "check-seedling-string-pull-fast.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "full"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "check-seedling-string-pull-fast — **`STRING_PULL_FAST` IS ANSWER-IDENTICAL ON THE REAL CORPUS** (seedling hammer-phase SP, D2).",
+            "path": "scripts/procgen/check-seedling-string-pull-fast.mjs"
         },
         {
             "argvHelpers": [],
@@ -13237,6 +13275,40 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-rng — take the generator's own stream FROM THE GAME.",
             "path": "scripts/procgen/probe-seedling-rng.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-rock-remove.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling ROCKMOVE's \"Remove bundle\", ON THE GAME (rules `rules-rock-remove`).",
+            "path": "scripts/procgen/probe-seedling-rock-remove.mjs"
         },
         {
             "argvHelpers": [

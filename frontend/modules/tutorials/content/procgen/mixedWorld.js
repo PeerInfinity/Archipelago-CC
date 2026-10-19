@@ -19,7 +19,7 @@ const matrixButton = { ...REGISTRY, selector: 'button.srp-mode[data-mode="matrix
 export const PROCGEN_MIXED_WORLD = Object.freeze({
     id: 'procgen-mixed-world',
     title: 'Procgen: a mixed world',
-    summary: 'Build one world from a maze, a text adventure, a bounce zone, a Noiz2sa stage and a generated Seedling room, and watch the Playback Bot play every kind.',
+    summary: 'Build one world from a maze, a text adventure, a bounce zone, a stretch of Noiz2sa and a generated Seedling room, and watch the Playback Bot play every kind.',
     track: 'procgen',
     status: 'ready', // ⚖ the user, 2026-10-10 (tutorial-bugs)
     doc: 'docs/json/user/tutorials/procgen-mixed-world.md',
@@ -57,7 +57,7 @@ export const PROCGEN_MIXED_WORLD = Object.freeze({
             blocks: [
                 ...look('look-text-adventure', { panel: 'textAdventureSubstrateWrapperPanel' }, 'The **Text Adventure** tab plays text-adventure regions: rooms described in words, exits and items you click.'),
                 ...look('look-bounce', { panel: 'bounceDemoPanel' }, 'The **Bounce Demo** tab plays bounce zones: a platformer whose jumps are the progression.'),
-                ...look('look-noiz2sa', { panel: 'noiz2saSubstratePanel' }, 'The **Noiz2sa** tab plays Noiz2sa stages: a bullet-hell shooter, where surviving a stage opens its exit.'),
+                ...look('look-noiz2sa', { panel: 'noiz2saSubstratePanel' }, 'The **Noiz2sa** tab plays Noiz2sa regions: a bullet-hell shooter, where each region is a run of the game\'s scenes — choose an exit, then survive the run to leave by it.'),
                 ...look('look-seedling', { panel: 'flashPanel' }, 'The **Flash Panel** plays the generated Seedling room in the original game.'),
                 ...startSeedlingGame('start-game'),
                 { prose: 'Mazes play in the **Maze Room**, as before. When the player walks into a region, the app brings its panel forward.' },

@@ -2742,6 +2742,7 @@ DESIRED_KEY_ORDER = [
     'preset_sidecars',
     'procgen_metadata',
     'loop_costs',
+    'discovery_mode',
     'world',
     'exporter',
     'game_info',
@@ -2761,6 +2762,8 @@ PLAYER_SPECIFIC_KEYS = [
     # APWORLD SUBSTRATE CHANGE P1a: both blocks are per-player maps now
     # (`{"<p>": block}`), so a per-player export slices them like the rest.
     'procgen_metadata', 'loop_costs',
+    # the world's Discovery-mode choice (`{"<p>": {"enabled": bool}}`).
+    'discovery_mode',
     # rules F2: the region-atlas compile's blocks are per-player maps too, so a
     # `_P<n>` slice carries only its own slot's (never slot 1's wiring).
     'provenance', 'region_atlas', 'flash_panel',

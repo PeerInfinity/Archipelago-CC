@@ -13,6 +13,7 @@ export const moduleInfo = {
   name: 'loops',
   title: 'Loops',
   componentType: 'loopsPanel',
+  docs: 'docs/json/user/modules/loops.md',
   icon: '🔄',
   column: 3, // Right column
   category: 'Loop Mode Modules',

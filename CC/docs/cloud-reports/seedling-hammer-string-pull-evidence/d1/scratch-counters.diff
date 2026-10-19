@@ -1,0 +1,94 @@
+diff --git a/frontend/modules/seedlingDemo/botDriverV2.js b/frontend/modules/seedlingDemo/botDriverV2.js
+index fed79e22..5e10c411 100644
+--- a/frontend/modules/seedlingDemo/botDriverV2.js
++++ b/frontend/modules/seedlingDemo/botDriverV2.js
+@@ -1017,7 +1017,41 @@ export function planTilePath(level, from, to, allowTeleporter = null, opts = {})
+  * the smoother is allowed to be approximate because something downstream
+  * is not.
+  */
++function __poa(level, x, y, allowTeleporter, opts) {
++    const D = globalThis.__d1;
++    if (!D) return plannerObstacleAt(level, x, y, allowTeleporter, opts);
++    D.poa += 1;
++    const k = `${x},${y}`;
++    if (D.callPts.has(k)) D.poaRepeatCall += 1; else D.callPts.add(k);
++    let oid = D.optsIds.get(opts); if (oid === undefined) { oid = D.optsIds.size; D.optsIds.set(opts, oid); }
++    const sk = `${level.level}|${allowTeleporter}|${oid}|${k}`;
++    if (D.solvePts.has(sk)) D.poaRepeatSolve += 1; else D.solvePts.add(sk);
++    const t = performance.now();
++    const r = plannerObstacleAt(level, x, y, allowTeleporter, opts);
++    D.poaMs += performance.now() - t;
++    if (r) D.poaHit[r.kind] = (D.poaHit[r.kind] ?? 0) + 1;
++    return r;
++}
+ export function controllerPathClear(level, a, b, allowTeleporter = null, opts = {}) {
++    const D = globalThis.__d1;
++    let __t0 = 0, __p0 = 0;
++    if (D) {
++        D.cpc += 1; __t0 = performance.now(); __p0 = D.poa;
++        let oid = D.optsIds.get(opts); if (oid === undefined) { oid = D.optsIds.size; D.optsIds.set(opts, oid); }
++        const ck = `${level.level}|${allowTeleporter}|${oid}|${a.x},${a.y}|${b.x},${b.y}`;
++        if (D.callCpc.has(ck)) D.cpcRepeatCall += 1; else D.callCpc.add(ck);
++        if (D.solveCpc.has(ck)) D.cpcRepeatSolve += 1; else D.solveCpc.add(ck);
++        const ck2 = `${level.level}|${allowTeleporter}|${a.x},${a.y}|${b.x},${b.y}`;
++        if (D.solveCpcNoOpts.has(ck2)) D.cpcRepeatSolveIgnoringOpts += 1; else D.solveCpcNoOpts.add(ck2);
++    }
++    const __r = __cpc(level, a, b, allowTeleporter, opts);
++    if (D) {
++        const n = D.poa - __p0; D.cpcMs += performance.now() - __t0;
++        D.cpcRows.push([Math.round(Math.abs(b.x - a.x)), Math.round(Math.abs(b.y - a.y)), n, __r ? 1 : 0]);
++    }
++    return __r;
++}
++function __cpc(level, a, b, allowTeleporter = null, opts = {}) {
+     const dx = b.x - a.x;
+     const dy = b.y - a.y;
+     const diagonal = Math.min(Math.abs(dx), Math.abs(dy));
+@@ -1025,7 +1059,7 @@ export function controllerPathClear(level, a, b, allowTeleporter = null, opts =
+         x: a.x + Math.sign(dx) * diagonal,
+         y: a.y + Math.sign(dy) * diagonal,
+     };
+-    if (plannerObstacleAt(level, a.x, a.y, allowTeleporter, opts)) return false;
++    if (__poa(level, a.x, a.y, allowTeleporter, opts)) return false;
+     for (const [from, to] of [[a, corner], [corner, b]]) {
+         const dist = Math.hypot(to.x - from.x, to.y - from.y);
+         const steps = Math.max(1, Math.ceil(dist / SEGMENT_SAMPLE_STEP));
+@@ -1033,8 +1067,9 @@ export function controllerPathClear(level, a, b, allowTeleporter = null, opts =
+         for (let i = 1; i <= steps; i++) {
+             const f = i / steps;
+             const p = { x: from.x + (to.x - from.x) * f, y: from.y + (to.y - from.y) * f };
+-            if (plannerObstacleAt(level, p.x, prev.y, allowTeleporter, opts)) return false;
+-            if (plannerObstacleAt(level, p.x, p.y, allowTeleporter, opts)) return false;
++            if (globalThis.__d1) { globalThis.__d1.samples += 1; if (prev.y === p.y) globalThis.__d1.sameY += 1; }
++            if (__poa(level, p.x, prev.y, allowTeleporter, opts)) return false;
++            if (__poa(level, p.x, p.y, allowTeleporter, opts)) return false;
+             prev = p;
+         }
+     }
+@@ -1256,6 +1291,10 @@ function nearestGoalNode(level, to, allowTeleporter, opts) {
+ }
+ 
+ export function planWaypoints(level, from, to, allowTeleporter = null, opts = {}) {
++    if (globalThis.__d1) { const D = globalThis.__d1; D.pw += 1; D.callPts = new Set(); D.callCpc = new Set(); D.pwT.push(performance.now()); }
++    try { return __pw(level, from, to, allowTeleporter, opts); } finally { if (globalThis.__d1) { const D = globalThis.__d1; D.pwMs += performance.now() - D.pwT.pop(); } }
++}
++function __pw(level, from, to, allowTeleporter = null, opts = {}) {
+     // ⚠ TWO PASSES, AND THE SECOND ONE IS THE POINT. The greedy string-pull
+     // below has a FALLBACK — when no smoothed segment is clear it keeps the
+     // next A* node regardless — and that node was never clearance-checked.
+@@ -1338,6 +1377,7 @@ export function planWaypoints(level, from, to, allowTeleporter = null, opts = {}
+         });
+     }
+ 
++    if (globalThis.__d1) { globalThis.__d1.pulls += 1; globalThis.__d1.pointsTotal += points.length; }
+     const kept = [];
+     let anchor = 0;
+     while (anchor < points.length - 1) {
+@@ -1349,6 +1389,7 @@ export function planWaypoints(level, from, to, allowTeleporter = null, opts = {}
+                 break;
+             }
+         }
++        if (globalThis.__d1) globalThis.__d1.anchors += 1;
+         kept.push(points[next]);
+         anchor = next;
+     }

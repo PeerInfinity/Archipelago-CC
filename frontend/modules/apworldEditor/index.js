@@ -105,6 +105,7 @@ export const moduleInfo = {
   name: 'apworldEditor',
   title: 'APWorld Editor',
   componentType: APWORLD_EDITOR_PANEL_ID,
+  docs: 'docs/json/user/modules/apworldEditor.md',
   icon: '🧩',
   column: 3,
   category: 'Procgen Infrastructure Panels',

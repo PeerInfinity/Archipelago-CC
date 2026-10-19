@@ -240,3 +240,37 @@ def test_a_package_that_ships_none_is_unchanged_by_preprocess(tmp_path, cleanup_
     handler.preprocess_world_data(world, export_data, 1)
 
     assert export_data == {"preset_sidecars": {}}
+
+
+def test_discovery_mode_round_trips_both_halves(tmp_path, cleanup_fake_module):
+    """A world's `discovery_mode` choice survives rules.json → world_generator
+    → export: the generator writes the slot's `{"enabled": ...}` to
+    `_worldgen_discovery_mode.json`, the handler re-injects it under the
+    exporting player, and the key is ordered and sliced per player. A slot
+    with no entry (the default) writes no file."""
+    from world_generator.generator import WorldGenerator
+
+    source = json.loads(FOUR.read_text(encoding="utf-8"))
+    assert "discovery_mode" not in source  # the premise: the committed fixture carries none
+    source["discovery_mode"] = {"2": {"enabled": False}}
+    src_path = tmp_path / "with_discovery.json"
+    src_path.write_text(json.dumps(source), encoding="utf-8")
+
+    for player in ("2", "3"):
+        gen = WorldGenerator(str(src_path), output_dir=str(tmp_path / f"d{player}"), force=True, player_id=player)
+        gen.load()
+        gen.generate()
+    written = tmp_path / "d2" / "_worldgen_discovery_mode.json"
+    assert json.loads(written.read_text(encoding="utf-8")) == {"enabled": False}
+    assert not (tmp_path / "d3" / "_worldgen_discovery_mode.json").exists()
+
+    world, _ = _make_fake_world(tmp_path, "fake_discovery_world", files={
+        "_worldgen_discovery_mode.json": {"enabled": False},
+    })
+    export_data = {}
+    BaseGameExportHandler().preprocess_world_data(world, export_data, 4)
+    assert export_data == {"discovery_mode": {"4": {"enabled": False}}}
+
+    lists = _export_key_lists()
+    assert "discovery_mode" in lists["DESIRED_KEY_ORDER"]
+    assert "discovery_mode" in lists["PLAYER_SPECIFIC_KEYS"]

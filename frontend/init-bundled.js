@@ -165,6 +165,7 @@ import './modules/tests/testCases/timerTests.js';
 import './modules/tests/testCases/multiclientTests.js';
 import './modules/tests/testCases/spoilerTestPanelTests.js';
 import './modules/tests/testCases/playbackBotTests.js';
+import './modules/tests/testCases/discoveryModeTests.js';
 import './modules/tests/testCases/textAdventureWrapperTests.js';
 import './modules/tests/testCases/flashSubstrateTests.js';
 import './modules/tests/testCases/runnerDemoTests.js';
