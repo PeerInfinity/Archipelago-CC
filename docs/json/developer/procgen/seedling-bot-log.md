@@ -23513,3 +23513,40 @@ The report is `CC/docs/cloud-reports/seedling-fidelity-digest.md`.
 solverBot-side globals: `HAMMER_ESCAPE_BOUNDS`, `GHOST_SPINNER_PRESS`, `PRESS_KILL_COST`, the deadline state and the
 progress hook. It is scoped to one `twoPassSolve`. The spinning axes' and lava chains' visit state are outside the
 escape's reach today; a slice that teaches the escape about them adds them to `stateDigestParts`.
+
+### Seedling fidelity BOMBBLAST — a bomb's Explosion lands on a body (`bombBlastBody`, OFF)
+
+Wave 19 (model coverage). The Explosion's `"Enemy"` arm (`Enemy.hit(4, Point, 1)` + knockback) was a by-name refusal in
+`levelRun`, and hammer BW's bombstand solve reaches it (leg 381: t1294 #10 on `bob@272,112`; with the strike lapse ON,
+t1339 #11 on `spinner@192,160`). The report is `CC/docs/cloud-reports/seedling-fidelity-bombblast.md`.
+
+**The game first.** `probe-seedling-bomb-blast-body.mjs` (p4f, headless) records every Bob/BobSoldier/Spinner row per
+tick. Two witnesses extend BW's prefixes with idle ticks:
+- t1294: #10 at (268, 118) lands on a Bob (hits 0 → 1, `hits_timer` 30, knocked back) AND a Spinner (1 → 2).
+- t1340: #11 on the same Bob (1 → 2) and the player.
+- With the lapse ON, t1339: #11 at (250, 160) KILLS a Spinner (2 → 3, velocity unchanged), and it is gone at t1350.
+- No blast can reach the BobSoldier: it is at (880, 832), and every bomb lands within 256 px of (112, 128).
+
+**The model** (switch ON): `bombBlastHitChaser` / `bombBlastHitSpinner` in `drainBombBlastsNow`. Both witnesses
+reproduce at 0 px over their WHOLE tapes, but only with `chaserSpinnerWalls` ON: from t1219, `bob@304,144` stops on a
+spinner in the game and walks through it in the model. That divergence comes before any blast and is not this arm's.
+It is fresh evidence for L40CONTACT's OFF switch.
+
+The walk's chaser forecast steps the same blasts (D3). A forecast taken at t1285 holds the Bob at 0 px against the
+live run through t1300; built OFF, it is 8 px astray with hits 0 by t1297.
+
+**Measured movers.**
+- L40 survey steps 78/108/110/112 are byte-identical OFF vs ON.
+- The local L40 sweep is 17/18 identical by key. Leg 414 moved by a seam-clock difference (4972 vs 4981), far from
+  the lobber.
+- Bounded vitest with the default flipped in code: only the two default pins go red.
+- Hammer's `plan-seedling-hammer-bw-bombstand --check`: the two blast-refusal rows move. With the lapse ON, the ON
+  solve passes #11 and returns at t1667 with 0 hits. With the lapse OFF, it passes #10 and stops at t1572 on a
+  combat-ladder exhaustion.
+- The escape's reach is unchanged (closure census: 144 units, the same read-binding set). No digest field is needed.
+
+**Trap candidates.**
+- A blast row is billed at `updateLists()`, after `ticksCompleted` has counted the tick. The arm's rows carry
+  `ticksCompleted`, an advance-time arm carries `+ 1`, and the player's `playerHits` row reads one tick on.
+- The run's `spinnerBodies` keeps a faded spinner (alpha < 0) one tick past the game's removal. This holds for a
+  press kill too. The kill ledger's `removedTick` is the game's.

@@ -34,10 +34,10 @@ withContactFidelity({ strikeIframeLapse: lapse }, () => withMovingWait(true, () 
 const keyText = keys.map((s) => [...s].sort().join('+')).join(',');
 console.log(JSON.stringify({
     lapse, bombBlastBody: CONTACT_FIDELITY.bombBlastBody ?? null, wallSec: Math.round((Date.now() - t0) / 1000),
-    ticks: keys.length, ticksCompleted: run.ticksCompleted, outcome: message ? 'threw' : (result?.outcome ?? result?.status ?? 'returned'),
+    ticks: keys.length, ticksCompleted: run.ticksCompleted, outcome: message ? 'threw' : 'returned', resultKeys: result ? Object.keys(result).slice(0, 12) : null, solved: result?.solved ?? result?.ok ?? null,
     message: message?.slice(0, 600) ?? null,
     hits: run.ledger('playerHits').map((h) => [h.t, h.source, h.id]),
-    bodyHits: (run.ledger('bombEvents') ?? []).filter((h) => h.what === 'body-hit').map((h) => [h.t, h.bomb, h.body, h.arm, h.hitsAfter, h.killed ? 'killed' : (h.refusedAt ? 'refused' : 'landed')]),
+    bodyHits: (run.ledger('bombEvents') ?? []).filter((h) => h.what === 'body-hit').map((h) => [h.t, h.id, h.body, h.arm, h.hitsAfter, h.killed ? 'killed' : (h.refusedAt ? 'refused' : 'landed')]),
     blasts: (run.ledger('bombEvents') ?? []).filter((e) => e.what === 'blast').map((e) => [e.t, e.id.split('#')[1], e.at.x, e.at.y, e.hitPlayer ? 'HIT' : '']),
     digest: typeof run.stateDigest === 'function' ? run.stateDigest() : null,
     keysMd5: createHash('md5').update(keyText).digest('hex'),

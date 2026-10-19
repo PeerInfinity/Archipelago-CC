@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 78,
-            "count": 125,
+            "browser": 79,
+            "count": 126,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 425,
-        "browser": 143,
+        "blockStyle": 426,
+        "browser": 144,
         "cited": 221,
-        "files": 438,
+        "files": 439,
         "lineStyle": 13,
-        "withDocblock": 438,
-        "withFlags": 354
+        "withDocblock": 439,
+        "withFlags": 355
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -10032,6 +10032,86 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-bobsoldier-mobiles — ⛓⛓⛓ seedling-fidelity-bobsoldier: THE BOBSOLDIER'S OWN POSITION, ASKED OF THE GAME, TICK BY SAMPLED TICK (U7's `probe-seedling-u7-puncher-mobiles.mjs`, one class over).",
             "path": "scripts/procgen/probe-seedling-bobsoldier-mobiles.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "classOf"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-bomb-blast-body.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "file"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "from"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "game-only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "reuse"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "upto"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "window"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-bomb-blast-body — ⛓ seedling-fidelity-bombblast D1/D2: A BOMB'S EXPLOSION ON A BODY, ASKED OF THE GAME TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-bomb-blast-body.mjs"
         },
         {
             "argvHelpers": [

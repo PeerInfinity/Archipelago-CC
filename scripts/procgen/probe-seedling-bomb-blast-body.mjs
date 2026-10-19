@@ -28,6 +28,7 @@
  *                            `fixtures/bombblast-witness/<n>.json` — only on a PASS of the model over that window;
  *                            `fidelityBombBlast.test.js` replays it
  */
+import { chromium } from 'playwright';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -134,7 +135,6 @@ async function main() {
 
 /** The game's rows, one sample per tick. ⛔ Takes the box (a browser instrument). */
 async function playOnGame(tape, PAGE_URL) {
-    const { chromium } = await import('playwright');
     const { gameVisibleTape } = await import(join(MODULE, 'tapeFormat.js'));
     takeBoxLockOrExit({ name: 'probe-seedling-bomb-blast-body.mjs', kind: 'browser' });
     const browser = await chromium.launch({ args: HEADLESS_LOGIC_ONLY_ARGS });
