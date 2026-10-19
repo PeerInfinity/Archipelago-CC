@@ -3,6 +3,7 @@
   "family": [
     "arrivalSolid.js",
     "arrowLaneCrossing.js",
+    "axePricedCrossing.js",
     "botDriverV1.js",
     "botDriverV2.js",
     "bulbPlacement.js",
@@ -140,9 +141,9 @@
       "form": "stepper",
       "files": {
         "botDriverV2.js": 27,
-        "solverBot.js": 42
+        "solverBot.js": 43
       },
-      "sites": 69,
+      "sites": 70,
       "seen": "both",
       "via": [
         "direct",
@@ -699,9 +700,9 @@
         "dangerMap.js": 2,
         "director.js": 4,
         "forcedHit.js": 2,
-        "solverBot.js": 57
+        "solverBot.js": 59
       },
-      "sites": 119,
+      "sites": 121,
       "seen": "both",
       "via": [
         "direct",
@@ -771,7 +772,7 @@
         "playerHits": {
           "botDriverV2.js": 6,
           "forcedHit.js": 1,
-          "solverBot.js": 21
+          "solverBot.js": 23
         },
         "presses": {
           "botDriverV2.js": 1,
@@ -839,9 +840,9 @@
         "dangerMap.js": 12,
         "director.js": 1,
         "solveProgress.js": 2,
-        "solverBot.js": 104
+        "solverBot.js": 105
       },
-      "sites": 152,
+      "sites": 153,
       "seen": "both",
       "via": [
         "direct",
@@ -981,9 +982,9 @@
       "files": {
         "botDriverV2.js": 29,
         "director.js": 1,
-        "solverBot.js": 90
+        "solverBot.js": 93
       },
-      "sites": 120,
+      "sites": 123,
       "seen": "both",
       "via": [
         "direct",
@@ -1013,7 +1014,7 @@
         },
         "inventory": {
           "botDriverV2.js": 7,
-          "solverBot.js": 37
+          "solverBot.js": 39
         },
         "inventorySlots": {
           "solverBot.js": 9
@@ -1028,7 +1029,7 @@
         },
         "primaryWeapon": {
           "botDriverV2.js": 3,
-          "solverBot.js": 14
+          "solverBot.js": 15
         },
         "saveState": {
           "director.js": 1
@@ -1184,9 +1185,9 @@
         "arrowLaneCrossing.js": 2,
         "botDriverV2.js": 115,
         "crusherBait.js": 6,
-        "solverBot.js": 441
+        "solverBot.js": 443
       },
-      "sites": 569,
+      "sites": 571,
       "seen": "both",
       "via": [
         "direct",
@@ -1230,9 +1231,9 @@
       "files": {
         "botDriverV2.js": 3,
         "dangerMap.js": 3,
-        "solverBot.js": 99
+        "solverBot.js": 100
       },
-      "sites": 105,
+      "sites": 106,
       "seen": "both",
       "via": [
         "direct",
@@ -1364,9 +1365,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "solveProgress.js": 2,
-        "solverBot.js": 230
+        "solverBot.js": 231
       },
-      "sites": 294,
+      "sites": 295,
       "seen": "both",
       "via": [
         "direct",
@@ -1625,9 +1626,9 @@
       "form": "constant",
       "files": {
         "botDriverV2.js": 4,
-        "solverBot.js": 14
+        "solverBot.js": 15
       },
-      "sites": 18,
+      "sites": 19,
       "seen": "both",
       "via": [
         "direct",
@@ -2606,9 +2607,9 @@
         "botDriverV1.js": 2,
         "botDriverV2.js": 60,
         "crusherBait.js": 2,
-        "solverBot.js": 169
+        "solverBot.js": 170
       },
-      "sites": 236,
+      "sites": 237,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2640,9 +2641,9 @@
         "botDriverV1.js": 2,
         "botDriverV2.js": 63,
         "crusherBait.js": 2,
-        "solverBot.js": 173
+        "solverBot.js": 174
       },
-      "sites": 243,
+      "sites": 244,
       "seen": "both",
       "via": [
         "const-alias",
@@ -3771,10 +3772,10 @@
       "class": "seedling",
       "form": "constant",
       "files": {
-        "solverBot.js": 9,
+        "solverBot.js": 13,
         "strikePolicy.js": 2
       },
-      "sites": 11,
+      "sites": 15,
       "seen": "static",
       "via": [
         "import"
@@ -3918,12 +3919,13 @@
       "form": "constant",
       "files": {
         "arrowLaneCrossing.js": 4,
+        "axePricedCrossing.js": 4,
         "botDriverV2.js": 1,
         "forcedHit.js": 4,
         "solverBot.js": 28,
         "strikePolicy.js": 2
       },
-      "sites": 39,
+      "sites": 43,
       "seen": "static",
       "via": [
         "import"
@@ -5211,9 +5213,9 @@
         "botDriverV2.js": 12,
         "crusherBait.js": 4,
         "encounters.js": 1,
-        "solverBot.js": 62
+        "solverBot.js": 64
       },
-      "sites": 80,
+      "sites": 82,
       "seen": "static",
       "via": [
         "import"
