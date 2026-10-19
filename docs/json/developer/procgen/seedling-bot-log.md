@@ -23594,3 +23594,35 @@ arm no longer refuses on the dwell), `f1-l5-open-lock` (it IS the `baitForecast`
 `f1-bodies-oracle.json` reads its 437 t), `l40button-witness` (at the defaults `lobberHoldRefusal` throws; with
 `movingWait` ON, l42's walk throws on the Explosion → Enemy arm, BOMBBLAST's region). Every ON tape of the first two
 also reproduces on the game; the recordings are in the report's evidence.
+
+### Seedling fidelity WATCHERTALK — the Watcher's `{114,0}` is earned by talking (switch OFF)
+
+Wave 19, planner `seedling-fidelity-planning-9`. The report is `CC/docs/cloud-reports/seedling-fidelity-watchertalk.md`.
+
+**The finding.** The AP event "talk to the Watcher" is the clear-tag `{114,0}` on `watcher@72,72`, and it gates the
+FinalDoor. The Watcher is typed "Watcher" (`Watcher.as:48`), in no solids list, so `world.solids` never holds it. Two
+spellings answered the clear-tag, and both were wrong:
+- the solver's `execClearTag` found no solid at (72,72) and took `already-clear`. Route survey step 210 "SOLVED" in
+  4 ticks this way, with `watcherTalks` and `earnedClears` empty: the flag was never written. Step 211 opened the door
+  only because the survey's grants stage `{114,0}`;
+- the JS runtime's pre-check (`jsRuntimeSolver.clearTagVerbOf`) refused the sweep's two L114 legs `no-verb` on
+  `solid:watcher` before asking the solver. With the pre-check opened and no verb, the solver "solves" them in 0 ticks.
+
+**The verb.** `CONTACT_FIDELITY.watcherTalkVerb` (OFF, byte-identical; `SEEDLING_WATCHER_TALK_VERB=0|1`).
+- `refineStrategy` selects `talk` for `solid:watcher`; the shared table is untouched.
+- `execClearTag` binds the run's watcher roster where no solid stands, and runs the existing `talk` verb
+  (`resolveTalkStrategy` + `execTalk`). It is certified by `run.watcherTalks` holding the `doneTalking()` write, as well
+  as by the `earnedClears` row.
+- A SILENT watcher answers by its census reason: a tag cleared at boot is `already-clear`; an empty `text` is
+  `cannot-act` (it never writes its tag).
+
+**Measured.** ON, both sweep legs (node bare pass, with the JS arc's one line applied in a scratch copy) solve by
+`talk` in 398 t. The survey moves only step 210: 4 t with no flag → 406 t earning `{114,0}`. Steps 209 and 211 (L113)
+are unchanged, and local OFF equals CI 39153361080 on all 212 steps. The six producer `--check`s are identical ON.
+
+**Witnesses** (p4f, game-recorded): `watchertalk-l114-clear-16` and `-32`, from (64,128) and (80,128). The game reports
+"watcher@72,72 -> 114:0 off at tick 380 (cause done, page 20 of 20)", and the model reproduces both at 0 px.
+
+**Trap candidate.** *A clear-tag that finds no body is not proof the flag is clear.* `already-clear` reads "no solid
+here" as "the build left it out". That holds for a body that is a solid; for an NPC (no collider) it is a false solve
+with 0 ticks and no write.

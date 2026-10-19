@@ -2426,6 +2426,10 @@ function refineStrategy(run, strategy, obstacle) {
     // ⛓ fidelity SEALDOOR D2 (behind `CONTACT_FIDELITY.sealDoorApproach`): the FinalDoor is opened by APPROACH. The
     // shared table keeps no row for it, so OFF the answer is the table's (none) byte for byte.
     if (CONTACT_FIDELITY.sealDoorApproach && obstacle?.kind === 'solid' && obstacle?.tag === 'finaldoor') return 'approach';
+    // ⛓ fidelity WATCHERTALK D2 (behind `CONTACT_FIDELITY.watcherTalkVerb`): the Watcher's `{114,0}` is written by its
+    // dialogue (`Watcher.doneTalking()`), so the clear-tag's verb for `solid:watcher` is `talk`. The shared table keeps
+    // no row for it, so OFF the answer is the table's (none) byte for byte.
+    if (CONTACT_FIDELITY.watcherTalkVerb && obstacle?.kind === 'solid' && obstacle?.tag === 'watcher') return 'talk';
     /**
      * ⛓⛓⛓ SEEDLING FIDELITY WAND (behind `WAND_VERB`) — the two rows the game contradicts, asked here so the
      * shared table keeps its words: a `wandlock` is a `Lock` (its group's verb, then the kill-lock arm below), and a
@@ -22856,7 +22860,30 @@ function solveSegmentUnder({
             execCrossRoomPress();
             return;
         }
-        if (!solid) {
+        /**
+         * ⛓⛓⛓ fidelity WATCHERTALK D2 (behind `CONTACT_FIDELITY.watcherTalkVerb`) — **THE WATCHER IS NO SOLID.**
+         *
+         * `Watcher.as:48` types it "Watcher", in no solids list, so `world.solids` never holds it and OFF the clear-tag
+         * for `{114,0}` (the AP event "talk to the Watcher") lands in `already-clear` below with the flag never
+         * written. ON the run's own watcher roster binds it, and the verb is the dialogue (`refineStrategy` → `talk`,
+         * `resolveTalkStrategy` + `execTalk`). A SILENT watcher is answered by its census reason: a tag cleared at boot
+         * is the game's own `already-clear`; an empty `text` never talks and so never writes its tag (`cannot-act`).
+         */
+        const watcher = CONTACT_FIDELITY.watcherTalkVerb && cls === 'watcher' && !solid
+            ? (run.watchers ?? []).find((w) => w.id === id) ?? null : null;
+        if (watcher) {
+            const silent = (run.world.silentHazards ?? []).find((h) => h.id === id);
+            if (silent && /is cleared/.test(silent.why)) {
+                done('already-clear', { why: `${id} is SILENT — ${silent.why}: the boot's persistence holds `
+                    + `{${flag.level},${flag.tag}} cleared already` });
+                return;
+            }
+            if (silent) {
+                refuseCT('cannot-act', `${id} is SILENT — ${silent.why} — so it never runs \`doneTalking()\`, the `
+                    + `only writer of its tag: no walk clears {${flag.level},${flag.tag}}`);
+            }
+        }
+        if (!solid && !watcher) {
             done('already-clear', { why: `no ${cls ?? 'solid'} stands at (${goal.at.x},${goal.at.y}) in level `
                 + `${run.level}'s live world and the ledger is silent: the build left it out, which is the `
                 + 'game\'s own `check()` for a flag the boot\'s persistence holds cleared' });
@@ -22929,6 +22956,12 @@ function solveSegmentUnder({
             before, walkTo, goal, equip, rewind,
         });
         for (const c of resolved.exempt ?? []) exemptions.add(c);
+        // ⛓ fidelity WATCHERTALK D2: the talk is certified by the run's own `watcherTalks` row for this flag.
+        if (watcher && !run.watcherTalks.some((r) => r.id === id && r.flag.level === flag.level
+            && r.flag.tag === flag.tag)) {
+            refuseCT('not-written', `'${verb}' ran (${JSON.stringify(record).slice(0, 160)}) and the run's `
+                + `\`watcherTalks\` holds no \`doneTalking()\` of ${id} writing {${flag.level},${flag.tag}}`);
+        }
         // The verb's own finish is the WORLD's (the solid gone, the lock open);
         // the GAME's write can land later (a lock's `turnOff` closes its fade).
         const waited = waitForWrite(`'${verb}' ran (${JSON.stringify(record).slice(0, 160)})`);
