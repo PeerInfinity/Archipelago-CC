@@ -41,6 +41,7 @@ User-friendly guides still to be written. See the corresponding technical refere
 - [Bounce Demo](./bounceDemo.md) — Playing a generated world's bounce regions
 - [Noiz2sa](./noiz2sa.md) — Playing a generated world's Noiz2sa regions, and training its bot
 - [Bounce Region Editor](./bounceRegionEditor.md) — Editing a generated bounce zone's platforms and seeing the rules they make
+- [Procgen Lab](./procgenLab.md) — The maze and Seedling room labs inside the app
 
 ## Core Service Modules
 

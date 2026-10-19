@@ -888,6 +888,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The Presets panel is the primary way to load a game into the application. It lists all predefined game configurations and lets you load custom files from your computer."
     },
     {
+        "path": "docs/json/user/modules/procgenLab.md",
+        "title": "Procgen Lab Panel",
+        "section": "user/modules",
+        "summary": "The Procgen Lab shows a room generator's own page inside the app: the maze lab or the Seedling lab. There you can generate a room step by step, edit it by hand, solve it, and play it — the same…"
+    },
+    {
         "path": "docs/json/user/modules/procgenPipeline.md",
         "title": "Procgen Pipeline Panel",
         "section": "user/modules",
@@ -1172,6 +1178,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/modules/pathAnalyzerPanel.md",
             "docs/json/user/modules/playbackBot.md",
             "docs/json/user/modules/presets.md",
+            "docs/json/user/modules/procgenLab.md",
             "docs/json/user/modules/procgenPipeline.md",
             "docs/json/user/modules/progressBarPanel.md",
             "docs/json/user/modules/proofGraph.md",
