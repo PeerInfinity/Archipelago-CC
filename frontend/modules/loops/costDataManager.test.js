@@ -375,6 +375,16 @@ describe('CostDataManager — tryLoadEmbedded path filtering', () => {
     globalThis.fetch = vi.fn(async () => { throw new Error('network'); });
     expect(await mgr.tryLoadEmbedded('/path/to/rules.json')).toBe(false);
   });
+
+  it('B4: a document fetched for a load a newer world has overtaken applies nothing (isCurrent false)', async () => {
+    const doc = { loop_costs: { 1: validData() } };
+    globalThis.fetch = vi.fn(async () => ({ ok: true, status: 200, json: async () => doc }));
+    expect(await mgr.tryLoadEmbedded('./presets/x/AP_1/AP_1_rules.json', '1', { isCurrent: () => false })).toBe(false);
+    expect(mgr.isLoaded()).toBe(false);
+    // the same document for a load still current applies, as before
+    expect(await mgr.tryLoadEmbedded('./presets/x/AP_1/AP_1_rules.json', '1', { isCurrent: () => true })).toBe(true);
+    expect(mgr.isLoaded()).toBe(true);
+  });
 });
 
 describe('CostDataManager — clear / exportToJSON', () => {

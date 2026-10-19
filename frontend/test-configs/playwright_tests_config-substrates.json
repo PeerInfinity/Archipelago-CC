@@ -1842,6 +1842,11 @@
             "category": "discoveryMode"
         },
         {
+            "id": "loops-inmemory-load-during-preset-load",
+            "enabled": true,
+            "category": "discoveryMode"
+        },
+        {
             "id": "playback-bot-loop-mode-adventure",
             "enabled": true,
             "category": "Playback Bot",

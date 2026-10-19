@@ -238,15 +238,19 @@ export class CostDataManager {
    *
    * @param {string} rulesPath - URL/path to the rules.json
    * @param {string|number} playerId - the loaded slot (`stateManager:rulesLoaded`'s `playerId`)
+   * @param {{isCurrent?: () => boolean}} [opts] `isCurrent`: checked after the
+   *        fetch; false (a newer world arrived meanwhile) applies nothing, so a
+   *        stale document can never overwrite the newer world's costs
    * @returns {Promise<boolean>} true if embedded loop_costs were found and loaded
    */
-  async tryLoadEmbedded(rulesPath, playerId) {
+  async tryLoadEmbedded(rulesPath, playerId, { isCurrent = null } = {}) {
     if (!rulesPath || typeof fetch !== 'function') return false;
     if (!_looksLikeRulesPath(rulesPath)) return false;
     try {
       const response = await fetch(rulesPath);
       if (!response.ok) return false;
       const rulesDoc = await response.json();
+      if (isCurrent && !isCurrent()) return false;
       return this.applyEmbeddedLoopCosts(rulesDoc?.loop_costs?.[String(playerId)], rulesPath);
     } catch (err) {
       logger.warn(`Could not load embedded loop_costs from ${rulesPath}: ${err.message}`);
