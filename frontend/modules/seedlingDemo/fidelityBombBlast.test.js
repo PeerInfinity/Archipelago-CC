@@ -142,3 +142,48 @@ describe('BOMBBLAST — the game witness bombblast-l40-bw-lapse1-idle (a blast K
         expect([kill.t, kill.id, kill.removedTick]).toEqual([1339, 'spinner@192,160', 1350]);
     });
 });
+
+/**
+ * D3 — THE WALK'S CHASER FORECAST STEPS THE SAME BLASTS. Taken after t1285 of the idle witness and stepped with the live
+ * player each tick, the forecast's `bob@272,112` is the live body: #10's blast (t1294) lands at the TOP of the next
+ * forecast step, so t1294's projection still reads hits 0 (the press's convention: `step` returns before the tick's
+ * `updateLists()`), and from t1295 position, hits and i-frame agree. A forecast built with the switch OFF never hits it.
+ */
+function forecastAgainstLive(w, fcSwitch) {
+    return withContactFidelity(ON, () => {
+        const tape = parseTape(JSON.stringify(w.tape));
+        let run = null;
+        const st = createTapeStepper(tape, { levelSource: atlasLevelSource(), onTick: (t, s, h, rn) => { run = rn; } });
+        let r = st.next();
+        while (r.value.observation.t < 1285) r = st.next();
+        const fc = withContactFidelity({ bombBlastBody: fcSwitch }, () => run.chaserForecast());
+        const rows = [];
+        for (let t = 1286; t <= 1300; t += 1) {
+            const proj = fc.step({ ...run.state });
+            r = st.next();
+            const live = run.entities('chasers').find((c) => c.id === 'bob@272,112');
+            const f = proj.find((c) => c.id === 'bob@272,112');
+            rows.push({ t, dx: Math.abs(f.x - live.x), dy: Math.abs(f.y - live.y), f: [f.hits, f.hitsTimer],
+                live: [live.hits, live.hitsTimer] });
+        }
+        return rows;
+    });
+}
+
+describe('BOMBBLAST D3 — the chaser forecast steps the blast (bombblast-l40-bw-idle, t1286..1300)', () => {
+    const w = witness('bombblast-l40-bw-idle');
+
+    it('ON: the forecast\'s bob@272,112 is the live body at 0 px, and from t1295 its hits and i-frame too', () => {
+        const rows = forecastAgainstLive(w, true);
+        expect(rows.filter((x) => x.dx > 1e-9 || x.dy > 1e-9)).toEqual([]);
+        expect(rows.find((x) => x.t === 1294)).toMatchObject({ f: [0, 0], live: [1, 30] });
+        expect(rows.filter((x) => x.t >= 1295 && (x.f[0] !== x.live[0] || x.f[1] !== x.live[1]))).toEqual([]);
+        expect(rows.find((x) => x.t === 1295).f).toEqual([1, 29]);
+    });
+
+    it('a forecast built with the switch OFF never takes the blast: hits 0 and the body astray by t1297', () => {
+        const rows = forecastAgainstLive(w, false);
+        expect(rows.filter((x) => x.t >= 1295).every((x) => x.f[0] === 0)).toBe(true);
+        expect(rows.find((x) => x.t === 1297).dy).toBeGreaterThan(5);
+    });
+});

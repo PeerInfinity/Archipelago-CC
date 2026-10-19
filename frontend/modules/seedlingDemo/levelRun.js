@@ -7963,6 +7963,23 @@ export function createLevelRun({
         };
     }
 
+    /**
+     * ⛓ fidelity BOMBBLAST D3 — the lobber and its bombs as `bombForecastNow` clones them, for a forecast that steps
+     * them ITSELF (`chaserForecastNow`: a blast moves or kills a body, so a corridor priced against the bodies must see
+     * it). `null` while `bombBlastBody` (or `bombPusherLive`) is OFF or the room holds no lobber and no bomb.
+     */
+    function bombBlastClonesNow() {
+        if (!CONTACT_FIDELITY.bombBlastBody || !CONTACT_FIDELITY.bombPusherLive) return null;
+        const pushers = [...bombPusherStateFor(level).values()];
+        const live = bombsFor(level);
+        if (pushers.length === 0 && live.length === 0) return null;
+        return {
+            lobbers: [...pushers].reverse().map((b) => ({ ...b, spawned: null })),
+            air: live.map((b) => ({ ...b, v: { ...b.v } })),
+            pending: pendingBombBlasts.filter((b) => b.level === level).map((b) => ({ id: b.id, x: b.x, y: b.y })),
+        };
+    }
+
     function chaserForecastNow() {
         // ⛔ THE SAME GATE `stepChasersNow` OPENS WITH, for its reason: under
         // these flags the run does not step a chaser, so it has no live
@@ -8011,6 +8028,59 @@ export function createLevelRun({
             ctxAfter: firstTickInWorld ? spinnerCtx({ beforeTypeFlip: false }) : null,
             walls: [],
         } : null;
+        /**
+         * ⛓⛓ fidelity BOMBBLAST D3 (`CONTACT_FIDELITY.bombBlastBody` ON) — THE BLASTS LAND ON THE FORECAST'S BODIES.
+         * The bombs and the lobber step on this forecast's own clones (`bombBlastClonesNow`), first in the tick and in
+         * `bombForecastNow`'s order (the bombs, then the lobber against the previewed player where the tick started),
+         * so they are the bombs `run.spitForecast()` prices against the same walk. A bomb removed on tick k explodes
+         * at k's `updateLists()`: AFTER the tick's press (`hit`, which the caller applies once `step` returns) and
+         * BEFORE the bodies move on k+1 — so it lands at the TOP of the next `step` (`flushBombBlasts`), on each body
+         * whose box meets the square and whose origin is in the disc: `darkHitChaser`'s `enemyHit` + knockback from
+         * the blast point (the live `bombBlastHitChaser`), a kill staged as `hit`'s is (`dyingAt`), and a forecast
+         * spinner (`chaserSpinnerWalls`) hit by `hitSpinner`. A static census body is not a forecast body (the live
+         * arm still refuses it). `null`: every other forecast is byte-identical.
+         */
+        const fbomb = bombBlastClonesNow();
+        const flushBombBlasts = () => {
+            if (fbomb === null || fbomb.pending.length === 0) return;
+            const radius = BOMB.explosionHitRadius;
+            for (const bl of fbomb.pending.splice(0, fbomb.pending.length)) {
+                const square = rect(bl.x - radius, bl.y - radius, radius * 2, radius * 2);
+                const inDisc = (px, py) => Math.sqrt((bl.x - px) ** 2 + (bl.y - py) ** 2) <= radius;
+                const from = { x: bl.x, y: bl.y };
+                for (const id of ids) {
+                    const c = bodies.get(id);
+                    if (!c || c.removed) continue;
+                    if (!(rectsOverlap(chaserBoxAt(c.tag, c.x, c.y), square) && inDisc(c.x, c.y))) continue;
+                    const { verdict } = darkHitChaser(c, from, { d: BOMB.damage, f: BOMB.force, t: '', frozen: false });
+                    if (verdict.killed && hasDropDeath(c.tag)) {
+                        c.bulbPhase = 'armed';
+                    } else if (verdict.killed) {
+                        c.dyingAt = tickOffset;
+                        c.removalTicks = removalTicksAfterHit(c.as3, deathTicks(c.tag));
+                    }
+                }
+                for (const e of fspin === null ? [] : spinnerRects(fspin.st)) {
+                    if (!(rectsOverlap(e.rect, square) && inDisc(e.spinner.x, e.spinner.y))) continue;
+                    fspin.st.byId.set(e.id, hitSpinner(fspin.st.byId.get(e.id),
+                        { force: BOMB.force, from, damage: BOMB.damage, t: '', frozen: false }));
+                }
+            }
+        };
+        const stepBombClones = (playerPos) => {
+            if (fbomb === null) return;
+            for (const s of fbomb.air) {
+                const r = stepBomb(s, { frozen: false });
+                if (r.exploded) fbomb.pending.push({ id: s.id, x: r.exploded.x, y: r.exploded.y });
+            }
+            for (let i = fbomb.air.length - 1; i >= 0; i -= 1) {
+                if (fbomb.air[i].removed) fbomb.air.splice(i, 1);
+            }
+            for (const b of fbomb.lobbers) {
+                stepBombPusher(b, { player: { x: playerPos.x, y: playerPos.y } });
+                if (b.spawned) fbomb.air.unshift(b.spawned);
+            }
+        };
         // The camera, seeded from the live one and stepped by this forecast
         // alone. `cam`/`camBand` are exclusive in `stepCameraNow` and are
         // mirrored here as such.
@@ -8083,6 +8153,9 @@ export function createLevelRun({
             step(playerPos, opts = {}) {
                 if (!first) advanceCamera(playerPos);
                 first = false;
+                // ⛓ fidelity BOMBBLAST D3: the previous tick's `updateLists()`, then this tick's bombs (they update first).
+                flushBombBlasts();
+                stepBombClones(playerPos);
                 if (fspin !== null) {
                     stepSpinners(fspin.st, fspin.ctx);
                     fspin.ctx = fspin.ctxAfter ?? fspin.ctx;
