@@ -18,7 +18,9 @@ name: Seedling divergence sweep (manual)
 #          their union printed as `REDISPATCH ids=…` (the `ids` input of the re-run, as is) — and a MIXED-BUDGET
 #          merge (rows whose `legBudgetMs` stamp differs from the plan's: S5-1's `leg_budget_ms`), and a MIXED-WINDOW merge
 #          (rows whose `upgradeWindowWork` / `dashOnlyWindow` / `dashShape` stamp differs from the plan's:
-#          `upgrade_window_work`, `dash_only_window`, `dash_shape`).
+#          `upgrade_window_work`, `dash_only_window`, `dash_shape`). It also stamps each shard's RUNNER SPEED (median
+#          page boot, play ticks/s) against the run's median, flags a shard below SLOW_RUNNER_FRACTION as
+#          SLOW-RUNNER, and tags each `timeout` row with its shard — information, never a red merge.
 #
 # ⛓ H1 (sweep-4 shard 9, run 38110831520, sat ~5 h after page 18 and named nothing): every harness step between
 # legs runs under a MEASURED wall-clock bound in the probe (`HANG_BOUNDS_MS`); one that expires prints `HANG:`,
@@ -369,6 +371,8 @@ jobs:
             grep -aE '^SHARD |^CHANNEL:|^LEG-BUDGET:|^INFO: page|^FAIL|^HANG:' "$D/shard.log" 2>/dev/null | cut -c1-300 || true
             echo "rows $(wc -l < "$D/rows-$I.jsonl" 2>/dev/null || echo 0)"
             node -e "const fs=require('fs');const m={};for(const l of fs.readFileSync('$D/rows-$I.jsonl','utf8').split('\n').filter(Boolean)){const e=JSON.parse(l).end;m[e]=(m[e]||0)+1}console.log(JSON.stringify(m))" 2>/dev/null || true
+            # ⛓ RUNNER SPEED — this shard's median page boot and play rate; the merge compares them across shards
+            node scripts/procgen/seedlingDivergenceMerge.js --shard-stamp "$D/rows-$I.jsonl" "$D/shard.log" 2>/dev/null || true
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
