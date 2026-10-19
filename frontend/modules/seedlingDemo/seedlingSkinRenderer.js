@@ -45,7 +45,13 @@
  * ⛓ G2: the player's sprites come from `seedlingPlayerSkin.js` (`playerOps`)
  * through `opts.playerSprites`; without them the player is the white hitbox.
  *
- * ⛔ NOT YET (G3+ of the ladder): enemies, live pushables / broken rocks / opened chests / burned trees (every
+ * ⛓ G3: the enemies, spinners and arrows (`seedlingEnemySkin.enemyOps`) come
+ * through `opts.entitySprites`, Y-sorted with everything else; the AP items
+ * drawn as their looks (`seedlingEnemySkin.apItemOps`) through
+ * `opts.apItemSprites`, which then replace G1's logo-for-every-item. Without
+ * them the list is G1/G2's, op for op.
+ *
+ * ⛔ NOT YET (G4+ of the ladder, and G3's remaining classes): live pushables / broken rocks / opened chests / burned trees (every
  * solid with a run-changeable id stays a rectangle, at its START position —
  * the rect view's known limitation), grass blades, the bridge's opening, the
  * lighting passes, and the torches' `flip` attribute (the world does not keep
@@ -273,9 +279,14 @@ const sprite = (art, key, frame, at, extra = {}) => {
  * @param {object[]} [opts.playerSprites] the player's sprite ops (`seedlingPlayerSkin.playerOps`, G2); when
  *   non-empty they replace the white hitbox and are Y-sorted with everything else
  * @param {object[]} [opts.apItems] uncollected AP items (`{rect}`)
+ * @param {object[]} [opts.apItemSprites] the AP items' ops (`seedlingEnemySkin.apItemOps`, G3); when given they
+ *   replace the logo drawn for each of `apItems`
+ * @param {object[]} [opts.entitySprites] every other body's ops (`seedlingEnemySkin.enemyOps`, G3), Y-sorted
  * @param {Function} [opts.mask] the autotiler (a test's MUTANT; default `autotileMask`)
  */
-export function roomOps(world, art, { level, tick = 0, player = null, playerSprites = null, apItems = [], mask = autotileMask } = {}) {
+export function roomOps(world, art, {
+    level, tick = 0, player = null, playerSprites = null, apItems = [], apItemSprites = null, entitySprites = null, mask = autotileMask,
+} = {}) {
     const plan = planFor(world, level, mask);
     const ops = [];
     const rectOp = (rect, colour, alpha, layer) => ({ rect, colour, alpha, layer });
@@ -313,13 +324,15 @@ export function roomOps(world, art, { level, tick = 0, player = null, playerSpri
 
     for (const tp of world.teleporters) if (!tp.deactivated) ops.push(rectOp(tp.rect, TELEPORTER_COLOUR, 0.45, -Infinity));
     for (const p of world.pickups ?? []) ops.push(rectOp(p.rect, AP_ITEM_COLOUR, 0.5, -p.rect.bottom));
-    for (const a of apItems) {
+    if (apItemSprites) ops.push(...apItemSprites);
+    else for (const a of apItems) {
         const fallback = rectOp(a.rect, AP_ITEM_COLOUR, 1, -a.rect.bottom);
         const centre = { x: (a.rect.x + a.rect.right) / 2, y: (a.rect.y + a.rect.bottom) / 2 };
         ops.push(has('archipelago:pickup/item')
             ? sprite(art, 'archipelago:pickup/item', 0, centre, { layer: -a.rect.bottom, fallback })
             : fallback);
     }
+    if (entitySprites?.length) ops.push(...entitySprites);
     if (playerSprites?.length) ops.push(...playerSprites);
     else if (player) ops.push(rectOp(player, PLAYER_COLOUR, 0.95, -player.bottom));
 

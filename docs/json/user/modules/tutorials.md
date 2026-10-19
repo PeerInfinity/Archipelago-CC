@@ -122,6 +122,7 @@ These panels are deliberately left out of the tutorials:
 | Tile Map Analyzer | Currently a failed experiment. |
 | Meta Game | Deprecated (an early draft of the procgen idea). |
 | Progress Bars | Deprecated, with the Meta Game panel. |
+| Flash Substrate | A placeholder page, not a substrate: no world uses it. |
 
 <!-- END GENERATED tutorial lists -->
 
