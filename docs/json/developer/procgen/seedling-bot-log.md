@@ -23922,3 +23922,39 @@ witness rows (2195 → 1216, 1629 → 778: refusals whose kill crosses a death).
 - A work unit is a deadline ask, and the press kill asks almost none. A leg can spend its whole wall budget inside
   one rung while its work budget is untouched, so "ran out of units" and "ran out of time" name different rungs.
 - Refusing a strike candidate IS waiting: a strikeless press-kill tick takes a refuge and derives again.
+
+### Seedling hammer-phase RR — the orphaned R-ladder producer reds, and the CI row
+
+⚖ The user approved the slice on 2026-10-19. At `d8fa8e0b19`, 7 of the 93 producer `--check`s were red
+(90 `plan-seedling-*` and the 3 `regenerate-r{2,3,4}-tapes`), and nothing ran them. The report is
+`CC/docs/cloud-reports/seedling-hammer-rladder-reds.md`.
+
+**Fixed in the producer or its check. No tape changed.**
+
+| producer | first bad | cause | fix |
+|---|---|---|---|
+| `r5-conch` | `84ebe05dcb` | `buildTape` v5 (`pins`) needs v4 (`equips`) | `equips: []` in the relax; `--write` byte-identical |
+| `r5-feather` | `84ebe05dcb`, then `bb156222b6` | the same; then a pickup's own tag reaches `earnedClears` | `equips: []`; the opener set adds the declared pickups in `PICKUP_CLEARS_OWN_TAG`. The route is unchanged |
+| `r6-shieldboss` | `3b37466df7` (its own) | the run logs `removeRequested`, which the check never expected | assert all four instants, with `removed` one tick after `removeRequested` |
+| `pushblock-witness` | `f2baacde0a` | the dead-frame re-pin edited the authored fixture by text | author v5 + `pins: ["dead_frames"]`, on one line as the re-pin wrote it |
+| `r7-attribution` | `f2baacde0a` | the re-pin moved R7's three recorded v≤3 tapes to v5 | a recorded tape now ≥ v4 has left the domain, and the check names it |
+
+**STOP (the honest fix is a re-record): `regenerate-r3/r4-tapes`.** First bad is `0670ca91e6` (WATCHERFLIP D1: a
+silent watcher is no planner volume). Through the torch segment the synthesizer now finds a route 17 ticks shorter
+(1964 → 1947 on `*-walk-3-torch`).
+
+**The CI row.** The `Producer --checks` job in `unittests_frontend.yml` runs `ci-producer-checks.mjs`. It is a merge
+gate: no `continue-on-error` and no submodules.
+- The roster is a glob.
+- `plan-seedling-r7-ends-meet` is EXCLUDED because it needs a browser and the wasm build. It already runs as a browser
+  arm.
+- r3/r4 are KNOWN_RED with an exact DIFFERS set, so any other drift, or the debt being paid, turns the row red.
+
+**Hand-overs.**
+- Re-record `r3/r4-walk-3-torch` and `r3/r4-walk-full`, and fix their one-line `pins` formatting.
+- `r5-feather --write` no longer emits its fixture (1735 → 1534 t). First bad is `5ec1edb6bd` (WATER_STEP_COST).
+- `r6-shield-kill` has never been what its producer emits: the talk starts one tick earlier in the fixture. This dates
+  from the introducing commit.
+
+**Trap candidate.** A `--check` that never compares bytes can go green while `--write` would move the fixture (feather,
+shieldboss). Green here means the producer's asserts hold, not that the tape is its output.
