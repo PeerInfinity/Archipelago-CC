@@ -426,12 +426,12 @@
       "form": "live-state",
       "files": {
         "arrowLaneCrossing.js": 1,
-        "botDriverV2.js": 101,
+        "botDriverV2.js": 102,
         "crusherBait.js": 3,
         "dangerMap.js": 17,
         "solverBot.js": 148
       },
-      "sites": 270,
+      "sites": 271,
       "seen": "both",
       "via": [
         "direct"
@@ -509,7 +509,7 @@
           "solverBot.js": 9
         },
         "openActivators": {
-          "botDriverV2.js": 22,
+          "botDriverV2.js": 23,
           "solverBot.js": 18
         },
         "openBridges": {
@@ -865,10 +865,11 @@
       "class": "physics",
       "form": "geometry-query",
       "files": {
+        "botDriverV2.js": 2,
         "dangerMap.js": 1,
         "solverBot.js": 13
       },
-      "sites": 14,
+      "sites": 16,
       "seen": "both",
       "via": [
         "direct"
@@ -3918,12 +3919,12 @@
       "form": "constant",
       "files": {
         "arrowLaneCrossing.js": 4,
-        "botDriverV2.js": 1,
+        "botDriverV2.js": 3,
         "forcedHit.js": 4,
         "solverBot.js": 28,
         "strikePolicy.js": 2
       },
-      "sites": 39,
+      "sites": 41,
       "seen": "static",
       "via": [
         "import"

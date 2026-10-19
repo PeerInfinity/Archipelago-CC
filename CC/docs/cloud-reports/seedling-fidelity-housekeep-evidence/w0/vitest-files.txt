@@ -50,6 +50,7 @@ frontend/modules/seedlingDemo/fidelityWatcher.test.js
 frontend/modules/seedlingDemo/ghostSword.test.js
 frontend/modules/seedlingDemo/jsRuntimeDeclarations.test.js
 frontend/modules/seedlingDemo/jsRuntimeSolverEventGoal.test.js
+frontend/modules/seedlingDemo/jsRuntimeWalker.test.js
 frontend/modules/seedlingDemo/levelRunStateDigest.test.js
 frontend/modules/seedlingDemo/levelWorld.test.js
 frontend/modules/seedlingDemo/magicalLock.test.js

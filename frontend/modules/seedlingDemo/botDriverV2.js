@@ -387,6 +387,9 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
         // that drowns. Threading it belongs with the leg plan, at the slice
         // that first needs a hazard-crossing leg.
         inventory = null,
+        // ⛓ housekeep D3: the NINTH forwarded family, only under `CONTACT_FIDELITY.walkerBeamTowers` (OFF: dropped, as
+        // `R8_NORMALIZE_LIVE_BATCH.plannerDropsSixFamilies` says). A drifted tower's Solid, by `beamTowerId`.
+        beamTowers = null,
     } = opts;
     const lethalSafe = inventory ?? EMPTY_INVENTORY;
     const box = grow(playerBoxAt(x, y), margin);
@@ -418,6 +421,7 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
         ...(liveBag ?? normalizeLiveOpts({
             openActivators, openBridges, pushables, brokenRocks,
             pulledRopes, openChests, burnedTrees, crushers,
+            ...(CONTACT_FIDELITY.walkerBeamTowers ? { beamTowers } : {}),
         })),
         // ⚠ THE POLICY KEYS RIDE ON TOP OF THE BRANDED BAG, not inside it.
         // `normalizeLiveOpts` drops unknown keys by design, and
@@ -4861,7 +4865,17 @@ export function livePerVisitOpts(run) {
         // means "still a solid" — an unwoken BossTotem is a Solid, so the
         // key expresses the WAKE rather than the wall.
         bosses: run.entities('bosses'),
+        // ⛓ housekeep D3 (`CONTACT_FIDELITY.walkerBeamTowers`, OFF): the drifting BeamTower Solids, the run's own
+        // (`liveGeometryOpts`), so the walker's planner and the verbs' probes stop reading the PLACEMENT. Absent
+        // OFF, and under noclip (no family is stepped there: `openActivators` is null).
+        ...(CONTACT_FIDELITY.walkerBeamTowers ? { beamTowers: walkerBeamTowersOf(run) } : {}),
     });
+}
+
+/** ⛓ housekeep D3 — the run's drifted beam-tower Solids (`{id, rect, y}` by id), or null (noclip, or none here). */
+function walkerBeamTowersOf(run) {
+    if (run.entities('openActivators') === null || typeof run.liveGeometryOpts !== 'function') return null;
+    return run.liveGeometryOpts().beamTowers ?? null;
 }
 function liveGeometryOpts(run, extra = {}) {
     return { ...livePerVisitOpts(run), avoidVolumes: false, ...extra };
