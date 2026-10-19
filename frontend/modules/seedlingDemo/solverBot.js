@@ -18281,6 +18281,37 @@ function corridorLength(from, wps) {
  * @param {object} o.planOpts  the walk's own `solverPlanOpts`
  * @param {(wps: object[]) => {hit: object|null, truncated: object|null, ticks: number}} o.certify
  */
+/**
+ * ⛓⛓ SEEDLING FIDELITY L40GUARD D3 — **IS THE AIM'S OWN TILE INSIDE A LIVE BODY'S DANGER?** (`coveredGoalRefusal`)
+ *
+ * The planner's own goal-tile test (`planTilePath`: `isWalkableTile` at the goal node with no clearance, then
+ * `plannerObstacleAt` for the reason) under the AVOID rung's options — the danger map's volumes forbidden. A `danger`
+ * obstacle whose id names a live chaser means no corridor ends there while that body stands: DETOUR's every candidate
+ * (`from → vias → aim`) and every forced crossing would end on it. MEASURED (hammer LB, L40 leg 414): DETOUR asks
+ * 3,480 `detour` units a pass and the forced-hit rung 2,376 `crusher-fork` units before both refuse.
+ *
+ * @returns {null | {id: string, tile: {tx: number, ty: number}, why: string}}
+ */
+export function coveredGoalOf(run, aim, allowTeleporter, opts) {
+    const pitch = opts.lattice ?? DEFAULT_LATTICE;
+    const ends = { ...opts, nodeMargin: 0, triggerMargin: 0 };
+    const g = nodeAt(aim.x, aim.y, pitch);
+    if (isWalkableTile(run.world, g.tx, g.ty, allowTeleporter, ends)) return null;
+    const c = nodeCentre(g.tx, g.ty, pitch);
+    const o = plannerObstacleAt(run.world, c.x, c.y, allowTeleporter, ends);
+    const id = o?.kind === 'danger' ? o.blocker?.id : undefined;
+    if (id === undefined) return null;
+    const live = (run.entities('chasers') ?? []).some((b) => b.id === id && !b.destroy && !b.removed);
+    if (!live) return null;
+    return {
+        id,
+        tile: { tx: g.tx, ty: g.ty },
+        why: `COVERED GOAL (coveredGoalRefusal): the aim (${aim.x},${aim.y})'s own tile (${g.tx},${g.ty}) lies inside `
+            + `the live body ${id}'s volume (${o.blocker.why}), so the danger map forbids the goal itself — every `
+            + 'DETOUR candidate and every forced crossing ends on that tile, and neither rung is asked while it stands',
+    };
+}
+
 export function deriveChaserDetour(run, {
     aim, allowTeleporter = null, planOpts, certify,
     maxVias = DETOUR_RUNG.maxVias, maxPreviews = DETOUR_RUNG.maxPreviews,
@@ -22045,7 +22076,20 @@ function solveSegmentUnder({
             lastWhy = narrowWhy;
             lastOption = 'narrow';
         }
-        if (hit.sources.length > 0 && hit.sources.every((sx) => sx.kind === 'chaser')) {
+        /**
+         * ⛓ fidelity L40GUARD D3 (`coveredGoalRefusal`, OFF) — the AIM's own tile inside a live body's danger: every
+         * DETOUR candidate and every forced crossing ends on it, so both rungs are refused BY NAME here and spend
+         * nothing. OFF: never asked (`null`), the ladder byte-identical.
+         */
+        const coveredGoal = CONTACT_FIDELITY.coveredGoalRefusal
+            ? coveredGoalOf(run, aim, allowTeleporter, solverPlanOpts(run, contacts, { ...goalPlanExtra,
+                extraVolumes: vols, ...(lattice === DEFAULT_LATTICE ? {} : { lattice }) }))
+            : null;
+        if (coveredGoal !== null && hit.sources.length > 0 && hit.sources.every((sx) => sx.kind === 'chaser')) {
+            rowFor('detour', { rung: lastOption, why: lastWhy }, { coveredGoal: coveredGoal.id, previews: 0, planned: 0 });
+            lastWhy = coveredGoal.why;
+            lastOption = 'detour';
+        } else if (hit.sources.length > 0 && hit.sources.every((sx) => sx.kind === 'chaser')) {
             if (activeProgress !== null) progressRung('detour');
             const detour = deriveChaserDetour(run, {
                 aim, allowTeleporter,
@@ -22095,7 +22139,11 @@ function solveSegmentUnder({
          *   3. THE BILL: the chosen keys are replayed on the live run, whose new `playerHits` rows must be the
          *      fork's; the row says `verb: 'forced-hit'` with the proof and the hits, and `forcedHits` carries it.
          */
-        if (FORCED_HITS.enabled && fork !== null && Array.isArray(corridor) && corridor.length > 0) {
+        if (coveredGoal !== null && FORCED_HITS.enabled && fork !== null && Array.isArray(corridor) && corridor.length > 0) {
+            // ⛓ L40GUARD D3: a forced crossing ends on the covered tile too — refused by name, no proof asked.
+            rowFor('forced-hit', { rung: lastOption, why: lastWhy }, { coveredGoal: coveredGoal.id });
+            lastOption = 'forced-hit';
+        } else if (FORCED_HITS.enabled && fork !== null && Array.isArray(corridor) && corridor.length > 0) {
             if (activeProgress !== null) progressRung('forced-hit');
             const lastRefused = { rung: lastOption, why: lastWhy };
             const proof = proveForcedHit(fork, { replayTicks: perTick.length });

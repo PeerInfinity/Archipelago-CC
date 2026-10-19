@@ -722,6 +722,13 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_GUARD_APPROACH_STANCE=0|1` for a node measurement.
      */
     guardApproachStance: false,
+    /**
+     * fidelity L40GUARD D3 — A GOAL TILE INSIDE A LIVE BODY'S DANGER IS REFUSED BY NAME AT DETOUR AND THE FORCED-HIT
+     * RUNG (`solverBot.coveredGoalRefusal`), instead of spending a via set whose every candidate ends on that tile
+     * (MEASURED by hammer LB on L40 leg 414: DETOUR 3,480 units a pass, `crusher-fork` 2,376, ~98 left if both refuse).
+     * OFF: never asked, byte-identical. `SEEDLING_COVERED_GOAL_REFUSAL=0|1` for a node measurement.
+     */
+    coveredGoalRefusal: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -865,9 +872,11 @@ if (globalThis.process?.env?.SEEDLING_WALKER_BEAM_TOWERS === '0') CONTACT_FIDELI
 // ⛓ fidelity BOMBBLAST D2: `SEEDLING_BOMB_BLAST_BODY=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_BOMB_BLAST_BODY === '1') CONTACT_FIDELITY.bombBlastBody = true;
 if (globalThis.process?.env?.SEEDLING_BOMB_BLAST_BODY === '0') CONTACT_FIDELITY.bombBlastBody = false;
-// ⛓ fidelity L40GUARD D2: `SEEDLING_GUARD_APPROACH_STANCE=0|1`, likewise.
+// ⛓ fidelity L40GUARD D2/D3: `SEEDLING_GUARD_APPROACH_STANCE=0|1`, `SEEDLING_COVERED_GOAL_REFUSAL=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_GUARD_APPROACH_STANCE === '1') CONTACT_FIDELITY.guardApproachStance = true;
 if (globalThis.process?.env?.SEEDLING_GUARD_APPROACH_STANCE === '0') CONTACT_FIDELITY.guardApproachStance = false;
+if (globalThis.process?.env?.SEEDLING_COVERED_GOAL_REFUSAL === '1') CONTACT_FIDELITY.coveredGoalRefusal = true;
+if (globalThis.process?.env?.SEEDLING_COVERED_GOAL_REFUSAL === '0') CONTACT_FIDELITY.coveredGoalRefusal = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
