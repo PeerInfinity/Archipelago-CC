@@ -13774,18 +13774,19 @@ export function createLevelRun({
         // while `genericHit` returns at its first line. The hits are LOST,
         // silently. (`fireVerb.FIRE_DEAD_FRAME_RULE`.)
         if (fireWindows.some((w) => w.hitTicks.has(ticksCompleted))) {
-            throw new Error('levelRun: a fire window\'s hit tick '
+            throw Object.assign(new Error('levelRun: a fire window\'s hit tick '
                 + `${ticksCompleted} falls on a FROZEN tick (${what}). \`sprites()\` `
                 + 'still advances `sprFire` and `genericHit` returns '
                 + 'immediately under `Game.freezeObjects`, so the window '
-                + 'BURNS — the press lands nothing. Press outside the freeze.');
+                + 'BURNS — the press lands nothing. Press outside the freeze.'), { code: 'FROZEN_TICK_PRESS' });
         }
         if (swordWindow.pending) {
-            throw new Error(`levelRun: a ${swordWindow.pending.weapon} press at tick `
+            // ⛓ housekeep D1: coded — `solverBot.REFUSAL_BY_NAME` names it a solver can't-do (sweep leg 631, survey 122).
+            throw Object.assign(new Error(`levelRun: a ${swordWindow.pending.weapon} press at tick `
                 + `${swordWindow.pending.pressTick} would fire its rect on a FROZEN `
                 + `tick (${what}), and \`genericHit\` returns immediately under `
                 + '`Game.freezeObjects` — so the press would do nothing at '
-                + 'all. Press outside the freeze.');
+                + 'all. Press outside the freeze.'), { code: 'FROZEN_TICK_PRESS' });
         }
         // ⛓ fidelity BEAMTOWER D1: a tower's own update returns on the freeze, its graphic still updates.
         if (!noclip && beamTowersStepped()) stepBeamTowersNow({ frozen: true });
@@ -20047,14 +20048,14 @@ export function createLevelRun({
             // a warning because the cure is arithmetic the planner owns:
             // the freeze span is derivable from the volley clock.
             if (frozenTimer > 0 && held.has(TALK_KEY) && !wasHeld.has(TALK_KEY) && !noclip) {
-                throw new Error(`levelRun: a \`primary\` press at tick ${ticksCompleted} `
+                throw Object.assign(new Error(`levelRun: a \`primary\` press at tick ${ticksCompleted} `
                     + `lands on a FROZEN tick (frozenTimer ${frozenTimer} after this `
                     + 'tick\'s `freezeStep`). `Player.input()` returns at its first line '
                     + 'while `frozenTimer > 0`, and `useItem(Main.primary)` is called '
                     + 'from INSIDE `input()` — so the press is LOST, not delayed. An '
                     + '`IceTurretBlast` contact refuses input for '
                     + `${ICE_TURRET_BLAST.freezeTicks - 1} ticks starting with the `
-                    + 'contact tick; schedule the press outside that span.');
+                    + 'contact tick; schedule the press outside that span.'), { code: 'FROZEN_TICK_PRESS' });
             }
             /**
              * ⛓⛓⛓ R9 SLICE 12b — `useItem`'s SWORD ARM, RESOLVED ABOVE THE
