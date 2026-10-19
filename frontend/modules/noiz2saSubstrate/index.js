@@ -307,6 +307,7 @@ export const moduleInfo = {
     name: 'noiz2saSubstrate',
     title: 'Noiz2sa',
     componentType: NOIZ2SA_PANEL_COMPONENT_TYPE,
+    docs: 'docs/json/user/modules/noiz2sa.md',
     icon: '🚀',
     column: 3,
     category: 'Procgen Substrate Panels',

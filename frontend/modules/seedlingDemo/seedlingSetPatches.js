@@ -54,6 +54,39 @@
  *      other L38 button writes tset 4 into 37), and the corridor stays open in
  *      both directions, as the rules already say. The button itself stays.
  *
+ * ⚖ The user (2026-10-18), on fidelity's measure-only ROCKMOVE (should the
+ * trigger-sealed rocks be removed, or moved one tile off the door?): **"Remove
+ * bundle"** — three more rooms where a trigger drops a `fallrock` onto the one
+ * way through, while the rules price every `fallrock` OPEN (an `overlay_rows`
+ * `open` row; no rules event names a rock). Removing the rock makes the game
+ * match the rules, and the rules do not change (the regeneration moves only
+ * `provenance.set_patches`). No move works in any of them: each rock sits in a
+ * one-tile neck, and every neighbouring tile seals the same neck or lands on an
+ * arrival (ROCKMOVE's game witnesses). L43's three wand-dropped rocks are LEFT:
+ * in the AP delivery the wand is an `apitem`, and no rock falls.
+ *
+ *   4–5. `l74-fallrock-removed` + `l74-button-removed` — L74 (`Dungeon7/3`):
+ *      L73's `teleporter@64,0` lands ON `button@288,128` (tset 0), which drops
+ *      `fallrock@288,144` (tset 0, tag 2) onto `teleporter@288,144` → L73, the
+ *      only door back; the rules price `level_74 <-> level_73` free.
+ *   6. `l39-fallrock-removed` — L39 (`Dungeon4/1`): cutting `rope@96,384`
+ *      (tset 6, tag 9), which the 1-wide shaft requires, drops
+ *      `fallrock@144,624` (tset 6, tag 10) onto `teleporter@144,624` → L38, so
+ *      the rules' L39 → L38 exit was never usable after the cut. The ROPE STAYS:
+ *      it gates the shaft, and it still drives `pulser@64,96` (tset 6).
+ *   7–8. `l29-fallrock-removed` + `l29-button-removed` — L29 (`Dungeon3/8`):
+ *      `button@112,128` (tset 0), on the one-tile neck between the south half
+ *      (L22's door) and the north half (the L31 stairs and the boss key), drops
+ *      `fallrock@112,112` (tset 0, tag 0) into the neck, severing the halves
+ *      both ways; the rules hold the room as one region.
+ * The BUTTON goes with the rock in L74 and L29: the rock is the only tset-0
+ * responder in either room (and no `buttonroom` in any level writes into 29 or
+ * 74), so a button left behind presses a group nothing answers, and the solver
+ * refuses a `hold` on it. L39's tset 6 keeps its pulser, so its rope stays.
+ * The measurement: `CC/docs/cloud-reports/seedling-fidelity-rockmove.md` (D1
+ * census, D2 game witnesses, D3 solver legs, D5 table) and its evidence dir.
+ * Game witness: `probe-seedling-rock-remove.mjs`.
+ *
  * ── ⛔ WHERE THIS APPLIES, AND WHERE IT DOES NOT ─────────────────────────────
  *
  * ONE caller: `levelSetExporter.vanillaRecordSet`, the single source of the
@@ -95,6 +128,11 @@ export const SET_PATCH_IDS = Object.freeze({
     l110FallToL2: 'l110-fall-to-l2',
     l110FallOffStairs: 'l110-fall-off-stairs',
     l37FallrockRemoved: 'l37-fallrock-removed',
+    l74FallrockRemoved: 'l74-fallrock-removed',
+    l74ButtonRemoved: 'l74-button-removed',
+    l39FallrockRemoved: 'l39-fallrock-removed',
+    l29FallrockRemoved: 'l29-fallrock-removed',
+    l29ButtonRemoved: 'l29-button-removed',
 });
 
 /**
@@ -125,6 +163,47 @@ export const PATCH_L37_FALLROCK_REMOVED = Object.freeze({
         + 'stays open after the first entry',
 });
 
+/** One `remove` row of the ROCKMOVE bundle (⚖ 2026-10-18): the one entity `type@x,y` with `attrs`, in `level`. */
+const removeRow = (id, level, type, x, y, attrs, why) => Object.freeze({
+    id, level, op: 'remove', match: Object.freeze({ type, x, y, attrs: Object.freeze(attrs) }), why,
+});
+
+export const PATCH_L74_FALLROCK_REMOVED = removeRow(SET_PATCH_IDS.l74FallrockRemoved, 74, 'fallrock', 288, 144,
+    { tset: '0', tag: '2' },
+    'L73\'s door lands on L74\'s `button@288,128`, which dropped this rock onto `teleporter@288,144` → L73, '
+    + 'the only door back; with no rock L74 ↔ L73 stays open both ways, as the rules price it');
+
+export const PATCH_L74_BUTTON_REMOVED = removeRow(SET_PATCH_IDS.l74ButtonRemoved, 74, 'button', 288, 128,
+    { tset: '0' },
+    'the L73 arrival tile\'s button: its group (tset 0) had one responder, the removed fallrock@288,144, and '
+    + 'no other level writes into 74, so it would press a group nothing answers');
+
+export const PATCH_L39_FALLROCK_REMOVED = removeRow(SET_PATCH_IDS.l39FallrockRemoved, 39, 'fallrock', 144, 624,
+    { tset: '6', tag: '10' },
+    'cutting `rope@96,384` (tset 6), which the 1-wide shaft requires, dropped this rock onto '
+    + '`teleporter@144,624` → L38; with no rock the L38 door stays open after the cut. The rope stays '
+    + '(it gates the shaft and drives `pulser@64,96`)');
+
+export const PATCH_L29_FALLROCK_REMOVED = removeRow(SET_PATCH_IDS.l29FallrockRemoved, 29, 'fallrock', 112, 112,
+    { tset: '0', tag: '0' },
+    '`button@112,128` dropped this rock into the one-tile neck between the south half (L22\'s door) and the '
+    + 'north half (the L31 stairs, the boss key), severing them both ways; with no rock the room is the one '
+    + 'region the rules hold');
+
+export const PATCH_L29_BUTTON_REMOVED = removeRow(SET_PATCH_IDS.l29ButtonRemoved, 29, 'button', 112, 128,
+    { tset: '0' },
+    'the neck\'s button: its group (tset 0) had one responder, the removed fallrock@112,112, and no other '
+    + 'level writes into 29, so it would press a group nothing answers');
+
+/** The five ROCKMOVE rows, in the table's order (⚖ 2026-10-18 "Remove bundle"). */
+export const ROCKMOVE_REMOVE_BUNDLE = Object.freeze([
+    PATCH_L74_FALLROCK_REMOVED,
+    PATCH_L74_BUTTON_REMOVED,
+    PATCH_L39_FALLROCK_REMOVED,
+    PATCH_L29_FALLROCK_REMOVED,
+    PATCH_L29_BUTTON_REMOVED,
+]);
+
 /** L110's control, repointed so its pit's fall arrives at L2 (`x`, `y`) — `xOff`/`yOff` solved from (64,64). */
 const l110RepointTo = (id, x, y, why) => Object.freeze({
     id,
@@ -146,13 +225,14 @@ export const PATCH_L110_FALL_OFF_STAIRS = l110RepointTo(SET_PATCH_IDS.l110FallOf
     + 'fall-from-ceiling descent does not cross L2\'s `stairsup@48,16`');
 
 /**
- * ⚖ THE TABLE THE DELIVERY CARRIES. Edits 1 and 3: edit 2 is STOPPED (the
+ * ⚖ THE TABLE THE DELIVERY CARRIES. Edits 1, 3 and 4–8: edit 2 is STOPPED (the
  * header above) — `PATCH_L110_FALL_TO_L2` and `PATCH_L110_FALL_OFF_STAIRS` stand
  * ready for the user's choice.
  */
 export const SEEDLING_SET_PATCHES = Object.freeze([
     PATCH_MOONROCK_REMOVED,
     PATCH_L37_FALLROCK_REMOVED,
+    ...ROCKMOVE_REMOVE_BUNDLE,
 ]);
 
 const sameAttrs = (have, want) => Object.entries(want)

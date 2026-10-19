@@ -1,6 +1,6 @@
 # Procgen: everything, in Loop mode
 
-The last procgen tutorial puts it all together: JtA zones, a generated Seedling room, mazes, a text adventure, a bounce zone, a Noiz2sa stage and *Idle Loops* — another idle game, which only runs in loop mode — in one world, every action spending the same mana.
+The last procgen tutorial puts it all together: JtA zones, a generated Seedling room, mazes, a text adventure, a bounce zone, a stretch of Noiz2sa and *Idle Loops* — another idle game, which only runs in loop mode — in one world, every action spending the same mana.
 
 Seedling rooms play in the **wasm** build of the original game (the default). The **Settings** panel's Flash runtime setting (`moduleSettings.flashPanel.runtime`) can switch them to the **JS** runtime, where the Playback Bot already walks them; this tutorial stays on wasm.
 

@@ -27,6 +27,7 @@ export const moduleInfo = {
     name: 'playbackBot',
     title: 'Playback Bot',
     componentType: 'playbackBotPanel',
+    docs: 'docs/json/user/modules/playbackBot.md',
     icon: '🤖',
     column: 3,
     category: 'Procgen Infrastructure Panels',

@@ -90,7 +90,7 @@ export const LOOPS_ADVENTURE = Object.freeze({
                 {
                     step: {
                         id: 'generate-costs',
-                        text: 'Press **Generate Costs**: every move, explore and check gets a mana cost, worked out from the world\'s solution (its sphere log) — and Loop mode starts. (**Accept Defaults** gives every move 50 and every check 100 instead.)',
+                        text: 'Press **Generate Costs**: every move, explore and check gets a mana cost, worked out from the world\'s solution (its sphere log) — and Loop mode starts. (**Accept Defaults** gives every move 50 and every check 10 instead.)',
                         actions: [{ click: { ...LOOPS, selector: '#loop-ui-generate-costs-inline', optional: true } }],
                         done: (ctx) => ctx.text(toggle) === 'Exit Loop Mode' && !ctx.exists({ ...LOOPS, selector: '#loop-ui-generate-costs-inline' }),
                         // A refusal is written in the progress label, in colour.

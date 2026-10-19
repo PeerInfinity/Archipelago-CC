@@ -115,6 +115,7 @@ export const moduleInfo = {
     name: 'bounceDemo',
     title: 'Bounce Demo',
     componentType: BOUNCE_PANEL_COMPONENT_TYPE,
+    docs: 'docs/json/user/modules/bounceDemo.md',
     icon: '🏀',
     column: 3,
     category: 'Procgen Substrate Panels',

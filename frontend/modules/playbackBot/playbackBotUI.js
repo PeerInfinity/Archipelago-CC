@@ -1612,7 +1612,7 @@ export class PlaybackBotUI {
 
         const hint = document.createElement('div');
         hint.className = 'playback-bot-hint';
-        hint.textContent = 'Drives the maze panel — open it in another column to watch the bot walk.';
+        hint.textContent = 'Drives each region\'s own game (Maze Room, Text Adventure, Bounce, …), or the Loops queue in loop mode — open that panel in another column to watch the bot play.';
         root.appendChild(hint);
 
         this._element = root;

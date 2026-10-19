@@ -12,9 +12,9 @@ You need a copy of Archipelago (or this project's repository) on your computer f
 
 ## Look at it in the APWorld Editor
 
-1. Press **Open in APWorld Editor** (under the result). The world opens in the **APWorld Editor** tab: its regions, locations, items and rules, as tabs you can browse and edit.
+1. Press **Open in APWorld Editor** (beside **Load into frontend**). The world opens in the **APWorld Editor** tab: its regions, locations, items and rules, as tabs you can browse and edit.
 
-Browse a little: the **Regions** tab lists the mazes the pipeline built, **Locations** the pickups in them, **Items** the keys and Victory. Every edit you make is checked as you make it, and **↶ Undo** takes it back.
+Browse a little: the **Regions** tab lists the mazes the pipeline built, each with its exits and the locations (pickups) in it; **Items** lists the keys and Victory. Every edit you make is checked as you make it, and **↶ Undo** takes it back.
 
 1. Give the game a name of its own: type **Tutorial Maze** in the *apworld game name* box beside **⭳ .apworld**. (Blank keeps the world's own name.)
 2. Press **⭳ .apworld**. The editor runs Archipelago's world generator in your browser (the first time, it downloads Python — a few seconds) and saves the `.apworld`. Its status line names the file.

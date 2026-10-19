@@ -1,0 +1,22 @@
+solve-seedling-r8-battery D1CENSUS {"pw":34,"pulls":25,"cpc":184,"poa":16321,"poaRepeatWithinPlanWaypoints":9670,"pwMs":396,"cpcMs":371}
+  1s
+solve-seedling-r8-d2-chain D1CENSUS {"pw":44,"pulls":33,"cpc":286,"poa":21517,"poaRepeatWithinPlanWaypoints":9812,"pwMs":225,"cpcMs":196}
+  5s
+solve-seedling-r8-l18 D1CENSUS {"pw":4,"pulls":1,"cpc":6,"poa":1471,"poaRepeatWithinPlanWaypoints":494,"pwMs":16,"cpcMs":9}
+  3s
+solve-seedling-r8-tail D1CENSUS {"pw":16,"pulls":9,"cpc":49,"poa":2855,"poaRepeatWithinPlanWaypoints":1523,"pwMs":38,"cpcMs":34}
+  1s
+solve-seedling-r9-l3 D1CENSUS {"pw":2,"pulls":1,"cpc":35,"poa":2074,"poaRepeatWithinPlanWaypoints":1134,"pwMs":50,"cpcMs":46}
+  0s
+solve-seedling-r9-campaign D1CENSUS {"pw":317,"pulls":170,"cpc":6525,"poa":928507,"poaRepeatWithinPlanWaypoints":668771,"pwMs":9169,"cpcMs":8525}
+  58s
+scripts/procgen/batch-seedling-acceptance.mjs D1CENSUS {"pw":6708,"pulls":3415,"cpc":10137,"poa":1066103,"poaRepeatWithinPlanWaypoints":463635,"pwMs":6361,"cpcMs":5407}
+  96s
+scripts/procgen/dump-seedling-kind-pairs.mjs --kinds=empty --seeds=1-40 --count=3 D1CENSUS {"pw":22614,"pulls":11621,"cpc":25200,"poa":3069605,"poaRepeatWithinPlanWaypoints":1191404,"pwMs":18850,"cpcMs":15903}
+  175s
+scripts/procgen/dump-seedling-kind-pairs.mjs --kinds=winding,rooms,branchy,bushy,loopy,open --seeds=1-12 --count=4 D1CENSUS {"pw":23545,"pulls":12327,"cpc":93529,"poa":6259321,"poaRepeatWithinPlanWaypoints":3458261,"pwMs":34968,"cpcMs":32250}
+  182s
+scripts/procgen/census-seedling-killgate-clears.mjs --seeds=2-2 D1CENSUS {"pw":419,"pulls":220,"cpc":620,"poa":55730,"poaRepeatWithinPlanWaypoints":22144,"pwMs":340,"cpcMs":279}
+  3s
+scripts/procgen/dump-maze-byteidentity.mjs D1CENSUS {"pw":0,"pulls":0,"cpc":0,"poa":0,"poaRepeatWithinPlanWaypoints":0,"pwMs":0,"cpcMs":0}
+  2s

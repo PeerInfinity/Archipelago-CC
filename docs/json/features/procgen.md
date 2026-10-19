@@ -9,7 +9,7 @@ A generated world is a graph of connected regions, each rendered by a **substrat
 - **Maze** — walk a grid maze, pick up items, dodge patrolling hazards
 - **Bounce** — a Doodle-Jump-style vertical platformer where movement abilities (arrows, springs, jetpacks, colored platforms) are the progression items
 - **Text Adventure** — the region as prose with clickable exits and locations
-- **Noiz2sa** — a stage of Kenta Cho's bullet-hell shoot-'em-up
+- **Noiz2sa** — a run of scenes from Kenta Cho's bullet-hell shoot-'em-up
 - **Seedling** — rooms of the Flash game *Seedling*, recompiled to run in the browser: real rooms from the game, or new rooms generated in its style
 - **Journey to Ascension** and **Idle Loops** — zones of these idle games as regions, in loop mode
 

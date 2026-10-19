@@ -23410,6 +23410,48 @@ by 12–28 bytes per segment.
 Lesson: *a static census is only as good as the text it reads.* RK's 200-character heads hid the deciding words of 32
 sites. Those words sat past the cut, or were split by a `' + '`.
 
+### Seedling hammer-phase SP — the string-pull lever
+
+⚖ The user (2026-10-18): *"Please launch whichever of these can run in parallel in cloud sessions."* HB's residue (2)
+named the lever: `botDriverV2.planWaypoints`' string-pull is ~57 % of the L40 solve. The report is
+`CC/docs/cloud-reports/seedling-hammer-string-pull.md`.
+
+**W0** at `b3adfad282`: the six producers' `--check`s equal HB's md5s, tapeRunner **617 `8f27f975`**, censuses
+312 · 6,002 · 566 · 138 · 280, and the bounded vitest passes 461/461. L40 (`r5-l40-part5` → (160,640)) reproduces HB:
+27 `planWaypoints` calls, 881 string-pull `controllerPathClear` calls, digest `3addc379`, `shouldStop` 167;
+`planWaypoints` is 54 % of the profile, and `plannerObstacleAt` is 96 % of that.
+
+**D1 — where the time goes.** The 881 calls make 92,035 `plannerObstacleAt` asks, and **51 % of them repeat a point
+already asked in the same `planWaypoints` call** (72 % over the campaign, 39–55 % over the generated pairs). An
+axis-aligned sample asks one point twice, every candidate from one anchor re-asks the anchor and the shared prefix of
+its axis legs, and the next anchor re-walks the same ground. Across calls the repeats rise to 88 %, but there the world
+can move, so that key would need a world version from fidelity's code. A binary search over `j` agreed with
+farthest-first at every one of 1,124 measured anchors, but monotonicity is not provable, so it was not used.
+
+**D2 — `STRING_PULL_FAST` (default OFF).** The string-pull asks `plannerObstacleAt` through a memo keyed `(x, y)` that
+lives for ONE `planWaypoints` call. That scope is the completeness proof. Inside one call, `level`, `allowTeleporter`
+and `opts` are fixed and nothing advances the run (the loop runs only read-only queries and the emit-only `plan-pull`
+heartbeat). So every live family is constant over the memo's life without being named in the key: crushers, beam towers,
+pushables, bridges, and any family added later. The same samples are asked in the same order (`controllerPathClearBy`
+is the one copy of the geometry), and only a repeat is answered from the memo. Gate rows: `stringPullFast.test.js` has
+a crusher step (L42, 1 px) and a push (L8) through ONE options object mutated in place, four plans decided by the
+X-first corner sample, and L40/L18/L6/L3 plus the L42 crusher witness OFF = ON end to end (digest, `shouldStop`,
+`budget.asks`, the whole progress stream). `check-seedling-string-pull-fast.mjs` runs the six producers and the
+killgate census OFF and ON: md5s equal, 1,275 audited `planWaypoints` calls, 0 mismatches. Five mutants (a memo that
+outlives the call, one per options object, a key without `y`, a skipped corner query, nearest-first) are each caught.
+A binary search returns the same answers on the corpus and is caught only by the progress stream, because it asks
+fewer times. ⚠ The first D4 vitest caught one defect: the silent arm's `beat && activeProgress !== null` guard broke
+the one-null-check form `solveProgressHeartbeat.test.js` pins. It is now `if (beat) { if (activeProgress !== null) … }`.
+
+**D3** (three interleaved rounds, load 1.0–1.6): L40 `planWaypoints` 4.7–5.4 s → **2.5–2.9 s (~1.84×)**, wall
+6.1–7.3 s → 4.4–4.8 s. L18 does not move (its `planWaypoints` is 0.2 %). Digest and `shouldStop` are identical in every
+run. On the page, the JS runtime's planner-walk rows pass on base and head with no difference.
+
+Lessons:
+1. *Scope can be the key.* A memo whose life ends before anything can change needs no field for what might change.
+   The time-varying families are covered by the memo's scope, not by being listed in the key.
+2. *A real corpus can miss a whole branch.* No committed solve has a plan that turns on the X-first corner sample, so
+   the mutant that skipped it passed 1,275 calls. Sampled atlas queries found four in 1,505 plans.
 ### Seedling hammer-phase TC2 — the active frame (solve-progress)
 
 ⚖ The user (2026-10-17): *"I want to implement all of these features, if possible"* (the solve-progress reports). This is
@@ -23544,3 +23586,14 @@ answers within one `twoPassSolve` call.
 Lesson: *a cache that must be exact has to replay what the call DID, not only what it returned.* The answer alone
 would have kept the tapes byte-identical and still moved the deadline's ask counts, the progress stream and the
 instruments.
+### Seedling hammer-phase SP flip — `STRING_PULL_FAST` ON by default
+
+⚖ The user (2026-10-18): flip it ON. `botDriverV2.js`'s `STRING_PULL_FAST.enabled` now defaults ON;
+`SEEDLING_STRING_PULL_FAST=0` turns it OFF for a node measurement (the corpus gate `check-seedling-string-pull-fast`
+already runs its OFF arm with `0`). The evidence is the full divergence sweep, ON (a measurement-only branch) against
+OFF at the SP head:
+- 851 / 851 legs, good 756 → 756, 0 good↔bad movers;
+- first plans equal on every leg whose seam time and arrival clock are equal;
+- solve time −10 % overall, L12 −35 %, L40's finished p90 1.1 → 0.57 s.
+
+It does **not** clear L40's 397 / 414 band: those solves run past 84 s, and ~1.4× does not bring them under 90 s.

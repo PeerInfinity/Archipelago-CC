@@ -17,6 +17,7 @@ export const moduleInfo = {
     name: 'procgenPipeline',
     title: 'Procgen Pipeline',
     componentType: 'procgenPipelinePanel',
+    docs: 'docs/json/user/modules/procgenPipeline.md',
     icon: '🧭',
     column: 3,
     category: 'Procgen Infrastructure Panels',

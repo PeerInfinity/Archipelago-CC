@@ -22,7 +22,7 @@ export const PROCGEN_LOOP_MODE_EVERYTHING = Object.freeze({
     status: 'ready', // ⚖ the user, 2026-10-14
     doc: 'docs/json/user/tutorials/procgen-loop-mode-everything.md',
     intro: [
-        { prose: 'The last procgen tutorial puts it all together: JtA zones, a generated Seedling room, mazes, a text adventure, a bounce zone, a Noiz2sa stage and *Idle Loops* — another idle game, which only runs in loop mode — in one world, every action spending the same mana.' },
+        { prose: 'The last procgen tutorial puts it all together: JtA zones, a generated Seedling room, mazes, a text adventure, a bounce zone, a stretch of Noiz2sa and *Idle Loops* — another idle game, which only runs in loop mode — in one world, every action spending the same mana.' },
         { prose: SEEDLING_RUNTIME_NOTE },
     ],
     sections: [
