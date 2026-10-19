@@ -1,11 +1,11 @@
 {
   "_comment": "Derived by scripts/procgen/probe-seedling-deadframe-band.mjs from the differential sweep's banked payloads. The per-load fade is the GAME's number minus the model's own freezes; this file is the committed copy because the payload directory is gitignored and was, at slice 12, the only copy of the numbers §24.85 quoted.",
-  "totalTapes": 280,
-  "totalLoads": 623,
+  "totalTapes": 282,
+  "totalLoads": 731,
   "min": 19,
   "max": 21,
-  "mean": 20.0016051364366,
-  "sigma": 0.09248088313169191,
+  "mean": 20.002735978112174,
+  "sigma": 0.08549639209483541,
   "observations": [
     {
       "name": "axe-l48-reach-l49",
@@ -122,15 +122,15 @@
     {
       "name": "diagonal-run",
       "loads": 1,
-      "dead": 15,
-      "modelled": -5,
+      "dead": 17,
+      "modelled": -3,
       "residue": 20
     },
     {
       "name": "direction-flip",
       "loads": 1,
-      "dead": 16,
-      "modelled": -4,
+      "dead": 17,
+      "modelled": -3,
       "residue": 20
     },
     {
@@ -234,8 +234,8 @@
     {
       "name": "friction-stop",
       "loads": 1,
-      "dead": 14,
-      "modelled": -6,
+      "dead": 17,
+      "modelled": -3,
       "residue": 20
     },
     {
@@ -290,8 +290,8 @@
     {
       "name": "grant-sword-room",
       "loads": 5,
-      "dead": 94,
-      "modelled": -6,
+      "dead": 97,
+      "modelled": -3,
       "residue": 100
     },
     {
@@ -577,8 +577,8 @@
     {
       "name": "r2-walk-1-sword-shield",
       "loads": 13,
-      "dead": 254,
-      "modelled": -6,
+      "dead": 257,
+      "modelled": -3,
       "residue": 260
     },
     {
@@ -615,6 +615,13 @@
       "dead": 200,
       "modelled": 0,
       "residue": 200
+    },
+    {
+      "name": "r2-walk-full",
+      "loads": 55,
+      "dead": 1097,
+      "modelled": -3,
+      "residue": 1100
     },
     {
       "name": "r2-wallflyer-contact",
@@ -710,8 +717,8 @@
     {
       "name": "r3-walk-1-sword",
       "loads": 9,
-      "dead": 326,
-      "modelled": 145,
+      "dead": 325,
+      "modelled": 144,
       "residue": 181
     },
     {
@@ -748,6 +755,13 @@
       "dead": 350,
       "modelled": 150,
       "residue": 200
+    },
+    {
+      "name": "r3-walk-full",
+      "loads": 53,
+      "dead": 1958,
+      "modelled": 897,
+      "residue": 1061
     },
     {
       "name": "r4-iceturret-bobs",
@@ -1256,8 +1270,8 @@
     {
       "name": "r7-ends-meet-1",
       "loads": 2,
-      "dead": 34,
-      "modelled": -6,
+      "dead": 37,
+      "modelled": -3,
       "residue": 40
     },
     {
@@ -1270,8 +1284,8 @@
     {
       "name": "r7-ends-meet-full",
       "loads": 3,
-      "dead": 55,
-      "modelled": -5,
+      "dead": 57,
+      "modelled": -3,
       "residue": 60
     },
     {
@@ -1326,8 +1340,8 @@
     {
       "name": "r8-solve-1",
       "loads": 2,
-      "dead": 34,
-      "modelled": -6,
+      "dead": 37,
+      "modelled": -3,
       "residue": 40
     },
     {
@@ -1739,15 +1753,15 @@
     {
       "name": "statue-press",
       "loads": 1,
-      "dead": 15,
-      "modelled": -5,
+      "dead": 17,
+      "modelled": -3,
       "residue": 20
     },
     {
       "name": "straight-run",
       "loads": 1,
-      "dead": 14,
-      "modelled": -6,
+      "dead": 17,
+      "modelled": -3,
       "residue": 20
     },
     {

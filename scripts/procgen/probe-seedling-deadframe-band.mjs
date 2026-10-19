@@ -270,7 +270,11 @@ if (flake) {
         + `${LEGACY_FADE_PER_LOAD.max * flake.loads}] → 50 `
         + `${50 < LEGACY_FADE_PER_LOAD.min * flake.loads ? 'REJECTED (the flake)' : 'admitted'}`);
     console.log(`  new    [${b.lo.toFixed(1)},${b.hi.toFixed(1)}] → 50 `
-        + `${50 >= b.lo && 50 <= b.hi ? 'ADMITTED (the flake stops flaking)' : 'REJECTED ⛔'}`);
+        + `${50 >= b.lo && 50 <= b.hi ? 'ADMITTED (the flake stops flaking)'
+            // ⛓ R6 lockstep: the tape boots at the page's spawn, so the flake was
+            // the boot fade the page spent before the arm — now owed back by name.
+            : 'REJECTED as a raw residue — it was the skip-path boot fade spent before '
+            + 'the arm, which `bootFadeSpent` now owes back from `armed_at`'}`);
 }
 
 if (BANK) {

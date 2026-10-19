@@ -93,21 +93,23 @@ import { BUILD_SPAWN } from './tapeFormat.js';
  * every tape but the two vanilla fade probes now declares `pins:
  * ["dead_frames"]` (the decay per UPDATE), and the budget owes back the boot
  * fade a skip-path tape's page spent before `botStart` (`bootFadeSpent`,
- * below). 272/280 tapes read EXACTLY 20 a load. The other eight: +1 on the
- * five sword-pickup tapes, −1 on `r6-seed-control`, −1/−2 on
+ * below). 273/282 tapes read EXACTLY 20 a load. The other nine: +1 on six:
+ * the five that collect the sword (`r3-collect-sword`, `r3/r4-walk-1`,
+ * `r3/r4-walk-full`) and `r7-act2-full` — a fencepost for fidelity, not noise; −1 on `r6-seed-control`, −1/−2 on
  * `r5-l38-fade-boot`/`-door` (unpinned on purpose). The 17..20 "per-level
  * constants" above were never per level: every 17 was a level-0 spawn tape
  * whose page had spent 3 fade frames before the arm.
  */
 export const FADE_STATS = Object.freeze({
-    tapes: 280,
-    loads: 623,
+    tapes: 282,
+    loads: 731,
     min: 19.0,
     max: 21.0,
-    mean: 20.0016,
-    sigma: 0.0925,
-    source: 'seedling-full-tier run 39311970465 (f2baacde0a, headless, all-pinned), '
-        + 'tier-merged payloads; re-derived by probe-seedling-deadframe-band with bootFadeSpent',
+    mean: 20.0027,
+    sigma: 0.0855,
+    source: 'seedling-full-tier run 39317708180 (301e20b91f, headless, all-pinned, 282/282 '
+        + 'green), tier-merged payloads; re-derived by probe-seedling-deadframe-band with '
+        + 'bootFadeSpent',
 });
 
 /**
