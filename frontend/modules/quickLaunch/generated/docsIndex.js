@@ -960,6 +960,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The Storage panel lists every key this site keeps in your browser's local storage. For each key it shows which part of the app owns it, what kind of data it is and how big it is. It lets you clear…"
     },
     {
+        "path": "docs/json/user/modules/substrateRegistry.md",
+        "title": "Substrate Registry Panel",
+        "section": "user/modules",
+        "summary": "The Substrate Registry lists every substrate — every kind of region a generated world can be built from, such as a maze, a text adventure, a bounce zone, Noiz2sa or a Seedling room — and says what…"
+    },
+    {
         "path": "docs/json/user/modules/swfRecompilerPanel.md",
         "title": "SWF Recompiler",
         "section": "user/modules",
@@ -1190,6 +1196,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/modules/spoilerChecklist.md",
             "docs/json/user/modules/spoilerTest.md",
             "docs/json/user/modules/storagePanel.md",
+            "docs/json/user/modules/substrateRegistry.md",
             "docs/json/user/modules/swfRecompilerPanel.md",
             "docs/json/user/modules/textAdventure.md",
             "docs/json/user/modules/timerPanel.md",
