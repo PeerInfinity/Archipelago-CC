@@ -1,5 +1,5 @@
 {
-  "tape_version": 3,
+  "tape_version": 5,
   "game": "seedling",
   "boot": {
     "level": 8,
@@ -14,6 +14,8 @@
     "waterfall"
   ],
   "persistence": [],
+  "equips": [],
+  "pins": ["dead_frames"],
   "tick_count": 130,
   "inputs": [
     {

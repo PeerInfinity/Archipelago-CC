@@ -1,5 +1,5 @@
 {
-  "tape_version": 4,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r5-l40-part1",
   "description": "⛓⛓⛓ THE SECOND COLLECT CEREMONY — `totempart 1 @160,640`, and it costs a WALK. §24.5 priced L40's north half as an eleven-link chain (a chest, a burn, a pulser, three walk-pushes, a boss key) and §23.9's arrival flood recorded which prizes need none of it: exactly one does. Measured with every activator group SHUT, so \"free\" is a verdict about the room. ⚠ The route stays off every pit: `control@224,432` is a PARAMETER BLOCK, not a trigger, and what it configures is a fall that transports to L43 — the wand room, one way. The 150 frozen frames are the claim; `hasTotemPart` is not in `Bot.itemReadout`.",
@@ -24,6 +24,7 @@
   ],
   "persistence": [],
   "equips": [],
+  "pins": ["dead_frames"],
   "tick_count": 493,
   "inputs": [
     {

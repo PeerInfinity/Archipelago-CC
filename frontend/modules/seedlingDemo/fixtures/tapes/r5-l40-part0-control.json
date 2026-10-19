@@ -1,5 +1,5 @@
 {
-  "tape_version": 4,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r5-l40-part0-control",
   "description": "⛓⛓ THE SHUT-BEFORE CONTROL for `r5-l40-part0`: the identical tape with the THREE rock swings deleted and every walk span byte-identical. The buttonrooms still latch — they are stood on, not pressed — so the arm isolates the rocks exactly: group 0 opens, group 1 opens, and the part is still behind three 16x16 solids. No ceremony.",
@@ -24,6 +24,7 @@
   ],
   "persistence": [],
   "equips": [],
+  "pins": ["dead_frames"],
   "tick_count": 700,
   "inputs": [
     {

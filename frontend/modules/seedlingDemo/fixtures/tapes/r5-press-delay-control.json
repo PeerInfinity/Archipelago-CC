@@ -1,5 +1,5 @@
 {
-  "tape_version": 4,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r5-press-delay-control",
   "description": "⛓ THE SHUT-BEFORE CONTROL for `r5-press-delay`: identical tape, both `primary` spans deleted, every walk span the same. The block stands where it spawned, so the player is stopped in row 4 by the cell press 4 would have emptied and never reaches row 5 at all.",
@@ -35,6 +35,7 @@
       "slot": 1
     }
   ],
+  "pins": ["dead_frames"],
   "tick_count": 530,
   "inputs": [
     {

@@ -1,5 +1,5 @@
 {
-  "tape_version": 4,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r4-walk-6-health",
   "description": "R4 walk SEGMENT 6 of 6, synthesized by botDriverV2 from legs 33-40 of the committed route (fixtures/r4-route.json). It boots where segment 5 ended and inherits sword, feather, torch, spear in a single grant entry at the boot level, which fires on tick 0, with slot 1 selected on the same tick. 8 legs across 7 level(s), 7 crossings. COLLECTS a boss key (bosskey@48,64, 0 release(s) over 0 ticks); health (health@16,16, 2 release(s) over 11 ticks). PRESSES W at (178.34511888600008,116.51949436482472) in L67; E at (100.4873027913451,99.24739196926036) in L63; W at (195.48355690612345,132.3301609084656) in L65; N at (163.73689522468803,162.56787266583692) in L65; W at (195.3793516207072,115.25220405600749) in L65. OPENS bosslock@16,32 with BossKey 4 over 72 ticks, which writes setPersistence(0, false). Ends holding [hasSword, hasFeather, hasSpear, hasTorch] with hitsMax 4.",
@@ -72,6 +72,9 @@
       "t": 0,
       "slot": 1
     }
+  ],
+  "pins": [
+    "dead_frames"
   ],
   "tick_count": 3049,
   "inputs": [

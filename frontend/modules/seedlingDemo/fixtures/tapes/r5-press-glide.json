@@ -1,5 +1,5 @@
 {
-  "tape_version": 4,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r5-press-glide",
   "description": "⛓⛓ THE GLIDE, MEASURED WITH THE PLAYER AS A DIPSTICK — and RECONSTRUCTED from `r5-press-delay` by removing its 120-tick shift, because the driver that authored it is now correct and therefore refuses to. Identical to the delayed arm up to and including press 5, then holds `down` for 260 ticks. A player pressed against a block gliding at 0.5 px/tick follows it in 1 px steps every other tick, so the y trace dates the glide, measures its speed and says where it stopped. ⛔⛔ THE PRESS IS WEDGED: `spinner@224,112` stands in the corridor, the block parks ~7 px into a 16 px move, and `hit()`'s `if (v.length > 0) return` swallows everything after. This is the arm that REFUTED the pre-slice-13 model, at t157.",
@@ -35,6 +35,7 @@
       "slot": 1
     }
   ],
+  "pins": ["dead_frames"],
   "tick_count": 410,
   "inputs": [
     {

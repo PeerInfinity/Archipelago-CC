@@ -1,5 +1,5 @@
 {
-  "tape_version": 4,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r4-walk-4-approach",
   "description": "R4 walk SEGMENT 4 of 6, synthesized by botDriverV2 from legs 23-27 of the committed route (fixtures/r4-route.json). It boots where segment 3 ended and inherits sword, feather, torch in a single grant entry at the boot level, which fires on tick 0. 5 legs across 5 level(s), 4 crossings. Ends holding [hasSword, hasFeather, hasTorch] with hitsMax 3.",
@@ -67,6 +67,9 @@
     }
   ],
   "equips": [],
+  "pins": [
+    "dead_frames"
+  ],
   "tick_count": 1354,
   "inputs": [
     {

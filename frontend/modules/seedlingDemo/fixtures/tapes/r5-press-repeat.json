@@ -1,5 +1,5 @@
 {
-  "tape_version": 4,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r5-press-repeat",
   "description": "⛓⛓ SIX PRESSES, 42 TICKS APART, WITH `down` HELD — the two-sided test of whether the thing in the corridor is STATIC or MOVING, RECONSTRUCTED from `r5-press-delay`. A static blocker gives the same y for the whole tape; a wandering spinner would let a later press through and the y would step down. ⛔ IT DOES NOT: the block jams ~14 px in at t143 and the FIVE LATER PRESSES ARE ALL SWALLOWED, because a blocked block keeps `v` non-zero forever (`input()` re-derives it from `tile`, `moveY` resets `tile` to the current cell) and `PushableBlockFire.hit`'s first line is `if (v.length > 0) return`. A wedged block can never be un-wedged by pressing it.",
@@ -35,6 +35,7 @@
       "slot": 1
     }
   ],
+  "pins": ["dead_frames"],
   "tick_count": 404,
   "inputs": [
     {

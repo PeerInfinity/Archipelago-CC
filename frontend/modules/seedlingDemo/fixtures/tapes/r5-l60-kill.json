@@ -1,5 +1,5 @@
 {
-  "tape_version": 3,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r5-l60-kill",
   "description": "THE FIRST LIVE KILL, arm 2 of 2 — 10 sword presses at the 31-tick cadence (21 is the DASH floor, 31 the enemy i-frame one; the larger wins). Both jellyfish chase onto the stance — the 160 px leash is the whole room — and are cut where they arrive. The count is a FLOOR: six landed hits is the arithmetic and twelve presses is the schedule, because a knocked-back body spends ticks coming back. The assertion is the EFFECT: `persistence_cleared` gains {60, 0} — which only `Lock.turnOff()` writes, 100 ticks of alpha fade after `totalEnemies()` reaches 0 — and the same held RIGHT that pins the control arm at 126 crosses to 150.",
@@ -23,6 +23,8 @@
     }
   ],
   "persistence": [],
+  "equips": [],
+  "pins": ["dead_frames"],
   "tick_count": 358,
   "inputs": [
     {

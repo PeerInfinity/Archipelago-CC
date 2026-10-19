@@ -426,6 +426,10 @@ export function r2TapeSpecs(route) {
                 noHazards: [...R2_NO_HAZARDS],
                 grants,
                 persistence: clears(),
+                equips: [],
+                // ⛓ The dead-frame LOCKSTEP (`Bot.pinDeadFrames`): a load costs exactly
+                // LOAD_FADE_FRAMES, whatever the page's render pacing. Re-pinned 2026-10-19.
+                pins: ['dead_frames'],
             },
         });
     }
@@ -449,6 +453,10 @@ export function r2TapeSpecs(route) {
             noHazards: [...R2_NO_HAZARDS],
             grants: route.grants.map((g) => ({ level: g.level, items: [...g.items] })),
             persistence: clears(),
+            equips: [],
+            // ⛓ The dead-frame LOCKSTEP (`Bot.pinDeadFrames`): a load costs exactly
+            // LOAD_FADE_FRAMES, whatever the page's render pacing. Re-pinned 2026-10-19.
+            pins: ['dead_frames'],
         },
     });
     return specs;

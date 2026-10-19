@@ -1,5 +1,5 @@
 {
-  "tape_version": 3,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r5-totem-entrance",
   "description": "⛓⛓ THE ENTRANCE TO THE WHOLE TOTEM CLUSTER, and it is a five-link puzzle rather than a walk. L38 is TWO DISJOINT ROOMS: the L37 door lands in the south one and `buttonroom@32,48` — the only opener of L39 — is in the north one. The join is ONE cell holding a `cover` AND, underneath it, a `chest` that is `type = \"Solid\"` until opened. This arm runs the chain: a `room = -1` ButtonRoom latches its group and opens a cover; a SECOND one under that cover ARMS A `Pulser`; the pulse shoves a PushableBlockFire one tile north onto a button no player can stand on; that button opens the cover over the chest; and the chest opens on a ONE-PIXEL LINE beneath it from a TWO-PIXEL stance band. Then the entrance button, then the door, then 400 ticks of UP in L39 — which this arm spends WALKING, because {39,8} is written and `wandlock@144,592` was never built.",
@@ -23,6 +23,8 @@
     }
   ],
   "persistence": [],
+  "equips": [],
+  "pins": ["dead_frames"],
   "tick_count": 1214,
   "inputs": [
     {

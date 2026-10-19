@@ -1,5 +1,5 @@
 {
-  "tape_version": 4,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r5-l40-join",
   "description": "⛓⛓⛓ L40 LINKS 1 AND 2 — the chest and the tree, which are ONE GATE. Row 51 of the south-east chamber is wall except at (55,51), where `chest@880,816` stands, and `burnabletree@872,784` is a 32x32 solid on the four cells above it: chest alone +4, tree alone +0, both +40. ⛓ The ORDER is forced by the route and not by the flags — every stance that reaches the tree is inside the chest's own cell. The chest is a SEAL CEREMONY (331 dead frames) and the burn is 41 ticks of a still-solid tree. ⚠ The chamber holds a bobsoldier in the chest's stance band and two spinners; bob-family `removed()` is EMPTY so a bob kill writes nothing, and the ledger claim is that no SPINNER died.",
@@ -29,6 +29,7 @@
       "slot": 1
     }
   ],
+  "pins": ["dead_frames"],
   "tick_count": 895,
   "inputs": [
     {

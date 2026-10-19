@@ -1,5 +1,5 @@
 {
-  "tape_version": 3,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r3-walk-6-darksuit",
   "description": "R3 walk SEGMENT 6 of 6, synthesized by botDriverV2 from legs 43-52 of the committed route (fixtures/r3-route.json). It boots where segment 5 ended and inherits sword, feather, torch, spear, darkshield in a single grant entry at the boot level, which fires on tick 0. 10 legs across 6 level(s), 9 crossings of which 1 are pit falls. COLLECTS darksuit (darksuit@40,152, 4 release(s) over 29 ticks). TOUCHES shieldlock@288,256 with Player.hasDarkShield, snapping to y 263 and refusing input for 100 ticks, which writes setPersistence(2, false). 10 persistence clear(s) applied before the first live tick. Ends holding hasSword, hasDarkShield, hasFeather, hasSpear, hasDarkSuit, hasTorch, hitsMax 3. Regenerate with fixtures/regenerate-r3-tapes.mjs; the route is the artifact and this tape is derived from it.",
@@ -79,6 +79,10 @@
       "tag": 0,
       "note": "lock@112,192"
     }
+  ],
+  "equips": [],
+  "pins": [
+    "dead_frames"
   ],
   "tick_count": 2175,
   "inputs": [

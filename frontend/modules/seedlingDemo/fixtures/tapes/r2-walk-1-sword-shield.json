@@ -1,5 +1,5 @@
 {
-  "tape_version": 3,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r2-walk-1-sword-shield",
   "description": "R2 walk SEGMENT 1 of 6, synthesized by botDriverV2 from legs 0-12 of the committed route (fixtures/r2-route.json). 13 legs across 7 level(s), 12 crossings of which 0 are pit falls. 25 persistence clear(s) applied before the first live tick. Ends holding hasSword, hasShield, hitsMax 3. Regenerate with fixtures/regenerate-r2-tapes.mjs; the route is the artifact and this tape is derived from it.",
@@ -156,6 +156,10 @@
       "tag": 0,
       "note": "lock@32,32"
     }
+  ],
+  "equips": [],
+  "pins": [
+    "dead_frames"
   ],
   "tick_count": 928,
   "inputs": [

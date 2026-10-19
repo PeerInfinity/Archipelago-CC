@@ -90,14 +90,14 @@
       "file": "collide-up-rock.json",
       "tickCount": 45,
       "bootLevel": 0,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
       "file": "cross-level-leg.json",
       "tickCount": 257,
       "bootLevel": 0,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
@@ -118,14 +118,14 @@
       "file": "diagonal-run.json",
       "tickCount": 40,
       "bootLevel": 0,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
       "file": "direction-flip.json",
       "tickCount": 45,
       "bootLevel": 0,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
@@ -230,7 +230,7 @@
       "file": "friction-stop.json",
       "tickCount": 30,
       "bootLevel": 0,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
@@ -286,7 +286,7 @@
       "file": "grant-sword-room.json",
       "tickCount": 376,
       "bootLevel": 0,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "pit",
@@ -334,7 +334,7 @@
       "file": "hazard-boot-pit.json",
       "tickCount": 30,
       "bootLevel": 83,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "pit",
@@ -347,7 +347,7 @@
       "file": "hazard-walk-water.json",
       "tickCount": 60,
       "bootLevel": 0,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "pit",
@@ -409,7 +409,7 @@
       "file": "l71-button-lock.json",
       "tickCount": 160,
       "bootLevel": 71,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -421,7 +421,7 @@
       "file": "l71-hold-101-shut.json",
       "tickCount": 101,
       "bootLevel": 71,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -433,7 +433,7 @@
       "file": "l71-hold-102-open.json",
       "tickCount": 102,
       "bootLevel": 71,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -445,7 +445,7 @@
       "file": "l71-lock-shut.json",
       "tickCount": 60,
       "bootLevel": 71,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -457,7 +457,7 @@
       "file": "l71-shieldlock-open.json",
       "tickCount": 140,
       "bootLevel": 71,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -469,7 +469,7 @@
       "file": "l71-shieldlock-shut.json",
       "tickCount": 140,
       "bootLevel": 71,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -495,7 +495,7 @@
       "file": "pit-fall-83.json",
       "tickCount": 80,
       "bootLevel": 83,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -507,7 +507,7 @@
       "file": "pit-fall-chain-85.json",
       "tickCount": 220,
       "bootLevel": 83,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -568,7 +568,7 @@
       "file": "pushblock-l65-sword-press.json",
       "tickCount": 80,
       "bootLevel": 65,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -636,7 +636,7 @@
       "file": "r2-walk-1-sword-shield.json",
       "tickCount": 928,
       "bootLevel": 0,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -648,7 +648,7 @@
       "file": "r2-walk-2-feather.json",
       "tickCount": 276,
       "bootLevel": 0,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -660,7 +660,7 @@
       "file": "r2-walk-3-darksword-torch.json",
       "tickCount": 1556,
       "bootLevel": 0,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -672,7 +672,7 @@
       "file": "r2-walk-4-spear.json",
       "tickCount": 3533,
       "bootLevel": 12,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -684,7 +684,7 @@
       "file": "r2-walk-5-darkshield.json",
       "tickCount": 1936,
       "bootLevel": 12,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -696,7 +696,7 @@
       "file": "r2-walk-6-darksuit.json",
       "tickCount": 1907,
       "bootLevel": 71,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -708,7 +708,7 @@
       "file": "r2-walk-full.json",
       "tickCount": 10136,
       "bootLevel": 0,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -741,7 +741,7 @@
       "file": "r3-collect-darkshield.json",
       "tickCount": 54,
       "bootLevel": 74,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -753,7 +753,7 @@
       "file": "r3-collect-darksuit.json",
       "tickCount": 53,
       "bootLevel": 79,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -765,7 +765,7 @@
       "file": "r3-collect-feather.json",
       "tickCount": 54,
       "bootLevel": 89,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -777,7 +777,7 @@
       "file": "r3-collect-shield.json",
       "tickCount": 54,
       "bootLevel": 20,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -789,7 +789,7 @@
       "file": "r3-collect-spear.json",
       "tickCount": 56,
       "bootLevel": 64,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -801,7 +801,7 @@
       "file": "r3-collect-sword.json",
       "tickCount": 75,
       "bootLevel": 10,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -813,7 +813,7 @@
       "file": "r3-collect-torch.json",
       "tickCount": 54,
       "bootLevel": 30,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -848,7 +848,7 @@
       "file": "r3-walk-1-sword.json",
       "tickCount": 641,
       "bootLevel": 0,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -860,7 +860,7 @@
       "file": "r3-walk-2-feather.json",
       "tickCount": 1473,
       "bootLevel": 0,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -872,7 +872,7 @@
       "file": "r3-walk-3-torch.json",
       "tickCount": 1964,
       "bootLevel": 12,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -884,7 +884,7 @@
       "file": "r3-walk-4-spear.json",
       "tickCount": 3707,
       "bootLevel": 12,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -896,7 +896,7 @@
       "file": "r3-walk-5-darkshield.json",
       "tickCount": 2162,
       "bootLevel": 12,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -908,7 +908,7 @@
       "file": "r3-walk-6-darksuit.json",
       "tickCount": 2175,
       "bootLevel": 71,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -920,7 +920,7 @@
       "file": "r3-walk-full.json",
       "tickCount": 12122,
       "bootLevel": 0,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -939,7 +939,7 @@
       "file": "r4-walk-1-sword.json",
       "tickCount": 641,
       "bootLevel": 0,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "waterfall"
@@ -949,7 +949,7 @@
       "file": "r4-walk-2-feather.json",
       "tickCount": 1473,
       "bootLevel": 0,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "waterfall"
@@ -959,7 +959,7 @@
       "file": "r4-walk-3-torch.json",
       "tickCount": 1964,
       "bootLevel": 12,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "waterfall"
@@ -969,7 +969,7 @@
       "file": "r4-walk-4-approach.json",
       "tickCount": 1354,
       "bootLevel": 12,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "waterfall"
@@ -979,7 +979,7 @@
       "file": "r4-walk-5-spear.json",
       "tickCount": 1571,
       "bootLevel": 61,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "waterfall"
@@ -989,7 +989,7 @@
       "file": "r4-walk-6-health.json",
       "tickCount": 3049,
       "bootLevel": 59,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "waterfall"
@@ -999,7 +999,7 @@
       "file": "r4-walk-full.json",
       "tickCount": 10052,
       "bootLevel": 0,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "waterfall"
@@ -1059,7 +1059,7 @@
       "file": "r5-contact-control-off.json",
       "tickCount": 80,
       "bootLevel": 8,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -1071,7 +1071,7 @@
       "file": "r5-contact-control-on.json",
       "tickCount": 80,
       "bootLevel": 8,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -1122,14 +1122,14 @@
       "file": "r5-l37-burn-control.json",
       "tickCount": 226,
       "bootLevel": 37,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
       "file": "r5-l37-burn.json",
       "tickCount": 226,
       "bootLevel": 37,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
@@ -1150,49 +1150,49 @@
       "file": "r5-l40-join-control.json",
       "tickCount": 895,
       "bootLevel": 40,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
       "file": "r5-l40-join.json",
       "tickCount": 895,
       "bootLevel": 40,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
       "file": "r5-l40-part0-control.json",
       "tickCount": 700,
       "bootLevel": 40,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
       "file": "r5-l40-part0.json",
       "tickCount": 700,
       "bootLevel": 40,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
       "file": "r5-l40-part1.json",
       "tickCount": 493,
       "bootLevel": 40,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
       "file": "r5-l40-part5-control.json",
       "tickCount": 1937,
       "bootLevel": 40,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
       "file": "r5-l40-part5.json",
       "tickCount": 1978,
       "bootLevel": 40,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
@@ -1253,7 +1253,7 @@
       "file": "r5-l60-kill-control.json",
       "tickCount": 358,
       "bootLevel": 60,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "waterfall"
@@ -1263,7 +1263,7 @@
       "file": "r5-l60-kill.json",
       "tickCount": 358,
       "bootLevel": 60,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "waterfall"
@@ -1273,42 +1273,42 @@
       "file": "r5-press-delay-control.json",
       "tickCount": 530,
       "bootLevel": 39,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
       "file": "r5-press-delay.json",
       "tickCount": 530,
       "bootLevel": 39,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
       "file": "r5-press-glide.json",
       "tickCount": 410,
       "bootLevel": 39,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
       "file": "r5-press-repeat.json",
       "tickCount": 404,
       "bootLevel": 39,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
       "file": "r5-shaft-control.json",
       "tickCount": 2764,
       "bootLevel": 39,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
       "file": "r5-shaft.json",
       "tickCount": 2764,
       "bootLevel": 39,
-      "tapeVersion": 4,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
@@ -1342,14 +1342,14 @@
       "file": "r5-totem-entrance-control.json",
       "tickCount": 1048,
       "bootLevel": 38,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
       "file": "r5-totem-entrance.json",
       "tickCount": 1214,
       "bootLevel": 38,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
@@ -1370,7 +1370,7 @@
       "file": "r6-contact-pair-control.json",
       "tickCount": 130,
       "bootLevel": 8,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -1382,7 +1382,7 @@
       "file": "r6-contact-pair-heart.json",
       "tickCount": 130,
       "bootLevel": 8,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -1394,7 +1394,7 @@
       "file": "r6-contact-pair-live.json",
       "tickCount": 130,
       "bootLevel": 8,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -1406,7 +1406,7 @@
       "file": "r6-contact-pair-standing.json",
       "tickCount": 90,
       "bootLevel": 8,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": [
         "water",
         "lava",
@@ -1620,7 +1620,7 @@
       "file": "r8-l6-bob-contact.json",
       "tickCount": 30,
       "bootLevel": 6,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
@@ -1963,7 +1963,7 @@
       "file": "shuffle-stop.json",
       "tickCount": 60,
       "bootLevel": 0,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
@@ -2040,14 +2040,14 @@
       "file": "statue-press.json",
       "tickCount": 150,
       "bootLevel": 0,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
       "file": "straight-run.json",
       "tickCount": 40,
       "bootLevel": 0,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
@@ -2061,14 +2061,14 @@
       "file": "thread-the-gap.json",
       "tickCount": 197,
       "bootLevel": 0,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
       "file": "transition-west-return.json",
       "tickCount": 150,
       "bootLevel": 0,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {
@@ -2194,7 +2194,7 @@
       "file": "wall-slide.json",
       "tickCount": 70,
       "bootLevel": 0,
-      "tapeVersion": 3,
+      "tapeVersion": 5,
       "noHazards": []
     },
     {

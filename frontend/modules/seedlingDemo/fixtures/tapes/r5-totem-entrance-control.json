@@ -1,5 +1,5 @@
 {
-  "tape_version": 3,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r5-totem-entrance-control",
   "description": "⛓ THE CONTROL, and the field is a BUTTON rather than a flag. Byte-identical to `r5-totem-entrance` except for one target: it opens the same chest, walks through the same join and takes the same door, and it does NOT stand on `buttonroom@32,48`. So L39 is built WITH `wandlock@144,592` and the same 400 ticks of UP end PINNED one tile short of it. ⚠ Its ledger is NOT empty — the arrival button writes {37,4}+{38,5} and the chest clears {38,1} in both arms, which is exactly why an exact-set assertion has to name them.",
@@ -23,6 +23,8 @@
     }
   ],
   "persistence": [],
+  "equips": [],
+  "pins": ["dead_frames"],
   "tick_count": 1048,
   "inputs": [
     {

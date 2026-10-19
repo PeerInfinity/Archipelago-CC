@@ -1,5 +1,5 @@
 {
-  "tape_version": 4,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r5-shaft",
   "description": "⛓⛓ THE SHAFT — eighteen fire presses, three blocks and four holds. `SHAFT_PLAN` has been a plan since §19.8 and a CORRECT plan since §20.3, and both of its certificates ran through the same unaimed press model. This is the first independent check it has ever met. The choreography: block 1 up column 9 onto `button t1` (which opens BOTH group-1 responders — `cover t1` lets block 2 in and `wandlock@48,160` lets block 3 out); block 2 down column 12 and TWO tiles past its destination onto `button t2`, holding `cover t2` for block 3's whole crossing; block 3 out of its pocket, east along row 9 and ONE tile past its own destination onto `button t0`; and then a SINGLE press from the middle of the cross that sends all three onto the three lock-buttons at once — every push a pure axis, so the `bothRange` diagonal §19.8 needed is not needed anywhere. ⛓ The rope is pulled with FIRE rather than the sword: `genericHit`'s rope arm takes no `t`, a sword press would consult the `blockedLine` oracle and then waive it, and this way the whole visit needs one weapon and one equip.",
@@ -35,6 +35,7 @@
       "slot": 1
     }
   ],
+  "pins": ["dead_frames"],
   "tick_count": 2764,
   "inputs": [
     {

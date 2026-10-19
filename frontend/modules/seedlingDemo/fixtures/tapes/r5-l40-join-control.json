@@ -1,5 +1,5 @@
 {
-  "tape_version": 4,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r5-l40-join-control",
   "description": "⛓⛓ THE SHUT-BEFORE CONTROL for `r5-l40-join`: the identical tape with the ONE fire press deleted. ⚠ The chest still opens — it is a probe row the walk crosses, not a press — so this arm IS the +4 measurement, driven: the walk reaches the chest's own cell and the tree holds the four above it. The chamber behind the gate is never entered.",
@@ -29,6 +29,7 @@
       "slot": 1
     }
   ],
+  "pins": ["dead_frames"],
   "tick_count": 895,
   "inputs": [
     {

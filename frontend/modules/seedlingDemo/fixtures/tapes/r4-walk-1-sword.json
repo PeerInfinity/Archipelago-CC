@@ -1,5 +1,5 @@
 {
-  "tape_version": 4,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r4-walk-1-sword",
   "description": "R4 walk SEGMENT 1 of 6, synthesized by botDriverV2 from legs 0-8 of the committed route (fixtures/r4-route.json). 9 legs across 5 level(s), 8 crossings. COLLECTS sword (sword@48,48, 4 release(s) over 29 ticks). Ends holding [hasSword] with hitsMax 3.",
@@ -58,6 +58,9 @@
     }
   ],
   "equips": [],
+  "pins": [
+    "dead_frames"
+  ],
   "tick_count": 641,
   "inputs": [
     {

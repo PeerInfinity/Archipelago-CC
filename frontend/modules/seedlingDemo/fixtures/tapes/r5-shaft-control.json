@@ -1,5 +1,5 @@
 {
-  "tape_version": 4,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r5-shaft-control",
   "description": "⛓⛓ THE SHUT-BEFORE CONTROL for `r5-shaft`: the identical tape with the EIGHTEEN block presses deleted and the rope pull kept, because the rope is what opens the shaft and a control blocked at the door would be testing the door. Every walk span is byte-identical. The three covers stay shut, so the walk cannot cross row 9 and comes to rest pinned in the column below the lowest WandLock — and the ledger it earns is the rope's alone. A press arm that reaches the middle of the cross proves the choreography only if this one does not.",
@@ -35,6 +35,7 @@
       "slot": 1
     }
   ],
+  "pins": ["dead_frames"],
   "tick_count": 2764,
   "inputs": [
     {

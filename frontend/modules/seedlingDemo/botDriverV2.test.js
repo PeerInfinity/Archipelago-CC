@@ -604,11 +604,17 @@ describe('the committed fixtures are what the driver emits today', () => {
             noHazards: [...t.noHazards],
             grants: t.grants.map((g) => ({ level: g.level, items: [...g.items] })),
             inputs: t.inputs.map((s) => ({ key: s.key, from: s.from, to: s.to })),
+            pins: [...t.pins],
         };
     };
+    // ⛓ The three fixtures carry the dead-frame LOCKSTEP pin (re-pinned
+    // 2026-10-19), so the driver is asked for it: a pin selects an execution.
+    const LOCKSTEP = { equips: [], pins: ['dead_frames'] };
+    // An unrelaxed walk declares the v3 floor's values, which is what it got.
+    const UNRELAXED = { noclip: false, noDamage: false, noHazards: [], grants: [], ...LOCKSTEP };
 
     it('thread-the-gap', () => {
-        const { tape } = synthesizeWalk([{ x: 264, y: 216 }], { levelSource });
+        const { tape } = synthesizeWalk([{ x: 264, y: 216 }], { levelSource, relax: UNRELAXED });
         expect(substance(tape)).toEqual(substance(loadTape('thread-the-gap')));
     });
 
@@ -617,7 +623,7 @@ describe('the committed fixtures are what the driver emits today', () => {
             { level: 0, targets: [{ x: 88, y: 168 }], exit: { x: 0, y: 128 } },
             { level: 94, targets: [{ x: 216, y: 200 }], exit: { x: 304, y: 160 } },
             { level: 0, targets: [] },
-        ], { levelSource });
+        ], { levelSource, relax: UNRELAXED });
         expect(substance(tape)).toEqual(substance(loadTape('cross-level-leg')));
     });
 
@@ -641,6 +647,7 @@ describe('the committed fixtures are what the driver emits today', () => {
                 noDamage: true,
                 noHazards: ['water', 'pit', 'lava', 'ice', 'waterfall'],
                 grants: [{ level: 10, items: ['sword'] }],
+                ...LOCKSTEP,
             },
         });
         expect(substance(tape)).toEqual(substance(loadTape('grant-sword-room')));
