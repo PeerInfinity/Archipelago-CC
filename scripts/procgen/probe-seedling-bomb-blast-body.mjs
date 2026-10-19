@@ -116,13 +116,13 @@ async function main() {
             recordedBy: 'scripts/procgen/probe-seedling-bomb-blast-body.mjs --record',
             switches: { SEEDLING_CONTACT_FIDELITY: process.env.SEEDLING_CONTACT_FIDELITY ?? null,
                 SEEDLING_BOMB_BLAST_BODY: process.env.SEEDLING_BOMB_BLAST_BODY ?? null },
-            note: 'the GAME\'s player, its hits, and every Bob/BobSoldier/Spinner row with x < 400 and y < 260 at each '
+            note: 'the GAME\'s player, its hits, its camera, and every Bob/BobSoldier/Spinner row with x < 400 and y < 260 at each '
                 + 'sampled tick of the window (`botMobiles()`, `botStatus()`; the last poll before the tick advanced); a '
                 + 'body row is [class, x, y, vx, vy, hits, hits_timer]',
             events: events.filter((e) => e.t >= a && e.t <= b),
             tape,
             samples: game.filter((g) => g.t >= a && g.t <= b).map((g) => ({ t: g.t, p: [g.player.x, g.player.y],
-                hits: g.hits, bodies: g.bodies.filter((r) => r.x < 400 && r.y < 260)
+                hits: g.hits, cam: g.camera, bodies: g.bodies.filter((r) => r.x < 400 && r.y < 260)
                     .map((r) => [r.cls, r.x, r.y, r.vx, r.vy, r.hits, r.hitsTimer]) })),
         };
         const path = join(dir, `${NAME}.json`);
@@ -259,8 +259,11 @@ async function modelColumns(tape, game) {
             if (cls) bodies.push({ cls, id: c.id, x: c.x, y: c.y, vx: c.vx, vy: c.vy, hits: c.hits, hitsTimer: c.hitsTimer });
         }
         // `spinnerBodies` carries no velocity: a spinner is joined on position, `hits` and `hits_timer`.
+        // ⚠ A faded spinner (alpha < 0) is GONE in the game on that tick (`Spinner.death` removes it in the same
+        // update) and still listed by the run until its next tick drains it — for a press kill and a blast kill alike
+        // (measured: t1285 and t1350 of `bombblast-l40-bw-lapse1-idle`); the kill ledger's `removedTick` is the game's.
         for (const s of run?.entities?.('spinnerBodies') ?? []) {
-            if (s.removed) continue;
+            if (s.removed || s.alpha < 0) continue;
             bodies.push({ cls: 'Spinner', id: s.id, x: s.x, y: s.y, vx: null, vy: null, hits: s.hits, hitsTimer: s.hitsTimer });
         }
         cols[o.t] = { px: o.x, py: o.y, bodies };
