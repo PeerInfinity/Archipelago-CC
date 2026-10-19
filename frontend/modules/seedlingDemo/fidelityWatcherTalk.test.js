@@ -1,6 +1,6 @@
 /**
  * fidelityWatcherTalk.test — ⛓⛓⛓ fidelity WATCHERTALK (wave 19): THE WATCHER'S EVENT IS EARNED BY TALKING
- * (`CONTACT_FIDELITY.watcherTalkVerb`, OFF by default).
+ * (`CONTACT_FIDELITY.watcherTalkVerb`, ON by default since planning-9's flip, 2026-10-19).
  *
  * The AP event "talk to the Watcher" is the clear-tag `{114,0}` on `watcher@72,72` (it gates the FinalDoor). The
  * Watcher is typed "Watcher" (`Watcher.as:48`), in no solids list, so the clear-tag finds no solid at (72,72):
@@ -47,8 +47,9 @@ const refusalOf = (fn) => {
 };
 
 describe('fidelity WATCHERTALK — the switch', () => {
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.watcherTalkVerb).toBe(false);
+    // ⛓ planning-9's flip (⚖ user "Flip watcherTalkVerb", 2026-10-19): it shipped OFF and ships ON now.
+    it('ships ON', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.watcherTalkVerb).toBe(true);
     });
 });
 

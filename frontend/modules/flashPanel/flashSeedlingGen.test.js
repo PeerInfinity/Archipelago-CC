@@ -63,8 +63,11 @@ describe('the entry — registered, light, and in the family', () => {
         expect(ENTRY.loadRegionEvent).toBe(FLASH_SEEDLING_LOAD_REGION_EVENT);
         expect(ENTRY.roomEditor).toEqual(FLASH_SEEDLING_ENTRY.roomEditor);
         expect('iframeId' in ENTRY).toBe(false);
-        // ⛔ the editor round trip is NOT declared in G1 (the hub reports "not checked")
-        expect('regionRoundTrip' in ENTRY).toBe(false);
+        // ⛓ region-editor-launch S2 (⚖ 2026-10-19): the round trip IS declared now — a generated
+        //   room opens from a world (`seedlingDemo/seedlingGenRegionRoundTrip.js`, its own tests)
+        expect(typeof ENTRY.regionRoundTrip?.open).toBe('function');
+        expect(typeof ENTRY.regionRoundTrip?.save).toBe('function');
+        expect('refused' in ENTRY.regionRoundTrip).toBe(false);
     });
 
     it('is PROCEDURAL (it shadows no zone hook) in the SIDES shape, and (G4) a HOST — a leaf only by the state\'s knob', () => {

@@ -112,6 +112,18 @@ This derivation runs only on the editor path: `deriveAtlasOf` passes `record.set
 
 **End to end on a generated set.** `buildLevelSet({link: true})` → set session → `add-room` → `connect` → `reorder` → `mark-location` → `set-access-rule` → `deriveAtlasOf` → `validateRegionAtlas` (with schema) → `compileRegionAtlas` → `rulesJsonSchemaErrors` empty → the compile report's unwired exits agree with `reachabilityOf` → `reachableRegions` covers every region with an open evaluator and drops the gated one when the evaluator refuses the rule's item → undo back to the base.
 
+### A generated room from a world
+
+A `flash_seedling_gen` region opens on the EDIT arm from the pipeline's Edit ▸ and the APWorld Editor's, through `seedlingDemo/seedlingGenRegionRoundTrip.js` (the entry's `regionRoundTrip`, loaded by dynamic import so the registry entry stays light).
+
+- **What the page is handed.** A one-room `record` level set holding the room as it plays: the sidecar keeps the bare generated record, so `open` adds the `apitem`s and the door `teleporter`s the way `assembleGeneratedSeedlingSet` does (every door leads back into the room, at its own arrival).
+- **What a save may change.** Tiles, and every entity except the doors and AP items. A save that moves, removes or adds a door or an AP item, or resizes the room, is refused with a sentence: those cells belong to the world (a neighbour's door lands on a door's `entrance_spawn`; a location's tag is its AP identity). Entities are compared with their attribute values as strings, because `buildLevelSet` writes every OEL attribute as a string.
+- **Rules.** An edit moves no rule. A generated room's rules come from the world (`extractGenRules` copies them), and the pipeline keeps the exit fields its serializer does not write (a grown exit's `isBackExit`, from which Compile composes the back exit's gate).
+- **Certification.** A changed room is re-checked by `seedlingGenRoom.certifyGenRoom`: the generator's own oracle, under the model of the room's own draw (`redrawGenRoom`, which reproduces the draw from the payload's seed, size and knobs), with every door as a wall, once for the goal cell and once for each other location (given a pickup there). The verdict is stamped on `generation.edited` (`{certified: true}` or `{certified: false, failures}`). A room that fails is saved and flagged, never refused; the entry's `regionEditStatus` turns the stamp into the flag the pipeline and the APWorld Editor show. An unedited save returns the payload byte for byte.
+- **Real-game rooms** (`flash_seedling`) do not open from a world. They are read-only there: their access rules come from the committed playthrough atlas, not from their layout, and a change to one goes in as a reviewed `SEEDLING_SET_PATCHES` row.
+
+Tests: `seedlingGenRegionRoundTrip.test.js` (every committed generated room through the APWorld Editor's door; the refusals; certification; an edited room assembled into its world's set and solved on the JS runtime), `procgenPipeline/pipelineRoomEdit.test.js` (every generated room of the sphere presets round-tripped unedited recompiles byte-identically), and the in-app row `procgen-pipeline-seedling-gen-edit-round-trip` (the real page).
+
 ## The WORLD — one session over several set documents (`procgenCore/world*.js`)
 
 A world is a set session whose rooms are not all one substrate. **The bundle is the world**: its members are a `level-set`, a `region-library`, and a `world` document holding the manifest, both parts' overlays and the links between them. The overlays live inside the `world` document because a bundle has exactly one entry per kind. A `world` document is recognised by shape: a `parts` object plus a `links` array.

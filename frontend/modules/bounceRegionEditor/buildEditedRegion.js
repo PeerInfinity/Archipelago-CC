@@ -40,6 +40,21 @@
 
 import { assembleBounceRegionFromLevel } from '../bounceDemo/bounceDemoLibrary.js';
 
+/**
+ * ⛓ The derive settings of a session — the staged `settings` over the
+ * contract's, over the defaults. ONE spelling: the save below and the panel's
+ * `_analyze` readout both read it, so the readout derives what Save derives.
+ */
+export function deriveSettingsOf(contract = {}, settings = {}) {
+    const s = settings ?? {};
+    const c = contract ?? {};
+    return {
+        physicsProfile: s.physicsProfile ?? c.physicsProfile ?? 'experimental',
+        mode: s.mode ?? c.mode ?? 'column',
+        freeArrow: s.freeArrow ?? c.freeArrow ?? 'right',
+    };
+}
+
 const clone = (o) => (typeof structuredClone === 'function'
     ? structuredClone(o)
     : JSON.parse(JSON.stringify(o)));
@@ -61,9 +76,7 @@ export function buildEditedRegion({ region, contract = {}, level, settings = {} 
         region_id: region.region_id,
         exitSpecs: contract.exitSpecs ?? [],
         locationSpecs,
-        physicsProfile: s.physicsProfile ?? contract.physicsProfile ?? 'experimental',
-        mode: s.mode ?? contract.mode ?? 'column',
-        freeArrow: s.freeArrow ?? contract.freeArrow ?? 'right',
+        ...deriveSettingsOf(contract, s),
     });
     const next = clone(region);
     next.playable_payload = built.payload;

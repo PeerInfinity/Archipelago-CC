@@ -64,7 +64,7 @@
  */
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { getRegionEditor } from '../procgenPipeline/regionEditors.js';
+import { getRegionEditor, openRoomEditor } from '../procgenPipeline/regionEditors.js';
 import { extractItemRequirementFromRule } from '../procgenPipeline/ruleRequirements.js';
 import {
     apExitNameCandidates, apLocationNameCandidates,
@@ -507,9 +507,10 @@ export async function buildSidecarOp({ saved, inspection }) {
  *   lab door), so the caller can PARK it and close it on a re-render.
  */
 export async function openRegionRoom(inspection, onOp) {
-    const open = getRegionEditor(inspection.substrate);
     const onSave = (saved) => {
         buildSidecarOp({ saved, inspection }).then(onOp, (e) => onOp({ error: e.message }));
     };
-    return open({ ...inspection.session, onSave });
+    // ⛓ The ONE opener (⚖ region-editor-launch Q1): the editor's panel is
+    //   created first when the layout has none.
+    return openRoomEditor(inspection.substrate, { ...inspection.session, onSave });
 }

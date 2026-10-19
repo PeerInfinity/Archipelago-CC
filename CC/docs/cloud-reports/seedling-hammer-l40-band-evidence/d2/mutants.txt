@@ -1,0 +1,14 @@
+base md5 9b13123185d58c506e4bd995cb89f9fc
+M1 the shake catch ignores its switch: exit 1
+    [31m     [31m×[31m HO1: at t2439 the strike preview throws OFF; ON the band's candidates are refused by name[39m[33m 9143[2mms[22m[39m
+    [2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[33m4 skipped[39m[90m (5)[39m
+M2 the band's walk is not marked truncated: exit 1
+    [31m     [31m×[31m HO1: at t2439 the strike preview throws OFF; ON the band's candidates are refused by name[39m[33m 7324[2mms[22m[39m
+    [2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[33m4 skipped[39m[90m (5)[39m
+M3 the reboot guard ignores its switch: exit 1
+    [31m     [31m×[31m HO2 OFF: the press kill carries on past the death at t1202[39m[33m 122891[2mms[22m[39m
+    [2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[33m4 skipped[39m[90m (5)[39m
+M4 the reboot guard refuses on any tick (>= for >): exit 1
+    [31m     [31m×[31m HO2 ON: the press kill is refused by name on the tick of the first death[39m[33m 4431[2mms[22m[39m
+    [2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[33m4 skipped[39m[90m (5)[39m
+restored md5 9b13123185d58c506e4bd995cb89f9fc

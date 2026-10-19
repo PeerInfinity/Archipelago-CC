@@ -169,6 +169,14 @@ export class ProcgenLabPanelUI {
          * entry would hand a caller an iframe that is already `about:blank`.
          */
         registerLabPanelInstance(this);
+        /**
+         * ⛔ MEASURED 2026-10-19 (region-editor-launch): closing the tab did NOT
+         * call `destroy()` — the panel manager's wrapper calls `onUnmount` only,
+         * and this class had none — so a closed lab stayed REGISTERED and
+         * `findLabPanel` handed Edit ▸ a panel no longer on screen. Golden
+         * Layout's own `destroy` event is what the app's other panels hang it on.
+         */
+        container?.on?.('destroy', () => this.destroy());
         this._render();
     }
 
@@ -536,6 +544,8 @@ export class ProcgenLabPanelUI {
     }
 
     destroy() {
+        if (this._destroyed) return;
+        this._destroyed = true;
         // ⛔ FIRST, and before the iframe goes to `about:blank`: a room editor
         // that resolved this instance a line later would address a dead frame.
         unregisterLabPanelInstance(this);

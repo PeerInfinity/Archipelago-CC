@@ -84,7 +84,8 @@ import {
     sphereLibrarySubstrateIds, buildSphereConfig, buildSphereRun,
     buildSpiralRun, buildTopDownRun, buildGridRun, compileGridRun,
 } from './presetRun.js';
-import { getRegionEditor } from './regionEditors.js';
+import { getRegionEditor, openRoomEditor, roomEditorKindOf } from './regionEditors.js';
+import { openPipelineRoom, regionFromPipelineSave } from './pipelineRoomEdit.js';
 import { peekSphereStateSingleton } from '../sphereState/singleton.js';
 import {
     SHIPPED_PRESETS, capturePresetState, applyPresetState,
@@ -3179,6 +3180,15 @@ export class ProcgenPipelineUI {
         label.textContent = `#${node.index} w${node.wave}`
             + `${node.isFiller ? ' (filler)' : ''}`
             + `${itemCount ? ` — ${itemCount} item(s)` : ''}`;
+        const editStatus = this._editStatusOf(region);
+        if (editStatus) {
+            const flag = document.createElement('span');
+            flag.className = 'procgen-pipeline-edit-status';
+            flag.textContent = editStatus.flagged ? ' ⚠ edited, uncertified' : ' ✎ edited';
+            flag.title = editStatus.text;
+            if (editStatus.flagged) flag.style.color = '#d04040';
+            label.appendChild(flag);
+        }
         row.appendChild(label);
 
         // Per-region substrate override. Unlike the 2b topology dropdown (scoped
@@ -3277,12 +3287,78 @@ export class ProcgenPipelineUI {
             return;
         }
         const nd = node ?? this._nodeForRegion(region);
+        const writeBack = (editedRegion) => this._onRegionEdited(region, editedRegion, nd);
+        const st = this._stepState;
+        if (roomEditorKindOf(region?.substrate) === 'lab') {
+            return this._openLabRoom(region, {
+                ...(st?.growConfig?.itemLib ? { baseItemLib: st.growConfig.itemLib } : {}),
+                itemPool: Object.keys(this.scenario?.items ?? {}),
+            }, writeBack);
+        }
         const contract = this._buildRegionContract(region, nd);
-        open({
-            region,
-            contract,
-            onSave: (editedRegion) => this._onRegionEdited(region, editedRegion, nd),
+        return this._openPanelRoom(region, { region, contract, onSave: writeBack });
+    }
+
+    // ⛓ A `kind: 'lab'` editor (maze, Seedling) takes a SET DOCUMENT, not a
+    // region: the substrate's own `regionRoundTrip` builds it and reads the save
+    // back (pipelineRoomEdit.js — the declaration the APWorld editor's Edit ▸
+    // uses), and `writeBack` gets a live region descriptor exactly as a panel
+    // editor's save hands one. Every refusal on the way is SHOWN.
+    async _openLabRoom(region, ctxOpts, writeBack) {
+        let opened;
+        try {
+            opened = await openPipelineRoom(region, ctxOpts);
+        } catch (err) {
+            opened = { ok: false, why: err.message };
+        }
+        if (!opened.ok) return this._showEditRefusal(opened.why);
+        this._labRoomHandle?.close?.();
+        this._labRoomHandle = null;
+        const handle = await openRoomEditor(region.substrate, {
+            ...opened.session,
+            onSave: (saved) => {
+                this._labRoomHandle = null;
+                regionFromPipelineSave(opened, saved).then(
+                    (out) => (out.error ? this._showEditRefusal(out.error, 'Save') : writeBack(out.region)),
+                    (err) => this._showEditRefusal(err.message, 'Save'),
+                );
+            },
         });
+        if (!this._reportEditDoor(handle, region)) return;
+        this._labRoomHandle = handle;
+        this.message = `Editing "${region.region_id}" in the ${region.substrate} lab. `
+            + 'Save there (close the room) to write it back here.';
+        this.warning = '';
+        this.render();
+    }
+
+    // ⛓ A `kind: 'panel'` door (bounce), through the ONE opener: its panel is
+    // created when the layout has none (⚖ region-editor-launch Q1).
+    async _openPanelRoom(region, session) {
+        let handle;
+        try {
+            handle = await openRoomEditor(region.substrate, session);
+        } catch (err) {
+            handle = { ok: false, why: err.message };
+        }
+        return this._reportEditDoor(handle, region);
+    }
+
+    // ⛔ The door's refusal is a RETURN VALUE (labRoomEditor's `{ok:false, why}`);
+    // one returned to nobody is a button that does nothing and says nothing.
+    // Answers true when the door opened (or answers nothing — a panel door).
+    _reportEditDoor(handle, region) {
+        if (handle && handle.ok === false) {
+            this._showEditRefusal(handle.why);
+            return false;
+        }
+        return true;
+    }
+
+    _showEditRefusal(why, what = 'Edit') {
+        this.message = '';
+        this.warning = `${what} refused: ${why}`;
+        this.render();
     }
 
     // Reconstruct the realiser contract for a region from its node + the tree:
@@ -3356,17 +3432,33 @@ export class ProcgenPipelineUI {
     // Write-back from an editor save (pipeline mode): splice the edited region
     // into the live grid and invalidate 4 only (the user re-runs Compile; the
     // oracle is the backstop). Leaves the logical tree untouched.
+    // ⛓ region-editor-launch S2 — an edited region's flag, as its substrate
+    // declares it (`regionEditStatus`), or null. The panel names no substrate.
+    _editStatusOf(region) {
+        try {
+            return substrateRegistry.get(region?.substrate)?.regionEditStatus?.(region?.playable_payload) ?? null;
+        } catch {
+            return null;
+        }
+    }
+
     _onRegionEdited(origRegion, editedRegion, node) {
         const st = this._stepState;
         const grid = st?.grow?.grid;
-        if (!grid || !editedRegion) return;
         const cell = node?.cell ?? this._nodeForRegion(origRegion)?.cell;
-        if (!cell) return;
+        // ⛔ Said, not dropped: a Save that arrives after a re-run cleared the
+        //   grid (or moved the region) would otherwise vanish without a word.
+        if (!grid || !editedRegion || !cell || grid.getRegion(cell)?.region_id !== origRegion.region_id) {
+            return this._showEditRefusal(`"${origRegion.region_id}" is no longer on this run's grid `
+                + '(the world was re-run while the editor was open), so the edit was not written back.', 'Save');
+        }
         grid.replaceRegion(cell, editedRegion);
         // _invalidateFrom clears this.message, so set it AFTER and re-render.
         this._invalidateFrom(4);
+        const status = this._editStatusOf(editedRegion);
         this.message = `Saved edits to "${editedRegion.region_id ?? origRegion.region_id}". `
             + 'Re-run 4 Compile to recheck the oracle.';
+        this.warning = status?.flagged ? `⚠ ${editedRegion.region_id}: ${status.text}` : '';
         this.render();
     }
 
@@ -3390,6 +3482,18 @@ export class ProcgenPipelineUI {
             : `✗ oracle mismatch: ${oracleErrors[0]}`;
         oracle.style.cssText = ok ? 'color:#3aa85a;' : 'color:#d04040;';
         wrap.appendChild(oracle);
+        // ⛓ region-editor-launch S2 — an edited region its substrate flags is
+        //   REPORTED here: the sphere oracle checks the plan, not the room.
+        const flagged = Object.entries(rulesJson.preset_sidecars ?? {}).flatMap(([, sidecars]) =>
+            Object.entries(sidecars ?? {}).map(([id, e]) => [id, this._editStatusOf(e)]))
+            .filter(([, status]) => status?.flagged);
+        for (const [id, status] of flagged) {
+            const line = document.createElement('div');
+            line.className = 'procgen-pipeline-edit-flag';
+            line.textContent = `⚠ ${id}: ${status.text}`;
+            line.style.cssText = 'color:#d04040;';
+            wrap.appendChild(line);
+        }
         const regionCount = Object.keys(rulesJson.regions ?? {}).length;
         const hasLog = Array.isArray(rulesJson.sphere_log) && rulesJson.sphere_log.length > 0;
         const counts = document.createElement('div');
@@ -5109,6 +5213,13 @@ export class ProcgenPipelineUI {
             this.render();
             return;
         }
+        const writeBack = (editedRegion) => this._onRegionEditedTD(regionId, editedRegion);
+        if (roomEditorKindOf(region?.substrate) === 'lab') {
+            return this._openLabRoom(region, {
+                itemPool: Object.keys(st.compileIn?.sourceItemDefs ?? st.source?.items?.['1'] ?? {}),
+                expectedItems: [...(st.compileIn?.startingItems ?? [])],
+            }, writeBack);
+        }
         const regionParams = st.opts?.regionParams ?? {};
         let contract;
         try {
@@ -5127,11 +5238,7 @@ export class ProcgenPipelineUI {
             st.compileIn?.sourceItemDefs ?? st.source?.items?.['1'] ?? {},
         );
         contract.expectedItems = [...(st.compileIn?.startingItems ?? [])];
-        open({
-            region,
-            contract,
-            onSave: (editedRegion) => this._onRegionEditedTD(regionId, editedRegion),
-        });
+        return this._openPanelRoom(region, { region, contract, onSave: writeBack });
     }
 
     // Write-back from a top-down region editor save: splice the edited region into
@@ -5142,11 +5249,16 @@ export class ProcgenPipelineUI {
         const layout = this._tdState?.layout;
         const grid = layout?.grid;
         const cell = layout?.cellsByName?.get?.(regionId);
-        if (!grid || !cell || !editedRegion) return;
+        if (!grid || !cell || !editedRegion || grid.getRegion(cell)?.region_id !== regionId) {
+            return this._showEditRefusal(`"${regionId}" is no longer on this run's grid `
+                + '(the world was re-run while the editor was open), so the edit was not written back.', 'Save');
+        }
         grid.replaceRegion(cell, editedRegion);
         // _invalidateFromTD clears this.message, so set it AFTER it.
         this._invalidateFromTD(1);
+        const status = this._editStatusOf(editedRegion);
         this.message = `Saved edits to "${regionId}". Re-run from 3 Finalize to apply.`;
+        this.warning = status?.flagged ? `⚠ ${regionId}: ${status.text}` : '';
         this.render();
     }
 
