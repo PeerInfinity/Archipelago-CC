@@ -927,7 +927,8 @@ export function createRuntimeSolver({
             budgetWork: budget, upgradeWindowWork: upgradeWindow,
         };
         const handle = service
-            ? service.start({ ...request, source: { records: getRecords() } })
+            // ⛓ RETRY ATTEMPT — this solver never re-asks a start at a larger budget: each start is attempt 0
+            ? service.start({ ...request, source: { records: getRecords() } }, { attempt: { retry: 0, budgets: [budget] } })
             : inPlace.start({ ...request, levelSource: getLevelSource() });
         pending = { handle, run, session, prefixLength: session.perTick.length, goal, solverGoal, askedAt: clock(), startedAt: null };
         stats.solving = true;

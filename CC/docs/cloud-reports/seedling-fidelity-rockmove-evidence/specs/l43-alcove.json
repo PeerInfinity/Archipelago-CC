@@ -1,0 +1,6 @@
+{"name":"l43-alcove-after-wand","levels":[43],
+ "tape":{"boot":{"level":43,"x":64,"y":336},"tick_count":200,"persistence":[{"level":43,"tag":0,"note":"wand taken"},{"level":43,"tag":1,"note":"rock fallen"},{"level":43,"tag":2,"note":"rock fallen"},{"level":43,"tag":3,"note":"rock fallen"}],
+   "inputs":[{"key":"right","from":0,"to":200}]},
+ "arms":[{"name":"vanilla"},
+  {"name":"remove3","ops":[{"op":"remove","level":43,"type":"fallrock","x":96,"y":336},{"op":"remove","level":43,"type":"fallrock","x":192,"y":336},{"op":"remove","level":43,"type":"fallrock","x":176,"y":384}]},
+  {"name":"move3","ops":[{"op":"move","level":43,"type":"fallrock","x":96,"y":336,"to":{"x":128,"y":336}},{"op":"move","level":43,"type":"fallrock","x":192,"y":336,"to":{"x":160,"y":336}},{"op":"move","level":43,"type":"fallrock","x":176,"y":384,"to":{"x":160,"y":368}}]}]}

@@ -173,7 +173,7 @@ import { dropKillVetoFor, setDropKillNeeds } from './bulbPlacement.js';
 import { HOLD_FIRST_KEY_SETS, SPACE_TIME_CHECK_EVERY, SPACE_TIME_KEY_SETS, bestFirstQueue, coarseKey,
     spaceTimeReach } from './spaceTimeReach.js';
 // ⛓ hammer-phase D1 — the progress emitter: every count point below is `activeProgress !== null` first.
-import { activeProgress, progressAsked, progressEnter, progressGoal, progressHeartbeat, progressLeave,
+import { activeProgress, progressAsked, progressEnter, progressFrame, progressGoal, progressHeartbeat, progressLeave,
     progressPreview, progressReaders, progressRow, progressRun, progressRung, progressSearch, progressSegment,
     progressSite, progressStatesFor, progressTick, withSolveProgress } from './solveProgress.js';
 // ⛓ seedling-fidelity-forcedhit D2 — the forced-hit rung's proof and crossing (`FORCED_HITS`, OFF).
@@ -14407,6 +14407,7 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
         if (seeded?.fromContinuation && seeded.cell && plan === resolved.plans[0]
             && run.ticksCompleted < seeded.aimAt) {
             strike = seeded;
+            if (activeProgress !== null) progressFrame({ target: plan.id, stance: seeded.cell }); // ⛓ TC2: the strike
             cycles.push({
                 body: plan.id,
                 cell: seeded.cell,
@@ -14420,6 +14421,7 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
         // tick, from this state); otherwise the loop derives its own.
         if (seeded?.approach && plan === resolved.plans[0] && approachHeld(seeded.approach, run) !== null) {
             strike = seeded;
+            if (activeProgress !== null) progressFrame({ target: plan.id, stance: seeded.cell }); // ⛓ TC2: the strike
             cycles.push({
                 body: plan.id,
                 cell: seeded.cell,
@@ -14578,6 +14580,7 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                     const move = moveNow();
                     if (move === 'strike' || move === 'uncertified') {
                         strike = next;
+                        if (activeProgress !== null) progressFrame({ target: plan.id, stance: next.cell }); // ⛓ TC2
                         refuge = null;
                         // ⛓ hammer-phase B1 — the certificate drives the walk; a stall of an older strike ends
                         if (next.approach) phaseStall = null;
@@ -19549,6 +19552,7 @@ function solveSegmentUnder({
         const escalations = [];
         climbNo += 1;
         const climb = climbNo;
+        if (activeProgress !== null) progressFrame({ danger: hit }); // ⛓ TC2: the climb's frame — the walk probe's hit
         /**
          * ⛔⛔⛔ A RUNG'S ROW CARRIES THE **WHOLE** REFUSAL CHAIN, not just the
          * rung below it — and that is a fix rather than a flourish.
@@ -21159,6 +21163,7 @@ function solveSegmentUnder({
              * 17), and it needs no second forecast.
              */
             const hunted = interceptOrder(removable, hit)[0] ?? target;
+            if (activeProgress !== null) progressFrame({ target: hunted.id }); // ⛓ TC2: the chaser arm's body
             /**
              * ⛓⛓ SEEDLING FIDELITY SF3 — **NO SWORD, NO CHASER ARM, AND NO SCAN.**
              * Both of this arm's outcomes without a sword are refusals: no stance
@@ -21937,6 +21942,7 @@ function solveSegmentUnder({
                     // ⛓ hammer-phase D1 — the verb applied (its stance walk, then its executor) is a progress node
                     const verbFrame = activeProgress === null ? null
                         : progressEnter(`verb:${plan.strategy}`, 'verb', plan.strategy);
+                    if (activeProgress !== null) progressFrame({ target: plan.obstacle.id, stance: plan.resolved.stance }); // ⛓ TC2: the verb
                     // The stance first — planned with whatever exemptions the
                     // strategy's own resolution earned (trap 147: a hold is what
                     // ADDS its presser to the exemptions, so the stance and the

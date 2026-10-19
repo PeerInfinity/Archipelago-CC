@@ -1,0 +1,69 @@
+flag:L0:1 [back door 304,176->L12]
+  move breakablerock@288,176 -> (272,176) (away from the back door); into: open
+  free: L12 teleporter@0,80 -> (288,176) free
+  pocket (held): 2 tiles, doors [tp@304,176->L12]
+  opened (cleared): 110 tiles, 6 doors; still gates: true
+  from the pocket flag:L0:1: SOLVES 21 t break
+  other landings changed: none
+  GAP (open side, flag HELD, new doors): none
+flag:L0:4 [back door 80,96->L1]
+  move breakablerock@80,112 -> (80,128) (away from the back door); into: open
+  free: L1 teleporter@64,112 -> (80,112) free
+  pocket (held): 109 tiles, doors [stairs@256,272->L2, stairs@32,192->L13, tp@0,128->L94, tp@0,144->L94, tp@160,272->L86, tp@80,96->L1]
+  opened (cleared): 110 tiles, 6 doors; still gates: false
+  from the pocket flag:L0:4: SOLVES 20 t break
+  other landings changed: none
+  GAP (open side, flag HELD, new doors): L2 stairsup@48,16 -> (256,256) +[tp@80,96->L1] | L12 teleporter@0,80 -> (288,176) +[tp@80,96->L1] | L13 stairsup@64,144 -> (48,192) +[tp@80,96->L1] | L86 teleporter@48,64 -> (160,288) +[tp@80,96->L1] | L94 teleporter@304,160 -> (16,128) +[tp@80,96->L1] | L94 teleporter@304,176 -> (16,144) +[tp@80,96->L1]
+flag:L12:4 + flag:L12:5 + flag:L12:11 + flag:L12:3: SKIPPED — no gated landing (not an arrival obstacle)
+flag:L12:7 + flag:L12:12 [back door 32,848->L83]
+  move magicallock@32,864 -> (32,880) (away from the back door); into: open
+  move bosslock@32,864 -> (32,880) (away from the back door); into: open
+  free: L83 teleporter@32,64 -> (32,864) free
+  pocket (held): 2 tiles, doors [tp@32,848->L83]
+  opened (cleared): 48 tiles, 1 doors; still gates: false
+  from the pocket flag:L12:7: THREW undefined/null levelRun: a WandShot in level 12 would collide with 1 Enemy-typed bod(ies) this run cannot place: puncher@416,256. `WandShot`'s ctor pushes "Enemy" onto its own solids, so a live enemy STOPS a shot — and a live enemy is 
+  from the pocket flag:L12:12: REFUSES clear-tag/unresolved solverBot(cleartag-patch-12-12) clear-tag {12,12} bosslock@32,880: 'keylock' could not be resolved from (40,872): solverBot: no REACHABLE stance on bosslock@32,880's key line in level 12 — 2 cell(s) put the player box on
+  other landings changed: none
+  GAP (open side, flag HELD, new doors): none
+flag:L19:1: SKIPPED — no gated landing (not an arrival obstacle)
+flag:L24:0 [back door 48,144->L12]
+  move burnabletree@32,128 -> (32,96) (the back door is under the obstacle: away from the nearest level edge); into: open
+  free: L12 teleporter@40,688 -> (48,128) free
+  pocket (held): 4 tiles, doors [tp@32,144->L12, tp@48,144->L12]
+  opened (cleared): 35 tiles, 3 doors; still gates: true
+  from the pocket flag:L24:0: SOLVES 54 t burn
+  other landings changed: none
+  GAP (open side, flag HELD, new doors): none
+flag:L30:0 + flag:L30:2: SKIPPED — no gated landing (not an arrival obstacle)
+flag:L31:0: SKIPPED — no gated landing (not an arrival obstacle)
+flag:L39:8: SKIPPED — no gated landing (not an arrival obstacle)
+flag:L40:8: SKIPPED — no gated landing (not an arrival obstacle)
+flag:L48:1: SKIPPED — no gated landing (not an arrival obstacle)
+flag:L63:1: SKIPPED — no gated landing (not an arrival obstacle)
+flag:L62:0: SKIPPED — no gated landing (not an arrival obstacle)
+flag:L68:0: SKIPPED — no gated landing (not an arrival obstacle)
+flag:L71:2 [back door 304,256->L76]
+  move shieldlock@288,256 -> (272,256) (away from the back door); into: open
+  free: L76 teleporter@0,80 -> (288,256) free
+  pocket (held): 2 tiles, doors [tp@304,256->L76]
+  opened (cleared): 107 tiles, 4 doors; still gates: true
+  from the pocket flag:L71:2: REFUSES solid/null solverBot(cleartag-patch-71-2) clear-tag {71,2} shieldlock@272,256 -> touch stance -> touch stance (shieldlock@272,256): STANCE_REENTRY — the walk to shieldlock@272,256's `touch` stance (264,264) is itself blocked by shi
+  other landings changed: none
+  GAP (open side, flag HELD, new doors): none
+flag:L112:1 [back door 112,0->L113]
+  move rocklock@112,16 -> (112,32) (away from the back door); into: open
+  free: L113 teleporter@64,144 -> (112,16) free | L113 teleporter@80,144 -> (112,16) free
+  pocket (held): 2 tiles, doors [tp@112,0->L113]
+  opened (cleared): 135 tiles, 2 doors; still gates: true
+  from the pocket flag:L112:1: REFUSES clear-tag/no-verb solverBot(cleartag-patch-112-1) clear-tag {112,1} rocklock@112,32: no strategy row exists for solid:rocklock — the catalogue names no verb that clears it
+  other landings changed: none
+  GAP (open side, flag HELD, new doors): none
+flag:L113:0 [back door 112,0->L115]
+  move finaldoor@112,0 -> (112,32) (the back door is under the obstacle: away from the nearest level edge); into: open
+  free: L115 teleporter@64,144 -> (112,16) free | L115 teleporter@80,144 -> (128,16) free
+  pocket (held): 4 tiles, doors [tp@112,0->L115, tp@128,0->L115]
+  opened (cleared): 54 tiles, 6 doors; still gates: true
+  from the pocket flag:L113:0: REFUSES clear-tag/unresolved solverBot(cleartag-patch-113-0) clear-tag {113,0} finaldoor@112,32: 'approach' could not be resolved from (120,24): solverBot: approach finaldoor@112,32 in level 113 — the door cannot open in this state: the save holds 0
+  other landings changed: none
+  GAP (open side, flag HELD, new doors): none
+flag:L114:0: SKIPPED — no gated landing (not an arrival obstacle)

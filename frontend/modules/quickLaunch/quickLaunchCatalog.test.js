@@ -134,7 +134,7 @@ describe('buildCatalog — docs and virtual groups', () => {
         const cat = build({ helpSections: SECTIONS, showDeveloperDocs: true });
         expect(cat.help.map((s) => s.dir)).toEqual(['user', 'games', 'dev']);
         expect(drawnHelpSections(SECTIONS, true).some((s) => s.audience === 'panel')).toBe(false);
-        expect(drawnHelpSections(HELP_SECTIONS).map((s) => s.label)).toEqual(['User Guides', 'Features', 'Playable Games']);
+        expect(drawnHelpSections(HELP_SECTIONS).map((s) => s.label)).toEqual(['Start Here', 'User Guides', 'Features', 'Playable Games']);
     });
 
     it('virtualGroups is All panels (split by category) then Help (split by section)', () => {

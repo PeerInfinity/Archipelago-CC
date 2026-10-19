@@ -282,7 +282,8 @@ describe('⛓ the links the render emits', () => {
         //   359 → 360: JtA zone locations — substrate-registry.md → jta.md.
         //   360 → 362: spiral victory — architecture.md and substrate-registry.md → stepped-pipeline.md § The item layer.
         //   362 → 364: Noiz2sa measured final span — noiz2sa.md § Pricing → the cloud measurement report, twice.
-        expect(checked).toBe(364);
+        //   364 → 366: generic `flash` entry removed — architecture.md's substrate table → noiz2sa.md, flash.md.
+        expect(checked).toBe(366);
     });
 
     it('tags each link with the kind that produced it', () => {

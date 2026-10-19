@@ -13,7 +13,8 @@
  *     (214,680), 238 ticks over 274.9 px, floor 196. The rows measure both legs first, so a moved world fails here by
  *     name rather than in the boundary row;
  *   · the same request solved whole (`solveAnytime`, budget 640, window 0, the way DS replayed it): the ticks are
- *     identical ON and OFF, and the work drops (its 261-tick leg over 303 px is floor 220);
+ *     identical ON and OFF, and the work drops (its 261-tick leg over 303 px is floor 220). ⛓ That row runs for
+ *     minutes, so it lives in `hammerDashShape.slow.test.js` (the serial `.slow` tier);
  *   · the D2 counter-example (DF, `seedling-dash-flip.md`): `axe-l48-reach-l49`'s corridor has a 305-tick undashed
  *     leg, a 192 px climb and then the walk dithering at its waypoint. It is not a clean run, so it SCANS, and the
  *     producer plans its 368-tick tape (K = 40 refused it: 585 t);
@@ -30,7 +31,6 @@ import { AXE_WITNESSES, axePlan, axeStaging } from '../../../scripts/procgen/pla
 
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { DEFAULT_TOLERANCE } from './botDriverV1.js';
-import { solveAnytime } from './jsRuntimeSolver.js';
 import { createLevelRun } from './levelRun.js';
 import { withContactFidelity } from './contactFidelity.js';
 import { atlasLevelSource } from './levelSource.js';
@@ -171,19 +171,8 @@ describe('seedling DK (i) — DASH_LEG_PRECHECK: a corridor with a clean leg no 
         expect(asks.asked).toEqual(['sword-dash']);
     }, 60_000);
 
-    it('ON, sweep request 392:0 solved whole ships the same ticks for less work', () => {
-        const solve = () => solveAnytime({ staging: PIT.staging, perTick: [], live: PIT.live, solverGoal: PIT.solverGoal,
-            name: PIT.from.name, scratchPersistence: PIT.scratchPersistence, equips: null, budgetWork: PIT.budgetWork,
-            upgradeWindowWork: null, levelSource: pitSource });
-        const off = withDashLegPrecheck(false, solve);
-        const on = withDashLegPrecheck(true, solve);
-        expect(off.ok && on.ok).toBe(true);
-        expect(on.plan.solution.length).toBe(828);
-        expect(on.plan.solution).toEqual(off.plan.solution);
-        expect(on.work).toBeLessThan(off.work);
-        // OFF the full pass spends the budget on the 261-tick leg's scan; ON it refuses that corridor by name
-        expect(off.passes.find((p) => p.pass === 'full')).toMatchObject({ ok: false, deadline: 'sword-dash', limit: 'budget' });
-    }, 180_000);
+    // ⛓ the row "ON, sweep request 392:0 solved whole ships the same ticks for less work" runs for minutes, so it
+    // lives in `hammerDashShape.slow.test.js` (the serial `.slow` tier), byte-identical
 
     it('the D2 counter-example: the axe corridor\'s 305-tick leg is not a clean run, so ON it SCANS, exactly as OFF', async () => {
         const staging = await axeStaging(AXE);

@@ -71,11 +71,11 @@ export async function createLab() {
         kind: 'worker',
         get stats() { return inner.stats; },
         warm() { inner.warm(); },
-        start(request) {
+        start(request, opts) {
             // ⛓ the request AS POSTED: the hook stamps the service adds (off-default only) are on the capture too, so a
             // replay of an off-default request runs under the same switches (before, they were dropped)
             const posted = stampHooks({ ...request });
-            const h = inner.start(request);
+            const h = inner.start(request, opts);
             tap.solves.push({ request: posted, handle: h, at: performance.now() });
             return h;
         },

@@ -146,6 +146,10 @@ describe('jsRuntimeSolveService — the worker round-trip ≡ the in-place (S1) 
             expect(sync.playback.state).toBe(WALK_STATES.DONE);
 
             const { service, workers } = workerService();
+            // ⛓ RETRY ATTEMPT — what the JS page's solver TELLS the service: each start is attempt 0 at its budget
+            const told = [];
+            const realStart = service.start;
+            service.start = (request, opts) => { told.push(opts?.attempt); return realStart(request, opts); };
             // ⛔ Not a budget row: equivalence is asked with the work budget out of the way.
             const rt = midRoom({ ...w, solveService: service, solverBudgetWork: 1e9, solverUpgradeWindowWork: 0 });
             rt.playback.setSolverWalk(true);
@@ -159,6 +163,7 @@ describe('jsRuntimeSolveService — the worker round-trip ≡ the in-place (S1) 
             expect(out.holds).toBeGreaterThan(0);
             expect([...reasons].some((r) => /^solving… \(budget 1000000000 work units\)$/.test(r))).toBe(true);
             expect(s).toMatchObject({ solves: 1, refutations: 0, declines: 0, expiries: 0, stale: 0 });
+            expect(told).toEqual([{ retry: 0, budgets: [1e9] }]);
             expect(s.lastSolve.where).toBe('worker');
             expect(s.lastSolve.verbs).toEqual(expect.arrayContaining(w.verbs));
             expect(s.played).toBe(s.lastSolve.keys);

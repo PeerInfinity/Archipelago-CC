@@ -13,8 +13,9 @@
  *                step without -i — refused before any work runs
  *   2  oracle    the world was built and its outputs written, but the sphere
  *                oracle disagrees with the plan (was 1 before this module)
- *   3  input     an input file (-i, --source, --params, --atlas, …) is missing,
- *                is not JSON, or is an envelope of another kind / version
+ *   3  input     an input file (-i, --config, --source, --params, --atlas, …) is
+ *                missing, is not JSON, fails its schema (--config), or is an
+ *                envelope of another kind / version
  *   4  internal  anything else thrown while the pipeline ran
  * A crash while a hoisted import is still loading exits 1: Node owns that exit
  * and a static import cannot be caught.
@@ -41,10 +42,11 @@ export class InputError extends Error {
     constructor(message) { super(message); this.name = 'InputError'; }
 }
 
-/** Run `fn` (an argv parser); anything it throws is a usage error. */
+/** Run `fn` (an argv parser); anything it throws is a usage error, except a
+ *  file it read (`--config`), which stays an InputError. */
 export function parseOrUsage(fn) {
     try { return fn(); } catch (e) {
-        throw e instanceof UsageError ? e : new UsageError(e.message);
+        throw e instanceof UsageError || e instanceof InputError ? e : new UsageError(e.message);
     }
 }
 
@@ -80,10 +82,12 @@ function outIsStdout(argv) {
 /**
  * Run a driver's `main(status)` and exit with its code. `main` fills the
  * status fields it knows (subcommand, completed, next, outputs, oracle,
- * summary); a non-empty `status.oracle.errors` ends the run with exit 2.
+ * summary, config — the parsed flags after `--config`, §5au item 7); a non-empty `status.oracle.errors` ends the run with exit 2.
+ * `stdoutIsOutput`: the tool always prints its output on stdout, so
+ * `--json-status -` is refused as usage (as `-o -` makes it for the drivers).
  * Does nothing unless `metaUrl` is the file node was asked to run.
  */
-export function runCli(tool, metaUrl, main, { argv = process.argv } = {}) {
+export function runCli(tool, metaUrl, main, { argv = process.argv, stdoutIsOutput = false } = {}) {
     if (argv[1] !== fileURLToPath(metaUrl)) return;
     const args = argv.slice(2);
     const status = {
@@ -99,6 +103,7 @@ export function runCli(tool, metaUrl, main, { argv = process.argv } = {}) {
         outputs: {},
         oracle: null,
         summary: {},
+        config: null,
     };
     const target = statusTarget(args);
     const finish = (outcome, err) => {
@@ -126,8 +131,10 @@ export function runCli(tool, metaUrl, main, { argv = process.argv } = {}) {
         if (args.includes('--json-status') && !target) {
             throw new UsageError('--json-status needs a PATH (or - for stdout)');
         }
-        if (target === '-' && outIsStdout(args)) {
-            throw new UsageError('--json-status - and -o - both want stdout; give one of them a file');
+        if (target === '-' && (stdoutIsOutput || outIsStdout(args))) {
+            throw new UsageError(stdoutIsOutput
+                ? `--json-status -: ${tool} prints its output on stdout; give the status a file`
+                : '--json-status - and -o - both want stdout; give one of them a file');
         }
         await main(status);
     })().then(
