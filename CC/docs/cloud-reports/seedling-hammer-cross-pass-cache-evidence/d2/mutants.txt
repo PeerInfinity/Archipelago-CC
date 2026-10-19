@@ -1,0 +1,29 @@
+== M1-no-digest: rc=1 3 ⎯⎯⎯⎯⎯⎯⎯
+   RED hammer-phase XC — the deadline (js-7 condition 1) > ⛓⛓⛓ a budget that trips mid-search gives OFF's answer, stream and asks — a hit tripped at its k-th ask included
+   RED hammer-phase XC — the key > ⛓⛓ the clocked hazard in a beam-tower room (L104): the escape is entered, the two seam times are two entries
+   RED hammer-phase XC — the key > ⛓⛓⛓ the clocked hazard: one call at two seam times across the hammer's phase is two entries, and the two answers differ
+== M2-no-pressAt: rc=1 1 ⎯⎯⎯⎯⎯⎯⎯
+   RED hammer-phase XC — the key > ⛓⛓⛓ the arguments: `pressAt` and the held sets' ORDER are in the key — each variant is OFF's answer
+== M2b-keys-unordered: rc=1 1 ⎯⎯⎯⎯⎯⎯⎯
+   RED hammer-phase XC — the key > ⛓⛓⛓ the arguments: `pressAt` and the held sets' ORDER are in the key — each variant is OFF's answer
+== M3-no-deadline-state: rc=1 1 ⎯⎯⎯⎯⎯⎯⎯
+   RED hammer-phase XC — the key > ⛓⛓⛓ the deadline's presence is in the key; a tripped miss is never stored; an entry stored before a trip is never read after one
+== M4-hit-skips-asks: rc=1 2 ⎯⎯⎯⎯⎯⎯⎯
+   RED hammer-phase XC — the cross-pass escape cache: ON is OFF > ⛓⛓⛓ L18 residue 21: the bytes, the stream, the asks, the shouldStop total and the instruments are OFF's, with c
+   RED hammer-phase XC — the deadline (js-7 condition 1) > ⛓⛓⛓ a budget that trips mid-search gives OFF's answer, stream and asks — a hit tripped at its k-th ask included
+== M5-tripped-miss-stored: rc=1 2 ⎯⎯⎯⎯⎯⎯⎯
+   RED hammer-phase XC — the deadline (js-7 condition 1) > ⛓⛓⛓ a budget that trips mid-search gives OFF's answer, stream and asks — a hit tripped at its k-th ask included
+   RED hammer-phase XC — the key > ⛓⛓⛓ the deadline's presence is in the key; a tripped miss is never stored; an entry stored before a trip is never read after one
+== M6-outlives-its-call: rc=1 5 ⎯⎯⎯⎯⎯⎯⎯
+   RED hammer-phase XC — the cap (js-7 condition 3) > ⛓⛓ maxEntries 0: OFF exactly, and a full scope misses rather than evicts
+   RED hammer-phase XC — the cap (js-7 condition 3) > ⛓⛓ maxEntries 1: OFF exactly, and a full scope misses rather than evicts
+   RED hammer-phase XC — the cap (js-7 condition 3) > ⛓⛓ maxEntries 7: OFF exactly, and a full scope misses rather than evicts
+   RED hammer-phase XC — the deadline (js-7 condition 1) > ⛓⛓⛓ a budget that trips mid-search gives OFF's answer, stream and asks — a hit tripped at its k-th ask included
+   RED hammer-phase XC — the scope (js-7 condition 4) > ⛓⛓⛓ two solves back to back: the second's first lookup misses, and it hits exactly as the first did
+== M7-digest-per-tick: rc=1 2 ⎯⎯⎯⎯⎯⎯⎯
+   RED hammer-phase XC — the deadline (js-7 condition 1) > ⛓⛓⛓ a budget that trips mid-search gives OFF's answer, stream and asks — a hit tripped at its k-th ask included
+   RED hammer-phase XC — the key > ⛓⛓⛓ the digest is per CALL: a call that builds a lazy visit state is never stored, so the next run builds it too (the per-tick mutant's trap)
+== M8-no-bypass-after-trip: rc=1 2 ⎯⎯⎯⎯⎯⎯⎯
+   RED hammer-phase XC — the deadline (js-7 condition 1) > ⛓⛓⛓ a budget that trips mid-search gives OFF's answer, stream and asks — a hit tripped at its k-th ask included
+   RED hammer-phase XC — the key > ⛓⛓⛓ the deadline's presence is in the key; a tripped miss is never stored; an entry stored before a trip is never read after one
+mutant tree restored to the source
