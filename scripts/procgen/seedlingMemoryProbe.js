@@ -31,6 +31,8 @@ export const MEMORY_PROBE_MAX_SAMPLES = 1200;
  * stamped with the ones set):
  *   hit-sample-ms=<n>   the SPLIT ARM: the lab's 25 ms `botStatus` hit sampler runs every <n> ms (per-call vs per-frame)
  *   hold-l0=<s>         before the grants, freeze the boot room (L0) with `botHold("on")` for <s> s, then release
+ *   quiet-l0=<s>        after that, freeze L0 again for <s> s with the panel's item-only `queueItems` pushes DROPPED
+ *                       (the lab's counter; a teleport push still goes) — the host push vs the runtime's own frames
  *   run-arrival=<s>     after the jump, let the arrival room RUN unheld for <s> s before the serve
  *   hold-arrival=<s>    after that, freeze the arrival room with `botHold("on")` for <s> s, then release
  *   live-objects        the runtime's per-frame live AVM2 object/array counts (`swf_perf_report`'s arguments), kept
@@ -40,14 +42,14 @@ export const MEMORY_PROBE_MAX_SAMPLES = 1200;
 export function parseMemoryProbe(spec) {
     const [head, ...opts] = String(spec ?? '').split(',').map((x) => x.trim());
     const ms = parseMemoryProbeMs(head);
-    const out = { ms, hitSampleMs: null, holdL0Sec: null, holdArrivalSec: null, runArrivalSec: null, liveObjects: false };
-    const SEC = { 'hold-l0': 'holdL0Sec', 'hold-arrival': 'holdArrivalSec', 'run-arrival': 'runArrivalSec' };
+    const out = { ms, hitSampleMs: null, holdL0Sec: null, quietL0Sec: null, holdArrivalSec: null, runArrivalSec: null, liveObjects: false };
+    const SEC = { 'hold-l0': 'holdL0Sec', 'quiet-l0': 'quietL0Sec', 'hold-arrival': 'holdArrivalSec', 'run-arrival': 'runArrivalSec' };
     for (const o of opts.filter(Boolean)) {
         let m;
         if (o === 'live-objects') out.liveObjects = true;
         else if ((m = /^hit-sample-ms=(\d+)$/.exec(o)) && Number(m[1]) >= 5) out.hitSampleMs = Number(m[1]);
-        else if ((m = /^(hold-l0|hold-arrival|run-arrival)=(\d+)$/.exec(o)) && Number(m[2]) >= 1) out[SEC[m[1]]] = Number(m[2]);
-        else throw new Error(`--memory-probe-ms: ${JSON.stringify(o)} is not hit-sample-ms=<ms >= 5>, hold-l0=<s>, `
+        else if ((m = /^(hold-l0|quiet-l0|hold-arrival|run-arrival)=(\d+)$/.exec(o)) && Number(m[2]) >= 1) out[SEC[m[1]]] = Number(m[2]);
+        else throw new Error(`--memory-probe-ms: ${JSON.stringify(o)} is not hit-sample-ms=<ms >= 5>, hold-l0=<s>, quiet-l0=<s>, `
             + 'hold-arrival=<s>, run-arrival=<s> or live-objects');
     }
     if (!ms && opts.some(Boolean)) throw new Error('--memory-probe-ms: an arm needs the probe on (an interval first)');
@@ -57,6 +59,7 @@ export function parseMemoryProbe(spec) {
 /** The row stamp of the arms set (`{}` when none): a row measured under an arm says so. */
 export function memoryArmStamp(p) {
     return { ...(p.hitSampleMs ? { hitSampleMs: p.hitSampleMs } : {}), ...(p.holdL0Sec ? { holdL0Sec: p.holdL0Sec } : {}),
+        ...(p.quietL0Sec ? { quietL0Sec: p.quietL0Sec } : {}),
         ...(p.runArrivalSec ? { runArrivalSec: p.runArrivalSec } : {}), ...(p.holdArrivalSec ? { holdArrivalSec: p.holdArrivalSec } : {}),
         ...(p.liveObjects ? { liveObjects: true } : {}) };
 }
@@ -234,7 +237,8 @@ export function formatMemorySample(legId, s) {
     return `MEMPROBE leg ${legId} t=${(s.t / 1000).toFixed(1)}s${s.tag ? ` [${s.tag}]` : ''}${s.arm ? ` arm=${s.arm}` : ''} phase=${s.phase ?? '-'}`
         + ` alloc=${g.found ? MB(g.allocated) : '?'}MB peak=${g.found ? MB(g.peak) : '?'}MB oom=${g.found ? g.oom : '?'}`
         + ` frames=${g.frames ?? '-'}${typeof g.liveObj === 'number' ? ` live=${g.liveObj}/${g.liveArr}` : ''} game_time=${s.gameTime ?? '-'} level=${s.level ?? '-'} jsHeap=${MB(s.jsHeap)}MB`
-        + ` calls=${s.calls?.total ?? '-'} reply=${MB(s.calls?.replyChars)}Mch queue=${s.calls?.queueItems ?? '-'}`;
+        + ` calls=${s.calls?.total ?? '-'} reply=${MB(s.calls?.replyChars)}Mch queue=${s.calls?.queueItems ?? '-'}`
+        + `${s.calls?.dropped ? ` dropped=${s.calls.dropped}` : ''}`;
 }
 
 /**

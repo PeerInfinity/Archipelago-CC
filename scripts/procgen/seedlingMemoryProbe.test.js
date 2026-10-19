@@ -15,7 +15,7 @@ describe('seedlingMemoryProbe — parseMemoryProbeMs', () => {
 });
 
 describe('seedlingMemoryProbe — parseMemoryProbe (the measurement-only arms)', () => {
-    const OFF = { hitSampleMs: null, holdL0Sec: null, holdArrivalSec: null, runArrivalSec: null, liveObjects: false };
+    const OFF = { hitSampleMs: null, holdL0Sec: null, quietL0Sec: null, holdArrivalSec: null, runArrivalSec: null, liveObjects: false };
     it('`<ms>` alone sets no arm; each arm parses; a bad arm or an arm without the probe throws by name', () => {
         expect(parseMemoryProbe('')).toEqual({ ms: 0, ...OFF });
         expect(parseMemoryProbe('2000')).toEqual({ ms: 2000, ...OFF });
@@ -25,6 +25,8 @@ describe('seedlingMemoryProbe — parseMemoryProbe (the measurement-only arms)',
         expect(() => parseMemoryProbe('2000,hits=1000')).toThrow(/is not hit-sample-ms=/);
         expect(() => parseMemoryProbe('2000,hit-sample-ms=1')).toThrow(/is not hit-sample-ms=/);
         expect(() => parseMemoryProbe('2000,hold-l0=0')).toThrow(/is not/);
+        expect(parseMemoryProbe('2000,quiet-l0=45')).toEqual({ ms: 2000, ...OFF, quietL0Sec: 45 });
+        expect(memoryArmStamp(parseMemoryProbe('2000,quiet-l0=45'))).toEqual({ quietL0Sec: 45 });
         expect(() => parseMemoryProbe('0,hit-sample-ms=1000')).toThrow(/needs the probe on/);
     });
     it('the row stamp names exactly the arms set', () => {

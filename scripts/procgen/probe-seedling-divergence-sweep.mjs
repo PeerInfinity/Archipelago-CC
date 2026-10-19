@@ -70,7 +70,8 @@
  *                        `--memory-probe-ms=<ms>,hit-sample-ms=<n>` = the SPLIT ARM: the lab's 25 ms `botStatus` hit
  *                        sampler runs every <n> ms instead (rows stamped `hitSampleMs`; `roomHits` is coarser there).
  *                        More arms (`seedlingMemoryProbe.parseMemoryProbe`, each stamped on the row): `hold-l0=<s>` (the
- *                        boot room frozen by `botHold` before the grants), `run-arrival=<s>` / `hold-arrival=<s>` (the
+ *                        boot room frozen by `botHold` before the grants), `quiet-l0=<s>` (then frozen again with the panel's
+ *                        item-only `queueItems` pushes dropped), `run-arrival=<s>` / `hold-arrival=<s>` (the
  *                        arrival room run unheld, then frozen, before the serve), `live-objects` (the runtime's per-frame
  *                        live AVM2 counts, kept by a one-token rewrite of the served glue JS; the wasm is untouched).
  *   --capture-requests=<jsonl>  ⛓ REQUEST CAPTURE (default OFF): append every solve request each leg made, in order, AS THE
@@ -788,6 +789,12 @@ async function main() {
                 }
                 // ⛓ MEMORY PROBE arm `hold-l0` — the boot room frozen, sampled, released (measurement only)
                 if (MEM.holdL0Sec) { arm = 'hold-l0'; await holdFor(MEM.holdL0Sec); arm = null; }
+                if (MEM.quietL0Sec) {
+                    arm = 'quiet-l0';
+                    await page.evaluate(() => window.__div.setDropItems(true));
+                    try { await holdFor(MEM.quietL0Sec); } finally { await page.evaluate(() => window.__div.setDropItems(false)); }
+                    arm = null;
+                }
                 if (MODE === 'inv') {
                     const want = leg.sphere?.inventory ?? null;
                     const need = want ? multisetMinus(want, granted) : [];
