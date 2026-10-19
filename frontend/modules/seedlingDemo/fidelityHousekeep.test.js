@@ -18,12 +18,17 @@ import { loadAtlas } from './levelSource.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { createRunForStaging } from './tapeRunner.js';
 import { arrivalStaging } from './fidelityArrival.js';
-import { patchedMapDocument } from './seedlingSetPatches.js';
+import { SEEDLING_SET_PATCHES, patchedMapDocument } from './seedlingSetPatches.js';
 import { REFUSAL_BY_NAME, SolverRefusal, solveSegment } from './solverBot.js';
 import { BotDriverV2Error } from './botDriverV2.js';
 import { progressKind } from './solveProgress.js';
 
-const ATLAS = patchedMapDocument(loadAtlas());
+// ⛓ wave-19 harvest: the rules arc's rock removal (main 879bec39a5) delivers L74 and L29 WITHOUT their fallrock and
+// button, so the delivered set no longer reaches the frozen press or the orphan presser. These rows stage the set as it
+// stood before those four rows (every other patch kept); the orphan row then removes L29's rock alone, as ROCKMOVE's
+// remove arm did.
+const ROCK_ROWS = new Set(['l74-fallrock-removed', 'l74-button-removed', 'l29-fallrock-removed', 'l29-button-removed']);
+const ATLAS = patchedMapDocument(loadAtlas(), SEEDLING_SET_PATCHES.filter((p) => !ROCK_ROWS.has(p.id)));
 const withoutEntity = (doc, level, type, x, y) => ({ ...doc,
     levels: doc.levels.map((r) => (r.level !== level ? r
         : { ...r, entities: r.entities.filter((e) => !(e.type === type && e.x === x && e.y === y)) })) });
