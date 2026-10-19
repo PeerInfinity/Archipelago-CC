@@ -702,6 +702,26 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_BOMB_BLAST_BODY=0|1` for a node measurement.
      */
     bombBlastBody: false,
+    /**
+     * fidelity L40GUARD D2 — THE CHASER ARM'S APPROACH STANCE, FOR A BODY THE ROOM HOLDS AWAY FROM THE PLAYER
+     * (`solverBot.deriveGuardApproach`, asked only after `deriveKillByChaser`'s two scans priced NOTHING).
+     *
+     *     BobSoldier.as:30,33   moveSpeed 0.8, runRange 80 — it chases only inside 80 px; no return-to-post
+     *     BobSoldier.as:34,114  attackRange 32 — the spin begins at d < 33; the blade is 8..16 px out (:165-166)
+     *     Player.as:929-950     getSlashRect — 16 px along the swing, 32 across: a strike lands from a cell the
+     *                           blade does not reach (witnessed on the game at d 20.5, `l40guard-diag-strike`)
+     *
+     * L40's `bobsoldier@880,832` stands in the 16-px pocket under the chest. MEASURED on the game (three witnesses,
+     * worst |Δ| 0): it DOES chase once the player is inside 80 px, but the pocket's west wall holds it and it leaves
+     * only as `vy` allows, so it never arrives inside the arm's straight-line ceiling — and that ceiling's kill term is
+     * `3 × killWindowTicks`, 3 ticks for a class with no die animation, not three landed hits through its i-frames.
+     * ON, a scan that priced nothing asks a second question: the cells within the sword's reach of the body (the
+     * player walks in, on the body's timing) plus the reachable leash cells, each previewed by the arm's own
+     * instrument with a ceiling of the body's travel plus `hits` landed hits at `KILL_PRESS_CADENCE` plus the slack.
+     * Its refusal names which of REACH / TIMING / LEASH failed. OFF: never asked, byte-identical.
+     * `SEEDLING_GUARD_APPROACH_STANCE=0|1` for a node measurement.
+     */
+    guardApproachStance: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -845,6 +865,9 @@ if (globalThis.process?.env?.SEEDLING_WALKER_BEAM_TOWERS === '0') CONTACT_FIDELI
 // ⛓ fidelity BOMBBLAST D2: `SEEDLING_BOMB_BLAST_BODY=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_BOMB_BLAST_BODY === '1') CONTACT_FIDELITY.bombBlastBody = true;
 if (globalThis.process?.env?.SEEDLING_BOMB_BLAST_BODY === '0') CONTACT_FIDELITY.bombBlastBody = false;
+// ⛓ fidelity L40GUARD D2: `SEEDLING_GUARD_APPROACH_STANCE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_GUARD_APPROACH_STANCE === '1') CONTACT_FIDELITY.guardApproachStance = true;
+if (globalThis.process?.env?.SEEDLING_GUARD_APPROACH_STANCE === '0') CONTACT_FIDELITY.guardApproachStance = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

@@ -17965,9 +17965,20 @@ export function deriveKillByChaser(run, body, contacts,
         const cut = scoreAll(dedup);
         if (cut) return cut;
     }
+    // ⛓ fidelity L40GUARD D2 — a scan that priced nothing asks the approach question (`guardApproachStance`, OFF).
+    let approachWhy = null;
+    if (scored.length === 0 && CONTACT_FIDELITY.guardApproachStance) {
+        const g = deriveGuardApproach(run, {
+            body, target, targetCentre, leash, speed, pitch, candidates, fromHere, toAim, aimIsPlannable,
+            aim, allowTeleporter, planOpts, strikeFor, tolerance,
+        });
+        if (g.stance) return g;
+        approachWhy = g.why;
+    }
     if (scored.length === 0) {
         return {
             stance: null,
+            ...(approachWhy !== null ? { approach: approachWhy } : {}),
             why: `no stance derives for ${body.id} on level ${run.level}: `
                 + `${aroundTarget ? `the ${STANCE_SCAN_CELLS}-cell box around the player's `
                     + 'node held 0 leash cells, so the box around the TARGET was scanned: ' : ''}`
@@ -17980,7 +17991,8 @@ export function deriveKillByChaser(run, body, contacts,
                 + `[${rejected.slice(0, 3).map((r) => `(${r.x},${r.y}): ${r.why}`).join('; ')}`
                 + `${rejected.length > 3 ? '; …' : ''}]. ⛔ A stance safe to PASS is not safe `
                 + 'to WAIT in (trap 154), and this rung asks the waiting question over the '
-                + 'whole duration rather than at the instant.',
+                + 'whole duration rather than at the instant.'
+                + `${approachWhy !== null ? ` ${approachWhy}` : ''}`,
         };
     }
     /**
@@ -18012,6 +18024,154 @@ export function deriveKillByChaser(run, body, contacts,
             + `${scored.length} stance(s) qualified out of ${candidates.length} reachable of `
             + `${inLeash.length} in leash; this one is the soonest kill. The presses are the `
             + 'one opportunistic strike policy every walk uses, not a second schedule.',
+    };
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY L40GUARD D2 — **THE APPROACH STANCE: THE PLAYER GOES TO A BODY THE ROOM HOLDS AWAY**
+ * (`CONTACT_FIDELITY.guardApproachStance`, OFF; asked by `deriveKillByChaser` only when both of its scans priced
+ * nothing, so every stance a committed solve chose is still chosen the same way).
+ *
+ * MEASURED on the game (`seedling-fidelity-l40guard` § D1, three witnesses, worst |Δ| 0): L40's
+ * `bobsoldier@880,832` chases once the player is inside its 80 px leash, but it stands in the 16-px pocket under the
+ * chest and the pocket's west wall holds it — it leaves only as its `vy` allows, so it never arrives inside the
+ * arm's ceiling, whose travel term is the straight line. And the ceiling's kill term is `3 × killWindowTicks(tag)`,
+ * which is three DEATH windows: 78 ticks for a Bob, 3 for a BobSoldier (no die animation) — not the three landed hits
+ * through the receiver's i-frames its docblock describes. A player strike lands from a cell the blade does not reach
+ * (game: d 20.5, hits 0 → 1, no blade hit), so a stance the player WALKS to, on the body's timing, exists.
+ *
+ * The question, with the arm's own instrument and nothing else (`previewWalk` under the one strike policy, the
+ * standing tail, `dangerDuringTransit` per sample on the one forecast):
+ *   - REACH: the lattice cells within `SLASH_REACH` of the body's box (the sword's 16 px from the player's point), plus
+ *     the leash cells the scan already found reachable; each must plan from here and onward to the aim;
+ *   - TIMING: the body dies inside its travel (straight line, the floor) plus `hits` landed hits at
+ *     `KILL_PRESS_CADENCE` plus `killWindowTicks` plus `HOLD_SLACK`, and neither the approach nor the wait is hit by
+ *     the body itself;
+ *   - LEASH: no OTHER body reaches the player over the whole preview (its leash, its blade, its contact).
+ * The best is scored as the arm scores (soonest kill, shortest approach, most cleared, y, x). A refusal names which
+ * of the three failed for every candidate, counted.
+ */
+function deriveGuardApproach(run, { body, target, targetCentre, leash, speed, pitch, candidates, fromHere, toAim,
+    aimIsPlannable, aim, allowTeleporter, planOpts, strikeFor, tolerance }) {
+    const reachLimit = SLASH_REACH;
+    const hits = ENEMY_CLASSES[target.tag]?.kill?.hits ?? 3;
+    const ceilingFor = (c) => Math.ceil(Math.hypot(c.x - targetCentre.x, c.y - targetCentre.y) / speed)
+        + hits * KILL_PRESS_CADENCE + killWindowTicks(target.tag) + HOLD_SLACK;
+    const seen = new Set();
+    const asked = [];
+    let inReach = 0;
+    let reachRefused = 0;
+    const home = nodeAt(targetCentre.x, targetCentre.y, pitch);
+    for (let dy = -2; dy <= 2; dy += 1) {
+        for (let dx = -2; dx <= 2; dx += 1) {
+            const c = nodeCentre(home.tx + dx, home.ty + dy, pitch);
+            if (distanceRectPoint(c.x, c.y, target.rect) > reachLimit) continue;
+            inReach += 1;
+            const reachable = fromHere ? fromHere(c) : corridorPlans(run.world, run.state, c, allowTeleporter, planOpts);
+            const onward = !aimIsPlannable || (toAim ? toAim(c) : corridorPlans(run.world, c, aim, allowTeleporter, planOpts));
+            if (!reachable || !onward) { reachRefused += 1; continue; }
+            const k = `${c.x},${c.y}`;
+            if (seen.has(k)) continue;
+            seen.add(k);
+            asked.push({ ...c, approach: Math.hypot(c.x - run.state.x, c.y - run.state.y), inReach: true });
+        }
+    }
+    for (const c of candidates) {
+        const k = `${c.x},${c.y}`;
+        if (seen.has(k)) continue;
+        seen.add(k);
+        asked.push({ ...c, inReach: false });
+    }
+    asked.sort((a, b) => a.approach - b.approach || a.y - b.y || a.x - b.x);
+    const failed = { reach: 0, timing: 0, leash: 0 };
+    const rejected = [];
+    const scored = [];
+    for (const c of asked) {
+        if (fineDeadlineReached('kill-chaser')) {
+            return { stance: null, why: `GUARD APPROACH (guardApproachStance): deadline — the caller's anytime deadline `
+                + `(\`shouldStop\`) was reached after ${scored.length} scored of ${asked.length}` };
+        }
+        const wps = (c.x === run.state.x && c.y === run.state.y)
+            ? [] : planWaypointsOrNull(run.world, run.state, c, allowTeleporter, planOpts);
+        if (wps === null) { failed.reach += 1; rejected.push({ ...c, failed: 'reach', why: 'no corridor plans to it' }); continue; }
+        let walk;
+        try {
+            walk = previewWalk(run, wps, tolerance, { strike: strikeFor(), standFor: ceilingFor(c) });
+        } catch (e) {
+            if (!(e instanceof PhysicsV2Error) && !(e instanceof BotDriverV2Error)) throw e;
+            failed.reach += 1;
+            rejected.push({ ...c, failed: 'reach', why: `the model refuses to price its corridor — `
+                + `${e.message.split('\n')[0].slice(0, 120)}` });
+            continue;
+        }
+        if (walk.truncated) {
+            failed.reach += 1;
+            rejected.push({ ...c, failed: 'reach', why: `the preview did not settle — ${walk.truncated.why}` });
+            continue;
+        }
+        let danger = null;
+        let deathTick = null;
+        for (const sm of walk.samples) {
+            if (deathTick === null && sm.chasers
+                && !sm.chasers.some((b) => b.id === target.id)) deathTick = sm.tick;
+            if (danger !== null) continue;
+            const dg = dangerDuringTransit(run, sm.tick, playerBoxAt(sm.x, sm.y),
+                sm.arrows, sm.chasers, sm.spits ?? null, sm.grenades ?? null);
+            if (dg.danger) danger = { tick: sm.tick, phase: sm.phase ?? 'transit', ...dg };
+        }
+        if (danger) {
+            const others = danger.sources.filter((x) => x.id !== target.id);
+            const kind = others.length > 0 ? 'leash' : 'timing';
+            failed[kind] += 1;
+            rejected.push({ ...c, failed: kind, why: `${danger.phase === 'dwell' ? 'the WAIT' : 'the APPROACH'} is hit at `
+                + `tick ${danger.tick - walk.startTick} by ${danger.sources.map((x) => `${x.kind}:${x.id}`).join(', ')}` });
+            continue;
+        }
+        if (deathTick === null) {
+            failed.timing += 1;
+            rejected.push({ ...c, failed: 'timing', why: `${target.id} still stands after the ${ceilingFor(c)}-tick `
+                + `ceiling (travel + ${hits} landed hit(s) at ${KILL_PRESS_CADENCE} + the death window + slack)` });
+            continue;
+        }
+        const arrival = walk.startTick + walk.samples.filter((sm) => sm.phase !== 'dwell').length;
+        scored.push({
+            x: c.x, y: c.y, inReach: c.inReach,
+            approach: arrival - walk.startTick,
+            deathAt: deathTick - walk.startTick,
+            clears: clearsOf(walk, run),
+            ticks: (deathTick - arrival) + HOLD_SLACK,
+        });
+    }
+    if (scored.length === 0) {
+        const first = rejected.slice(0, 3).map((r) => `(${r.x},${r.y}) ${r.failed}: ${r.why}`).join('; ');
+        return {
+            stance: null,
+            failed,
+            why: `GUARD APPROACH (guardApproachStance): no approach stance for ${body.id} either — `
+                + `REACH: ${inReach} lattice cell(s) within the sword's ${reachLimit} px of its box, ${reachRefused} of `
+                + `those with no corridor here or onward, +${failed.reach} candidate(s) whose walk did not settle or `
+                + `plan; TIMING: ${failed.timing} candidate(s) where ${target.id} outlives the ceiling or lands on the `
+                + `player first; LEASH: ${failed.leash} candidate(s) where another body reaches the player — of `
+                + `${asked.length} asked [${first}${rejected.length > 3 ? '; …' : ''}].`,
+        };
+    }
+    scored.sort((a, b) => a.deathAt - b.deathAt || a.approach - b.approach
+        || b.clears.length - a.clears.length || a.y - b.y || a.x - b.x);
+    const best = scored[0];
+    return {
+        stance: { x: best.x, y: best.y },
+        target,
+        ticks: best.ticks,
+        clears: best.clears,
+        approachStance: true,
+        runnersUp: scored.slice(1, 4).map((r) => ({ x: r.x, y: r.y, deathAt: r.deathAt })),
+        why: `GUARD APPROACH (guardApproachStance): ${body.id} is held away from the player (the arm's leash scan `
+            + `priced no stance), so the player goes to it: the stance (${best.x},${best.y}) is `
+            + `${Math.hypot(best.x - targetCentre.x, best.y - targetCentre.y).toFixed(1)} px from it`
+            + `${best.inReach ? `, inside the sword's ${reachLimit} px of its box` : `, inside its ${leash} px leash`}. `
+            + `The forecast walks there in ${best.approach} tick(s) and stands: ${target.id} dies at tick `
+            + `${best.deathAt}, and no body reaches the player at any sample of either half. ${scored.length} of `
+            + `${asked.length} asked qualified; this one is the soonest kill.`,
     };
 }
 
