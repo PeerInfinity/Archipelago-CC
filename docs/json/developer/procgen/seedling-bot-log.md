@@ -23513,3 +23513,45 @@ The report is `CC/docs/cloud-reports/seedling-fidelity-digest.md`.
 solverBot-side globals: `HAMMER_ESCAPE_BOUNDS`, `GHOST_SPINNER_PRESS`, `PRESS_KILL_COST`, the deadline state and the
 progress hook. It is scoped to one `twoPassSolve`. The spinning axes' and lava chains' visit state are outside the
 escape's reach today; a slice that teaches the escape about them adds them to `stateDigestParts`.
+
+### Seedling fidelity HOUSEKEEP — named refusals, the lightpole's label, the walker's beam towers
+
+Wave 19, three small items. The report is `CC/docs/cloud-reports/seedling-fidelity-housekeep.md`.
+
+**D1 — a solver can't-do that arrives as a plain throw leaves `solveSegment` as a `SolverRefusal`.**
+- The census is by code (`@babel/parser`, `evidence/tools/census-throws.mjs`): `solveSegment` / `twoPassSolve`'s import
+  closure holds 196 reachable plain-`Error` throw sites. 3 are converted, 128 are the model's own named refusals of a
+  state it does not transcribe (kept, unmeasured), 65 are invariants (argument contracts, the tape's contract, internal
+  consistency).
+- MEASURED, the non-refusal throws the survey (45 refused steps, local) and the sweep baseline (851 legs) reach: three.
+  `levelRun`'s press on a FROZEN tick (sweep 631, survey 122; coded `FROZEN_TICK_PRESS`), `findExit`'s teleporter on a
+  PIT tile (survey 113, 191; a `BotDriverV2Error`) — and ROCKMOVE's orphan button (`runHold`'s "NO responder", legs
+  311/313/634 under its remove arm).
+- Each is NAMED where the solver first sees it (`obstacle` on the error), and becomes a refusal only at the OUTERMOST
+  `solveSegment` (`REFUSAL_BY_NAME`, `refusingByName`). Kinds: `unmodelled-frozen-press`, `unmodelled-pit-teleporter`
+  (RK `unmodelled`, by field), `orphan-presser` (RK `does-not-apply`, by its words).
+- Byte-inert: tapes, the six `--check`s and the identity block do not move; the words of every refusal are unchanged
+  (the orphan presser's gain one sentence).
+
+**D2.** `PERSISTENCE_RESPONSE.lightpole` is `'light'`, not `'cosmetic'`: a cleared tag boots the pole LIT, and
+`darkTrapLight` (ON) kills the DarkTraps its light reaches. No reader branches on the value. `deriveLightPole`'s
+docblock names the cross-room press (a `ButtonRoom` in another level writes the pole's tag: the rules' darktrap
+event, discharged by `execCrossRoomPress` in the presser's room, never by the light arm).
+
+**D3 — `CONTACT_FIDELITY.walkerBeamTowers` (OFF).** The walker's planner read a BeamTower's PLACEMENT while the run
+walks into its drifted Solid. Giving `livePerVisitOpts` the family alone moves nothing: `plannerObstacleAt`'s named-key
+path drops it (r8Acceptance's `plannerDropsSixFamilies`), so ON forwards it there too. Measured ON (model): of the
+sweep's 18 beam-tower-room legs, the real `createRuntimeWalker` loop moves 1 (782, L105); the survey's five
+beam-tower steps are identical. The game's answer is the sweep's `producer=walker` A/B (the report names it).
+
+**Trap candidates:**
+
+1. *The brief's "plain `Error`" was the wrong filter.* Two of the three measured crashes were `BotDriverV2Error`s, a
+   named class. The question a sweep row asks is "is it a `SolverRefusal`", and a census by class name misses them.
+2. *A refusal must not be catchable when the run is half-stepped.* The frozen-tick press throws inside `advance`, after
+   the tick began mutating the run. Converting it at the throw would let a rung catch it and go on from a corrupt run;
+   converting it at the outermost segment keeps every inner control path the object it was.
+3. *A family in the bag is not a family in the query.* `livePerVisitOpts` feeding `beamTowers` changes nothing while the
+   node test destructures named keys. Measure the consumer, not the builder.
+4. *A progress hook's onProgress at `segment` runs OUTSIDE the segment's body.* A "nested" solve started from it is not
+   nested. Fire the nested call from a site emitted inside (`walk`).

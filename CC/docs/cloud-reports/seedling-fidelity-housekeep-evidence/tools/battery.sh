@@ -10,7 +10,7 @@ git rev-parse HEAD > "$O/sha-$T.txt"; git status --porcelain >> "$O/sha-$T.txt";
 } > "$O/censuses-$T.txt" 2>&1
 npx vitest run frontend/modules/seedlingDemo/tapeRunner.test.js --reporter=json --outputFile="$O/taperunner-$T.json" > /dev/null 2>&1
 python3 $E/tools/pairs.py "$O/taperunner-$T.json" > "$O/taperunner-pairs-$T.txt"; rm -f "$O/taperunner-$T.json"
-npx vitest run $(cat $E/w0/vitest-files.txt) --reporter=json --outputFile="$O/vitest-$T.json" > "$O/vitest-$T.log" 2>&1; echo "rc=$?" >> "$O/vitest-$T.log"
+npx vitest run $(cat ${VFILES:-$E/w0/vitest-files.txt}) --reporter=json --outputFile="$O/vitest-$T.json" > "$O/vitest-$T.log" 2>&1; echo "rc=$?" >> "$O/vitest-$T.log"
 python3 $E/tools/pairs.py "$O/vitest-$T.json" > "$O/vitest-pairs-$T.txt"
 python3 -c "import json,sys; j=json.load(open(sys.argv[1])); [print(a['status'], t['name'].split('seedlingDemo/')[-1], '::', a['fullName']) for t in j['testResults'] for a in t['assertionResults'] if a['status']!='passed']" "$O/vitest-$T.json" > "$O/vitest-nonpass-$T.txt"
 gzip -f "$O/vitest-$T.json"

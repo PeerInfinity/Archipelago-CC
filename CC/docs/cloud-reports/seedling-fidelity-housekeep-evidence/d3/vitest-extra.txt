@@ -1,0 +1,11 @@
+frontend/modules/seedlingDemo/breakVerb.test.js
+frontend/modules/seedlingDemo/contactFidelityHook.test.js
+frontend/modules/seedlingDemo/fidelityBulb.test.js
+frontend/modules/seedlingDemo/fidelityLavaChainPlayer.test.js
+frontend/modules/seedlingDemo/fidelityWaypointSlide.test.js
+frontend/modules/seedlingDemo/procgenCollectPath.test.js
+frontend/modules/seedlingDemo/procgenSwimSolver.test.js
+frontend/modules/seedlingDemo/pull.test.js
+frontend/modules/seedlingDemo/r5Totem.test.js
+frontend/modules/seedlingDemo/solverBot.test.js
+frontend/modules/seedlingDemo/fidelityHousekeepWalker.test.js
