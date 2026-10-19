@@ -23567,3 +23567,30 @@ OFF at the SP head:
 - solve time −10 % overall, L12 −35 %, L40's finished p90 1.1 → 0.57 s.
 
 It does **not** clear L40's 397 / 414 band: those solves run past 84 s, and ~1.4× does not bring them under 90 s.
+
+### Seedling fidelity INTERIMS — the producer pins retired by game-checked re-records (six of nine)
+
+⚖ The user (2026-10-18) chose "INTERIMS retire": on this branch, game-checked re-records of the nine producers that
+seedling-fidelity-producers pinned OFF as named INTERIMs are the job. No model, solver or `CONTACT_FIDELITY` change.
+The report is `CC/docs/cloud-reports/seedling-fidelity-interims.md`.
+
+**Census (D1).** Each producer planned at the defaults with its pin removed reproduces the producers report's numbers to
+the tick (15 tapes move, the rest byte-identical).
+
+**Retired (D2), each moved tape recorded on the game** (p4f, headless, `check-seedling-bot-differential --record
+--only=…`; "the model reproduces the recording it just made"; tapeRunner's 617 pairs pass):
+- `stance-witness` (`waypointSlide`): stance-l46-chest 1044 → 868 t, l48-chest 540 → 449, l48-keylock-open 454 → 231,
+  l48-keylock-south 369 → 322.
+- `axe-witness` (`waypointSlide`): axe-l48-reach-l49 368 → 330.
+- `l30keylock` (`strikeIframeLapse`): pit224 347 → 320, pit240 360 → 341; the chaser stance is now (88,88).
+- `pushblock-witness` (`strikeIframeLapse`): pushblock-l65-reach-l68 347 → 345.
+- `ladder2-witness` (KILLLOCK `jellyfishLive`): ladder2-l104-beam 278 → 261.
+- `u10-puncher-dwell`, the admitted arm only: 200 → 200 t, the presses at 14/44/74 (were 14/47/80); its observation
+  stream is byte-identical. The positive control `u10-puncher-dwell-refused` keeps `strikeIframeLapse` OFF, scoped and
+  named as the control's setting: ON, no stance of 56 round the puncher is refused by the punch.
+
+**Stopped.** `bobsoldier2` (the torch tape feeds `pickup-removal-witness.json`, another instrument's fixture; the BEFORE
+arm no longer refuses on the dwell), `f1-l5-open-lock` (it IS the `baitForecast` OFF control's witness;
+`f1-bodies-oracle.json` reads its 437 t), `l40button-witness` (at the defaults `lobberHoldRefusal` throws; with
+`movingWait` ON, l42's walk throws on the Explosion → Enemy arm, BOMBBLAST's region). Every ON tape of the first two
+also reproduces on the game; the recordings are in the report's evidence.

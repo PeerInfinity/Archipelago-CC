@@ -120,7 +120,7 @@
             "index": 1
         }
     },
-    "tick_count": 347,
+    "tick_count": 345,
     "inputs": [
         {
             "key": "left",
@@ -493,34 +493,34 @@
             "to": 264
         },
         {
-            "key": "primary",
-            "from": 271,
-            "to": 272
-        },
-        {
             "key": "left",
             "from": 258,
-            "to": 274
+            "to": 277
+        },
+        {
+            "key": "right",
+            "from": 277,
+            "to": 278
         },
         {
             "key": "primary",
-            "from": 273,
-            "to": 274
+            "from": 277,
+            "to": 278
         },
         {
-            "key": "right",
-            "from": 274,
-            "to": 275
-        },
-        {
-            "key": "right",
-            "from": 276,
+            "key": "primary",
+            "from": 279,
             "to": 280
         },
         {
-            "key": "left",
-            "from": 282,
-            "to": 283
+            "key": "primary",
+            "from": 285,
+            "to": 286
+        },
+        {
+            "key": "up",
+            "from": 280,
+            "to": 292
         },
         {
             "key": "primary",
@@ -528,53 +528,38 @@
             "to": 292
         },
         {
-            "key": "primary",
-            "from": 293,
+            "key": "down",
+            "from": 292,
             "to": 294
         },
         {
             "key": "up",
-            "from": 284,
-            "to": 300
-        },
-        {
-            "key": "primary",
-            "from": 299,
-            "to": 300
+            "from": 294,
+            "to": 298
         },
         {
             "key": "down",
-            "from": 300,
-            "to": 303
-        },
-        {
-            "key": "up",
-            "from": 303,
-            "to": 304
+            "from": 299,
+            "to": 301
         },
         {
             "key": "primary",
-            "from": 311,
-            "to": 312
+            "from": 301,
+            "to": 302
         },
         {
             "key": "right",
-            "from": 308,
-            "to": 314
-        },
-        {
-            "key": "primary",
-            "from": 313,
-            "to": 314
-        },
-        {
-            "key": "left",
-            "from": 314,
+            "from": 305,
             "to": 316
         },
         {
-            "key": "right",
+            "key": "left",
             "from": 316,
+            "to": 317
+        },
+        {
+            "key": "right",
+            "from": 317,
             "to": 318
         },
         {
@@ -583,46 +568,61 @@
             "to": 319
         },
         {
+            "key": "right",
+            "from": 319,
+            "to": 320
+        },
+        {
             "key": "up",
+            "from": 320,
+            "to": 321
+        },
+        {
+            "key": "primary",
             "from": 321,
-            "to": 332
+            "to": 322
         },
         {
             "key": "down",
+            "from": 322,
+            "to": 323
+        },
+        {
+            "key": "primary",
+            "from": 324,
+            "to": 325
+        },
+        {
+            "key": "up",
+            "from": 325,
+            "to": 333
+        },
+        {
+            "key": "primary",
             "from": 332,
             "to": 333
         },
         {
-            "key": "up",
-            "from": 333,
-            "to": 334
-        },
-        {
             "key": "down",
-            "from": 334,
+            "from": 333,
             "to": 335
         },
         {
-            "key": "up",
-            "from": 335,
-            "to": 336
-        },
-        {
-            "key": "up",
-            "from": 340,
-            "to": 345
+            "key": "down",
+            "from": 337,
+            "to": 338
         },
         {
             "key": "right",
-            "from": 340,
-            "to": 346
+            "from": 339,
+            "to": 345
         },
         {
-            "key": "primary",
-            "from": 346,
-            "to": 347
+            "key": "up",
+            "from": 339,
+            "to": 345
         }
     ],
     "tape_version": 8,
-    "description": "⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK — route step 146 (L65 → L68): `pushableblockspear@176,128` is the door. The solver thrusts it W, then N from two cells below across the pit, then W onto the pit where it sinks — R4's three pushes, re-derived — selecting the spear's slot for each thrust and the sword's after, and walks onto `teleporter@184,64`. The survey's staging (`r8-solve-11`'s committed block re-pointed at the atlas arrival, keys [0, 1, 2, 3, 4], items [canSwim, hasDarkSword, hasFeather, hasFire, hasShield, hasSpear, hasTorch, hasWand]), with darktrap@144,144's clear [{\"level\":65,\"tag\":1}] declared so the walk meets no DarkTrap. The solver's own plan: 347 t, 3 thrust(s), equips [{\"t\":0,\"slot\":3},{\"t\":40,\"slot\":0},{\"t\":81,\"slot\":3},{\"t\":121,\"slot\":0},{\"t\":191,\"slot\":3},{\"t\":242,\"slot\":0}]. Authored by scripts/procgen/plan-seedling-pushblock-witness.mjs."
+    "description": "⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK — route step 146 (L65 → L68): `pushableblockspear@176,128` is the door. The solver thrusts it W, then N from two cells below across the pit, then W onto the pit where it sinks — R4's three pushes, re-derived — selecting the spear's slot for each thrust and the sword's after, and walks onto `teleporter@184,64`. The survey's staging (`r8-solve-11`'s committed block re-pointed at the atlas arrival, keys [0, 1, 2, 3, 4], items [canSwim, hasDarkSword, hasFeather, hasFire, hasShield, hasSpear, hasTorch, hasWand]), with darktrap@144,144's clear [{\"level\":65,\"tag\":1}] declared so the walk meets no DarkTrap. The solver's own plan: 345 t, 3 thrust(s), equips [{\"t\":0,\"slot\":3},{\"t\":40,\"slot\":0},{\"t\":81,\"slot\":3},{\"t\":121,\"slot\":0},{\"t\":191,\"slot\":3},{\"t\":242,\"slot\":0}]. Authored by scripts/procgen/plan-seedling-pushblock-witness.mjs."
 }

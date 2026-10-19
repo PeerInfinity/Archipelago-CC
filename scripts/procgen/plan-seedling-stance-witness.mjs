@@ -186,15 +186,11 @@ async function replayRun(tape, levelSource, each = null) {
 }
 
 /**
- * ⚖ PINNED `waypointSlide` OFF — an INTERIM (seedling-fidelity-producers, 2026-10-16).
- * The four stance tapes were recorded on the game under the PRE-SLIDE walk (the ice walked parked). The wave-16
- * flip (`41b0bc6389`, ⚖ user 2026-10-14) turned `waypointSlide` ON and pinned `fidelityStance`'s chest and
- * keylock-open rows OFF for exactly that reason ("their tapes walk the ice parked"); its re-pin list missed this
- * producer (no CI job runs it). ON, the solver walks L46/L48's ice shorter and all four plans move.
- * ⛔ RETIRE THIS PIN with a re-record ON: the plan re-derived under the flipped default, recorded on the game
- * (p4f, 0 px), and its roster rows re-pinned — a roster move, so the user's licence.
+ * ⚖ RETIRED 2026-10-19 (seedling-fidelity-interims): the `waypointSlide` OFF INTERIM pin (seedling-fidelity-producers,
+ * 2026-10-16). Planned at the defaults (the slide ON) and recorded on the game (p4f, headless; the model reproduces each
+ * recording): stance-l46-chest 1044 → 868 t, l48-chest 540 → 449, l48-keylock-open 454 → 231, l48-keylock-south 369 → 322;
+ * l48-keylock-north does not move.
  */
-const PINNED_FIDELITY = Object.freeze({ waypointSlide: false });
 
 // ⚠ A bare import does nothing (`check-procgen-help`'s import door): the work is `main()`'s.
 async function main() {
@@ -292,7 +288,4 @@ async function main() {
     console.log('\nall checks green');
 }
 
-if (isEntryPoint(import.meta.url)) {
-    const { withContactFidelity } = await import(join(MODULE, 'contactFidelity.js'));
-    await withContactFidelity(PINNED_FIDELITY, main);
-}
+if (isEntryPoint(import.meta.url)) await main();
