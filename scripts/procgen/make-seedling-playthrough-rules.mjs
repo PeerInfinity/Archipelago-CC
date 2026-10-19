@@ -72,7 +72,9 @@ const { R7_GOAL_LEDGER } = await imp('frontend/modules/seedlingDemo/r7Acceptance
 //   the atlas's regions, exits and connections are a FUNCTION of the rooms, and
 //   only the OVERLAY below is authored. The vanilla 116 and an edited level set
 //   now go through ONE `deriveAtlas`.
-const { deriveAtlas, regionIdFor, outExitId, inExitId, LINK_TAGS, VICTORY_ITEM } = await imp('frontend/modules/seedlingDemo/seedlingAtlasDerivation.js');
+const {
+    deriveAtlas, regionIdFor, outExitId, inExitId, LINK_TAGS, VICTORY_ITEM, levelName, BOSS_LOCATION_ITEM, BOSS_FILLER_ITEM,
+} = await imp('frontend/modules/seedlingDemo/seedlingAtlasDerivation.js');
 const { buildLevelWorld, ROLES, maskHitsBox, PERSISTENCE_RESPONSE, combatCensusOf } = await imp('frontend/modules/seedlingDemo/levelWorld.js');
 const { censusFallsOntoDoors } = await imp('frontend/modules/seedlingDemo/fidelityDescent.js');
 const { playerBoxAt } = await imp('frontend/modules/seedlingDemo/playerPhysicsV2.js');
@@ -1553,6 +1555,75 @@ export function provenanceOf(atlasDoc) {
     };
 }
 
+/**
+ * ⛓⛓ R4b (rules-boss-locations; ⚖ the user 2026-10-19, "Both, default Seal/16") — THE TWO OPTIONS.
+ *
+ * - `boss_location_items` (`seal` | `filler`, default `seal`): what the seven boss kills hold. `seal` is
+ *   upstream parity (`boss_locations` adds a Seal per boss: 23 in the pool); `filler` puts upstream's filler
+ *   (`BOSS_FILLER_ITEM`) there instead, leaving the 16 chest Seals.
+ * - `seals_required` (1–23, default 16): the Seals the FinalDoor event and so the goal need. With `filler`
+ *   only 16 exist, and the generated world REFUSES N > 16 by name (`generate_early`: the item's pooled
+ *   count is the bound, measured, never a second constant).
+ *
+ * ⛔ THIS FILE'S RULES STAY THE DEFAULT, LITERALLY. Every JS evaluator of AP_1 (the solver, the runtime, the
+ * stateManager) reads `Has(Seal, 16)` as it always has; the options act in the WORLD only, through
+ * `world[p].option_effects`, which `world_generator` reads (an opt-in block: a document without one
+ * generates as before). The Generate.py export resolves the options to constants, as for any world.
+ *
+ * The HOST CONTRACT (R4b part 2) rides in `world[p].slot_data` (→ the world's `fill_slot_data`, from the
+ * options): `seals_required` = N and `boss_location_items` = 0 (seal) | 1 (filler).
+ */
+function applyBossLocationOptions(rules) {
+    const p = '1';
+    const items = rules.items[p];
+    const bossRows = R7_GOAL_LEDGER.filter((r) => r.kind === 'boss');
+    const locs = Object.values(rules.regions[p]).flatMap((r) => r.locations ?? []);
+    const bossLocations = bossRows.map((row) => {
+        const name = `${levelName(row.level)} - ${row.label}`;
+        const loc = locs.find((l) => l.name === name);
+        if (!loc) throw new Error(`R4b: boss row ${row.id} compiled no location "${name}"`);
+        if (loc.item?.name !== BOSS_LOCATION_ITEM) {
+            throw new Error(`R4b: boss location "${name}" holds ${loc.item?.name}, not ${BOSS_LOCATION_ITEM}`);
+        }
+        return name;
+    }).sort();
+    const sealItem = BOSS_LOCATION_ITEM;
+    const sealsInPool = rules.itempool_counts[p][sealItem];
+    const required = OV.PLAYTHROUGH_ENTITY_OVERLAY.finaldoor.condition.seals;
+    if (!Number.isInteger(required) || !Number.isInteger(sealsInPool) || required > sealsInPool - bossLocations.length) {
+        throw new Error(`R4b: the FinalDoor needs ${required} ${sealItem}s, but only ${sealsInPool} are pooled `
+            + `(${bossLocations.length} of them on bosses): the default must hold under both options`);
+    }
+    if (items[BOSS_FILLER_ITEM]) throw new Error(`R4b: ${BOSS_FILLER_ITEM} is already an item of this world`);
+    // ⛔ APPENDED after the sorted block (`regionAtlasCompiler` ids by sorted NAME): no existing item id moves.
+    const nextId = Math.max(...Object.values(items).map((i) => i.id).filter(Number.isInteger)) + 1;
+    items[BOSS_FILLER_ITEM] = {
+        name: BOSS_FILLER_ITEM, id: nextId, groups: [], classification: 'filler', type: null, max_count: 0,
+    };
+    const world = rules.world[p];
+    world.options = { ...world.options, boss_location_items: 0, seals_required: required };
+    world.option_definitions = {
+        boss_location_items: {
+            type: 'choice', name_lookup: { 0: 'seal', 1: 'filler' }, default: 0, display_name: 'Boss Location Items',
+        },
+        seals_required: {
+            type: 'range', range_start: 1, range_end: sealsInPool, default: required, display_name: 'Seals Required',
+        },
+    };
+    world.slot_data = { boss_location_items: 0, seals_required: required };
+    world.option_effects = [
+        {
+            kind: 'item_count', option: 'seals_required', item: sealItem, count: required,
+            why: 'every Has(Seal, default) in these rules (the FinalDoor event, the doorway behind it) reads N',
+        },
+        {
+            kind: 'location_items', option: 'boss_location_items', value: 1, item: BOSS_FILLER_ITEM,
+            locations: bossLocations,
+            why: 'with `filler`, the seven boss kills hold the filler and the pool keeps the 16 chest Seals',
+        },
+    ];
+}
+
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();
 
 function main() {
@@ -1599,6 +1670,7 @@ function main() {
         // ⛓ RULES game-truth-gaps (R2): and the landings on lethal terrain.
         exitGates: [...obstacle.exitGates, ...buttons.exitGates, ...talks.exitGates, ...landingGates],
     });
+    applyBossLocationOptions(rules);
     const rulesText = stringifyRulesJson(rules);
 
     if (check) {

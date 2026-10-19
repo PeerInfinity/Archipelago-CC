@@ -53,13 +53,38 @@ export function mergeSaveArray(name, held, granted) {
     const want = ints(granted);
     const out = rule === 'log-append' ? [...ints(held)] : sorted(held);
     const have = new Set(out);
+    // ⛓ R4b — never past the array's own slots: a 17th..23rd Seal (`boss_location_items: seal`) writes NOTHING.
+    const cap = Math.min(want.length, SAVE_SLOTS[name] ?? want.length);
     // `granted` holds `want.length` distinct values and at most `out.length` of them are held, so its own
     // values always suffice — and taken in order they are the smallest not held (granted is 0..N-1).
     for (const v of want) {
-        if (out.length >= want.length) break;
+        if (out.length >= cap) break;
         if (!have.has(v)) { out.push(v); have.add(v); }
     }
     return rule === 'log-append' ? out : out.sort((a, b) => a - b);
+}
+
+/**
+ * ⛓⛓ R4b (rules-boss-locations) — **THE SEAL LOG UNDER `seals_required`**, the host contract stated once.
+ *
+ * The game opens the FinalDoor on `SealController.hasAllSealParts()` = the LAST of the 16 log slots filled
+ * (`tapeFormat.SAVE_SLOTS.seal_parts`), and the AS3 is not changed for N: the HOST maps N held Seals to slots.
+ *   · `count >= sealsRequired` → ALL 16 slots (the Nth Seal opens the door, whatever N is, 1..23);
+ *   · otherwise `min(count, 15)` — one slot per Seal as before, but the door's slot is held back until N, so
+ *     a 16th..22nd copy below N writes nothing, and nothing is ever written past slot 16.
+ * With the default N = 16 this is exactly the old one-slot-per-Seal fill (15 below 16, all 16 at 16).
+ *
+ * @param {number} count  the Seals AP holds
+ * @param {number} [sealsRequired=16]  the world's `seals_required` option
+ * @returns {number} the log slots to fill
+ */
+export function sealLogSlots(count, sealsRequired = SAVE_SLOTS.seal_parts) {
+    if (!Number.isInteger(count) || count < 0) throw new Error(`saveArrayRules: a Seal count must be a non-negative integer, got ${JSON.stringify(count)}`);
+    if (!Number.isInteger(sealsRequired) || sealsRequired < 1) {
+        throw new Error(`saveArrayRules: seals_required must be a positive integer, got ${JSON.stringify(sealsRequired)}`);
+    }
+    const slots = SAVE_SLOTS.seal_parts;
+    return count >= sealsRequired ? slots : Math.min(count, slots - 1);
 }
 
 /**

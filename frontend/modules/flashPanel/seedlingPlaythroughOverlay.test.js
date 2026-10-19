@@ -39,6 +39,7 @@ import {
     LAVATRAP_PULL,
     LAVABOSS_ARENA,
     TENTACLE_ARENA,
+    LIGHTS_ARENA,
     DEATH_EXIT_ARENAS,
     LOCATION_GUARDS,
     PLAYTHROUGH_TILE_OVERLAY,
@@ -168,10 +169,14 @@ describe('⛔ THE BRIEF WAS WRONG ABOUT WandLock, and the test says so', () => {
         }
     });
 
-    it('and no overlay row anywhere gates on the wand for a LOCK', () => {
+    // ⛓ R4b (rules-totem-gate-as3 finding (3)): the ONE wand row is a boss BODY, not a lock — the BossTotem is
+    //   `onlyHitBy = "Wand"` (`BossTotem.as:262`), so the crossing past it costs the Wand.
+    it('and no overlay row anywhere gates on the wand for a LOCK (the BossTotem body is the one wand row)', () => {
         const wandish = Object.entries(PLAYTHROUGH_ENTITY_OVERLAY)
             .filter(([, r]) => JSON.stringify(r.condition ?? null).includes('Wand'));
-        expect(wandish).toEqual([]);
+        expect(wandish.map(([tag]) => tag)).toEqual(['bosstotem']);
+        expect(PLAYTHROUGH_ENTITY_OVERLAY.bosstotem.condition).toEqual({ all: [{ flag: 'hasTotemPartsAll' }, { flag: 'hasWand' }] });
+        expect(PLAYTHROUGH_ENTITY_OVERLAY.bosstotem.cite).toMatch(/onlyHitBy = "Wand"/);
         expect(WANDLOCK_IS_A_LOCK.cite).toMatch(/WandShot/);
     });
 
@@ -183,8 +188,10 @@ describe('⛔ THE BRIEF WAS WRONG ABOUT WandLock, and the test says so', () => {
 });
 
 describe('the trap rooms, and the L40 ruling', () => {
+    // ⛓ R4b (rules-boss-locations): the list is EMPTY since L69 was lifted (the Lights kill is a location);
+    //   the law still holds over it, vacuously, and the next never-enter row is held to it.
     it('every never-enter level carries the citation that makes it one', () => {
-        expect(NEVER_ENTER_LEVELS.length).toBeGreaterThan(0);
+        expect(NEVER_ENTER_LEVELS).toEqual([]);
         for (const level of NEVER_ENTER_LEVELS) {
             expect(typeof NEVER_ENTER_CITE[level], `L${level} has no citation`).toBe('string');
         }
@@ -383,8 +390,8 @@ describe('the charged doors and the completion condition', () => {
     // sends a player into the LavaBoss arena unable to leave it.
     it('L82 is no longer never-enter; its arena is gated BOTH ways on the Dark Suit and a weapon', () => {
         expect(NEVER_ENTER_LEVELS).not.toContain(LAVABOSS_ARENA.level);
-        // ⛓ RULES game-truth-gaps: L57 lifted too (⚖ the user, 2026-10-06), the row below.
-        expect(NEVER_ENTER_LEVELS).toEqual([69]);
+        // ⛓ RULES game-truth-gaps: L57 lifted too (⚖ the user, 2026-10-06), the row below; ⛓ R4b: and L69.
+        expect(NEVER_ENTER_LEVELS).toEqual([]);
         expect(LAVABOSS_ARENA.condition).toEqual({ all: [{ flag: 'hasDarkSuit' }, A_WEAPON] });
         for (const door of CHARGED_DOORS.filter((d) => d.condition === LAVABOSS_ARENA.condition)) {
             expect(door.cite).toMatch(/LavaBoss\.as:53,143-165/);
@@ -416,7 +423,8 @@ describe('the charged doors and the completion condition', () => {
     it('L57 is no longer never-enter; its arena is gated BOTH ways on the tentacle kill (sword, spear or wand)', () => {
         expect(NEVER_ENTER_LEVELS).not.toContain(TENTACLE_ARENA.level);
         expect(TENTACLE_ARENA.condition).toEqual({ any: [{ flag: 'hasSword' }, { flag: 'hasSpear' }, { flag: 'hasWand' }] });
-        expect(DEATH_EXIT_ARENAS.map((a) => [a.level, a.namedRoom])).toEqual([[57, 'tentacle_beast_mouth']]);
+        expect(DEATH_EXIT_ARENAS.map((a) => [a.level, a.namedRoom]))
+            .toEqual([[57, 'tentacle_beast_mouth'], [69, 'light_boss_exit']]);
         const rules = JSON.parse(readFileSync(fileURLToPath(new URL(
             '../../presets/seedling_playthrough/AP_1/AP_1_rules.json', import.meta.url)), 'utf8'));
         const kill = { rule: 'Or', children: ['Progressive Sword', 'Ghost Spear', 'Wand']
@@ -430,6 +438,43 @@ describe('the charged doors and the completion condition', () => {
         expect(R.level_57.exits.map((e) => e.connected_region)).toEqual(['level_58__r4c1']);
         // ⛓ ⚖ game truth first: the mouth's landing in L58 drowns an item-less arrival too, so the R2 gate adds Swim
         expect(R.level_57.exits[0].access_rule).toEqual({ rule: 'And', children: [kill, { rule: 'Has', args: { item_name: 'Progressive Swim' } }] });
+    });
+
+    // ⛓ R4b (rules-boss-locations) — L69 is wired like L57 (⚖ 2026-10-19 "All 7 bosses"): its exit is the
+    //   teleporter the last flier's death creates (the manifest's `light_boss_exit`, to L36), its way in L70's pit,
+    //   and both cost the flier kill.
+    it('L69 is no longer never-enter; its arena is gated BOTH ways on the flier kill (sword, spear or wand)', () => {
+        expect(NEVER_ENTER_LEVELS).not.toContain(LIGHTS_ARENA.level);
+        expect(LIGHTS_ARENA.condition).toEqual({ any: [{ flag: 'hasSword' }, { flag: 'hasSpear' }, { flag: 'hasWand' }] });
+        const rules = JSON.parse(readFileSync(fileURLToPath(new URL(
+            '../../presets/seedling_playthrough/AP_1/AP_1_rules.json', import.meta.url)), 'utf8'));
+        const kill = { rule: 'Or', children: ['Progressive Sword', 'Ghost Spear', 'Wand']
+            .map((item_name) => ({ rule: 'Has', args: { item_name } })) };
+        const R = rules.regions['1'];
+        const into = Object.entries(R).flatMap(([from, r]) => r.exits.filter((e) => e.connected_region === 'level_69')
+            .map((e) => ({ from, ...e })));
+        expect(into.map((e) => [e.from, e.access_rule])).toEqual([['level_70', kill]]);
+        expect(R.level_69.exits.map((e) => [e.connected_region, e.access_rule])).toEqual([['level_36', kill]]);
+        expect(R.level_69.locations.map((l) => [l.name, l.access_rule])).toEqual([['Level 069 - Lights', kill]]);
+    });
+
+    // ⛓ R4b — every boss row's kill is a LOCATION GUARD, read off the overlay's own rulings.
+    it('guards the seven boss kills, each with its fight\'s condition', () => {
+        const bosses = ['owl@L112', 'shieldspire@L19', 'times@L32', 'tentacledbeast@L57', 'totem@L43',
+            'lights@L69', 'kingoffire@L82'];
+        for (const id of bosses) {
+            expect(locationGuard(id)?.cite, id).toBeTruthy();
+            expect(locationGuard(id)?.why, id).toBeTruthy();
+        }
+        expect(locationGuard('totem@L43').condition).toEqual({ all: [{ flag: 'hasTotemPartsAll' }, { flag: 'hasWand' }] });
+        expect(locationGuard('shieldspire@L19').condition).toEqual(PLAYTHROUGH_ENTITY_OVERLAY.shieldboss.condition);
+        expect(locationGuard('owl@L112').condition).toEqual(PLAYTHROUGH_ENTITY_OVERLAY.finalboss.condition);
+        expect(locationGuard('times@L32').condition).toEqual(locationGuard('fire@L32').condition);
+        expect(locationGuard('tentacledbeast@L57').condition).toBe(TENTACLE_ARENA.condition);
+        expect(locationGuard('lights@L69').condition).toBe(LIGHTS_ARENA.condition);
+        expect(locationGuard('kingoffire@L82').condition).toBe(A_WEAPON);
+        // ⛔ the WAND's own location keeps its condition: a Wand behind the Wand would self-lock vanilla placement
+        expect(JSON.stringify(locationGuard('wand@L43').condition)).not.toContain('hasWand');
     });
 
     it('states the goal as the BLOODLESS seed and names the other ending a non-goal', () => {

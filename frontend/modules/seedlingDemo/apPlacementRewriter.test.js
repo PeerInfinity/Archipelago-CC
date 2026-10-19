@@ -81,7 +81,9 @@ const vanillaSet = () => vanillaRecordSet(fixture('seedling-vanilla-set.json'), 
 // The two numbers the whole slice is about, DERIVED from the ledger rather than
 // typed — a 42nd row or a third encounter moves both.
 const ENCOUNTER_ROWS = R7_GOAL_LEDGER.filter((r) => r.kind === 'encounter').length;
-const REWRITABLE = R7_GOAL_LEDGER.length - ENCOUNTER_ROWS;
+// ⛓ R4b (rules-boss-locations): the seven boss kills REPORT at a fixed address and are not rewritten either.
+const BOSS_ROWS = R7_GOAL_LEDGER.filter((r) => r.kind === 'boss').length;
+const REWRITABLE = R7_GOAL_LEDGER.length - ENCOUNTER_ROWS - BOSS_ROWS;
 
 describe('buildPlacementTable — the address, the placement and the look', () => {
     it(`resolves ${REWRITABLE} rewritable locations and REPORTS the ${ENCOUNTER_ROWS} encounter row(s)`, () => {
@@ -96,10 +98,23 @@ describe('buildPlacementTable — the address, the placement and the look', () =
         expect(encounters.every((e) => typeof e.location === 'string')).toBe(true);
     });
 
+    it(`REPORTS the ${BOSS_ROWS} boss kill(s) at their fixed address, never rewritten (R4b)`, () => {
+        const { entries, reports } = canonicalTable();
+        expect(BOSS_ROWS).toBe(7);
+        expect(reports.map((r) => [r.location, `${r.address.level},${r.address.tag}`]).sort()).toEqual([
+            ['Level 019 - Shieldspire', '19,0'], ['Level 032 - Times', '32,3'], ['Level 043 - Totem of Lacste', '43,5'],
+            ['Level 057 - Tentacled Beast', '57,0'], ['Level 069 - Lights', '69,0'], ['Level 082 - King of Fire', '82,0'],
+            ['Level 112 - Owl', '112,0'],
+        ]);
+        expect(reports.every((r) => r.vanillaItem === 'Seal')).toBe(true);
+        const bossLocations = new Set(reports.map((r) => r.location));
+        expect(entries.filter((e) => bossLocations.has(e.location))).toEqual([]);
+    });
+
     it('every location name it derives is a location the shipped preset actually has', () => {
         const placed = canonicalPlacement();
-        const { entries, encounters } = canonicalTable();
-        for (const row of [...entries, ...encounters]) expect(placed.has(row.location)).toBe(true);
+        const { entries, encounters, reports } = canonicalTable();
+        for (const row of [...entries, ...encounters, ...reports]) expect(placed.has(row.location)).toBe(true);
         expect(placed.size).toBe(R7_GOAL_LEDGER.length);
     });
 
