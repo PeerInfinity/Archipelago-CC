@@ -231,7 +231,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 426,
         "browser": 144,
-        "cited": 221,
+        "cited": 222,
         "files": 439,
         "lineStyle": 13,
         "withDocblock": 439,
@@ -10040,7 +10040,10 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "probe",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "probe-seedling-bomb-blast-body.mjs",
