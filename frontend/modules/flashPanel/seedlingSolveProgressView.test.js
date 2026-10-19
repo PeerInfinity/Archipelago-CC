@@ -73,6 +73,7 @@
  *   f7 the marks inserted on a frame-less snapshot    -> the frame-less identity row (+ the RK and stamps identity rows) red
  *   f8 one glyph for every kind                       -> 'a glyph per kind …' and 'the stance square …' red
  *   f9 the danger drawn at its source's placement     -> 'the stance square …' reds
+ *   f10 a work counter that is an object drawn         -> '`caches` / `churn` count objects …' reds
  */
 import { createHash } from 'node:crypto';
 
@@ -1173,6 +1174,43 @@ describe('⛓ FRAME VIEW — the row highlight', () => {
             t.runFrames();
             expect(outlined()).toEqual([expect.stringMatching(/rung: rung:kill /)]);
             expect(t.view.stats.rowsWritten - written).toBe(2);
+        } finally { t.restore(); }
+    });
+});
+
+describe('⛓ FRAME VIEW — fields the view does not know draw nothing', () => {
+    it('`caches` / `churn` count objects (top level, segment, budget, budget.work) leave every byte as it was', () => {
+        const extra = { hits: 4, misses: 1 };
+        const drawn = (withExtra) => {
+            const t = setup();
+            try {
+                const out = [];
+                for (const n of [...stampedStream(), framed(4, L40_FRAME), framed(5, null)]) {
+                    const note = structuredClone(n);
+                    if (withExtra) {
+                        const s = note.snapshot;
+                        Object.assign(s, { caches: extra, churn: extra });
+                        Object.assign(s.segment, { caches: extra, churn: extra });
+                        Object.assign(s.budget, { caches: extra, churn: extra });
+                        Object.assign(s.budget.work, { caches: extra, churn: extra });
+                    }
+                    t.emit(note);
+                    t.runFrames();
+                    out.push(framelessMd5(t));
+                }
+                return out;
+            } finally { t.restore(); }
+        };
+        expect(drawn(true)).toEqual(drawn(false));
+    });
+
+    it('a kind the view does not list (`soft-lock`) is a chip by name, after the listed kinds', () => {
+        const t = setup();
+        try {
+            const tree = node2('s', 'segment', { danger: 1, 'soft-lock': 2 }, [], { active: true });
+            t.emit({ solveId: 1, snapshot: snap2(1, { tree }), final: false });
+            t.runFrames();
+            expect(chipsOf(t.view._lines[0])).toEqual(['danger 1', 'soft-lock 2']);
         } finally { t.restore(); }
     });
 });
