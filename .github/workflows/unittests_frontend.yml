@@ -443,6 +443,48 @@ jobs:
           fi
 
   # ══════════════════════════════════════════════════════════════════════
+  # ⛓⛓ SEEDLING HAMMER-PHASE RR (⚖ user, 2026-10-19) — EVERY PRODUCER'S OWN
+  # `--check`, AND THIS ONE IS A MERGE GATE.
+  #
+  # ⛔ NOT `continue-on-error`, unlike the reader above: a producer `--check` is
+  # not a scheduling fact, it is "the committed artifact is what its producer
+  # makes". At `d8fa8e0b19` seven of them were red on main — two since
+  # 2026-08-06, one since its own introducing commit — and nothing ran them.
+  #
+  # ⛔ The roster is a GLOB inside `ci-producer-checks.mjs` (`plan-seedling-*`
+  # and the `regenerate-*-tapes` regenerators), never typed here; a producer
+  # that cannot run on a runner is named in its `EXCLUDED` table WITH its
+  # reason and printed as `## PRODUCER-SKIPPED`. A stale exclusion, a file that
+  # names neither `--check` nor `--write`, or a `--check` that moves the tree
+  # is red. No submodules: every enrolled producer is pure node over the
+  # atlas and the committed fixtures (measured in a worktree with none
+  # initialised).
+  # ══════════════════════════════════════════════════════════════════════
+  producer-checks:
+    name: Producer --checks
+    runs-on: ubuntu-latest
+    # ⛓ RULE 1 — the same guard as the suite's.
+    needs: already-green
+    if: ${{ !cancelled() && needs.already-green.outputs.green != 'true' }}
+    timeout-minutes: 40
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run every producer --check
+        timeout-minutes: 35
+        run: node scripts/procgen/ci-producer-checks.mjs --timeout-s=1500
+
+  # ══════════════════════════════════════════════════════════════════════
   # ⛓⛓⛓ S3 (⚖ RULING 72, 2026-09-01) — **THE BROWSER GATES, IN CI.**
   #
   # ⚖ 72 ruled: THE BANK QUOTES CI, CI never writes it. This is the
