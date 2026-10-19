@@ -36,11 +36,14 @@
  *    and the danger blocking the corridor, for the innermost open frame that has them, overwritten as the path moves
  *    (never a list). Each value is one the solver had already computed (a climb's `hit`, a rung row's `target` /
  *    `stance`, a verb's obstacle and stance, the press arm's strike); `progressFrame` only copies it.
+ *  - ⛓ HAMMER-PHASE PR — v2 ADDITION (still `v: 2`): the kind `soft-lock` (the refusal's own words say the action
+ *    would wedge the GAME: a Seed collected on a page that never ends).
  */
 
 /**
  * The snapshot's schema version (`v`). ⛓ RK: 2 — `tree.rejectionKinds` and `lastWhy` (the schema doc's §5). ⛓ RK2's
- * additions (`precondition`, `lastWhy.name`) and ⛓ TC2's (`frame`) are additive within 2: no consumer gates on `v`.
+ * additions (`precondition`, `lastWhy.name`), ⛓ TC2's (`frame`) and ⛓ PR's (`soft-lock`) are
+ * additive within 2: no consumer gates on `v`.
  */
 export const SOLVE_PROGRESS_VERSION = 2;
 
@@ -158,9 +161,10 @@ export function progressWhy(x) {
  * ⛓ HAMMER-PHASE RK — THE REFUSAL KINDS: a CLOSED list, each named with a word the solver already uses for it (the
  * schema doc's §2, "Rejection kinds", names the source of each). `other` is the residue: a rejection no rule below
  * recognises. ⛔ `solveProgress.test.js` holds `other` at 0 on the committed solves.
+ * ⛓ PR: `soft-lock` sits immediately before `other` (⚖ js-7: the view's chips follow this order; `other` stays last).
  */
 export const REFUSAL_KINDS = Object.freeze(['deadline', 'pending', 'danger', 'bound', 'exhausted', 'does-not-apply',
-    'precondition', 'already-true', 'unmodelled', 'diverged', 'error', 'other']);
+    'precondition', 'already-true', 'unmodelled', 'diverged', 'error', 'soft-lock', 'other']);
 
 /**
  * A search's `bound` → its kind: every bound the solver writes (`spaceTimeReach`'s `negative`, `deriveApproach`'s and
@@ -202,20 +206,32 @@ const PRECONDITION_WORDS = new RegExp([
 ].join('|'));
 
 /**
+ * ⛓ PR — a SOFT-LOCK's own words: the action would leave the GAME unable to go on (the Watcher's live Seed collected
+ * by a frozen box; a plain Seed rebooting into a level with no `seed` object, so every later world spawns the player
+ * without input). Neither damage (`danger`) nor a missing state (`precondition`): the run arrived where it meant to,
+ * and going on from there is what the game forbids. Read by the sentence's own claim — "is a soft-lock" — never by
+ * its circumstances, and never by the bare noun: `resolveTalkStrategy`'s "(a soft-lock)" names why some stances were
+ * left out of a search that then found none, and stays `exhausted`.
+ */
+const SOFT_LOCK_WORDS = /\bis a (?:soft-lock|SOFT-LOCK)\b/;
+
+/**
  * The sentence's rules, in order: each matches words the solver writes for that kind. Read on the VERBATIM `why`, never
  * on the cut key — a refusal raised after a deadline trip carries `deadlineClause` (`⏱ DEADLINE: …`) at its END,
- * past every separator the key cuts at.
+ * past every separator the key cuts at. ⛓ PR: `^deadline$` is `planSwordDash`'s own report after a reached deadline
+ * (`refuse('deadline')`), and `soft-lock` follows `already-true`.
  */
 const WHY_KINDS = Object.freeze([
-    ['deadline', /⏱ DEADLINE|anytime deadline|caller's deadline|at the deadline/],
+    ['deadline', /⏱ DEADLINE|anytime deadline|caller's deadline|at the deadline|^deadline$/],
     ['already-true', /\balready true\b|\bis ALREADY\b/],
+    ['soft-lock', SOFT_LOCK_WORDS],
     ['danger', /\bprobes? (?:DANGEROUS|dangerous)\b|\bwas HIT\b|\bHIT at dwell\b|danger map forbids|UNBILLED DAMAGE|fires a spit before/],
-    ['exhausted', /\b(?:no|NO) (?:[A-Za-z]+ )?(?:stance|stall|side|state|kill|strike|forced hit|corridor|path|cell)s?\b|\bno (?:walkable|admissible)\b|\bNO LIVE BODY\b|found nothing|\bnone of\b|plans no corridor|left no corridor|every input from here is hit|\bEXHAUSTED\b|removed every body it could|would be the first one again/],
+    ['exhausted', /\b(?:no|NO) (?:[A-Za-z]+ )?(?:stance|stall|side|state|kill|strike|forced hit|corridor|path|cell)s?\b|\bno (?:walkable|admissible)\b|\bNO LIVE BODY\b|found nothing|\bnone of\b|plans no corridor|left no corridor|every input from here is hit|\bEXHAUSTED\b|removed every body it could|would be the first one again|\bfailed to apply\b/],
     ['bound', /\bUPPER BOUND\b|maxPerSegment|\bbound\b|\bbounded at\b|strategies for one goal|\bcleared \S+ obstacle\(s\) and\b/i],
     ['precondition', PRECONDITION_WORDS],
     ['does-not-apply', /\bquestion\b|STATIC census body|`speed 0`|is not a live body|is not a body\b|is dying|\bholds no\b|\bhas no \w+ tile\b|is not a presser|does not hold\b|resolves to NOTHING/],
     ['unmodelled', /unmodelled|UNMODELLED|not modelled|does not model|unpriced|does not price|[Nn]o strategy row|NOT REGISTERED|not registered|NOT registered|executor is registered|executor does not run|this run does not step|no choreography|nothing computed the consequence/],
-    ['diverged', /diverge|and the RUN rests|does not ARRIVE|does not land|never (?:played|came to rest|comes to rest|armed|touched|ended|opened)\b|still standing|still shut|is not open by|disagree|crossed (?:to|from) level|crossed a door|\bleft level\b|press still down|is not (?:dead|dying)\b|still counted|is not in reach|\b(?:came|comes) to rest at\b|\bthe walk (?:rests|settled) at\b|does not settle\b|still frozen after|still open after|\bticks? (?:of the [a-z ]+ and no|without the)\b|is not complete\b|added nothing|as route step \S+ requires|before the thrust|ticks after the thrust|left the player (?:facing|at)\b|did not fire\b/],
+    ['diverged', /diverge|and the RUN rests|does not ARRIVE|does not land|never (?:played|came to rest|comes to rest|armed|touched|ended|opened)\b|still standing|still shut|is not open by|disagree|crossed (?:to|from) level|crossed a door|\bleft level\b|press still down|is not (?:dead|dying)\b|still counted|is not in reach|\b(?:came|comes) to rest at\b|\bthe walk (?:rests|settled) at\b|does not settle\b|still frozen after|still open after|\bticks? (?:of the [a-z ]+ and no|without the)\b|is not complete\b|added nothing|as route step \S+ requires|before the thrust|ticks after the thrust|left the player (?:facing|at)\b|did not fire\b|is NOT latched in the live run/],
 ]);
 
 /** How many times `progressKind` was entered in this process — the gate's "unhooked, it never runs" counter. */
@@ -230,7 +246,8 @@ export const kindEntered = () => kindEntries;
  *  3. an error's `code` (`HAMMER_SAFETY` → `danger`, `STRIKE_BOUND_EXHAUSTED` → `bound`), a search's other `bound`
  *     (`BOUND_KINDS`), a refusal's `obstacle` (`danger`, `unmodelled-*`, a `clear-tag`'s `reason`: `CLEAR_TAG_KINDS`,
  *     where an `unresolved` carrying a state gate's words is `precondition`);
- *  4. the verbatim sentence (`WHY_KINDS`);
+ *  4. the verbatim sentence (`WHY_KINDS`; ⛓ PR: `soft-lock` among them, so a plain `Error` whose words claim a
+ *     soft-lock — `levelRun`'s two Seed throws — is `soft-lock`, its class kept in `lastWhy.name`);
  *  5. any other thrown error (not a refusal) is `error`; the rest is `other`.
  * ⛔ PURE: it reads its argument only (no clock, no `shouldStop`), and only an install reaches it.
  *

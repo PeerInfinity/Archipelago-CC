@@ -754,8 +754,8 @@ describe('hammer-phase RK2 — precondition, the error\'s name, and the residue\
         // danger, does-not-apply
         ['danger', 'a spit at every wait', 'fires a spit before the kill', 'to face it', refusal],
         ['does-not-apply', 'not a body the run can watch die', 'the danger on this corridor is not a body this run can watch die', 'not of this one.)', refusal],
-        // ⚠ the named residue: a soft-lock is neither damage nor a missing state — no kind is honest, so `other`
-        ['other', 'the Watcher\'s live Seed (a soft-lock)', 'the dialogue opened with the box at', 'is a soft-lock.', refusal],
+        // ⛓ PR RE-PIN (`other` → `soft-lock`, the user's ruling 2026-10-18): RK2's named residue, now its own kind
+        ['soft-lock', 'the Watcher\'s live Seed (a soft-lock)', 'the dialogue opened with the box at', 'is a soft-lock.', refusal],
     ];
 
     it('⛓⛓⛓ each family\'s real sentence, read out of solverBot.js, has its kind', () => {
@@ -998,5 +998,108 @@ describe('hammer-phase TC2 — the active frame (`frame`, additive within v: 2)'
         const body = own.slice(own.indexOf('let frameEntries'), own.indexOf('// ── the snapshot'));
         expect(body.length).toBeGreaterThan(500);
         expect(body).not.toMatch(/shouldStop|activeDeadline|performance|Date\.|emit\(|work\(|dangerAt|probe\w*\(/);
+    });
+});
+
+/**
+ * ⛓ HAMMER-PHASE PR — the solve-progress residue (additive within `v: 2`): the kind `soft-lock` (⚖ the user,
+ * 2026-10-18), and the static `other` sites RK2's instrument left or hid given the kind their words already name
+ * (D3 adds the caches and churn rows below). Every sentence row
+ * reads its words OUT OF THE SOURCE (literals joined, each `${…}` filled with `7`), as RK2's family rows do.
+ *
+ * ── THE MUTATION LIST (run during development, each row's catcher named) ──
+ *   p1 the soft-lock words dropped from the rule (`SOFT_LOCK_WORDS` → a pattern that never matches) -> the soft-lock
+ *        row red (execTalk's sentence is `other`, levelRun's two are `error`) and RK2's re-pinned family row
+ *   p2 `soft-lock` placed AFTER `other` in `REFUSAL_KINDS` -> the order row red (and RK's `other`-last rows)
+ *   p3 the soft-lock rule reads the bare noun (`/soft-lock/i`) -> the not-stretched row red (`resolveTalkStrategy`'s
+ *        no-stance refusal, "(a soft-lock)", turns `soft-lock` instead of `exhausted`)
+ */
+describe('hammer-phase PR — the residue: soft-lock, the hidden `other` sites (additive within v: 2)', () => {
+    const SRC = {
+        'solverBot.js': readFileSync(join(HERE, 'solverBot.js'), 'utf8'),
+        'levelRun.js': readFileSync(join(HERE, 'levelRun.js'), 'utf8'),
+    };
+    /** `file`'s source with its adjacent string literals joined and its whitespace collapsed (RK2's `JOINED`). */
+    const joinedOf = (file) => SRC[file].replace(/(['"`])\s*\+\s*(['"`])/g, '').replace(/\s+/g, ' ');
+    const JOINED = Object.fromEntries(Object.keys(SRC).map((f) => [f, joinedOf(f)]));
+    /** RK2's `fromSource`, per file: the sentence from `start` to `end` as the file writes it, each `${…}` → `7`. */
+    function fromSource(file, start, end = start) {
+        const J = JOINED[file];
+        const i = J.indexOf(start);
+        expect([file, start, i >= 0]).toEqual([file, start, true]);
+        const j = J.indexOf(end, i);
+        expect([file, end, j >= i]).toEqual([file, end, true]);
+        let s = J.slice(i, j + end.length);
+        for (let k = s.indexOf('${'); k >= 0; k = s.indexOf('${')) {
+            let depth = 0;
+            let e = k + 1;
+            for (; e < s.length; e += 1) {
+                if (s[e] === '{') depth += 1;
+                if (s[e] === '}' && --depth === 0) break;
+            }
+            s = `${s.slice(0, k)}7${s.slice(e + 1)}`;
+        }
+        return s.replace(/\\(['`])/g, '$1');
+    }
+    const refusal = (message, extra = {}) => Object.assign(new Error(message), { name: 'SolverRefusal', ...extra });
+
+    it('⛓⛓⛓ the order: `soft-lock` is immediately before `other`, and `other` stays last (⚖ js-7: the chips follow it)', () => {
+        expect(REFUSAL_KINDS.at(-1)).toBe('other');
+        expect(REFUSAL_KINDS.at(-2)).toBe('soft-lock');
+        expect(REFUSAL_KINDS.indexOf('soft-lock')).toBe(REFUSAL_KINDS.indexOf('other') - 1);
+        expect(REFUSAL_KINDS.filter((k) => k === 'soft-lock').length).toBe(1);
+        // RK2's kinds keep their places (an addition, not a reorder)
+        expect(REFUSAL_KINDS.slice(0, -2)).toEqual(['deadline', 'pending', 'danger', 'bound', 'exhausted',
+            'does-not-apply', 'precondition', 'already-true', 'unmodelled', 'diverged', 'error']);
+    });
+
+    it('⛓⛓⛓ soft-lock: the three sentences whose own words say "is a soft-lock", a refusal and two plain levelRun errors', () => {
+        // solverBot `execTalk` — the dialogue opened with the box on the Watcher's live Seed (RK2's residue :2140)
+        const talk = refusal(`x: ${fromSource('solverBot.js', 'the dialogue opened with the box at', 'is a soft-lock.')}`,
+            { obstacle: { kind: 'proximity-hazard', id: 'watcher@7,7' } });
+        expect(progressKind(talk)).toBe('soft-lock');
+        expect(progressErrorName(talk)).toBe('SolverRefusal');
+        // levelRun (fidelity's file, read only) — a stance on the live Seed, and a plain Seed into a seedless level:
+        // plain Errors that were `error`; their class stays `Error` in `lastWhy.name`
+        for (const [start, end] of [['levelRun: the stance overlaps the Watcher\\\'s LIVE', 'Move the stance.'],
+            ['levelRun: a plain Seed collected in level', 'looks exactly like a dead bot.']]) {
+            const e = new Error(fromSource('levelRun.js', start, end));
+            expect([start, progressKind(e), progressErrorName(e)]).toEqual([start, 'soft-lock', 'Error']);
+        }
+    });
+
+    it('⛓⛓ not stretched: a sentence that names a soft-lock as the REASON a search left stances out keeps the search\'s kind', () => {
+        // `resolveTalkStrategy`'s no-stance refusal: "… N would freeze the box against the live Seed … (a soft-lock),
+        // and M plan no corridor …" — the search found no stance; the soft-lock is why some were not tried
+        const none = refusal(fromSource('solverBot.js', 'solverBot: no stance to open', 'no corridor from (${run.state.x},${run.state.y}).'),
+            { obstacle: { kind: 'proximity-hazard', id: 'watcher@7,7' } });
+        expect(none.message).toContain('(a soft-lock)');
+        expect(progressKind(none)).toBe('exhausted');
+        // nor a soft-lock mentioned as a noun anywhere else
+        expect(progressKind({ rung: 'kill', why: 'a soft-lock stance is refused by name' })).toBe('other');
+    });
+
+    it('⛓⛓ the sites RK2\'s instrument left `other` or hid: each takes the kind its run-time words already name', () => {
+        // :16920 — the rope's pull latched nothing (its raw head read `bound` off the VARIABLE `${bound}`; a run
+        // writes a number there), both branches of its press tick
+        const rope = fromSource('solverBot.js', ': pressed ${resolved.rope} at tick', 'this rung promised does not exist.');
+        expect(progressKind(refusal(`x${rope}`))).toBe('diverged');
+        expect(progressKind(refusal(`x${rope.replace('at tick 7', 'at tick NEVER — the aim never resolved')}`))).toBe('diverged');
+        // :23599 — the placement's blocker: the registered strategy's resolver resolved nothing ("failed to apply",
+        // as its frontier sibling's "no corridor … failed to apply" already reads `exhausted`); the other two
+        // branches stay `unmodelled`
+        const inside = fromSource('solverBot.js', ': the placement is INSIDE ${key} (${blocker.id})', 'not a stance problem.');
+        expect(progressKind(refusal(`x${inside} Strategy 'break' failed to apply.`))).toBe('exhausted');
+        expect(progressKind(refusal(`x${inside} Strategy 'break' is SELECTED but not registered.`))).toBe('unmodelled');
+        expect(progressKind(refusal(`x${inside} No strategy row exists for this obstacle.`))).toBe('unmodelled');
+        expect(JOINED['solverBot.js']).toContain('? \'failed to apply\' : \'is SELECTED but not registered\'}');
+        // :6021 — planSwordDash's own report after a reached deadline: the word is the deadline's
+        expect(JOINED['solverBot.js']).toContain('if (deadlineReached(\'sword-dash\')) return refuse(\'deadline\');');
+        expect(progressKind({ why: 'deadline' })).toBe('deadline');
+        expect(progressKind('deadline')).toBe('deadline');
+        expect(progressKind({ why: 'the deadline was near' })).toBe('other');
+        // :8959 / :8971 — `as route step ${i + 1} requires`: `other` only to a head that keeps the `${…}`; filled
+        expect(progressKind(refusal(fromSource('solverBot.js', '${label}: after the lean the block is', 'as route step ${i + 1} requires.'))))
+            .toBe('diverged');
     });
 });
