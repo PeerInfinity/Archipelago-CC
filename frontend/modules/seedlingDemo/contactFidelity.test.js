@@ -173,8 +173,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             statueTalkRange: true,
             // ⛓ fidelity AXEFORCEDU D2: `axePricedCrossing` (a spinning axe's forced U, crossed and its hits billed) ships OFF.
             axePricedCrossing: false,
-            // ⛓ fidelity WATCHERTALK D2: `watcherTalkVerb` (the Watcher's {114,0} clear-tag talks) ships OFF.
-            watcherTalkVerb: false,
+            // ⛓ fidelity WATCHERTALK D2: `watcherTalkVerb` (the Watcher's {114,0} clear-tag talks) shipped OFF;
+            // ⛓ planning-9's flip (⚖ user "Flip watcherTalkVerb", 2026-10-19) turns it ON.
+            watcherTalkVerb: true,
             // ⛓ housekeep D3: `walkerBeamTowers` (the walker's planner reads the beam towers' drifted Solids) ships OFF.
             walkerBeamTowers: false,
             // ⛓ fidelity BOMBBLAST D2: `bombBlastBody` (a bomb's Explosion lands on a body) ships OFF.
