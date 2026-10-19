@@ -82,6 +82,8 @@ The steps in Sphere growth are:
 | **3 Build regions** | For each region: change its substrate, **Edit ▸** its room, or **Re-roll 🎲** it with a new seed. |
 | **4 Compile** | Turns the world into a rules file and checks it matches the plan ("✓ oracle: plan realised exactly"). |
 
+**Edit ▸** opens a region's room in that substrate's own editor: a maze room in **Procgen Lab — maze** (open that panel first — if it is not open, the button says so), a bounce zone in the Bounce Region Editor. Edit the room there and close it (the lab's **CLOSE**, the Bounce Region Editor's **Save**); the room is written back into the world, and **Run all (finish)** compiles it again and rechecks the plan. Seedling rooms cannot be edited from the pipeline yet; their **Edit ▸** says why.
+
 Shuffled spiral (1 Arrange, 2 Content, 3 Regions, 4 Compile) and Top-down (1 Layout, 2 Realise, 3 Finalize, 4 Compile) have steps of their own.
 
 ### The result

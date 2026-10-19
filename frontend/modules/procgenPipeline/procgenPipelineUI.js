@@ -84,7 +84,8 @@ import {
     sphereLibrarySubstrateIds, buildSphereConfig, buildSphereRun,
     buildSpiralRun, buildTopDownRun, buildGridRun, compileGridRun,
 } from './presetRun.js';
-import { getRegionEditor } from './regionEditors.js';
+import { getRegionEditor, roomEditorKindOf } from './regionEditors.js';
+import { openPipelineRoom, regionFromPipelineSave } from './pipelineRoomEdit.js';
 import { peekSphereStateSingleton } from '../sphereState/singleton.js';
 import {
     SHIPPED_PRESETS, capturePresetState, applyPresetState,
@@ -3277,12 +3278,66 @@ export class ProcgenPipelineUI {
             return;
         }
         const nd = node ?? this._nodeForRegion(region);
+        const writeBack = (editedRegion) => this._onRegionEdited(region, editedRegion, nd);
+        const st = this._stepState;
+        if (roomEditorKindOf(region?.substrate) === 'lab') {
+            return this._openLabRoom(region, open, {
+                ...(st?.growConfig?.itemLib ? { baseItemLib: st.growConfig.itemLib } : {}),
+                itemPool: Object.keys(this.scenario?.items ?? {}),
+            }, writeBack);
+        }
         const contract = this._buildRegionContract(region, nd);
-        open({
-            region,
-            contract,
-            onSave: (editedRegion) => this._onRegionEdited(region, editedRegion, nd),
+        return this._reportEditDoor(open({ region, contract, onSave: writeBack }), region);
+    }
+
+    // ⛓ A `kind: 'lab'` editor (maze, Seedling) takes a SET DOCUMENT, not a
+    // region: the substrate's own `regionRoundTrip` builds it and reads the save
+    // back (pipelineRoomEdit.js — the declaration the APWorld editor's Edit ▸
+    // uses), and `writeBack` gets a live region descriptor exactly as a panel
+    // editor's save hands one. Every refusal on the way is SHOWN.
+    async _openLabRoom(region, open, ctxOpts, writeBack) {
+        let opened;
+        try {
+            opened = await openPipelineRoom(region, ctxOpts);
+        } catch (err) {
+            opened = { ok: false, why: err.message };
+        }
+        if (!opened.ok) return this._showEditRefusal(opened.why);
+        this._labRoomHandle?.close?.();
+        this._labRoomHandle = null;
+        const handle = open({
+            ...opened.session,
+            onSave: (saved) => {
+                this._labRoomHandle = null;
+                regionFromPipelineSave(opened, saved).then(
+                    (out) => (out.error ? this._showEditRefusal(out.error, 'Save') : writeBack(out.region)),
+                    (err) => this._showEditRefusal(err.message, 'Save'),
+                );
+            },
         });
+        if (!this._reportEditDoor(handle, region)) return;
+        this._labRoomHandle = handle;
+        this.message = `Editing "${region.region_id}" in the ${region.substrate} lab. `
+            + 'Save there (close the room) to write it back here.';
+        this.warning = '';
+        this.render();
+    }
+
+    // ⛔ The door's refusal is a RETURN VALUE (labRoomEditor's `{ok:false, why}`);
+    // one returned to nobody is a button that does nothing and says nothing.
+    // Answers true when the door opened (or answers nothing — a panel door).
+    _reportEditDoor(handle, region) {
+        if (handle && handle.ok === false) {
+            this._showEditRefusal(handle.why);
+            return false;
+        }
+        return true;
+    }
+
+    _showEditRefusal(why, what = 'Edit') {
+        this.message = '';
+        this.warning = `${what} refused: ${why}`;
+        this.render();
     }
 
     // Reconstruct the realiser contract for a region from its node + the tree:
@@ -3359,9 +3414,13 @@ export class ProcgenPipelineUI {
     _onRegionEdited(origRegion, editedRegion, node) {
         const st = this._stepState;
         const grid = st?.grow?.grid;
-        if (!grid || !editedRegion) return;
         const cell = node?.cell ?? this._nodeForRegion(origRegion)?.cell;
-        if (!cell) return;
+        // ⛔ Said, not dropped: a Save that arrives after a re-run cleared the
+        //   grid (or moved the region) would otherwise vanish without a word.
+        if (!grid || !editedRegion || !cell || grid.getRegion(cell)?.region_id !== origRegion.region_id) {
+            return this._showEditRefusal(`"${origRegion.region_id}" is no longer on this run's grid `
+                + '(the world was re-run while the editor was open), so the edit was not written back.', 'Save');
+        }
         grid.replaceRegion(cell, editedRegion);
         // _invalidateFrom clears this.message, so set it AFTER and re-render.
         this._invalidateFrom(4);
@@ -5109,6 +5168,13 @@ export class ProcgenPipelineUI {
             this.render();
             return;
         }
+        const writeBack = (editedRegion) => this._onRegionEditedTD(regionId, editedRegion);
+        if (roomEditorKindOf(region?.substrate) === 'lab') {
+            return this._openLabRoom(region, open, {
+                itemPool: Object.keys(st.compileIn?.sourceItemDefs ?? st.source?.items?.['1'] ?? {}),
+                expectedItems: [...(st.compileIn?.startingItems ?? [])],
+            }, writeBack);
+        }
         const regionParams = st.opts?.regionParams ?? {};
         let contract;
         try {
@@ -5127,11 +5193,7 @@ export class ProcgenPipelineUI {
             st.compileIn?.sourceItemDefs ?? st.source?.items?.['1'] ?? {},
         );
         contract.expectedItems = [...(st.compileIn?.startingItems ?? [])];
-        open({
-            region,
-            contract,
-            onSave: (editedRegion) => this._onRegionEditedTD(regionId, editedRegion),
-        });
+        return this._reportEditDoor(open({ region, contract, onSave: writeBack }), region);
     }
 
     // Write-back from a top-down region editor save: splice the edited region into
@@ -5142,7 +5204,10 @@ export class ProcgenPipelineUI {
         const layout = this._tdState?.layout;
         const grid = layout?.grid;
         const cell = layout?.cellsByName?.get?.(regionId);
-        if (!grid || !cell || !editedRegion) return;
+        if (!grid || !cell || !editedRegion || grid.getRegion(cell)?.region_id !== regionId) {
+            return this._showEditRefusal(`"${regionId}" is no longer on this run's grid `
+                + '(the world was re-run while the editor was open), so the edit was not written back.', 'Save');
+        }
         grid.replaceRegion(cell, editedRegion);
         // _invalidateFromTD clears this.message, so set it AFTER it.
         this._invalidateFromTD(1);

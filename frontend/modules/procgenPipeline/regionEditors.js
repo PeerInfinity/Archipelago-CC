@@ -49,9 +49,10 @@
  * exitSpecs, locationSpecs, physicsProfile, mode, braidWidth, freeArrow, …).
  *
  * ⚠ THE EXPORT NAME DID NOT MOVE. `procgenPipelineUI` calls `getRegionEditor`
- * at four sites (`:3209`, `:3252`, `:5452`, `:5500`) and `open({region,
- * contract, onSave})` at two of them — measured to FIT this contract already,
- * so the panel needed no edit for W3.
+ * and `open({region, contract, onSave})` — which fits a `panel` door only. A
+ * `lab` door refuses a region (it takes a SET document), and that refusal went
+ * to nobody until `roomEditorKindOf` let the panel route a lab door through
+ * `pipelineRoomEdit.js` (2026-10-18).
  */
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
@@ -129,6 +130,20 @@ export function getRegionEditor(substrate) {
             + `of [${Object.keys(ROOM_EDITOR_KINDS).join(', ')}]`);
     }
     return resolve(decl, substrate);
+}
+
+/**
+ * ⛓ WHICH kind of door `getRegionEditor(substrate)` opens — `'panel'`,
+ * `'lab'`, or `null` (no declaration, or a runtime override from the
+ * deprecated table, which takes the panel contract). A caller needs it because
+ * the two kinds take DIFFERENT sessions: a panel takes `{region, contract}`, a
+ * lab door takes a SET document (`record`) and refuses a region
+ * (`pipelineRoomEdit.js` builds that document for the pipeline).
+ */
+export function roomEditorKindOf(substrate) {
+    if (Object.prototype.hasOwnProperty.call(regionEditors, substrate)) return 'panel';
+    const kind = substrateRegistry.get(substrate)?.roomEditor?.kind;
+    return Object.prototype.hasOwnProperty.call(ROOM_EDITOR_KINDS, kind) ? kind : null;
 }
 
 export { regionEditors };

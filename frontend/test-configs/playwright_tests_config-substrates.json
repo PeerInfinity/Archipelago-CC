@@ -1491,6 +1491,18 @@
             "_comment": "SUBSTRATE CHART S4. The pipeline's Substrates (click to add) rows, a selected row and the sphere per-region override options show the live entry's label and hover cardText(cardOf(entry, capabilityRows(getAll()))) computed in the row; the stored value stays the id. Category procgenPipeline is claimed by no batch, so it runs in the default batch (fast). Restores the Scenario Pool collapse state and the active substrate dict."
         },
         {
+            "id": "procgen-pipeline-maze-edit-round-trip",
+            "enabled": true,
+            "category": "procgenPipeline",
+            "_comment": "(k) 2026-10-18: Edit ▸ on a maze region in the pipeline handed the lab door a region and the door refused it to nobody. The row applies Maze demo (sphere growth), Run all, presses the region row's own Edit ▸: no lab mounted → the refusal is in the warning line; a stub host (the hub row's recipe) gets a one-entry region library and room 0; an unedited close recompiles byte-identically; a close with the obstacles removed reaches the grid and the compiled sidecar. Stands real maze lab instances aside and puts them back. Runs in fast."
+        },
+        {
+            "id": "procgen-pipeline-bounce-edit-still-opens",
+            "enabled": true,
+            "category": "procgenPipeline",
+            "_comment": "(k) 2026-10-18 control: the panel door (bounce) beside the new lab route. Maze + bounce (sphere growth) → Run all → a bounce region's Edit ▸ → the Bounce Region Editor holds it in pipeline mode → its own Save → written back, 4 invalidated → Run all, oracle clean. Runs in fast."
+        },
+        {
             "id": "quick-launch-button-opens-panel-never-in-layout",
             "enabled": true,
             "category": "Quick Launch",
