@@ -61,12 +61,26 @@
  *   w8 Σ over the listed pairs only                   -> 'WALL: …' reds
  *   w9 the default switches (`{}`) drawn               -> both 'REQUEST: …' rows red
  *   w10 a 0 ms ETA drawn as `≈ 0 ms to …`             -> 'ETA: …' reds
+ *
+ * ⛓ FRAME VIEW — hammer-phase TC2's `frame` marked on the map, its row outlined. Its mutants (all RED):
+ *   f1 a `tile:`/`pit:` id divided by 16 like a placement -> 'the id → tile parse' reds
+ *   f2 a placement rounded, not floored               -> 'the id → tile parse' reds
+ *   f3 the level guard dropped                        -> 'LEVEL GUARD: …' reds
+ *   f4 the marks canvas not cleared on a null frame   -> 'CLEAR ON NULL: …' and 'LEVEL GUARD: …' red
+ *   f4b the frame line kept on a null frame           -> 'CLEAR ON NULL: …' reds
+ *   f5 the marks redrawn on every render              -> 'DRAW ONLY ON CHANGE: …' reds
+ *   f6 every active row outlined                      -> the row-highlight row and 'LEVEL GUARD: …' red
+ *   f7 the marks inserted on a frame-less snapshot    -> the frame-less identity row (+ the RK and stamps identity rows) red
+ *   f8 one glyph for every kind                       -> 'a glyph per kind …' and 'the stance square …' red
+ *   f9 the danger drawn at its source's placement     -> 'the stance square …' reds
  */
 import { createHash } from 'node:crypto';
 
 import { describe, expect, it } from 'vitest';
 
-import { cellColour, levelColour, recentLevel, shadeLevel, SolveProgressView } from './seedlingSolveProgressView.js';
+import {
+    cellColour, DANGER_GLYPHS, frameTargetTile, levelColour, recentLevel, shadeLevel, SolveProgressView,
+} from './seedlingSolveProgressView.js';
 import { SOLVE_PROGRESS_INTERVAL_MS } from '../seedlingDemo/solveProgressTap.js';
 
 /** A recording DOM: elements with parent links, canvases that count resizes and record their `fillRect`s. */
@@ -103,7 +117,12 @@ function recordingDocument() {
             let h = 0;
             Object.defineProperty(n, 'width', { get: () => w, set: (v) => { w = v; rec.resizes += 1; } });
             Object.defineProperty(n, 'height', { get: () => h, set: (v) => { h = v; rec.resizes += 1; } });
-            const ctx = { fillStyle: '', fillRect: (x, y, fw, fh) => rec.fills.push([x, y, fw, fh, ctx.fillStyle]) };
+            // ⛓ FRAME VIEW — the marks canvas's strokes and text go to `ctx.ops` (never `rec.fills`)
+            const ops = [];
+            const op = (name) => (...a) => ops.push([name, ...a, name === 'fillText' ? ctx.fillStyle : ctx.strokeStyle]);
+            const ctx = { fillStyle: '', strokeStyle: '', ops, fillRect: (x, y, fw, fh) => rec.fills.push([x, y, fw, fh, ctx.fillStyle]),
+                clearRect: (...a) => ops.push(['clearRect', ...a]), strokeRect: op('strokeRect'), fillText: op('fillText'),
+                beginPath: op('beginPath'), moveTo: op('moveTo'), lineTo: op('lineTo'), stroke: op('stroke') };
             n.getContext = () => ctx;
         }
         return n;
@@ -955,6 +974,205 @@ describe('⛓ STAMPS VIEW — stamps after the RK lines, and on a view that drew
                 : c === t.view.meter ? 'meter' : c === t.view.pathText ? 'path' : c === t.view.rkBox ? 'rk'
                     : c === t.view.body ? 'body' : 'title');
             expect(order).toEqual(['title', 'header', 'stamps', 'meter', 'path', 'rk', 'body']);
+        } finally { t.restore(); }
+    });
+});
+
+/** ⛓ FRAME VIEW — a stamped stream (no `frame`), for the frame-less identity row. */
+function stampedStream() {
+    return [1, 2, 3].map((seq) => {
+        const s = stamped(seq, { request: seq === 1 ? REQUEST : undefined });
+        s.tiles = tilesOf([[0, 0, seq, 0], [2, 1, 1, seq]]);
+        return { solveId: 1, snapshot: s, final: seq === 3 };
+    });
+}
+/** The md5 of everything a note's render leaves behind: the DOM, every canvas fill and resize, every node made, the stats. */
+const drawnMd5 = (t) => createHash('md5').update(serialize(t.view.element) + JSON.stringify(t.rec.fills)
+    + JSON.stringify([t.rec.resizes, t.rec.created, t.view.stats])).digest('hex');
+
+/**
+ * ⛓ FRAME VIEW — the md5 of each frame-less note's render (DOM, fills, resizes, nodes made, the stats the stamps view
+ * had), measured with the stamps view (main c7fd4996db), before the frame view's change.
+ */
+const FRAMELESS_MD5S = {
+    v1Stream: ['9add8ea8ee63bf945ffe0cf0a6d2bdae', '24afbaf8b5920896d39aa151daf89e67', 'c342d4273330b6b04f62a92984f87e5b'],
+    v2NoStampsStream: ['0687ee943b8a81412a24f7c7b7c003b4', '613c7015fe773e964c4686eb908fbc77', '3d465732d470e656f7bc987ef1528b48'],
+    stampedStream: ['1142affcabce09baed072e31ce5986cd', '8fea55927284dc82f34da9cc27262d77', 'adc66bf6c56c93ca92e4d42329f963a3'],
+};
+const STAMPS_VIEW_STATS = ['notes', 'renders', 'coalesced', 'hiddenSkipped', 'resizes', 'cellsPainted', 'rowsWritten', 'linesWritten'];
+const framelessMd5 = (t) => createHash('md5').update(serialize(t.view.element) + JSON.stringify(t.rec.fills)
+    + JSON.stringify([t.rec.resizes, t.rec.created, JSON.parse(JSON.stringify(t.view.stats, STAMPS_VIEW_STATS))])).digest('hex');
+
+describe('⛓ FRAME VIEW — a frame-less snapshot renders exactly as before', () => {
+    it('v1, v2 without stamps and a stamped stream: the stamps view\'s DOM, fills, resizes and nodes, note by note; no marks canvas', () => {
+        for (const stream of [v1Stream, v2NoStampsStream, stampedStream]) {
+            const t = setup();
+            try {
+                const md5s = [];
+                for (const n of stream()) { t.emit(n); t.runFrames(); md5s.push(framelessMd5(t)); }
+                expect(md5s, stream.name).toEqual(FRAMELESS_MD5S[stream.name]);
+                expect(t.view.marksCanvas).toBe(null);
+                expect([t.view.stats.framesReceived, t.view.stats.framesMarked, t.view.stats.marksDrawn]).toEqual([0, 0, 0]);
+            } finally { t.restore(); }
+        }
+    });
+});
+
+describe('⛓ FRAME VIEW — the id → tile parse', () => {
+    it('a body, a lock (with its suffix) and a rope are their census placement in tiles (floor of x/16, y/16); tile:/pit: are tiles', () => {
+        expect(frameTargetTile('puncher@128,624')).toEqual([8, 39]);
+        expect(frameTargetTile('spinner@143,31')).toEqual([8, 1]);          // floor, never round
+        expect(frameTargetTile('lock@144,112 {t 0, tag 3}')).toEqual([9, 7]);
+        expect(frameTargetTile('Rope@64,32')).toEqual([4, 2]);
+        expect(frameTargetTile('tile:5,7')).toEqual([5, 7]);                // a tile already — not divided
+        expect(frameTargetTile('pit:12,3')).toEqual([12, 3]);
+        expect(frameTargetTile('tile:Stone')).toBe(null);                  // a tile NAME has no place
+        expect(frameTargetTile(null)).toBe(null);
+        expect(frameTargetTile(42)).toBe(null);
+    });
+});
+
+/** ⛓ FRAME VIEW — a v2 snapshot on a 20×40 map (14 px cells) with a climb whose kill rung carries `frame`. */
+const FRAME_KEY = 's/c/rung:kill/arm:chaser';
+const frameTree = () => node2('s', 'segment', {}, [node2('s/c', 'climb', {}, [node2('s/c/rung:avoid', 'rung', { danger: 1 }),
+    node2('s/c/rung:kill', 'rung', {}, [node2(FRAME_KEY, 'arm', {}, [], { active: true })], { active: true })],
+{ active: true })], { active: true });
+const L40_FRAME = { key: FRAME_KEY, target: 'puncher@128,624', stance: [8, 38],
+    danger: { source: 'puncher@128,624', tick: 539, kind: 'forecast', at: [10, 39] } };
+const framed = (seq, frame, { tilesLevel = 4, cells = [[1, 1, seq, 0]] } = {}) => {
+    const s = snap2(seq, { tree: frameTree(), tiles: tilesOf(cells, { cols: 20, rows: 40, level: tilesLevel }) });
+    s.frame = frame;
+    return { solveId: 1, snapshot: s, final: false };
+};
+const marksOps = (t) => t.view.marksCanvas.getContext('2d').ops;
+/** The ops since the marks canvas's last clear (what it shows now). */
+const shown = (t) => { const ops = marksOps(t); return ops.slice(ops.map((o) => o[0]).lastIndexOf('clearRect') + 1); };
+const strokes = (t, colour) => shown(t).filter((o) => o[0] === 'strokeRect' && o.at(-1) === colour).map((o) => o.slice(1, 5));
+
+describe('⛓ FRAME VIEW — each mark from a hand-built frame', () => {
+    it('the stance square, the target cross and the danger box with its glyph and source id, at their tiles; the line says them', () => {
+        const t = setup();
+        try {
+            t.emit(framed(1, L40_FRAME));
+            t.runFrames();
+            const px = t.view._px;
+            expect(px).toBe(14);
+            expect(strokes(t, '#4fc3f7')).toEqual([[8 * px + 1.5, 38 * px + 1.5, px - 3, px - 3]]);
+            expect(strokes(t, '#ff8c1a')).toEqual([[10 * px + 0.5, 39 * px + 0.5, px - 1, px - 1]]);
+            const cross = shown(t).filter((o) => o[0] === 'moveTo' || o[0] === 'lineTo').map((o) => o.slice(0, 3));
+            expect(cross).toEqual([['moveTo', 8 * px + 1, 39 * px + 1], ['lineTo', 9 * px - 1, 40 * px - 1],
+                ['moveTo', 9 * px - 1, 39 * px + 1], ['lineTo', 8 * px + 1, 40 * px - 1]]);
+            const texts = shown(t).filter((o) => o[0] === 'fillText').map((o) => o[1]);
+            expect(texts).toEqual(['»', 'puncher@128,624']);
+            expect(t.view.frameLine.textContent).toBe('frame: stance (8,38) · target puncher@128,624 at (8,39)'
+                + ' · danger » forecast puncher@128,624 at (10,39) t539');
+            expect(t.view.marksCanvas.width).toBe(t.view.canvas.width);
+            expect(t.view.marksCanvas.height).toBe(t.view.canvas.height);
+            expect(t.view.mapBox.children).toEqual([t.view.canvas, t.view.tileText, t.view.marksCanvas, t.view.frameLine]);
+        } finally { t.restore(); }
+    });
+
+    it('a glyph per kind (forecast » · volume ■ · phase ◐); an unknown kind (`soft-lock`) draws `?`; additive fields are ignored', () => {
+        const t = setup();
+        try {
+            const glyphs = [];
+            for (const [i, kind] of ['forecast', 'volume', 'phase', 'soft-lock'].entries()) {
+                t.emit(framed(i + 1, { ...L40_FRAME, caches: { hits: 3 }, danger: { ...L40_FRAME.danger, kind, extra: 1 } }));
+                t.runFrames();
+                glyphs.push(shown(t).find((o) => o[0] === 'fillText')[1]);
+            }
+            expect(glyphs).toEqual(['»', '■', '◐', '?']);
+            expect(Object.keys(DANGER_GLYPHS)).toEqual(['forecast', 'volume', 'phase']);
+        } finally { t.restore(); }
+    });
+
+    it('a frame with only some detail draws only those marks (a verb: target + stance; AVOID: danger only); a tile-less target draws no cross', () => {
+        const t = setup();
+        try {
+            t.emit(framed(1, { key: FRAME_KEY, target: 'lock@144,112', stance: [3, 3], danger: null }));
+            t.runFrames();
+            expect(strokes(t, '#ff8c1a')).toEqual([]);
+            expect(shown(t).filter((o) => o[0] === 'moveTo')).toHaveLength(2);
+            t.emit(framed(2, { key: FRAME_KEY, target: null, stance: null, danger: L40_FRAME.danger }));
+            t.runFrames();
+            expect([strokes(t, '#4fc3f7'), shown(t).filter((o) => o[0] === 'moveTo')]).toEqual([[], []]);
+            expect(strokes(t, '#ff8c1a')).toHaveLength(1);
+            t.emit(framed(3, { key: FRAME_KEY, target: 'tile:Stone', stance: null, danger: null }));
+            t.runFrames();
+            expect(shown(t).filter((o) => o[0] === 'moveTo')).toEqual([]);
+            expect(t.view.frameLine.textContent).toBe('frame: stance — · target tile:Stone (no tile)');
+        } finally { t.restore(); }
+    });
+});
+
+describe('⛓ FRAME VIEW — the level guard, the clear on null, draw only on change', () => {
+    it('LEVEL GUARD: a map one level behind the segment gets no marks (the line says why); the row is still outlined', () => {
+        const t = setup();
+        try {
+            t.emit(framed(1, L40_FRAME, { tilesLevel: 3 }));
+            t.runFrames();
+            expect(shown(t)).toEqual([]);
+            expect(marksOps(t).map((o) => o[0])).toEqual(['clearRect']);
+            expect(t.view.frameLine.textContent).toMatch(/\(not marked: the map is another level\)$/);
+            expect([t.view.stats.framesReceived, t.view.stats.framesMarked]).toEqual([1, 0]);
+            expect(t.view.tree.children.filter((r) => r.style.cssText.includes('outline:'))).toHaveLength(1);
+            t.emit(framed(2, L40_FRAME));
+            t.runFrames();
+            expect(strokes(t, '#4fc3f7')).toHaveLength(1);
+            expect([t.view.stats.framesReceived, t.view.stats.framesMarked]).toEqual([2, 1]);
+        } finally { t.restore(); }
+    });
+
+    it('CLEAR ON NULL: a null frame clears every mark, the line and the row outline', () => {
+        const t = setup();
+        try {
+            t.emit(framed(1, L40_FRAME));
+            t.runFrames();
+            t.emit(framed(2, null));
+            t.runFrames();
+            expect(marksOps(t).at(-1)[0]).toBe('clearRect');
+            expect(shown(t)).toEqual([]);
+            expect(t.view.marks).toBe(null);
+            expect(t.view.frameLine.textContent).toBe('');
+            expect(t.view.tree.children.filter((r) => r.style.cssText.includes('outline:'))).toEqual([]);
+        } finally { t.restore(); }
+    });
+
+    it('DRAW ONLY ON CHANGE: new snapshots with the same frame do not redraw the marks; a moved stance does, once', () => {
+        const t = setup();
+        try {
+            t.emit(framed(1, L40_FRAME));
+            t.runFrames();
+            const drawn = t.view.stats.marksDrawn;
+            const ops = marksOps(t).length;
+            for (let i = 2; i <= 5; i += 1) {
+                t.emit(framed(i, structuredClone(L40_FRAME), { cells: [[1, 1, i, 0], [2, i, 1, i]] }));
+                t.runFrames();
+            }
+            expect(t.view.stats.renders).toBeGreaterThanOrEqual(5);
+            expect([t.view.stats.marksDrawn, marksOps(t).length]).toEqual([drawn, ops]);
+            t.emit(framed(6, { ...L40_FRAME, stance: [9, 38] }));
+            t.runFrames();
+            expect(t.view.stats.marksDrawn).toBe(drawn + 1);
+            expect(strokes(t, '#4fc3f7')).toEqual([[9 * 14 + 1.5, 38 * 14 + 1.5, 11, 11]]);
+        } finally { t.restore(); }
+    });
+});
+
+describe('⛓ FRAME VIEW — the row highlight', () => {
+    it('only the row whose key is frame.key is outlined (not every active row); moving the key rewrites just the two rows', () => {
+        const t = setup();
+        try {
+            t.emit(framed(1, L40_FRAME));
+            t.runFrames();
+            const outlined = () => t.view.tree.children.filter((r) => r.style.cssText.includes('outline:')).map((r) => r._text.data.trim());
+            expect(t.view.tree.children.filter((r) => r._shown?.css?.includes('#3a1520'))).toHaveLength(4);   // four active rows
+            expect(outlined()).toEqual([expect.stringMatching(/^▾?\s*arm: arm:chaser /)]);
+            const written = t.view.stats.rowsWritten;
+            t.emit(framed(2, { ...L40_FRAME, key: 's/c/rung:kill' }));
+            t.runFrames();
+            expect(outlined()).toEqual([expect.stringMatching(/rung: rung:kill /)]);
+            expect(t.view.stats.rowsWritten - written).toBe(2);
         } finally { t.restore(); }
     });
 });
