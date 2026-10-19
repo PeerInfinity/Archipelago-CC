@@ -26,22 +26,46 @@ export const MEMORY_PROBE_MIN_MS = 250;
 export const MEMORY_PROBE_MAX_SAMPLES = 1200;
 
 /**
- * `--memory-probe-ms` → `{ms, hitSampleMs}`: `ms` 0 (off, the default) or an interval (≥ MEMORY_PROBE_MIN_MS);
- * `hitSampleMs` null (the lab's own 25 ms) or the SPLIT ARM's hit-sampler interval, written `<ms>,hit-sample-ms=<n>`
- * (measurement only: the lab's `botStatus` poll is most of the bridge traffic while a leg waits, so slowing it splits
- * per-call retention from per-frame retention; every row is stamped `hitSampleMs`). Throws by name.
+ * `--memory-probe-ms` → `{ms, hitSampleMs, holdL0Sec, holdArrivalSec, runArrivalSec, liveObjects}`: `ms` 0 (off, the
+ * default) or an interval (≥ MEMORY_PROBE_MIN_MS), then comma options — the probe's MEASUREMENT-ONLY ARMS (every row
+ * stamped with the ones set):
+ *   hit-sample-ms=<n>   the SPLIT ARM: the lab's 25 ms `botStatus` hit sampler runs every <n> ms (per-call vs per-frame)
+ *   hold-l0=<s>         before the grants, freeze the boot room (L0) with `botHold("on")` for <s> s, then release
+ *   run-arrival=<s>     after the jump, let the arrival room RUN unheld for <s> s before the serve
+ *   hold-arrival=<s>    after that, freeze the arrival room with `botHold("on")` for <s> s, then release
+ *   live-objects        the runtime's per-frame live AVM2 object/array counts (`swf_perf_report`'s arguments), kept
+ *                       on `__swfPerf` by a one-token rewrite of the SERVED glue JS (the wasm is untouched)
+ * Throws by name.
  */
 export function parseMemoryProbe(spec) {
     const [head, ...opts] = String(spec ?? '').split(',').map((x) => x.trim());
     const ms = parseMemoryProbeMs(head);
-    let hitSampleMs = null;
+    const out = { ms, hitSampleMs: null, holdL0Sec: null, holdArrivalSec: null, runArrivalSec: null, liveObjects: false };
+    const SEC = { 'hold-l0': 'holdL0Sec', 'hold-arrival': 'holdArrivalSec', 'run-arrival': 'runArrivalSec' };
     for (const o of opts.filter(Boolean)) {
-        const m = /^hit-sample-ms=(\d+)$/.exec(o);
-        if (!m || Number(m[1]) < 5) throw new Error(`--memory-probe-ms: ${JSON.stringify(o)} is not hit-sample-ms=<ms >= 5>`);
-        hitSampleMs = Number(m[1]);
+        let m;
+        if (o === 'live-objects') out.liveObjects = true;
+        else if ((m = /^hit-sample-ms=(\d+)$/.exec(o)) && Number(m[1]) >= 5) out.hitSampleMs = Number(m[1]);
+        else if ((m = /^(hold-l0|hold-arrival|run-arrival)=(\d+)$/.exec(o)) && Number(m[2]) >= 1) out[SEC[m[1]]] = Number(m[2]);
+        else throw new Error(`--memory-probe-ms: ${JSON.stringify(o)} is not hit-sample-ms=<ms >= 5>, hold-l0=<s>, `
+            + 'hold-arrival=<s>, run-arrival=<s> or live-objects');
     }
-    if (hitSampleMs !== null && !ms) throw new Error('--memory-probe-ms: hit-sample-ms needs the probe on (an interval first)');
-    return { ms, hitSampleMs };
+    if (!ms && opts.some(Boolean)) throw new Error('--memory-probe-ms: an arm needs the probe on (an interval first)');
+    return out;
+}
+
+/** The row stamp of the arms set (`{}` when none): a row measured under an arm says so. */
+export function memoryArmStamp(p) {
+    return { ...(p.hitSampleMs ? { hitSampleMs: p.hitSampleMs } : {}), ...(p.holdL0Sec ? { holdL0Sec: p.holdL0Sec } : {}),
+        ...(p.runArrivalSec ? { runArrivalSec: p.runArrivalSec } : {}), ...(p.holdArrivalSec ? { holdArrivalSec: p.holdArrivalSec } : {}),
+        ...(p.liveObjects ? { liveObjects: true } : {}) };
+}
+
+/** The served glue JS's `swf_perf_report` keeps its live-object arguments (`live-objects`); null = the token moved. */
+export const LIVE_OBJECTS_TOKEN = 'S.frames++;';
+export function withLiveObjects(js) {
+    const n = js.split(LIVE_OBJECTS_TOKEN).length - 1;
+    return n === 1 ? js.replace(LIVE_OBJECTS_TOKEN, `${LIVE_OBJECTS_TOKEN}S.liveObj=live_obj;S.liveArr=live_arr;`) : null;
 }
 
 /** `--memory-probe-ms`'s interval → 0 (off, the default) or ms (≥ MEMORY_PROBE_MIN_MS). Throws by name. */
@@ -128,7 +152,9 @@ export function createMemorySampler({ intervalMs = 0, read, max = MEMORY_PROBE_M
 export function readGameMemoryInPage() {
     const u = window.HEAPU32;
     const frames = window.__swfPerf?.frames ?? null;
-    if (!u) return { found: false, wasmBytes: null, frames };
+    // ⛓ `live-objects` arm only (absent otherwise): the runtime's own per-frame live counts
+    const live = typeof window.__swfPerf?.liveObj === 'number' ? { liveObj: window.__swfPerf.liveObj, liveArr: window.__swfPerf.liveArr } : {};
+    if (!u) return { found: false, wasmBytes: null, frames, ...live };
     let c = window.__memProbeCapIdx;
     if (c === undefined) {
         c = -1;
@@ -149,8 +175,8 @@ export function readGameMemoryInPage() {
         }
         window.__memProbeCapIdx = c;
     }
-    if (c < 0) return { found: false, wasmBytes: u.buffer.byteLength, frames };
-    return { found: true, wasmBytes: u.buffer.byteLength, frames, capacity: u[c], allocated: u[c + 1], peak: u[c + 2],
+    if (c < 0) return { found: false, wasmBytes: u.buffer.byteLength, frames, ...live };
+    return { found: true, wasmBytes: u.buffer.byteLength, frames, ...live, capacity: u[c], allocated: u[c + 1], peak: u[c + 2],
         peakRequest: u[c + 3], oom: u[c + 4] };
 }
 
@@ -205,9 +231,9 @@ const MB = (b) => (Number.isFinite(b) ? (b / 1048576).toFixed(1) : '-');
 export function formatMemorySample(legId, s) {
     if (s.error) return `MEMPROBE leg ${legId} t=${(s.t / 1000).toFixed(1)}s error ${s.error}`;
     const g = s.game ?? {};
-    return `MEMPROBE leg ${legId} t=${(s.t / 1000).toFixed(1)}s${s.tag ? ` [${s.tag}]` : ''} phase=${s.phase ?? '-'}`
+    return `MEMPROBE leg ${legId} t=${(s.t / 1000).toFixed(1)}s${s.tag ? ` [${s.tag}]` : ''}${s.arm ? ` arm=${s.arm}` : ''} phase=${s.phase ?? '-'}`
         + ` alloc=${g.found ? MB(g.allocated) : '?'}MB peak=${g.found ? MB(g.peak) : '?'}MB oom=${g.found ? g.oom : '?'}`
-        + ` frames=${g.frames ?? '-'} game_time=${s.gameTime ?? '-'} level=${s.level ?? '-'} jsHeap=${MB(s.jsHeap)}MB`
+        + ` frames=${g.frames ?? '-'}${typeof g.liveObj === 'number' ? ` live=${g.liveObj}/${g.liveArr}` : ''} game_time=${s.gameTime ?? '-'} level=${s.level ?? '-'} jsHeap=${MB(s.jsHeap)}MB`
         + ` calls=${s.calls?.total ?? '-'} reply=${MB(s.calls?.replyChars)}Mch queue=${s.calls?.queueItems ?? '-'}`;
 }
 

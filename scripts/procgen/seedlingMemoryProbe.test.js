@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { MEMORY_PROBE_MIN_MS, callDelta, createMemorySampler, formatMemorySample, parseMemoryProbe, parseMemoryProbeMs, readGameMemoryInPage,
+import { MEMORY_PROBE_MIN_MS, callDelta, createMemorySampler, formatMemorySample, memoryArmStamp, parseMemoryProbe, parseMemoryProbeMs, readGameMemoryInPage, withLiveObjects,
     slope, summarizeMemory } from './seedlingMemoryProbe.js';
 
 describe('seedlingMemoryProbe — parseMemoryProbeMs', () => {
@@ -14,14 +14,31 @@ describe('seedlingMemoryProbe — parseMemoryProbeMs', () => {
     });
 });
 
-describe('seedlingMemoryProbe — parseMemoryProbe (the split arm)', () => {
-    it('`<ms>` alone keeps the lab\'s own hit sampler; `<ms>,hit-sample-ms=<n>` is the split arm; bad specs throw', () => {
-        expect(parseMemoryProbe('')).toEqual({ ms: 0, hitSampleMs: null });
-        expect(parseMemoryProbe('2000')).toEqual({ ms: 2000, hitSampleMs: null });
-        expect(parseMemoryProbe('2000,hit-sample-ms=1000')).toEqual({ ms: 2000, hitSampleMs: 1000 });
-        expect(() => parseMemoryProbe('2000,hits=1000')).toThrow(/hit-sample-ms=/);
-        expect(() => parseMemoryProbe('2000,hit-sample-ms=1')).toThrow(/hit-sample-ms=/);
+describe('seedlingMemoryProbe — parseMemoryProbe (the measurement-only arms)', () => {
+    const OFF = { hitSampleMs: null, holdL0Sec: null, holdArrivalSec: null, runArrivalSec: null, liveObjects: false };
+    it('`<ms>` alone sets no arm; each arm parses; a bad arm or an arm without the probe throws by name', () => {
+        expect(parseMemoryProbe('')).toEqual({ ms: 0, ...OFF });
+        expect(parseMemoryProbe('2000')).toEqual({ ms: 2000, ...OFF });
+        expect(parseMemoryProbe('2000,hit-sample-ms=1000')).toEqual({ ms: 2000, ...OFF, hitSampleMs: 1000 });
+        expect(parseMemoryProbe('2000,hold-l0=60,run-arrival=30,hold-arrival=90,live-objects')).toEqual({ ms: 2000, ...OFF,
+            holdL0Sec: 60, runArrivalSec: 30, holdArrivalSec: 90, liveObjects: true });
+        expect(() => parseMemoryProbe('2000,hits=1000')).toThrow(/is not hit-sample-ms=/);
+        expect(() => parseMemoryProbe('2000,hit-sample-ms=1')).toThrow(/is not hit-sample-ms=/);
+        expect(() => parseMemoryProbe('2000,hold-l0=0')).toThrow(/is not/);
         expect(() => parseMemoryProbe('0,hit-sample-ms=1000')).toThrow(/needs the probe on/);
+    });
+    it('the row stamp names exactly the arms set', () => {
+        expect(memoryArmStamp(parseMemoryProbe('2000'))).toEqual({});
+        expect(memoryArmStamp(parseMemoryProbe('2000,hold-arrival=90,live-objects'))).toEqual({ holdArrivalSec: 90, liveObjects: true });
+    });
+    it('withLiveObjects rewrites the ONE token, and refuses (null) when it is absent or repeated', () => {
+        const js = 'function swf_perf_report(a,b,c,live_obj,live_arr){var S={};S.frames++;return S}';
+        const out = withLiveObjects(js);
+        expect(out).toContain('S.frames++;S.liveObj=live_obj;S.liveArr=live_arr;');
+        // eslint-disable-next-line no-new-func
+        expect(new Function(`${out}; return swf_perf_report(0,0,0,7,3);`)()).toMatchObject({ liveObj: 7, liveArr: 3 });
+        expect(withLiveObjects('nothing here')).toBe(null);
+        expect(withLiveObjects('S.frames++;S.frames++;')).toBe(null);
     });
 });
 
@@ -108,6 +125,9 @@ describe('seedlingMemoryProbe — readGameMemoryInPage (o1heap diagnostics out o
             globalThis.window = { HEAPU32: u, __swfPerf: { frames: 42 } };
             const r = readGameMemoryInPage();
             expect(r).toMatchObject({ found: true, capacity: cap, allocated: 5 * MiB, peak: 9 * MiB, peakRequest: 2048, oom: 0, frames: 42 });
+            expect(r).not.toHaveProperty('liveObj'); // only the live-objects arm's rewrite puts it there
+            globalThis.window.__swfPerf.liveObj = 1234; globalThis.window.__swfPerf.liveArr = 56;
+            expect(readGameMemoryInPage()).toMatchObject({ liveObj: 1234, liveArr: 56 });
             u[c + 1] = 6 * MiB;
             expect(readGameMemoryInPage().allocated).toBe(6 * MiB); // the cached index re-reads live memory
             globalThis.window = {};
