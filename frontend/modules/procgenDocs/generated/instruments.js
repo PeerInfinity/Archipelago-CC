@@ -89,7 +89,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 4,
+            "count": 5,
             "id": "generate"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 427,
+        "blockStyle": 428,
         "browser": 144,
-        "cited": 222,
-        "files": 440,
+        "cited": 223,
+        "files": 441,
         "lineStyle": 13,
-        "withDocblock": 440,
-        "withFlags": 356
+        "withDocblock": 441,
+        "withFlags": 357
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6122,6 +6122,35 @@ export const INSTRUMENTS = frz({
             "inheritedFlags": [],
             "oneLiner": "gates — **RUN THE GATES, IN ONE LINE, KEYED ON EXIT CODES** (R9 slice 12e, ⚖ ruling 38 item (6)).",
             "path": "scripts/procgen/gates.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "generate",
+            "citedBy": [
+                "docs/json/developer/procgen/stepped-pipeline.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "generate-envelope-schemas.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "generate-envelope-schemas — writes the JSON Schema of each stepped-pipeline envelope kind to `frontend/schema/envelopes/<kind>.schema.json` (§5au item 9).",
+            "path": "scripts/procgen/generate-envelope-schemas.mjs"
         },
         {
             "argvHelpers": [

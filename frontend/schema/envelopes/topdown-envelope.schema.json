@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "topdown-envelope (envelope_version 1)",
+  "description": "A serialized topdown-envelope. Fields marked \"x-visibility\": \"internal\" are resume state whose shape may change without a version bump; read the public ones.",
+  "type": "object",
+  "required": [
+    "kind",
+    "envelope_version",
+    "completed",
+    "source",
+    "opts",
+    "compileIn",
+    "regionSize"
+  ],
+  "properties": {
+    "kind": {
+      "const": "topdown-envelope",
+      "description": "Which mode wrote this envelope.",
+      "x-visibility": "public"
+    },
+    "envelope_version": {
+      "const": 1,
+      "description": "The envelope format version (bumped when an envelope written now could not be read by the code that wrote it).",
+      "x-visibility": "public"
+    },
+    "source": {
+      "type": [
+        "object"
+      ],
+      "description": "The source rules.json the top-down world is laid out from.",
+      "x-visibility": "public",
+      "x-step": null
+    },
+    "opts": {
+      "type": [
+        "object"
+      ],
+      "description": "The resolved layout options (gridDims, seed, substrateMix, sphereLog, …).",
+      "x-visibility": "public",
+      "x-step": null
+    },
+    "compileIn": {
+      "type": [
+        "object"
+      ],
+      "description": "The compile inputs.",
+      "x-visibility": "public",
+      "x-step": null
+    },
+    "regionSize": {
+      "type": [
+        "object"
+      ],
+      "description": "Region size {width, height}.",
+      "x-visibility": "public",
+      "x-step": null
+    },
+    "completed": {
+      "type": [
+        "integer"
+      ],
+      "description": "Index into TOPDOWN_STEPS of the last step run; -1 = none.",
+      "x-visibility": "public",
+      "x-step": null
+    },
+    "edits": {
+      "type": [
+        "array"
+      ],
+      "description": "Recorded layout edits, replayed after the step each one belongs to.",
+      "x-visibility": "public",
+      "x-step": null
+    },
+    "layout": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The layout state: the tagged Grid encoding, placement order, per-region seeds and substrates.",
+      "x-visibility": "internal",
+      "x-step": "layout"
+    },
+    "rng": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The rng position after layout.",
+      "x-visibility": "internal",
+      "x-step": "layout"
+    },
+    "realise": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Realise bookkeeping (aliases the layout Grid).",
+      "x-visibility": "internal",
+      "x-step": "realise"
+    },
+    "finalize": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "startCell, stats, the sphere tree and plan, and warnings.",
+      "x-visibility": "public",
+      "x-step": "finalize",
+      "properties": {
+        "grid": {
+          "x-visibility": "internal"
+        }
+      }
+    },
+    "compile": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The compiled result: rulesJson and its warnings.",
+      "x-visibility": "public",
+      "x-step": "compile"
+    }
+  },
+  "additionalProperties": false
+}

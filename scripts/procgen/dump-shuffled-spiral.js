@@ -73,7 +73,7 @@ const FLAGS = {
     '-h': W.help,
 };
 
-function parseArgs(argv) {
+function parseArgs(argv, { configDoc = null } = {}) {
     const out = parseFlags(argv, FLAGS, {
         seed: 1,
         region: { width: 8, height: 6 },
@@ -84,7 +84,7 @@ function parseArgs(argv) {
         obstacles: {},
         jtaLocations: false,
         out: './shuffled-spiral-dump.json',
-    }, { metaUrl: import.meta.url });
+    }, { metaUrl: import.meta.url, configDoc });
     if (Object.keys(out.quotas).length === 0) {
         throw new Error('at least one --quota is required');
     }
@@ -124,15 +124,23 @@ function shapeRegions(grid) {
     return out;
 }
 
-async function main(status) {
-    const config = parseOrUsage(() => parseArgs(process.argv.slice(2)));
-    status.config = config;
-    await loadPipelineSubstrates();
-    checkSubstrateIds(config, {
-        layout: 'spiral', tool: 'dump-shuffled-spiral', counts: { quotas: '--quota' }, start: 'start',
-    });
+/** ⛓ A config OBJECT (the `--config` keys) → the parsed config; for `runPipeline`. */
+export const resolveConfig = (doc) => parseArgs([], { configDoc: doc });
+
+/** ⛓ The substrate ids this driver's config names, and the layout that must place them. */
+export const SUBSTRATE_CHECK = Object.freeze({
+    layout: 'spiral', tool: 'dump-shuffled-spiral', counts: { quotas: '--quota' }, start: 'start',
+});
+
+/**
+ * Build the dump from a parsed config. Writes nothing; the substrate
+ * libraries must already be loaded (`loadPipelineSubstrates`).
+ * @returns {Promise<{dump: object, rulesJson: object, summary: object}>}
+ */
+export async function build(config) {
     // Opt-in jta zone-locations channel (Phase 1 skeleton). Off by
-    // default so jta dumps stay byte-identical to prior runs.
+    // default so jta dumps stay byte-identical to prior runs. ⛓ Set on every
+    // call: it is module state, and a second build must not inherit the first's.
     setJtaEmitZoneLocations(config.jtaLocations);
     const {
         grid, stats, startCell, goalItem,
@@ -166,15 +174,26 @@ async function main(status) {
         regions: shapeRegions(grid),
         rulesJson,
     };
+    const summary = {
+        seed: config.seed, regionsBuilt: stats.regionsBuilt,
+        stopReason: stats.stopReason ?? null, substrateCounts: stats.substrateCounts ?? null,
+    };
+    return { dump, rulesJson, summary };
+}
+
+async function main(status) {
+    const config = parseOrUsage(() => parseArgs(process.argv.slice(2)));
+    status.config = config;
+    await loadPipelineSubstrates();
+    checkSubstrateIds(config, SUBSTRATE_CHECK);
+    const { dump, summary } = await build(config);
+    const { stats } = dump;
     const outPath = resolve(process.cwd(), config.out);
     mkdirSync(dirname(outPath), { recursive: true });
     writeFileSync(outPath, JSON.stringify(dump, null, 2));
     console.error(`Wrote ${outPath}`);
     status.outputs.dump = outPath;
-    status.summary = {
-        seed: config.seed, regionsBuilt: stats.regionsBuilt,
-        stopReason: stats.stopReason ?? null, substrateCounts: stats.substrateCounts ?? null,
-    };
+    status.summary = summary;
     console.error(`  regionsBuilt: ${stats.regionsBuilt}`
         + `  stopReason: ${stats.stopReason}`
         + `  substrateCounts: ${JSON.stringify(stats.substrateCounts)}`);

@@ -1,0 +1,243 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "sphere-envelope (envelope_version 1)",
+  "description": "A serialized sphere-envelope. Fields marked \"x-visibility\": \"internal\" are resume state whose shape may change without a version bump; read the public ones.",
+  "type": "object",
+  "required": [
+    "kind",
+    "envelope_version",
+    "completed",
+    "config"
+  ],
+  "properties": {
+    "kind": {
+      "const": "sphere-envelope",
+      "description": "Which mode wrote this envelope.",
+      "x-visibility": "public"
+    },
+    "envelope_version": {
+      "const": 1,
+      "description": "The envelope format version (bumped when an envelope written now could not be read by the code that wrote it).",
+      "x-visibility": "public"
+    },
+    "config": {
+      "type": [
+        "object"
+      ],
+      "description": "The resolved world config the steps run on (seed, regionSize, item pool, quotas, sphere count, …).",
+      "x-visibility": "public",
+      "x-step": null
+    },
+    "completed": {
+      "type": [
+        "integer"
+      ],
+      "description": "Index into SPHERE_STEPS of the last step run; -1 = none.",
+      "x-visibility": "public",
+      "x-step": null
+    },
+    "edits": {
+      "type": [
+        "array"
+      ],
+      "description": "Recorded layout edits, replayed after the step each one belongs to.",
+      "x-visibility": "public",
+      "x-step": null
+    },
+    "draft": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The drafted spheres: what each sphere holds before allocation.",
+      "x-visibility": "public",
+      "x-step": "plan"
+    },
+    "rng": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The main rng position, threaded between steps.",
+      "x-visibility": "internal",
+      "x-step": "plan"
+    },
+    "topologyWarnings": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "description": "Topology warnings from the last topology step.",
+      "x-visibility": "public",
+      "x-step": "plan"
+    },
+    "placed": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "description": "Node indices already placed on the grid (batch bookkeeping).",
+      "x-visibility": "internal",
+      "x-step": "plan"
+    },
+    "prevCount": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Node count before the current batch (batch bookkeeping).",
+      "x-visibility": "internal",
+      "x-step": "plan"
+    },
+    "batchStart": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "The first wave of the next batch (batch cursor).",
+      "x-visibility": "internal",
+      "x-step": "plan"
+    },
+    "plan": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The sphere plan: seed and per-sphere contents.",
+      "x-visibility": "public",
+      "x-step": "allocate"
+    },
+    "startingItems": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "description": "Items the player starts with.",
+      "x-visibility": "public",
+      "x-step": "allocate"
+    },
+    "allocation": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Regions and fillers per wave.",
+      "x-visibility": "public",
+      "x-step": "allocate"
+    },
+    "opts": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The runner options derived from config.",
+      "x-visibility": "internal",
+      "x-step": "allocate"
+    },
+    "totalNodes": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Node count the topology will reach.",
+      "x-visibility": "internal",
+      "x-step": "allocate"
+    },
+    "dims": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Grid dimensions {width, height}.",
+      "x-visibility": "public",
+      "x-step": "allocate"
+    },
+    "startCell": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The start cell {gx, gy}.",
+      "x-visibility": "public",
+      "x-step": "allocate"
+    },
+    "nodes": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "description": "The topology nodes (aliased by tree.nodes).",
+      "x-visibility": "internal",
+      "x-step": "topology"
+    },
+    "substrateCounts": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Regions per substrate.",
+      "x-visibility": "public",
+      "x-step": "topology"
+    },
+    "quotaFallbacks": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "How many regions fell back from their quota substrate.",
+      "x-visibility": "public",
+      "x-step": "topology"
+    },
+    "regionsRng": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The regions rng position.",
+      "x-visibility": "internal",
+      "x-step": "topology"
+    },
+    "tree": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The item tree over the nodes.",
+      "x-visibility": "internal",
+      "x-step": "items"
+    },
+    "grow": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The grown world: stats and startCell (public) and the tagged Grid encoding (grid, internal).",
+      "x-visibility": "public",
+      "x-step": "regions",
+      "properties": {
+        "grid": {
+          "x-visibility": "internal"
+        }
+      }
+    },
+    "librarySources": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Library-source bookkeeping for library quotas.",
+      "x-visibility": "internal",
+      "x-step": "regions"
+    },
+    "compile": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The compiled result: rulesJson and oracleErrors.",
+      "x-visibility": "public",
+      "x-step": "compile"
+    }
+  },
+  "additionalProperties": false
+}

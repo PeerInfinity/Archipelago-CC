@@ -176,7 +176,7 @@ const FLAGS = {
     '-h': W.help,
 };
 
-function parseArgs(argv) {
+function parseArgs(argv, { configDoc = null } = {}) {
     return parseFlags(argv, FLAGS, {
         subcommand: null,
         seed: 1,
@@ -213,7 +213,7 @@ function parseArgs(argv) {
         jtaFreeZones: undefined,
         jtaStartingPerks: undefined,
         jtaPerkShuffleSeed: undefined,
-    }, { subcommand: true, metaUrl: import.meta.url });
+    }, { subcommand: true, metaUrl: import.meta.url, configDoc });
 }
 
 // --- file I/O ---
@@ -421,6 +421,55 @@ function buildEnv(args) {
 
 // --- main ---
 
+/**
+ * The `run` subcommand's body: run `env` to `args.to` (default compile), from
+ * `args.from` or, without it, from the first step whose output is missing.
+ */
+async function runToEnd(env, args, { log }) {
+    const to = args.to ?? 'compile';
+    if (args.from) {
+        env.completed = SPIRAL_STEPS.indexOf(args.from) - 1;
+        await runSpiralToStep(env, to);
+    } else {
+        const at = detectSpiralCompleted(env) + 1;
+        if (at < SPIRAL_STEPS.length) {
+            log(`[spiral-step] auto-resume from ${SPIRAL_STEPS[at]}\n`);
+        }
+        await resumeSpiralEnvelope(env, to);
+    }
+}
+
+/** ⛓ A config OBJECT (the `--config` keys) → the parsed config of a `run`; for `runPipeline`. */
+export const resolveConfig = (doc) => ({ ...parseArgs([], { configDoc: doc }), subcommand: 'run' });
+
+/** ⛓ The substrate ids this driver's config names, and the layout that must place them. */
+export const SUBSTRATE_CHECK = Object.freeze({
+    layout: 'spiral', tool: 'spiral-step', counts: { quotas: '--quota' }, start: 'start',
+});
+
+/**
+ * `run`, in-process: a new envelope from the parsed config (or `envelope`, a
+ * serialized one to resume), run to `config.to` (default compile). Writes
+ * nothing (`--jta-dataset-file` is READ); the substrate libraries must
+ * already be loaded.
+ * @returns {Promise<{envelope: object, rulesJson: object|null, summary: object}>}
+ */
+export async function build(config, { envelope = null, log = () => {} } = {}) {
+    const env = envelope ? deserializeSpiralEnvelope(structuredClone(envelope)) : buildEnv(config);
+    await runToEnd(env, config, { log });
+    const rulesJson = env.compile?.rulesJson ?? null;
+    return {
+        envelope: serializeSpiralEnvelope(env),
+        rulesJson,
+        summary: {
+            seed: env.config?.seed ?? null,
+            completed: SPIRAL_STEPS[env.completed] ?? null,
+            driver: rulesJson?.procgen_metadata?.['1']?.driver ?? null,
+            regions: rulesJson ? Object.keys(rulesJson.regions?.['1'] ?? {}).length : null,
+        },
+    };
+}
+
 async function main(status) {
     const args = parseOrUsage(() => parseArgs(process.argv.slice(2)));
     status.config = args;
@@ -430,7 +479,7 @@ async function main(status) {
     const isStep = SPIRAL_STEPS.includes(sub);
     if (!isStep && sub !== 'run') throw new UsageError(`unknown subcommand '${sub}'`);
     await loadPipelineSubstrates();
-    checkSubstrateIds(args, { layout: 'spiral', tool: 'spiral-step', counts: { quotas: '--quota' }, start: 'start' });
+    checkSubstrateIds(args, SUBSTRATE_CHECK);
 
     let env;
     if (args.input) {
@@ -442,17 +491,7 @@ async function main(status) {
     }
 
     if (sub === 'run') {
-        const to = args.to ?? 'compile';
-        if (args.from) {
-            env.completed = SPIRAL_STEPS.indexOf(args.from) - 1;
-            await runSpiralToStep(env, to);
-        } else {
-            const at = detectSpiralCompleted(env) + 1;
-            if (at < SPIRAL_STEPS.length) {
-                process.stderr.write(`[spiral-step] auto-resume from ${SPIRAL_STEPS[at]}\n`);
-            }
-            await resumeSpiralEnvelope(env, to);
-        }
+        await runToEnd(env, args, { log: (m) => process.stderr.write(m) });
     } else {
         await runSpiralStep(sub, env);
     }
