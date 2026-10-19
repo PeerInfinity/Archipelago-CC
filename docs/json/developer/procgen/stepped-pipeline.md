@@ -162,7 +162,8 @@ Both the pipeline and the APWorld Editor open an editor through one call, `openR
 |---|---|---|
 | `bounce` | `panel` | `frontend/modules/bounceRegionEditor/` (panel 🪀), opened from Edit ▸ or standalone with a fixture |
 | `maze` | `lab` | `mazeRoom/lab.html`, SET arm, opened with a one-entry region library built by the substrate's `regionRoundTrip` (`procgenPipeline/pipelineRoomEdit.js`) |
-| `flash_seedling`, `flash_seedling_gen` | `lab` | declared (`seedlingDemo/watch.html`, EDIT arm), but neither opens from a world: `flash_seedling` (real-game rooms) is read-only by ruling and its `regionRoundTrip` refuses with the reason; `flash_seedling_gen` declares no `regionRoundTrip` yet |
+| `flash_seedling_gen` | `lab` | `seedlingDemo/watch.html`, EDIT arm, opened with a one-room level set built by `seedlingDemo/seedlingGenRegionRoundTrip.js` (see `seedling-editor.md` § "A generated room from a world") |
+| `flash_seedling` | `lab` | declared (`seedlingDemo/watch.html`, EDIT arm), but a real-game room does not open from a world: it is read-only by ruling and its `regionRoundTrip` refuses with the reason |
 
 Lab editors open inside `procgenLabPanel` through `frontend/modules/procgenLabPanel/labRoomEditor.js`: the document goes in over `load`, one room is opened over `navigate` with `?source=<arm>&room=<n>`, and the edited document comes back over `levelChanged`. `registerRegionEditor` remains as a deprecated runtime override; nothing in the repository calls it.
 

@@ -1497,6 +1497,12 @@
             "_comment": "SUBSTRATE CHART S4. The pipeline's Substrates (click to add) rows, a selected row and the sphere per-region override options show the live entry's label and hover cardText(cardOf(entry, capabilityRows(getAll()))) computed in the row; the stored value stays the id. Category procgenPipeline is claimed by no batch, so it runs in the default batch (fast). Restores the Scenario Pool collapse state and the active substrate dict."
         },
         {
+            "id": "procgen-pipeline-seedling-gen-edit-round-trip",
+            "enabled": true,
+            "category": "procgenPipeline",
+            "_comment": "region-editor-launch S2 (the user, 2026-10-19, Q3): a generated Seedling room opens from the pipeline's Edit ▸ in the REAL Seedling lab (one-room set, EDIT arm, room 0), the row presses the page's own #editRoomClose unedited, and the recompiled rules.json is byte-identical. No stub host: the point is that the page accepts the round trip's document and hands back one save can read."
+        },
+        {
             "id": "procgen-pipeline-maze-edit-round-trip",
             "enabled": true,
             "category": "procgenPipeline",

@@ -290,6 +290,11 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "edit",
+                    "statement": "A region of a saved world can be opened in an editor and saved back",
+                    "text": null
+                },
+                {
+                    "group": "edit",
                     "statement": "An exit can be moved to another side (and a side can hold more than one)",
                     "text": "and a side can hold more than one"
                 },
@@ -981,9 +986,9 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 92,
+        "fields": 93,
         "fieldsRead": 39,
-        "fieldsUnread": 50,
+        "fieldsUnread": 51,
         "statements": 29,
         "substrates": 9
     },
@@ -4605,12 +4610,12 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "flash_seedling_gen",
-                    "kind": "no",
+                    "kind": "yes",
                     "text": null,
                     "why": [
                         {
                             "field": "regionRoundTrip",
-                            "value": "—"
+                            "value": "{open, save}"
                         }
                     ]
                 },
@@ -4982,6 +4987,7 @@ export const CAPABILITIES = frz({
         "priceRegions",
         "procgenParamsFromPayload",
         "recordablePipelineConfig",
+        "regionEditStatus",
         "regionGeometry",
         "regionSourceDefault",
         "renderLibraryProcgenParams",

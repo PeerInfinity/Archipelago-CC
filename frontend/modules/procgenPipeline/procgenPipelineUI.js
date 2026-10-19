@@ -3180,6 +3180,15 @@ export class ProcgenPipelineUI {
         label.textContent = `#${node.index} w${node.wave}`
             + `${node.isFiller ? ' (filler)' : ''}`
             + `${itemCount ? ` — ${itemCount} item(s)` : ''}`;
+        const editStatus = this._editStatusOf(region);
+        if (editStatus) {
+            const flag = document.createElement('span');
+            flag.className = 'procgen-pipeline-edit-status';
+            flag.textContent = editStatus.flagged ? ' ⚠ edited, uncertified' : ' ✎ edited';
+            flag.title = editStatus.text;
+            if (editStatus.flagged) flag.style.color = '#d04040';
+            label.appendChild(flag);
+        }
         row.appendChild(label);
 
         // Per-region substrate override. Unlike the 2b topology dropdown (scoped
@@ -3423,6 +3432,16 @@ export class ProcgenPipelineUI {
     // Write-back from an editor save (pipeline mode): splice the edited region
     // into the live grid and invalidate 4 only (the user re-runs Compile; the
     // oracle is the backstop). Leaves the logical tree untouched.
+    // ⛓ region-editor-launch S2 — an edited region's flag, as its substrate
+    // declares it (`regionEditStatus`), or null. The panel names no substrate.
+    _editStatusOf(region) {
+        try {
+            return substrateRegistry.get(region?.substrate)?.regionEditStatus?.(region?.playable_payload) ?? null;
+        } catch {
+            return null;
+        }
+    }
+
     _onRegionEdited(origRegion, editedRegion, node) {
         const st = this._stepState;
         const grid = st?.grow?.grid;
@@ -3436,8 +3455,10 @@ export class ProcgenPipelineUI {
         grid.replaceRegion(cell, editedRegion);
         // _invalidateFrom clears this.message, so set it AFTER and re-render.
         this._invalidateFrom(4);
+        const status = this._editStatusOf(editedRegion);
         this.message = `Saved edits to "${editedRegion.region_id ?? origRegion.region_id}". `
             + 'Re-run 4 Compile to recheck the oracle.';
+        this.warning = status?.flagged ? `⚠ ${editedRegion.region_id}: ${status.text}` : '';
         this.render();
     }
 
@@ -3461,6 +3482,18 @@ export class ProcgenPipelineUI {
             : `✗ oracle mismatch: ${oracleErrors[0]}`;
         oracle.style.cssText = ok ? 'color:#3aa85a;' : 'color:#d04040;';
         wrap.appendChild(oracle);
+        // ⛓ region-editor-launch S2 — an edited region its substrate flags is
+        //   REPORTED here: the sphere oracle checks the plan, not the room.
+        const flagged = Object.entries(rulesJson.preset_sidecars ?? {}).flatMap(([, sidecars]) =>
+            Object.entries(sidecars ?? {}).map(([id, e]) => [id, this._editStatusOf(e)]))
+            .filter(([, status]) => status?.flagged);
+        for (const [id, status] of flagged) {
+            const line = document.createElement('div');
+            line.className = 'procgen-pipeline-edit-flag';
+            line.textContent = `⚠ ${id}: ${status.text}`;
+            line.style.cssText = 'color:#d04040;';
+            wrap.appendChild(line);
+        }
         const regionCount = Object.keys(rulesJson.regions ?? {}).length;
         const hasLog = Array.isArray(rulesJson.sphere_log) && rulesJson.sphere_log.length > 0;
         const counts = document.createElement('div');
@@ -5223,7 +5256,9 @@ export class ProcgenPipelineUI {
         grid.replaceRegion(cell, editedRegion);
         // _invalidateFromTD clears this.message, so set it AFTER it.
         this._invalidateFromTD(1);
+        const status = this._editStatusOf(editedRegion);
         this.message = `Saved edits to "${regionId}". Re-run from 3 Finalize to apply.`;
+        this.warning = status?.flagged ? `⚠ ${regionId}: ${status.text}` : '';
         this.render();
     }
 

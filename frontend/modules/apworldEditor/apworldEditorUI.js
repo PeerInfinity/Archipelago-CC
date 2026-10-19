@@ -6190,10 +6190,18 @@ class ApworldEditorUI {
       this._render();
       return;
     }
+    // ⛓ region-editor-launch S2 — the substrate's own flag on the saved room
+    //   (`regionEditStatus`: an edited generated Seedling room the generator's
+    //   oracle no longer certifies). Said, never a refusal: editing is free.
+    let status = null;
+    try {
+      const substrate = this.rulesDoc?.preset_sidecars?.[out.op?.player]?.[regionName]?.substrate;
+      status = substrateRegistry.get(substrate)?.regionEditStatus?.(out.op?.payload) ?? null;
+    } catch { status = null; }
     this._applyOp(out.op, {
       message: (res) => `${res.description}${out.moved
         ? ` — ${out.moved} access rule${out.moved === 1 ? '' : 's'} re-derived`
-        : ' — no access rule moved'}`,
+        : ' — no access rule moved'}${status?.flagged ? ` ⚠ ${status.text}` : ''}`,
     });
   }
 

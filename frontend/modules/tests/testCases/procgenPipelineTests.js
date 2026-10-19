@@ -399,3 +399,79 @@ registerTest({
     category: 'procgenPipeline',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
+
+/**
+ * ⛓⛓⛓ ⚖ region-editor-launch S2 — **Edit ▸ ON A GENERATED SEEDLING ROOM, THROUGH
+ * THE REAL SEEDLING LAB.** Preset "generated host" → Run all → the generated
+ * room's own Edit ▸ → the Seedling lab (made if absent) holds the one-room set
+ * with the room OPEN on its EDIT arm (the page's own `#editRoomClose` enabled)
+ * → the row presses that close, UNEDITED → the pipeline wrote the room back and
+ * cleared 4 → Run all → the rules.json is byte-identical. ⛔ No stub: what this
+ * row proves is that the page accepts the round trip's document and hands back
+ * one `save` can read. Edits and their certification are vitest's
+ * (`seedlingGenRegionRoundTrip.test.js`, `pipelineRoomEdit.test.js`).
+ */
+async function procgenPipelineSeedlingGenEditRoundTrip(testController) {
+    const PRESET = 'shipped:seedling-generated-host-demo';
+    try {
+        testController.eventBus.publish('ui:activatePanel', { panelId: 'procgenPipelinePanel' });
+        const panel = await testController.pollForValue(
+            () => document.querySelector(PANEL_SELECTOR)?.__panel ?? null,
+            'the Procgen Pipeline panel', 8000, 50);
+        testController.reportCondition('the Procgen Pipeline panel is mounted', !!panel);
+        if (!panel) return testController.getOverallResult();
+        const runAll = async (label) => {
+            await panel._runGeneration();
+            return testController.pollForValue(
+                () => panel._stepState?.compile?.rulesJson ?? null, label, 60000, 100);
+        };
+        panel._applyPreset(PRESET);
+        const before = await runAll('the preset world compiled');
+        testController.reportCondition('Run all compiled the world', !!before);
+        if (!before) return testController.getOverallResult();
+        const region = [...panel._stepState.grow.grid.allRegions()].find((r) => r.substrate === 'flash_seedling_gen');
+        testController.reportCondition(`⛓ premise: a generated Seedling region (${region?.region_id})`, !!region);
+        if (!region) return testController.getOverallResult();
+        const btn = [...panel._renderRegionEditRow(panel._nodeForRegion(region), region)
+            .querySelectorAll('button')].find((b) => b.textContent === 'Edit ▸');
+        panel.warning = '';
+        btn?.click();
+        const editing = await testController.pollForValue(
+            () => (panel.message?.startsWith('Editing') ? panel.message : (panel.warning || null)),
+            'the pipeline opened the room (or said why not)', 15000, 50);
+        testController.reportCondition(`Edit ▸ opened the room in the Seedling lab (${editing})`,
+            !!editing && editing.startsWith('Editing'));
+        const lab = labPanelInstances().find((p) => p.substrate === 'seedling');
+        const closeBtn = await testController.pollForValue(() => {
+            const b = lab?.iframe?.contentDocument?.getElementById('editRoomClose');
+            return b && !b.disabled ? b : null;
+        }, 'the Seedling lab holds the room OPEN on its EDIT arm', 60000, 100);
+        testController.reportCondition('⛓⛓ the page accepted the one-room set and opened room 0', !!closeBtn);
+        if (!closeBtn) return testController.getOverallResult();
+        closeBtn.click();
+        const saved = await testController.pollForValue(
+            () => (panel.message?.startsWith('Saved edits') && !panel._stepState?.compile ? panel.message
+                : (panel.warning?.startsWith('Save refused') ? panel.warning : null)),
+            'the close was written back', 15000, 50);
+        testController.reportCondition(`the page's close was written back and cleared 4 (${saved})`,
+            !!saved && saved.startsWith('Saved edits'));
+        const after = await runAll('the world recompiled after the unedited save');
+        testController.assertEqual('⛓⛓ an unedited Save through the REAL page recompiles to the SAME rules.json',
+            JSON.stringify(before), JSON.stringify(after));
+    } catch (error) {
+        testController.reportCondition(`Test error: ${error.message}`, false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'procgen-pipeline-seedling-gen-edit-round-trip',
+    name: 'Procgen Pipeline: Edit ▸ on a generated Seedling room opens it in the Seedling lab, and an unedited close recompiles to the same world',
+    description: '⚖ region-editor-launch S2. Preset "generated host" → Run all → the generated room\'s Edit ▸ → the real '
+               + 'Seedling lab holds the one-room set with room 0 open on its EDIT arm → the row presses the page\'s own '
+               + 'close → the pipeline wrote it back and cleared 4 → Run all → the rules.json is byte-identical.',
+    testFunction: procgenPipelineSeedlingGenEditRoundTrip,
+    category: 'procgenPipeline',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
