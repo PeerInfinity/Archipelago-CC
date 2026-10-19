@@ -95,7 +95,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_ARROW_LANE_CROSSING
         || !!process.env.SEEDLING_AXE_TIMING_RUNG || !!process.env.SEEDLING_AXE_GATE_TRANSIT
         || !!process.env.SEEDLING_STATUE_TALK_RANGE
-        || !!process.env.SEEDLING_AXE_PRICED_CROSSING)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_AXE_PRICED_CROSSING
+        || !!process.env.SEEDLING_GUARD_APPROACH_STANCE || !!process.env.SEEDLING_COVERED_GOAL_REFUSAL
+        || !!process.env.SEEDLING_SHAKE_BAND_MOOT || !!process.env.SEEDLING_SPINNER_SWING_LOS)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -179,7 +181,10 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ housekeep D3: `walkerBeamTowers` (the walker's planner reads the beam towers' drifted Solids) ships OFF.
             walkerBeamTowers: false,
             // ⛓ fidelity BOMBBLAST D2: `bombBlastBody` (a bomb's Explosion lands on a body) ships OFF.
-            bombBlastBody: false });
+            bombBlastBody: false,
+            // ⛓ fidelity L40GUARD: `guardApproachStance` (D2), `coveredGoalRefusal` (D3), `shakeBandMoot` and
+            // `spinnerSwingLineOfSight` (D4) ship OFF.
+            guardApproachStance: false, coveredGoalRefusal: false, shakeBandMoot: false, spinnerSwingLineOfSight: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
