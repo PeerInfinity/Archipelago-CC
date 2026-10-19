@@ -756,6 +756,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The Bounce Demo plays a generated world's bounce regions: a climb in the style of Doodle Jump. The player bounces automatically whenever it lands on a platform; you steer left and right to land on…"
     },
     {
+        "path": "docs/json/user/modules/bounceRegionEditor.md",
+        "title": "Bounce Region Editor Panel",
+        "section": "user/modules",
+        "summary": "The Bounce Region Editor edits one bounce zone of a generated world: its platforms, the springs, jetpacks, pickups and portals on them, and the size of the level. As you edit, it works out again…"
+    },
+    {
         "path": "docs/json/user/modules/discoveryPanel.md",
         "title": "Discovery Panel",
         "section": "user/modules",
@@ -784,6 +790,12 @@ export const DOCS_INDEX = Object.freeze([
         "title": "Exits Panel",
         "section": "user/modules",
         "summary": "The Exits panel shows every region exit (transition between regions) in the game, with real-time accessibility status and the logic required to traverse each one."
+    },
+    {
+        "path": "docs/json/user/modules/flashPanel.md",
+        "title": "Flash Panel",
+        "section": "user/modules",
+        "summary": "The Flash Panel plays Seedling — the original Flash game, recompiled to run in the browser — as part of an Archipelago world. Opening a chest or picking up an item in the game checks that location…"
     },
     {
         "path": "docs/json/user/modules/gameStatePanel.md",
@@ -882,6 +894,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The Presets panel is the primary way to load a game into the application. It lists all predefined game configurations and lets you load custom files from your computer."
     },
     {
+        "path": "docs/json/user/modules/procgenLab.md",
+        "title": "Procgen Lab Panel",
+        "section": "user/modules",
+        "summary": "The Procgen Lab shows a room generator's own page inside the app: the maze lab or the Seedling lab. There you can generate a room step by step, edit it by hand, solve it, and play it — the same…"
+    },
+    {
         "path": "docs/json/user/modules/procgenPipeline.md",
         "title": "Procgen Pipeline Panel",
         "section": "user/modules",
@@ -946,6 +964,12 @@ export const DOCS_INDEX = Object.freeze([
         "title": "Storage Panel",
         "section": "user/modules",
         "summary": "The Storage panel lists every key this site keeps in your browser's local storage. For each key it shows which part of the app owns it, what kind of data it is and how big it is. It lets you clear…"
+    },
+    {
+        "path": "docs/json/user/modules/substrateRegistry.md",
+        "title": "Substrate Registry Panel",
+        "section": "user/modules",
+        "summary": "The Substrate Registry lists every substrate — every kind of region a generated world can be built from, such as a maze, a text adventure, a bounce zone, Noiz2sa or a Seedling room — and says what…"
     },
     {
         "path": "docs/json/user/modules/swfRecompilerPanel.md",
@@ -1144,11 +1168,13 @@ export const HELP_SECTIONS = Object.freeze([
         "docs": [
             "docs/json/user/modules/apworldEditor.md",
             "docs/json/user/modules/bounceDemo.md",
+            "docs/json/user/modules/bounceRegionEditor.md",
             "docs/json/user/modules/discoveryPanel.md",
             "docs/json/user/modules/dungeons.md",
             "docs/json/user/modules/editor.md",
             "docs/json/user/modules/events.md",
             "docs/json/user/modules/exits.md",
+            "docs/json/user/modules/flashPanel.md",
             "docs/json/user/modules/gameStatePanel.md",
             "docs/json/user/modules/helpers.md",
             "docs/json/user/modules/iframeManagerPanel.md",
@@ -1165,6 +1191,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/modules/pathAnalyzerPanel.md",
             "docs/json/user/modules/playbackBot.md",
             "docs/json/user/modules/presets.md",
+            "docs/json/user/modules/procgenLab.md",
             "docs/json/user/modules/procgenPipeline.md",
             "docs/json/user/modules/progressBarPanel.md",
             "docs/json/user/modules/proofGraph.md",
@@ -1176,6 +1203,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/modules/spoilerChecklist.md",
             "docs/json/user/modules/spoilerTest.md",
             "docs/json/user/modules/storagePanel.md",
+            "docs/json/user/modules/substrateRegistry.md",
             "docs/json/user/modules/swfRecompilerPanel.md",
             "docs/json/user/modules/textAdventure.md",
             "docs/json/user/modules/timerPanel.md",

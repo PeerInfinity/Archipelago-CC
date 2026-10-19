@@ -16,17 +16,17 @@ Two mazes and two generated Seedling rooms, laid out by Shuffled spiral. Each Se
 
 ## Play it
 
-1. Open the **Flash Panel** tab: the Seedling regions play here, in the original game.
-2. The **Flash Substrate** tab is the other way a SWF can be a region — a plain recompiled SWF, without Seedling's room model (the bot cannot walk those).
-3. Open the **Flash Panel** tab and wait for the game page: the panel's status reads *click ▶ Start in the game* (the first time, the browser fetches the game's runtime).
-4. Press **▶ Start** in the game. The panel's status moves on to *configured*, and it loads the world's Seedling rooms into the game.
-5. Open the **Playback Bot** tab. It says "Sphere log loaded" — it has the world's solution path, sphere by sphere.
-6. Press **▶** (Play), then open the **Maze Room** tab to watch the bot walk the world, collect each sphere's items and finish.
+The Seedling regions play in the **Flash Panel**, in the original game.
+
+1. Open the **Flash Panel** tab and wait for the game page: the panel's status reads *click ▶ Start in the game* (the first time, the browser fetches the game's runtime).
+2. Press **▶ Start** in the game. The panel's status moves on to *configured*, and it loads the world's Seedling rooms into the game.
+3. Open the **Playback Bot** tab. It says "Sphere log loaded" — it has the world's solution path, sphere by sphere.
+4. Press **▶** (Play), then open the **Maze Room** tab to watch the bot walk the world, collect each sphere's items and finish.
 
 ## The Procgen Lab
 
 1. Open the **Procgen Lab — Seedling** tab: the Seedling room generator's own page, inside the app. Its status line says when it is connected.
-2. Press **TAKE — the page's level**: the room the lab is showing comes into the box below, as data. **SEND** does the reverse — load a room you paste into the box.
+2. Press **TAKE — the page's level**: the room the lab is showing comes into the box below, as data. **SEND — load this payload** does the reverse — load a room you paste into the box.
 
 **open standalone ↗** opens the same lab page in a tab of its own; its links lead to the procgen demo catalogue and the glossary. The **Procgen Lab — maze** tab does the same for maze rooms.
 

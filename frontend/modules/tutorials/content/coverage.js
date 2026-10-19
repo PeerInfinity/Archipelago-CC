@@ -25,6 +25,7 @@ export const NO_TUTORIAL = Object.freeze({
     tileMapAnalyzer: { title: 'Tile Map Analyzer', why: 'Currently a failed experiment.' },
     metaGamePanel: { title: 'Meta Game', why: 'Deprecated (an early draft of the procgen idea).' },
     progressBarPanel: { title: 'Progress Bars', why: 'Deprecated, with the Meta Game panel.' },
+    flashSubstratePanel: { title: 'Flash Substrate', why: 'A placeholder page, not a substrate: no world uses it.' },
 });
 
 /**
