@@ -23597,3 +23597,46 @@ OFF at the SP head:
 - solve time −10 % overall, L12 −35 %, L40's finished p90 1.1 → 0.57 s.
 
 It does **not** clear L40's 397 / 414 band: those solves run past 84 s, and ~1.4× does not bring them under 90 s.
+
+### Seedling hammer-phase PR — solve-progress residue
+
+⚖ The user (2026-10-18) picked the solve-progress residue in the replan and ruled *a NEW `soft-lock` refusal kind* for
+the Watcher's Seed refusal. The report is `CC/docs/cloud-reports/seedling-hammer-progress-residue.md`.
+
+**W0** at `0f4bcfaef5`. The identity block is XC's W0 (ENEMY `f0bec576`). The six `--check`s are `405d9c4b b76f6483
+465a8b46 35456fbc 6cd35fe1 3d41b9fb`. Reference MATCH; tapeRunner **617 `8f27f975`**; surface 314 · constants 6,028. The
+bounded vitest over RK2's 30 files plus `escapeCrossPassCache` and `stringPullFast` passes 927 / 927. RK2's runtime
+census is unchanged: `pending` 32, `exhausted` 12, `bound` 7, `does-not-apply` 3, `danger` 1, no `other`.
+
+**D1 — the census.** Every throw site of `solverBot.js`'s and `twoPassSolve.js`'s import closure: 63 files with a site,
+1,352 sites. Only `solverBot.js` builds a `SolverRefusal`, so only its sentences can be `other`: any other module's throw
+is `error` at worst. A run-time-spelling instrument expands each `${…}` to each literal inside it and to a value. It finds
+RK2's 4 static `other` sites, of which 2 are an artefact of reading `${…}` unexpanded (`:8959` / `:8971` already match
+at run time). It also finds two sites RK2's head hid: `:16920` read `bound` off the variable `${bound}`, and `:23599`'s
+`failed to apply` branch. And it finds `levelRun`'s two plain-`Error` Seed throws, which say "is a SOFT-LOCK" and were
+`error`.
+
+**D2 — `soft-lock`.** The kind sits immediately before `other`, and `other` stays last. The rule reads the sentence's own
+claim, `is a soft-lock` / `is a SOFT-LOCK`. It covers `execTalk`'s live-Seed refusal (RK2's pinned residue, re-pinned)
+and `levelRun`'s two throws (`lastWhy.name` stays `Error`). It never reads the bare noun: `resolveTalkStrategy`'s
+"(a soft-lock)" no-stance refusal stays `exhausted`. The rest:
+- `:16920` → `diverged` (`is NOT latched in the live run`);
+- `:23599`'s branch → `exhausted` (`failed to apply`, which its frontier sibling already read that way);
+- `planSwordDash`'s bare `deadline` → `deadline`.
+
+The run-time residue is 0. `v` stays 2.
+
+**D3 — counts.** `caches: {stringPull, escapeCrossPass}` and `churn: {opened, succeeded, rejected, moved}`: counts
+only, fixed key sets, ≤ 222 bytes at any snapshot. The string-pull count is one guarded line in `botDriverV2`'s memo. On
+L40 it reads 47,073 hits and 44,962 misses. The escape member is a per-segment delta of `ESCAPE_CROSS_PASS_CACHE_COUNTS`.
+On L18 with XC ON it reads: pass 1, 542 stored; passes 2 and 3, 542 cross-pass hits each. ⚠ **Its solver-side line is
+held.** XC's "ON is OFF" rows compare the whole progress stream ON and OFF: with the line, 10 of them go red, and
+without it all 17 pass. Until those rows drop `caches`, an installer wires the member from its hook (`progressCaches`).
+`churn` reads only the frames the emitter already opens: coarse, but free.
+
+**Gates.** The digest, `shouldStop` and asks are equal hooked and unhooked (L18 `230dc0ff` 165, L40 `3addc379` 167). RK's
+v1 md5s and TC2's stream md5 are unchanged, with `caches` / `churn` dropped from the projections. Unhooked,
+`cacheEntered()` stays at 0. 6 / 6 mutants caught.
+
+Lesson: *a field that reports a switch breaks every "ON is OFF" proof that compares the whole stream.* The stream's
+identity rows must name the fields they compare, or a new observation becomes a regression by construction.
