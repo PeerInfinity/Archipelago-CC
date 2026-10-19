@@ -104,6 +104,14 @@ function log(level, message, ...data) {
 // and stale costs used to survive a switch to a preset WITHOUT
 // loop_costs (and re-trigger the loop-mode auto-enable there).
 let _freshInMemoryCostLoad = false;
+// Bumped by every in-memory load (files:jsonLoaded). handleRulesLoaded awaits
+// a fetch for a rules file with a real path; a newer load that arrives during
+// that await makes the waiting handler STALE: it must not consume the newer
+// load's fresh flag or apply/clear costs, because the newer load's own
+// rulesLoaded follows and does all of it (B4 — before this, the stale handler
+// ate the flag and the newer world came up with its loop_costs cleared and
+// loop mode off).
+let _loadGeneration = 0;
 
 // Pick up loop_costs from an in-memory rules.json before stateManager
 // finishes loading them. Fires for editor / procgenPipeline paths where
@@ -113,6 +121,7 @@ let _freshInMemoryCostLoad = false;
 // the LOADED slot's (`selectedPlayerId`, which every publisher carries); a
 // document whose map has no entry for that slot runs with loop mode OFF.
 function handleFilesJsonLoaded(eventData) {
+  _loadGeneration += 1;
   if (!_costDataManager) return;
   const jsonData = eventData?.jsonData;
   const sourceName = eventData?.sourceName ?? 'unknown';
@@ -145,12 +154,18 @@ async function handleRulesLoaded(eventData) {
   if (_costDataManager) {
     const rulesPath = eventData?.source;
     let loadedNow = false;
+    const generation = _loadGeneration;
+    const isCurrent = () => generation === _loadGeneration;
     if (typeof rulesPath === 'string' && rulesPath.length > 0) {
       try {
-        loadedNow = await _costDataManager.tryLoadEmbedded(rulesPath, eventData?.playerId);
+        loadedNow = await _costDataManager.tryLoadEmbedded(rulesPath, eventData?.playerId, { isCurrent });
       } catch (err) {
         log('warn', '[Loops Module] tryLoadEmbedded threw:', err);
       }
+    }
+    if (!isCurrent()) {
+      log('info', `[Loops Module] A newer world arrived while ${rulesPath} loaded; leaving it to that world's rulesLoaded`);
+      return;
     }
     // Clear unless THIS load cycle populated cost data (either the
     // real-file path above or the in-memory files:jsonLoaded handler).
