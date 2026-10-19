@@ -1,0 +1,143 @@
+
+> archipelago-json@1.0.0 test
+> node scripts/test/run-tests.js --port=9598 --mode=test-substrates --test=seedling-js-runtime-bot-completes-generated-room
+
+--test: seedling-js-runtime-bot-completes-generated-room → batch seedling-js (WebGPU)
+# box lock: TAKEN by npm test test-substrates test=seedling-js-runtime-bot-completes-generated-room (browser, pid 5872) — head 6305b1af3, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+
+Running 1 test using 1 worker
+
+PW DEBUG: Navigating to application with parameters:
+  - machine: load 1.20 across 4 cpus
+  - mode: test-substrates
+  - flavour: unbundled
+PW DEBUG: URL: http://localhost:9598/frontend/?mode=test-substrates&testIds=seedling-js-runtime-bot-completes-generated-room
+BROWSER LOG (log): [Loader] Using unbundled mode (local development)
+PW DEBUG: Page navigation complete (load).
+PW DEBUG: Waiting for tests to start (__playwrightTestsStarted__ flag)...
+BROWSER LOG (info): [Init - INFO] [Init] loadCombinedModeData started
+BROWSER LOG (info): [Init - INFO] [Init] Created stateManager module_config with sourceName: ./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: fallback)
+BROWSER LOG (info): [21:15:52.912] [INFO] [INIT_STEP] Module import and registration phase started
+BROWSER LOG (info): [21:15:54.166] [INFO] [INIT_STEP] Module import and registration phase completed
+BROWSER LOG (info): [21:15:54.175] [INFO] [INIT_STEP] Golden Layout initialization started
+BROWSER LOG (log): [universalLogger] Worker logger initialized
+BROWSER LOG (info): [21:15:54.361] [INFO] [INIT_STEP] Golden Layout initialization completed
+BROWSER LOG (info): [21:15:54.363] [INFO] [INIT_STEP] Module initialization phase started (62 modules)
+BROWSER LOG (info): [21:15:54.409] [INFO] [INIT_STEP] Module initialization phase completed (62 modules)
+BROWSER LOG (info): [21:15:54.410] [INFO] [INIT_STEP] Module post-initialization phase started (4 modules)
+BROWSER LOG (debug): [Init - DEBUG] [Init _postInitializeSingleModule] Original genericModuleSpecificConfig FOR stateManager: {rulesConfig: Object, sourceName: ./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] Derived sourceName for StateManager: ./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json (source: fallback)
+BROWSER LOG (info): [Init - INFO] [Init _postInitializeSingleModule] EXACT configForPostInitialize BEING PASSED to stateManager.postInitialize: {rulesConfig: Object, sourceName: ./presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json}
+BROWSER LOG (info): [21:15:54.439] [INFO] [INIT_STEP] Module post-initialization phase completed (4 modules)
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+BROWSER LOG (log): [flash-placeholder] page ready; __swfBridge contract exposed
+BROWSER LOG (log): Loading game from: idleLoops_substrate inChallenge: undefined
+BROWSER LOG (log): Challenge Mode: 0 In Challenge: false
+BROWSER LOG (log): JSHandle@node SVGRect
+BROWSER LOG (warning): Expected element missing or wrong type! rngModeInput [, , ] null
+BROWSER LOG (warning): Expected element missing or wrong type! plannerTargetsInput [, , ] null
+BROWSER LOG (log): Updating prestige values from load
+BROWSER LOG (info): [tasw-bridge] Connected to host
+BROWSER LOG (info): [tasw-bridge] initial rebuildWorld attempt at connect
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (info): [tasw-bridge] world built: 10 rooms, current=Overworld
+BROWSER LOG (info): [jta-bridge] JtA in managed mode (loop paused)
+BROWSER LOG (info): [jta-bridge] connected to host; appReady sent
+BROWSER LOG (info): [flash-bridge] connected to host; appReady sent; __swfBridge.sendLocation/sendExit wired; loadRegion event: flash:loadRegion
+BROWSER LOG (info): [omsi-bridge] omsi-loops in managed mode (host-driven clock)
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (info): [omsi-bridge] connected to host; appReady sent
+BROWSER LOG (info): [mazeLabBridge] procgenLab: maze bridge connected as procgenLab-maze-1
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [omsi-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [omsi-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0}
+BROWSER LOG (info): [flash-bridge] connected to host; appReady sent; __swfBridge.sendLocation/sendExit wired; loadRegion event: noiz2sa:loadRegion
+BROWSER LOG (info): [flash-bridge] connected to host; appReady sent; __swfBridge.sendLocation/sendExit wired; loadRegion event: runner:loadRegion
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [omsi-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [omsi-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0}
+BROWSER LOG (info): [watchBridge] procgenLab: seedling bridge connected as procgenLab-seedling-2
+BROWSER LOG (info): [flash-bridge] connected to host; appReady sent; __swfBridge.sendLocation/sendExit wired; loadRegion event: bounce:loadRegion
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [omsi-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [omsi-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0}
+PW DEBUG: Tests started (or already complete/errored).
+PW DEBUG: Waiting for tests to complete (__playwrightTestsComplete__ flag)...
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 100, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: false}
+BROWSER LOG (error): Failed to load resource: the server responded with a status of 404 (File not found)
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(1), discoveredLocations: Array(0), discoveredExits: Array(1), procgenMode: true}
+BROWSER LOG (debug): [stateManagerProxy] Snapshot cached from rulesLoadedConfirmation.
+BROWSER LOG (warning): [tasw-bridge] gameState:regionChanged for unknown room region_0_0
+BROWSER LOG (info): [tasw-bridge] stateManager:rulesLoaded — rebuilding world
+BROWSER LOG (debug): [jta-bridge] stateManager:rulesLoaded — re-requesting static data; re-baselining world state
+BROWSER LOG (debug): [omsi-bridge] stateManager:rulesLoaded — re-baselining world state
+BROWSER LOG (debug): [omsi-bridge] cleared the fork reported-row ledger for the new world
+BROWSER LOG (info): [tasw-bridge] world built: 4 rooms, current=region_0_0
+BROWSER LOG (log): [js runtime] vanilla map loaded — 116 level(s)
+BROWSER LOG (log): [js runtime] boot level 0 at (80, 128) — the game's own first frame (Main.as:51)
+BROWSER LOG (log): [js runtime] boot level 0 at (128, 32) — teleport (new Game)
+BROWSER LOG (log): [js runtime] bot: idle
+BROWSER LOG (log): [js runtime] level set seedling-gen-1-4dd0bee4 mounted — 3 generated room(s)
+BROWSER LOG (log): [js runtime] boot level 0 at (128, 32) — teleport (new Game)
+BROWSER LOG (log): [js runtime] bot: waiting → region_0_0__key_blue_pickup in level 0 (paused)
+BROWSER LOG (log): [js runtime] bot: walking → region_0_0__key_blue_pickup in level 0
+BROWSER LOG (log): [js runtime] solving collect-placement in level 0 (budget 640 work units) — the room is held while the solver thinks
+BROWSER LOG (log): [js runtime] bot: walking → region_0_0__key_blue_pickup in level 0 — solving… (budget 640 work units)
+BROWSER LOG (log): [js runtime] solved collect-placement in level 0: 266 tick(s), verbs apitem (replay 38 ms over 15 tick(s), solve 102 ms, worker; pass dashless)
+BROWSER LOG (log): [js runtime] bot: walking → region_0_0__key_blue_pickup in level 0
+BROWSER LOG (log): [js runtime] apitem collected — level 0 tag 0
+BROWSER LOG (log): [js runtime] bot: waiting → exit_0 in level 0 (paused)
+BROWSER LOG (log): [js runtime] bot: walking → exit_0 in level 0
+BROWSER LOG (log): [js runtime] solving reach-exit in level 0 (budget 640 work units) — the room is held while the solver thinks
+BROWSER LOG (log): [js runtime] bot: walking → exit_0 in level 0 — solving… (budget 640 work units)
+BROWSER LOG (log): [js runtime] solved reach-exit in level 0: 292 tick(s), verbs walk (replay 40 ms over 273 tick(s), solve 90 ms, worker; pass dashless)
+BROWSER LOG (log): [js runtime] bot: walking → exit_0 in level 0
+BROWSER LOG (log): [js runtime] level 0 → 1 through the teleporter at (128, 16)
+BROWSER LOG (log): [js runtime] bot: done → exit_0 in level 0
+BROWSER LOG (log): [js runtime] bot: waiting → exit_1 in level 1
+BROWSER LOG (log): [js runtime] bot: walking → exit_1 in level 1
+BROWSER LOG (log): [js runtime] solving reach-exit in level 1 (budget 640 work units) — the room is held while the solver thinks
+BROWSER LOG (log): [js runtime] bot: walking → exit_1 in level 1 — solving… (budget 640 work units)
+BROWSER LOG (log): [js runtime] boot level 1 at (80, 48) — teleport (new Game)
+BROWSER LOG (log): [js runtime] solver plan refuted (1/3) — the run was re-booted while the solver thought (an item flag or a host teleport) — its answer is stale
+BROWSER LOG (log): [js runtime] solving reach-exit in level 1 (budget 640 work units) — the room is held while the solver thinks
+BROWSER LOG (log): [js runtime] solved reach-exit in level 1: 7 tick(s), verbs walk (replay 19 ms over 0 tick(s), solve 35 ms, worker; pass dashless)
+BROWSER LOG (log): [js runtime] bot: walking → exit_1 in level 1
+BROWSER LOG (log): [js runtime] level 1 → 2 through the teleporter at (96, 48)
+BROWSER LOG (log): [js runtime] bot: done → exit_1 in level 1
+BROWSER LOG (log): [js runtime] bot: waiting → region_0_0__key_blue_pickup in level 0 (paused)
+BROWSER LOG (log): [js runtime] boot level 0 at (128, 112) — teleport (new Game)
+BROWSER LOG (log): [js runtime] bot: done → region_0_0__key_blue_pickup in level 0
+[PROGRESS 1/1] seedling-js-runtime-bot-completes-generated-room PASSED 28.5s
+BROWSER LOG (debug): [jta-bridge] initial state received {_hostCurrentMana: 100, _hostMaxMana: 110, _hostResetCount: 0, _playbackAutomationPolicy: activate, _energyBonusSync: true}
+BROWSER LOG (debug): [tasw-bridge] initialState received {discoveryMode: full, discoveredRegions: Array(3), discoveredLocations: Array(0), discoveredExits: Array(5), procgenMode: true}
+BROWSER LOG (log): [swfBridge] avm2 shim installed
+PW DEBUG: __playwrightTestsComplete__ flag detected as true.
+PW DEBUG: __playwrightTestResults__ retrieved from window object.
+PW DEBUG: Test results saved to: /home/user/Archipelago-CC/test-results/in-app-tests/test-results-2026-10-18T21-16-27.json
+PW DEBUG: ===== IN-APP RESULTS: 1 row(s) =====
+  PASSED seedling-js-runtime-bot-completes-generated-room 28.5s
+  totals: 1 run · 1 passed · 0 failed · 1 enabled · 0 not run
+  test files: 0 failed to import
+  page: 1 console error(s) (each printed as a BROWSER LOG line), 0 uncaught exception(s)
+  handler errors (subscribers that threw inside the event bus): 0 in the log, 0 counted by the page's event bus
+  full results (every row's conditions, logs, timestamps): /home/user/Archipelago-CC/test-results/in-app-tests/test-results-2026-10-18T21-16-27.json
+PW DEBUG: =========================================
+PW DEBUG: No detailed spoiler test results found in window.__spoilerTestResults__.
+PW DEBUG: All Playwright assertions passed.
+  ✓  1 test_json/e2e/app.spec.js:72:3 › Application End-to-End Tests › run in-app tests and check results (35.0s)
+
+  1 passed (36.3s)

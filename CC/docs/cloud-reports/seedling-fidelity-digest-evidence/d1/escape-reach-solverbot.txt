@@ -1,0 +1,71 @@
+functions reached (49): askDeadline checkDrowning childOf clearOfHammersAt coarseKey deadlineReached directionAfterFall discClearanceAt drownStep drowningHazardKind emit facingToward fallDestination getStatePos ghostSpinnerPressFor hazardFlagsFor lethalFloorFrom nextDirection nodeOf noteLast parentOf pitDeathRefusal playerBoxAt pressEscape pressEscapeOnce previewOrDeath progressAsked progressErrorName progressKind progressReason progressSearch progressSite progressStatesFor progressWhy reach reject resolveTerrainState spaceTimeReach speedFrictionFor spinnerStrikePress step strikeEscape strikePressOf terrainEffectClass terrainProbeRect tilesOf top updateTeleporters work
+
+run members read (8):
+  run.gameTimeAt                   clearOfHammersAt:9785
+  run.level                        tilesOf:527
+  run.previewStepper               pressEscapeOnce:11460
+  run.progress                     strikePressOf:10182
+  run.spinnerForecastWithPress     pressEscapeOnce:11475 pressEscapeOnce:11491 pressEscapeOnce:11539
+  run.state                        strikeEscape:10724
+  run.ticksCompleted               pressEscape:11442 pressEscapeOnce:11459 strikeEscape:10724 strikeEscape:10725
+  run.world                        tilesOf:530 lethalFloorFrom:11574
+
+module-level bindings read (58):
+  BOUNCE_VELOCITY (playerPhysicsV2.js:740)                     step
+  BOUND_KINDS (solveProgress.js:166)                           progressKind
+  CHECK_OFFSET_Y (import ./playerPhysicsV1.js)                 step resolveTerrainState terrainProbeRect
+  CLEAR_TAG_KINDS (solveProgress.js:180)                       progressKind
+  DEFAULT_FRICTION (import ./playerPhysicsV1.js)               speedFrictionFor
+  DESCENT_GRAVITY (playerPhysicsV2.js:738)                     step
+  DESCENT_MAX_FALL (playerPhysicsV2.js:739)                    step
+  DIRECTION_DOWN (playerPhysicsV2.js:350)                      nextDirection directionAfterFall
+  DIRECTION_LEFT (playerPhysicsV2.js:349)                      nextDirection
+  DIRECTION_RIGHT (playerPhysicsV2.js:347)                     nextDirection
+  DIRECTION_UP (playerPhysicsV2.js:348)                        nextDirection
+  DOWN (import ./solverView.js)                                facingToward
+  DROWN_TIMER_MAX (playerPhysicsV2.js:403)                     checkDrowning drownStep
+  EMPTY_LATCH (playerPhysicsV2.js:255)                         step
+  FACING_KEYS (solverBot.js:12504)                             strikeEscape
+  FALL_ALPHA_SPEED (playerPhysicsV2.js:722)                    step
+  FALL_ALPHA_START (playerPhysicsV2.js:723)                    step
+  FALL_LERP_DIVISOR (playerPhysicsV2.js:726)                   step
+  GHOST_SPINNER_PRESS (ghostSpinnerPress.js:26)                strikePressOf ghostSpinnerPressFor
+  GHOST_SPINNER_PRESS_ROW (ghostSpinnerPress.js:61)            spinnerStrikePress
+  HAMMER_ESCAPE_BOUNDS (solverBot.js:11344)                    pressEscapeOnce
+  HAMMER_ESCAPE_TRACE (solverBot.js:11456)                     pressEscape
+  HAMMER_LINE_BOUND (solverBot.js:9780)                        clearOfHammersAt
+  HITBOX (import ./playerPhysicsV1.js)                         playerBoxAt terrainProbeRect
+  HOLD_FIRST_KEY_SETS (spaceTimeReach.js:64)                   pressEscapeOnce
+  ICE_STATE (playerPhysicsV2.js:298)                           hazardFlagsFor
+  INITIAL_DIRECTION (playerPhysicsV2.js:346)                   step
+  INITIAL_HAZARD_FLAGS (playerPhysicsV2.js:306)                step
+  INITIAL_TERRAIN_STATE (playerPhysicsV2.js:125)               step
+  LAVA_STATE (playerPhysicsV2.js:297)                          step drowningHazardKind hazardFlagsFor
+  LEFT (import ./solverView.js)                                facingToward
+  LIVE_GEOMETRY_KEYS (import ./levelWorld.js)                  step
+  MOVE_SPEEDS (import ./playerPhysicsV1.js)                    step
+  NO_BOUNCE_STATES (playerPhysicsV2.js:743)                    step
+  NO_KEYS (playerPhysicsV2.js:282)                             pressEscapeOnce step
+  PIT_STATE (playerPhysicsV2.js:285)                           step
+  PRECONDITION_WORDS (solveProgress.js:193)                    progressKind
+  PRESS_KILL_COST (import ./solverView.js)                     clearOfHammersAt
+  PRESS_KILL_COST_COUNTS (import ./solverView.js)              clearOfHammersAt
+  PROGRESS_TILE (solveProgress.js:44)                          reach
+  RIGHT (import ./solverView.js)                               facingToward
+  SLIDING_FRICTION (playerPhysicsV2.js:398)                    speedFrictionFor
+  SLIDING_SPEED (playerPhysicsV2.js:399)                       speedFrictionFor
+  SPACE_TIME_CHECK_EVERY (spaceTimeReach.js:68)                spaceTimeReach
+  SPACE_TIME_KEY_SETS (spaceTimeReach.js:57)                   spaceTimeReach
+  SPINNER (import ./solverView.js)                             discClearanceAt clearOfHammersAt
+  SWIM_LENGTH_FRAMES (import ./swimSoundClock.js)              step
+  SWORD_SPINNER_PRESS (ghostSpinnerPress.js:57)                strikePressOf spinnerStrikePress
+  TILE_SIZE (import ./levelWorld.js)                           step fallDestination
+  UP (import ./solverView.js)                                  facingToward
+  WATERFALL_ACCELERATION (playerPhysicsV2.js:400)              step
+  WATERFALL_STATE (playerPhysicsV2.js:299)                     hazardFlagsFor
+  WATER_FRICTION (import ./playerPhysicsV1.js)                 speedFrictionFor
+  WATER_STATE (playerPhysicsV2.js:296)                         drowningHazardKind hazardFlagsFor
+  WHY_KINDS (solveProgress.js:205)                             progressKind
+  activeDeadline (solverBot.js:18228)                          pressEscapeOnce askDeadline
+  activeProgress (solveProgress.js:69)                         pressEscapeOnce progressStatesFor deadlineReached askDeadline progressAsked progressSite
+  kindEntries (solveProgress.js:218)                           progressKind

@@ -74,6 +74,22 @@ export const PACKS = Object.freeze({
 
 const tile = (key, file, as3, extra = {}) => ({ pack: 'seedling', key: `seedling:tile/${key}`, file, fw: 16, fh: 16, as3, ...extra });
 const world = (frames, loops = 1) => ({ clock: 'world', frames, loops });
+const fps = (frames, rate) => ({ clock: 'fps', frames, fps: rate });
+
+/** `Player.as:653-658`: per `states` row (`colW` 9), the walk/stand cycle of each facing. */
+function playerAnims() {
+    const anims = {};
+    for (const [prefix, row, walk] of [['', 0, 15], ['swim-', 1, 5]]) {
+        const s = row * 9;
+        anims[`${prefix}down-walk`] = fps([s, s + 1, s + 2, s + 1], walk);
+        anims[`${prefix}down-stand`] = fps([s, s + 1], 1);
+        anims[`${prefix}side-walk`] = fps([s + 3, s + 4, s + 5, s + 4], walk);
+        anims[`${prefix}side-stand`] = fps([s + 3, s + 4], 1);
+        anims[`${prefix}up-walk`] = fps([s + 6, s + 7, s + 8, s + 7], walk);
+        anims[`${prefix}up-stand`] = fps([s + 6, s + 7], 1);
+    }
+    return anims;
+}
 
 /**
  * THE TABLE. `origin` defaults to [0, 0]: the frame's top-left sits on the
@@ -181,7 +197,25 @@ export const ART_TABLE = Object.freeze([
         as3: 'BoneTorch.as type 1: as type 0', origin: [0, 8], anims: { burn: world([0, 1, 2, 1], 2) } },
     { pack: 'seedling', key: 'seedling:scenery/snowhill', file: 'SnowHill.png', as3: 'SnowHill.as: Game.sprSnowHill y = -8', origin: [0, 8] },
 
-    // ── the fork's AP item: `APItem.as:74` (`look` "ap" → the logo, 0x0 = an Image, centred) ──
+    // ── the player (G2): `Player.as:35-45`. A suit is a 9-column grid, one ROW per `states` prefix
+    //    (`Player.as:83-86`: row 0 "", row 1 "swim-"); `addAnimations` (`Player.as:635-660`) adds each row's six
+    //    animations ONCE, at the row's FIRST index, so "" keeps row 0's walk speed 15 (stairs' 12 is never added)
+    //    and "swim-" row 1's 5. Both suits `centerOO` (`Player.as:383-384`), so the origin is the frame's centre. ──
+    ...[['shrum', 'ShrumBlue.png', 'Player.as:35-37 imgShrum → sprShrum'], ['shrumDark', 'ShrumDark.png', 'Player.as:38-39 sprShrumDark (row 2 = the final scene\'s "die", not drawn)']]
+        .map(([key, file, as3]) => ({ pack: 'seedling', key: `seedling:player/${key}`, file, fw: 16, fh: 16, origin: [8, 8],
+            as3: `${as3}; Player.as:383 centerOO; Player.as:635-660 addAnimations (walk fps 15 / swim 5, stand fps 1)`,
+            anims: playerAnims() })),
+    // ── the sword overlays: `centerOO` then `x = originX = 0` (`Player.as:390-406`), so the pivot (and the anchor)
+    //    is the frame's LEFT-middle, on the player's position; `slashEnd` ends the swing (`Player.as:41-45`). ──
+    ...[['slash', 'Slash.png', 'Player.as:40-41 sprSlash; :390-393'], ['slashDark', 'SlashDark.png', 'Player.as:42-43 sprSlashDark; :394-397']]
+        .map(([key, file, as3]) => ({ pack: 'seedling', key: `seedling:player/${key}`, file, fw: 16, fh: 32, origin: [0, 16],
+            as3: `${as3} — slash [0..4] at swordSpeed 30, slashnarrow [1,2,3] at swordSpeedDash 20 (Player.as:131-132)`,
+            anims: { slash: fps([0, 1, 2, 3, 4], 30), slashnarrow: fps([1, 2, 3], 20) } })),
+    { pack: 'seedling', key: 'seedling:player/ghostSword', file: 'GhostSword.png', fw: 24, fh: 7, origin: [0, 3.5],
+        as3: 'Player.as:44-45 sprGhostSword; :399-405 slash [0,1,2,2,3,3,4] at 30, slashnarrow [0,1,2,3] at 20',
+        anims: { slash: fps([0, 1, 2, 2, 3, 3, 4], 30), slashnarrow: fps([0, 1, 2, 3], 20) } },
+
+    // ── the fork's AP item:`APItem.as:74` (`look` "ap" → the logo, 0x0 = an Image, centred) ──
     { pack: 'archipelago', key: 'archipelago:pickup/item', file: 'ArchipelagoLogo.png',
         as3: 'Pickups/APItem.as:74 imgAP; APItem(x+8, y+8) with a centred Image', origin: [8, 8] },
 ]);
