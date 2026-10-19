@@ -176,7 +176,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity WATCHERTALK D2: `watcherTalkVerb` (the Watcher's {114,0} clear-tag talks) ships OFF.
             watcherTalkVerb: false,
             // ⛓ housekeep D3: `walkerBeamTowers` (the walker's planner reads the beam towers' drifted Solids) ships OFF.
-            walkerBeamTowers: false });
+            walkerBeamTowers: false,
+            // ⛓ fidelity BOMBBLAST D2: `bombBlastBody` (a bomb's Explosion lands on a body) ships OFF.
+            bombBlastBody: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

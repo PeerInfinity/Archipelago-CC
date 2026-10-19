@@ -679,6 +679,28 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_WALKER_BEAM_TOWERS=0|1` for a node measurement, and the sweep's `contact_fidelity` input for CI.
      */
     walkerBeamTowers: false,
+    /**
+     * fidelity BOMBBLAST D2/D3 — A BOMB'S EXPLOSION LANDS ON A BODY (`levelRun.drainBombBlastsNow`'s `"Enemy"` arm,
+     * and the walk's chaser forecast).
+     *
+     *     Bomb.as:16            hitables = ["Player", "Enemy", "ShieldBoss"]
+     *     Bomb.as:62            removed(): add(new Explosion(x, y, hitables, 24))   — int x, y; radius int(24 × 0.65) = 15
+     *     Explosion.as:47-66    collideRectInto each type (the square), then FP.distance(origin, origin) <= 15:
+     *                           Enemy → (c as Enemy).hit(4, new Point(x, y), 1)    — t "", force 4, damage 1
+     *     Enemy.as:141-181      the five gates; a landed non-killing hit arms 30 i-frames and knocks back (atan2 from
+     *                           the blast point, both components WHOLE); the killing hit does not knock back
+     *
+     * OFF a blast whose disc reached a stepped chaser or a spinner refused BY NAME (seedling-fidelity-bombpusher), and
+     * it is reached: hammer BW's bombstand ON solve (leg 381) at t1294 (#10 on `bob@272,112`), and with the strike
+     * lapse ON at t1339 (#11 on `spinner@192,160`). MEASURED on the game (`probe-seedling-bomb-blast-body.mjs`, the two
+     * `bombblast-*` witnesses): t1294 #10 lands on a Bob (hits 0 → 1, knocked back) AND a Spinner (1 → 2) in one blast;
+     * t1340 #11 on a Bob (1 → 2) and the player; t1339 (lapse ON) #11 KILLS a Spinner (2 → 3, no knockback, removed at
+     * t1350). ON: the run lands the arm (`bombBlastHitChaser` / `bombBlastHitSpinner`, one `bombEvents` row
+     * `what: 'body-hit'` per body) and the walk's chaser forecast steps the same blasts onto its own bodies (D3). A
+     * static census body in the square (no stepped state) still refuses by name. OFF: byte-identical.
+     * `SEEDLING_BOMB_BLAST_BODY=0|1` for a node measurement.
+     */
+    bombBlastBody: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -819,6 +841,9 @@ if (globalThis.process?.env?.SEEDLING_WATCHER_TALK_VERB === '0') CONTACT_FIDELIT
 // ⛓ housekeep D3: `SEEDLING_WALKER_BEAM_TOWERS=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_WALKER_BEAM_TOWERS === '1') CONTACT_FIDELITY.walkerBeamTowers = true;
 if (globalThis.process?.env?.SEEDLING_WALKER_BEAM_TOWERS === '0') CONTACT_FIDELITY.walkerBeamTowers = false;
+// ⛓ fidelity BOMBBLAST D2: `SEEDLING_BOMB_BLAST_BODY=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_BOMB_BLAST_BODY === '1') CONTACT_FIDELITY.bombBlastBody = true;
+if (globalThis.process?.env?.SEEDLING_BOMB_BLAST_BODY === '0') CONTACT_FIDELITY.bombBlastBody = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

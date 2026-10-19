@@ -483,6 +483,7 @@ describe('who takes the box', () => {
          * RULES l37-fallrock-patch the delivered set's open L37 ↔ L38 corridor, `probe-seedling-l37-fallrock.mjs`;
          * RULES rock-remove the delivered set's open L74 / L39 / L29 rock rooms, `probe-seedling-rock-remove.mjs`;
          * fidelity BOMBPUSHER the lobber/Bomb witness, `probe-seedling-bombpusher.mjs` (its `--reuse` arm runs no browser);
+         * fidelity BOMBBLAST the blast-on-a-body witness, `probe-seedling-bomb-blast-body.mjs` (its `--reuse` arm, likewise);
          * ci-skip-rules RULE 3 the full-tier differential, `check-seedling-bot-differential.mjs`, whose
          * `--tier-key` reads files and drives nothing — the CI plan job asks it before any shard;
          * seedling-js IMPORT GUARD five browser probes the full `check-procgen-help.mjs` failed on the
@@ -515,6 +516,7 @@ describe('who takes the box', () => {
             'probe-seedling-encounter-ticks.mjs',
             'probe-seedling-wand-mobiles.mjs', 'probe-seedling-l37-fallrock.mjs', 'probe-seedling-rock-remove.mjs',
             'probe-seedling-bombpusher.mjs', 'probe-seedling-staged-hits.mjs', 'probe-seedling-seal-delivery.mjs',
+            'probe-seedling-bomb-blast-body.mjs',
             'check-seedling-bot-differential.mjs',
             'probe-seedling-hold.mjs', 'probe-seedling-pushblock-weapon.mjs', 'probe-seedling-u15-turret-mobiles.mjs',
             'probe-seedling-u7-puncher-mobiles.mjs', 'probe-seedling-u9-shield-mobiles.mjs'];
