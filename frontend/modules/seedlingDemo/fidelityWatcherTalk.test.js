@@ -110,3 +110,31 @@ describe('ON — a SILENT watcher answers by its census reason', () => {
         expect(solve(false, runAt(boot), [goal], boot).records[0].arm).toBe('already-clear');
     });
 });
+
+describe.each([['watchertalk-l114-clear-16', ARRIVALS.from16], ['watchertalk-l114-clear-32', ARRIVALS.from32]])(
+    'the game witness %s (p4f, game-recorded from the sweep arrival)', (name, arrival) => {
+        const tape = parseTape(readFileSync(join(HERE, 'fixtures', 'tapes', `${name}.json`), 'utf8'));
+        const replay = () => {
+            const run = createRunForStaging({ ...stagingFromTape(tape), equips: [] }, SRC);
+            for (let i = 0; i < tape.tick_count; i += 1) {
+                run.advance(new Set(tape.inputs.filter((sp) => sp.from <= i && i < sp.to).map((sp) => sp.key)));
+            }
+            return run;
+        };
+        it('boots at the sweep leg\'s arrival', () => {
+            expect(tape.boot).toEqual(arrival);
+        });
+        it('the model replays the recorded plan: ONE talk paged to DONE, {114,0} written', () => {
+            const run = replay();
+            expect(run.watcherTalks).toEqual([expect.objectContaining({ id: WATCHER, cause: 'done', flag: { ...FLAG, value: false } })]);
+            expect(run.watcherFlags).toEqual([expect.objectContaining({ ...FLAG, id: WATCHER })]);
+            expect(runTape(tape, { levelSource: SRC }).ticks.at(-1).level).toBe(114);
+        });
+        it('the plan is the solver\'s own ON answer from that staging, key for key', () => {
+            const run = createRunForStaging({ ...stagingFromTape(tape), equips: [] }, SRC);
+            const out = solve(true, run, [CLEAR], tape.boot);
+            const keys = (i) => [...new Set(tape.inputs.filter((sp) => sp.from <= i && i < sp.to).map((sp) => sp.key))].sort();
+            expect(out.perTick.length).toBe(tape.tick_count);
+            expect(out.perTick.map((h) => [...h].sort())).toEqual(out.perTick.map((_, i) => keys(i)));
+        });
+    });
