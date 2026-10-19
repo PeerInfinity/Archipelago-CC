@@ -632,6 +632,75 @@ export const CONTACT_FIDELITY = {
      * measurement.
      */
     statueTalkRange: true,
+    /**
+     * fidelity AXEFORCEDU D2 — A SPINNING AXE'S FORCED U IS CROSSED AND ITS HITS BILLED (`axePricedCrossing.js`,
+     * `solverBot`'s ladder after the forced-hit rung).
+     *
+     *     SpinningAxe.as:49-76   the blade sweeps every point of its reach once a revolution; hitPlayer: force 5, damage 1
+     *     Player.as:336          20 i-frames after a hit
+     *
+     * MEASURED (sweep 39153416627 at `4667f7e353`; legs 603 L71 north, 636 L75 north, 774 L103): each corridor goes
+     * round the hub against the blade, so no stall and no dash-chain phase crosses it clean, and the forced-hit rung's
+     * input tree cannot reach the blade 47–153 ticks out (*"depth 3 needs 46,656 more fork steps than the budget's
+     * 668"*). ON: when the AXE arm's corridor, entered at every phase of the axe (the doorstep stalls `0 … period − 1`,
+     * × the dash chain's phases when the pass may dash), is hit in every member — the certificate — the members are
+     * driven on forks, the run bills the hits (knockback, i-frames), and the fewest-billed one that reaches the goal
+     * alive inside `FORCED_HITS`' budget is walked and billed as a forced hit. OFF: never asked, byte-identical. ⛔ OFF
+     * by default (no licence); `SEEDLING_AXE_PRICED_CROSSING=0|1` for a node measurement.
+     */
+    axePricedCrossing: false,
+    /**
+     * fidelity WATCHERTALK D2 — THE WATCHER'S EVENT `{114,0}` IS EARNED BY TALKING (`solverBot.refineStrategy` → `talk`).
+     *
+     *     Watcher.as:40-49   type = "Watcher" — in no solids list, so the clear-tag finds no SOLID at (72,72)
+     *     NPC.as:188-239     inRange = FP.distance <= 24 opens the dialogue on proximity (`keyNeeded` false while
+     *                        the tag is set); each page is a release of X; `doneTalking()` writes `{114,0}` false
+     *
+     * OFF a clear-tag goal naming `watcher@72,72` (the AP event "talk to the Watcher") takes the `already-clear` arm,
+     * because the Watcher is never in `world.solids`: the survey's L114 step "solves" in 4 ticks with the flag never
+     * written (`watcherTalks` empty), and the JS runtime's pre-check (`clearTagVerbOf`) refuses the sweep's legs
+     * `no-verb` on `solid:watcher`. ON the clear-tag binds the run's watcher, selects `talk`, walks to a talk stance,
+     * pages the dialogue (`execTalk`) and finishes on `watcherTalks` + the `earnedClears` row. OFF: byte-identical.
+     * `SEEDLING_WATCHER_TALK_VERB=0|1` for a node measurement.
+     */
+    watcherTalkVerb: false,
+    /**
+     * seedling-fidelity-housekeep D3 — THE WALKER'S PLANNER SEES A BEAM TOWER'S DRIFT (`botDriverV2.livePerVisitOpts`
+     * carries the `beamTowers` family, and `plannerObstacleAt` forwards it on the named-key path).
+     *
+     *     BeamTower.as:100-103  y += 0.3 * Math.sin(Game.worldFrame(100, 2) / 100 * 2 * Math.PI);  — the Solid rides on `y`
+     *
+     * `beamTowerDrift` (ON) moves the tower's Solid in the run, and the solver's own plans read it through the run's full
+     * bag (`liveBag: run.liveGeometryOpts()`). The walker's do not: `livePerVisitOpts` builds no `beamTowers` key, and
+     * `plannerObstacleAt`'s named-key path forwards eight families only (`R8_NORMALIZE_LIVE_BATCH.plannerDropsSixFamilies`
+     * lists `beamTowers` as dropped) — so the walker (`jsRuntimeWalker`), `synthesizeLegs` and the verbs' mid-leg probes
+     * plan against the tower's PLACEMENT while the run walks into its drifted Solid. ON: both carry the run's drifted
+     * rects (`liveGeometryOpts().beamTowers`). ⛔ OFF by default (no licence; measured movers in the housekeep report);
+     * `SEEDLING_WALKER_BEAM_TOWERS=0|1` for a node measurement, and the sweep's `contact_fidelity` input for CI.
+     */
+    walkerBeamTowers: false,
+    /**
+     * fidelity BOMBBLAST D2/D3 — A BOMB'S EXPLOSION LANDS ON A BODY (`levelRun.drainBombBlastsNow`'s `"Enemy"` arm,
+     * and the walk's chaser forecast).
+     *
+     *     Bomb.as:16            hitables = ["Player", "Enemy", "ShieldBoss"]
+     *     Bomb.as:62            removed(): add(new Explosion(x, y, hitables, 24))   — int x, y; radius int(24 × 0.65) = 15
+     *     Explosion.as:47-66    collideRectInto each type (the square), then FP.distance(origin, origin) <= 15:
+     *                           Enemy → (c as Enemy).hit(4, new Point(x, y), 1)    — t "", force 4, damage 1
+     *     Enemy.as:141-181      the five gates; a landed non-killing hit arms 30 i-frames and knocks back (atan2 from
+     *                           the blast point, both components WHOLE); the killing hit does not knock back
+     *
+     * OFF a blast whose disc reached a stepped chaser or a spinner refused BY NAME (seedling-fidelity-bombpusher), and
+     * it is reached: hammer BW's bombstand ON solve (leg 381) at t1294 (#10 on `bob@272,112`), and with the strike
+     * lapse ON at t1339 (#11 on `spinner@192,160`). MEASURED on the game (`probe-seedling-bomb-blast-body.mjs`, the two
+     * `bombblast-*` witnesses): t1294 #10 lands on a Bob (hits 0 → 1, knocked back) AND a Spinner (1 → 2) in one blast;
+     * t1340 #11 on a Bob (1 → 2) and the player; t1339 (lapse ON) #11 KILLS a Spinner (2 → 3, no knockback, removed at
+     * t1350). ON: the run lands the arm (`bombBlastHitChaser` / `bombBlastHitSpinner`, one `bombEvents` row
+     * `what: 'body-hit'` per body) and the walk's chaser forecast steps the same blasts onto its own bodies (D3). A
+     * static census body in the square (no stepped state) still refuses by name. OFF: byte-identical.
+     * `SEEDLING_BOMB_BLAST_BODY=0|1` for a node measurement.
+     */
+    bombBlastBody: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -763,6 +832,18 @@ if (globalThis.process?.env?.SEEDLING_AXE_GATE_TRANSIT === '0') CONTACT_FIDELITY
 // ⛓ fidelity DASHSTEP D2: `SEEDLING_STATUE_TALK_RANGE=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_STATUE_TALK_RANGE === '1') CONTACT_FIDELITY.statueTalkRange = true;
 if (globalThis.process?.env?.SEEDLING_STATUE_TALK_RANGE === '0') CONTACT_FIDELITY.statueTalkRange = false;
+// ⛓ fidelity AXEFORCEDU D2: `SEEDLING_AXE_PRICED_CROSSING=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_AXE_PRICED_CROSSING === '1') CONTACT_FIDELITY.axePricedCrossing = true;
+if (globalThis.process?.env?.SEEDLING_AXE_PRICED_CROSSING === '0') CONTACT_FIDELITY.axePricedCrossing = false;
+// ⛓ fidelity WATCHERTALK D2: `SEEDLING_WATCHER_TALK_VERB=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_WATCHER_TALK_VERB === '1') CONTACT_FIDELITY.watcherTalkVerb = true;
+if (globalThis.process?.env?.SEEDLING_WATCHER_TALK_VERB === '0') CONTACT_FIDELITY.watcherTalkVerb = false;
+// ⛓ housekeep D3: `SEEDLING_WALKER_BEAM_TOWERS=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_WALKER_BEAM_TOWERS === '1') CONTACT_FIDELITY.walkerBeamTowers = true;
+if (globalThis.process?.env?.SEEDLING_WALKER_BEAM_TOWERS === '0') CONTACT_FIDELITY.walkerBeamTowers = false;
+// ⛓ fidelity BOMBBLAST D2: `SEEDLING_BOMB_BLAST_BODY=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_BOMB_BLAST_BODY === '1') CONTACT_FIDELITY.bombBlastBody = true;
+if (globalThis.process?.env?.SEEDLING_BOMB_BLAST_BODY === '0') CONTACT_FIDELITY.bombBlastBody = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
