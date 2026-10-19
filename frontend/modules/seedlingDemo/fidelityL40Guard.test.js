@@ -115,7 +115,8 @@ describe('L40GUARD — the guard on the game, and the four switches', () => {
     describe('D4 #6 — a shake band over a body at rest is moot (`shakeBandMoot`)', () => {
         const T = tape('l40guard-band-moot');
         it('OFF the live run throws the band at t878 (bob@736,752, at rest at home)', () => {
-            expect(() => replay(T)).toThrow(/whether bob bob@736,752 is on screen at tick 878/);
+            expect(() => withContactFidelity({ shakeBandMoot: false }, () => replay(T)))
+                .toThrow(/whether bob bob@736,752 is on screen at tick 878/);
         });
         it('ON it steps through, and both shaft bobs equal the game\'s rows t860–1000', () => {
             const game = rowsOf('l40guard-band-moot.game-bobs.json');
@@ -144,7 +145,7 @@ describe('L40GUARD — the guard on the game, and the four switches', () => {
     describe('D4 #7 — a sword swing at a spinner through a Solid misses (`spinnerSwingLineOfSight`)', () => {
         const T = tape('l40guard-spinner-los');
         it('OFF the press at t2166 throws the line-of-sight assertion', () => {
-            expect(() => withContactFidelity({ shakeBandMoot: true }, () => replay(T)))
+            expect(() => withContactFidelity({ shakeBandMoot: true, spinnerSwingLineOfSight: false }, () => replay(T)))
                 .toThrow(/the swing at \(728, 685\) reaches spinner@816,848's rect but `collideLine\("Solid", …\)` finds tile:Blue Wall/);
         }, 60000);
         it('ON the blocked test is a miss row and the spinner equals the game\'s rows t2160–2200', () => {
