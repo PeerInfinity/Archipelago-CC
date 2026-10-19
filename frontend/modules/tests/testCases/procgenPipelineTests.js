@@ -17,6 +17,14 @@
 import { registerTest } from '../testRegistry.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
 import { capabilityRows, cardOf, cardText } from '../../procgenCore/substrateCapabilities.js';
+/** ⛓ The lab door's host registry and the SET arm's envelope — the hub row's
+ *  (`apworldEditorTests.js`) stub-host recipe, for the same reasons. */
+import {
+    labPanelInstances, registerLabPanelInstance, unregisterLabPanelInstance,
+} from '../../procgenLabPanel/labRoomEditor.js';
+import { makeSetRecordEnvelope } from '../../procgenCore/labRoomEnvelope.js';
+import appEventBus from '../../../app/core/eventBus.js';
+import { getPanelInstance as bounceEditorInstance } from '../../bounceRegionEditor/index.js';
 
 const PANEL_SELECTOR = '.procgen-pipeline-panel';
 const SCENARIO_SECTION = 'scenario';
@@ -130,6 +138,228 @@ registerTest({
                + 'as the hover, computed in the row; what is stored stays the id. The module is the oracle, the '
                + 'picker the subject.',
     testFunction: procgenPipelineSubstrateRowsShowLabelAndCard,
+    category: 'procgenPipeline',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+/**
+ * ⛓⛓⛓ **Edit ▸ ON A MAZE REGION OPENS THE LAB AND ITS SAVE REACHES THE WORLD.**
+ *
+ * Before 2026-10-18 the pipeline handed the maze's LAB door `{region,
+ * contract}`, the door refused it (it takes a SET document), and the refusal
+ * went to nobody: the button did nothing. The row drives the whole route:
+ * preset "Maze demo (sphere growth)" → Run all → the region row's own Edit ▸ →
+ * the door is handed a one-entry region library and asks for room 0 → close
+ * UNEDITED → Run all → the compiled rules.json is byte-identical → Edit ▸
+ * again, take the room's obstacles out, close → the grid region lost them →
+ * Run all → the compiled world moved. And with NO lab mounted, Edit ▸ says why.
+ *
+ * ⛔ NO IFRAME IS WAITED ON — the host is a panel-shaped stub and the row
+ * publishes the page's three phases itself (`apworldEditOpensTheLabDoorAndItsSaveIsOneOp`
+ * measured why: a live page and a synthetic one cannot both author them). Real
+ * maze lab instances are stood aside for the row and put back in `finally`.
+ */
+async function procgenPipelineMazeEditRoundTrip(testController) {
+    const PRESET = 'shipped:maze-sphere-demo';
+    let restore = null;
+    let host = null;
+    try {
+        testController.eventBus.publish('ui:activatePanel', { panelId: 'procgenPipelinePanel' });
+        const panel = await testController.pollForValue(
+            () => document.querySelector(PANEL_SELECTOR)?.__panel ?? null,
+            'the Procgen Pipeline panel', 8000, 50);
+        testController.reportCondition('the Procgen Pipeline panel is mounted', !!panel);
+        if (!panel) return testController.getOverallResult();
+
+        const displaced = labPanelInstances().filter((p) => p.substrate === 'maze');
+        for (const p of displaced) unregisterLabPanelInstance(p);
+        restore = () => { for (const p of displaced) registerLabPanelInstance(p); };
+
+        const runAll = async (label) => {
+            await panel._runGeneration();
+            return testController.pollForValue(
+                () => panel._stepState?.compile?.rulesJson ?? null, label, 60000, 100);
+        };
+        panel._applyPreset(PRESET);
+        testController.assertEqual('the preset is applied', PRESET, String(panel.activePresetId));
+        const before = await runAll('the preset world compiled');
+        testController.reportCondition('Run all compiled the world', !!before);
+        if (!before) return testController.getOverallResult();
+        const grid = panel._stepState.grow.grid;
+        const region = [...grid.allRegions()]
+            .find((r) => r.substrate === 'maze' && (r.playable_payload?.obstacles?.size ?? 0) > 0);
+        testController.reportCondition(`⛓ premise: a maze region holding an obstacle (${region?.region_id})`, !!region);
+        if (!region) return testController.getOverallResult();
+        const editButton = () => [...panel._renderRegionEditRow(panel._nodeForRegion(region), region)
+            .querySelectorAll('button')].find((b) => b.textContent === 'Edit ▸');
+
+        /* ── (0) no lab mounted: the press SAYS so (the defect was a silent no-op) ── */
+        panel.warning = '';
+        editButton()?.click();
+        const refusal = await testController.pollForValue(
+            () => (panel.warning?.startsWith('Edit refused:') ? panel.warning : null),
+            'the refusal is shown', 8000, 50);
+        testController.reportCondition(`⛔ with no maze lab mounted, Edit ▸ shows the door's refusal (${refusal})`,
+            !!refusal && /Procgen Lab/.test(refusal));
+        testController.reportCondition('…in the panel\'s own warning line',
+            [...document.querySelectorAll(`${PANEL_SELECTOR} .procgen-pipeline-warning`)]
+                .some((w) => w.textContent === refusal));
+
+        /* ── the stub host ── */
+        const sent = { load: null, navigate: null };
+        host = {
+            substrate: 'maze',
+            iframeId: 'pipeline-maze-edit-stub',
+            load: (payload) => { sent.load = payload; return true; },
+            navigate: (search) => { sent.navigate = search; return true; },
+            raise: () => true,
+            _note: () => {},
+        };
+        registerLabPanelInstance(host);
+        appEventBus.registerPublisher('procgenLab:levelChanged', 'tests');
+        const envelope = (room, record) => ({
+            substrate: 'maze', iframeId: host.iframeId,
+            payload: makeSetRecordEnvelope({ substrate: 'maze', room, record }),
+        });
+        const session = async (edit) => {
+            sent.load = null; sent.navigate = null;
+            editButton()?.click();
+            const library = await testController.pollForValue(
+                () => sent.load ?? null, 'the maze lab was handed a document', 8000, 50);
+            if (!library) return false;
+            const held = { library, overlay: {} };
+            testController.eventBus.publishAs('procgenLab:levelChanged', envelope(null, held), 'tests');
+            const search = await testController.pollForValue(
+                () => sent.navigate ?? null, 'the door asked for a room', 8000, 50);
+            testController.assertEqual('the door asked for room 0 of the SET arm', '?source=set&room=0', String(search));
+            testController.eventBus.publishAs('procgenLab:levelChanged', envelope(0, held), 'tests');
+            const out = JSON.parse(JSON.stringify(held));
+            edit?.(out.library.entries[0].payload);
+            testController.eventBus.publishAs('procgenLab:levelChanged', envelope(null, out), 'tests');
+            return library;
+        };
+
+        /* ── (1) an UNEDITED save moves nothing ── */
+        const library = await session(null);
+        testController.reportCondition('⛓ the door was handed a ONE-entry region library of this region',
+            !!library && library.entries?.length === 1 && library.entries[0].entry_id === region.region_id);
+        const savedOnce = await testController.pollForValue(
+            () => (panel.message?.startsWith('Saved edits') ? panel.message : null),
+            'the save was written back', 8000, 50);
+        testController.reportCondition('the close wrote the room back and said so', !!savedOnce);
+        testController.reportCondition('…and invalidated 4 Compile', !panel._stepState?.compile);
+        const unedited = await runAll('the world recompiled after the unedited save');
+        testController.assertEqual('⛓⛓ an unedited Save recompiles to the SAME rules.json',
+            JSON.stringify(before), JSON.stringify(unedited));
+
+        /* ── (2) take the obstacles out: the world reflects it ── */
+        await session((payload) => { payload.obstacles = []; });
+        const savedTwice = await testController.pollForValue(
+            () => (panel.message?.startsWith('Saved edits') && !panel._stepState?.compile ? panel.message : null),
+            'the edited save was written back', 8000, 50);
+        testController.reportCondition('the edited close was written back', !!savedTwice);
+        const now = panel._stepState.grow.grid.getRegion(region.cell);
+        testController.assertEqual('⛓ the grid region lost its obstacles', '0',
+            String(now?.playable_payload?.obstacles?.size));
+        const edited = await runAll('the world recompiled after the edit');
+        testController.assertEqual('⛓ the sidecar the compile wrote has no obstacles in that region', '0',
+            String(edited?.preset_sidecars?.['1']?.[region.region_id]?.playable_payload?.obstacles?.length));
+        testController.reportCondition('⛓⛓ …and the compiled world moved',
+            !!edited && JSON.stringify(edited) !== JSON.stringify(before));
+    } catch (error) {
+        testController.reportCondition(`Test error: ${error.message}`, false);
+    } finally {
+        if (host) unregisterLabPanelInstance(host);
+        restore?.();
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'procgen-pipeline-maze-edit-round-trip',
+    name: 'Procgen Pipeline: Edit ▸ on a maze region opens the maze lab, an unedited Save moves nothing, an edit reaches the compiled world',
+    description: 'Preset "Maze demo (sphere growth)" → Run all → the region row\'s own Edit ▸. With no maze lab '
+               + 'mounted the door\'s refusal is shown in the panel\'s warning line. With a stub host the door is '
+               + 'handed a one-entry region library and asks for room 0; an unedited close recompiles to the same '
+               + 'rules.json, and a close with the room\'s obstacles removed reaches the grid and the compiled sidecar.',
+    testFunction: procgenPipelineMazeEditRoundTrip,
+    category: 'procgenPipeline',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+/**
+ * ⛓ **…AND THE PANEL DOOR (bounce) STILL WORKS** after the lab route landed
+ * beside it: preset "Maze + bounce (sphere growth)" → Run all → a bounce
+ * region's own Edit ▸ → the Bounce Region Editor holds THAT region in pipeline
+ * mode → its own Save → the pipeline wrote it back and invalidated 4 → Run all
+ * compiles with the oracle clean.
+ */
+async function procgenPipelineBounceEditStillOpens(testController) {
+    const PRESET = 'shipped:maze-bounce-sphere-mix';
+    const REGION = 'region_3_2';
+    try {
+        testController.eventBus.publish('ui:activatePanel', { panelId: 'procgenPipelinePanel' });
+        const panel = await testController.pollForValue(
+            () => document.querySelector(PANEL_SELECTOR)?.__panel ?? null,
+            'the Procgen Pipeline panel', 8000, 50);
+        testController.reportCondition('the Procgen Pipeline panel is mounted', !!panel);
+        if (!panel) return testController.getOverallResult();
+        const runAll = async (label) => {
+            await panel._runGeneration();
+            return testController.pollForValue(
+                () => panel._stepState?.compile ?? null, label, 60000, 100);
+        };
+        panel._applyPreset(PRESET);
+        const first = await runAll('the preset world compiled');
+        testController.reportCondition('Run all compiled the world', !!first?.rulesJson);
+        if (!first) return testController.getOverallResult();
+        // ⛓ (l) 2026-10-18 — region_3_2 is the zone whose N exit the editor's
+        //   readout flagged IMPOSSIBLE under the experimental DEFAULTS: a `dj`
+        //   zone, whose spring clears the 520 px gap only under its own physics.
+        const region = [...panel._stepState.grow.grid.allRegions()].find((r) => r.region_id === REGION);
+        testController.reportCondition(`⛓ premise: ${REGION} is a bounce region`, region?.substrate === 'bounce');
+        testController.assertEqual('⛓ premise: …built under the dj physics profile', 'dj',
+            String(region?.playable_payload?.params?.physics?.profile));
+        if (!region) return testController.getOverallResult();
+        const btn = [...panel._renderRegionEditRow(panel._nodeForRegion(region), region)
+            .querySelectorAll('button')].find((b) => b.textContent === 'Edit ▸');
+        panel.warning = '';
+        btn?.click();
+        const editor = await testController.pollForValue(
+            () => {
+                const e = bounceEditorInstance();
+                return e?._session?.label === region.region_id ? e : null;
+            }, 'the Bounce Region Editor holds the region', 8000, 50);
+        testController.reportCondition('⛓ the Bounce Region Editor opened on THIS region', !!editor);
+        testController.assertEqual('…in pipeline mode (its Save writes back)', 'pipeline', String(editor?._session?.mode));
+        testController.assertEqual('no refusal was shown', '', String(panel.warning ?? ''));
+        if (!editor) return testController.getOverallResult();
+        const status = await testController.pollForValue(
+            () => editor.rootElement?.querySelector('.bre-status')?.textContent ?? null,
+            'the editor drew its status line', 8000, 50);
+        testController.assertEqual(`⛓⛓ (l) the editor reads ${REGION} as valid under the zone's OWN physics`,
+            '✓ valid', String(status));
+        editor._save();
+        const saved = await testController.pollForValue(
+            () => (panel.message?.startsWith('Saved edits') && !panel._stepState?.compile ? panel.message : null),
+            'the bounce save was written back', 8000, 50);
+        testController.reportCondition('the editor\'s Save was written back and invalidated 4', !!saved);
+        const again = await runAll('the world recompiled after the bounce save');
+        testController.reportCondition('Run all recompiled it', !!again?.rulesJson);
+        testController.assertEqual('…with the sphere oracle clean', '[]', JSON.stringify(again?.oracleErrors ?? null));
+    } catch (error) {
+        testController.reportCondition(`Test error: ${error.message}`, false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'procgen-pipeline-bounce-edit-still-opens',
+    name: 'Procgen Pipeline: Edit ▸ on a bounce region still opens the Bounce Region Editor, reads it valid under its own physics, and its Save reaches the pipeline',
+    description: 'Preset "Maze + bounce (sphere growth)" → Run all → a bounce region\'s own Edit ▸ → the Bounce '
+               + 'Region Editor holds region_3_2 in pipeline mode and reads it "✓ valid" (the readout derives under the zone\'s dj physics, as the save does) → its Save → the pipeline wrote it back and '
+               + 'invalidated 4 → Run all compiles with the oracle clean.',
+    testFunction: procgenPipelineBounceEditStillOpens,
     category: 'procgenPipeline',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });

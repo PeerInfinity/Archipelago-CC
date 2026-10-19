@@ -163,10 +163,17 @@ async function solveOf(s) {
     let shouldStops = 0;
     const stream = [];
     const finals = [];
+    const pulls = [];
     const hook = (site, peek) => {
         const snap = peek();
-        stream.push([site, snap === null ? null : JSON.stringify(snap)]);
-        if (site === 'done') finals.push(snap?.budget?.asks ?? null);
+        // ⛓ hammer-phase PR: `caches.stringPull` reports THIS switch (null OFF, the memo's counts ON), so the stream is
+        // compared without `caches`, and the member is kept beside it
+        const { caches, ...rest } = snap ?? {};
+        stream.push([site, snap === null ? null : JSON.stringify(rest)]);
+        if (site === 'done') {
+            finals.push(snap?.budget?.asks ?? null);
+            pulls.push(caches?.stringPull ?? null);
+        }
     };
     const go = () => twoPassSolve({ makeRun: (rows) => createRunForStaging({ ...staging, persistence: rows }, SOURCE),
         goals: s.goals, name: s.tape, boot: staging.boot, persistence: staging.persistence,
@@ -179,7 +186,7 @@ async function solveOf(s) {
     } catch (error) {
         r = { ok: false, error };
     }
-    return { digest: answerDigest(r), ok: r.ok, shouldStops, finals: JSON.stringify(finals), stream };
+    return { digest: answerDigest(r), ok: r.ok, shouldStops, finals: JSON.stringify(finals), stream, pulls };
 }
 
 describe('SP — committed solves: OFF and ON end to end, and every real pull audited', () => {
@@ -205,6 +212,9 @@ describe('SP — committed solves: OFF and ON end to end, and every real pull au
             expect(on.finals).toBe(off.finals);
             expect(on.stream.length).toBe(off.stream.length);
             expect(on.stream).toEqual(off.stream);
+            // ⛓ PR: OFF builds no memo (every segment's member null); ON, a segment that planned asked it
+            expect(off.pulls.every((x) => x === null)).toBe(true);
+            expect(on.pulls.some((x) => x !== null && x.hits + x.misses > 0)).toBe(true);
             expect(a.mismatches).toEqual([]);
             expect(a.calls).toBeGreaterThanOrEqual(s.minCalls);
         }, 240_000);

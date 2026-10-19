@@ -36,15 +36,25 @@
  * when its text changes; the wall line is one clipped line (its full list in the tooltip), so its moving digits never
  * change its height; every line is a full-width block, never a flex item sized by its text (S2's lesson).
  *
+ * ⛓ FRAME VIEW (slice `seedling-js-frame-view`, draws hammer-phase TC2's `frame`; the snapshot, the tap and the worker
+ * are unchanged): while `frame !== null`, the map MARKS what the solver's active frame is aimed at — its STANCE tile
+ * (a cyan square), its TARGET at the tile of the placement in its id (a white cross; `frameTargetTile`), and its
+ * DANGER at the tile where the corridor met it (`danger.at`), with a glyph per kind (`DANGER_GLYPHS`) and its source
+ * id — and the tree row whose key is `frame.key` is OUTLINED. A line under the map says the same in words. The marks
+ * are drawn only when `tiles.level === segment.level` (a crossing can leave the map a level behind); a `null` frame
+ * clears them. They live on a second canvas over the map, so the cell canvas's incremental paint is untouched; it and
+ * the line are inserted on the first snapshot that carries a frame, so a frame-less stream draws the stamps view's
+ * bytes (pinned), and the marks are redrawn only when what they show changes (`stats.marksDrawn`).
+ *
  * ⛓ INCREMENTAL (slice S1, ⚖ the user 2026-10-17 — the rate setting `flashPanel.seedlingSolveProgressIntervalMs`
  * depends on it): a note updates the STATE (and the show/hide lifecycle) at once, but the DOM at most once per
- * animation frame (`frame`, default `requestAnimationFrame`) — the notes of one frame coalesce into one render of the
+ * animation frame (the `frame` option, kept here as `scheduleRender`; default `requestAnimationFrame`) — the notes of one frame coalesce into one render of the
  * newest state. A HIDDEN view renders nothing (the state is kept; showing it renders the newest at the next frame).
  * The canvas is resized only when the room's size changes (a resize clears it), and only the cells whose colour
  * changed are painted (a cell gone since the last paint is painted back to the background). The tree's rows are
  * kept and DIFFED: a row element is written only where its text, colour, tooltip or key changed. `flush()` renders
  * a pending frame now; `stats` counts notes, renders, coalesced and hidden-skipped notes, resizes, cells painted
- * and rows written — what the pins read.
+ * and rows written (and ⛓ FRAME VIEW's frame counts) — what the pins read.
  *
  * ⛓ AUTO-SHOW — `setMode(off | auto | always)` (the panel's setting). `isOpen` is whether the view is SHOWN,
  * `isListening` whether its feed is subscribed: in `auto` the feed listens while the view is hidden, the first note
@@ -89,6 +99,61 @@ const WHY_CLOSED_CSS = 'color:#ccc;margin:0 0 4px;white-space:nowrap;overflow:hi
 const WHY_OPEN_CSS = 'color:#ccc;margin:0 0 4px;white-space:pre-wrap;overflow-wrap:anywhere;cursor:pointer;';
 /** ⛓ STAMPS VIEW — the site pairs the wall line names before it counts the rest (Σ is always over every pair). */
 export const WALL_SITES_SHOWN = 6;
+
+/** ⛓ FRAME VIEW — a danger's glyph per kind (TC2's `dangerKindOf`); a kind not listed draws `?`. */
+export const DANGER_GLYPHS = Object.freeze({ forecast: '»', volume: '■', phase: '◐' });
+const STANCE_COLOUR = '#4fc3f7';
+const TARGET_COLOUR = '#ffffff';
+const DANGER_COLOUR = '#ff8c1a';
+/** ⛓ FRAME VIEW — the outline on the tree row the frame belongs to. */
+const FRAME_ROW_CSS = `outline:1px solid ${STANCE_COLOUR};outline-offset:-1px;`;
+const MARKS_CSS = 'position:absolute;left:1px;top:1px;pointer-events:none;';
+
+/**
+ * ⛓ FRAME VIEW — the tile a `frame.target` id names: `tile:col,row` and `pit:col,row` are tiles already; any other id
+ * carrying `@x,y` (a body `puncher@128,624`, a lock `lock@144,112 {t 0, tag 3}`, a rope `Rope@64,32`) is its census
+ * placement in pixels, `[floor(x / 16), floor(y / 16)]`. An id with neither (`tile:Stone`) has no tile: `null`.
+ */
+export function frameTargetTile(id) {
+    if (typeof id !== 'string') return null;
+    const t = /^(?:tile|pit):(-?\d+),(-?\d+)$/.exec(id);
+    if (t) return [Number(t[1]), Number(t[2])];
+    const p = /@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/.exec(id);
+    return p ? [Math.floor(Number(p[1]) / 16), Math.floor(Number(p[2]) / 16)] : null;
+}
+
+const isCell = (c) => Array.isArray(c) && c.length === 2 && Number.isInteger(c[0]) && Number.isInteger(c[1]);
+
+/**
+ * ⛓ FRAME VIEW — what the map marks for a snapshot: `null` with no frame; otherwise `{key, onMap, stance, target,
+ * danger}`, where `onMap` is whether the tiles are the segment's level, and each mark is `null` when the frame has
+ * none (a target whose id names no tile keeps its id with `at: null`). Unknown fields are ignored.
+ */
+export function frameMarks(snap) {
+    const f = snap?.frame;
+    if (!f || typeof f !== 'object') return null;
+    const level = snap.tiles?.level;
+    const d = f.danger && typeof f.danger === 'object' ? f.danger : null;
+    return {
+        key: f.key ?? null,
+        onMap: level !== undefined && level !== null && level === snap.segment?.level,
+        stance: isCell(f.stance) ? [f.stance[0], f.stance[1]] : null,
+        target: typeof f.target === 'string' ? { id: f.target, at: frameTargetTile(f.target) } : null,
+        danger: d ? { source: d.source ?? null, kind: d.kind ?? null, tick: d.tick ?? null, at: isCell(d.at) ? [d.at[0], d.at[1]] : null,
+            glyph: DANGER_GLYPHS[d.kind] ?? '?' } : null,
+    };
+}
+
+/** ⛓ FRAME VIEW — the line under the map. */
+export function frameText(m) {
+    if (m === null) return '';
+    const cell = (c) => (c ? `(${c[0]},${c[1]})` : '—');
+    const parts = [`stance ${cell(m.stance)}`];
+    if (m.target) parts.push(`target ${m.target.id} ${m.target.at ? `at ${cell(m.target.at)}` : '(no tile)'}`);
+    if (m.danger) parts.push(`danger ${m.danger.glyph} ${m.danger.kind ?? '?'} ${m.danger.source ?? '?'} at ${cell(m.danger.at)}`
+        + (m.danger.tick !== null ? ` t${m.danger.tick}` : ''));
+    return `frame: ${parts.join(' · ')}${m.onMap ? '' : ' (not marked: the map is another level)'}`;
+}
 
 const el = (tag, css = '', text = null) => {
     const e = document.createElement(tag);
@@ -144,11 +209,15 @@ const nextFrame = (fn) => (typeof globalThis.requestAnimationFrame === 'function
 export class SolveProgressView {
     constructor({ getServices, now = () => Date.now(), frame = nextFrame }) {
         this.now = now;
-        this.frame = frame;
+        // the option is named `frame` (an animation frame); kept as `scheduleRender` so it never reads as the
+        // snapshot's `frame` (⛓ FRAME VIEW)
+        this.scheduleRender = frame;
         /** ⚖ `flashPanel.seedlingSolveProgressIntervalMs`: the rate this view asks its services for (`setIntervalMs`). */
         this.intervalMs = SOLVE_PROGRESS_INTERVAL_MS;
         this.stats = { notes: 0, renders: 0, coalesced: 0, hiddenSkipped: 0, resizes: 0, cellsPainted: 0, rowsWritten: 0,
-            linesWritten: 0 };
+            linesWritten: 0,
+            // ⛓ FRAME VIEW — notes that carried a frame, renders that marked one on the map, marks-canvas redraws
+            framesReceived: 0, framesMarked: 0, marksDrawn: 0 };
         this._dirty = true;
         this._pending = false;
         this._tilesKey = null;
@@ -167,6 +236,11 @@ export class SolveProgressView {
         this.recent = { cells: 0, max: 0 };
         /** the tree's row elements, in order; each remembers what it shows (`_shown`). */
         this._lines = [];
+        /** ⛓ FRAME VIEW — the marks canvas and line (made on the first frame), and what they show now. */
+        this.marksCanvas = null;
+        this.frameLine = null;
+        this.marks = null;
+        this._marksKey = null;
         this.state = emptyProgress();
         this.expanded = new Set();
         this.mode = 'off';
@@ -328,6 +402,7 @@ export class SolveProgressView {
         if (next.segmentChanged) this.expanded = new Set();
         this.state = next;
         this.stats.notes += 1;
+        if (note?.snapshot?.frame) this.stats.framesReceived += 1;
         this._setVisible(autoVisibility(this.mode, this.visible, note), note);
         this._mirror();
         this._invalidate();
@@ -344,7 +419,7 @@ export class SolveProgressView {
     _schedule() {
         if (this._pending) return;
         this._pending = true;
-        this.frame(() => { this._pending = false; this.flush(); });
+        this.scheduleRender(() => { this._pending = false; this.flush(); });
     }
 
     /** Render the newest state now, if it changed since the last render and the view is shown. */
@@ -362,6 +437,7 @@ export class SolveProgressView {
         this._renderStamps();
         this._renderRK();
         this._renderTiles();
+        this._renderFrame();
         this._renderTree();
     }
 
@@ -620,6 +696,76 @@ export class SolveProgressView {
         this._next = painted;
     }
 
+    /**
+     * ⛓ FRAME VIEW — mark the active frame on the map. Nothing is made or inserted before the first snapshot that
+     * carries a frame. The marks canvas is redrawn only when the marks or the map's size change.
+     */
+    _renderFrame() {
+        const snap = this.state.snapshot;
+        const m = frameMarks(snap);
+        if (this.marksCanvas === null) {
+            if (m === null) return;
+            this.mapBox.style.position = 'relative';
+            this.marksCanvas = el('canvas', MARKS_CSS);
+            this.marksCanvas.className = 'flash-panel-solve-progress-marks';
+            this.frameLine = el('div', 'color:#aaa;white-space:normal;overflow-wrap:anywhere;');
+            this.frameLine.className = 'flash-panel-solve-progress-frame';
+            this.mapBox.append(this.marksCanvas, this.frameLine);
+        }
+        this.marks = m;
+        this._line(this.frameLine, frameText(m));
+        const tiles = snap?.tiles;
+        const draw = m !== null && m.onMap && this._index ? m : null;
+        if (draw !== null) this.stats.framesMarked += 1;
+        const key = JSON.stringify([this._tilesKey, draw && [draw.stance, draw.target?.at, draw.danger?.at, draw.danger?.glyph,
+            draw.danger?.source]]);
+        if (key === this._marksKey) return;
+        this._marksKey = key;
+        const c = this.marksCanvas;
+        if (c.width !== this.canvas.width) c.width = this.canvas.width;
+        if (c.height !== this.canvas.height) c.height = this.canvas.height;
+        const ctx = c.getContext?.('2d') ?? null;
+        this.stats.marksDrawn += 1;
+        if (!ctx) return;
+        ctx.clearRect(0, 0, c.width, c.height);
+        if (draw === null) return;
+        const px = this._px;
+        const inside = (t) => t && t[0] >= 0 && t[1] >= 0 && t[0] < tiles.cols && t[1] < tiles.rows;
+        ctx.lineWidth = Math.max(1, Math.floor(px / 8));
+        if (inside(draw.danger?.at)) {
+            const [col, row] = draw.danger.at;
+            ctx.strokeStyle = DANGER_COLOUR;
+            ctx.strokeRect(col * px + 0.5, row * px + 0.5, px - 1, px - 1);
+            ctx.fillStyle = DANGER_COLOUR;
+            ctx.font = `${Math.max(6, px - 2)}px monospace`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(draw.danger.glyph, col * px + px / 2, row * px + px / 2);
+            if (draw.danger.source) {
+                ctx.font = `${Math.max(6, Math.min(10, px - 4))}px monospace`;
+                ctx.textAlign = col * px > c.width / 2 ? 'right' : 'left';
+                ctx.textBaseline = row > 0 ? 'bottom' : 'top';
+                ctx.fillText(draw.danger.source, col * px > c.width / 2 ? col * px - 1 : (col + 1) * px + 1,
+                    row > 0 ? row * px : (row + 1) * px);
+            }
+        }
+        if (inside(draw.target?.at)) {
+            const [col, row] = draw.target.at;
+            ctx.strokeStyle = TARGET_COLOUR;
+            ctx.beginPath();
+            ctx.moveTo(col * px + 1, row * px + 1);
+            ctx.lineTo((col + 1) * px - 1, (row + 1) * px - 1);
+            ctx.moveTo((col + 1) * px - 1, row * px + 1);
+            ctx.lineTo(col * px + 1, (row + 1) * px - 1);
+            ctx.stroke();
+        }
+        if (inside(draw.stance)) {
+            const [col, row] = draw.stance;
+            ctx.strokeStyle = STANCE_COLOUR;
+            ctx.strokeRect(col * px + 1.5, row * px + 1.5, px - 3, px - 3);
+        }
+    }
+
     _tileSummary() {
         const tiles = this.state.snapshot?.tiles;
         if (!tiles) return 'no previewed states yet';
@@ -650,6 +796,8 @@ export class SolveProgressView {
      */
     _renderTree() {
         const tree = this.state.snapshot?.tree ?? null;
+        // ⛓ FRAME VIEW — the row the active frame belongs to is outlined
+        const frameKey = this.state.snapshot?.frame?.key ?? null;
         const { rows, more } = tree ? treeRows(tree, { expanded: this.expanded, cap: SOLVE_PROGRESS_TREE_CAP })
             : { rows: [], more: 0 };
         let added = false;
@@ -667,7 +815,7 @@ export class SolveProgressView {
                 tail: chips.length ? reasons : '',
                 chips: chips.map(([k, v]) => `${k} ${v}`).join('|'),
                 css: `${TREE_ROW_CSS}color:${n.active ? '#fff' : '#bbb'};${n.active ? 'background:#3a1520;' : ''}`
-                    + (row.collapsible ? 'cursor:pointer;' : ''),
+                    + (row.collapsible ? 'cursor:pointer;' : '') + (frameKey !== null && n.key === frameKey ? FRAME_ROW_CSS : ''),
                 title: Object.entries(n.rejections ?? {}).map(([k, v]) => `${v}× ${k}`).join('\n'),
                 key: row.collapsible ? n.key : null,
             };

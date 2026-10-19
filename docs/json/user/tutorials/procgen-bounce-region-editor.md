@@ -12,9 +12,9 @@ A generated region is not final: the pipeline's step 3 lists every region it bui
 ## Edit a bounce zone
 
 1. In the **Sphere pipeline** section's region list, find a region whose substrate reads **Bounce Demo** and press its **Edit ▸**. The **Bounce Region Editor** opens with that zone.
-2. Pick a platform — click it on the canvas, or choose it in the sidebar's **pick** drop-down (here **b1**, the second from the bottom). The sidebar shows its fields — position, width, kind — and **Derived access rules** lists what reaching each exit needs.
+2. Pick a platform — click it on the canvas, or choose it in the sidebar's **pick** drop-down (here **b1**, the second from the bottom). The sidebar shows its fields — **x**, **y** and **type** — and **Derived access rules** lists what reaching each exit needs.
 
-Change a field — move the platform, widen it — and watch the rules update; **↶ Undo** takes an edit back.
+Change a field — move the platform, change its type — and watch the rules update; **↶ Undo** takes an edit back.
 
 1. Press **Save**: the edited zone goes back into the pipeline's world.
 

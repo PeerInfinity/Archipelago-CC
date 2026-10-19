@@ -940,9 +940,12 @@ export const substrateRegistryEntry = Object.freeze({
      * there is no one-room set document for the lab's EDIT arm to open, and
      * nothing a save could be written back INTO on this side.
      *
-     * ⛓ `roomEditor` above stays exactly as it is: the pipeline's own Edit
-     * still opens a Seedling room from a LIVE run, where the level set is in
-     * hand. It is the DOCUMENT direction that has no answer.
+     * ⛓ `roomEditor` above stays exactly as it is. ⚠ MEASURED 2026-10-18: the
+     * pipeline's Edit ▸ does NOT open a Seedling room either — the lab door
+     * takes a SET document, and the pipeline builds one only through this
+     * declaration (`procgenPipeline/pipelineRoomEdit.js`), so a pipeline
+     * press shows this refusal. A live-run level-set document is the open
+     * question, not a wired path.
      */
     regionRoundTrip: Object.freeze({
         refused: 'a Seedling sidecar payload is an ATLAS REFERENCE '

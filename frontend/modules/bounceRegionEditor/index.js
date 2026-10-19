@@ -28,6 +28,7 @@ export const moduleInfo = {
     name: 'bounceRegionEditor',
     title: 'Bounce Region Editor',
     componentType: BOUNCE_EDITOR_COMPONENT_TYPE,
+    docs: 'docs/json/user/modules/bounceRegionEditor.md',
     icon: '🪀',
     column: 3,
     category: 'Procgen Infrastructure Panels',

@@ -513,6 +513,12 @@
             "_comment": "GRAPHICS G1. flashPanel.runtime = js + seedlingJsGraphics = seedling + seedlingJsCamera = follow on seedling_atlas_location: the page boots with the seedling + archipelago content packs (frontend/packs), every sheet decodes, sprites are drawn in the follow view, zero console errors; G2: the player is drawn from the pack (seedling:player/shrum) and ArrowRight/ArrowLeft play side-walk unmirrored/mirrored; the camera switch back to room is applied live (no re-mount). seedling-js batch."
         },
         {
+            "id": "seedling-js-runtime-graphics-enemies",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "GRAPHICS G3. jsRuntime.html?graphics=seedling&camera=follow mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 14 (six Bobs): each Bob is drawn as seedling:enemy/bob from the seedling pack, every sheet decodes, the Bobs' frames advance (the per-tick reducer is live), zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+        },
+        {
             "id": "seedling-js-runtime-solver-opens-kill-lock",
             "enabled": true,
             "category": "Seedling JS runtime",
@@ -1489,6 +1495,18 @@
             "enabled": true,
             "category": "procgenPipeline",
             "_comment": "SUBSTRATE CHART S4. The pipeline's Substrates (click to add) rows, a selected row and the sphere per-region override options show the live entry's label and hover cardText(cardOf(entry, capabilityRows(getAll()))) computed in the row; the stored value stays the id. Category procgenPipeline is claimed by no batch, so it runs in the default batch (fast). Restores the Scenario Pool collapse state and the active substrate dict."
+        },
+        {
+            "id": "procgen-pipeline-maze-edit-round-trip",
+            "enabled": true,
+            "category": "procgenPipeline",
+            "_comment": "(k) 2026-10-18: Edit ▸ on a maze region in the pipeline handed the lab door a region and the door refused it to nobody. The row applies Maze demo (sphere growth), Run all, presses the region row's own Edit ▸: no lab mounted → the refusal is in the warning line; a stub host (the hub row's recipe) gets a one-entry region library and room 0; an unedited close recompiles byte-identically; a close with the obstacles removed reaches the grid and the compiled sidecar. Stands real maze lab instances aside and puts them back. Runs in fast."
+        },
+        {
+            "id": "procgen-pipeline-bounce-edit-still-opens",
+            "enabled": true,
+            "category": "procgenPipeline",
+            "_comment": "(k) 2026-10-18 control: the panel door (bounce) beside the new lab route. Maze + bounce (sphere growth) → Run all → region_3_2's Edit ▸ → the Bounce Region Editor holds it in pipeline mode and reads it ✓ valid ((l): the readout derives under the zone's dj physics, the save path's own derive) → its own Save → written back, 4 invalidated → Run all, oracle clean. Runs in fast."
         },
         {
             "id": "quick-launch-button-opens-panel-never-in-layout",
