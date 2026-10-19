@@ -1148,8 +1148,9 @@ describe('hammer-phase PR — the residue: soft-lock, the hidden `other` sites, 
             const enteredOff = cacheEntered() - entered;
             const h = countsHook();
             const before = { ...ESCAPE_CROSS_PASS_CACHE_COUNTS };
-            // ⛓ with XC ON, THIS installer wires the escape member at each segment's first call (the solver-side line
-            // is held: `progressCaches`' docblock)
+            // ⛓ with XC ON, the solver hands the escape counters in at each segment's start (`solveSegmentUnder`, beside
+            // `progressReaders`); this installer's call at site `segment` precedes it with the same counters (the first
+            // call wins, so the two agree)
             const on = await go(xc ? (site, peek) => { if (site === 'segment') progressCaches(ESCAPE_CROSS_PASS_CACHE_COUNTS); h.hook(site, peek); } : h.hook);
             const delta = Object.fromEntries(Object.entries(ESCAPE_CROSS_PASS_CACHE_COUNTS).map(([k, v]) => [k, v - before[k]]));
             runs.set(key, { off, on, ...h, enteredOff, delta });
@@ -1192,10 +1193,12 @@ describe('hammer-phase PR — the residue: soft-lock, the hidden `other` sites, 
                 }
                 last.set(x.segment, x);
             }
-            // a closed segment closed every frame it opened; XC is OFF here, so its member is null
+            // a closed segment closed every frame it opened; XC is ON by default (the XC flip), so the escape member is
+            // null (no scope in hand) or counts in which a miss is stored or not stored for exactly one named cause
             for (const f of finals) {
                 expect(f.churn.succeeded + f.churn.rejected).toBe(f.churn.opened);
-                expect(f.caches.escapeCrossPass).toBe(null);
+                const e = f.caches.escapeCrossPass;
+                if (e !== null) expect(e.misses).toBe(e.stored + e.tripped + e.digestMoved + e.cap);
             }
         }, 600_000);
     }
@@ -1236,15 +1239,22 @@ describe('hammer-phase PR — the residue: soft-lock, the hidden `other` sites, 
         for (const x of e) expect(x.misses).toBe(x.stored + x.tripped + x.digestMoved + x.cap);
     }, 600_000);
 
-    it('⛓⛓ unwired, the escape member is null with the switch ON (the solver-side line is held) and OFF; a null hand-in is null', async () => {
+    it('⛓⛓ the solver wires the escape member: counted with the switch ON and no installer, null with it OFF; a null hand-in is null', async () => {
         const s = RK_SOLVES[0];
         const f = finalsHook();
         await withEscapeCrossPassCache(true, () => solveRk(s, f.hook));
-        expect(f.finals.map((x) => x.caches.escapeCrossPass)).toEqual([null, null, null]);
+        const on = f.finals.map((x) => x.caches.escapeCrossPass);
+        expect(on.every((x) => x !== null)).toBe(true);
+        expect(on.reduce((a, x) => a + x.hits, 0)).toBeGreaterThan(0);
+        const o = finalsHook();
+        await withEscapeCrossPassCache(false, () => solveRk(s, o.hook));
+        expect(o.finals.map((x) => x.caches.escapeCrossPass)).toEqual([null, null, null]);
+        // an installer's null hand-in at site `segment` precedes the solver's call and wins: null with the switch ON
         const g = finalsHook();
         const staging = stagingOf(RK_SOLVES[3].tape);
-        solveSegment({ run: createRunForStaging(staging, SOURCE), goals: RK_SOLVES[3].goals, name: 'x', boot: staging.boot,
-            onProgress: (site, peek) => { if (site === 'segment') progressCaches(null); g.hook(site, peek); } });
+        withEscapeCrossPassCache(true, () => solveSegment({ run: createRunForStaging(staging, SOURCE), goals: RK_SOLVES[3].goals,
+            name: 'x', boot: staging.boot,
+            onProgress: (site, peek) => { if (site === 'segment') progressCaches(null); g.hook(site, peek); } }));
         expect(g.finals.at(-1).caches.escapeCrossPass).toBe(null);
     }, 600_000);
 
@@ -1254,9 +1264,15 @@ describe('hammer-phase PR — the residue: soft-lock, the hidden `other` sites, 
         expect(pulls.length).toBe(1);
         expect(pulls[0]).toMatch(/^\s*if \(activeProgress !== null\) progressStringPull\(v !== undefined\); \/\/ ⛓ PR/);
         const bot = SRC['solverBot.js'];
-        // ⚠ HELD: the solver-side `progressCaches` line waits on XC's "ON is OFF" stream rows (`progressCaches`'
-        // docblock); when it lands, this row pins it inside the segment's `if (activeProgress !== null)` block
-        expect(bot).not.toMatch(/\bprogressCaches\b|\bcacheEntered\b|\bprogressStringPull\b/);
+        // the escape counters' one call site, pinned inside the segment's `if (activeProgress !== null)` block, right
+        // after `progressReaders` (XC's "ON is OFF" rows compare the stream without `caches`, so the line is in)
+        const caches = bot.split('\n').filter((l) => /\bprogressCaches\(/.test(l));
+        expect(caches.length).toBe(1);
+        expect(caches[0]).toMatch(/^\s*progressCaches\(ESCAPE_CROSS_PASS_CACHE\.enabled && activeEscapeScope !== null \? ESCAPE_CROSS_PASS_CACHE_COUNTS : null\); \/\/ ⛓ PR/);
+        const at = bot.indexOf(caches[0]);
+        const block = bot.lastIndexOf('if (activeProgress !== null) {', at);
+        expect(bot.slice(block, at)).toMatch(/^if \(activeProgress !== null\) \{\s*progressReaders\(\{[^}]*\}\);\s*$/);
+        expect(bot).not.toMatch(/\bcacheEntered\b|\bprogressStringPull\b/);
         const own = readFileSync(join(HERE, 'solveProgress.js'), 'utf8');
         const body = own.slice(own.indexOf('let cacheEntries'), own.indexOf('// ── the active frame'));
         expect(body.length).toBeGreaterThan(500);
