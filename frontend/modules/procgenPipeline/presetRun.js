@@ -38,7 +38,7 @@ import {
 } from './sphereConfigHooks.js';
 import { buildLibrarySpiralConfig } from './regionLibraryLoader.js';
 import { applyPresetState, VALID_MODES, TOPDOWN_GRID_KEYS } from './presetDefs.js';
-import { growMazeAsync, buildRulesJson } from './procgenPipelineEngine.js';
+import { growMazeAsync, buildRulesJson, discoveryModeConfig } from './procgenPipelineEngine.js';
 import { newEnvelope as newSphereEnvelope, runToStep as runSphereToStep } from './sphereSteps.js';
 import { newSpiralEnvelope, runSpiralToStep } from './spiralSteps.js';
 import { buildTopDownEnvelope, runTopDownToStep } from './topDownSteps.js';
@@ -77,6 +77,10 @@ export const DEFAULT_PARAMS = {
     // proportionally to XP level; 'speed' / 'both' are reserved for v2;
     // 'none' disables the XP discount. See Phase 7.
     regionXpEffect: 'cost',
+    // The world's Discovery mode: 'follow' (default — writes nothing; the
+    // world's discovery follows loop mode, as before the knob), 'on' or 'off'
+    // → the rules.json `discovery_mode[slot]` block (buildRulesJson).
+    discoveryMode: 'follow',
     // Sphere-growth mode parameters (sphere-driven-growth.md). The
     // planner assigns the scenario items to `sphereCount` spheres;
     // fillerCount adds itemless regions; revisitPercent is the chance
@@ -395,6 +399,7 @@ export function buildSphereConfig(state, resolvedLibraries = []) {
         victoryItemId: goal,
         enableLoopMode: !!params.enableLoopMode,
         regionXpEffect: params.regionXpEffect ?? 'cost',
+        ...discoveryModeConfig(params.discoveryMode),
         hazardOpts: effectiveHazardOpts(params),
     };
 }
@@ -439,6 +444,7 @@ export function sphereRunConfig(cfg, prep, itemPool, { params, resolvedLibraries
         pinnedCanonicalItems: prep.pinnedCanonicalItems ?? [],
         enableLoopMode: cfg.enableLoopMode,
         regionXpEffect: cfg.regionXpEffect ?? 'cost',
+        ...discoveryModeConfig(cfg.discoveryMode),
         itemPool,
         // ⛓ bulletml N5: only when an active substrate prices its regions (bytes kept otherwise)
         ...withPricingParams(cfg.activeIds, params),
@@ -521,6 +527,7 @@ export function buildSpiralRun(state, { resolvedLibraries = [] } = {}) {
         seed,
         enableLoopMode: !!params.enableLoopMode,
         regionXpEffect: params.regionXpEffect ?? 'cost',
+        ...discoveryModeConfig(params.discoveryMode),
         completionConditionItem: goal,
         // ⛓ bulletml N5: only when an in-quota substrate prices its regions (bytes kept otherwise)
         ...withPricingParams(Object.keys(substrateQuotas), params),
@@ -561,6 +568,7 @@ export function buildTopDownRun(state, { topDownSource = null, sphereLog = null 
         sphereLog,
         enableLoopMode: !!params.enableLoopMode,
         regionXpEffect: params.regionXpEffect ?? 'cost',
+        ...discoveryModeConfig(params.discoveryMode),
     };
 }
 
@@ -604,6 +612,7 @@ export function buildGridRun(state) {
             seed,
             enableLoopMode: !!params.enableLoopMode,
             regionXpEffect: params.regionXpEffect ?? 'cost',
+            ...discoveryModeConfig(params.discoveryMode),
             completionConditionItem: resolveVictoryItemId(state),
         },
     };

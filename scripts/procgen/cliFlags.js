@@ -187,6 +187,8 @@ export const W = Object.freeze({
     param: flag('params', KIND.params),
     enableLoopMode: flag('enableLoopMode', KIND.on),
     regionXpEffect: flag('regionXpEffect', KIND.str),
+    /** `--discovery-mode follow|on|off` — absent from a driver's defaults, so its echoed config keeps its bytes unless given. */
+    discoveryMode: flag('discoveryMode', oneOf('follow', 'on', 'off')),
     consumableTiles: flag('consumableTiles', KIND.int),
     consumableCount: flag('consumableCount', KIND.int),
     manaTiles: flag('manaTiles', KIND.int),

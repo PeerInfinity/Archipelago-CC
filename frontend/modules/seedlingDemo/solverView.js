@@ -129,8 +129,8 @@ export { ICE_TURRET, ICE_TURRET_PLAN } from './iceTurret.js';
 export { TURRET_SPIT } from './turret.js';
 // ⛓ hammer-phase C1: the static sword arm's turret mini-forecast (`staticSwordShotFree`)
 export { stepTurret } from './turret.js';
-// levelRun.js — botDriverV2 · physics 1
-export { createLevelRun } from './levelRun.js';
+// levelRun.js — botDriverV2, solverBot · physics 1, seedling 1
+export { canonicalDigestText, createLevelRun } from './levelRun.js';
 
 // ⛓ K2PREP: `Game.worldFrame`, the Spritemap step and the lava chain — simulation since `levelRun` steps the chain
 // (`lavaChain.js`); `hazards.js` imports them here and re-exports them (the beam, the axe, the danger map).

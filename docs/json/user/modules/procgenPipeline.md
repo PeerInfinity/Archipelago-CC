@@ -60,6 +60,7 @@ What goes into the world.
 | **Grid width** / **Grid height** (Grid growth, Top-down) | The size of the map grid. In Top-down it follows the source world. |
 | **Concepts** | What a gate may be *shown* as — a guardian that needs the sword, water that needs swimming, a door that needs a key. A concept changes the picture, never the logic; none ticked (the default) builds the plain world. |
 | **Enable loop mode** | Builds the world for [Loop mode](../tutorials/procgen-loop-mode-jta.md): each action costs mana, and a run restarts when it runs out. |
+| **Discovery mode** | **Same as loop mode** (default), **On** or **Off**. Same as loop mode: the world is in Discovery mode exactly while it is in Loop mode. On: as in Loop mode while it is on, and walk-to-reveal without it. Off: no Discovery mode, and everything counts as discovered. On and Off are saved in the world. The [Discovery panel guide](discoveryPanel.md#loop-mode-and-a-worlds-own-discovery-mode) has the full table. |
 
 Below these, each substrate you chose has its own parameters (for a maze, for example, **Maze rooms play as** and **Enable hazards**). **Reset Defaults** puts only the parameters and the scenario back.
 

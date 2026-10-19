@@ -20,7 +20,7 @@ Below the mana bar there is one block per region the queue visits, starting with
 
 Open a block to add actions:
 
-- **Explore Region** queues an explore of that region. It earns experience and uncovers the region's hidden exits and locations: Loop mode turns Discovery mode on, so what you have not discovered yet is shown as **???**. Tick **Repeat** to queue it again each time it finishes.
+- **Explore Region** queues an explore of that region. It earns experience and uncovers the region's hidden exits and locations: Loop mode turns Discovery mode on (unless the world's own **Discovery mode** says Off — see the [Discovery panel guide](discoveryPanel.md#loop-mode-and-a-worlds-own-discovery-mode)), so what you have not discovered yet is shown as **???**. Tick **Repeat** to queue it again each time it finishes.
 - **Exits** — click an available exit to queue moving through it.
 - **Locations** — click an available location to queue checking it.
 

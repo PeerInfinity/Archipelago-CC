@@ -23556,6 +23556,36 @@ solverBot-side globals: `HAMMER_ESCAPE_BOUNDS`, `GHOST_SPINNER_PRESS`, `PRESS_KI
 progress hook. It is scoped to one `twoPassSolve`. The spinning axes' and lava chains' visit state are outside the
 escape's reach today; a slice that teaches the escape about them adds them to `stateDigestParts`.
 
+### Seedling hammer-phase XC — the cross-pass escape cache
+
+⚖ The user (2026-10-18): *"I agree with that plan"*. Fidelity's digest landed first (DIGEST), then this cache on top
+of it. The report is `CC/docs/cloud-reports/seedling-hammer-cross-pass-cache.md`.
+
+**What it is.** `ESCAPE_CROSS_PASS_CACHE` (**OFF**; `SEEDLING_ESCAPE_CROSS_PASS_CACHE=1`) caches `pressEscape`'s
+answers within one `twoPassSolve` call.
+- The key is DIGEST's D4: `run.stateDigest()` taken per call, before it; the call's arguments by value; the
+  solver-side globals (`HAMMER_ESCAPE_BOUNDS`, `GHOST_SPINNER_PRESS`, `PRESS_KILL_COST`, the deadline's presence, the
+  progress install).
+- The scope is the call: `twoPassSolve.js` creates it and installs it around each pass's synchronous solve. It serves
+  only the runs that call's `makeRun` built, reached through the segment's `Object.create(run)` view.
+- A miss records its work (every `hammer-escape` ask, every `onNode` point, every search row, the instruments'
+  deltas). A hit replays that stream in order, so the deadline, `budget.asks`, `shouldStop` totals and the progress
+  stream are OFF's. A trip at a hit's k-th ask re-derives the call silently and emits the tripped row.
+- Not stored: a tripped miss, a miss that moved the digest (a lazy visit build), a miss at the cap (4,096 entries or
+  2 M nodes; never an eviction). After a trip nothing is read or stored.
+
+**Measured.**
+- D1 (the lab, the key modelled): 66.7 % of L18's escape calls hit, every one across passes, 0 with a different
+  answer or work; net ≈ 32 % of the sweep at both floors after the digest's cost.
+- The shadow gate (verify mode recomputes every hit): **0 mismatches** over 37,770 (OFF) / 54,350 (floor ON) L18 hits
+  and 2,160 producer hits.
+- D3, three interleaved rounds: L18's sweep **0.72×** (OFF) / **0.71×** (floor ON). Floor ON + cache ÷ floor OFF today
+  = **1.00**. Every answer and md5 is OFF's.
+- 17 gate rows (`escapeCrossPassCache.test.js`); 9 / 9 mutants caught.
+
+Lesson: *a cache that must be exact has to replay what the call DID, not only what it returned.* The answer alone
+would have kept the tapes byte-identical and still moved the deadline's ask counts, the progress stream and the
+instruments.
 ### Seedling hammer-phase SP flip — `STRING_PULL_FAST` ON by default
 
 ⚖ The user (2026-10-18): flip it ON. `botDriverV2.js`'s `STRING_PULL_FAST.enabled` now defaults ON;
