@@ -48,6 +48,7 @@ import { fileURLToPath } from 'node:url';
 
 import { argvHelp } from './argvHelp.js';
 import { seedlingSourceOrExit } from './seedlingSource.js';
+import { ENEMY_ART } from '../../frontend/modules/seedlingDemo/seedlingEnemyArt.js';
 
 argvHelp(import.meta.url);
 const REPO_ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)));
@@ -214,6 +215,10 @@ export const ART_TABLE = Object.freeze([
     { pack: 'seedling', key: 'seedling:player/ghostSword', file: 'GhostSword.png', fw: 24, fh: 7, origin: [0, 3.5],
         as3: 'Player.as:44-45 sprGhostSword; :399-405 slash [0,1,2,2,3,3,4] at 30, slashnarrow [0,1,2,3] at 20',
         anims: { slash: fps([0, 1, 2, 2, 3, 3, 4], 30), slashnarrow: fps([0, 1, 2, 3], 20) } },
+
+    // ── G3: the enemies, the arrow and the AP item looks — the rows live with the renderer that runs their anims
+    //    (`frontend/modules/seedlingDemo/seedlingEnemyArt.js`), so the pack and the per-tick reducer share ONE table ──
+    ...ENEMY_ART,
 
     // ── the fork's AP item:`APItem.as:74` (`look` "ap" → the logo, 0x0 = an Image, centred) ──
     { pack: 'archipelago', key: 'archipelago:pickup/item', file: 'ArchipelagoLogo.png',
