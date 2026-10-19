@@ -129,7 +129,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ hammer-phase C2: +1 (275) — `hammer-c2-l18-ghostspinner`.
         // ⛓ fidelity L40BUTTON: +2 (277) — `l40button-l41-part0`, `l40button-l42-part0`.
         // ⛓ fidelity SEALDOOR: +3 (280) — `sealdoor-l113-clear`, `sealdoor-l113-exit`, `sealdoor-l113-noseal-control`.
-        expect(names.length).toBe(280);
+        // ⛓ fidelity WATCHERTALK: +2 (282) — `watchertalk-l114-clear-16`, `watchertalk-l114-clear-32`.
+        expect(names.length).toBe(282);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -193,7 +194,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ hammer-phase C2: 275 (measured) — `hammer-c2-l18-ghostspinner` swaps too.
         // ⛓ fidelity L40BUTTON: 277 (measured) — both `l40button-*` witnesses swap too.
         // ⛓ fidelity SEALDOOR: 280 (measured) — the three `sealdoor-l113-*` witnesses swap too.
-        expect(tally.swapped).toBe(280);
+        // ⛓ fidelity WATCHERTALK: 282 (measured) — the two `watchertalk-l114-clear-*` witnesses swap too.
+        expect(tally.swapped).toBe(282);
     }, 600_000);
 });
 

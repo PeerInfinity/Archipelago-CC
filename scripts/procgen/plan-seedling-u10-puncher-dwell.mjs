@@ -50,18 +50,18 @@ async function main() {
     const CHECK = process.argv.includes('--check');
 
     /**
-     * ⚖ PINNED `strikeIframeLapse` OFF — an INTERIM (seedling-fidelity-producers, 2026-10-16).
-     * Both tapes were recorded on the game under the PRE-LAPSE strike gate. The lapse flip (`19aaa5cce4`, ⚖ user
-     * "Flip after DD lands") turned `strikeIframeLapse` ON; its re-pin list missed this producer (no CI job runs it,
-     * and no vitest row re-derives these previews). ON, both previews move and the refused control's punch row
-     * ("the FORECAST refuses the stance BY THE PUNCH at a named tick") loses its tick.
-     * ⛔ RETIRE THIS PIN with a re-record ON: the plan re-derived under the flipped default, recorded on the game
-     * (p4f, 0 px), and its roster rows re-pinned — a roster move, so the user's licence.
+     * ⚖ RETIRED 2026-10-19 (seedling-fidelity-interims) for the ADMITTED arm: the process-wide `strikeIframeLapse` OFF
+     * INTERIM pin (seedling-fidelity-producers, 2026-10-16). `u10-puncher-dwell` is planned at the defaults (the lapse ON;
+     * presses land at t 14, 44, 74 where they landed at 14, 47, 80) and recorded on the game (p4f, headless; the model
+     * reproduces the recording): 200 → 200 t, the keys moved, the observation stream byte-identical.
+     * ⚖ KEPT, scoped to the POSITIVE CONTROL (`u10-puncher-dwell-refused`) and named as the control's own setting, not
+     * an interim: at the defaults the lapse lets the presses kill the puncher before its wind-up ends, so the forecast
+     * admits that stance, and refuses none of 56 stances on an 8 px grid round the body (x 384–448, y 232–280,
+     * measured 2026-10-19) by the punch: there is no punched stance left to control with. The punch pricing the control proves does not read
+     * the lapse, so the control keeps it OFF.
      */
-    const PINNED_FIDELITY = Object.freeze({ strikeIframeLapse: false });
-
-    // the script is its own derivation (no `main()`): pin the switch for this process before anything is staged
-    Object.assign((await import(join(MODULE, 'contactFidelity.js'))).CONTACT_FIDELITY, PINNED_FIDELITY);
+    const REFUSED_CONTROL_FIDELITY = Object.freeze({ strikeIframeLapse: false });
+    const { withContactFidelity } = await import(join(MODULE, 'contactFidelity.js'));
 
     const { parseTape, PIN_NAMES } = await import(join(MODULE, 'tapeFormat.js'));
     const { createLevelRun } = await import(join(MODULE, 'levelRun.js'));
@@ -228,7 +228,7 @@ async function main() {
         const NAME = 'u10-puncher-dwell-refused';
         const BOOT = Object.freeze({ level: 12, x: 400, y: 248 });
         const STAND = 50;
-        const p = previewAt(BOOT, STAND);
+        const p = withContactFidelity(REFUSED_CONTROL_FIDELITY, () => previewAt(BOOT, STAND));
         check('⛓⛓⛓ the FORECAST refuses the stance BY THE PUNCH at a named tick',
             p.forecast !== null && /the punch/.test(p.forecast.why),
             p.forecast ? `t ${p.forecast.t}: ${p.forecast.why}` : 'admitted: no positive control');
@@ -241,7 +241,7 @@ async function main() {
          * stops before a press the model cannot yet adjudicate.
          */
         const held = p.held.slice(0, p.forecast?.t ?? p.held.length);
-        const run = drive(BOOT, held);
+        const run = withContactFidelity(REFUSED_CONTROL_FIDELITY, () => drive(BOOT, held));
         const first = run.playerHits[0];
         check('⛓⛓⛓ the MODEL, driven by those keys, is PUNCHED at exactly that tick',
             first && first.source === 'punch' && first.t === p.forecast?.t,

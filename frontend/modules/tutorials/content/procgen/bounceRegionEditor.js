@@ -58,12 +58,12 @@ export const PROCGEN_BOUNCE_REGION_EDITOR = Object.freeze({
                 {
                     step: {
                         id: 'pick-platform',
-                        text: 'Pick a platform — click it on the canvas, or choose it in the sidebar\'s **pick** drop-down (here **b1**, the second from the bottom). The sidebar shows its fields — position, width, kind — and **Derived access rules** lists what reaching each exit needs.',
+                        text: 'Pick a platform — click it on the canvas, or choose it in the sidebar\'s **pick** drop-down (here **b1**, the second from the bottom). The sidebar shows its fields — **x**, **y** and **type** — and **Derived access rules** lists what reaching each exit needs.',
                         actions: [{ select: { ...EDITOR, selector: 'select.bre-platform-pick', value: 'b1' } }],
                         done: (ctx) => ctx.text(editorSide).includes('selected: b1'),
                     },
                 },
-                { prose: 'Change a field — move the platform, widen it — and watch the rules update; **↶ Undo** takes an edit back.' },
+                { prose: 'Change a field — move the platform, change its type — and watch the rules update; **↶ Undo** takes an edit back.' },
                 {
                     step: {
                         id: 'save',

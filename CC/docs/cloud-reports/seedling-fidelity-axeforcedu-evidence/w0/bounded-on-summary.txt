@@ -1,0 +1,4 @@
+ON (SEEDLING_AXE_PRICED_CROSSING=1) files 76 tests 2084 pass 2081 fail 2 skip 1 md5 b29abe3abfb3ebe72ef70294c9dd1838
+   failed seedlingSolverSurface.test.js :: the committed contract equals a fresh census (i) every static row's files and site counts match
+   skipped contactFidelity.test.js :: contact witnesses (fixtures/contact-witness) the shipped defaults: all three ON
+   failed fidelityAxePriced.test.js :: AXEFORCEDU D2 — the switch and its bounds its bounds: a preview bound for the certificate, eight members priced on forks

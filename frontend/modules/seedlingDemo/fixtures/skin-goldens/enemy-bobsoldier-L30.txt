@@ -1,0 +1,200 @@
+t=1 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 51, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 56, 85) rot=-288
+t=2 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 51.55, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 56.55, 85) rot=-306
+t=3 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 52.1, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 57.1, 85) rot=-324
+t=4 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 52.65, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 57.65, 85) rot=-342
+t=5 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 53.2, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 58.2, 85) rot=-360
+t=6 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 53.75, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 58.75, 85) rot=-378
+t=7 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 54.3, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 59.3, 85) rot=-396.00000000000006
+t=8 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 54.85, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 59.85, 85) rot=-413.99999999999994
+t=9 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 55.4, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 60.4, 85) rot=-432
+t=10 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 55.95, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 60.95, 85) rot=-450
+t=11 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 56.5, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 61.5, 85) rot=-468
+t=12 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 57.05, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 62.05, 85) rot=-486
+t=13 [] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 57.6, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 62.6, 85) rot=-504
+t=14 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 58.15, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 63.15, 85) rot=-522
+t=15 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 58.7, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 63.7, 85) rot=-540
+t=16 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 59.25, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 64.25, 85) rot=-558
+t=17 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 59.8, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 64.8, 85) rot=-576
+t=18 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 60.35, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 65.35, 85) rot=-594
+t=19 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 60.9, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 65.9, 85) rot=-612
+t=20 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 61.45, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 66.45, 85) rot=-630
+t=21 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 62, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 67, 85) rot=-648
+t=22 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 58.05, 83) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 63.05, 85) rot=-666
+t=23 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 55.15, 83) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 60.15, 85) rot=-684
+t=24 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 53.3, 83) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 58.3, 85) rot=-702
+t=25 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 52.5, 83) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 57.5, 85)
+t=26 [] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 52.5, 83) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 57.5, 85)
+t=27 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 53.05, 83) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 58.05, 85)
+t=28 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 53.6, 83) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 58.6, 85)
+t=29 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 54.15, 83) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 59.15, 85)
+t=30 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 54.7, 83) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 59.7, 85)
+t=31 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 55.25, 83) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 60.25, 85)
+t=32 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 55.8, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 60.8, 85)
+t=33 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 56.35, 83) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 61.35, 85)
+t=34 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 56.823, 83.28) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 61.823, 85.28)
+t=35 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 57.332, 83.073) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 62.332, 85.073)
+t=36 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 57.834, 83.299) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 62.834, 85.299)
+t=37 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 58.337, 83.077) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 63.337, 85.077)
+t=38 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 58.84, 83.3) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 63.84, 85.3)
+t=39 [] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 59.342, 83.078) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 64.342, 85.078)
+t=40 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 59.845, 83.301) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 64.845, 85.301)
+t=41 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 60.348, 83.078) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 65.348, 85.078)
+t=42 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 60.851, 83.301) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 65.851, 85.301)
+t=43 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 61.354, 83.078) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 66.354, 85.078)
+t=44 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 61.857, 83.301) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 66.857, 85.301)
+t=45 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 62.36, 83.078) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 67.36, 85.078)
+t=46 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 62.862, 83.301) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 67.862, 85.301)
+t=47 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 63.365, 83.078) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 68.365, 85.078)
+t=48 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 63.798, 82.738) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 68.798, 84.738)
+t=49 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 64.313, 82.931) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 69.313, 84.931)
+t=50 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 64.812, 82.7) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 69.812, 84.7)
+t=51 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 65.243, 82.358) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 70.243, 84.358)
+t=52 [] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 65.647, 81.984) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 70.647, 83.984)
+t=53 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 66.04, 81.6) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 71.04, 83.6)
+t=54 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 66.431, 81.213) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 71.431, 83.213)
+t=55 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 66.82, 80.824) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 71.82, 82.824)
+t=56 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 67.209, 80.436) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 72.209, 82.436)
+t=57 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 67.598, 80.047) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 72.598, 82.047)
+t=58 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 67.987, 79.658) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 72.987, 81.658)
+t=59 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 68.376, 79.269) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 73.376, 81.269)
+t=60 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 68.765, 78.88) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 73.765, 80.88)
+t=61 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 69.154, 78.491) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 74.154, 80.491)
+t=62 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 69.543, 78.102) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 74.543, 80.102)
+t=63 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 69.932, 77.713) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 74.932, 79.713)
+t=64 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 70.321, 77.324) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 75.321, 79.324)
+t=65 [] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 70.709, 76.935) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 75.709, 78.935)
+t=66 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 67.345, 79.037) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 72.345, 81.037)
+t=67 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 65.003, 80.226) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 70.003, 82.226)
+t=68 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 63.703, 80.553) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 68.703, 82.553)
+t=69 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 63.385, 80.252) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 68.385, 82.252)
+t=70 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 63.606, 79.749) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 68.606, 81.749)
+t=71 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 64.134, 79.902) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 69.134, 81.902)
+t=72 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 64.629, 79.661) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 69.629, 81.661)
+t=73 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 65.057, 79.317) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 70.057, 81.317)
+t=74 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 65.46, 78.942) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 70.46, 80.942)
+t=75 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 65.853, 78.557) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 70.853, 80.557)
+t=76 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 66.243, 78.17) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 71.243, 80.17)
+t=77 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 66.763, 78.35) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 71.763, 80.35)
+t=78 [] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 67.261, 78.116) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 72.261, 80.116)
+t=79 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 67.765, 78.336) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 72.765, 80.336)
+t=80 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 68.268, 78.112) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 73.268, 80.112)
+t=81 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 68.771, 78.335) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 73.771, 80.335)
+t=82 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 69.273, 78.112) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 74.273, 80.112)
+t=83 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 69.776, 78.335) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 74.776, 80.335)
+t=84 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 70.279, 78.112) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 75.279, 80.112)
+t=85 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 70.782, 78.335) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 75.782, 80.335)
+t=86 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 71.215, 78.675) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 76.215, 80.675)
+t=87 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 71.73, 78.482) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 76.73, 80.482)
+t=88 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 72.229, 78.713) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 77.229, 80.713)
+t=89 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 72.733, 78.492) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 77.733, 80.492)
+t=90 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 73.235, 78.715) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 78.235, 80.715)
+t=91 [] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 73.738, 78.493) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 78.738, 80.493)
+t=92 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 74.241, 78.716) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 79.241, 80.716)
+t=93 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 74.744, 78.493) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 79.744, 80.493) rot=-18
+t=94 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 75.247, 78.716) tint=#ff0000 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 80.247, 80.716) rot=-36
+t=95 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 75.75, 78.493) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 80.75, 80.493) rot=-54
+t=96 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 76.253, 78.716) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 81.253, 80.716) rot=-72
+t=97 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 76.756, 78.493) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 81.756, 80.493) rot=-90
+t=98 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 77.258, 78.716) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 82.258, 80.716) rot=-108
+t=99 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 77.691, 79.055) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 82.691, 81.055) rot=-126
+t=100 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 78.206, 78.863) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 83.206, 80.863) rot=-144
+t=101 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 78.706, 79.093) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 83.706, 81.093) rot=-162
+t=102 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 79.136, 79.435) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 84.136, 81.435) rot=-180
+t=103 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 79.652, 79.243) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 84.652, 81.243) rot=-198.00000000000003
+t=104 [] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 80.151, 79.474) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 85.151, 81.474) rot=-216
+t=105 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 80.582, 79.816) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 85.582, 81.816) rot=-234
+t=106 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 81.097, 79.624) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 86.097, 81.624) rot=-252
+t=107 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 81.597, 79.855) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 86.597, 81.855) rot=-270
+t=108 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 82.028, 80.197) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 87.028, 82.197) rot=-288
+t=109 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 82.543, 80.005) ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 87.543, 82.005) rot=-306
+t=110 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 82.543, 80.005) alpha=0.9 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 87.543, 82.005) rot=-324 alpha=0.9
+t=111 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 82.543, 80.005) alpha=0.8 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 87.543, 82.005) rot=-342 alpha=0.8
+t=112 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 82.543, 80.005) alpha=0.7 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 87.543, 82.005) rot=-360 alpha=0.7
+t=113 [walk] | seedling:enemy/bobsoldier#2 drawImage(seedling/BobSoldier, 20, 0, 82.543, 80.005) alpha=0.6 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 87.543, 82.005) rot=-378 alpha=0.6
+t=114 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 82.543, 80.005) alpha=0.5 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 87.543, 82.005) rot=-396.00000000000006 alpha=0.5
+t=115 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 82.543, 80.005) alpha=0.4 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 87.543, 82.005) rot=-413.99999999999994 alpha=0.4
+t=116 [walk] | seedling:enemy/bobsoldier#1 drawImage(seedling/BobSoldier, 10, 0, 82.543, 80.005) alpha=0.3 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 87.543, 82.005) rot=-432 alpha=0.3
+t=117 [] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 82.543, 80.005) alpha=0.2 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 87.543, 82.005) rot=-450 alpha=0.2
+t=118 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 82.543, 80.005) alpha=0.1 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 87.543, 82.005) rot=-468 alpha=0.1
+t=119 [walk] | seedling:enemy/bobsoldier#0 drawImage(seedling/BobSoldier, 0, 0, 82.543, 80.005) alpha=0 ; seedling:enemy/lameSword#0 drawImage(seedling/LameSword, 0, 0, 87.543, 82.005) rot=-486 alpha=0
+t=120 [] |
+t=121 [] |
+t=122 [] |
+t=123 [] |
+t=124 [] |
+t=125 [] |
+t=126 [] |
+t=127 [] |
+t=128 [] |
+t=129 [] |
+t=130 [] |
+t=131 [] |
+t=132 [] |
+t=133 [] |
+t=134 [] |
+t=135 [] |
+t=136 [] |
+t=137 [] |
+t=138 [] |
+t=139 [] |
+t=140 [] |
+t=141 [] |
+t=142 [] |
+t=143 [] |
+t=144 [] |
+t=145 [] |
+t=146 [] |
+t=147 [] |
+t=148 [] |
+t=149 [] |
+t=150 [] |
+t=151 [] |
+t=152 [] |
+t=153 [] |
+t=154 [] |
+t=155 [] |
+t=156 [] |
+t=157 [] |
+t=158 [] |
+t=159 [] |
+t=160 [] |
+t=161 [] |
+t=162 [] |
+t=163 [] |
+t=164 [] |
+t=165 [] |
+t=166 [] |
+t=167 [] |
+t=168 [] |
+t=169 [] |
+t=170 [] |
+t=171 [] |
+t=172 [] |
+t=173 [] |
+t=174 [] |
+t=175 [] |
+t=176 [] |
+t=177 [] |
+t=178 [] |
+t=179 [] |
+t=180 [] |
+t=181 [] |
+t=182 [] |
+t=183 [] |
+t=184 [] |
+t=185 [] |
+t=186 [] |
+t=187 [] |
+t=188 [] |
+t=189 [] |
+t=190 [] |
+t=191 [] |
+t=192 [] |
+t=193 [] |
+t=194 [] |
+t=195 [] |
+t=196 [] |
+t=197 [] |
+t=198 [] |
+t=199 [] |
+t=200 [] |

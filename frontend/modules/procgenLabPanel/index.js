@@ -20,6 +20,7 @@ export const moduleInfo = {
     name: 'procgenLabPanel',
     title: 'Procgen Lab',
     componentType: 'procgenLabPanel',
+    docs: 'docs/json/user/modules/procgenLab.md',
     icon: '🧪',
     column: 3,
     category: 'Procgen Infrastructure Panels',

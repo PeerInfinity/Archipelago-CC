@@ -1,0 +1,373 @@
+{
+    "game": "seedling",
+    "name": "watchertalk-l114-clear-16",
+    "boot": {
+        "level": 114,
+        "x": 64,
+        "y": 128
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 384,
+    "inputs": [
+        {
+            "key": "primary",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "up",
+            "from": 0,
+            "to": 3
+        },
+        {
+            "key": "primary",
+            "from": 2,
+            "to": 3
+        },
+        {
+            "key": "down",
+            "from": 3,
+            "to": 4
+        },
+        {
+            "key": "up",
+            "from": 4,
+            "to": 9
+        },
+        {
+            "key": "down",
+            "from": 9,
+            "to": 10
+        },
+        {
+            "key": "right",
+            "from": 12,
+            "to": 18
+        },
+        {
+            "key": "left",
+            "from": 18,
+            "to": 20
+        },
+        {
+            "key": "right",
+            "from": 20,
+            "to": 21
+        },
+        {
+            "key": "left",
+            "from": 21,
+            "to": 22
+        },
+        {
+            "key": "right",
+            "from": 22,
+            "to": 23
+        },
+        {
+            "key": "left",
+            "from": 23,
+            "to": 24
+        },
+        {
+            "key": "right",
+            "from": 24,
+            "to": 25
+        },
+        {
+            "key": "left",
+            "from": 25,
+            "to": 26
+        },
+        {
+            "key": "up",
+            "from": 12,
+            "to": 27
+        },
+        {
+            "key": "right",
+            "from": 26,
+            "to": 27
+        },
+        {
+            "key": "primary",
+            "from": 27,
+            "to": 28
+        },
+        {
+            "key": "primary",
+            "from": 36,
+            "to": 37
+        },
+        {
+            "key": "primary",
+            "from": 45,
+            "to": 46
+        },
+        {
+            "key": "primary",
+            "from": 54,
+            "to": 55
+        },
+        {
+            "key": "primary",
+            "from": 63,
+            "to": 64
+        },
+        {
+            "key": "primary",
+            "from": 72,
+            "to": 73
+        },
+        {
+            "key": "primary",
+            "from": 81,
+            "to": 82
+        },
+        {
+            "key": "primary",
+            "from": 90,
+            "to": 91
+        },
+        {
+            "key": "primary",
+            "from": 99,
+            "to": 100
+        },
+        {
+            "key": "primary",
+            "from": 108,
+            "to": 109
+        },
+        {
+            "key": "primary",
+            "from": 117,
+            "to": 118
+        },
+        {
+            "key": "primary",
+            "from": 126,
+            "to": 127
+        },
+        {
+            "key": "primary",
+            "from": 135,
+            "to": 136
+        },
+        {
+            "key": "primary",
+            "from": 144,
+            "to": 145
+        },
+        {
+            "key": "primary",
+            "from": 153,
+            "to": 154
+        },
+        {
+            "key": "primary",
+            "from": 162,
+            "to": 163
+        },
+        {
+            "key": "primary",
+            "from": 171,
+            "to": 172
+        },
+        {
+            "key": "primary",
+            "from": 180,
+            "to": 181
+        },
+        {
+            "key": "primary",
+            "from": 189,
+            "to": 190
+        },
+        {
+            "key": "primary",
+            "from": 198,
+            "to": 199
+        },
+        {
+            "key": "primary",
+            "from": 207,
+            "to": 208
+        },
+        {
+            "key": "primary",
+            "from": 216,
+            "to": 217
+        },
+        {
+            "key": "primary",
+            "from": 225,
+            "to": 226
+        },
+        {
+            "key": "primary",
+            "from": 234,
+            "to": 235
+        },
+        {
+            "key": "primary",
+            "from": 243,
+            "to": 244
+        },
+        {
+            "key": "primary",
+            "from": 252,
+            "to": 253
+        },
+        {
+            "key": "primary",
+            "from": 261,
+            "to": 262
+        },
+        {
+            "key": "primary",
+            "from": 270,
+            "to": 271
+        },
+        {
+            "key": "primary",
+            "from": 279,
+            "to": 280
+        },
+        {
+            "key": "primary",
+            "from": 288,
+            "to": 289
+        },
+        {
+            "key": "primary",
+            "from": 297,
+            "to": 298
+        },
+        {
+            "key": "primary",
+            "from": 306,
+            "to": 307
+        },
+        {
+            "key": "primary",
+            "from": 315,
+            "to": 316
+        },
+        {
+            "key": "primary",
+            "from": 324,
+            "to": 325
+        },
+        {
+            "key": "primary",
+            "from": 333,
+            "to": 334
+        },
+        {
+            "key": "primary",
+            "from": 342,
+            "to": 343
+        },
+        {
+            "key": "primary",
+            "from": 351,
+            "to": 352
+        },
+        {
+            "key": "primary",
+            "from": 360,
+            "to": 361
+        },
+        {
+            "key": "primary",
+            "from": 369,
+            "to": 370
+        },
+        {
+            "key": "primary",
+            "from": 378,
+            "to": 379
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓⛓ SEEDLING FIDELITY WATCHERTALK — the divergence sweep's L114 location leg (`level_114 <- in_L113_16_0 -> location:L114 flag 0: watcher@72,72 cleared`): the clear-tag {114,0} on watcher@72,72 from the arrival (64,128). The solver walks to a talk stance outside the 24 px circle, steps in until `NPC.talk()` opens the dialogue on proximity, pages it with a release of X on the ceremony cadence until `doneTalking()` writes {114,0} false, and settles. Staged as `watcher-l114-talk` (`r8-solve-11`'s committed block re-pointed at the arrival). The solver's own plan (`watcherTalkVerb` ON): 384 t. Authored by scripts/procgen/plan-seedling-watchertalk-witness.mjs."
+}

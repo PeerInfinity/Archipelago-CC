@@ -633,6 +633,73 @@ registerTest({
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
+/**
+ * ⛓ GRAPHICS G3 — the enemies' sibling row. The JS page is mounted STANDALONE in this row's own iframe
+ * (`jsRuntime.html?graphics=seedling&camera=follow`) and driven through its own `__swfBridge`, exactly as the node
+ * tapes drive the core: configure, then `Game(14, 16, 112)` — the room with six Bobs — with the sword staged. No
+ * panel, no preset and no AP state is touched; the iframe is removed however the row ends.
+ *
+ * It asserts what node cannot: in a browser the pack's enemy sheets DECODE and the page's tick loop folds every
+ * body into the skin, so `__seedlingJsGraphics.enemies` reports each Bob drawn as `seedling:enemy/bob` from the
+ * seedling pack, and its frame CHANGES while the Bobs chase (the per-tick reducer is live, not a frozen frame 0).
+ */
+export async function seedlingJsRuntimeGraphicsEnemies(tc) {
+    const frame = document.createElement('iframe');
+    // Visible (a display:none frame gets no animation frames, and the page paints only in rAF), but out of the way.
+    Object.assign(frame.style, { position: 'fixed', right: '0', bottom: '0', width: '160px', height: '160px',
+        opacity: '0.01', pointerEvents: 'none', border: '0' });
+    const errors = [];
+    try {
+        frame.src = './modules/seedlingDemo/jsRuntime.html?graphics=seedling&camera=follow';
+        document.body.appendChild(frame);
+        const win = await tc.pollForValue(() => {
+            const w = frame.contentWindow;
+            return w?.__runtimeReady && w.__seedlingJsRuntime?.vanilla && w.__seedlingJsGraphics?.status === 'ready' ? w : null;
+        }, 'the standalone JS page loaded the vanilla map and the seedling pack stack', 20000, 200);
+        tc.reportCondition('the standalone page is up with its pack', !!win);
+        if (!win) return tc.getOverallResult();
+        const origError = win.console.error.bind(win.console);
+        win.console.error = (...a) => { errors.push(a.map(String).join(' ')); origError(...a); };
+        win.addEventListener('error', (e) => errors.push(`uncaught: ${e.message}`));
+        const game = await (await fetch('./modules/flashPanel/games/seedling.json')).json();
+        win.__swfBridge.game.configure(JSON.stringify({ classes: game.classes, state_properties: game.state_properties }));
+        win.__swfBridge.queueItems([{ class: 'game', property: 'menu', value: false }, { class: 'Main', property: 'hasSword', value: true },
+            { invocation: 'new_instance', className: 'Game', args: [14, 16, 112] }]);
+        const g = win.__seedlingJsGraphics;
+        const bobsOf = (e) => (e?.ops ?? []).filter((o) => o.key === 'seedling:enemy/bob');
+        const first = await tc.pollForValue(() => (bobsOf(g.enemies).length >= 6 ? g.enemies : null),
+            'the page drew the six Bobs of level 14 from the pack', 15000, 100);
+        tc.log(`enemies: ${JSON.stringify(g.enemies)}`);
+        tc.assertEqual('level 14\'s six Bobs resolved to seedling:enemy/bob from the seedling pack', '6/seedling',
+            `${bobsOf(first).length}/${[...new Set(bobsOf(first).map((o) => o.pack))].join(',')}`);
+        tc.assertEqual('every sheet decoded (none fell back to rectangles)', '[]', JSON.stringify(g.failedSheets));
+        const frames0 = bobsOf(first).map((o) => o.frame).join(',');
+        const moved = await tc.pollForValue(() => {
+            const now = bobsOf(g.enemies).map((o) => o.frame).join(',');
+            return now !== frames0 ? now : null;
+        }, 'a Bob\'s frame advanced (the reducer runs in the tick loop)', 10000, 50);
+        tc.assertEqual('the Bobs animate (their frames moved off the first paint\'s)', true, !!moved);
+        tc.assertEqual('no console error on the page', '[]', JSON.stringify(errors));
+        const rt = win.__seedlingJsRuntime;
+        tc.assertEqual('the run is in level 14 and did not halt', '14/null', `${rt.run?.level}/${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        frame.remove();
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-graphics-enemies',
+    name: 'Seedling JS runtime: enemies in the original graphics (G3)',
+    description: 'Mounts jsRuntime.html?graphics=seedling&camera=follow standalone in its own iframe, drives it to level 14 '
+        + '(six Bobs) through its own __swfBridge, and asserts the page draws each Bob as seedling:enemy/bob from the '
+        + 'seedling pack, every sheet decodes, the Bobs\' frames advance, and no console error. Touches no panel, preset '
+        + 'or AP state; the iframe is removed however it ends.',
+    testFunction: seedlingJsRuntimeGraphicsEnemies,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
 export async function seedlingJsRuntimeBotCompletesAtlasLocation(tc) {
     let previous = 'auto';
     try { previous = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }

@@ -1252,7 +1252,7 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
          * room's one chaser.
          */
         Object.freeze({
-            name: 'stance-l48-keylock-south', levels: Object.freeze([53]), bobs: 1, ticks: 369,
+            name: 'stance-l48-keylock-south', levels: Object.freeze([53]), bobs: 1, ticks: 322,
             addedBy: 'Seedling fidelity STANCE D2 (a bosslock opens only from its own side)',
             why: 'from the L47 door the `keylock` stance lands on `bosslock@48,144`\'s key line, the '
                 + 'lock opens and the walk leaves by `teleporter@0,112`; the crossing\'s last tick is '
@@ -1306,7 +1306,7 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             why: 'the BURN witness\'s last tick is the L45 arrival, a jellyfish room; replayed unchanged with the jellyfish stepped.',
         }),
         Object.freeze({
-            name: 'ladder2-l104-beam', levels: Object.freeze([104, 105]), bobs: 1, ticks: 279,
+            name: 'ladder2-l104-beam', levels: Object.freeze([104, 105]), bobs: 1, ticks: 262,
             addedBy: 'Seedling fidelity KILLLOCK K1 at the wave-8 harvest (the guard found it)',
             why: 'the LADDER2 beam witness walks L104 and arrives in L105, both jellyfish rooms; replayed unchanged with the jellyfish stepped.',
         }),
@@ -1365,13 +1365,13 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'game\'s own `hits` is the model\'s.',
         }),
         Object.freeze({
-            name: 'l30keylock-pit224', levels: Object.freeze([22, 30]), bobs: 1, ticks: 347,
+            name: 'l30keylock-pit224', levels: Object.freeze([22, 30]), bobs: 1, ticks: 320,
             addedBy: 'Seedling fidelity L30KEYLOCK D2 (the AFTER from (224,80): the solver\'s own plan, both switches ON)',
             why: 'the keylock\'s wait priced, the kill from (88,120) (the body gone at t 191), the key line at t 252, '
                 + 'the lock open at t 331, teleporter@64,0 -> L22. Zero hits. Recorded on the game; the model reproduces it.',
         }),
         Object.freeze({
-            name: 'l30keylock-pit240', levels: Object.freeze([22, 30]), bobs: 1, ticks: 360,
+            name: 'l30keylock-pit240', levels: Object.freeze([22, 30]), bobs: 1, ticks: 341,
             addedBy: 'Seedling fidelity L30KEYLOCK D3 (the AFTER from the other pit landing (240,80))',
             why: 'the kill from (88,120) (the body gone at t 207), the key line at t 265, the lock open at t 344, '
                 + 'teleporter@64,0 -> L22. Zero hits — the base solver\'s walk from here DIES on the key line. Recorded on '
@@ -1436,7 +1436,7 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'L63\'s arrival among its two jellyfish. Recorded on the game with `hits` 0.',
         }),
         Object.freeze({
-            name: 'pushblock-l65-reach-l68', levels: Object.freeze([65]), bobs: 1, ticks: 348,
+            name: 'pushblock-l65-reach-l68', levels: Object.freeze([65]), bobs: 1, ticks: 346,
             addedBy: 'Seedling fidelity PUSHBLOCK D3 (route step 146\'s room, R4\'s three thrusts)',
             why: 'three spear thrusts at `pushableblockspear@176,128` from its own pocket and the walk to '
                 + '`teleporter@184,64`: 347 ticks in L65 with `bob@208,80`, the last on L68\'s arrival (no '

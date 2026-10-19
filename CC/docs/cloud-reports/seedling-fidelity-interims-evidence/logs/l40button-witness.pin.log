@@ -1,0 +1,8 @@
+PASS: l40button-l41-part0: the ON plan latches t0, breaks, latches t1, collects — and never touches group 2 — ["brave","kill","hold","break","hold","collect"], 1543 t, 12 s
+PASS: l40button-l41-part0: the model replays it to the part — 1544 observations, ends {"level":40,"x":72.34285322518913,"y":142.9015638457861}
+PASS: the committed l40button-l41-part0 is what this script produces today — byte-identical
+PASS: l40button-l42-part0: the ON plan latches t0, breaks, latches t1, collects — and never touches group 2 — ["brave","hold","kill","break","hold","collect"], 1597 t, 8 s
+PASS: l40button-l42-part0: the model replays it to the part — 1598 observations, ends {"level":40,"x":72.29869107660389,"y":143.36218665510063}
+PASS: the committed l40button-l42-part0 is what this script produces today — byte-identical
+all checks green
+exit 0 at 00:44:01
