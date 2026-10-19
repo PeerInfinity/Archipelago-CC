@@ -48,6 +48,10 @@
  *   --rules-out <rules.json>      (compile / run) also write the bare rules.json
  *   --from <step>                 (run) resume from this step
  *   --to <step>                   (run) stop after this step (default compile)
+ *   --config PATH                 read flags from a JSON object (the keys a dump
+ *                                 echoes as `config`; flags given here win; exit 3
+ *                                 if it fails the schema); see cliFlags.js
+ *   --config-schema               print that JSON Schema and exit
  *   --json-status PATH            write the run's status object (`-` = stdout); see cliRun.js
  *   -h, --help                    print this and exit
  *
@@ -56,13 +60,13 @@
  */
 import { writeFileSync, readFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-import { argvHelp, helpText } from './argvHelp.js';
+import { argvHelp } from './argvHelp.js';
+import { KIND, W, flag, parseFlags } from './cliFlags.js';
 import { runCli, UsageError, InputError, parseOrUsage, readInputJson } from './cliRun.js';
 
-// Substrate libraries register their adapters on import — one shared list.
-import './registerPipelineSubstrates.js';
+// Substrate libraries (procgenCore/substrateLibraries.js) — loaded by main, not on import.
+import { checkSubstrateIds, loadPipelineSubstrates } from './registerPipelineSubstrates.js';
 import {
     TOPDOWN_STEPS, runTopDownStep, runTopDownToStep, resumeTDEnvelope,
     nextTopDownStep, detectTDCompleted, buildTopDownEnvelope, tdEditsBehind,
@@ -76,8 +80,34 @@ argvHelp(import.meta.url);
 
 // --- CLI parser ---
 
+/** ⛓ The flags this driver takes (cliFlags.js parses them). */
+const FLAGS = {
+    '--source': flag('source', KIND.str),
+    '--seed': W.seed,
+    '--grid': W.grid,
+    '--region': W.region,
+    '--mix': W.mixWeights,
+    '--param': W.param,
+    '--physics-profile': W.physicsProfile,
+    '--fall-behavior': W.fallBehavior,
+    '--sphere-log': flag('sphereLog', KIND.str),
+    '--enable-loop-mode': W.enableLoopMode,
+    '--region-xp-effect': W.regionXpEffect,
+    '-i': W.input,
+    '--input': W.input,
+    '-o': W.out,
+    '--out': W.out,
+    '--rules-out': W.rulesOut,
+    '--from': W.from,
+    '--to': W.to,
+    '--config': W.config,
+    '--config-schema': W.configSchema,
+    '--json-status': W.jsonStatus,
+    '-h': W.help,
+};
+
 function parseArgs(argv) {
-    const out = {
+    const out = parseFlags(argv, FLAGS, {
         subcommand: null,
         source: null,
         seed: 1,
@@ -95,53 +125,7 @@ function parseArgs(argv) {
         rulesOut: null,
         from: null,
         to: null,
-    };
-    const parseWxH = (s) => {
-        const [w, h] = s.split('x').map((n) => parseInt(n, 10));
-        if (!Number.isFinite(w) || !Number.isFinite(h)) throw new Error(`expected WxH, got '${s}'`);
-        return { width: w, height: h };
-    };
-    const parseNumKv = (s) => {
-        const i = s.indexOf('=');
-        if (i < 0) throw new Error(`expected id=N, got '${s}'`);
-        return [s.slice(0, i), parseFloat(s.slice(i + 1))];
-    };
-    const parseStrKv = (s) => {
-        const i = s.indexOf('=');
-        if (i < 0) throw new Error(`expected key=value, got '${s}'`);
-        const v = s.slice(i + 1);
-        const n = Number(v);
-        return [s.slice(0, i), Number.isFinite(n) && v.trim() !== '' ? n : v];
-    };
-    for (let i = 0; i < argv.length; i++) {
-        const a = argv[i];
-        const next = () => argv[++i];
-        if (i === 0 && !a.startsWith('-')) { out.subcommand = a; continue; }
-        switch (a) {
-            case '--source': out.source = next(); break;
-            case '--seed': out.seed = parseInt(next(), 10); break;
-            case '--grid': out.grid = parseWxH(next()); break;
-            case '--region': out.region = parseWxH(next()); break;
-            case '--mix': { const [id, w] = parseNumKv(next()); out.mix[id] = w; break; }
-            case '--param': { const [k, v] = parseStrKv(next()); out.params[k] = v; break; }
-            case '--physics-profile': out.physicsProfile = next(); break;
-            case '--fall-behavior': out.fallBehavior = next(); break;
-            case '--sphere-log': out.sphereLog = next(); break;
-            case '--enable-loop-mode': out.enableLoopMode = true; break;
-            case '--region-xp-effect': out.regionXpEffect = next(); break;
-            case '-i': case '--input': out.input = next(); break;
-            case '-o': case '--out': out.out = next(); break;
-            case '--rules-out': out.rulesOut = next(); break;
-            case '--from': out.from = next(); break;
-            case '--to': out.to = next(); break;
-            case '--json-status': out.jsonStatus = next(); break;
-            case '-h':
-                process.stdout.write(`${helpText(fileURLToPath(import.meta.url))}\n`);
-                process.exit(0);
-                break;
-            default: throw new Error(`unknown flag '${a}'`);
-        }
-    }
+    }, { subcommand: true, metaUrl: import.meta.url });
     if (Object.keys(out.mix).length === 0) out.mix = { maze: 1 };
     return out;
 }
@@ -209,11 +193,14 @@ function buildEnv(args) {
 
 async function main(status) {
     const args = parseOrUsage(() => parseArgs(process.argv.slice(2)));
+    status.config = args;
     const sub = args.subcommand;
     status.subcommand = sub;
     if (!sub) throw new UsageError(`missing subcommand (one of: ${TOPDOWN_STEPS.join(', ')}, run)`);
     const isStep = TOPDOWN_STEPS.includes(sub);
     if (!isStep && sub !== 'run') throw new UsageError(`unknown subcommand '${sub}'`);
+    await loadPipelineSubstrates();
+    checkSubstrateIds(args, { layout: 'topdown', tool: 'topdown-step', counts: { mix: '--mix' } });
 
     let env;
     if (args.input) {

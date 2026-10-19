@@ -1,0 +1,17 @@
+== f1: frame kept as a growing list (every open frame's detail)
+  exit 1; Tests  5 failed | 5 passed | 33 skipped (43)
+  RED × ⛓⛓⛓ L18 hammer room (residue 21): every pre-TC2 byte of every snapshot is W0's; `frame` is null or ONE object of the declared shape 16ms
+  RED × ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): every pre-TC2 byte of every snapshot is W0's; `frame` is null or ONE object of the declared shape 1ms
+  RED × ⛓⛓⛓ L6 ladder climb: every pre-TC2 byte of every snapshot is W0's; `frame` is null or ONE object of the declared shape 150ms
+  RED × ⛓⛓⛓ L40's kill rung: the frame's body is a body of the room, its stance a walkable cell, its danger the trace's 1ms
+  RED × ⛓⛓ L18's press arm: each frame is a strike the record kept (its body, its cell), read and not re-derived 1ms
+== f2: the climb's danger from a FRESH probe instead of the hit it was handed
+  exit 1; Tests  4 failed | 6 passed | 33 skipped (43)
+  RED × ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, shouldStop, the asks and the work are W0's, hooked and unhooked; unhooked, no frame is read 16881ms
+  RED × ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): every pre-TC2 byte of every snapshot is W0's; `frame` is null or ONE object of the declared shape 2ms
+  RED × ⛓⛓⛓ L6 ladder climb: every pre-TC2 byte of every snapshot is W0's; `frame` is null or ONE object of the declared shape 178ms
+  RED × ⛓⛓⛓ L40's kill rung: the frame's body is a body of the room, its stance a walkable cell, its danger the trace's 7ms
+== f3: a frame read outside the null check (setter null-safe, the chaser arm's guard dropped)
+  exit 1; Tests  2 failed | 8 passed | 33 skipped (43)
+  RED × ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, shouldStop, the asks and the work are W0's, hooked and unhooked; unhooked, no frame is read 15930ms
+  RED × ⛓⛓ only an install reaches a frame: every solverBot site is one guarded line, and the setter reads no deadline 12ms

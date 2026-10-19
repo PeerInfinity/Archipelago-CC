@@ -25,15 +25,15 @@ Beyond standard tracking, the frontend supports alternate game modes activated v
 | **[MetaMath](../worlds/metamath/docs/README.md)** | `?mode=metamath` | Play through mathematical proofs as Archipelago worlds |
 | **[DepGraph](../docs/json/features/depgraph.md)** | `?mode=depgraph` | Navigate dependency graphs (tech trees, skill trees) |
 | **[Loops](../docs/json/features/loops.md)** | `?mode=loops` | Incremental/idle mode — queue actions, spend mana, earn XP |
-| **Text Adventure** | *(via module config)* | Play the randomizer as a text-based adventure |
+| **Text Adventure** | `?mode=textadventure` | Play the randomizer as a text-based adventure |
 
-The frontend also includes a **procedural-generation pipeline**: the Procgen Pipeline panel generates complete multi-region worlds whose regions are rendered by pluggable substrates (maze, platformer, text adventure, Flash, idle game), compiled to standard `rules.json` and playable in place. See the [procgen developer docs](../docs/json/developer/procgen/README.md).
+The frontend also includes a **procedural-generation pipeline**: the Procgen Pipeline panel generates complete multi-region worlds whose regions are rendered by pluggable substrates (maze, text adventure, platformer, shoot-'em-up, rooms of the recompiled Flash game Seedling, and idle games in loop mode), compiled to standard `rules.json` and playable in place. See the [procgen developer docs](../docs/json/developer/procgen/README.md).
 
 ## Getting Started
 
 ### Try the live demo
 
-Open the [live demo](https://peerinfinity.github.io/Archipelago-CC/) — it loads with a default game preset so you can explore the interface immediately. Use the Presets panel to switch between 158 supported games.
+Open the [live demo](https://peerinfinity.github.io/Archipelago-CC/) — it loads with a default game preset so you can explore the interface immediately. Use the Presets panel to switch to any of the supported games, or to a generated example world.
 
 ### Use with your own games
 
@@ -219,7 +219,6 @@ npm run test:headed
 - **[Event System](../docs/json/developer/guides/event-system.md)** - EventBus and EventDispatcher
 - **[State Management](../docs/json/developer/guides/state-management.md)** - StateManager details
 - **[JSON Schema](schema/README.md)** - Schema documentation for rules files
-- **[Project Roadmap](../docs/json/project-roadmap.md)** - Development priorities and future features
 
 ## Browser Support
 

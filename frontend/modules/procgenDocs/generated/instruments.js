@@ -247,7 +247,8 @@ export const INSTRUMENTS = frz({
         "flags": [
             "includes: /\\bincludes\\(\\s*'--([a-zA-Z][a-zA-Z0-9-]*)'/g",
             "startsWith: /startsWith\\(\\s*[`']--([a-zA-Z][a-zA-Z0-9-]*)=/g",
-            "case: /\\bcase\\s+'--([a-zA-Z][a-zA-Z0-9-]*)'\\s*:/g"
+            "case: /\\bcase\\s+'--([a-zA-Z][a-zA-Z0-9-]*)'\\s*:/g",
+            "table: /^\\s*'--([a-zA-Z][a-zA-Z0-9-]*)'\\s*:/gm"
         ],
         "helperDecl": "/^\\s*(?:export )?const ([a-zA-Z][a-zA-Z0-9]*) = (?:async\\s+)?(?:function\\b|\\([^)]*\\)\\s*=>|[a-zA-Z_$][\\w$]*\\s*=>)/gm — then `<helper>('x')`, within 400 characters of a mention of both `argv` and a `--${…}` template",
         "unresolvedByDesign": "/\\((?:never written|retired)\\)/ within 120 characters after a citation, on the same line — the citation is then of a PLAN or of a RETIRED instrument, and is dropped from both directions of the table"

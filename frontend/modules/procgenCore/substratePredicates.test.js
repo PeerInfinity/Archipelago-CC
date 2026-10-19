@@ -9,8 +9,8 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    CAPTURE_SHAPES, REALISER_KINDS, SOLVER_KINDS,
-    botHonorsInstant, captureShapeOf, offersPlayback, regionRealiserKind, solverKindOf,
+    CAPTURE_SHAPES, PIPELINE_LAYOUTS, REALISER_KINDS, SOLVER_KINDS,
+    botHonorsInstant, captureShapeOf, offersPlayback, pipelineLayoutsOf, regionRealiserKind, solverKindOf,
 } from './substratePredicates.js';
 import * as viaHub from '../apworldEditor/regionRegenerate.js';
 
@@ -97,5 +97,19 @@ describe('botHonorsInstant', () => {
             loopSupport: { instant: true }, sharing: { mana: { loopActionDelegation: true } }, takeLastRecording: fn,
         })).toBe(false);
         expect(botHonorsInstant(null)).toBe(false);
+    });
+});
+
+describe('pipelineLayoutsOf', () => {
+    const { SPHERE, SPIRAL, GRID, TOPDOWN } = PIPELINE_LAYOUTS;
+    it('procedural: every layout; a zone realiser: sphere + topdown; zoneCount alone: spiral only', () => {
+        expect(pipelineLayoutsOf({ generateRegionCore: fn })).toEqual([SPHERE, SPIRAL, GRID, TOPDOWN]);
+        expect(pipelineLayoutsOf({ generateZoneForSpecs: fn })).toEqual([SPHERE, TOPDOWN]);
+        expect(pipelineLayoutsOf({ zoneCount: 4 })).toEqual([SPIRAL]);
+        expect(pipelineLayoutsOf({ generateZoneForSpecsGen: fn, zoneCount: 4 })).toEqual([SPHERE, SPIRAL, TOPDOWN]);
+    });
+    it('none for no entry or an entry with no realiser and no zones', () => {
+        expect(pipelineLayoutsOf(undefined)).toEqual([]);
+        expect(pipelineLayoutsOf({ zoneCount: '4', generateRegionCore: true })).toEqual([]);
     });
 });

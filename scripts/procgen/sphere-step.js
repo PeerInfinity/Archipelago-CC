@@ -49,6 +49,10 @@
  *     --rules-out PATH            `compile`/`run`/`append`: also write the bare rules.json
  *     --from STEP                 `run`: start at this step (default: auto-resume)
  *     --to STEP                   `run`: stop after this step (default compile)
+ *     --config PATH               read flags from a JSON object (the keys a dump
+ *                                 echoes as `config`; flags given here win; exit 3
+ *                                 if it fails the schema); see cliFlags.js
+ *     --config-schema             print that JSON Schema and exit
  *     --json-status PATH          write the run's status object (`-` = stdout); see cliRun.js
  *     -h, --help                  print this and exit
  *
@@ -88,13 +92,13 @@
 
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-import { argvHelp, helpText } from './argvHelp.js';
+import { argvHelp } from './argvHelp.js';
+import { KIND, W, flag, parseFlags } from './cliFlags.js';
 import { runCli, UsageError, parseOrUsage, readInputJson } from './cliRun.js';
 
-// Substrate libraries register their adapters on import — one shared list.
-import './registerPipelineSubstrates.js';
+// Substrate libraries (procgenCore/substrateLibraries.js) — loaded by main, not on import.
+import { checkSubstrateIds, loadPipelineSubstrates } from './registerPipelineSubstrates.js';
 
 import {
     SPHERE_STEPS, runStep, runToStep, resumeEnvelope, detectCompleted, sphereEditsBehind,
@@ -113,8 +117,42 @@ argvHelp(import.meta.url);
 
 // --- CLI parser ---
 
+/** ⛓ The flags this driver takes (cliFlags.js parses them). */
+const FLAGS = {
+    '--seed': W.seed,
+    '--region': W.region,
+    '--items': W.items,
+    '--spheres': W.spheres,
+    '--victory': W.victory,
+    '--quota': W.quota,
+    '--start': W.start,
+    '--max-items-per-region': W.maxItemsPerRegion,
+    '--fillers': W.fillers,
+    '--revisit': W.revisit,
+    '--spheres-per-batch': flag('spheresPerBatch', KIND.int),
+    '--truncate-to-wave': flag('truncateToWave', KIND.int),
+    '--no-arrow-entry': W.noArrowEntry,
+    '--fall-behavior': W.fallBehavior,
+    '--physics-profile': W.physicsProfile,
+    '--param': W.param,
+    '--enable-loop-mode': W.enableLoopMode,
+    '--region-xp-effect': W.regionXpEffect,
+    '-i': W.input,
+    '--input': W.input,
+    '-o': W.out,
+    '--out': W.out,
+    '--params': flag('paramsFile', KIND.str),
+    '--rules-out': W.rulesOut,
+    '--from': W.from,
+    '--to': W.to,
+    '--config': W.config,
+    '--config-schema': W.configSchema,
+    '--json-status': W.jsonStatus,
+    '-h': W.help,
+};
+
 function parseArgs(argv) {
-    const out = {
+    const out = parseFlags(argv, FLAGS, {
         subcommand: null,
         // world flags (used by `plan` / `run`)
         seed: 1,
@@ -152,63 +190,7 @@ function parseArgs(argv) {
         rulesOut: null,
         from: null,
         to: null,
-    };
-    const parseWxH = (s) => {
-        const [w, h] = s.split('x').map((n) => parseInt(n, 10));
-        if (!Number.isFinite(w) || !Number.isFinite(h)) throw new Error(`expected WxH, got '${s}'`);
-        return { width: w, height: h };
-    };
-    const parseKv = (s) => {
-        const i = s.indexOf('=');
-        if (i < 0) throw new Error(`expected id=N, got '${s}'`);
-        return [s.slice(0, i), parseInt(s.slice(i + 1), 10)];
-    };
-    const parseStrKv = (s) => {
-        const i = s.indexOf('=');
-        if (i < 0) throw new Error(`expected key=value, got '${s}'`);
-        return [s.slice(0, i), s.slice(i + 1)];
-    };
-    for (let i = 0; i < argv.length; i++) {
-        const a = argv[i];
-        const next = () => argv[++i];
-        if (i === 0 && !a.startsWith('-')) { out.subcommand = a; continue; }
-        switch (a) {
-            case '--seed': out.seed = parseInt(next(), 10); break;
-            case '--region': out.region = parseWxH(next()); break;
-            case '--items': { const [id, n] = parseKv(next()); out.items[id] = n; break; }
-            case '--spheres': out.spheres = parseInt(next(), 10); break;
-            case '--victory': out.victory = next(); break;
-            case '--quota': { const [id, n] = parseKv(next()); out.quotas[id] = n; break; }
-            case '--start': out.start = next(); break;
-            case '--max-items-per-region': out.maxItemsPerRegion = parseInt(next(), 10); break;
-            case '--fillers': out.fillers = parseInt(next(), 10); break;
-            case '--revisit': out.revisit = parseFloat(next()); break;
-            case '--spheres-per-batch': out.spheresPerBatch = parseInt(next(), 10); break;
-            case '--truncate-to-wave': out.truncateToWave = parseInt(next(), 10); break;
-            case '--no-arrow-entry': out.arrowEntry = false; break;
-            case '--fall-behavior': out.fallBehavior = next(); break;
-            case '--physics-profile': out.physicsProfile = next(); break;
-            case '--param': {
-                const [k, v] = parseStrKv(next());
-                out.params[k] = /^-?\d+(\.\d+)?$/.test(v) ? Number(v) : v;
-                break;
-            }
-            case '--enable-loop-mode': out.enableLoopMode = true; break;
-            case '--region-xp-effect': out.regionXpEffect = next(); break;
-            case '-i': case '--input': out.input = next(); break;
-            case '-o': case '--out': out.out = next(); break;
-            case '--params': out.paramsFile = next(); break;
-            case '--rules-out': out.rulesOut = next(); break;
-            case '--from': out.from = next(); break;
-            case '--to': out.to = next(); break;
-            case '--json-status': out.jsonStatus = next(); break;
-            case '-h':
-                process.stdout.write(`${helpText(fileURLToPath(import.meta.url))}\n`);
-                process.exit(0);
-                break;
-            default: throw new Error(`unknown flag: ${a}`);
-        }
-    }
+    }, { subcommand: true, metaUrl: import.meta.url });
     // Default item pool for world-building subcommands. `append` reads --items
     // as the NEW sphere's content, so an empty list there means "just relocate
     // the goal" — don't inject a default pool.
@@ -318,6 +300,7 @@ function announceEdits(env, firstStep) {
 
 async function main(status) {
     const args = parseOrUsage(() => parseArgs(process.argv.slice(2)));
+    status.config = args;
     const sub = args.subcommand;
     status.subcommand = sub;
     if (!sub) throw new UsageError('missing subcommand (one of: '
@@ -327,6 +310,8 @@ async function main(status) {
     if (!isStep && sub !== 'run' && sub !== 'append') {
         throw new UsageError(`unknown subcommand '${sub}'`);
     }
+    await loadPipelineSubstrates();
+    checkSubstrateIds(args, { layout: 'sphere', tool: 'sphere-step', counts: { quotas: '--quota' }, start: 'start' });
 
     // Load or create the envelope. `append` accepts EITHER a saved envelope or a
     // bare finished rules.json (reconstructed via its embedded sphere_tree —

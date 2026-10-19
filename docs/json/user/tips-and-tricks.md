@@ -60,6 +60,9 @@ A: Yes, for the full online experience. The Archipelago server uses the `.archip
 **Q: Can I use this without connecting to a server?**
 A: Yes. Load your `rules.json` file, and the application works as a powerful offline tracker. You can manually add items to your inventory and use all the accessibility analysis and pathfinding tools.
 
+**Q: Can I play without an existing Archipelago game at all?**
+A: Yes. The client can generate a new world for you and let you play it in the browser: open the **Procgen Pipeline** panel, pick a preset and press Generate, or load one of the generated example worlds from the **Presets** panel. See [For Players](../intro/for-players.md).
+
 **Q: How does "Analyze Paths" in the Regions view work?**
 A: It uses a search algorithm to find all possible sequences of region connections from your starting point to the target region you are analyzing. It then examines the access rules for every exit along those paths and compiles a list of all the items or conditions you are missing to make the path fully accessible.
 

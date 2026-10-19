@@ -23452,3 +23452,106 @@ Lessons:
    The time-varying families are covered by the memo's scope, not by being listed in the key.
 2. *A real corpus can miss a whole branch.* No committed solve has a plan that turns on the X-first corner sample, so
    the mutant that skipped it passed 1,275 calls. Sampled atlas queries found four in 1,505 plans.
+### Seedling hammer-phase TC2 — the active frame (solve-progress)
+
+⚖ The user (2026-10-17): *"I want to implement all of these features, if possible"* (the solve-progress reports). This is
+Tier C's "active frame's detail", hammer #2 and fidelity #6 on the investigation's wishlist. The report is
+`CC/docs/cloud-reports/seedling-hammer-active-frame.md`.
+
+**W0** at `b3adfad282`. The six `--check`s, tapeRunner **617 `8f27f975`** and the censuses 312 · 6,002 · 566 · 138 ·
+280 are RK2's. The identity block is RK2's D4 but for ENEMY (`f0bec576`, banked at the BeamTower trio flip,
+`68b81a1a`). The bounded vitest over RK2's 30 files passes 883/883. RK's L18 / L40 digests, `shouldStop` and asks are
+unchanged.
+
+**D1 — where the values live.** Nothing has to be computed. The trace already writes all three:
+- a climb's danger is its `hit`, the walk probe's (`obstacle.id` on every rung row);
+- a rung row's `extra` carries `target` and `stance` (the kill rung's arms, BAIT, the light arm, PULL's rope);
+- the chaser arm's hunted body is chosen before its stance scan, which is 254 of L40's 372 snapshots;
+- a frontier verb has `plan.obstacle.id` and `plan.resolved.stance`;
+- the press arm's strike is `{body: plan.id, cell}` (`execKillByPressOnce`'s `cycles`, outside EX's `pressEscape`).
+
+A walk, a goal and a search carry none. Nothing lives in fidelity's files or in SP's `planWaypoints`.
+
+**D2 — `frame`.** `frame: {key, target, stance, danger} | null`, additive within `v: 2`. It is the innermost open frame
+that has detail, so a nested climb shows its own and the outer one returns when it closes. `key` is that frame's active
+node. `stance` and `danger.at` are the tile map's `[col, row]`. `danger` is `{source, tick, kind, at}`: one source,
+never the list, and `kind` is `forecast`, `volume` or `phase`, read off the source's own fields (`phase` / `axe`, then
+`kind`). `target` takes the trace's own word (`strategy.target`), because a verb's target is an obstacle (L18's
+`lock@144,112`), not always a body. `solverBot.js` gets six guarded emit-only lines.
+
+**Gates.** The digest, `shouldStop`, asks and `budget.work` are equal hooked and unhooked. Unhooked, `frameEntered()`
+stays at 0. The md5 of every snapshot with `frame` dropped is the base's on L18, L40, L6 and L3, and so are RK's v1 md5s
+and kind totals. L40's kill rung names `puncher@128,624`, the walkable tile `[8, 38]` and the trace's danger
+(`forecast`). Every L18 press frame is a strike the record kept, in order. Mutants caught: `frame` as a list, a fresh
+probe for the danger, and a read outside the null check. **D3** (24 runs): the digest and `shouldStop` are identical.
+The final snapshot grows 13 bytes (`"frame":null`), and a posted one grows 80–250 bytes.
+
+Lesson: *the trace is the instrument's first source.* Every value the view wanted was already a field of a trace row.
+The work was choosing which open frame's row is "current".
+
+### Seedling hammer-phase EX — the escape-admission cache
+
+⚖ The user (2026-10-18), after WC named the escape as the lever: an EXACT cache of `pressEscape`'s answers behind
+`ESCAPE_ADMISSION_CACHE` (default OFF), a hit replaying the miss's `shouldStop` asks and `onNode` states. **The slice
+stopped at D1 (measured):** at the defaults the honest key repeats on 0.2 % of the calls and would save 0.6 % of the L18
+sweep, against a 10 % bar. No switch was added and no solver code moved. The report is
+`CC/docs/cloud-reports/seedling-hammer-escape-cache.md`.
+
+**W0** at `b3adfad282`: the floor OFF (cap 16), `HAMMER_ESCAPE` and its fallback ON. The bounded vitest over
+`solverBot*`, `hammer*`, `solveProgress*` and `lintGateLabels` was 19 files, 327 / 327.
+
+**D1 — the key.** A scratch lab hashed every `pressEscape` call's inputs, answer and work units over the L18 sweep, one
+L18 residue under a never-tripping deadline, staging A and the L40 kill rung, floor OFF and ON. Its answers were
+byte-equal to the base's.
+- WC's figures reproduce: on L18 ON, 55.5 % of the calls repeat a (body, cell, absolute press tick), and 99.7 % of
+  those return the same certificate. But each of them is asked from a LATER tick. The world it reads (the spinners, the
+  run's tick, the forecast's rows) has moved, so none is a repeat of the full input.
+- What `pressEscape` reads from the run can only be fixed by the run object and its tick, because `levelRun` exposes no
+  state digest. Keyed that way (run, tick, the call's arguments, `CONTACT_FIDELITY` and the deadline's state), 0.2 % of
+  the calls repeat (135 OFF, 159 ON): 0.6 % / 0.5 % of the sweep's wall.
+- The real repeats are ACROSS the two-pass loop's passes: 66.7 % of the calls, 38 % of the wall OFF and 41 % ON. Each
+  residue solves three times, and passes 2 and 3 re-ask pass 1's escapes with the same answer and the same work. But
+  each pass builds a NEW run from different persistence (a declared `at` row in place of `PENDING_AT`). The claim that
+  this row is inert before its tick lives in `levelRun.js` (fidelity's file). So an honest key across passes needs a
+  state digest from `levelRun`, or a proof in it. That is the STOP's named reason.
+- Staging A asks the escape 20 times (≈ 0 s), and the L40 kill rung never asks it.
+
+**D4.** `hammerDashShape.test.js`'s DK whole-solve row moved, byte-identical, to `hammerDashShape.slow.test.js`, so the
+serial `.slow` tier runs it.
+
+Lesson: *a repeat of a key is not a repeat of the input.* "The same press tick" was asked from consecutive ticks of a
+moving world. The input repeated only where a whole solve was redone, and there the key had to name the run's world,
+which the solver cannot see.
+
+### Seedling fidelity DIGEST — `run.stateDigest()`, the key for a cross-pass escape cache
+
+⚖ The user (2026-10-18): *"I agree with that plan"*. Fidelity's digest lands first; hammer's cross-pass `strikeEscape`
+cache is then built on top of it. The need came from hammer's EX:
+- across `twoPassSolve`'s passes, 66.7 % of escape calls repeat with identical answers;
+- that is ~40 % of the L18 sweep's wall;
+- each pass is a new `createLevelRun`, so a cache needs a state key `levelRun` owns.
+The report is `CC/docs/cloud-reports/seedling-fidelity-digest.md`.
+
+**What it is.** `run.stateDigest()` is a stable hash over exactly the run state the escape can read.
+- Two AST censuses (`evidence/tools/`) found it, by code: the escape reaches 49 functions and 8 run members, and
+  through them 74 `createLevelRun` bindings.
+- It is **emit-only**. Nothing calls it by default; the identity block, the six `--check`s, tapeRunner's 617 pairs and
+  the L18 sweep's norm-md5 are all unchanged.
+- It is an **escape key, not a run equivalence**: the persistence channel and the ledgers are not in the escape's reach.
+  In particular, the kill-lock ledger's `declaredAt` differs between a `PENDING_AT` pass and an `at = T` pass from the
+  removal on, but no escape reads it.
+
+**Gates.**
+- **0 false-equal pairs** (equal digest + arguments + globals, different answer) on EX's L18 lab, OFF and floor-ON.
+- It matches **99.9 %** of EX's cross-pass repeats.
+- 98/98 field mutants behave as predicted.
+- `levelRunStateDigest.test.js` pins the `PENDING_AT` rows.
+- One digest costs 0.17 ms against a 0.70–0.86 ms median escape (≈ 43 s / 69 s net on the lab sweep).
+
+**Also fixed:** the forecast memo's comment claimed `advance` was the run's only mutator. `equipNow` (through
+`replayOntoFork`) also writes.
+
+**Hand-over to hammer** (report D4). The cache keys on the digest, plus the call's arguments by value, plus the
+solverBot-side globals: `HAMMER_ESCAPE_BOUNDS`, `GHOST_SPINNER_PRESS`, `PRESS_KILL_COST`, the deadline state and the
+progress hook. It is scoped to one `twoPassSolve`. The spinning axes' and lava chains' visit state are outside the
+escape's reach today; a slice that teaches the escape about them adds them to `stateDigestParts`.
