@@ -211,6 +211,20 @@ See [Name Substitutions](../docs/json/developer/guides/world-generator.md#name-s
 
 The generator expands helper function references into self-contained rules, making the generated code independent of external helper modules.
 
+### Option Effects
+
+A rules.json may declare what the world's own options do, in `world[<player>].option_effects` (next to the
+`option_definitions` that create the options). The document's rules stay the defaults; the effects act only in
+the generated world, and an export resolves them to constants. Two kinds:
+
+- `item_count` `{option, item, count}`: every `Has(item, count)` becomes `Has(item, FromOption(<Option>))`, and
+  `generate_early` refuses, by name, a value larger than the pool holds.
+- `location_items` `{option, value, item, locations}`: while the option holds `value`, the listed locations hold
+  `item` instead of their canonical item, and the pool trades one for one.
+
+The block is opt-in: a document without it generates byte for byte as before. Seedling Playthrough's
+`seals_required` and `boss_location_items` are the first use (`_template_option_effects.py`).
+
 ### State Counter Detection
 
 Automatically detects counter item patterns like:
