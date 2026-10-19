@@ -7,8 +7,9 @@
  *                `item` off the row; any other encounter row stays refused by name.
  *   2. MAPPING   `solverGoalFor` (and through it `wasmArrival.arrivalSolverGoal`) maps that goal to the solver's
  *                `encounter` goal, `then` off the level's control block.
- *   3. CHECK     the location's check is the GAME's flag (`hasFire` / `hasDarkSword`) turning true in the
- *                encounter's own level — never the plan, never an echo of the host's own item write.
+ *   3. CHECK     ⛓ R4b part 2: the location's check is the `bossreport` build's CLEAR at the row's fixed address
+ *                ((32,4) the Fire drop, (12,1) the dark sword) — a table row like any other; the old flag path
+ *                (`hasFire` / `hasDarkSword` turning true) is retired: on that build only the host's grant sets them.
  *   4. PERSISTENCE  a live arrival after a death in L32 ({32,1} cleared) is staged, mapped and SOLVED.
  *
  * ⛔ THE FIXTURE IS THE PRODUCTION LOAD (`loadSeedlingRandomizer` over the shipped rules, as
@@ -24,7 +25,7 @@ import {
     realRoomPlaybackMap, resolveSeedlingAtlasGoal, rulesAtlasOf, vanillaArmPlaybackMap,
 } from './seedlingPlaybackController.js';
 import { loadSeedlingRandomizer } from './seedlingRandomizerWiring.js';
-import { SeedlingRegionGlue, reportContext } from './seedlingRegionGlue.js';
+import { SeedlingRegionGlue } from './seedlingRegionGlue.js';
 import { FLASH_SEEDLING_LOAD_REGION_EVENT } from './flashSeedlingLibrary.js';
 import { ENCOUNTER_EXECUTORS } from '../seedlingDemo/solverBot.js';
 import { solverGoalFor, createInPlaceSolveService } from '../seedlingDemo/jsRuntimeSolver.js';
@@ -184,14 +185,22 @@ function glueWith(binding) {
     const glue = new SeedlingRegionGlue({ eventBus: { subscribe: () => () => {}, publish: () => {} },
         getDispatcher: () => ({ publish: (name, data) => published.push({ name, data }) }),
         loadRegionEvent: FLASH_SEEDLING_LOAD_REGION_EVENT, getPanel: () => null });
+    const cleared = [];
     const adapter = { teleport: vi.fn(), onStateReport: null, setHostOwnedLocations: vi.fn(),
-        gameState: { level: 0 }, expectedEchoValue: {} };
+        gameState: { level: 0 }, expectedEchoValue: {},
+        // ⛓ the game's cleared table, as `botStatus().persistence_cleared` reads it (the reconcile's source)
+        _getFlash: () => ({ botStatus: () => JSON.stringify({ persistence_cleared: cleared }) }) };
     glue.attachAdapter(adapter);
     glue.setCheckBinding(binding);
     /** One game report, the way `FlashBridgeAdapter._onStateChanged` makes it (state first, then the hook). */
     const report = (property, value) => { adapter.gameState[property] = value; adapter.onStateReport(property, value); };
     const checks = () => published.filter((p) => p.name === 'user:locationCheck').map((p) => p.data.locationName);
-    return { glue, adapter, report, checks };
+    /** One persistence write the game makes: the slot cleared in its table, and (unless `lost`) the report. */
+    const clear = (level, tag, { seq, lost = false } = {}) => {
+        cleared.push({ level, tag });
+        if (!lost) report('pendingCheck', `${seq}|${level}|${tag}|0`);
+    };
+    return { glue, adapter, report, checks, clear };
 }
 const freshBinding = async () => (await loadSeedlingRandomizer({
     flashPanel: PT.flash_panel['1'], manifest: readJson('./wasm/builds.json'), rawRules: PT, locations: locationsOf(PT),
@@ -200,65 +209,48 @@ const freshBinding = async () => (await loadSeedlingRandomizer({
     importModule: (u) => import(/* @vite-ignore */ u),
 })).checkBinding;
 
-describe('3 · CHECK — read off the GAME\'s flag in the encounter\'s own level, never the plan', () => {
-    it('`hasFire` → true while the game reports level 32 checks Bob Boss; `hasDarkSword` in 12 checks the Witch', async () => {
+describe('3 · CHECK — ⛓ R4b part 2: the fixed-address CLEAR, never the game\'s flag', () => {
+    it('(32,4) checks Bob Boss (the Fire drop), (12,1) the Witch (the dark sword), (32,3) Times (the kill)', async () => {
+        const g = glueWith(await freshBinding());
+        g.report('level', 32);
+        g.clear(32, 3, { seq: 1 });
+        g.clear(32, 4, { seq: 2 });
+        g.report('level', 12);
+        g.clear(12, 1, { seq: 3 });
+        expect(g.checks()).toEqual(['Level 032 - Times', BOB, WITCH]);
+    });
+
+    it('⛔ the RETIRED flag path: `hasFire` / `hasDarkSword` turning true checks NOTHING, in its own level or not', async () => {
         const g = glueWith(await freshBinding());
         g.report('level', 32);
         g.report('hasFire', true);
         g.report('level', 12);
         g.report('hasDarkSword', true);
-        expect(g.checks()).toEqual([BOB, WITCH]);
-        expect(g.glue.checkBinding.stats.encounterChecks).toBe(2);
-    });
-
-    it('⛔ NOT THE PLAN: a level-32 run whose flag never turns true checks nothing (a false report, a played-out goal)', async () => {
-        const g = glueWith(await freshBinding());
-        g.report('level', 32);
-        g.report('hasFire', false);
-        // the engine finishing its encounter goal reaches the glue as nothing at all: there is no plan input
-        g.report('level', 30);
         expect(g.checks()).toEqual([]);
     });
 
-    it('⛔ an ECHO of the host\'s own item write (an AP grant of Fire) is not the drop', async () => {
+    it('once: a second clear of the same address (a re-entry, a tape replay) does not check again', async () => {
         const g = glueWith(await freshBinding());
-        g.report('level', 32);
-        g.adapter.expectedEchoValue.hasFire = true;
-        expect(reportContext(g.adapter, 'hasFire', true)).toEqual({ level: 32, echo: true });
-        g.report('hasFire', true);
-        expect(g.checks()).toEqual([]);
-        expect(g.glue.checkBinding.stats.encounterEchoes).toBe(1);
-    });
-
-    it('⛔ the flag turning true in ANOTHER level (Fire collected elsewhere) is not the encounter', async () => {
-        const g = glueWith(await freshBinding());
-        g.report('level', 30);
-        g.report('hasFire', true);
-        expect(g.checks()).toEqual([]);
-        expect(g.glue.checkBinding.stats.encounterElsewhere).toBe(1);
-    });
-
-    it('once: a second flip (a reboot that re-set the flag) does not check again', async () => {
-        const g = glueWith(await freshBinding());
-        g.report('level', 32);
-        g.report('hasFire', true);
-        g.report('hasFire', false);
-        g.report('hasFire', true);
+        g.clear(32, 4, { seq: 1 });
+        g.clear(32, 4, { seq: 2 });
         expect(g.checks()).toEqual([BOB]);
     });
 
-    it('fail-closed: a report with no context (another caller) checks nothing', async () => {
-        const b = await freshBinding();
-        expect(b.onStateReport('hasFire', true)).toEqual([]);
+    it('⛓ THE OWL: (112,0) and (112,1) cleared in one tick — only (112,1) is reported — and the Owl is still checked', async () => {
+        const g = glueWith(await freshBinding());
+        g.clear(112, 0, { lost: true });  // overwritten in the single report slot before the host polled
+        g.clear(112, 1, { seq: 7 });      // the rocklock EVENT's slot, which reaches `pendingCheck`
+        expect(g.checks()).toEqual(['Level 112 - Owl']);
+        expect(g.glue.checkBinding.stats).toMatchObject({ reconcile: 1, reconcileReads: 1 });
     });
 
-    it('the property path stands down on its own names for the two flags (`Fire`, `Dark Sword`): no undo of the drop', async () => {
+    it('the property path stands down on its own names for the two flags (`Fire`, `Dark Sword`): no undo of the grant', async () => {
         const g = glueWith(await freshBinding());
         const owned = g.adapter.setHostOwnedLocations.mock.calls.at(-1)[0];
         expect(owned.has('Fire')).toBe(true);
         expect(owned.has('Dark Sword')).toBe(true);
-        // the encounter locations themselves are the binding's, not the property path's vocabulary
-        expect(owned.has(BOB)).toBe(false);
+        // ⛓ R4b part 2 — the encounter locations are TABLE rows now
+        expect(owned.has(BOB)).toBe(true);
         expect(owned.size).toBe(LOADED.table.size + 2);
     });
 });

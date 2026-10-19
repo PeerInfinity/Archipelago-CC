@@ -330,13 +330,14 @@ export const ENCOUNTER_REFUSAL = (e) => `"${e.location}" is an ENCOUNTER (a ${e.
     + 'comes from the property path — there is no entity to walk onto';
 
 /**
- * ⛓ R4b (rules-boss-locations) — why a vanilla-arm BOSS KILL has no cell yet: the row reports at its fixed
- * address (the game's own clear) and is never rewritten; the bot has no fight executor for it. Refused by name, so
- * every location is still accounted for (entries + refusals + events).
+ * ⛓ R4b — why a vanilla-arm BOSS KILL has no cell in the BOT's map: the row reports at its fixed address (the
+ * game's own clear) and is never rewritten, and the bot has no fight executor for it. ⛓ R4b part 2: its CHECK is
+ * bound (a `bossreport` build's clear, `SeedlingCheckBinding`'s fixed table row); only the walk is refused. Refused
+ * by name, so every location is still accounted for (entries + refusals + events).
  */
 export const BOSS_REPORT_REFUSAL = (r) => `"${r.location}" is a BOSS KILL (a ${r.entityType} in level ${r.level}, `
-    + `reported at {${r.address?.level},${r.address?.tag}}): the vanilla arm does not rewrite it and the bot has no `
-    + 'fight executor for it — there is no entity to walk onto';
+    + `reported at {${r.address?.level},${r.address?.tag}}): its check is bound, but the vanilla arm does not rewrite `
+    + 'it and the bot has no fight executor for it — there is no entity to walk onto';
 
 /**
  * ⛓⛓ ENCOUNTERS — the drops the solver has an encounter EXECUTOR for: `solverBot.ENCOUNTER_EXECUTORS`'s keys

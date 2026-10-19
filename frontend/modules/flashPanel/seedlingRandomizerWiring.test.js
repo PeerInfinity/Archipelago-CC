@@ -320,6 +320,33 @@ describe('the whole construction, driven in node', () => {
     });
 
     /**
+     * ⛓⛓ R4b part 2 — THE `bossreport` GUARD. Only p4g declares it; p4d (rebuilt from its own SWF bytes) grants
+     * Fire and the dark sword itself and clears none of the nine report addresses, so the load must REFUSE BY NAME
+     * rather than play a seed whose checks never fire (and never fall back to the old encounter flags).
+     */
+    it('⛔ a build WITHOUT `bossreport` (p4d) refuses the load, naming all 9 report rows; p4g binds them', async () => {
+        const caps = (n) => manifest.builds.find((b) => b.name === n)?.capabilities ?? null;
+        expect(caps('seedling_bot_ap_p4d')).not.toContain('bossreport');
+        expect(caps('seedling_bot_ap_p4g')).toContain('bossreport');
+        const p4d = await load('seedling_playthrough', { flashPanel: { ...RULES.seedling_playthrough.flash_panel['1'],
+            wasm: 'seedling_bot_ap_p4d/game.html' } });
+        expect(p4d.verdict).toBe('ineligible');
+        expect(p4d.eligibility.failed).toBe('capability');
+        expect(p4d.checkBinding).toBeNull();
+        expect(p4d.delivery).toBeNull();
+        const names = ['Level 012 - Witch', 'Level 019 - Shieldspire', 'Level 032 - Bob Boss', 'Level 032 - Times',
+            'Level 043 - Totem of Lacste', 'Level 057 - Tentacled Beast', 'Level 069 - Lights', 'Level 082 - King of Fire',
+            'Level 112 - Owl'];
+        expect(p4d.refused.map((r) => r.location).sort()).toEqual(names);
+        for (const n of names) expect(p4d.why).toContain(`"${n}"`);
+        expect(p4d.why).toMatch(/"seedling_bot_ap_p4d" does not declare `bossreport`/);
+        const p4g = await load('seedling_playthrough');
+        expect(p4g.verdict, p4g.why).toBe('eligible');
+        expect(p4g.fixed.map((e) => e.location).sort()).toEqual(names);
+        for (const e of p4g.fixed) expect(p4g.checkBinding.table.get(`${e.level}|${e.tag}`)).toBe(e);
+    });
+
+    /**
      * ⛔⛔ THE EQUALITY ROW. The table built through the REAL resolver over the
      * REAL rules must be the table `check-seedling-ap-placement.mjs` builds
      * from the same three documents — same addresses, same items, same looks.
@@ -341,6 +368,7 @@ describe('the whole construction, driven in node', () => {
             ledger: R7_GOAL_LEDGER,
             rooms: MAP.levels,
             selfPlayer: Number(slot),
+            bossReport: true,
         });
         expect([...r.table.keys()].sort()).toEqual([...want.keys()].sort());
         for (const [k, v] of want) expect(r.table.get(k)).toEqual(v);

@@ -157,9 +157,13 @@ for (const region of Object.values(RULES.regions[SLOT])) {
     }
 }
 const { set: VANILLA_SET } = vanillaRecordSet(EMBED, MAP);
+// ⛓ R4b part 2 — whether PAGE_NAME reports the nine boss/encounter rows, read off the manifest (a build
+// without `bossreport` makes the load refuse them; this instrument measures the rewrite, so it binds them only
+// where the build would).
+const PAGE_BOSS_REPORT = (readJson('frontend/modules/flashPanel/wasm/builds.json').builds.find((b) => b.name === PAGE_NAME)?.capabilities ?? []).includes('bossreport');
 const { table } = buildPlacementTable({
     locationItemOf: (n) => PLACED.get(n) ?? null,
-    ledger: R7_GOAL_LEDGER, rooms: MAP.levels, selfPlayer: SELF_PLAYER,
+    ledger: R7_GOAL_LEDGER, rooms: MAP.levels, selfPlayer: SELF_PLAYER, bossReport: PAGE_BOSS_REPORT,
 });
 const { set: REWRITTEN_SET, replaced } = rewriteRecordSet(VANILLA_SET, table);
 
@@ -173,7 +177,8 @@ const SUBJECTS = Object.entries(GAME_CONFIG.region_coords)
         region,
         level: warp.level,
         spawn: { x: warp.x, y: warp.y },
-        entries: [...table.values()].filter((e) => e.level === warp.level),
+        // ⛓ R4b part 2 — a fixed-address report row (`rewrite: false`) moves no room byte: not a subject.
+        entries: [...table.values()].filter((e) => e.level === warp.level && e.rewrite !== false),
     }))
     .filter((s) => s.entries.length > 0);
 
@@ -912,7 +917,7 @@ if (!existsSync(join(M1_ARTIFACT, 'game.html'))) {
         locationItemOf: (n) => (n === M1_SUBJECT.location
             ? { name: 'A Thing From Somewhere Else', player: SELF_PLAYER + 1 }
             : PLACED.get(n) ?? null),
-        ledger: R7_GOAL_LEDGER, rooms: MAP.levels, selfPlayer: SELF_PLAYER,
+        ledger: R7_GOAL_LEDGER, rooms: MAP.levels, selfPlayer: SELF_PLAYER, bossReport: PAGE_BOSS_REPORT,
     });
     const FOREIGN_ENTRY = FOREIGN_TABLE.get([...FOREIGN_TABLE.keys()]
         .find((k) => FOREIGN_TABLE.get(k).ledgerId === M1_SUBJECT.ledgerId));

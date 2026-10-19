@@ -151,8 +151,9 @@ describe('loadSeedlingGenerated over the headless spiral world', () => {
         expect(vanilla.verdict, vanilla.why).toBe('eligible');
         const r = await load();
         const missing = Object.keys(vanilla).filter((k) => !(k in r));
-        // ⛓ R4b: `reports` (the boss kills) is the vanilla ledger's own row list, as `encounters` is.
-        expect(missing.filter((k) => !['entries', 'encounters', 'reports'].includes(k))).toEqual([]);
+        // ⛓ R4b: `reports` (the boss kills) is the vanilla ledger's own row list, as `encounters` is; ⛓ R4b part 2:
+        // `fixed` too (its nine fixed-address table rows).
+        expect(missing.filter((k) => !['entries', 'encounters', 'reports', 'fixed'].includes(k))).toEqual([]);
         expect(r).toMatchObject({ arm: RANDOMIZER_ARMS.GENERATED, selfPlayer: 1, tileSize: 16, replaced: 1 });
     });
 

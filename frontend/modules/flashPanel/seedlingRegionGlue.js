@@ -80,19 +80,6 @@ export const POSITION_POLL_MS = 250;
  */
 export const LOOP_RESET_EVENT = 'loopState:loopReset';
 
-/**
- * ⛓ ENCOUNTERS — what the check binding needs beside a report to tell the game's own encounter drop from anything
- * else that sets the same flag: the level the GAME last reported (`adapter.gameState.level`), and whether the report
- * is the adapter's own write coming back (`expectedEchoValue` — read here because `onStateReport` runs BEFORE the
- * adapter consumes the echo).
- */
-export function reportContext(adapter, property, value) {
-    const level = adapter?.gameState?.level;
-    const echoes = adapter?.expectedEchoValue ?? {};
-    return { level: Number.isInteger(level) ? level : null,
-        echo: Object.prototype.hasOwnProperty.call(echoes, property) && echoes[property] === value };
-}
-
 /** The `source` of the move the loop-reset fallback publishes (`handleLoopReset`). */
 export const LOOP_RESET_MOVE_SOURCE = 'flashSeedling-loopReset';
 
@@ -292,16 +279,15 @@ export class SeedlingRegionGlue {
              * own.
              */
             this.apply(this.binding.onStateReport(property, value));
-            if (this.checkBinding) {
-                this.apply(this.checkBinding.onStateReport(property, value, reportContext(adapter, property, value)));
-            }
+            // ⛓ R4b part 2 / EVENT GOALS — a live clear (either reader's count moved): re-read the game's table once,
+            // for both (a same-frame second write hid the first: the Owl's (112,0), L38's ButtonRoom).
+            const checkClears = this.checkBinding?.liveClears;
+            if (this.checkBinding) this.apply(this.checkBinding.onStateReport(property, value));
             // ⛓ OBSTACLE EVENTS — the third reader of the same reports (a cleared event flag).
-            if (this.eventCollector) {
-                const clears = this.eventCollector.liveClears;
-                this.apply(this.eventCollector.onStateReport(property, value));
-                // ⛓ EVENT GOALS — a live clear: re-read the game's table (a same-frame second write hid the first).
-                if (this.eventCollector.liveClears !== clears) this.reconcileEventsFromGame();
-            }
+            const eventClears = this.eventCollector?.liveClears;
+            if (this.eventCollector) this.apply(this.eventCollector.onStateReport(property, value));
+            if ((this.checkBinding && this.checkBinding.liveClears !== checkClears)
+                || (this.eventCollector && this.eventCollector.liveClears !== eventClears)) this.reconcileEventsFromGame();
         };
         /**
          * ⛔ WHAT WAS DELIVERED INTO THE OLD PAGE IS DROPPED WITH IT. The delivery, the check binding and the
@@ -346,16 +332,19 @@ export class SeedlingRegionGlue {
      * ⛓ EVENT GOALS — the RECONCILE read (`SeedlingEventCollector.onReconcile`): the game's cleared table after a live
      * clear, so an event flag whose report a same-frame write overwrote is still collected. One `botStatus` per live
      * persistence clear (they are rare: a pickup, a broken obstacle, a press). Returns the effects, or null.
+     * ⛓ R4b part 2 — the SAME read feeds the check binding's reconcile (`SeedlingCheckBinding.onReconcile`): a
+     * location whose clear was overwritten in its frame (the Owl's (112,0) under (112,1)) is still checked.
      */
     reconcileEventsFromGame() {
-        if (!this.eventCollector || !this.adapter) return null;
+        if ((!this.eventCollector && !this.checkBinding) || !this.adapter) return null;
         let st = null;
         try {
             const raw = this.adapter._getFlash?.()?.botStatus?.();
             st = typeof raw === 'string' ? JSON.parse(raw) : raw;
         } catch { st = null; }
         if (!Array.isArray(st?.persistence_cleared)) return null;
-        const effects = this.eventCollector.onReconcile(st.persistence_cleared);
+        const effects = [...(this.checkBinding?.onReconcile?.(st.persistence_cleared) ?? []),
+            ...(this.eventCollector?.onReconcile(st.persistence_cleared) ?? [])];
         this.apply(effects);
         return effects;
     }
@@ -410,12 +399,11 @@ export class SeedlingRegionGlue {
      * the granted item straight back. The gate that catches it is *"the flag
      * flips EXACTLY ONCE"*.
      *
-     * ⛓ IT IS A SET, NOT A DELETE, and the difference is the two ENCOUNTER
-     * locations: `fire@L32` and `darksword@L12` are boss/special grants with no
-     * pickup entity, are not rewritten, and MUST stay on the property path. So
-     * the adapter is handed the names H6 owns and stands down on exactly those.
-     * With no check binding the set is empty and the adapter behaves as it
-     * always has.
+     * ⛓ IT IS A SET, NOT A DELETE: the adapter is handed the names H6 owns
+     * and stands down on exactly those. With no check binding the set is empty
+     * and the adapter behaves as it always has. (⛓ R4b part 2: the two
+     * encounters are table rows now, and their property-path names are in the
+     * set — `SeedlingCheckBinding.propertyLocations`.)
      */
     _standDownAdapter() {
         this.adapter?.setHostOwnedLocations?.(

@@ -320,7 +320,7 @@ describe('vanillaRecordSet carries the table — the single source of the delive
             for (const loc of region.locations ?? []) placed.set(loc.name, { name: loc.item.name, player: loc.item.player });
         }
         const { table } = buildPlacementTable({
-            locationItemOf: (n) => placed.get(n) ?? null, ledger: R7_GOAL_LEDGER, rooms: MAP().levels, selfPlayer: 1,
+            locationItemOf: (n) => placed.get(n) ?? null, ledger: R7_GOAL_LEDGER, rooms: MAP().levels, selfPlayer: 1, bossReport: true,
         });
         const { set } = rewriteRecordSet(vanillaRecordSet(EMBED, MAP()).set, table);
         const records = mountedRecordsOf(set);

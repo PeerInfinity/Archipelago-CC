@@ -23,10 +23,11 @@
  * Spellings: `union` / `count-fill` arrays are sorted index lists (`[0, 3]`); a `log-append` array is the log's
  * filled prefix in slot order (`[7, 3]`).
  *
- * ⛔ DOM-FREE, pure, no imports beyond the slot counts.
+ * ⛔ DOM-FREE, pure, no imports beyond the slot counts and the threshold fill rule (`flashPanel/fillThreshold.js`).
  */
 
 import { SAVE_SLOTS } from './tapeFormat.js';
+import { thresholdFillSlots } from '../flashPanel/fillThreshold.js';
 
 /** The rule per save array (see the header). */
 export const SAVE_ARRAY_RULES = Object.freeze({ keys: 'union', totem_parts: 'count-fill', seal_parts: 'log-append' });
@@ -83,8 +84,8 @@ export function sealLogSlots(count, sealsRequired = SAVE_SLOTS.seal_parts) {
     if (!Number.isInteger(sealsRequired) || sealsRequired < 1) {
         throw new Error(`saveArrayRules: seals_required must be a positive integer, got ${JSON.stringify(sealsRequired)}`);
     }
-    const slots = SAVE_SLOTS.seal_parts;
-    return count >= sealsRequired ? slots : Math.min(count, slots - 1);
+    // ⛓ R4b part 2 — the rule is `fillThreshold`'s, shared with the panel adapter's `!seal` writes.
+    return thresholdFillSlots(count, SAVE_SLOTS.seal_parts, sealsRequired);
 }
 
 /**
