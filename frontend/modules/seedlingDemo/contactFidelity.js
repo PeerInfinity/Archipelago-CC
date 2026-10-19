@@ -633,6 +633,23 @@ export const CONTACT_FIDELITY = {
      */
     statueTalkRange: true,
     /**
+     * fidelity AXEFORCEDU D2 — A SPINNING AXE'S FORCED U IS CROSSED AND ITS HITS BILLED (`axePricedCrossing.js`,
+     * `solverBot`'s ladder after the forced-hit rung).
+     *
+     *     SpinningAxe.as:49-76   the blade sweeps every point of its reach once a revolution; hitPlayer: force 5, damage 1
+     *     Player.as:336          20 i-frames after a hit
+     *
+     * MEASURED (sweep 39153416627 at `4667f7e353`; legs 603 L71 north, 636 L75 north, 774 L103): each corridor goes
+     * round the hub against the blade, so no stall and no dash-chain phase crosses it clean, and the forced-hit rung's
+     * input tree cannot reach the blade 47–153 ticks out (*"depth 3 needs 46,656 more fork steps than the budget's
+     * 668"*). ON: when the AXE arm's corridor, entered at every phase of the axe (the doorstep stalls `0 … period − 1`,
+     * × the dash chain's phases when the pass may dash), is hit in every member — the certificate — the members are
+     * driven on forks, the run bills the hits (knockback, i-frames), and the fewest-billed one that reaches the goal
+     * alive inside `FORCED_HITS`' budget is walked and billed as a forced hit. OFF: never asked, byte-identical. ⛔ OFF
+     * by default (no licence); `SEEDLING_AXE_PRICED_CROSSING=0|1` for a node measurement.
+     */
+    axePricedCrossing: false,
+    /**
      * fidelity WATCHERTALK D2 — THE WATCHER'S EVENT `{114,0}` IS EARNED BY TALKING (`solverBot.refineStrategy` → `talk`).
      *
      *     Watcher.as:40-49   type = "Watcher" — in no solids list, so the clear-tag finds no SOLID at (72,72)
@@ -778,6 +795,9 @@ if (globalThis.process?.env?.SEEDLING_AXE_GATE_TRANSIT === '0') CONTACT_FIDELITY
 // ⛓ fidelity DASHSTEP D2: `SEEDLING_STATUE_TALK_RANGE=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_STATUE_TALK_RANGE === '1') CONTACT_FIDELITY.statueTalkRange = true;
 if (globalThis.process?.env?.SEEDLING_STATUE_TALK_RANGE === '0') CONTACT_FIDELITY.statueTalkRange = false;
+// ⛓ fidelity AXEFORCEDU D2: `SEEDLING_AXE_PRICED_CROSSING=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_AXE_PRICED_CROSSING === '1') CONTACT_FIDELITY.axePricedCrossing = true;
+if (globalThis.process?.env?.SEEDLING_AXE_PRICED_CROSSING === '0') CONTACT_FIDELITY.axePricedCrossing = false;
 // ⛓ fidelity WATCHERTALK D2: `SEEDLING_WATCHER_TALK_VERB=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_WATCHER_TALK_VERB === '1') CONTACT_FIDELITY.watcherTalkVerb = true;
 if (globalThis.process?.env?.SEEDLING_WATCHER_TALK_VERB === '0') CONTACT_FIDELITY.watcherTalkVerb = false;

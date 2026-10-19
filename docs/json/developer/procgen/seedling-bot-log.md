@@ -23626,3 +23626,48 @@ are unchanged, and local OFF equals CI 39153361080 on all 212 steps. The six pro
 **Trap candidate.** *A clear-tag that finds no body is not proof the flag is clear.* `already-clear` reads "no solid
 here" as "the build left it out". That holds for a body that is a solid; for an NPC (no collider) it is a false solve
 with 0 ticks and no write.
+
+### Seedling fidelity AXEFORCEDU — a spinning axe's forced U, certified and priced: the knockback kills
+
+Slice `seedling-fidelity-axeforcedu` (wave 19, planner `seedling-fidelity-planning-9`), base `4667f7e353` (main: DIGEST
+harvested). One switch, **OFF**, OFF byte-inert. The report is `CC/docs/cloud-reports/seedling-fidelity-axeforcedu.md`.
+
+**D1 — the axe legs at base** (sweep 39153416627, survey 39153361080; node, each row's `seamTime`, the page's budget
+flow). Legs 603 (L71 north), 636 (L75 north) and 774 (L103) reproduce: the dashless pass answers EXHAUSTED on the blade
+in 1,213 / 2,125 / 1,562 of the retry's 2,560 work units (the AXE arm's stall search 598 / 1,711 / 1,027 previews, the
+bent corridors bounded at 60), and the full pass is cut (`kill-chaser` / `axe-dodge` / `axe-dodge`). The forced-hit
+rung is not proven: *"depth 3 needs 46656 more fork step(s) than the budget's 668"*. Leg 760 (L101 stairs) is `done`
+at this baseline (354 t, a dodge and a kill, stable over seam ±3). Survey: only step 149 (= 636) refuses at an axe.
+**The priced count with the knockback stepped by the run is not AXETIMING's ~1–2 hits.** Every member of each corridor
+(every doorstep phase, and every dash-chain phase in the full pass) driven on a fork **dies**: L71 by lava (the hit's
+knockback throws the player east out of the one-tile lane beside the hub) or by the third hit (pinned: each knockback
+pushes the walk back into the next sweep); L103 by its pit. In L75 the model refuses to step: the hit's camera shake
+leaves `lavarunner@104,64` neither surely on nor surely off screen (⚖ never the cosmetic RNG).
+
+**D2 — `axePricedCrossing`** (`SEEDLING_AXE_PRICED_CROSSING`; `axePricedCrossing.js`, the ladder right after the
+forced-hit rung, only on an axe-only danger with a fork). The certificate: the AXE arm's corridor at every phase of the
+axe (doorstep stalls 0 … period − 1, × the dash chain's 10 phases when the pass may dash), each member priced by
+`axeHitsPlayer` on its pre-move boxes; it holds when no member crosses free of blade contact (and refuses by name,
+"a gap exists", when one does: L61 under the timing rung OFF). The crossing: members driven on forks, fewest contact
+samples first (8); admitted only alive, at the goal, axe hits only, inside `FORCED_HITS`' budget; the fewest-billed is
+replayed live and billed as a `forced-hit` row with `proof: {kind: 'axe-phase'}`. A refusal appends one clause to the
+ladder's last reason (the progress kind is unchanged: `exhausted`). Rows: `fidelityAxePriced.test.js` (18).
+
+**D3 — game witnesses** (p4f headless, 0 px with `spinningAxePlayerHit` ON; OFF parts at the hit):
+`axeforcedu-l71-603-member` (417 rows: the blade at t48, the lava, the respawn at (296,104) at t81, and the loop) and
+`axeforcedu-l103-774-member` (554 rows: the blade at t156, the pit, the respawn at (24,72) at t178).
+
+**Movers: none.** Sweep (node, the page budget, the 82 axe-room legs): ON = OFF on outcome, ticks and message for 79;
+603 / 636 / 774 refuse with the clause added; the dashless pass spends +22 work units where it reaches the rung, and no
+pass's answer moves. Survey (local, the 24 axe-room steps): OFF = CI on all 24; ON = OFF on all 24 (149 gains the
+clause). The rung's gate (every reason a spinning axe) keeps it out of every other room.
+
+Trap candidates:
+1. *A priced hit is priced with its knockback, or it is not priced.* AXETIMING's 1–2 hits ignored the knockback; the
+   run's billing throws the player into lava and pits at every phase. Count hits on a fork of the run, never on a
+   preview that cannot be hit.
+2. *A knockback pushes WITH the blade.* `hitPlayer`'s point is the foot of the perpendicular on the blade two updates
+   back, so on a corridor against the blade every hit pushes the walk back into the next sweep: a pinned walk bills a
+   hit a revolution until it dies.
+3. *A hit opens the shake band, and the band can hide a body's wake.* After any priced hit, a chaser near the screen
+   edge makes the run refuse to step; a priced crossing in such a room is undecidable, not cheap.

@@ -94,7 +94,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_CORRIDOR_BODY_PRICING
         || !!process.env.SEEDLING_ARROW_LANE_CROSSING
         || !!process.env.SEEDLING_AXE_TIMING_RUNG || !!process.env.SEEDLING_AXE_GATE_TRANSIT
-        || !!process.env.SEEDLING_STATUE_TALK_RANGE)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_STATUE_TALK_RANGE
+        || !!process.env.SEEDLING_AXE_PRICED_CROSSING)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -170,6 +171,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity DASHSTEP D2: `statueTalkRange` (a statue's talk circle is its class's 32 px) shipped OFF;
             // ⛓ planning-9's flip (⚖ user "Harvest, then flip it ON", 2026-10-17) turns it ON.
             statueTalkRange: true,
+            // ⛓ fidelity AXEFORCEDU D2: `axePricedCrossing` (a spinning axe's forced U, crossed and its hits billed) ships OFF.
+            axePricedCrossing: false,
             // ⛓ fidelity WATCHERTALK D2: `watcherTalkVerb` (the Watcher's {114,0} clear-tag talks) ships OFF.
             watcherTalkVerb: false });
     });

@@ -1,0 +1,24 @@
+603-5409.json False None None the corridor is hit at every phase (52 member(s) over 1 family, fewest
+603-5410.json False None None the corridor is hit at every phase (52 member(s) over 1 family, fewest
+603-5411.json False None None the corridor is hit at every phase (52 member(s) over 1 family, fewest
+603-5413.json False None None the corridor is hit at every phase (52 member(s) over 1 family, fewest
+603-5414.json False None None the corridor is hit at every phase (52 member(s) over 1 family, fewest
+603-5415.json False None None the corridor is hit at every phase (52 member(s) over 1 family, fewest
+636-5418.json False None None the corridor is hit at every phase (60 member(s) over 1 family, fewest
+636-5419.json False None None the corridor is hit at every phase (60 member(s) over 1 family, fewest
+636-5420.json False None None the corridor is hit at every phase (60 member(s) over 1 family, fewest
+636-5422.json False None None the corridor is hit at every phase (60 member(s) over 1 family, fewest
+636-5423.json False None None the corridor is hit at every phase (60 member(s) over 1 family, fewest
+636-5424.json False None None the corridor is hit at every phase (60 member(s) over 1 family, fewest
+760-5533.json True 354 ['dodge', 'kill'] 
+760-5534.json True 354 ['dodge', 'kill'] 
+760-5535.json True 354 ['dodge', 'kill'] 
+760-5537.json True 354 ['dodge', 'kill'] 
+760-5538.json True 354 ['dodge', 'kill'] 
+760-5539.json True 354 ['dodge', 'kill'] 
+774-5525.json False None None the corridor is hit at every phase (72 member(s) over 1 family, fewest
+774-5526.json False None None the corridor is hit at every phase (72 member(s) over 1 family, fewest
+774-5527.json False None None the corridor is hit at every phase (72 member(s) over 1 family, fewest
+774-5529.json False None None the corridor is hit at every phase (72 member(s) over 1 family, fewest
+774-5530.json False None None the corridor is hit at every phase (72 member(s) over 1 family, fewest
+774-5531.json False None None the corridor is hit at every phase (72 member(s) over 1 family, fewest
