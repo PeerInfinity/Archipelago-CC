@@ -23822,3 +23822,35 @@ v1 md5s and TC2's stream md5 are unchanged, with `caches` / `churn` dropped from
 
 Lesson: *a field that reports a switch breaks every "ON is OFF" proof that compares the whole stream.* The stream's
 identity rows must name the fields they compare, or a new observation becomes a regression by construction.
+### Seedling hammer-phase XF — XC flip prep
+
+⚖ The user (2026-10-18) picked "XC flip, then the floor flip". Every flip is the user's call: this slice builds the
+evidence and a flip-ready branch (`seedling-hammer-xc-flip`, never merged by the slice). The report is
+`CC/docs/cloud-reports/seedling-hammer-xc-flip-prep.md`.
+
+**The gap it closes (fidelity-9's condition).** No row had put a drifting beam tower inside a CACHED SEARCH.
+- No committed room can: spinners live in L18 / 39 / 40 / 92 and towers in L103–108. The escape searches only after a
+  press LANDS on a spinner, so a tower room returns at `no-landing`. L104 returns even earlier, at the shield's
+  `unmodelled` probe, and dropping the shield only moves it to `no-landing`.
+- Measured over the six producers, killgate s2 / s5 / s9 and the L18 sweep: 0 escape calls in a tower world. Of L18's
+  56,655 calls, 54,471 end at `no-landing` and 2,028 search.
+- So two rows were constructed in `escapeCrossPassCache.test.js`, over L18 with one tower added at (92, 84):
+  - **two seam times 45 ticks apart.** The hammers' phase is the same (`gameTime % 45`) and the drift's is opposite
+    (its period is 90). With no tower, or with the drift OFF, the two answer alike. With the drift ON, both escapes
+    search (75 vs 9,685 expansions) and answer differently. ON there are two entries and then two hits; verify finds
+    0 mismatches;
+  - **a visit-only pair.** One run's tower switches are OFF for 40 ticks: one seam, tick, clock and player, and the
+    digests differ in `visit` alone. A key without `visit` (mutant M9) turns this row red. The seam-time row stays
+    green under M9, because `staging` and `clock` already part its two digests.
+
+**The flip branch** changes the default only (`=0` turns it OFF). On it: the identity block is W0's, all six
+`--check`s exit 0, the tier is 22 files / 375 tests green, and verify mode over the producers and both L18 sweeps finds
+**0 mismatches in 94,280 verified hits**.
+
+**The floor** (`STRIKE_ETA_FLOOR`, floor + cache ÷ today, 3 interleaved rounds):
+- L18 sweep **0.99×**; floor + cache ÷ cache is 1.40×;
+- staging A **0.43×**;
+- L40 flat.
+
+It is not answer-identical. All 45 L18 residues still solve, 24 shorter and 21 longer (19,545 → 19,558 t), and
+staging A's kill moves t3100 → t1740. L40's answer is unchanged.
