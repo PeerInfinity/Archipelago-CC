@@ -1,0 +1,20 @@
+PASS: l40button-l41-part0: the ON plan latches t0, breaks, latches t1, collects — and never touches group 2 — ["brave","kill","hold","break","hold","collect"], 1601 t, 8 s
+PASS: l40button-l41-part0: the model replays it to the part — 1602 observations, ends {"level":40,"x":72.22553841535428,"y":142.7391580354677}
+wrote frontend/modules/seedlingDemo/fixtures/tapes/l40button-l41-part0.json
+file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/levelRun.js:12775
+                    throw new Error(`levelRun: the Explosion of ${b.id} at (${b.x}, ${b.y}) on tick `
+                          ^
+
+Error: levelRun: the Explosion of bombpusher@112,128#11 at (250, 160) on tick 1339 in level 40 reaches the spinner spinner@192,160 — `Enemy.hit(4, …, 1)` (`Explosion.as:62-65`) is not staged on a bomb's blast (seedling-fidelity-bombpusher). Refused by name.
+    at drainBombBlastsNow (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/levelRun.js:12775:27)
+    at Object.advance (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/levelRun.js:20531:21)
+    at Object.advance (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:18577:31)
+    at drive (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/botDriverV2.js:5344:48)
+    at walkToUnder (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:22213:31)
+    at walkTo (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:22258:68)
+    at walkToUnder (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:21956:29)
+    at walkTo (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:22258:68)
+    at walkToUnder (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:21956:29)
+    at walkTo (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:22258:68)
+
+Node.js v22.22.0

@@ -21,7 +21,23 @@
 //     editBinding?: <layoutEdits binding>, // optional; see below
 //     dropOutputs?: { name: (env) => void }, // optional; see invalidateFromStep
 //     kind:     'sphere-envelope' | …,   // the serialized envelope's `kind` stamp
+//     fields:   { name: <field def> },   // every top-level key; see THE FIELDS
 //   }
+//
+// THE FIELDS (§5au item 9). `fields` declares every top-level key a serialized
+// envelope of this mode may carry, beyond the stamp:
+//   { type, visibility: 'public' | 'internal', step: <step name> | null,
+//     about, internalKeys?: [<sub-key>, …] }
+// `step` is the step that writes it (null: set when the envelope is made);
+// a field a step writes may be null or absent before that step runs.
+// PUBLIC fields are the inputs and results a script may read and rely on;
+// INTERNAL ones are resume state (rng positions, batch cursors, the engine's
+// tagged Grid encoding, alias bookkeeping) whose shape may change without an
+// envelope_version bump. `internalKeys` marks internal sub-keys of a public
+// field (`grow.grid` inside an otherwise public `grow`). `envelopeSchema(desc)`
+// turns the table into the JSON Schema published under
+// `frontend/schema/envelopes/` — marking is schema-only; the bytes of an
+// envelope do not change.
 //
 // THE STAMP. A serialized envelope opens with `kind` (which mode wrote it) and
 // `envelope_version` (ENVELOPE_VERSION). Deserializing REFUSES a stamp that
@@ -197,6 +213,57 @@ export class EnvelopeStampError extends Error {
         this.name = 'EnvelopeStampError';
         this.code = 'ENVELOPE_STAMP';
     }
+}
+
+/** ⛓ A field's visibility (THE FIELDS in the header). */
+export const FIELD_VISIBILITY = Object.freeze({ PUBLIC: 'public', INTERNAL: 'internal' });
+
+/**
+ * ⛓⛓ THE JSON SCHEMA of one mode's serialized envelope, from its descriptor's
+ * `fields` (draft 2020-12). Unknown top-level keys are refused, so a step that
+ * starts writing a new field without declaring it fails the schema test.
+ * Visibility rides on `x-visibility`; the writing step on `x-step`.
+ */
+export function envelopeSchema(desc) {
+    const stepNames = new Set(desc.steps);
+    const properties = {
+        kind: { const: desc.kind, description: 'Which mode wrote this envelope.', 'x-visibility': 'public' },
+        envelope_version: {
+            const: ENVELOPE_VERSION,
+            description: 'The envelope format version (bumped when an envelope written now could not be read by '
+                + 'the code that wrote it).',
+            'x-visibility': 'public',
+        },
+    };
+    for (const [name, f] of Object.entries(desc.fields)) {
+        if (!Object.values(FIELD_VISIBILITY).includes(f.visibility)) {
+            throw new Error(`envelopeSchema(${desc.kind}): field '${name}' has no visibility`);
+        }
+        if (f.step !== null && !stepNames.has(f.step)) {
+            throw new Error(`envelopeSchema(${desc.kind}): field '${name}' names unknown step '${f.step}'`);
+        }
+        const types = [].concat(f.type);
+        properties[name] = {
+            type: f.step === null && !f.nullable ? types : [...types, 'null'],
+            description: f.about,
+            'x-visibility': f.visibility,
+            'x-step': f.step,
+            ...(f.internalKeys?.length ? {
+                properties: Object.fromEntries(f.internalKeys.map((k) => [k, { 'x-visibility': FIELD_VISIBILITY.INTERNAL }])),
+            } : {}),
+        };
+    }
+    return {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        title: `${desc.kind} (envelope_version ${ENVELOPE_VERSION})`,
+        description: `A serialized ${desc.kind}. Fields marked "x-visibility": "internal" are resume state whose shape `
+            + 'may change without a version bump; read the public ones.',
+        type: 'object',
+        required: [...new Set(['kind', 'envelope_version', 'completed',
+            ...Object.entries(desc.fields).filter(([, f]) => f.required).map(([n]) => n)])],
+        properties,
+        additionalProperties: false,
+    };
 }
 
 /** A fresh envelope for the given initial fields; `completed: -1` = nothing run. */

@@ -81,6 +81,8 @@ import {
     deserializeEnvelope as deserializeEnvelopeGeneric,
     invalidateFromStep as invalidateFromStepGeneric,
     editsBehindStep as editsBehindStepGeneric,
+    FIELD_VISIBILITY,
+    envelopeSchema,
 } from './steppedPipeline.js';
 // Recorded layout edits — the op vocabulary + replay. This module supplies the
 // SPHERE binding (below); layoutEdits.js stays envelope-agnostic.
@@ -873,6 +875,39 @@ const STEP_OUTPUT_PRESENT = {
 // The sphere mode descriptor — the whole per-mode surface the harness needs.
 // nextStep is the batch-aware loop (nextSphereStep); everything else is the
 // step list, runners, presence probes, and the non-plain artifact codecs.
+/**
+ * ⛓ EVERY TOP-LEVEL FIELD a serialized sphere envelope may carry (§5au item
+ * 9; the contract is THE FIELDS in steppedPipeline.js). `step` is the first
+ * step that writes the field; the schema under `frontend/schema/envelopes/`
+ * is generated from this table.
+ */
+export const SPHERE_ENVELOPE_FIELDS = Object.freeze({
+    config: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: null, required: true, about: 'The resolved world config the steps run on (seed, regionSize, item pool, quotas, sphere count, …).' },
+    completed: { type: 'integer', visibility: FIELD_VISIBILITY.PUBLIC, step: null, required: true, about: 'Index into SPHERE_STEPS of the last step run; -1 = none.' },
+    edits: { type: 'array', visibility: FIELD_VISIBILITY.PUBLIC, step: null, about: 'Recorded layout edits, replayed after the step each one belongs to.' },
+    draft: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: 'plan', about: 'The drafted spheres: what each sphere holds before allocation.' },
+    rng: { type: 'object', visibility: FIELD_VISIBILITY.INTERNAL, step: 'plan', about: 'The main rng position, threaded between steps.' },
+    topologyWarnings: { type: 'array', visibility: FIELD_VISIBILITY.PUBLIC, step: 'plan', about: 'Topology warnings from the last topology step.' },
+    placed: { type: 'array', visibility: FIELD_VISIBILITY.INTERNAL, step: 'plan', about: 'Node indices already placed on the grid (batch bookkeeping).' },
+    prevCount: { type: 'integer', visibility: FIELD_VISIBILITY.INTERNAL, step: 'plan', about: 'Node count before the current batch (batch bookkeeping).' },
+    batchStart: { type: 'integer', visibility: FIELD_VISIBILITY.INTERNAL, step: 'plan', about: 'The first wave of the next batch (batch cursor).' },
+    plan: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: 'allocate', about: 'The sphere plan: seed and per-sphere contents.' },
+    startingItems: { type: 'array', visibility: FIELD_VISIBILITY.PUBLIC, step: 'allocate', about: 'Items the player starts with.' },
+    allocation: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: 'allocate', about: 'Regions and fillers per wave.' },
+    opts: { type: 'object', visibility: FIELD_VISIBILITY.INTERNAL, step: 'allocate', about: 'The runner options derived from config.' },
+    totalNodes: { type: 'integer', visibility: FIELD_VISIBILITY.INTERNAL, step: 'allocate', about: 'Node count the topology will reach.' },
+    dims: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: 'allocate', about: 'Grid dimensions {width, height}.' },
+    startCell: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: 'allocate', about: 'The start cell {gx, gy}.' },
+    nodes: { type: 'array', visibility: FIELD_VISIBILITY.INTERNAL, step: 'topology', about: 'The topology nodes (aliased by tree.nodes).' },
+    substrateCounts: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: 'topology', about: 'Regions per substrate.' },
+    quotaFallbacks: { type: 'integer', visibility: FIELD_VISIBILITY.PUBLIC, step: 'topology', about: 'How many regions fell back from their quota substrate.' },
+    regionsRng: { type: 'object', visibility: FIELD_VISIBILITY.INTERNAL, step: 'topology', about: 'The regions rng position.' },
+    tree: { type: 'object', visibility: FIELD_VISIBILITY.INTERNAL, step: 'items', about: 'The item tree over the nodes.' },
+    grow: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: 'regions', internalKeys: ['grid'], about: 'The grown world: stats and startCell (public) and the tagged Grid encoding (grid, internal).' },
+    librarySources: { type: 'object', visibility: FIELD_VISIBILITY.INTERNAL, step: 'regions', about: 'Library-source bookkeeping for library quotas.' },
+    compile: { type: 'object', visibility: FIELD_VISIBILITY.PUBLIC, step: 'compile', about: 'The compiled result: rulesJson and oracleErrors.' },
+});
+
 const SPHERE_DESCRIPTOR = {
     kind: 'sphere-envelope',
     steps: SPHERE_STEPS,
@@ -882,7 +917,11 @@ const SPHERE_DESCRIPTOR = {
     nextStep: nextSphereStep,
     editBinding: SPHERE_EDIT_BINDING,
     dropOutputs: SPHERE_DROP_OUTPUTS,
+    fields: SPHERE_ENVELOPE_FIELDS,
 };
+
+/** The JSON Schema of a serialized envelope of this mode (from its `fields`). */
+export const sphereEnvelopeSchema = () => envelopeSchema(SPHERE_DESCRIPTOR);
 
 /**
  * Roll the envelope back so `stepName` (and everything after it) re-runs — the

@@ -256,20 +256,19 @@ export function configSchema(table, defaults, { tool = null } = {}) {
  * Read and check a `--config` file against the table, then write it into
  * `out`. Anything wrong with the FILE is an InputError (exit 3).
  */
-function applyConfig(out, path, table, defaults) {
-    const doc = readInputJson(path, '--config');
+function applyConfig(out, doc, label, table, defaults) {
     if (doc === null || typeof doc !== 'object' || Array.isArray(doc)) {
-        throw new InputError(`--config ${path}: expected a JSON object`);
+        throw new InputError(`${label}: expected a JSON object`);
     }
     const keys = configKeys(table, defaults);
     for (const [key, value] of Object.entries(doc)) {
         const k = keys.get(key);
         if (!k) {
-            throw new InputError(`--config ${path}: unknown key '${key}' (this driver's keys: ${[...keys.keys()].join(', ')}; `
+            throw new InputError(`${label}: unknown key '${key}' (this driver's keys: ${[...keys.keys()].join(', ')}; `
                 + 'see --config-schema)');
         }
         if (!(value === null ? k.nullable : k.kind.check(value))) {
-            throw new InputError(`--config ${path}: '${key}' must be ${describe(k.kind.schema)}`
+            throw new InputError(`${label}: '${key}' must be ${describe(k.kind.schema)}`
                 + `${k.nullable ? ' or null' : ''}, got ${JSON.stringify(value)}`);
         }
     }
@@ -298,21 +297,25 @@ function describe(schema) {
  * @param {string[]} argv
  * @param {Record<string, object>} table flag → spec (`W.*`, `flag(...)`, `W.config`, `W.help`)
  * @param {object} defaults
- * @param {{subcommand?: boolean, metaUrl?: string}} [opts] `subcommand`: a
- *        first argument not starting with `-` is `out.subcommand`; `metaUrl`:
- *        the driver's, for `-h`
+ * @param {{subcommand?: boolean, metaUrl?: string, configDoc?: object|null}} [opts]
+ *        `subcommand`: a first argument not starting with `-` is
+ *        `out.subcommand`; `metaUrl`: the driver's, for `-h`; `configDoc`: a
+ *        config OBJECT applied (and checked) like a `--config` file
  */
-export function parseFlags(argv, table, defaults, { subcommand = false, metaUrl = null } = {}) {
+export function parseFlags(argv, table, defaults, { subcommand = false, metaUrl = null, configDoc = null } = {}) {
     const out = defaults;
     const pristine = structuredClone(defaults);
     const tool = metaUrl ? basename(fileURLToPath(metaUrl), '.js') : null;
-    // ⛓ the config file first, wherever --config sits: flags win over it.
+    // ⛓ the config first, wherever --config sits: flags win over it. A
+    // `configDoc` (an object: `runPipeline`'s `config`) is checked the same way.
+    if (configDoc !== null) applyConfig(out, configDoc, 'config', table, pristine);
     if (Object.values(table).includes(CONFIG)) {
         const at = argv.flatMap((a, i) => (a === '--config' && !(subcommand && i === 0) ? [i] : []));
         if (at.length > 1) throw new UsageError('--config given more than once');
         if (at.length === 1) {
             if (at[0] + 1 >= argv.length) throw new UsageError('--config needs a value');
-            applyConfig(out, argv[at[0] + 1], table, pristine);
+            const path = argv[at[0] + 1];
+            applyConfig(out, readInputJson(path, '--config'), `--config ${path}`, table, pristine);
         }
     }
     for (let i = 0; i < argv.length; i++) {

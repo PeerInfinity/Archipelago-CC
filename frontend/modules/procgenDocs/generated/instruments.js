@@ -89,7 +89,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 4,
+            "count": 5,
             "id": "generate"
         },
         {
@@ -129,12 +129,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 90,
+            "count": 91,
             "id": "plan"
         },
         {
-            "browser": 79,
-            "count": 126,
+            "browser": 80,
+            "count": 127,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 427,
-        "browser": 144,
-        "cited": 222,
-        "files": 440,
+        "blockStyle": 430,
+        "browser": 145,
+        "cited": 224,
+        "files": 443,
         "lineStyle": 13,
-        "withDocblock": 440,
-        "withFlags": 356
+        "withDocblock": 443,
+        "withFlags": 359
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6124,6 +6124,35 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/gates.mjs"
         },
         {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "generate",
+            "citedBy": [
+                "docs/json/developer/procgen/stepped-pipeline.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "generate-envelope-schemas.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "generate-envelope-schemas — writes the JSON Schema of each stepped-pipeline envelope kind to `frontend/schema/envelopes/<kind>.schema.json` (§5au item 9).",
+            "path": "scripts/procgen/generate-envelope-schemas.mjs"
+        },
+        {
             "argvHelpers": [
                 "arg",
                 "has",
@@ -9887,6 +9916,33 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/plan-seedling-watcher-witness.mjs"
         },
         {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-watchertalk-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-watchertalk-witness — ⛓⛓⛓ fidelity WATCHERTALK D3: THE WATCHER'S EVENT `{114,0}`, EARNED BY THE SOLVER'S CLEAR-TAG FROM THE DIVERGENCE SWEEP'S TWO L114 ARRIVALS (`CONTACT_FIDELITY.watcherTalkVerb` ON).",
+            "path": "scripts/procgen/plan-seedling-watchertalk-witness.mjs"
+        },
+        {
             "argvHelpers": [
                 "arg"
             ],
@@ -10070,6 +10126,89 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-bobsoldier-mobiles — ⛓⛓⛓ seedling-fidelity-bobsoldier: THE BOBSOLDIER'S OWN POSITION, ASKED OF THE GAME, TICK BY SAMPLED TICK (U7's `probe-seedling-u7-puncher-mobiles.mjs`, one class over).",
             "path": "scripts/procgen/probe-seedling-bobsoldier-mobiles.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "classOf"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-bomb-blast-body.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "file"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "from"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "game-only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "reuse"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "upto"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "window"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-bomb-blast-body — ⛓ seedling-fidelity-bombblast D1/D2: A BOMB'S EXPLOSION ON A BODY, ASKED OF THE GAME TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-bomb-blast-body.mjs"
         },
         {
             "argvHelpers": [

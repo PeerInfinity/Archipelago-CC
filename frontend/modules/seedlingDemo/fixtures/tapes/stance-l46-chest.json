@@ -89,7 +89,7 @@
             "index": 1
         }
     },
-    "tick_count": 1044,
+    "tick_count": 868,
     "inputs": [
         {
             "key": "right",
@@ -634,269 +634,29 @@
         {
             "key": "up",
             "from": 792,
-            "to": 793
+            "to": 794
         },
         {
             "key": "down",
-            "from": 795,
-            "to": 797
-        },
-        {
-            "key": "up",
-            "from": 797,
-            "to": 798
-        },
-        {
-            "key": "down",
-            "from": 798,
-            "to": 799
-        },
-        {
-            "key": "up",
-            "from": 801,
-            "to": 803
-        },
-        {
-            "key": "down",
-            "from": 805,
-            "to": 807
-        },
-        {
-            "key": "up",
-            "from": 810,
-            "to": 812
-        },
-        {
-            "key": "down",
-            "from": 814,
-            "to": 816
-        },
-        {
-            "key": "up",
-            "from": 818,
-            "to": 820
-        },
-        {
-            "key": "down",
-            "from": 822,
-            "to": 824
-        },
-        {
-            "key": "up",
-            "from": 826,
-            "to": 828
-        },
-        {
-            "key": "down",
-            "from": 830,
-            "to": 832
-        },
-        {
-            "key": "up",
-            "from": 834,
-            "to": 836
-        },
-        {
-            "key": "down",
-            "from": 837,
-            "to": 839
-        },
-        {
-            "key": "up",
-            "from": 841,
-            "to": 843
-        },
-        {
-            "key": "down",
-            "from": 845,
-            "to": 847
-        },
-        {
-            "key": "up",
-            "from": 849,
-            "to": 851
-        },
-        {
-            "key": "down",
-            "from": 853,
-            "to": 855
-        },
-        {
-            "key": "up",
-            "from": 857,
-            "to": 859
-        },
-        {
-            "key": "down",
-            "from": 861,
-            "to": 863
-        },
-        {
-            "key": "up",
-            "from": 865,
-            "to": 867
-        },
-        {
-            "key": "down",
-            "from": 869,
-            "to": 871
-        },
-        {
-            "key": "up",
-            "from": 873,
-            "to": 875
-        },
-        {
-            "key": "down",
-            "from": 876,
-            "to": 878
-        },
-        {
-            "key": "up",
-            "from": 880,
-            "to": 882
-        },
-        {
-            "key": "down",
-            "from": 884,
-            "to": 886
-        },
-        {
-            "key": "up",
-            "from": 888,
-            "to": 890
-        },
-        {
-            "key": "down",
-            "from": 892,
-            "to": 894
-        },
-        {
-            "key": "up",
-            "from": 896,
-            "to": 898
-        },
-        {
-            "key": "down",
-            "from": 900,
-            "to": 902
-        },
-        {
-            "key": "up",
-            "from": 904,
-            "to": 906
-        },
-        {
-            "key": "down",
-            "from": 908,
-            "to": 910
-        },
-        {
-            "key": "up",
-            "from": 912,
-            "to": 914
-        },
-        {
-            "key": "down",
-            "from": 915,
-            "to": 917
-        },
-        {
-            "key": "up",
-            "from": 919,
-            "to": 921
-        },
-        {
-            "key": "down",
-            "from": 923,
-            "to": 925
-        },
-        {
-            "key": "up",
-            "from": 927,
-            "to": 929
-        },
-        {
-            "key": "down",
-            "from": 931,
-            "to": 933
-        },
-        {
-            "key": "up",
-            "from": 935,
-            "to": 937
-        },
-        {
-            "key": "down",
-            "from": 939,
-            "to": 941
-        },
-        {
-            "key": "up",
-            "from": 943,
-            "to": 945
-        },
-        {
-            "key": "down",
-            "from": 947,
-            "to": 949
-        },
-        {
-            "key": "up",
-            "from": 951,
-            "to": 952
+            "from": 794,
+            "to": 795
         },
         {
             "key": "left",
-            "from": 954,
-            "to": 956
+            "from": 799,
+            "to": 801
         },
         {
             "key": "right",
-            "from": 957,
-            "to": 960
+            "from": 802,
+            "to": 805
         },
         {
             "key": "left",
-            "from": 960,
-            "to": 961
-        },
-        {
-            "key": "up",
-            "from": 962,
-            "to": 964
-        },
-        {
-            "key": "down",
-            "from": 965,
-            "to": 968
-        },
-        {
-            "key": "up",
-            "from": 968,
-            "to": 969
-        },
-        {
-            "key": "down",
-            "from": 969,
-            "to": 970
-        },
-        {
-            "key": "up",
-            "from": 972,
-            "to": 974
-        },
-        {
-            "key": "down",
-            "from": 976,
-            "to": 978
-        },
-        {
-            "key": "up",
-            "from": 980,
-            "to": 981
+            "from": 805,
+            "to": 806
         }
     ],
     "tape_version": 8,
-    "description": "⛓⛓⛓ SEEDLING FIDELITY STANCE — route step 91 (L46): from the L45 arrival the solver walks to `chest@424,40`, a chest on a HALF tile whose stance (432,58) no 16 px node reaches, on the 8 px lattice and one axis at a time, and opens and collects it. The survey's staging (`r8-solve-11`'s committed block re-pointed at L46 (240,448), keys [0, 1, 2], items [hasShield, hasFire, canSwim, hasTorch]). The solver's own plan: 1044 t, equips []. Authored by scripts/procgen/plan-seedling-stance-witness.mjs."
+    "description": "⛓⛓⛓ SEEDLING FIDELITY STANCE — route step 91 (L46): from the L45 arrival the solver walks to `chest@424,40`, a chest on a HALF tile whose stance (432,58) no 16 px node reaches, on the 8 px lattice and one axis at a time, and opens and collects it. The survey's staging (`r8-solve-11`'s committed block re-pointed at L46 (240,448), keys [0, 1, 2], items [hasShield, hasFire, canSwim, hasTorch]). The solver's own plan: 868 t, equips []. Authored by scripts/procgen/plan-seedling-stance-witness.mjs."
 }

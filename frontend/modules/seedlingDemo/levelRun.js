@@ -7963,6 +7963,23 @@ export function createLevelRun({
         };
     }
 
+    /**
+     * ⛓ fidelity BOMBBLAST D3 — the lobber and its bombs as `bombForecastNow` clones them, for a forecast that steps
+     * them ITSELF (`chaserForecastNow`: a blast moves or kills a body, so a corridor priced against the bodies must see
+     * it). `null` while `bombBlastBody` (or `bombPusherLive`) is OFF or the room holds no lobber and no bomb.
+     */
+    function bombBlastClonesNow() {
+        if (!CONTACT_FIDELITY.bombBlastBody || !CONTACT_FIDELITY.bombPusherLive) return null;
+        const pushers = [...bombPusherStateFor(level).values()];
+        const live = bombsFor(level);
+        if (pushers.length === 0 && live.length === 0) return null;
+        return {
+            lobbers: [...pushers].reverse().map((b) => ({ ...b, spawned: null })),
+            air: live.map((b) => ({ ...b, v: { ...b.v } })),
+            pending: pendingBombBlasts.filter((b) => b.level === level).map((b) => ({ id: b.id, x: b.x, y: b.y })),
+        };
+    }
+
     function chaserForecastNow() {
         // ⛔ THE SAME GATE `stepChasersNow` OPENS WITH, for its reason: under
         // these flags the run does not step a chaser, so it has no live
@@ -8011,6 +8028,59 @@ export function createLevelRun({
             ctxAfter: firstTickInWorld ? spinnerCtx({ beforeTypeFlip: false }) : null,
             walls: [],
         } : null;
+        /**
+         * ⛓⛓ fidelity BOMBBLAST D3 (`CONTACT_FIDELITY.bombBlastBody` ON) — THE BLASTS LAND ON THE FORECAST'S BODIES.
+         * The bombs and the lobber step on this forecast's own clones (`bombBlastClonesNow`), first in the tick and in
+         * `bombForecastNow`'s order (the bombs, then the lobber against the previewed player where the tick started),
+         * so they are the bombs `run.spitForecast()` prices against the same walk. A bomb removed on tick k explodes
+         * at k's `updateLists()`: AFTER the tick's press (`hit`, which the caller applies once `step` returns) and
+         * BEFORE the bodies move on k+1 — so it lands at the TOP of the next `step` (`flushBombBlasts`), on each body
+         * whose box meets the square and whose origin is in the disc: `darkHitChaser`'s `enemyHit` + knockback from
+         * the blast point (the live `bombBlastHitChaser`), a kill staged as `hit`'s is (`dyingAt`), and a forecast
+         * spinner (`chaserSpinnerWalls`) hit by `hitSpinner`. A static census body is not a forecast body (the live
+         * arm still refuses it). `null`: every other forecast is byte-identical.
+         */
+        const fbomb = bombBlastClonesNow();
+        const flushBombBlasts = () => {
+            if (fbomb === null || fbomb.pending.length === 0) return;
+            const radius = BOMB.explosionHitRadius;
+            for (const bl of fbomb.pending.splice(0, fbomb.pending.length)) {
+                const square = rect(bl.x - radius, bl.y - radius, radius * 2, radius * 2);
+                const inDisc = (px, py) => Math.sqrt((bl.x - px) ** 2 + (bl.y - py) ** 2) <= radius;
+                const from = { x: bl.x, y: bl.y };
+                for (const id of ids) {
+                    const c = bodies.get(id);
+                    if (!c || c.removed) continue;
+                    if (!(rectsOverlap(chaserBoxAt(c.tag, c.x, c.y), square) && inDisc(c.x, c.y))) continue;
+                    const { verdict } = darkHitChaser(c, from, { d: BOMB.damage, f: BOMB.force, t: '', frozen: false });
+                    if (verdict.killed && hasDropDeath(c.tag)) {
+                        c.bulbPhase = 'armed';
+                    } else if (verdict.killed) {
+                        c.dyingAt = tickOffset;
+                        c.removalTicks = removalTicksAfterHit(c.as3, deathTicks(c.tag));
+                    }
+                }
+                for (const e of fspin === null ? [] : spinnerRects(fspin.st)) {
+                    if (!(rectsOverlap(e.rect, square) && inDisc(e.spinner.x, e.spinner.y))) continue;
+                    fspin.st.byId.set(e.id, hitSpinner(fspin.st.byId.get(e.id),
+                        { force: BOMB.force, from, damage: BOMB.damage, t: '', frozen: false }));
+                }
+            }
+        };
+        const stepBombClones = (playerPos) => {
+            if (fbomb === null) return;
+            for (const s of fbomb.air) {
+                const r = stepBomb(s, { frozen: false });
+                if (r.exploded) fbomb.pending.push({ id: s.id, x: r.exploded.x, y: r.exploded.y });
+            }
+            for (let i = fbomb.air.length - 1; i >= 0; i -= 1) {
+                if (fbomb.air[i].removed) fbomb.air.splice(i, 1);
+            }
+            for (const b of fbomb.lobbers) {
+                stepBombPusher(b, { player: { x: playerPos.x, y: playerPos.y } });
+                if (b.spawned) fbomb.air.unshift(b.spawned);
+            }
+        };
         // The camera, seeded from the live one and stepped by this forecast
         // alone. `cam`/`camBand` are exclusive in `stepCameraNow` and are
         // mirrored here as such.
@@ -8083,6 +8153,9 @@ export function createLevelRun({
             step(playerPos, opts = {}) {
                 if (!first) advanceCamera(playerPos);
                 first = false;
+                // ⛓ fidelity BOMBBLAST D3: the previous tick's `updateLists()`, then this tick's bombs (they update first).
+                flushBombBlasts();
+                stepBombClones(playerPos);
                 if (fspin !== null) {
                     stepSpinners(fspin.st, fspin.ctx);
                     fspin.ctx = fspin.ctxAfter ?? fspin.ctx;
@@ -12746,6 +12819,8 @@ export function createLevelRun({
      * ⛔ THE `"Enemy"` / `"ShieldBoss"` ARMS ARE A REFUSAL, NOT A ZERO. `Enemy.hit(4, Point(x, y), 1)` would land on a
      * body in the disc; this arm does not stage it. A stepped chaser in the disc, or any other `"Enemy"` body whose
      * box meets the prefilter square, refuses by name (the lobber itself is `type = "Solid"`, out of every list).
+     * ⛓ fidelity BOMBBLAST D2 (`CONTACT_FIDELITY.bombBlastBody` ON): a stepped chaser or a spinner in the disc TAKES
+     * the hit (`bombBlastHitChaser` / `bombBlastHitSpinner`); a static census body in the square still refuses.
      */
     function drainBombBlastsNow() {
         if (pendingBombBlasts.length === 0) return;
@@ -12761,6 +12836,10 @@ export function createLevelRun({
             for (const c of (noclip || noDamage) ? [] : chaserStateFor(level).values()) {
                 if (c.removed) continue;
                 if (rectsOverlap(chaserBoxAt(c.tag, c.x, c.y), square) && inDisc(c.x, c.y)) {
+                    if (CONTACT_FIDELITY.bombBlastBody) {
+                        bombBlastHitChaser(b, c);
+                        continue;
+                    }
                     throw new Error(`levelRun: the Explosion of ${b.id} at (${b.x}, ${b.y}) on tick `
                         + `${ticksCompleted} in level ${level} reaches the chaser ${c.id} — \`Enemy.hit(4, …, 1)\` `
                         + '(`Explosion.as:62-65`) is not staged on a bomb\'s blast (seedling-fidelity-bombpusher). '
@@ -12772,6 +12851,10 @@ export function createLevelRun({
             // conservative refusal (it can only refuse MORE than the game hits).
             for (const e of spinnerRectsNow() ?? []) {
                 if (rectsOverlap(e.rect, square) && inDisc(e.spinner.x, e.spinner.y)) {
+                    if (CONTACT_FIDELITY.bombBlastBody) {
+                        bombBlastHitSpinner(b, e.id);
+                        continue;
+                    }
                     throw new Error(`levelRun: the Explosion of ${b.id} at (${b.x}, ${b.y}) on tick `
                         + `${ticksCompleted} in level ${level} reaches the spinner ${e.id} — \`Enemy.hit(4, …, 1)\` `
                         + '(`Explosion.as:62-65`) is not staged on a bomb\'s blast (seedling-fidelity-bombpusher). '
@@ -12796,6 +12879,54 @@ export function createLevelRun({
             applyPlayerHit({ source: 'bomb', id: b.id, force: BOMB.force, damage: BOMB.damage,
                 from: { x: b.x, y: b.y }, retaliate: null });
         }
+    }
+
+    /**
+     * ⛓⛓⛓ fidelity BOMBBLAST D2 — `Explosion.as:62-65`'s `"Enemy"` ARM ON A STEPPED CHASER: `(c as Enemy).hit(4,
+     * new Point(x, y), 1)`. `darkHitChaser`'s pair: `enemyHit` (t `""`, the bomb's force and damage, the freeze the
+     * bomb stepped under) and, on a landed non-killing hit, `Enemy.knockback` from the blast's INT point — both
+     * components whole, a class with an empty `knockback` not moved. The killing hit does not knock back, and is staged
+     * as every chaser kill is (`stageChaserKill`, `by` 'bomb'). ⚠ ON THIS TICK: the drain runs in `updateLists()`,
+     * after `ticksCompleted` has counted the tick, so the rows carry `ticksCompleted` (an `advance`-time arm carries
+     * `+ 1`) — and the body's NEXT update moves it and runs its i-frame down, as the game's does.
+     * MEASURED (`bombblast-l40-bw-idle`, t1294): #10 at (268, 118) on `bob@272,112` at (269.955, 122.859): hits 0 → 1,
+     * `hits_timer` 30, v (−0.360, 0.346) → (1.133, 4.057).
+     */
+    function bombBlastHitChaser(b, c) {
+        const { verdict, shoved } = darkHitChaser(c, { x: b.x, y: b.y },
+            { d: BOMB.damage, f: BOMB.force, t: '', frozen: b.frozen });
+        if (verdict.killed) stageChaserKill(c, 'bomb', 'a bomb kill', { t: ticksCompleted, bomb: b.id });
+        bombEvents.push({ t: ticksCompleted, level, what: 'body-hit', id: b.id, body: c.id, arm: 'chaser',
+            landed: verdict.landed, killed: verdict.killed, refusedAt: verdict.refusedAt, hitsAfter: c.hits,
+            hitsTimer: c.hitsTimer, shoved });
+    }
+
+    /**
+     * ⛓⛓⛓ fidelity BOMBBLAST D2 — THE SAME ARM ON A SPINNER (`Spinner` overrides no `hit`): `hitSpinner` with the
+     * bomb's force, damage and point, its kill accounted exactly as a dark hit's is (`darkHitSpinner`): the kill-lock
+     * scan (`assertSpinnerKillIsAccounted`) and a `spinnerKills` row, `removedTick` eleven ticks on (`destroy` at this
+     * `updateLists()`, the fade from the next update).
+     * MEASURED (`bombblast-l40-bw-lapse1-idle`, t1339): #11 at (250, 160) on the spinner at (242.981, 147.216):
+     * hits 2 → 3, NO knockback (v unchanged), removed at t1350; (`bombblast-l40-bw-idle`, t1294) #10 on one at
+     * (262.090, 107.198): hits 1 → 2, knocked back.
+     */
+    function bombBlastHitSpinner(b, id) {
+        const spSt = spinnerStateFor(level);
+        const sp = spSt.byId.get(id);
+        const after = hitSpinner(sp, { force: BOMB.force, from: { x: b.x, y: b.y }, damage: BOMB.damage, t: '',
+            frozen: b.frozen });
+        spSt.byId.set(id, after);
+        const landed = after.hits !== sp.hits;
+        const killed = after.destroy && !sp.destroy;
+        if (killed) {
+            assertSpinnerKillIsAccounted(after);
+            spinnerKills.push({ t: ticksCompleted, level, id, tag: sp.persistTag, weapon: 'bomb',
+                removedTick: ticksCompleted + removalTicksAfterHit('Spinner') });
+        }
+        bombEvents.push({ t: ticksCompleted, level, what: 'body-hit', id: b.id, body: id, arm: 'spinner',
+            landed, killed, refusedAt: landed ? null : (sp.destroy ? 'dying' : (b.frozen ? 'the freeze'
+                : (sp.hitsTimer > 0 && sp.hitByDarkStuff !== true ? 'i-frames' : 'hitsMax'))),
+            hitsAfter: after.hits, hitsTimer: after.hitsTimer, shoved: landed && !killed });
     }
 
     /** The towers are stepped when either BEAMTOWER switch is ON. */
@@ -13774,18 +13905,19 @@ export function createLevelRun({
         // while `genericHit` returns at its first line. The hits are LOST,
         // silently. (`fireVerb.FIRE_DEAD_FRAME_RULE`.)
         if (fireWindows.some((w) => w.hitTicks.has(ticksCompleted))) {
-            throw new Error('levelRun: a fire window\'s hit tick '
+            throw Object.assign(new Error('levelRun: a fire window\'s hit tick '
                 + `${ticksCompleted} falls on a FROZEN tick (${what}). \`sprites()\` `
                 + 'still advances `sprFire` and `genericHit` returns '
                 + 'immediately under `Game.freezeObjects`, so the window '
-                + 'BURNS — the press lands nothing. Press outside the freeze.');
+                + 'BURNS — the press lands nothing. Press outside the freeze.'), { code: 'FROZEN_TICK_PRESS' });
         }
         if (swordWindow.pending) {
-            throw new Error(`levelRun: a ${swordWindow.pending.weapon} press at tick `
+            // ⛓ housekeep D1: coded — `solverBot.REFUSAL_BY_NAME` names it a solver can't-do (sweep leg 631, survey 122).
+            throw Object.assign(new Error(`levelRun: a ${swordWindow.pending.weapon} press at tick `
                 + `${swordWindow.pending.pressTick} would fire its rect on a FROZEN `
                 + `tick (${what}), and \`genericHit\` returns immediately under `
                 + '`Game.freezeObjects` — so the press would do nothing at '
-                + 'all. Press outside the freeze.');
+                + 'all. Press outside the freeze.'), { code: 'FROZEN_TICK_PRESS' });
         }
         // ⛓ fidelity BEAMTOWER D1: a tower's own update returns on the freeze, its graphic still updates.
         if (!noclip && beamTowersStepped()) stepBeamTowersNow({ frozen: true });
@@ -20047,14 +20179,14 @@ export function createLevelRun({
             // a warning because the cure is arithmetic the planner owns:
             // the freeze span is derivable from the volley clock.
             if (frozenTimer > 0 && held.has(TALK_KEY) && !wasHeld.has(TALK_KEY) && !noclip) {
-                throw new Error(`levelRun: a \`primary\` press at tick ${ticksCompleted} `
+                throw Object.assign(new Error(`levelRun: a \`primary\` press at tick ${ticksCompleted} `
                     + `lands on a FROZEN tick (frozenTimer ${frozenTimer} after this `
                     + 'tick\'s `freezeStep`). `Player.input()` returns at its first line '
                     + 'while `frozenTimer > 0`, and `useItem(Main.primary)` is called '
                     + 'from INSIDE `input()` — so the press is LOST, not delayed. An '
                     + '`IceTurretBlast` contact refuses input for '
                     + `${ICE_TURRET_BLAST.freezeTicks - 1} ticks starting with the `
-                    + 'contact tick; schedule the press outside that span.');
+                    + 'contact tick; schedule the press outside that span.'), { code: 'FROZEN_TICK_PRESS' });
             }
             /**
              * ⛓⛓⛓ R9 SLICE 12b — `useItem`'s SWORD ARM, RESOLVED ABOVE THE

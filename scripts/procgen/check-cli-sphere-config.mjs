@@ -20,6 +20,9 @@
  * Run: node scripts/procgen/check-cli-sphere-config.mjs
  * @ci-box V3b adopted this script's NAME, not its RUN: it has never been priced on a runner, and `planCiShards` gives an unpriced arm a whole 600 s shard — adopting it is a costed decision, not a rename's side effect.
  *   ⇒ deleting this one line is how a later slice adopts it into CI.
+ *   ⛓ CI RUNS IT ANYWAY, as one row of `cliContract.test.js` (§5au item 8,
+ *   the default vitest tier, ~4 s): the gate roster stays as it was, and a
+ *   red here is a red vitest shard.
  */
 import { spawnSync } from 'node:child_process';
 import { readFileSync, mkdtempSync } from 'node:fs';

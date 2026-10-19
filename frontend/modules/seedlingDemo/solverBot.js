@@ -156,6 +156,8 @@ import {
     // ⛓⛓⛓ seedling-fidelity-wand D2: the `wand` verb (behind `WAND_VERB`).
     WAND_VERB, WAND_WINDOW, wandShotSpawn, wandShotVelocity, withWandVerb,
     createWandShot, stepWandShot, wandShotRect, MAGICAL_LOCK_OPEN_TICK_OFFSET,
+    // ⛓⛓⛓ hammer-phase XC: the cross-pass escape cache's key spells its arguments as the digest spells the run.
+    canonicalDigestText,
 } from './solverView.js';
 import {
     bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
@@ -178,6 +180,8 @@ import { activeProgress, progressAsked, progressEnter, progressFrame, progressGo
     progressSite, progressStatesFor, progressTick, withSolveProgress } from './solveProgress.js';
 // ⛓ seedling-fidelity-forcedhit D2 — the forced-hit rung's proof and crossing (`FORCED_HITS`, OFF).
 import { FORCED_HITS, FORCED_HIT_TRACE, planForcedCrossing, proveForcedHit, worldHitsOf } from './forcedHit.js';
+// ⛓ seedling-fidelity-axeforcedu D2 — a spinning axe's forced U, crossed and billed (`AXE_PRICED_CROSSING`, OFF).
+import { AXE_PRICED_CROSSING, AXE_PRICED_TRACE, admitAxeCrossing } from './axePricedCrossing.js';
 // ⛓ seedling-fidelity-arrowlane D2 — the armed-lane crossing arm (`ARROW_LANE_CROSSING`, OFF).
 import { ARROW_LANE_CROSSING, ARROW_LANE_TRACE, LaneCrossingExcept, admitLaneCrossing, laneCrossingExcept,
     laneCrossingFor } from './arrowLaneCrossing.js';
@@ -195,6 +199,9 @@ import { ARROW_LANE_CROSSING, ARROW_LANE_TRACE, LaneCrossingExcept, admitLaneCro
  *
  * @param {Array<{x:number,y:number,tick:number}>} samples in walk order
  * @param {number} startTick the run's own clock when the corridor was planned
+ *
+ * ⛓ housekeep D1: its five throws STAY plain `Error`s — each is the instrument's own invariant (a probe that
+ * sampled nothing, or whose clock stopped), a bug in the solver's transit probe, never a can't-do of the room.
  */
 export function assertTransitSamplesCarryEtas(samples, startTick,
     what = 'the transit probe') {
@@ -361,6 +368,76 @@ export class SolverRefusal extends Error {
          * the field is what a caller reads.
          */
         this.bound = bound;
+    }
+}
+
+/**
+ * ⛓⛓ seedling-fidelity-housekeep D1 — **A SOLVER CAN'T-DO THAT ARRIVES AS A PLAIN THROW, NAMED, THEN REFUSED.**
+ *
+ * Three throws a solve reaches are not `SolverRefusal`s, and a sweep row or a survey row read each as a crash
+ * (measured: sweep leg 631, survey steps 113 / 122 / 191, ROCKMOVE's orphan-button legs 311 / 313 / 634):
+ *   · `levelRun`'s press on a FROZEN tick (`code: 'FROZEN_TICK_PRESS'`: a press the game drops under
+ *     `Game.freezeObjects` / `frozenTimer`) — the solver's presses are not scheduled around a freeze;
+ *   · `botDriverV2.findExit`'s teleporter standing on a PIT tile — the goal is a door the model does not transcribe;
+ *   · `botDriverV2.runHold`'s presser that NO responder answers — the hold verb does not apply to it.
+ * Each is NAMED where the solver first sees it (`nameRefusal`: the error gains `obstacle` and `refusalByName`, so a
+ * progress frame it unwinds through reads the obstacle's kind), and becomes a `SolverRefusal` only at the OUTERMOST
+ * `solveSegment` (`refusingByName`). ⛔ NOT INSIDE THE LADDER: a frozen-tick press throws mid-`advance`, after the
+ * tick has begun mutating the run, so a rung that caught it as a refusal would go on from a half-stepped run. And
+ * not catchable means not a new control path: inside the solve every throw is the object it was, so a solve that
+ * did not throw is byte-identical; one that threw now ends REFUSED, with the same words (the orphan presser's gain one
+ * sentence) and the obstacle. The census of every plain-`Error` throw a solve reaches, and why the rest stay errors,
+ * is `CC/docs/cloud-reports/seedling-fidelity-housekeep.md`.
+ */
+export const REFUSAL_BY_NAME = Object.freeze({
+    /** a thrown error's `code` → the obstacle kind it names (the model sets the code; the solver owns the kind) */
+    codes: Object.freeze({ FROZEN_TICK_PRESS: 'unmodelled-frozen-press' }),
+    kinds: Object.freeze(['unmodelled-frozen-press', 'unmodelled-pit-teleporter', 'orphan-presser']),
+});
+
+/** Name `e` (a non-refusal thrown under a solve) as a solver can't-do: `obstacle` + `refusalByName`. Returns `e`. */
+function nameRefusal(e, obstacle, clause = '') {
+    if (e === null || typeof e !== 'object' || e instanceof SolverRefusal || e.refusalByName === true) return e;
+    e.refusalByName = true;
+    e.obstacle = obstacle;
+    if (clause) e.message += clause;
+    return e;
+}
+
+/** A coded throw (`REFUSAL_BY_NAME.codes`) named; anything else returned untouched. */
+function nameRefusalByCode(e) {
+    const kind = typeof e?.code === 'string' && Object.hasOwn(REFUSAL_BY_NAME.codes, e.code)
+        ? REFUSAL_BY_NAME.codes[e.code] : null;
+    return kind === null ? e : nameRefusal(e, { kind, code: e.code });
+}
+
+/** `run.advance(held)`, a coded throw named on its way out (the solve's own advance: `solveSegment`'s view). */
+function advanceNamingRefusals(run, held) {
+    try {
+        return run.advance(held);
+    } catch (e) {
+        throw nameRefusalByCode(e);
+    }
+}
+
+/** How deep the `solveSegment`s on the stack are: only the outermost turns a named throw into a refusal. */
+let refusalByNameDepth = 0;
+
+/** `fn()` as one segment; at the outermost, a named non-refusal leaves as a `SolverRefusal` (its `cause`). */
+function refusingByName(fn) {
+    refusalByNameDepth += 1;
+    try {
+        return fn();
+    } catch (e) {
+        if (refusalByNameDepth !== 1) throw e;
+        const named = nameRefusalByCode(e);
+        if (named?.refusalByName !== true || named instanceof SolverRefusal) throw e;
+        const r = new SolverRefusal(named.message, { obstacle: named.obstacle });
+        r.cause = named;
+        r.byName = { name: named.name, code: named.code ?? null };
+        throw r;
+    } finally {
+        refusalByNameDepth -= 1;
     }
 }
 
@@ -2426,6 +2503,10 @@ function refineStrategy(run, strategy, obstacle) {
     // ⛓ fidelity SEALDOOR D2 (behind `CONTACT_FIDELITY.sealDoorApproach`): the FinalDoor is opened by APPROACH. The
     // shared table keeps no row for it, so OFF the answer is the table's (none) byte for byte.
     if (CONTACT_FIDELITY.sealDoorApproach && obstacle?.kind === 'solid' && obstacle?.tag === 'finaldoor') return 'approach';
+    // ⛓ fidelity WATCHERTALK D2 (behind `CONTACT_FIDELITY.watcherTalkVerb`): the Watcher's `{114,0}` is written by its
+    // dialogue (`Watcher.doneTalking()`), so the clear-tag's verb for `solid:watcher` is `talk`. The shared table keeps
+    // no row for it, so OFF the answer is the table's (none) byte for byte.
+    if (CONTACT_FIDELITY.watcherTalkVerb && obstacle?.kind === 'solid' && obstacle?.tag === 'watcher') return 'talk';
     /**
      * ⛓⛓⛓ SEEDLING FIDELITY WAND (behind `WAND_VERB`) — the two rows the game contradicts, asked here so the
      * shared table keeps its words: a `wandlock` is a `Lock` (its group's verb, then the kill-lock arm below), and a
@@ -8675,12 +8756,50 @@ function execHold(run, perTick, resolved, ctx) {
     if (resolved.latched === true && resolved.stance === null) {
         return runLatchedWait(run, perTick, resolved, ctx.what, pace);
     }
-    return runHold(run, perTick, {
-        presser: { x: resolved.target.x, y: resolved.target.y },
-        ticks: resolved.hold.ticks,
-        until: resolved.hold.until,
-        ...(pace === null ? {} : { pace }),
-    }, ctx.what, ctx.before);
+    try {
+        return runHold(run, perTick, {
+            presser: { x: resolved.target.x, y: resolved.target.y },
+            ticks: resolved.hold.ticks,
+            until: resolved.hold.until,
+            ...(pace === null ? {} : { pace }),
+        }, ctx.what, ctx.before);
+    } catch (e) {
+        throw orphanPresserNamed(e, run, resolved.target);
+    }
+}
+
+/**
+ * ⛓ housekeep D1 — a `reach-exit` goal's door, with `findExit`'s PIT-tile throw named: the teleporter's tile is a pit
+ * (`level.pitTiles`, `findExit`'s own test), whose trigger and fall edge fire on one tick — FlashPunk bookkeeping the
+ * physics does not transcribe (survey steps 113 / 191: L43's door to L37, L100's to L101).
+ */
+function findExitNamed(level, exit) {
+    try {
+        return findExit(level, exit);
+    } catch (e) {
+        if (!(e instanceof BotDriverV2Error)) throw e;
+        const tp = level.teleporters.find((t) => t.x === exit.x && t.y === exit.y);
+        const tx = tp ? Math.floor(tp.x / TILE_SIZE) : null;
+        const ty = tp ? Math.floor(tp.y / TILE_SIZE) : null;
+        if (!tp || tp.deactivated || !level.pitTiles.some((t) => t.tx === tx && t.ty === ty)) throw e;
+        throw nameRefusal(e, { kind: 'unmodelled-pit-teleporter', id: `teleporter@${tp.x},${tp.y}`, tile: [tx, ty] });
+    }
+}
+
+/**
+ * ⛓ housekeep D1 — `runHold`'s "NO responder" throw, named: the presser at `at` publishes a group no responder,
+ * pulser or arrow trap of this level answers and it is not a cross-room presser (`runHold`'s own test, read on the
+ * same world). ROCKMOVE D3: L29's / L74's button once its fallrock is removed (legs 311 / 313 / 634).
+ */
+function orphanPresserNamed(e, run, at) {
+    if (!(e instanceof BotDriverV2Error)) return e;
+    const w = run.world;
+    const p = (w.pressers ?? []).find((q) => q.x === at.x && q.y === at.y);
+    if (!p || p.room >= 0) return e;
+    const answers = (list) => (list ?? []).some((a) => a.t === p.t);
+    if (answers(w.activators) || answers(w.pulsers) || answers(w.arrowTraps)) return e;
+    return nameRefusal(e, { kind: 'orphan-presser', id: `${p.tag}@${p.x},${p.y}` }, ' ⛓ A presser no responder '
+        + 'answers is not an obstacle a hold clears: the hold resolves to NOTHING in this level (housekeep D1).');
 }
 
 /**
@@ -11433,12 +11552,12 @@ export function noStrikeMove({ next, following, refuge, fallback = HAMMER_ESCAPE
  *   A claimed negative names its `bound` (A3): the kernel's own (`exhausted`, `start`, `horizon`), or `death`,
  *   `line`, `no-landing`, `approach`, `train`.
  */
-function pressEscape(run, opts) {
+export function pressEscape(run, opts) {
     const sink = HAMMER_ESCAPE_TRACE.sink;
-    if (sink === null) return pressEscapeOnce(run, opts, null);
+    if (sink === null) return pressEscapeScoped(run, opts, null);
     const searches = [];
     const t0 = globalThis.performance.now();
-    const out = pressEscapeOnce(run, opts, searches);
+    const out = pressEscapeScoped(run, opts, searches);
     sink({ run, caller: opts.caller ?? 'aim', t: run.ticksCompleted, pressAt: opts.pressAt, id: opts.id,
         ok: out.ok, claim: out.claim, bound: out.bound ?? null, why: out.why ?? null, searches,
         expansions: searches.reduce((a, x) => a + x.expansions, 0), ms: globalThis.performance.now() - t0 });
@@ -11455,7 +11574,378 @@ function pressEscape(run, opts) {
  */
 export const HAMMER_ESCAPE_TRACE = { sink: null };
 
-function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = true }, trace) {
+/**
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE XC — **THE CROSS-PASS ESCAPE CACHE** (`ESCAPE_CROSS_PASS_CACHE`, OFF;
+ * `SEEDLING_ESCAPE_CROSS_PASS_CACHE=1` opts a process in). EX measured that two thirds of L18's escape calls repeat
+ * ACROSS `twoPassSolve`'s passes with equal answers and work (passes 2 and 3 replay pass 1 below the declared tick),
+ * and that no key the solver could build alone was exact. Fidelity's `run.stateDigest()` is that key's missing half.
+ *
+ * THE KEY (DIGEST's D4, `CC/docs/cloud-reports/seedling-fidelity-digest.md`), per call, before it:
+ *   1. `run.stateDigest()` — everything the escape's reach reads of the run (⚠ an ESCAPE key, not a run-equivalence:
+ *      two runs with one digest may part at the next `advance`; nothing else may read this cache);
+ *   2. the call's arguments by value (`state` with its symbol keys, `at`, `keys` in order, `pressAt`, `id`,
+ *      `deadline`) — `caller` is not stored and not read;
+ *   3. what levelRun cannot see: `HAMMER_ESCAPE_BOUNDS`, `GHOST_SPINNER_PRESS.enabled`, `PRESS_KILL_COST.enabled`,
+ *      the deadline (none / live, and `fine`; a TRIPPED one bypasses the cache, below) and the progress install
+ *      (none / outside a segment / inside one).
+ * The digest is taken once per CALL, never once per tick: `equipNow` and the lazy `…StateFor` builds write inside a
+ * tick (DIGEST's 45 / 53 tick-0 misses are exactly that).
+ *
+ * THE SCOPE is one `twoPassSolve` call (`escapeCrossPassScope`, installed around each pass by `twoPassSolve.js`), and
+ * only the runs its own `makeRun` built (`adopt`). Not wider: the digest leaves the `levelSource` out (a function),
+ * so two solves over two sources could share a digest and differ; and nothing survives into the next worker solve or
+ * leg. Not narrower: a pass's repeats are across its own passes (same-pass repeats are 0.2 %, EX's EXACT row).
+ *
+ * WHAT IS STORED: a miss records its WORK as it happens — every ask of `deadlineReached('hammer-escape')`, every
+ * `onNode` (x, y, index) through `progressStatesFor`, every finished search (the trace row and `progressSearch`) —
+ * plus its answer (a copy) and the `…_COUNTS` instruments it moved. It is NOT stored when:
+ *   - a deadline tripped inside it (a trip is never an answer, js-7 condition 1);
+ *   - the digest moved across it (the call built a lazy visit state: a hit could not rebuild it, so a later call or
+ *     `advance` would read a run OFF never had);
+ *   - the scope is at its cap (`maxEntries` entries, or `maxNodes` recorded nodes): a miss, never an eviction, so no
+ *     answer depends on what was evicted first (js-7 condition 3).
+ *
+ * A HIT REPLAYS THE MISS'S WORK, in its order: each ask is a real `deadlineReached('hammer-escape')` (so the deadline's
+ * own counts, `budget.asks` by site and `shouldStop` totals are OFF's), each node goes through `progressStatesFor`,
+ * each search's row is emitted as the miss emitted it, the instruments' deltas are added back. A trip at ask k
+ * re-derives the call SILENTLY with a `shouldStop` that answers true at its k-th ask (no ask, node or emit of its own)
+ * and emits the tripped search's row: exactly what OFF returns at that ask, its expansions, nodes and deepest. Only
+ * the wall clock may differ — and memos outside the digest (the spinner forecast's one-entry memo) may be extended by
+ * a miss and not by a hit; they are exact either way, so the instruments that count their reuse can drift.
+ *
+ * `verify: true` (`SEEDLING_ESCAPE_CROSS_PASS_CACHE_VERIFY=1`, js-7 condition 2): every hit is recomputed as a miss
+ * and compared — the answer, the ask/node/search stream and the instruments' deltas. A mismatch is counted
+ * (`verifyMismatches`) and kept (`ESCAPE_CROSS_PASS_CACHE_MISMATCHES`, the first 16); the recomputed answer is the one
+ * returned, so a verify run is OFF's run plus the comparisons.
+ */
+export const ESCAPE_CROSS_PASS_CACHE = {
+    enabled: globalThis.process?.env?.SEEDLING_ESCAPE_CROSS_PASS_CACHE === '1',
+    verify: globalThis.process?.env?.SEEDLING_ESCAPE_CROSS_PASS_CACHE_VERIFY === '1',
+    maxEntries: 4096,
+    maxNodes: 2_000_000,
+};
+
+/** Run `fn` with the cache's switch set to `enabled`, restoring the previous value (`withHammerEscape`'s shape). */
+export function withEscapeCrossPassCache(enabled, fn) {
+    const was = ESCAPE_CROSS_PASS_CACHE.enabled;
+    ESCAPE_CROSS_PASS_CACHE.enabled = enabled === true;
+    try {
+        const out = fn();
+        if (out && typeof out.then === 'function') {
+            return out.finally(() => { ESCAPE_CROSS_PASS_CACHE.enabled = was; });
+        }
+        ESCAPE_CROSS_PASS_CACHE.enabled = was;
+        return out;
+    } catch (e) {
+        ESCAPE_CROSS_PASS_CACHE.enabled = was;
+        throw e;
+    }
+}
+
+/**
+ * The cache's instrument (`PRESS_KILL_COST_COUNTS`' shape): every lookup's outcome, summed over every scope in the
+ * process. Read by the gate rows and the report; nothing reads it to decide. `resetEscapeCrossPassCacheCounts()`.
+ */
+export const ESCAPE_CROSS_PASS_CACHE_COUNTS = {
+    lookups: 0, hits: 0, crossPassHits: 0, misses: 0, stored: 0,
+    notStoredTripped: 0, notStoredMoved: 0, notStoredCap: 0, bypassedTripped: 0, tripReplays: 0,
+    verified: 0, verifyMismatches: 0, verifySkippedTripped: 0,
+};
+export function resetEscapeCrossPassCacheCounts() {
+    for (const k of Object.keys(ESCAPE_CROSS_PASS_CACHE_COUNTS)) ESCAPE_CROSS_PASS_CACHE_COUNTS[k] = 0;
+    ESCAPE_CROSS_PASS_CACHE_MISMATCHES.length = 0;
+}
+
+/** Verify mode's mismatches, the first 16: `{scope, t, caller, what}`. */
+export const ESCAPE_CROSS_PASS_CACHE_MISMATCHES = [];
+
+/**
+ * ⛓ The cache's trace (`HAMMER_ESCAPE_TRACE`'s shape): `null`, or handed one record per escape call on an adopted
+ * run, `{scope, run, t, caller, outcome, opts}` — `outcome` is `hit`, `miss`, `bypass` (a tripped deadline),
+ * `verified`; `opts` is the call's own argument object (a gate row re-asks a call by it). `scope` and `run` number
+ * the scopes and their runs in creation order.
+ */
+export const ESCAPE_CROSS_PASS_CACHE_TRACE = { sink: null };
+
+/** The scope the solve in hand runs under (`withEscapeCrossPassScope`) — `null` is "no cache". */
+let activeEscapeScope = null;
+let escapeScopes = 0;
+
+/**
+ * One `twoPassSolve` call's cache: empty, and it serves only the runs it `adopt`s — reached as the segment drives
+ * them, through its `Object.create(run)` view (`solveSegmentUnder`'s `viewOf`); a Proxy over a run is not reached,
+ * and is not served.
+ */
+export function escapeCrossPassScope() {
+    const runs = new WeakMap();
+    let adopted = 0;
+    return {
+        id: (escapeScopes += 1),
+        entries: new Map(),
+        nodes: 0,
+        counts: { lookups: 0, hits: 0, crossPassHits: 0, stored: 0 },
+        /** Serve `run` (a run this scope's `makeRun` built); returns it. */
+        adopt(run) {
+            if (typeof run?.stateDigest === 'function' && !runs.has(run)) runs.set(run, (adopted += 1));
+            return run;
+        },
+        /** The adopted run `run` is (or views), or `null`. */
+        innerOf(run) {
+            for (let r = run; r !== null && typeof r === 'object'; r = Object.getPrototypeOf(r)) {
+                if (runs.has(r)) return r;
+            }
+            return null;
+        },
+        indexOf: (inner) => runs.get(inner) ?? null,
+    };
+}
+
+/** Run `fn` (synchronous) under `scope` (`null`: under none — an outer scope does not reach in), restored after. */
+export function withEscapeCrossPassScope(scope, fn) {
+    const was = activeEscapeScope;
+    activeEscapeScope = scope;
+    try {
+        return fn();
+    } finally {
+        activeEscapeScope = was;
+    }
+}
+
+const ESCAPE_EV_SEARCH = 0;
+const ESCAPE_EV_ASK = 1;
+const ESCAPE_EV_NODE = 2;
+const ESCAPE_EV_END = 3;
+const ESCAPE_INSTRUMENTS = [PRESS_KILL_COST_COUNTS, STRIKE_SCAN_COST_COUNTS, PRESS_KILL_BOMBS_COUNTS,
+    REFUGE_ETA_CUT_COUNTS];
+
+const instrumentsNow = () => ESCAPE_INSTRUMENTS.map((c) => Object.values(c));
+const instrumentsSince = (before) => ESCAPE_INSTRUMENTS.map((c, j) => Object.values(c).map((v, k) => v - before[j][k]));
+const addInstruments = (delta) => ESCAPE_INSTRUMENTS.forEach((c, j) => Object.keys(c).forEach((k, i) => {
+    c[k] += delta[j][i];
+}));
+
+/** A finished escape search's row: the trace's (when one is collected) and the progress leaf's. */
+function escapeSearchEmit(trace, phase, r) {
+    if (trace !== null) trace.push({ phase, expansions: r.expansions, ok: r.ok, bound: r.bound ?? null });
+    // ⛓ hammer-phase D1 — the escape search is a progress leaf
+    if (activeProgress !== null) progressSearch(`escape-${phase}`, r);
+}
+
+/** An answer's own copy: arrays, plain objects (symbol keys too), Sets and Maps are copied, aliasing kept. */
+function copyEscapeValue(v, seen = new Map()) {
+    if (v === null || typeof v !== 'object') return v;
+    if (seen.has(v)) return seen.get(v);
+    let out;
+    if (Array.isArray(v)) {
+        out = new Array(v.length);
+        seen.set(v, out);
+        for (let i = 0; i < v.length; i += 1) out[i] = copyEscapeValue(v[i], seen);
+    } else if (v instanceof Set) {
+        out = new Set();
+        seen.set(v, out);
+        for (const x of v) out.add(copyEscapeValue(x, seen));
+    } else if (v instanceof Map) {
+        out = new Map();
+        seen.set(v, out);
+        for (const [k, x] of v) out.set(k, copyEscapeValue(x, seen));
+    } else {
+        const proto = Object.getPrototypeOf(v);
+        if (proto !== Object.prototype && proto !== null) return v;
+        out = proto === null ? Object.create(null) : {};
+        seen.set(v, out);
+        for (const k of Reflect.ownKeys(v)) {
+            if (Object.prototype.propertyIsEnumerable.call(v, k)) out[k] = copyEscapeValue(v[k], seen);
+        }
+    }
+    return out;
+}
+
+/** The cache key of one call (the docblock's 1–3), and the digest alone (the after-check compares it). */
+function escapeKeyOf(run, { state, at, keys = [], pressAt, id, deadline = true }) {
+    const digest = run.stateDigest();
+    const d = activeDeadline;
+    const p = activeProgress;
+    const { horizon, follow, cell, maxExpansions } = HAMMER_ESCAPE_BOUNDS;
+    const globals = [horizon, follow, cell, maxExpansions, GHOST_SPINNER_PRESS.enabled, PRESS_KILL_COST.enabled,
+        d === null ? 'none' : `live:${d.fine === true}`, p === null ? 'none' : (p.seg === null ? 'outside' : 'segment')];
+    return { digest, key: `${digest}|${canonicalDigestText(globals)}|${
+        canonicalDigestText({ state, at, keys, pressAt, id, deadline })}` };
+}
+
+/** A miss's recorder: the work stream it emits, and whether a deadline tripped inside it. */
+function escapeRecorder(run) {
+    const rec = { ev: [], rs: [], nodes: 0, tripped: false };
+    rec.tap = {
+        silent: false,
+        ask: () => {
+            rec.ev.push(ESCAPE_EV_ASK);
+            const stop = deadlineReached('hammer-escape');
+            if (stop) rec.tripped = true;
+            return stop;
+        },
+        onNodeFor: (n) => {
+            rec.ev.push(ESCAPE_EV_SEARCH);
+            const on = activeProgress === null ? null : progressStatesFor(run, n);
+            if (on === null) return null;
+            return (q, i) => {
+                rec.ev.push(ESCAPE_EV_NODE, q.x, q.y, i);
+                rec.nodes += 1;
+                on(q, i);
+            };
+        },
+        searched: (phase, r) => {
+            rec.ev.push(ESCAPE_EV_END, rec.rs.length);
+            rec.rs.push([phase, r]);
+        },
+    };
+    return rec;
+}
+
+/** The miss path: the escape, recorded. */
+function escapeRecorded(run, opts, trace) {
+    const rec = escapeRecorder(run);
+    const before = instrumentsNow();
+    const answer = pressEscapeOnce(run, opts, trace, rec.tap);
+    return { answer, rec, counts: instrumentsSince(before) };
+}
+
+/** OFF's answer at the k-th ask, which tripped: the call re-derived silently, the tripped search's row emitted. */
+function escapeTrippedAt(run, opts, trace, k) {
+    let asked = 0;
+    let last = null;
+    const answer = pressEscapeOnce(run, opts, null, {
+        silent: true,
+        ask: () => {
+            asked += 1;
+            return asked === k;
+        },
+        onNodeFor: () => null,
+        searched: (phase, r) => { last = [phase, r]; },
+    });
+    if (last !== null) escapeSearchEmit(trace, last[0], last[1]);
+    return answer;
+}
+
+/** A hit: the stored work stream replayed in order, then the answer's own copy. */
+function escapeReplayed(entry, run, opts, trace) {
+    const n = run.ticksCompleted;
+    const ev = entry.ev;
+    let onNode = null;
+    let asks = 0;
+    for (let p = 0; p < ev.length;) {
+        switch (ev[p]) {
+            case ESCAPE_EV_SEARCH:
+                onNode = activeProgress === null ? null : progressStatesFor(run, n);
+                p += 1;
+                break;
+            case ESCAPE_EV_ASK:
+                asks += 1;
+                if (deadlineReached('hammer-escape')) {
+                    ESCAPE_CROSS_PASS_CACHE_COUNTS.tripReplays += 1;
+                    return escapeTrippedAt(run, opts, trace, asks);
+                }
+                p += 1;
+                break;
+            case ESCAPE_EV_NODE:
+                if (onNode !== null) onNode({ x: ev[p + 1], y: ev[p + 2] }, ev[p + 3]);
+                p += 4;
+                break;
+            default: {
+                const [phase, r] = entry.rs[ev[p + 1]];
+                escapeSearchEmit(trace, phase, { ...r });
+                p += 2;
+            }
+        }
+    }
+    addInstruments(entry.counts);
+    return copyEscapeValue(entry.answer);
+}
+
+/** Verify mode: what differs between a stored entry and the same call recomputed (`null`: nothing). */
+function escapeEntryDiffers(entry, got) {
+    if (canonicalDigestText(entry.answer) !== canonicalDigestText(got.answer)) return 'answer';
+    const a = entry.ev;
+    const b = got.rec.ev;
+    if (a.length !== b.length || a.some((x, i) => !Object.is(x, b[i]))) return 'work (asks, nodes or searches)';
+    const row = ([phase, r]) => [phase, r.ok, r.bound ?? null, r.why ?? null, r.expansions, r.nodes ?? null,
+        r.deepest ?? null];
+    if (canonicalDigestText(entry.rs.map(row)) !== canonicalDigestText(got.rec.rs.map(row))) return 'search rows';
+    if (canonicalDigestText(entry.counts) !== canonicalDigestText(got.counts)) return 'instruments';
+    return null;
+}
+
+/** `pressEscapeOnce` through the scope in hand, when there is one and it adopted `run`. */
+function pressEscapeScoped(run, opts, trace) {
+    const scope = activeEscapeScope;
+    const inner = scope === null ? null : scope.innerOf(run);
+    if (inner === null) return pressEscapeOnce(run, opts, trace, null);
+    const C = ESCAPE_CROSS_PASS_CACHE_COUNTS;
+    const sink = ESCAPE_CROSS_PASS_CACHE_TRACE.sink;
+    const note = (outcome) => {
+        if (sink !== null) {
+            sink({ scope: scope.id, run: scope.indexOf(inner), t: run.ticksCompleted, caller: opts.caller ?? 'aim',
+                outcome, opts });
+        }
+    };
+    // ⛔ after a trip, nothing is read or stored (js-7 condition 1): the deadline's answers are no longer the key's
+    if (activeDeadline !== null && activeDeadline.tripped.size > 0) {
+        C.bypassedTripped += 1;
+        note('bypass');
+        return pressEscapeOnce(run, opts, trace, null);
+    }
+    C.lookups += 1;
+    scope.counts.lookups += 1;
+    const { digest, key } = escapeKeyOf(run, opts);
+    const entry = scope.entries.get(key);
+    if (entry !== undefined) {
+        C.hits += 1;
+        scope.counts.hits += 1;
+        if (entry.run !== inner) {
+            C.crossPassHits += 1;
+            scope.counts.crossPassHits += 1;
+        }
+        if (!ESCAPE_CROSS_PASS_CACHE.verify) {
+            note('hit');
+            return escapeReplayed(entry, run, opts, trace);
+        }
+        const got = escapeRecorded(run, opts, trace);
+        if (got.rec.tripped) {
+            C.verifySkippedTripped += 1;
+        } else {
+            C.verified += 1;
+            const what = escapeEntryDiffers(entry, got);
+            if (what !== null) {
+                C.verifyMismatches += 1;
+                if (ESCAPE_CROSS_PASS_CACHE_MISMATCHES.length < 16) {
+                    ESCAPE_CROSS_PASS_CACHE_MISMATCHES.push({ scope: scope.id, t: run.ticksCompleted,
+                        caller: opts.caller ?? 'aim', what });
+                }
+            }
+        }
+        note('verified');
+        return got.answer;
+    }
+    C.misses += 1;
+    note('miss');
+    const got = escapeRecorded(run, opts, trace);
+    if (got.rec.tripped) {
+        C.notStoredTripped += 1;
+    } else if (run.stateDigest() !== digest) {
+        C.notStoredMoved += 1;
+    } else if (scope.entries.size >= ESCAPE_CROSS_PASS_CACHE.maxEntries
+        || scope.nodes + got.rec.nodes > ESCAPE_CROSS_PASS_CACHE.maxNodes) {
+        C.notStoredCap += 1;
+    } else {
+        scope.entries.set(key, { run: inner, answer: copyEscapeValue(got.answer), ev: got.rec.ev, rs: got.rec.rs,
+            counts: got.counts });
+        scope.nodes += got.rec.nodes;
+        C.stored += 1;
+        scope.counts.stored += 1;
+    }
+    return got.answer;
+}
+
+function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = true }, trace, tap) {
     const n = run.ticksCompleted;
     const step = run.previewStepper();
     const NO_KEYS = new Set();
@@ -11504,10 +11994,10 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
     const safeIn = (rows) => (q, i) => q !== null && !lethalFloor(q)
         && clearOfHammersAt(run, playerBoxAt(q.x, q.y), rows, i);
     const safe = safeIn(first.rows);
+    // ⛓ hammer-phase XC: `tap` (the cache's recorder or its silent re-derivation) sees each search; `null` is today's
     const traced = (phase, r) => {
-        if (trace !== null) trace.push({ phase, expansions: r.expansions, ok: r.ok, bound: r.bound ?? null });
-        // ⛓ hammer-phase D1 — the escape search is a progress leaf
-        if (activeProgress !== null) progressSearch(`escape-${phase}`, r);
+        if (tap !== null) tap.searched(phase, r);
+        if (tap === null || !tap.silent) escapeSearchEmit(trace, phase, r);
         return r;
     };
     for (let t = at + 1; t <= L; t += 1) {
@@ -11522,8 +12012,9 @@ function pressEscapeOnce(run, { state, at, keys = [], pressAt, id, deadline = tr
         // ⛓ of two states with one coarse key, keep the one farther from every hammer's disc (the refuge's
         // preference, `discClearanceAt` — a robustness score, never the safety test)
         rank: (q, i) => discClearanceAt(playerBoxAt(q.x, q.y), rows, i),
-        shouldStop: deadline && activeDeadline !== null ? () => deadlineReached('hammer-escape') : null,
-        onNode: activeProgress === null ? null : progressStatesFor(run, n),
+        shouldStop: !deadline || activeDeadline === null ? null
+            : (tap === null ? () => deadlineReached('hammer-escape') : tap.ask),
+        onNode: tap !== null ? tap.onNodeFor(n) : (activeProgress === null ? null : progressStatesFor(run, n)),
     }));
     const verdict = (r, from, pre) => {
         if (r.ok) return null;
@@ -17855,6 +18346,13 @@ function deriveKillByCeiling(run, body, contacts) {
  *   · the STANCE: a walkable tile centre and a facing whose `spearRect` overlaps the pole's bob-invariant core
  *     (the census rect is the union over the bob, 4 px top and bottom of which the hitbox leaves at some phase) and
  *     no other press responder, with the player box clear of the body, reached by `stanceReaches`.
+ *   · ⛓ housekeep D2 — the SUB-ORDER, and the press in ANOTHER room. With no Spear the Spear is the sub-order the
+ *     route owes (the refusal below says so). It is not the only way to light the pole: the pole boots LIT from its
+ *     cleared tag (`PERSISTENCE_RESPONSE.lightpole` 'light'), and a CROSS-ROOM `ButtonRoom` (`room >= 0`) writes
+ *     that tag from its own level (`ButtonRoom.as:93`, `Game.setPersistence(t, persist, room)`) — the rules' darktrap
+ *     event (`seedlingObstacleEvents.deriveButtonEvents` + `poleKillsOf`), which the solver discharges as a
+ *     `clear-tag` goal in the PRESSER's room (`execCrossRoomPress`). This arm never authors that press (it is
+ *     another room's walk); a pole lit that way is the `wait` branch above on the next build.
  *
  * @returns {{pole, stance?, dir?, wait?, why}|{pole: null, why}}
  */
@@ -18320,14 +18818,15 @@ function solveSegmentDeadlined(o) {
     const shouldStop = o?.shouldStop ?? null;
     // ⛔ No hook: the segment runs under whatever deadline is already active —
     // none at all for every committed caller — so the default is untouched.
-    if (shouldStop === null) return solveSegmentUnder(o);
+    // ⛓ housekeep D1: inside the deadline (its clause reaches the refusal), inside the progress segment.
+    if (shouldStop === null) return refusingByName(() => solveSegmentUnder(o));
     if (typeof shouldStop !== 'function') {
         fail(`solveSegment: shouldStop must be a function (site) => boolean or null, got `
             + `${typeof shouldStop} — the deadline is a callback the caller owns, never a `
             + 'number of milliseconds this module would read a clock for.');
     }
     return withSolveDeadline({ shouldStop, fineCheckpoints: o.fineCheckpoints ?? false },
-        () => solveSegmentUnder(o));
+        () => refusingByName(() => solveSegmentUnder(o)));
 }
 
 /**
@@ -18574,7 +19073,7 @@ function solveSegmentUnder({
                 && (tapeTick - prefix.length) % WALK_CHECK_TICKS === 0 && fineDeadlineReached('walk')) {
                 refuseWalkDeadline(`after ${tapeTick - prefix.length} tick(s) of the segment's drive`);
             }
-            const out = inner.advance(held);
+            const out = advanceNamingRefusals(inner, held); // ⛓ housekeep D1: a coded throw named on its way out
             if (activeProgress !== null) progressTick(inner.level);
             if (!dashedBefore && inner.progress('slashInfo').state.slashDashed === true) {
                 dashesPressed += 1;
@@ -21470,6 +21969,255 @@ function solveSegmentUnder({
             lastBound = undefined;
         }
         /**
+         * ── rung 6½: AXE PRICED (seedling-fidelity-axeforcedu D2; `axePricedCrossing.js`) ── the forced-hit rung's
+         * verdict for the one corridor class its input tree cannot reach: a spinning axe met far out along the walk's
+         * own corridor. Asked ONLY here, after every rung above refused, only behind `AXE_PRICED_CROSSING` (OFF:
+         * absent, no row, the refusal word for word the BEFORE one), only when every reason is a spinning axe (the
+         * AXE arm's `axeOnly`), and on a segment with a fork.
+         *   1. THE CERTIFICATE: the corridor entered at every phase of the axe — the doorstep stalls `0 … period − 1`
+         *      (and the dash chain's phases when this pass may dash) — and no member crosses free of blade contact,
+         *      priced by `axeHitsPlayer` on each sample's pre-move box at the visit's update count.
+         *   2. THE CROSSING: the members, fewest contact samples first, driven on forks; the run bills the hits
+         *      (knockback, i-frames); admitted only reaching the goal alive, axe hits only, inside `FORCED_HITS`.
+         *   3. THE BILL: the fewest-billed member replayed on the live run, whose rows must be the fork's; a
+         *      `forced-hit` row with `proof: {kind: 'axe-phase'}`, and `forcedHits` carries it.
+         */
+        if (AXE_PRICED_CROSSING.enabled && axeOnly && fork !== null && Array.isArray(corridor) && corridor.length > 0) {
+            if (activeProgress !== null) progressRung('forced-hit');
+            const pricedRefused = { rung: lastOption, why: lastWhy };
+            const at = { level: run.level, x: run.state.x, y: run.state.y, tick: perTick.length };
+            const axeIds = hit.sources.map((s) => s.id).join(', ');
+            const hitAxes = hit.sources.map((s) => s.axe);
+            const clockP = axeVisitClock(run);
+            const t0 = run.ticksCompleted;
+            const { rest, offsetStep } = AXE_TIMING_RUNG;
+            let previews = 0;
+            let tripped = false;
+            const ask = () => {
+                if (previews >= AXE_PRICED_CROSSING.maxPreviews) return false;
+                if (deadlineReached('axe-dodge')) { tripped = true; return false; }
+                previews += 1;
+                return true;
+            };
+            const roomAxes = (run.world.combat?.hazards ?? []).filter((x) => x.tag === 'spinningaxe')
+                .map((x) => ({ cx: x.cx, cy: x.cy, rate: Number(x.attrs?.rate ?? 0) }));
+            const inReach = (sm) => hitAxes.some((a) => axeCanReach(a, playerBoxAt(sm.x, sm.y)));
+            /** Blade contact at sample index `i` (tick `t0 + i + 1`): the run's own billing predicate. */
+            const contactAt = (p, i) => {
+                const u = t0 + i + 1 - clockP.v + AXE_UPDATE_OFFSET;
+                return u >= 1 && roomAxes.some((axe) => axeHitsPlayer(axe, u, playerBoxAt(p.x, p.y)) !== null);
+            };
+            const inv = run.progress('inventory');
+            const weapon = run.progress('primaryWeapon');
+            const mayDash = dashMode !== 'none' && !axisAligned && !undashed && !!(inv?.hasSword || inv?.hasGhostSword)
+                && ['sword', 'ghostsword'].includes(weapon);
+            const pattern = inv?.hasGhostSword ? GHOST_DASH_CHAIN_PATTERN : DASH_CHAIN_PATTERN;
+            const families = [{ label: 'walk', offset: null }];
+            if (mayDash) {
+                for (let o = 0; o < ORDINARY_SWING_PERIOD; o += offsetStep) families.push({ label: `chain+${o}`, offset: o });
+            }
+            let door = 0;
+            let span = 1;
+            const strikeFor = (r, fam, s) => (axisAligned ? null : strikePolicyFor(r, fam.offset === null ? { dashMode }
+                : { dashMode, dashPlan: (() => {
+                    const ticks = new Set();
+                    const resume = t0 + door + s;
+                    for (let w = resume + fam.offset; w < resume + span + ORDINARY_SWING_PERIOD; w += ORDINARY_SWING_PERIOD) {
+                        for (const d of pattern) ticks.add(w + d);
+                    }
+                    return { ticks, starts: [], windows: [], why: `⛓ AXEPRICED: the chain every ${ORDINARY_SWING_PERIOD} t `
+                        + `from ${fam.offset} t after the walk resumes` };
+                })() }));
+            const optsFor = (fam, s) => ({ strike: strikeFor(run, fam, s), ...(axisAligned ? { axisAligned } : {}),
+                ...(s > 0 ? { stall: { at: door, ticks: s } } : {}) });
+            const completed = (w) => !w.truncated || w.truncated.kind === 'crossed';
+            const contactsOf = (sm) => sm.reduce((n, p, i) => n + (contactAt(p, i) ? 1 : 0), 0);
+            let why = null;
+            const members = [];
+            let period = null;
+            /**
+             * ⛔ THE PRICE IS THE RUN'S, SO THE RUN MUST BILL THE AXE. With `spinningAxePlayerHit` OFF the run lets the
+             * blade pass through the player, and a fork would "admit" a crossing the game hits (measured: SPINNINGAXE
+             * D2's step-163 row, solved by a 0-hit fork with the axe's player arm pinned OFF). Refused by name.
+             */
+            if (!CONTACT_FIDELITY.spinningAxePlayerHit) {
+                why = 'the run does not bill a spinning axe (`spinningAxePlayerHit` OFF), so a crossing through its blade '
+                    + 'cannot be priced';
+            } else if (clockP.v === null) why = `the axe's update count is not known here (${clockP.why})`;
+            else if (!ask()) why = tripped ? 'the deadline (`axe-dodge`)' : 'the preview bound';
+            else {
+                period = Math.max(...hitAxes.map((a) => a.period));
+                const base = previewWalk(run, corridor, tolerance, optsFor(families[0], 0));
+                door = Math.min(Math.max(0, hit.tick - t0 - 1), base.samples.length - 1);
+                while (door > 0 && inReach(base.samples[door])) door -= 1;
+                span = Math.max(1, base.samples.length - door);
+                // a player already in reach cannot wait where it stands: the crossing starts now, at its one phase
+                const stalls = inReach(base.samples[door]) ? 1 : period;
+                fams: for (const fam of families) {
+                    for (let s = 0; s <= Math.min(rest, stalls - 1); s += 1) {
+                        let w = base;
+                        if (fam.offset !== null || s > 0) {
+                            if (!ask()) break fams;
+                            w = previewWalk(run, corridor, tolerance, optsFor(fam, s));
+                        }
+                        members.push({ fam, s, done: completed(w), contacts: contactsOf(w.samples), ticks: w.samples.length });
+                    }
+                    if (stalls <= rest + 1) continue;
+                    // ⛓ the rest screen (the AXE arm's): a longer stall is the rest-length walk shifted
+                    if (!ask()) break;
+                    const scr = previewWalk(run, corridor, tolerance, optsFor(fam, rest));
+                    const sm = scr.samples;
+                    const still = sm.length > door + rest && sm[door + rest - 1].x === sm[door + rest - 2]?.x
+                        && sm[door + rest - 1].y === sm[door + rest - 2]?.y;
+                    for (let s = rest + 1; s < stalls; s += 1) {
+                        if (still) {
+                            const shift = s - rest;
+                            const stand = sm[door + rest - 1];
+                            let n = 0;
+                            for (let i = 0; i < sm.length + shift; i += 1) {
+                                const p = i < door + rest ? sm[i] : (i < door + s ? stand : sm[i - shift]);
+                                if (contactAt(p, i)) n += 1;
+                            }
+                            members.push({ fam, s, done: completed(scr), contacts: n, ticks: sm.length + shift });
+                        } else {
+                            if (!ask()) break fams;
+                            const w = previewWalk(run, corridor, tolerance, optsFor(fam, s));
+                            members.push({ fam, s, done: completed(w), contacts: contactsOf(w.samples), ticks: w.samples.length });
+                        }
+                    }
+                }
+                const expected = families.length * stalls;
+                const clean = members.find((m) => m.done && m.contacts === 0);
+                if (members.length < expected) {
+                    why = `${members.length} of the ${expected} member(s) were priced before `
+                        + `${tripped ? 'the deadline (`axe-dodge`)' : `the preview bound (${AXE_PRICED_CROSSING.maxPreviews})`} — `
+                        + 'a certificate that gave up is not one';
+                } else if (clean) {
+                    why = `the corridor entered ${clean.s} tick(s) after the doorstep (${clean.fam.label}) crosses free of `
+                        + 'blade contact in its preview — a gap exists, so no hit is forced';
+                } else if (!members.some((m) => m.done)) {
+                    why = `no member of the ${expected} completes the corridor in its preview`;
+                }
+            }
+            const certRow = { kind: 'axe-phase', axes: axeIds, door, period, families: families.length,
+                members: members.length, completed: members.filter((m) => m.done).length,
+                minContacts: members.some((m) => m.done) ? Math.min(...members.filter((m) => m.done).map((m) => m.contacts))
+                    : null, previews };
+            const rejected = [];
+            let best = null;
+            if (why === null) {
+                const spent = forcedHits.reduce((n, f) => n + f.billed.length, 0);
+                const hitsMax = run.progress('inventory')?.hitsMax ?? 3;
+                const hitsNow = worldHitsOf(run).hits;
+                const tries = members.filter((m) => m.done)
+                    .sort((x, y) => x.contacts - y.contacts || x.ticks - y.ticks || x.s - y.s)
+                    .slice(0, AXE_PRICED_CROSSING.forkCandidates);
+                for (const m of tries) {
+                    const label = `stall ${m.s} at sample ${door} (${m.fam.label})`;
+                    if (!ask()) { rejected.push({ candidate: label, why: tripped ? 'the deadline' : 'the preview bound' }); break; }
+                    // the member's own prefix (walk to the doorstep + the stall), then the corridor driven on
+                    const pre = previewWalk(run, corridor, tolerance, optsFor(m.fam, m.s)).samples.slice(0, door + m.s);
+                    const f = fork();
+                    if (f === null) { rejected.push({ candidate: label, why: 'the caller\'s deadline tripped' }); break; }
+                    const h0 = (f.ledger('playerHits') ?? []).length;
+                    const d0 = (f.ledger('playerDeaths') ?? []).length;
+                    const keys = [];
+                    let transition = null;
+                    try {
+                        for (const sm of pre) {
+                            const held = new Set(sm.held);
+                            keys.push(held);
+                            const o = f.advance(held);
+                            if (o.transition) { transition = o.transition; break; }
+                        }
+                        if (transition === null) {
+                            const wps = corridor.slice(Math.max(0, pre.at(-1)?.wp ?? 0));
+                            const strike = strikeFor(f, m.fam, m.s);
+                            for (let wi = 0; wi < wps.length; wi += 1) {
+                                const last = wi === wps.length - 1;
+                                const t = drive(f, wps[wi], keys, {
+                                    until: (last && crossTo) ? 'transition' : 'arrival', tolerance,
+                                    maxTicks: maxTicksPerTarget, avoidVolumes: true, contacts, crossTo, grazes: [], strike,
+                                    axisAligned, intermediate: !last,
+                                    what: `${what} (axe-priced ${label}) waypoint ${wi} (${wps[wi].x},${wps[wi].y})`,
+                                });
+                                if (t && crossTo) { transition = t; break; }
+                            }
+                        }
+                    } catch (e) {
+                        /**
+                         * ⛔ A DEATH FIRST, THEN THE DRIVER'S WORDS: a hit's knockback that lands the player in lava or
+                         * a pit is a death (`playerDeaths`) and a respawn at the room's entry, after which the drive
+                         * walks on to its bound — the timeout would hide what the run billed.
+                         */
+                        const deaths = (f.ledger('playerDeaths') ?? []).slice(d0);
+                        const took = (f.ledger('playerHits') ?? []).slice(h0);
+                        rejected.push({ candidate: label, billed: took.length, ...(deaths.length ? { died: deaths[0].t ?? null } : {}),
+                            // the instrument's copy of the member's keys (a game witness replays them); inert without a sink
+                            ...(AXE_PRICED_TRACE.sink ? { keys: keys.map((k) => [...k].sort()) } : {}),
+                            why: deaths.length
+                                ? `the crossing dies on the fork at t${deaths[0].t ?? '?'} (${deaths[0].cause ?? deaths[0].source ?? 'death'}`
+                                    + `${took[0] ? `, after ${took[0].source}:${took[0].id} hit it at t${took[0].t}` : ''})`
+                                : `${e instanceof BotDriverV2Error ? '' : 'the model refused: '}`
+                                    + String(e?.message ?? e).split('\n')[0].slice(0, 200) });
+                        continue;
+                    }
+                    const billed = (f.ledger('playerHits') ?? []).slice(h0).map((h) => ({ t: h.t, level: h.level,
+                        source: h.source, id: h.id, hits: h.hits }));
+                    const adm = admitAxeCrossing({ billed, died: (f.ledger('playerDeaths') ?? []).length - d0,
+                        crossed: !crossTo || transition?.to_level === crossTo.level, hitsMax, hitsNow,
+                        budgetLeft: FORCED_HITS.maxPerSegment - spent, maxHitsPerCrossing: FORCED_HITS.maxHitsPerCrossing,
+                        margin: FORCED_HITS.margin });
+                    if (!adm.ok) { rejected.push({ candidate: label, why: adm.why, billed: billed.length }); continue; }
+                    if (best === null || billed.length < best.billed.length
+                        || (billed.length === best.billed.length && keys.length < best.keys.length)) {
+                        best = { label, keys, billed, transition };
+                    }
+                    if (best.billed.length === 0) break;
+                }
+                if (best === null) {
+                    why = `the corridor is hit at every phase (${members.length} member(s) over ${families.length} `
+                        + `famil${families.length === 1 ? 'y' : 'ies'}, fewest contact samples ${certRow.minContacts}), and no `
+                        + 'crossing was admitted: ' + rejected.map((r) => `${r.candidate}: ${r.why}`).join(' · ');
+                }
+            }
+            if (best !== null) {
+                rowFor('forced-hit', pricedRefused, { proof: certRow, candidate: best.label, billed: best.billed,
+                    ticks: best.keys.length });
+                const hitsBefore = run.ledger('playerHits').length;
+                const from = perTick.length;
+                let transition = null;
+                for (let i = 0; i < best.keys.length; i += 1) {
+                    perTick.push(best.keys[i]);
+                    const o = run.advance(best.keys[i]);
+                    if (o.transition) {
+                        transition = o.transition;
+                        if (i !== best.keys.length - 1) {
+                            fail(`${what} -> axe-priced: the replay crossed to level ${transition.to_level} at tick `
+                                + `${i + 1} of ${best.keys.length} — the fork did not (the fork is not this run).`);
+                        }
+                    }
+                }
+                const got = run.ledger('playerHits').slice(hitsBefore).map((h) => `${h.t}:${h.source}:${h.id}`).join(',');
+                const want = best.billed.map((h) => `${h.t}:${h.source}:${h.id}`).join(',');
+                if (got !== want || (best.transition === null) !== (transition === null)) {
+                    fail(`${what} -> axe-priced: the replay billed [${got}] where the fork billed [${want}] — the fork is `
+                        + 'not this run.');
+                }
+                if (best.billed.length > 0) {
+                    forcedHits.push({ tick: from, what, proof: certRow, candidate: `axe-priced ${best.label}`,
+                        billed: best.billed, ticks: best.keys.length, damage: worldHitsOf(run) });
+                }
+                AXE_PRICED_TRACE.sink?.({ what, at, cert: certRow, outcome: 'billed', candidate: best.label,
+                    billed: best.billed, ticks: best.keys.length, keys: best.keys.map((k) => [...k].sort()), rejected,
+                    damage: worldHitsOf(run) });
+                return { forced: { transition }, escalations };
+            }
+            AXE_PRICED_TRACE.sink?.({ what, at, cert: certRow, outcome: rejected.length ? 'no-crossing' : 'not-certified',
+                rejected, why });
+            lastWhy = `${lastWhy}; and by the axe's phase certificate (AXEPRICED, ${previews} preview(s)): ${why}`;
+        }
+        /**
          * ── rung 7: ARROW-LANE (seedling-fidelity-arrowlane D2; ⚖ the user, 2026-10-16, "arrows aren't supposed to
          * be dodgeable") ── Asked ONLY here, after every rung above refused (PULL among them: a sworded walk silences
          * L16's lanes with no hit), only behind `ARROW_LANE_CROSSING` (OFF: absent, no row, the refusal word for word
@@ -22856,7 +23604,30 @@ function solveSegmentUnder({
             execCrossRoomPress();
             return;
         }
-        if (!solid) {
+        /**
+         * ⛓⛓⛓ fidelity WATCHERTALK D2 (behind `CONTACT_FIDELITY.watcherTalkVerb`) — **THE WATCHER IS NO SOLID.**
+         *
+         * `Watcher.as:48` types it "Watcher", in no solids list, so `world.solids` never holds it and OFF the clear-tag
+         * for `{114,0}` (the AP event "talk to the Watcher") lands in `already-clear` below with the flag never
+         * written. ON the run's own watcher roster binds it, and the verb is the dialogue (`refineStrategy` → `talk`,
+         * `resolveTalkStrategy` + `execTalk`). A SILENT watcher is answered by its census reason: a tag cleared at boot
+         * is the game's own `already-clear`; an empty `text` never talks and so never writes its tag (`cannot-act`).
+         */
+        const watcher = CONTACT_FIDELITY.watcherTalkVerb && cls === 'watcher' && !solid
+            ? (run.watchers ?? []).find((w) => w.id === id) ?? null : null;
+        if (watcher) {
+            const silent = (run.world.silentHazards ?? []).find((h) => h.id === id);
+            if (silent && /is cleared/.test(silent.why)) {
+                done('already-clear', { why: `${id} is SILENT — ${silent.why}: the boot's persistence holds `
+                    + `{${flag.level},${flag.tag}} cleared already` });
+                return;
+            }
+            if (silent) {
+                refuseCT('cannot-act', `${id} is SILENT — ${silent.why} — so it never runs \`doneTalking()\`, the `
+                    + `only writer of its tag: no walk clears {${flag.level},${flag.tag}}`);
+            }
+        }
+        if (!solid && !watcher) {
             done('already-clear', { why: `no ${cls ?? 'solid'} stands at (${goal.at.x},${goal.at.y}) in level `
                 + `${run.level}'s live world and the ledger is silent: the build left it out, which is the `
                 + 'game\'s own `check()` for a flag the boot\'s persistence holds cleared' });
@@ -22929,6 +23700,12 @@ function solveSegmentUnder({
             before, walkTo, goal, equip, rewind,
         });
         for (const c of resolved.exempt ?? []) exemptions.add(c);
+        // ⛓ fidelity WATCHERTALK D2: the talk is certified by the run's own `watcherTalks` row for this flag.
+        if (watcher && !run.watcherTalks.some((r) => r.id === id && r.flag.level === flag.level
+            && r.flag.tag === flag.tag)) {
+            refuseCT('not-written', `'${verb}' ran (${JSON.stringify(record).slice(0, 160)}) and the run's `
+                + `\`watcherTalks\` holds no \`doneTalking()\` of ${id} writing {${flag.level},${flag.tag}}`);
+        }
         // The verb's own finish is the WORLD's (the solid gone, the lock open);
         // the GAME's write can land later (a lock's `turnOff` closes its fade).
         const waited = waitForWrite(`'${verb}' ran (${JSON.stringify(record).slice(0, 160)})`);
@@ -23070,7 +23847,7 @@ function solveSegmentUnder({
             continue;
         }
         if (goal.kind === 'reach-exit') {
-            const { index, teleporter } = findExit(run.world, goal.exit);
+            const { index, teleporter } = findExitNamed(run.world, goal.exit);
             const centre = {
                 x: teleporter.rect.x + TILE_SIZE / 2,
                 y: teleporter.rect.y + TILE_SIZE / 2,

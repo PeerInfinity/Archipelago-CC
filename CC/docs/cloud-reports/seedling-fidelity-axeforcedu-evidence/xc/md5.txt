@@ -1,0 +1,4 @@
+ecd6b2f1ceb59f228b44291e50a1c965  /tmp/claude-0/cc-head.txt
+ecd6b2f1ceb59f228b44291e50a1c965  /tmp/claude-0/cc-base.txt
+395780e9ea4b1afeeb2c4437e043d3db  - /tmp/claude-0/er-..txt (line numbers stripped)
+395780e9ea4b1afeeb2c4437e043d3db  - /tmp/claude-0/er-base.txt (line numbers stripped)

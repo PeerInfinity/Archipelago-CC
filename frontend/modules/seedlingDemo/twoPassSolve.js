@@ -61,8 +61,9 @@
  */
 
 import {
-    HAMMER_FIGHT, HAMMER_FIGHT_FALLBACK, PENDING_AT, PendingDeclaration, fightFallbackRefused,
-    isFightFallbackRefusal, solveSegment, withHammerFight,
+    ESCAPE_CROSS_PASS_CACHE, HAMMER_FIGHT, HAMMER_FIGHT_FALLBACK, PENDING_AT, PendingDeclaration,
+    escapeCrossPassScope, fightFallbackRefused, isFightFallbackRefusal, solveSegment, withEscapeCrossPassScope,
+    withHammerFight,
 } from './solverBot.js';
 import { assertTwoPassPrefixAgrees } from './r8Acceptance.js';
 
@@ -159,6 +160,14 @@ export async function twoPassSolve({
      * produces any, whether it SOLVES or raises the next declaration.
      */
     let measured = null;
+    /**
+     * ⛓⛓⛓ HAMMER-PHASE XC — THE CROSS-PASS ESCAPE CACHE'S SCOPE IS THIS CALL (`ESCAPE_CROSS_PASS_CACHE`, OFF):
+     * created here, installed around each pass's synchronous solve (never across the `gameTick` await, so two loops
+     * interleaved by their awaits never share one), and serving only the runs this call's `makeRun` built. OFF:
+     * `null`, and `runFor` is `makeRun`.
+     */
+    const escapeScope = ESCAPE_CROSS_PASS_CACHE.enabled ? escapeCrossPassScope() : null;
+    const runFor = (rows) => (escapeScope === null ? makeRun(rows) : escapeScope.adopt(makeRun(rows)));
     /** Which (level, tag) has already been measured — the convergence guard. */
     const raisedTwice = new Map();
     const checkPrefix = (perTick, how) => {
@@ -179,8 +188,8 @@ export async function twoPassSolve({
         // ⛓ CRUSHER: `forkRun` lets a verb try a choreography on a fresh replay
         // before committing it, and (HAMMER-PHASE B3) the fight fallback rewind the
         // pass to a press kill's first tick (`solveSegment`'s docblock).
-        const solvePass = () => solveSegment({ run: makeRun(passRows), goals, name, boot, dashMode,
-            forkRun: () => makeRun(passRows) });
+        const solvePass = () => withEscapeCrossPassScope(escapeScope, () => solveSegment({ run: runFor(passRows),
+            goals, name, boot, dashMode, forkRun: () => runFor(passRows) }));
         try {
             try {
                 out = solvePass();
