@@ -115,9 +115,9 @@ function findPayloadDir() {
  * never learned R6's death, same-level reboot and ceremony-start terms, so it
  * rejected 8 residues the gate admits on the R4 harvest's full tier.
  */
-function modelledFrames(name, tape, transitions) {
+function modelledFrames(name, tape, transitions, armedAt) {
     const expected = runTape(tape, { levelSource: atlasLevelSource() });
-    return deadFrameBudget({ tape, expected, transitions, exempt: MODEL_EXEMPT[name] ?? null });
+    return deadFrameBudget({ tape, expected, transitions, exempt: MODEL_EXEMPT[name] ?? null, armedAt });
 }
 
 const payloadDir = findPayloadDir();
@@ -137,7 +137,8 @@ for (const file of readdirSync(payloadDir).filter((f) => f.endsWith('.json')).so
     if (typeof status?.dead_frames !== 'number') continue;
     let budget;
     try {
-        budget = modelledFrames(name, loadTape(name), stream.transitions.length);
+        budget = modelledFrames(name, loadTape(name), stream.transitions.length,
+            status.arm?.armed_at ?? null);
     } catch (e) {
         console.log(`SKIP ${name}: the model does not run this tape — ${e.message}`);
         continue;

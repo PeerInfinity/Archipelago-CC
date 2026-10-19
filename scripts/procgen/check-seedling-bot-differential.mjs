@@ -1304,8 +1304,12 @@ function checkReadout(name, tape, status, stream, seam) {
     // recording).
     const exempt = MODEL_EXEMPT[name] ?? null;
     const {
-        loads, runFreeze, sealFrames, pickupFrames, spawnedFrames, declaredFreeze, modelled,
-    } = deadFrameBudget({ tape, expected, transitions: stream.transitions.length, exempt });
+        loads, runFreeze, sealFrames, pickupFrames, spawnedFrames, declaredFreeze, bootFadeSpent,
+        modelled,
+    } = deadFrameBudget({
+        tape, expected, transitions: stream.transitions.length, exempt,
+        armedAt: status.arm?.armed_at ?? null,
+    });
     const residue = status.dead_frames - modelled;
     const { lo, hi } = fadeBand(loads);
     check(`${name}: the dead frames are accounted for`,
@@ -1316,7 +1320,8 @@ function checkReadout(name, tape, status, stream, seam) {
         // makes every one of them look the same — the 26 that failed its
         // first run were told apart by hand arithmetic off a single number.
         + `(${runFreeze} run freeze + ${sealFrames} seal + `
-        + `${pickupFrames} pickup + ${spawnedFrames} spawned + ${declaredFreeze} declared) `
+        + `${pickupFrames} pickup + ${spawnedFrames} spawned + ${declaredFreeze} declared`
+        + `${bootFadeSpent ? ` − ${bootFadeSpent} boot fade spent before the arm` : ''}) `
         + `+ ${residue} residue, against ${describeFadeBand(loads)}`
         + `${residue >= lo && residue <= hi ? '' : ' ⛔ OUT OF BAND — a '
             + 'freeze fired that the model does not know about, and no positional '
