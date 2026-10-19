@@ -1576,6 +1576,30 @@
             "_comment": "SLOWSOLVE (slice seedling-slowsolve-check, 2026-10-16). The walk row of feature check seedling-dash-window: runtime js + the solver on + the view on always (the user, 2026-10-16) + the upgrade window 85 (session-only, restored), seedling_playthrough loaded, the sword granted through the Inventory panel (slotted), the panel stages the l12-dash-cut demo (divergence leg 108): with the dash-only window OFF (session-only) the full (dash) pass ends refused at the window and the bot crosses to L33; then the dash-only window at its default (ON since the dash flip, the user 2026-10-16), still window 85: the full pass ends solved (328 t, its kept dashes) and the bot crosses again; the world is reloaded. Manual batch feature-checks."
         },
         {
+            "id": "feature-check-region-edit-maze-lab-closed",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "REGION EDITING (region-editor-launch S1+S2, the user 2026-10-19: walked by hand before Seedling editing is called settled). The walk row of feature check region-edit-maze-lab-closed: the maze-sphere-demo world; the Procgen Lab — maze tab CLOSED; a maze region's Edit ▸ re-makes it with the room open; the lab's CLOSE writes it back; Run 4 Compile, oracle ✓. Manual batch feature-checks."
+        },
+        {
+            "id": "feature-check-region-edit-seedling-generated",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "REGION EDITING (region-editor-launch S1+S2, the user 2026-10-19: walked by hand before Seedling editing is called settled). The walk row of feature check region-edit-seedling-generated: the generated-host world; a generated room's Edit ▸ opens the real Seedling lab; CLOSE unedited (no flag); a wall painted on a far floor cell (PAINT/wall, canvas clicks in the iframe) → row '✎ edited'; the goal walled in → saved, pipeline warning 'NOT certified', row '⚠ edited, uncertified', and the ⚠ line under Run 4 Compile. Manual batch feature-checks."
+        },
+        {
+            "id": "feature-check-region-edit-seedling-real-game",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "REGION EDITING (region-editor-launch S1+S2, the user 2026-10-19: walked by hand before Seedling editing is called settled). The walk row of feature check region-edit-seedling-real-game: the Seedling sphere-leaf world; a real-game (flash_seedling) room's Edit ▸ refuses with 'this is a room from the original Seedling game …'. Manual batch feature-checks."
+        },
+        {
+            "id": "feature-check-region-edit-apworld-editor",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "REGION EDITING (region-editor-launch S1+S2, the user 2026-10-19: walked by hand before Seedling editing is called settled). The walk row of feature check region-edit-apworld-editor: the generated-host world opened in the APWorld Editor; a generated region's Edit ▸ opens the Seedling lab; CLOSE returns one undoable op (↶ Undo enabled). Manual batch feature-checks."
+        },
+        {
             "id": "tutorial-walk-guided-tour",
             "enabled": true,
             "category": "Tutorial walks",
