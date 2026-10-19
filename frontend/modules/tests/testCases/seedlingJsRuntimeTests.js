@@ -949,12 +949,13 @@ export async function seedlingJsRuntimeSolveProgressView(tc) {
         tc.assertEqual('the plan in hand is drawn (stamps view)', true, /^best: (ok · \d+ ticks|refused|none yet)/.test(view.bestText.textContent));
         tc.assertEqual('the wall by site is drawn (stamps view)', true,
             /^wall by site \(this attempt\): .* · Σ [\d.]+ (ms|s)$/.test(view.wallText.textContent));
-        // ⛓ FRAME VIEW — hammer-phase TC2's `frame` on the real solve: L6's climbs on `sandtrap@64,16` carry one (a
-        // BAIT on `bob@112,48`; TC2's report), so a posted snapshot carries it and a render marks it; the final is null
+        // ⛓ FRAME VIEW — hammer-phase TC2's `frame` on the real solve. Whether a POSTED snapshot carries one is
+        // timing, not a property: L6's frames (the climbs on `sandtrap@64,16`) are a short stretch of its 41 snapshots
+        // between the tap's 100 ms posts — measured: 2–3 of 6–8 posts locally, 0 of 8 on CI at aedde83273. So the
+        // count is logged, not asserted; the marks themselves are pinned in seedlingSolveProgressView.test.js. What
+        // holds on every run: the final frame is null, so no mark is left on the map and the frame line is empty.
         tc.log(`frame view: ${view.stats.framesReceived} note(s) carried a frame, ${view.stats.framesMarked} render(s) `
             + `marked one, ${view.stats.marksDrawn} marks redraw(s)`);
-        tc.assertEqual('a posted snapshot carried a frame (TC2)', true, view.stats.framesReceived >= 1);
-        tc.assertEqual('the frame was marked on the map at least once (frame view)', true, view.stats.framesMarked >= 1);
         tc.assertEqual('the final frame is null: no marks, an empty frame line (frame view)', true,
             final.frame === null && view.marks === null && (view.frameLine?.textContent ?? '') === '');
         if (st.snapshot?.tiles) {
