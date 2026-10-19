@@ -1,0 +1,4 @@
+{"sites":373,"byKind":{"error":51,"other":65,"precondition":24,"exhausted":44,"unmodelled":14,"deadline":7,"diverged":86,"does-not-apply":19,"soft-lock":1,"bound":22,"already-true":1,"n/a (planSwordDash window row)":7,"danger":27,"pending":5},"otherWrappers":62,"residue":3}
+6021	refuse	'deadline'
+8959	refuse	`${label}: after the lean the block is ${!live || live.removed ? 'GONE' : `on (${tileOf(live).tx},${tileOf(live).ty})`}, not ${step.destroys ? 'destroyed' : `on (${step.to.tx},${step.to.ty})`} as route step ${i + 1} requires. The search priced the world one way and the run answered another — a rock, a Solid or a sink the transcription does not know about.'
+8973	refuse	`${label}: after the thrust the block is ${!live || live.removed ? 'GONE' : `on (${tileOf(live).tx},${tileOf(live).ty})`}, not ${step.destroys ? 'destroyed' : `on (${step.to.tx},${step.to.ty})`} as route step ${i + 1} requires.`

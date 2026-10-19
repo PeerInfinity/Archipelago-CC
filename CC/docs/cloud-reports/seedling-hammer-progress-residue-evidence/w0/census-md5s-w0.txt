@@ -1,0 +1,10 @@
+405d9c4bb37a0ab00fb0ef9a99194783  solve-seedling-r8-battery
+b76f648331c7a56e8fc11f89d5a4daf8  solve-seedling-r8-d2-chain
+465a8b469896813dc7efc8c1ce3937d2  solve-seedling-r8-l18
+35456fbc07e7151ddbc4c2a1fd00c789  solve-seedling-r8-tail
+6cd35fe1414af6bf5beb7605f235cb8e  solve-seedling-r9-l3
+3d41b9fb93b9d3818b467c67a9693499  solve-seedling-r9-campaign
+{"tape":"r9-solve-18","interval":"none","wall":5186,"digest":"230dc0ff7300b9741e5559abc26ef70f","shouldStops":165,"ok":true,"ticks":445,"hookCalls":0}
+{"tape":"r5-l40-part5","interval":"none","wall":5548,"digest":"3addc3798712900a1155934ad303a8e8","shouldStops":167,"ok":true,"ticks":679,"hookCalls":0}
+{"tape":"r8-solve-6","interval":"none","wall":225,"digest":"341a2e63348568efe9ed5ab0b772e928","shouldStops":15,"ok":true,"ticks":294,"hookCalls":0}
+{"tape":"r8-solve-3","interval":"none","wall":146,"digest":"c4625729413b39902bfeac97708c6baa","shouldStops":16,"ok":true,"ticks":245,"hookCalls":0}
