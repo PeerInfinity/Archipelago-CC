@@ -122,13 +122,14 @@ describe('AXEFORCEDU D3 — the refused members on the game: 0 px, the hit, the 
 });
 
 /** The witness tape's own staging, solved by the dashless pass (`dashMode: 'none'`, the page's first pass). */
-const solveFrom = (W, goal, over, dashMode = 'none') => {
-    const staging = stagingFromTape(parseTape(JSON.stringify(W.tape)));
+const solveFrom = (W, goal, over, dashMode = 'none', extra = {}) => {
+    const staging = { ...stagingFromTape(parseTape(JSON.stringify(W.tape))), ...extra };
     return withContactFidelity(over, () => twoPassSolve({
         makeRun: (p) => createRunForStaging({ ...staging, persistence: p }, SRC),
         goals: [goal], name: 'axeforcedu', boot: staging.boot, persistence: staging.persistence, log: () => {},
         ...(dashMode ? { dashMode } : {}),
-    }).then((s) => ({ ticks: s.out.perTick.length }), (e) => ({ refusal: e.message })));
+    }).then((s) => ({ ticks: s.out.perTick.length, forcedHits: s.out.forcedHits ?? null }),
+        (e) => ({ refusal: e.message })));
 };
 
 describe('AXEFORCEDU D2 — leg 603 (L71 from (296,104) to teleporter@96,0), the dashless pass', () => {
@@ -144,6 +145,25 @@ describe('AXEFORCEDU D2 — leg 603 (L71 from (296,104) to teleporter@96,0), the
         expect(on.refusal).toMatch(/AXEPRICED, \d+ preview\(s\)\): the corridor is hit at every phase \(52 member\(s\) over 1 family/);
         expect(on.refusal).toMatch(/stall 2 at sample 14 \(walk\): the crossing dies on the fork at t81 \(lava, after spinningaxe:spinningaxe@256,144 hit it at t48\)/);
         expect(on.refusal.startsWith(off.refusal)).toBe(true);
+    }, 240000);
+});
+
+/**
+ * ⛓ THE ADMITTED PATH, where nothing can be billed: the same staging under `noDamage` (`Player.hit` returns at its first
+ * line, so the run bills no axe and no knockback). The danger map still sees the blade, so the ladder climbs exactly as
+ * above; the certificate holds, the first member driven on a fork reaches the exit with nothing billed, and it is
+ * replayed on the live run (the fork's keys, its rows — none — and its transition must be the run's).
+ */
+describe('AXEFORCEDU D2 — leg 603 under noDamage: the first member is admitted and replayed', () => {
+    const goal = { kind: 'reach-exit', exit: { x: 96, y: 0 } };
+    it('OFF: still EXHAUSTED (the danger map prices the blade whatever the damage)', async () => {
+        const r = await solveFrom(L603, goal, { axePricedCrossing: false }, 'none', { noDamage: true });
+        expect(r.refusal).toMatch(/the combat ladder is EXHAUSTED/);
+    }, 240000);
+    it('ON: SOLVED in 359 t through the doorstep stall 2, billing nothing (no forcedHits row)', async () => {
+        const r = await solveFrom(L603, goal, { axePricedCrossing: true }, 'none', { noDamage: true });
+        expect(r.ticks).toBe(359);
+        expect(r.forcedHits).toBeNull();
     }, 240000);
 });
 

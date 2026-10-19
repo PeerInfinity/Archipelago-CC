@@ -1,0 +1,5 @@
+M1 15 / 16 red: ['AXEFORCEDU D2 — the certificate refuses where a gap exists (survey step 152, L61, the AXE TIMING rung OFF) a dash-chain phase crosses free of blade contact: no hit is forced, so nothing is priced']
+M2 15 / 16 red: ['AXEFORCEDU D2 — leg 603 (L71 from (296,104) to teleporter@96,0), the dashless pass ON: certified (every one of the 52 phases in blade contact), then every member priced dies — the same refusal, one clause longer']
+M3 15 / 16 red: ["AXEFORCEDU D2 — the admission: the forced-hit rung's budget, axe hits only, alive, at the goal a death is refused first, whatever it billed"]
+M5 15 / 16 red: ['AXEFORCEDU D2 — leg 603 (L71 from (296,104) to teleporter@96,0), the dashless pass ON: certified (every one of the 52 phases in blade contact), then every member priced dies — the same refusal, one clause longer']
+M6 17 / 18 red: ['AXEFORCEDU D2 — leg 603 under noDamage: the first member is admitted and replayed ON: SOLVED in 359 t through the doorstep stall 2, billing nothing (no forcedHits row)']

@@ -1,0 +1,188 @@
+{
+ "game": "seedling",
+ "name": "axeforcedu-l774-member",
+ "boot": {
+  "level": 103,
+  "x": 16,
+  "y": 64
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [],
+ "equips": [],
+ "pins": [
+  "dead_frames",
+  "sound"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 0,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 987286273
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasDarkSword": true,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasDarkShield": true,
+   "hasFire": true,
+   "hasWand": true,
+   "hasFireWand": false,
+   "canSwim": true,
+   "hasFeather": true,
+   "hasSpear": true,
+   "hasDarkSuit": true,
+   "hasTorch": true
+  },
+  "time": 5528,
+  "primary": 0
+ },
+ "tick_count": 553,
+ "inputs": [
+  {
+   "key": "right",
+   "from": 0,
+   "to": 94
+  },
+  {
+   "key": "left",
+   "from": 94,
+   "to": 95
+  },
+  {
+   "key": "right",
+   "from": 95,
+   "to": 96
+  },
+  {
+   "key": "left",
+   "from": 98,
+   "to": 99
+  },
+  {
+   "key": "down",
+   "from": 101,
+   "to": 141
+  },
+  {
+   "key": "down",
+   "from": 153,
+   "to": 159
+  },
+  {
+   "key": "right",
+   "from": 156,
+   "to": 159
+  },
+  {
+   "key": "down",
+   "from": 178,
+   "to": 199
+  },
+  {
+   "key": "right",
+   "from": 178,
+   "to": 199
+  },
+  {
+   "key": "down",
+   "from": 218,
+   "to": 239
+  },
+  {
+   "key": "right",
+   "from": 218,
+   "to": 239
+  },
+  {
+   "key": "down",
+   "from": 258,
+   "to": 279
+  },
+  {
+   "key": "right",
+   "from": 258,
+   "to": 279
+  },
+  {
+   "key": "down",
+   "from": 298,
+   "to": 319
+  },
+  {
+   "key": "right",
+   "from": 298,
+   "to": 319
+  },
+  {
+   "key": "down",
+   "from": 338,
+   "to": 359
+  },
+  {
+   "key": "right",
+   "from": 338,
+   "to": 359
+  },
+  {
+   "key": "down",
+   "from": 378,
+   "to": 399
+  },
+  {
+   "key": "right",
+   "from": 378,
+   "to": 399
+  },
+  {
+   "key": "down",
+   "from": 418,
+   "to": 439
+  },
+  {
+   "key": "right",
+   "from": 418,
+   "to": 439
+  },
+  {
+   "key": "down",
+   "from": 458,
+   "to": 479
+  },
+  {
+   "key": "right",
+   "from": 458,
+   "to": 479
+  },
+  {
+   "key": "down",
+   "from": 498,
+   "to": 519
+  },
+  {
+   "key": "right",
+   "from": 498,
+   "to": 519
+  },
+  {
+   "key": "down",
+   "from": 538,
+   "to": 553
+  },
+  {
+   "key": "right",
+   "from": 538,
+   "to": 553
+  }
+ ],
+ "tape_version": 8
+}
