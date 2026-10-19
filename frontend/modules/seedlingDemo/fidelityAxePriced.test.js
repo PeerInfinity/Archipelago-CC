@@ -146,6 +146,12 @@ describe('AXEFORCEDU D2 — leg 603 (L71 from (296,104) to teleporter@96,0), the
         expect(on.refusal).toMatch(/stall 2 at sample 14 \(walk\): the crossing dies on the fork at t81 \(lava, after spinningaxe:spinningaxe@256,144 hit it at t48\)/);
         expect(on.refusal.startsWith(off.refusal)).toBe(true);
     }, 240000);
+    // ⛓ found by the flip battery: SPINNINGAXE D2's step-163 row pins the axe's player arm OFF, and a fork then bills
+    // nothing — a "priced" crossing the game hits. The rung refuses before any preview when the run cannot bill the axe.
+    it('ON with spinningAxePlayerHit OFF: refused by name before any preview (the run cannot price the blade)', async () => {
+        const r = await solveFrom(L603, goal, { axePricedCrossing: true, spinningAxePlayerHit: false });
+        expect(r.refusal).toMatch(/AXEPRICED, 0 preview\(s\)\): the run does not bill a spinning axe \(`spinningAxePlayerHit` OFF\), so a crossing through its blade cannot be priced$/);
+    }, 240000);
 });
 
 /**

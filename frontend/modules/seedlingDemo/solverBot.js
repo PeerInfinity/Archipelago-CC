@@ -21538,7 +21538,15 @@ function solveSegmentUnder({
             let why = null;
             const members = [];
             let period = null;
-            if (clockP.v === null) why = `the axe's update count is not known here (${clockP.why})`;
+            /**
+             * ⛔ THE PRICE IS THE RUN'S, SO THE RUN MUST BILL THE AXE. With `spinningAxePlayerHit` OFF the run lets the
+             * blade pass through the player, and a fork would "admit" a crossing the game hits (measured: SPINNINGAXE
+             * D2's step-163 row, solved by a 0-hit fork with the axe's player arm pinned OFF). Refused by name.
+             */
+            if (!CONTACT_FIDELITY.spinningAxePlayerHit) {
+                why = 'the run does not bill a spinning axe (`spinningAxePlayerHit` OFF), so a crossing through its blade '
+                    + 'cannot be priced';
+            } else if (clockP.v === null) why = `the axe's update count is not known here (${clockP.why})`;
             else if (!ask()) why = tripped ? 'the deadline (`axe-dodge`)' : 'the preview bound';
             else {
                 period = Math.max(...hitAxes.map((a) => a.period));
