@@ -64,7 +64,7 @@
  * scope then, not now.
  */
 
-import { activeProgress, progressHeartbeat } from './solveProgress.js';
+import { activeProgress, progressHeartbeat, progressStringPull } from './solveProgress.js';
 import {
     KEY_CODES, assertTapeWithinRuntimeBudget, coerceTerrainState, serializeTape,
     createLevelRun,
@@ -1122,6 +1122,7 @@ function stringPullBlockedAt(level, allowTeleporter, opts) {
             rows.set(x, row);
         }
         let v = row.get(y);
+        if (activeProgress !== null) progressStringPull(v !== undefined); // ⛓ PR: emit-only, the memo's hit or miss
         if (v === undefined) {
             v = !!plannerObstacleAt(level, x, y, allowTeleporter, opts);
             row.set(y, v);

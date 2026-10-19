@@ -32,11 +32,12 @@ import { atlasLevelSource } from './levelSource.js';
 import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
 import { twoPassSolve } from './twoPassSolve.js';
 import { SPINNER } from './spinner.js';
-import { DEADLINE_SITES, solveSegment, withSolveDeadline, withSolveProgress as reExported } from './solverBot.js';
+import { DEADLINE_SITES, ESCAPE_CROSS_PASS_CACHE_COUNTS, solveSegment, withEscapeCrossPassCache, withSolveDeadline,
+    withSolveProgress as reExported } from './solverBot.js';
 import {
-    BOUND_KINDS, CLEAR_TAG_KINDS, PROGRESS_POINTS, PROGRESS_TILE, REFUSAL_KINDS, SOLVE_PROGRESS_VERSION, activeProgress,
-    dangerKindOf, frameEntered, installSolveProgress, kindEntered, progressErrorName, progressKind, progressReason,
-    progressWhy, withSolveProgress,
+    BOUND_KINDS, CLEAR_TAG_KINDS, ESCAPE_CACHE_COUNTS, PROGRESS_POINTS, PROGRESS_TILE, REFUSAL_KINDS,
+    SOLVE_PROGRESS_VERSION, activeProgress, cacheEntered, dangerKindOf, frameEntered, installSolveProgress, kindEntered,
+    progressCaches, progressErrorName, progressKind, progressReason, progressWhy, withSolveProgress,
 } from './solveProgress.js';
 import { isWalkableTile } from './botDriverV2.js';
 import { CONTACT_FIDELITY, withContactFidelity } from './contactFidelity.js';
@@ -395,10 +396,10 @@ function finalsHook(all = false) {
 
 const nodesOf = (n, out = []) => { out.push(n); for (const c of n.children) nodesOf(c, out); return out; };
 const sum = (o) => Object.values(o).reduce((a, b) => a + b, 0);
-/** v1's bytes of a v2 snapshot: no `v`, no `lastWhy`, no `rejectionKinds` (⛓ TC2: and no `frame`). */
+/** v1's bytes of a v2 snapshot: no `v`, no `lastWhy`, no `rejectionKinds` (⛓ TC2: no `frame`; ⛓ PR: no `caches`, `churn`). */
 const v1Of = (snap) => {
     const strip = (n) => { const { rejectionKinds, children, ...rest } = n; return { ...rest, children: children.map(strip) }; };
-    const { v, lastWhy, frame, tree, ...rest } = snap;
+    const { v, lastWhy, frame, caches, churn, tree, ...rest } = snap;
     return { ...rest, tree: strip(tree) };
 };
 /**
@@ -829,7 +830,8 @@ describe('hammer-phase RK2 — precondition, the error\'s name, and the residue\
  *
  * W0's pins (`seedling-hammer-active-frame-evidence/w0/v2proj-w0.jsonl`, measured at the base, where no snapshot has
  * a frame): `pre` is the md5 of EVERY snapshot of a peek-at-every-call stream with `frame` dropped — every pre-TC2
- * byte — and `work` is each segment's final `budget.work`.
+ * byte — and `work` is each segment's final `budget.work`. ⛓ PR: `caches` and `churn` (added after TC2) are dropped
+ * too, so the same md5 says no pre-TC2 byte moved for them either.
  *
  * ── THE MUTATION LIST (run during development, each row's catcher named) ──
  *   f1 `frame` kept as a growing list (`frameOf` returns every open frame's detail) -> the shape row red
@@ -867,7 +869,7 @@ describe('hammer-phase TC2 — the active frame (`frame`, additive within v: 2)'
             const x = peek();
             if (x !== null) {
                 snapshots += 1;
-                const { frame, ...rest } = x;
+                const { frame, caches, churn, ...rest } = x;
                 pre.update(JSON.stringify(rest));
                 pre.update('\n');
                 frames.push({ site, has: Object.hasOwn(x, 'frame'), frame, tree: x.tree, segment: x.segment.index });
@@ -1003,8 +1005,9 @@ describe('hammer-phase TC2 — the active frame (`frame`, additive within v: 2)'
 
 /**
  * ⛓ HAMMER-PHASE PR — the solve-progress residue (additive within `v: 2`): the kind `soft-lock` (⚖ the user,
- * 2026-10-18), and the static `other` sites RK2's instrument left or hid given the kind their words already name
- * (D3 adds the caches and churn rows below). Every sentence row
+ * 2026-10-18), the static `other` sites RK2's instrument left or hid given the kind their words already name, and two
+ * bounded COUNT objects per segment — `caches` (the string-pull memo's and the cross-pass escape cache's hits and
+ * misses) and `churn` (the frames the active path opened and closed, and the climb cursor's moves). Every sentence row
  * reads its words OUT OF THE SOURCE (literals joined, each `${…}` filled with `7`), as RK2's family rows do.
  *
  * ── THE MUTATION LIST (run during development, each row's catcher named) ──
@@ -1013,8 +1016,13 @@ describe('hammer-phase TC2 — the active frame (`frame`, additive within v: 2)'
  *   p2 `soft-lock` placed AFTER `other` in `REFUSAL_KINDS` -> the order row red (and RK's `other`-last rows)
  *   p3 the soft-lock rule reads the bare noun (`/soft-lock/i`) -> the not-stretched row red (`resolveTalkStrategy`'s
  *        no-stance refusal, "(a soft-lock)", turns `soft-lock` instead of `exhausted`)
+ *   p4 a cache count read outside the null check (`botDriverV2`'s memo calls `progressStringPull` unguarded, made
+ *        null-safe) -> the unhooked row red (`cacheEntered()` moves with no hook) and the source row
+ *   p5 `caches.escapeCrossPass` reports the process-wide counters, not the segment's delta -> the XC ON row red (Σ over
+ *        the segments ≠ the solve's own delta)
+ *   p6 `churn` kept as a list of the frames opened (`seg.churn.opened.push(key)`) -> the bounded-shape row red
  */
-describe('hammer-phase PR — the residue: soft-lock, the hidden `other` sites (additive within v: 2)', () => {
+describe('hammer-phase PR — the residue: soft-lock, the hidden `other` sites, caches and churn (additive within v: 2)', () => {
     const SRC = {
         'solverBot.js': readFileSync(join(HERE, 'solverBot.js'), 'utf8'),
         'levelRun.js': readFileSync(join(HERE, 'levelRun.js'), 'utf8'),
@@ -1101,5 +1109,146 @@ describe('hammer-phase PR — the residue: soft-lock, the hidden `other` sites (
         // :8959 / :8971 — `as route step ${i + 1} requires`: `other` only to a head that keeps the `${…}`; filled
         expect(progressKind(refusal(fromSource('solverBot.js', '${label}: after the lean the block is', 'as route step ${i + 1} requires.'))))
             .toBe('diverged');
+    });
+
+    // ── caches and churn ───────────────────────────────────────────────
+    const CACHE_KEYS = ['stringPull', 'escapeCrossPass'];
+    const CHURN_KEYS = ['opened', 'succeeded', 'rejected', 'moved'];
+    const counts = (o, keys) => o !== null && typeof o === 'object' && !Array.isArray(o)
+        && JSON.stringify(Object.keys(o)) === JSON.stringify(keys) && Object.values(o).every((n) => Number.isInteger(n) && n >= 0);
+    /** Every snapshot's `caches` and `churn` (the two are small and fixed), and the finals. */
+    function countsHook() {
+        const seen = [];
+        const finals = [];
+        const hook = (site, peek) => {
+            const x = peek();
+            if (x !== null) seen.push({ segment: x.segment.index, caches: x.caches, churn: x.churn, bytes: JSON.stringify({ c: x.caches, h: x.churn }).length });
+            if (site === 'done') finals.push(x);
+        };
+        return { hook, seen, finals };
+    }
+    const runs = new Map();
+    const runOf = async (s, xc = false) => {
+        const key = `${s.tape}:${xc}`;
+        if (!runs.has(key)) {
+            const go = (hook) => (xc ? withEscapeCrossPassCache(true, () => solveRk(s, hook)) : solveRk(s, hook));
+            const entered = cacheEntered();
+            const off = await go(null);
+            const enteredOff = cacheEntered() - entered;
+            const h = countsHook();
+            const before = { ...ESCAPE_CROSS_PASS_CACHE_COUNTS };
+            // ⛓ with XC ON, THIS installer wires the escape member at each segment's first call (the solver-side line
+            // is held: `progressCaches`' docblock)
+            const on = await go(xc ? (site, peek) => { if (site === 'segment') progressCaches(ESCAPE_CROSS_PASS_CACHE_COUNTS); h.hook(site, peek); } : h.hook);
+            const delta = Object.fromEntries(Object.entries(ESCAPE_CROSS_PASS_CACHE_COUNTS).map(([k, v]) => [k, v - before[k]]));
+            runs.set(key, { off, on, ...h, enteredOff, delta });
+        }
+        return runs.get(key);
+    };
+
+    for (const s of RK_SOLVES.slice(0, 2)) {
+        it(`⛓⛓⛓ ${s.what}: the answer, shouldStop and the asks are W0's hooked and unhooked; unhooked, no cache count is read`, async () => {
+            const { off, on, finals, enteredOff } = await runOf(s);
+            expect(enteredOff).toBe(0);
+            expect(off.ok && on.ok).toBe(true);
+            expect(digest(on)).toBe(digest(off));
+            expect([off.shouldStops, on.shouldStops]).toEqual([s.shouldStop, s.shouldStop]);
+            expect(finals.map((x) => x.budget.asks)).toEqual(s.asks);
+            expect(activeProgress).toBe(null);
+        }, 600_000);
+    }
+
+    for (const s of RK_SOLVES) {
+        it(`⛓⛓⛓ ${s.what}: \`caches\` and \`churn\` are ONE bounded object of counts at EVERY snapshot, and never fall`, async () => {
+            const { seen, finals } = await runOf(s);
+            expect(seen.length).toBeGreaterThan(0);
+            const last = new Map();
+            for (const x of seen) {
+                expect(Object.keys(x.caches)).toEqual(CACHE_KEYS);
+                expect(x.caches.stringPull === null || counts(x.caches.stringPull, ['hits', 'misses'])).toBe(true);
+                expect(x.caches.escapeCrossPass === null
+                    || counts(x.caches.escapeCrossPass, Object.keys(ESCAPE_CACHE_COUNTS))).toBe(true);
+                expect(counts(x.churn, CHURN_KEYS)).toBe(true);
+                // bounded: the two objects' bytes do not grow with the solve (8 counts of ≤ 7 digits each, at most)
+                expect(x.bytes).toBeLessThan(400);
+                const was = last.get(x.segment);
+                if (was) {
+                    for (const k of CHURN_KEYS) expect(x.churn[k]).toBeGreaterThanOrEqual(was.churn[k]);
+                    if (was.caches.stringPull !== null) {
+                        expect(x.caches.stringPull.hits).toBeGreaterThanOrEqual(was.caches.stringPull.hits);
+                        expect(x.caches.stringPull.misses).toBeGreaterThanOrEqual(was.caches.stringPull.misses);
+                    }
+                }
+                last.set(x.segment, x);
+            }
+            // a closed segment closed every frame it opened; XC is OFF here, so its member is null
+            for (const f of finals) {
+                expect(f.churn.succeeded + f.churn.rejected).toBe(f.churn.opened);
+                expect(f.caches.escapeCrossPass).toBe(null);
+            }
+        }, 600_000);
+    }
+
+    it('⛓⛓⛓ non-vacuous, string pull (ON by default): L40 and L6 ask the memo, hit it, and their climbs move the cursor', async () => {
+        for (const s of [RK_SOLVES[1], RK_SOLVES[2]]) {
+            const f = (await runOf(s)).finals.at(-1);
+            expect([s.tape, f.caches.stringPull.hits > 0, f.caches.stringPull.misses > 0]).toEqual([s.tape, true, true]);
+            expect(f.budget.work.waypointsPlanned).toBeGreaterThan(0);
+            expect(f.churn.opened).toBeGreaterThan(0);
+            expect(f.churn.moved).toBeGreaterThan(0);
+        }
+        // L18: a segment that plans nothing has no string-pull data (`null`); the two refused passes' frames are
+        // closed by the error unwinding them (`rejected`), the solved pass's by returning
+        const l18 = (await runOf(RK_SOLVES[0])).finals;
+        expect(l18.map((x) => x.budget.work.waypointsPlanned)).toEqual([0, 0, 1]);
+        expect(l18.map((x) => x.caches.stringPull === null)).toEqual([true, true, false]);
+        expect(l18.map((x) => [x.segment.outcome, x.churn.rejected > 0, x.churn.succeeded > 0]))
+            .toEqual([['threw', true, false], ['threw', true, false], ['solved', false, true]]);
+    }, 600_000);
+
+    it('⛓⛓⛓ non-vacuous, the cross-pass escape cache ON (the test only, wired by its hook): L18\'s segments report the solve\'s own hits and misses', async () => {
+        const s = RK_SOLVES[0];
+        const { off, on, finals, delta, enteredOff } = await runOf(s, true);
+        expect(enteredOff).toBe(0);
+        expect(digest(on)).toBe(digest(off));
+        expect(digest(on)).toBe(digest((await runOf(s)).off));
+        expect(finals.length).toBe(3);
+        const e = finals.map((x) => x.caches.escapeCrossPass);
+        expect(e.every((x) => x !== null)).toBe(true);
+        // Σ over the segments is the solve's own delta of the process-wide counters, field by field
+        for (const [out, k] of Object.entries(ESCAPE_CACHE_COUNTS)) {
+            expect([out, e.reduce((a, x) => a + x[out], 0)]).toEqual([out, delta[k]]);
+        }
+        expect(e.reduce((a, x) => a + x.hits, 0)).toBeGreaterThan(0);
+        expect(e.reduce((a, x) => a + x.crossPassHits, 0)).toBeGreaterThan(0);
+        // a miss is stored or not stored for exactly one named cause
+        for (const x of e) expect(x.misses).toBe(x.stored + x.tripped + x.digestMoved + x.cap);
+    }, 600_000);
+
+    it('⛓⛓ unwired, the escape member is null with the switch ON (the solver-side line is held) and OFF; a null hand-in is null', async () => {
+        const s = RK_SOLVES[0];
+        const f = finalsHook();
+        await withEscapeCrossPassCache(true, () => solveRk(s, f.hook));
+        expect(f.finals.map((x) => x.caches.escapeCrossPass)).toEqual([null, null, null]);
+        const g = finalsHook();
+        const staging = stagingOf(RK_SOLVES[3].tape);
+        solveSegment({ run: createRunForStaging(staging, SOURCE), goals: RK_SOLVES[3].goals, name: 'x', boot: staging.boot,
+            onProgress: (site, peek) => { if (site === 'segment') progressCaches(null); g.hook(site, peek); } });
+        expect(g.finals.at(-1).caches.escapeCrossPass).toBe(null);
+    }, 600_000);
+
+    it('⛓⛓ only an install reaches a cache count: each call site is one guarded line, and the counters read no deadline', () => {
+        const drv = readFileSync(join(HERE, 'botDriverV2.js'), 'utf8');
+        const pulls = drv.split('\n').filter((l) => /\bprogressStringPull\(/.test(l));
+        expect(pulls.length).toBe(1);
+        expect(pulls[0]).toMatch(/^\s*if \(activeProgress !== null\) progressStringPull\(v !== undefined\); \/\/ ⛓ PR/);
+        const bot = SRC['solverBot.js'];
+        // ⚠ HELD: the solver-side `progressCaches` line waits on XC's "ON is OFF" stream rows (`progressCaches`'
+        // docblock); when it lands, this row pins it inside the segment's `if (activeProgress !== null)` block
+        expect(bot).not.toMatch(/\bprogressCaches\b|\bcacheEntered\b|\bprogressStringPull\b/);
+        const own = readFileSync(join(HERE, 'solveProgress.js'), 'utf8');
+        const body = own.slice(own.indexOf('let cacheEntries'), own.indexOf('// ── the active frame'));
+        expect(body.length).toBeGreaterThan(500);
+        expect(body).not.toMatch(/shouldStop\(|activeDeadline|performance|Date\.|emit\(|work\(/);
     });
 });

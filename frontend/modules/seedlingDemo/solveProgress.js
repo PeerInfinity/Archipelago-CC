@@ -36,13 +36,16 @@
  *    and the danger blocking the corridor, for the innermost open frame that has them, overwritten as the path moves
  *    (never a list). Each value is one the solver had already computed (a climb's `hit`, a rung row's `target` /
  *    `stance`, a verb's obstacle and stance, the press arm's strike); `progressFrame` only copies it.
- *  - ⛓ HAMMER-PHASE PR — v2 ADDITION (still `v: 2`): the kind `soft-lock` (the refusal's own words say the action
- *    would wedge the GAME: a Seed collected on a page that never ends).
+ *  - ⛓ HAMMER-PHASE PR — v2 ADDITIONS (still `v: 2`): the kind `soft-lock` (the refusal's own words say the action
+ *    would wedge the GAME: a Seed collected on a page that never ends), and two bounded COUNT objects per segment —
+ *    `caches` (the string-pull memo's and the cross-pass escape cache's hits and misses, `null` per member when its
+ *    switch is OFF or it has no data — the escape member is wired by an installer, `progressCaches`) and `churn` (the frames the active path opened and closed, and the climb
+ *    cursor's moves). Counts only, never ratios (the view does the arithmetic); nothing in them grows with the solve.
  */
 
 /**
  * The snapshot's schema version (`v`). ⛓ RK: 2 — `tree.rejectionKinds` and `lastWhy` (the schema doc's §5). ⛓ RK2's
- * additions (`precondition`, `lastWhy.name`), ⛓ TC2's (`frame`) and ⛓ PR's (`soft-lock`) are
+ * additions (`precondition`, `lastWhy.name`), ⛓ TC2's (`frame`) and ⛓ PR's (`soft-lock`, `caches`, `churn`) are
  * additive within 2: no consumer gates on `v`.
  */
 export const SOLVE_PROGRESS_VERSION = 2;
@@ -363,6 +366,7 @@ export function progressEnter(key, role, label) {
     node.attempts += 1;
     const frame = { node, cursor: null, rung: null, lastRefused: null, detail: null };
     seg.stack.push(frame);
+    seg.churn.opened += 1;
     emit(p, role);
     return frame;
 }
@@ -382,6 +386,11 @@ export function progressLeave(frame, err = null) {
     if (err !== null) noteLast(seg, err, kind, seg.stack[seg.stack.length - 1].node.key);
     while (seg.stack.length > at) {
         const f = seg.stack.pop();
+        // ⛓ PR — churn: every frame closed under the segment's root (an unwinding error closes each one it passes)
+        if (f.node !== seg.root) {
+            if (reason === null) seg.churn.succeeded += 1;
+            else seg.churn.rejected += 1;
+        }
         if (reason === null) {
             f.node.successes += 1;
             if (f.cursor !== null) {
@@ -431,6 +440,7 @@ export function progressRung(rung) {
     if (f === null) return;
     const node = childOf(f.node, `rung:${rung}`, 'rung', rung);
     node.attempts += 1;
+    if (f.cursor !== node) p.seg.churn.moved += 1;
     f.rung = node;
     f.cursor = node;
     clearRungDetail(f);
@@ -446,6 +456,7 @@ export function progressRow(rung, refused, extra) {
     const p = activeProgress;
     const f = climbFrame(p.seg);
     if (f === null) return;
+    const was = f.cursor;
     if (refused && refused !== f.lastRefused) {
         f.lastRefused = refused;
         const node = childOf(f.node, `rung:${refused.rung}`, 'rung', refused.rung);
@@ -469,6 +480,7 @@ export function progressRow(rung, refused, extra) {
     } else {
         f.cursor = f.rung;
     }
+    if (f.cursor !== was) p.seg.churn.moved += 1;
 }
 
 /** A finished search (a leaf): one attempt, a success or its rejection, and its expansions as work. */
@@ -625,6 +637,8 @@ export function progressSegment(name, run, fn) {
         tiles: new Map(), tileLevel: null,
         asks: {}, work: { shouldStop: 0, ticks: 0, previews: 0, previewStates: 0, searchStates: 0, expansions: 0 },
         readers: null, lastWhy: null, lastSource: null,
+        caches: { set: false, stringPull: null, escape: null, escapeBase: null },
+        churn: { opened: 0, succeeded: 0, rejected: 0, moved: 0 },
     };
     p.segments += 1;
     p.seg = seg;
@@ -649,6 +663,68 @@ export function progressSegment(name, run, fn) {
 export function progressReaders(readers) {
     const seg = activeProgress.seg;
     if (seg !== null && seg.readers === null) seg.readers = readers;
+}
+
+// ── the caches (⛓ PR) ───────────────────────────────────────────────────
+
+/** How many times a cache count point was entered in this process — the gate's "unhooked, it never runs" counter. */
+let cacheEntries = 0;
+export const cacheEntered = () => cacheEntries;
+
+/**
+ * ⛓ PR — the cross-pass escape cache's counters this snapshot reports, `snapshot key → ESCAPE_CROSS_PASS_CACHE_COUNTS
+ * key`: a lookup is a hit or a miss; a miss is `stored`, or not stored because a deadline tripped during it
+ * (`tripped`), the run's state digest moved under it (`digestMoved`) or the scope is full (`cap`); `bypassed` is a
+ * call after a trip, which neither reads nor stores. A fixed list: the member never grows.
+ */
+export const ESCAPE_CACHE_COUNTS = Object.freeze({ hits: 'hits', crossPassHits: 'crossPassHits', misses: 'misses',
+    stored: 'stored', tripped: 'notStoredTripped', digestMoved: 'notStoredMoved', cap: 'notStoredCap',
+    bypassed: 'bypassedTripped' });
+
+/**
+ * ⛓ PR — one ask of `botDriverV2`'s string-pull memo (`STRING_PULL_FAST`): `hit` when the point was already asked in
+ * that `planWaypoints` call. Called from the memo behind `activeProgress !== null`. ⛔ EMIT-ONLY: no hook call, no
+ * ask, no work unit. The member exists only once the memo is asked in the segment, so it is `null` with the switch
+ * OFF (the memo is never built) or with no plan.
+ */
+export function progressStringPull(hit) {
+    cacheEntries += 1;
+    const seg = activeProgress.seg;
+    if (seg === null) return;
+    const c = seg.caches.stringPull ?? (seg.caches.stringPull = { hits: 0, misses: 0 });
+    if (hit) c.hits += 1;
+    else c.misses += 1;
+}
+
+/**
+ * ⛓ PR — the segment's view of the cross-pass escape cache: `counts` is `solverBot.ESCAPE_CROSS_PASS_CACHE_COUNTS`
+ * (process-wide, summed over every scope) when the switch is ON and a scope is in hand, else `null`. Read once, at
+ * the segment's start (the first call wins, as `progressReaders`); the snapshot reports what moved since.
+ * ⚠ WHO CALLS IT: an installer that knows the cache is in hand, from its hook's first call of the segment (site
+ * `segment`, where `seg` is already open). The solver-side call — one line beside `solveSegmentUnder`'s
+ * `progressReaders` — is HELD: XC's "ON is OFF" rows (`escapeCrossPassCache.test.js`, XF's) compare the whole progress
+ * stream ON and OFF, and a member that reports the switch differs by design. Until they compare it without `caches`,
+ * the member is `null` on every solve no installer wires (the PR report names the line).
+ */
+export function progressCaches(counts) {
+    cacheEntries += 1;
+    const seg = activeProgress.seg;
+    if (seg === null || seg.caches.set) return;
+    seg.caches.set = true;
+    if (counts === null || typeof counts !== 'object') return;
+    seg.caches.escape = counts;
+    seg.caches.escapeBase = Object.fromEntries(Object.values(ESCAPE_CACHE_COUNTS).map((k) => [k, counts[k] ?? 0]));
+}
+
+/** The snapshot's `caches`: two members, each a fixed set of counts or `null`. */
+function cachesOf(seg) {
+    const c = seg.caches;
+    const e = c.escape;
+    return {
+        stringPull: c.stringPull === null ? null : { hits: c.stringPull.hits, misses: c.stringPull.misses },
+        escapeCrossPass: e === null ? null : Object.fromEntries(Object.entries(ESCAPE_CACHE_COUNTS)
+            .map(([out, k]) => [out, (e[k] ?? 0) - c.escapeBase[k]])),
+    };
 }
 
 // ── the active frame (⛓ TC2) ─────────────────────────────────────────────
@@ -770,6 +846,8 @@ function snapshotOf(p) {
         budget: { asks: { ...seg.asks }, work: { ...seg.work, ...counted } },
         lastWhy: seg.lastWhy === null ? null : { ...seg.lastWhy },
         frame: frameOf(seg),
+        caches: cachesOf(seg),
+        churn: { ...seg.churn },
         ...(p.beat.count > 0 ? { heartbeat: { at: p.beat.at, count: p.beat.count } } : {}),
     };
 }
