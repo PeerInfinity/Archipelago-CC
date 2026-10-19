@@ -3,7 +3,7 @@
  * check-seedling-string-pull-fast — **`STRING_PULL_FAST` IS ANSWER-IDENTICAL ON THE REAL CORPUS** (seedling
  * hammer-phase SP, D2).
  *
- * `botDriverV2.planWaypoints`' string-pull memo (`STRING_PULL_FAST`, default OFF) must change time and nothing else.
+ * `botDriverV2.planWaypoints`' string-pull memo (`STRING_PULL_FAST`, default ON since the user's flip) must change time and nothing else.
  * This runs each corpus row twice in a child process — OFF, and ON with the `audit` seam installed by this same file
  * as a `--import` preload — and holds, per row:
  *   · the row's stdout md5 and exit code equal OFF and ON (a producer's `--check` stdout is ⚖ ruling 8's standing

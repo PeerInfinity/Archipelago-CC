@@ -23555,3 +23555,15 @@ The report is `CC/docs/cloud-reports/seedling-fidelity-digest.md`.
 solverBot-side globals: `HAMMER_ESCAPE_BOUNDS`, `GHOST_SPINNER_PRESS`, `PRESS_KILL_COST`, the deadline state and the
 progress hook. It is scoped to one `twoPassSolve`. The spinning axes' and lava chains' visit state are outside the
 escape's reach today; a slice that teaches the escape about them adds them to `stateDigestParts`.
+
+### Seedling hammer-phase SP flip — `STRING_PULL_FAST` ON by default
+
+⚖ The user (2026-10-18): flip it ON. `botDriverV2.js`'s `STRING_PULL_FAST.enabled` now defaults ON;
+`SEEDLING_STRING_PULL_FAST=0` turns it OFF for a node measurement (the corpus gate `check-seedling-string-pull-fast`
+already runs its OFF arm with `0`). The evidence is the full divergence sweep, ON (a measurement-only branch) against
+OFF at the SP head:
+- 851 / 851 legs, good 756 → 756, 0 good↔bad movers;
+- first plans equal on every leg whose seam time and arrival clock are equal;
+- solve time −10 % overall, L12 −35 %, L40's finished p90 1.1 → 0.57 s.
+
+It does **not** clear L40's 397 / 414 band: those solves run past 84 s, and ~1.4× does not bring them under 90 s.

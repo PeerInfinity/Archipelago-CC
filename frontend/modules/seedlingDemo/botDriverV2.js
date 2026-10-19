@@ -1085,12 +1085,13 @@ function controllerPathClearBy(blockedAt, a, b) {
  * `check-seedling-string-pull-fast.mjs`): when a function, `planWaypoints` runs
  * BOTH pulls on the same points and hands `{ off, on }` to it, returning the
  * switch's arm. The other arm runs silent (no heartbeats), so a hooked solve
- * beats as it would unaudited. `SEEDLING_STRING_PULL_FAST=1` turns it ON for a
- * node measurement; `withStringPullFast(on, fn)` for a test. The browser has no
- * `process` and takes the default.
+ * beats as it would unaudited. Default ON (the user's flip, 2026-10-18);
+ * `SEEDLING_STRING_PULL_FAST=0` turns it OFF for a node measurement;
+ * `withStringPullFast(on, fn)` for a test. The browser has no `process` and
+ * takes the default.
  */
 export const STRING_PULL_FAST = {
-    enabled: globalThis.process?.env?.SEEDLING_STRING_PULL_FAST === '1',
+    enabled: globalThis.process?.env?.SEEDLING_STRING_PULL_FAST !== '0',
     audit: null,
 };
 

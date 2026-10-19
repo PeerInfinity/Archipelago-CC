@@ -57,8 +57,8 @@ async function audited(fn) {
 }
 
 describe('SP — the switch\'s contract', () => {
-    it.skipIf(process.env.SEEDLING_STRING_PULL_FAST === '1')('OFF by default, no audit', () => {
-        expect(STRING_PULL_FAST.enabled).toBe(false);
+    it.skipIf(process.env.SEEDLING_STRING_PULL_FAST === '0')('ON by default, no audit', () => {
+        expect(STRING_PULL_FAST.enabled).toBe(true);
         expect(STRING_PULL_FAST.audit).toBe(null);
     });
 
