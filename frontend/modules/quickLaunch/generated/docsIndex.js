@@ -756,6 +756,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The Bounce Demo plays a generated world's bounce regions: a climb in the style of Doodle Jump. The player bounces automatically whenever it lands on a platform; you steer left and right to land on…"
     },
     {
+        "path": "docs/json/user/modules/bounceRegionEditor.md",
+        "title": "Bounce Region Editor Panel",
+        "section": "user/modules",
+        "summary": "The Bounce Region Editor edits one bounce zone of a generated world: its platforms, the springs, jetpacks, pickups and portals on them, and the size of the level. As you edit, it works out again…"
+    },
+    {
         "path": "docs/json/user/modules/discoveryPanel.md",
         "title": "Discovery Panel",
         "section": "user/modules",
@@ -1144,6 +1150,7 @@ export const HELP_SECTIONS = Object.freeze([
         "docs": [
             "docs/json/user/modules/apworldEditor.md",
             "docs/json/user/modules/bounceDemo.md",
+            "docs/json/user/modules/bounceRegionEditor.md",
             "docs/json/user/modules/discoveryPanel.md",
             "docs/json/user/modules/dungeons.md",
             "docs/json/user/modules/editor.md",

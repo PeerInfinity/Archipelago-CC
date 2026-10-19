@@ -40,6 +40,7 @@ User-friendly guides still to be written. See the corresponding technical refere
 - [Loop Stats](./loopStats.md) — Each queued action's cost and the mana left, this loop and the last
 - [Bounce Demo](./bounceDemo.md) — Playing a generated world's bounce regions
 - [Noiz2sa](./noiz2sa.md) — Playing a generated world's Noiz2sa regions, and training its bot
+- [Bounce Region Editor](./bounceRegionEditor.md) — Editing a generated bounce zone's platforms and seeing the rules they make
 
 ## Core Service Modules
 
