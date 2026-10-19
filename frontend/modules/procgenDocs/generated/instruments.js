@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 90,
+            "count": 91,
             "id": "plan"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 425,
+        "blockStyle": 426,
         "browser": 143,
         "cited": 221,
-        "files": 438,
+        "files": 439,
         "lineStyle": 13,
-        "withDocblock": 438,
-        "withFlags": 354
+        "withDocblock": 439,
+        "withFlags": 355
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -9847,6 +9847,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-watcher-witness — ⛓⛓⛓ SEEDLING FIDELITY WATCHER: A SILENT WATCHER ON THE FRONTIER OF A REACH-EXIT IS NOT AN OBSTACLE, AND A SPEAKING ONE IS PASSED BY ITS DIALOGUE.",
             "path": "scripts/procgen/plan-seedling-watcher-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-watchertalk-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-watchertalk-witness — ⛓⛓⛓ fidelity WATCHERTALK D3: THE WATCHER'S EVENT `{114,0}`, EARNED BY THE SOLVER'S CLEAR-TAG FROM THE DIVERGENCE SWEEP'S TWO L114 ARRIVALS (`CONTACT_FIDELITY.watcherTalkVerb` ON).",
+            "path": "scripts/procgen/plan-seedling-watchertalk-witness.mjs"
         },
         {
             "argvHelpers": [
