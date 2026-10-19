@@ -23922,3 +23922,21 @@ witness rows (2195 → 1216, 1629 → 778: refusals whose kill crosses a death).
 - A work unit is a deadline ask, and the press kill asks almost none. A leg can spend its whole wall budget inside
   one rung while its work budget is untouched, so "ran out of units" and "ran out of time" name different rungs.
 - Refusing a strike candidate IS waiting: a strikeless press-kill tick takes a refuge and derives again.
+### Seedling hammer-phase XC flip — `ESCAPE_CROSS_PASS_CACHE` ON by default (flip-ready branch)
+
+⚖ The user (2026-10-18) picked "XC flip, then the floor flip". The flip is the user's call. This entry rides the
+flip-ready branch `seedling-hammer-xc-flip` (slice XF, `CC/docs/cloud-reports/seedling-hammer-xc-flip-prep.md`) and lands
+only if the user merges it. `solverBot.ESCAPE_CROSS_PASS_CACHE.enabled` now defaults ON. `SEEDLING_ESCAPE_CROSS_PASS_CACHE=0`
+turns it OFF for a node measurement, the way SP's flip did with `=0`.
+- The cache is answer-identical: XC's gate rows, its 94,280-hit shadow gate (0 mismatches) and XF's local verify
+  campaign on this branch. Only the wall clock moves: L18's sweep 0.71× (XF, 3 interleaved rounds).
+- fidelity-9's gap is closed by XF's D2: a drifting beam tower inside a cached SEARCH (L18 with one tower added), at
+  two seam times a hammer period apart and as a visit-only pair. A key without the digest's `visit` part turns the
+  visit-only row red.
+- Before merging: the full-sweep A/B named in the report (this branch against its parent, capture on).
+- **Landed (2026-10-19, ⚖ the user approved).** js-7's A/B GO stands: no answer moved, and the sweep ran 11% faster.
+  The landing harvest also folds in PR's held escape-member line: `solveSegmentUnder` hands
+  `ESCAPE_CROSS_PASS_CACHE_COUNTS` to `progressCaches` beside `progressReaders` (or `null` when the switch is OFF or no
+  scope is in hand). XF's stream rows now compare each snapshot without `caches`, and `solveProgress.test.js`'s rows pin
+  the line and its block: counted ON with no installer, `null` OFF, and an installer's `null` at site `segment` wins (the first call does). The bounded-shape rows accept the member's counts
+  now that the default is ON.

@@ -1,5 +1,5 @@
 /**
- * SEEDLING HAMMER-PHASE XC — the cross-pass escape cache (`ESCAPE_CROSS_PASS_CACHE`, OFF), keyed on
+ * SEEDLING HAMMER-PHASE XC — the cross-pass escape cache (`ESCAPE_CROSS_PASS_CACHE`, ON since the XC flip), keyed on
  * `run.stateDigest()` + the call's arguments + the solver-side globals, scoped per `twoPassSolve` call
  * (`CC/docs/cloud-reports/seedling-hammer-cross-pass-cache.md`).
  *
@@ -81,7 +81,9 @@ function solve({ tape, goals }, { residue = null, cache = false, verify = false,
     const lasts = new Map();
     const peek = (site, p) => {
         const snap = p();
-        stream.push(JSON.stringify({ site, snap }));
+        // ⛓ PR: `caches` reports the switch by design (ON's escape member is counts where OFF's is null), so the
+        // stream compares the rest of the snapshot
+        stream.push(JSON.stringify({ site, snap: snap ? (({ caches, ...rest }) => rest)(snap) : snap }));
         if (snap) lasts.set(snap.segment.index, snap);
     };
     // ⚠ a tripped `withSolveDeadline` spreads its report onto the value: the promise is kept from inside it
@@ -184,12 +186,14 @@ function under(stop, fn) {
 }
 
 describe('hammer-phase XC — the cross-pass escape cache: ON is OFF', () => {
-    it('⛓⛓ OFF by default; the scope is per call and empty', () => {
-        expect(ESCAPE_CROSS_PASS_CACHE.enabled).toBe(false);
-        expect(ESCAPE_CROSS_PASS_CACHE.verify).toBe(false);
+    it('⛓⛓ ON by default (the XC flip; `SEEDLING_ESCAPE_CROSS_PASS_CACHE=0` turns it OFF); the scope is per call and empty', () => {
+        const env = globalThis.process?.env?.SEEDLING_ESCAPE_CROSS_PASS_CACHE;
+        expect(ESCAPE_CROSS_PASS_CACHE.enabled).toBe(env !== '0');
+        expect(ESCAPE_CROSS_PASS_CACHE.verify).toBe(globalThis.process?.env?.SEEDLING_ESCAPE_CROSS_PASS_CACHE_VERIFY === '1');
         expect(ESCAPE_CROSS_PASS_CACHE.maxEntries).toBeGreaterThan(0);
-        expect(withEscapeCrossPassCache(true, () => ESCAPE_CROSS_PASS_CACHE.enabled)).toBe(true);
-        expect(ESCAPE_CROSS_PASS_CACHE.enabled).toBe(false);
+        const was = ESCAPE_CROSS_PASS_CACHE.enabled;
+        expect(withEscapeCrossPassCache(false, () => ESCAPE_CROSS_PASS_CACHE.enabled)).toBe(false);
+        expect(ESCAPE_CROSS_PASS_CACHE.enabled).toBe(was);
         const a = escapeCrossPassScope();
         const b = escapeCrossPassScope();
         expect(a.id).not.toBe(b.id);
