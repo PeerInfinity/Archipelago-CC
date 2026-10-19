@@ -1501,7 +1501,7 @@ export function goalHeldBy(row, fields) {
         // ⛓ R4b — a boss kill is held once its report address is CLEARED; the save's own readout.
         const clears = fields['save.levelPersistence'];
         return Array.isArray(clears)
-            ? (clears.some((c) => c.level === row.address.level && c.tag === row.address.tag) ? 1 : 0) : null;
+            ? bool(clears.some((c) => c.level === row.address.level && c.tag === row.address.tag)) : null;
     }
     case 'key': {
         const arr = fields['save.hasKey'];

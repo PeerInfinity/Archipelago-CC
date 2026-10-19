@@ -383,7 +383,7 @@ describe('the whole construction, driven in node', () => {
      * refusal is unchanged for rules with NO real rooms — shown here on the
      * same rules with their sidecars removed.
      */
-    it('0 of 48 and no real rooms refuses at PLACEMENT, and the refusal carries the count', async () => {
+    it(`0 of ${R7_GOAL_LEDGER.length} and no real rooms refuses at PLACEMENT, and the refusal carries the count`, async () => {
         const noRooms = structuredClone(RULES.seedling_atlas);
         delete noRooms.preset_sidecars;
         const r = await load('seedling_atlas', { rawRules: noRooms });

@@ -27,6 +27,7 @@ import {
 import { loadSeedlingRandomizer } from './seedlingRandomizerWiring.js';
 import { ATLAS_CHECK_PLAYER, ATLAS_ROOM_SUBSTRATE_ID } from '../seedlingDemo/seedlingAtlasCheckTable.js';
 import { AP_ITEM_TYPE } from '../seedlingDemo/apPlacementRewriter.js';
+import { R7_GOAL_LEDGER } from '../seedlingDemo/r7Acceptance.js';
 import { loadWasmPlaybackEngine } from './seedlingWasmPlayback.js';
 
 const abs = (rel) => fileURLToPath(new URL(rel, import.meta.url));
@@ -98,7 +99,8 @@ describe('the vanilla arm\'s map — seedling_playthrough, every name accounted 
             .toEqual([...LOADED.entries, ...LOADED.encounters].map((e) => e.location).sort());
         // ⛓ R4b (rules-boss-locations) — the seven boss kills are REFUSED BY NAME (no fight executor yet), never dropped.
         expect(refused.map((r) => r.name).sort()).toEqual(LOADED.reports.map((r) => r.location).sort());
-        expect(LOADED.reports).toHaveLength(7);
+        expect(LOADED.reports.map((r) => r.ledgerId).sort())
+            .toEqual(R7_GOAL_LEDGER.filter((r) => r.kind === 'boss').map((r) => r.id).sort());
         for (const r of refused) expect(r.refused, r.name).toContain('is a BOSS KILL');
         // ⛔ The game plays the REWRITE: each goal names the entity the delivered room holds — the rewriter's
         // own type — at the table's (level, tag); the map document's vanilla type would not be found there.
