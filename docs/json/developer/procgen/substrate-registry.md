@@ -106,7 +106,7 @@ The optional `sharing` field declares which resource-channel categories a substr
 
 | Field | Type | Meaning |
 |-------|------|---------|
-| `roomEditor` | object | The room editor: open room i of a document and get one saved room back. `kind: 'panel'` carries `open({region \| record, base?, contract?, onSave})`, a panel launcher loaded by dynamic import. `kind: 'lab'` carries `page` (the `procgenLabPanel` page, `maze` or `seedling`) and `arm` (its `?source=` for a set document). Resolved by `getRegionEditor(id)` in `procgenPipeline/regionEditors.js`. |
+| `roomEditor` | object | The room editor: open room i of a document and get one saved room back. `kind: 'panel'` carries `open({region \| record, base?, contract?, onSave})`, a panel launcher loaded by dynamic import, and `module`, the app module whose panel it opens (`regionEditors.openRoomEditor` enables it first, so a closed panel is re-created). `kind: 'lab'` carries `page` (the `procgenLabPanel` page, `maze` or `seedling`) and `arm` (its `?source=` for a set document). Resolved by `getRegionEditor(id)` in `procgenPipeline/regionEditors.js`. |
 | `regionRoundTrip` | object | How a document region goes into that editor and back. `open({regionId, payload, region, itemPool, expectedItems})` returns `{session, unedited}`; `save(saved, ctx)` returns `{payload, exits, locations}`; either may be async. `{refused: '<why>'}` declares there is none. Optional `rules` (`procgenCore/roundTripRules.js`): `'authored'` when the payload's rules must equal the document's, `'derived'` (default) when rebuilt from geometry. Resolved by `apworldEditor/regionRoundTrip.js`. |
 | `exitSides` | object (optional) | What else in the payload is keyed by an exit's `side`: `{keys, relabel}`. `relabel(payload, moves)` is pure and applies `moves = [{exitId, from, to}]` together; the editor writes `payload.exits` itself. If absent, exit-side moves are refused. Read through `exitSidesOf` in `procgenCore/exitSides.js` by the APWorld editor and the pipeline's `moveSphereExitSide` / `swapSphereExitSides`. |
 
@@ -314,7 +314,7 @@ Groups are this document's own § headings, matched to a field by the section th
 |---|---|---|---|---|---|---|---|---|---|
 | `exitSides` | {keys, relabel} | {keys, relabel} | {keys, relabel} | {keys, relabel} | — | {keys, relabel} | {keys, relabel} | {keys, relabel} | {keys, relabel} |
 | `regionRoundTrip` | {open, save} | {refused} | — | — | {open, save} | — | — | — | {open, rules, save} |
-| `roomEditor` | {kind, open} | {arm, kind, page} | {arm, kind, page} | — | {arm, kind, page} | — | — | — | — |
+| `roomEditor` | {kind, module, open} | {arm, kind, page} | {arm, kind, page} | — | {arm, kind, page} | — | — | — | — |
 
 **Build-time — procedural substrates**
 

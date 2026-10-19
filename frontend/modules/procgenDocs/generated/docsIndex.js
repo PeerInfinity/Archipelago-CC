@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 28,
         "headings": 1122,
         "indexHeadings": 2,
-        "lines": 30382,
+        "lines": 30384,
         "pages": 4,
-        "words": 412839
+        "words": 413007
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -70,7 +70,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 5512
+            "words": 5531
         },
         {
             "description": "A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The catalogue itself is data in `demos.js`; this page says where it lives and how to add to it.",
@@ -288,7 +288,7 @@ export const DOCS_INDEX = frz({
             "file": "stepped-pipeline.md",
             "h1": "The Stepped Pipeline",
             "headings": 16,
-            "lines": 191,
+            "lines": 193,
             "links": [
                 "architecture.md",
                 "bounce.md",
@@ -297,7 +297,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/stepped-pipeline.md",
-            "words": 2808
+            "words": 2957
         },
         {
             "description": "The Procgen Pipeline panel's **Preset** drop-down applies a shipped configuration (mode, seed, substrates, knobs and item pool) so that Generate builds a world demonstrating one feature. CI generates every preset that names no heavy substrate headless, twice, and requires the two runs to be byte-identical.",

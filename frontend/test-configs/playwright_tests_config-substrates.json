@@ -735,6 +735,12 @@
             "_comment": "APWorld hub H4b. The lab door end to end without an iframe: the host is a PANEL-SHAPED stub (W4's own contract shape, the same one createPageLabTransport implements) and the three phases of labRoomEditor's contract are published on procgenLab:levelChanged. The first version mounted the real maze lab; the page connected inside the row's own poll, opened room 0 for real and published its OWN close, so onSave fired with the page's UNEDITED record and the row measured a no-op — a live page and a synthetic one cannot both author the same conversation. Asserts the handed document is a ONE-ENTRY region library, the navigate asks for ?source=set&room=0, the close returns exactly ONE hub op moving payload AND the one rule the door proved it authored, the exit targets and baked AP location names the library capture strips are restored, and ONE Undo folds it all away."
         },
         {
+            "id": "apworld-edit-opens-a-closed-maze-lab",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "region-editor-launch Q1 (the user, 2026-10-19: one shared opener). Closes every real maze lab tab, presses the hub's Edit ▸ on a maze region, and asserts regionEditors.openRoomEditor MADE a maze lab and parked the room session for that region with no refusal — before, the press said 'Open Procgen Lab — maze first'. The made tab is left on screen."
+        },
+        {
             "id": "apworld-bounce-reverse-link-selects-the-region",
             "enabled": true,
             "category": "apworldEditor",

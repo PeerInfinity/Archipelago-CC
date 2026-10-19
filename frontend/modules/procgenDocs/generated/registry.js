@@ -6197,10 +6197,11 @@ export const REGISTRY = frz({
                 {
                     "id": "bounce",
                     "present": true,
-                    "short": "{kind, open}",
+                    "short": "{kind, module, open}",
                     "type": "object",
                     "value": [
                         "kind",
+                        "module",
                         "open"
                     ]
                 },

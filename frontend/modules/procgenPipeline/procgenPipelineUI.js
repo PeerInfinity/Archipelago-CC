@@ -84,7 +84,7 @@ import {
     sphereLibrarySubstrateIds, buildSphereConfig, buildSphereRun,
     buildSpiralRun, buildTopDownRun, buildGridRun, compileGridRun,
 } from './presetRun.js';
-import { getRegionEditor, roomEditorKindOf } from './regionEditors.js';
+import { getRegionEditor, openRoomEditor, roomEditorKindOf } from './regionEditors.js';
 import { openPipelineRoom, regionFromPipelineSave } from './pipelineRoomEdit.js';
 import { peekSphereStateSingleton } from '../sphereState/singleton.js';
 import {
@@ -3281,13 +3281,13 @@ export class ProcgenPipelineUI {
         const writeBack = (editedRegion) => this._onRegionEdited(region, editedRegion, nd);
         const st = this._stepState;
         if (roomEditorKindOf(region?.substrate) === 'lab') {
-            return this._openLabRoom(region, open, {
+            return this._openLabRoom(region, {
                 ...(st?.growConfig?.itemLib ? { baseItemLib: st.growConfig.itemLib } : {}),
                 itemPool: Object.keys(this.scenario?.items ?? {}),
             }, writeBack);
         }
         const contract = this._buildRegionContract(region, nd);
-        return this._reportEditDoor(open({ region, contract, onSave: writeBack }), region);
+        return this._openPanelRoom(region, { region, contract, onSave: writeBack });
     }
 
     // ⛓ A `kind: 'lab'` editor (maze, Seedling) takes a SET DOCUMENT, not a
@@ -3295,7 +3295,7 @@ export class ProcgenPipelineUI {
     // back (pipelineRoomEdit.js — the declaration the APWorld editor's Edit ▸
     // uses), and `writeBack` gets a live region descriptor exactly as a panel
     // editor's save hands one. Every refusal on the way is SHOWN.
-    async _openLabRoom(region, open, ctxOpts, writeBack) {
+    async _openLabRoom(region, ctxOpts, writeBack) {
         let opened;
         try {
             opened = await openPipelineRoom(region, ctxOpts);
@@ -3305,7 +3305,7 @@ export class ProcgenPipelineUI {
         if (!opened.ok) return this._showEditRefusal(opened.why);
         this._labRoomHandle?.close?.();
         this._labRoomHandle = null;
-        const handle = open({
+        const handle = await openRoomEditor(region.substrate, {
             ...opened.session,
             onSave: (saved) => {
                 this._labRoomHandle = null;
@@ -3321,6 +3321,18 @@ export class ProcgenPipelineUI {
             + 'Save there (close the room) to write it back here.';
         this.warning = '';
         this.render();
+    }
+
+    // ⛓ A `kind: 'panel'` door (bounce), through the ONE opener: its panel is
+    // created when the layout has none (⚖ region-editor-launch Q1).
+    async _openPanelRoom(region, session) {
+        let handle;
+        try {
+            handle = await openRoomEditor(region.substrate, session);
+        } catch (err) {
+            handle = { ok: false, why: err.message };
+        }
+        return this._reportEditDoor(handle, region);
     }
 
     // ⛔ The door's refusal is a RETURN VALUE (labRoomEditor's `{ok:false, why}`);
@@ -5170,7 +5182,7 @@ export class ProcgenPipelineUI {
         }
         const writeBack = (editedRegion) => this._onRegionEditedTD(regionId, editedRegion);
         if (roomEditorKindOf(region?.substrate) === 'lab') {
-            return this._openLabRoom(region, open, {
+            return this._openLabRoom(region, {
                 itemPool: Object.keys(st.compileIn?.sourceItemDefs ?? st.source?.items?.['1'] ?? {}),
                 expectedItems: [...(st.compileIn?.startingItems ?? [])],
             }, writeBack);
@@ -5193,7 +5205,7 @@ export class ProcgenPipelineUI {
             st.compileIn?.sourceItemDefs ?? st.source?.items?.['1'] ?? {},
         );
         contract.expectedItems = [...(st.compileIn?.startingItems ?? [])];
-        return this._reportEditDoor(open({ region, contract, onSave: writeBack }), region);
+        return this._openPanelRoom(region, { region, contract, onSave: writeBack });
     }
 
     // Write-back from a top-down region editor save: splice the edited region into
