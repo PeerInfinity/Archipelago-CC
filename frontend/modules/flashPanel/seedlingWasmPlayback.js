@@ -1322,7 +1322,8 @@ export function createWasmPlayback({
         applyAxeDodge();
         applyDashOnly();
         applyDashShapeDep();
-        handle = svc().start(req);
+        // ⛓ RETRY ATTEMPT — the service is TOLD which attempt this is (metadata: the request is unchanged)
+        handle = svc().start(req, { attempt: { retry: 0, budgets: [...play.budgets] } });
         phase = 'solving';
         tl('solve', { name: req.name ?? null });
         note(`${walkerInstrument ? 'walking a tape' : playInit.continuation ? 'solving on from the held room' : 'solving'}… `
@@ -1352,7 +1353,8 @@ export function createWasmPlayback({
         applyAxeDodge();
         applyDashOnly();
         applyDashShapeDep();
-        handle = svc().start(req);
+        // ⛓ RETRY ATTEMPT — told, not recognised: a rebuilt `req` still reads as this retry
+        handle = svc().start(req, { attempt: { retry: play.retries, budgets: [...play.budgets] } });
         log(`[wasm playback] ${goal.name ?? goal.kind}: the solver ran out of ${play.budgets.at(-2)} work units in level ${goal.level} `
             + `— asking again with ${play.budget}, the room held (retry ${play.retries})`, 'warn');
         note(`solving again, the room held… (budget ${play.budget} work units, retry ${play.retries})`);

@@ -35,8 +35,10 @@ import { SPINNER } from './spinner.js';
 import { DEADLINE_SITES, solveSegment, withSolveDeadline, withSolveProgress as reExported } from './solverBot.js';
 import {
     BOUND_KINDS, CLEAR_TAG_KINDS, PROGRESS_POINTS, PROGRESS_TILE, REFUSAL_KINDS, SOLVE_PROGRESS_VERSION, activeProgress,
-    installSolveProgress, kindEntered, progressErrorName, progressKind, progressReason, progressWhy, withSolveProgress,
+    dangerKindOf, frameEntered, installSolveProgress, kindEntered, progressErrorName, progressKind, progressReason,
+    progressWhy, withSolveProgress,
 } from './solveProgress.js';
+import { isWalkableTile } from './botDriverV2.js';
 import { CONTACT_FIDELITY, withContactFidelity } from './contactFidelity.js';
 import { arrivalStaging } from './fidelityArrival.js';
 
@@ -393,10 +395,10 @@ function finalsHook(all = false) {
 
 const nodesOf = (n, out = []) => { out.push(n); for (const c of n.children) nodesOf(c, out); return out; };
 const sum = (o) => Object.values(o).reduce((a, b) => a + b, 0);
-/** v1's bytes of a v2 snapshot: no `v`, no `lastWhy`, no `rejectionKinds`. */
+/** v1's bytes of a v2 snapshot: no `v`, no `lastWhy`, no `rejectionKinds` (⛓ TC2: and no `frame`). */
 const v1Of = (snap) => {
     const strip = (n) => { const { rejectionKinds, children, ...rest } = n; return { ...rest, children: children.map(strip) }; };
-    const { v, lastWhy, tree, ...rest } = snap;
+    const { v, lastWhy, frame, tree, ...rest } = snap;
     return { ...rest, tree: strip(tree) };
 };
 /**
@@ -816,5 +818,185 @@ describe('hammer-phase RK2 — precondition, the error\'s name, and the residue\
         const body = own.slice(own.indexOf('export function progressErrorName('), own.indexOf('/**', own.indexOf('export function progressErrorName(')));
         expect(body).not.toMatch(/message|progressWhy|\.why\b/);
         expect(SRC).not.toMatch(/\bprogressErrorName\(/);
+    });
+});
+
+/**
+ * ⛓ HAMMER-PHASE TC2 — `frame`, THE ACTIVE FRAME'S DETAIL (additive within `v: 2`): the innermost open frame that has
+ * a target, a stance or a blocking danger, with its active node's key — ONE object or null, never a list. Every value
+ * is one the solver had already computed: a climb's `hit` (the walk probe's), a rung row's `target` / `stance`, a
+ * frontier verb's obstacle and stance, the press arm's strike (its body and cell).
+ *
+ * W0's pins (`seedling-hammer-active-frame-evidence/w0/v2proj-w0.jsonl`, measured at the base, where no snapshot has
+ * a frame): `pre` is the md5 of EVERY snapshot of a peek-at-every-call stream with `frame` dropped — every pre-TC2
+ * byte — and `work` is each segment's final `budget.work`.
+ *
+ * ── THE MUTATION LIST (run during development, each row's catcher named) ──
+ *   f1 `frame` kept as a growing list (`frameOf` returns every open frame's detail) -> the shape row red
+ *   f2 a frame field computed by a FRESH probe (the climb's line: `probeCorridor(corridor, dangerExcept)` instead of
+ *        the `hit` it was handed) -> the byte-identity row red (`budget.work.previews` moves)
+ *   f3 a frame read outside the null check (`progressFrame` made null-safe and one site's guard dropped) -> the
+ *        byte-identity row red (`frameEntered()` moves with no hook) and the source row
+ */
+describe('hammer-phase TC2 — the active frame (`frame`, additive within v: 2)', () => {
+    const TC2 = {
+        'r9-solve-18': { pre: '815d03a141424a831b3318151c604107', snapshots: 1593, work: [
+            { shouldStop: 50, ticks: 408, previews: 401, previewStates: 25884, searchStates: 18362, expansions: 10444,
+                waypointsPlanned: 0, replans: 0, dashesPressed: 0 },
+            { shouldStop: 51, ticks: 441, previews: 401, previewStates: 25884, searchStates: 18362, expansions: 10444,
+                waypointsPlanned: 0, replans: 0, dashesPressed: 0 },
+            { shouldStop: 64, ticks: 445, previews: 411, previewStates: 26472, searchStates: 18362, expansions: 10444,
+                waypointsPlanned: 1, replans: 0, dashesPressed: 6 }] },
+        'r5-l40-part5': { pre: 'ffb863ee0a956e0489b522a266fb28a7', snapshots: 372, work: [
+            { shouldStop: 167, ticks: 679, previews: 33, previewStates: 15970, searchStates: 0, expansions: 0,
+                waypointsPlanned: 11, replans: 0, dashesPressed: 3 }] },
+        'r8-solve-6': { pre: '4225dd84ae1a1fef66fe8030ba00a40a', snapshots: 41, work: [
+            { shouldStop: 0, ticks: 294, previews: 5, previewStates: 988, searchStates: 0, expansions: 0,
+                waypointsPlanned: 5, replans: 0, dashesPressed: 0 }] },
+        'r8-solve-3': { pre: 'b45dd8f1ad52a3a482c0c4c1a12da15d', snapshots: 27, work: [
+            { shouldStop: 0, ticks: 245, previews: 1, previewStates: 245, searchStates: 0, expansions: 0,
+                waypointsPlanned: 6, replans: 0, dashesPressed: 0 }] },
+    };
+    /** A hook that peeks at EVERY call: the pre-TC2 bytes' md5, every snapshot's `frame` (with its tree), the finals. */
+    function streamOf() {
+        const pre = createHash('md5');
+        const frames = [];
+        const finals = [];
+        let snapshots = 0;
+        const hook = (site, peek) => {
+            const x = peek();
+            if (x !== null) {
+                snapshots += 1;
+                const { frame, ...rest } = x;
+                pre.update(JSON.stringify(rest));
+                pre.update('\n');
+                frames.push({ site, has: Object.hasOwn(x, 'frame'), frame, tree: x.tree, segment: x.segment.index });
+            }
+            if (site === 'done') finals.push(peek());
+        };
+        return { hook, frames, finals, digest: () => pre.digest('hex'), count: () => snapshots };
+    }
+    const runs = new Map();
+    const runOf = async (s) => {
+        if (!runs.has(s.tape)) {
+            const entered = frameEntered();
+            const off = await solveRk(s);
+            const enteredOff = frameEntered() - entered;
+            const st = streamOf();
+            const on = await solveRk(s, st.hook);
+            runs.set(s.tape, { off, on, st, enteredOff, enteredOn: frameEntered() - entered - enteredOff,
+                pre: st.digest() });
+        }
+        return runs.get(s.tape);
+    };
+    const tileOf = (p) => [Math.floor(p.x / PROGRESS_TILE), Math.floor(p.y / PROGRESS_TILE)];
+
+    for (const s of RK_SOLVES.slice(0, 2)) {
+        it(`⛓⛓⛓ ${s.what}: the answer, shouldStop, the asks and the work are W0's, hooked and unhooked; unhooked, no frame is read`, async () => {
+            const { off, on, st, enteredOff, enteredOn } = await runOf(s);
+            expect(enteredOff).toBe(0);
+            expect(enteredOn).toBeGreaterThan(0);
+            expect(off.ok && on.ok).toBe(true);
+            expect(digest(on)).toBe(digest(off));
+            expect([off.shouldStops, on.shouldStops]).toEqual([s.shouldStop, s.shouldStop]);
+            expect(st.finals.map((x) => x.budget.asks)).toEqual(s.asks);
+            expect(st.finals.map((x) => x.budget.work)).toEqual(TC2[s.tape].work);
+            expect(activeProgress).toBe(null);
+        }, 600_000);
+    }
+
+    for (const s of RK_SOLVES) {
+        it(`⛓⛓⛓ ${s.what}: every pre-TC2 byte of every snapshot is W0's; \`frame\` is null or ONE object of the declared shape`, async () => {
+            const { st, pre } = await runOf(s);
+            expect([st.count(), pre]).toEqual([TC2[s.tape].snapshots, TC2[s.tape].pre]);
+            expect(st.finals.map((x) => x.budget.work)).toEqual(TC2[s.tape].work);
+            for (const { has, frame, tree } of st.frames) {
+                expect(has).toBe(true);
+                if (frame === null) continue;
+                expect(Array.isArray(frame)).toBe(false);
+                expect(Object.keys(frame)).toEqual(['key', 'target', 'stance', 'danger']);
+                const node = nodesOf(tree).find((n) => n.key === frame.key);
+                expect([frame.key, node?.active]).toEqual([frame.key, true]);
+                expect(frame.target === null || (typeof frame.target === 'string' && frame.target.length < 80)).toBe(true);
+                for (const cell of [frame.stance, frame.danger?.at ?? null]) {
+                    if (cell === null) continue;
+                    expect(cell.length).toBe(2);
+                    expect(cell.every(Number.isInteger)).toBe(true);
+                }
+                if (frame.danger !== null) {
+                    expect(Object.keys(frame.danger)).toEqual(['source', 'tick', 'kind', 'at']);
+                    expect(['forecast', 'volume', 'phase']).toContain(frame.danger.kind);
+                    expect(typeof frame.danger.source).toBe('string');
+                    expect(Number.isInteger(frame.danger.tick)).toBe(true);
+                }
+            }
+            // a closed segment has no open frame
+            expect(st.finals.every((x) => x.frame === null)).toBe(true);
+        }, 600_000);
+    }
+
+    it('⛓⛓⛓ L40\'s kill rung: the frame\'s body is a body of the room, its stance a walkable cell, its danger the trace\'s', async () => {
+        const s = RK_SOLVES[1];
+        const { on, st } = await runOf(s);
+        const kill = st.frames.filter((x) => x.frame?.key.endsWith('/climb/rung:kill/arm:chaser'));
+        expect(kill.length).toBeGreaterThan(0);
+        const row = on.value.out.trace.rows.find((r) => r.strategy?.rung === 'kill' && r.strategy.arm === 'chaser');
+        const run = createRunForStaging(stagingOf(s.tape), SOURCE);
+        const room = new Set((run.world.combat?.enemies ?? []).map((e) => `${e.tag}@${e.x},${e.y}`));
+        for (const { frame } of kill) {
+            expect(room.has(frame.target)).toBe(true);
+            expect(frame.target).toBe(row.strategy.target);
+            expect(frame.stance).toEqual(tileOf(row.strategy.stance));
+            expect(isWalkableTile(run.world, frame.stance[0], frame.stance[1], null, { lattice: PROGRESS_TILE })).toBe(true);
+            expect(frame.danger.source).toBe(row.obstacle.id);
+            expect(frame.danger.kind).toBe('forecast');
+        }
+        // the rungs below it carry the climb's danger and no body of their own
+        const below = st.frames.filter((x) => /\/climb\/rung:(?:avoid|pull|time|bait)$/.test(x.frame?.key ?? ''));
+        expect(below.length).toBeGreaterThan(0);
+        expect(below.every((x) => x.frame.target === null && x.frame.danger.source === row.obstacle.id)).toBe(true);
+    }, 600_000);
+
+    it('⛓⛓ L18\'s press arm: each frame is a strike the record kept (its body, its cell), read and not re-derived', async () => {
+        const { on, st } = await runOf(RK_SOLVES[0]);
+        const press = st.frames.filter((x) => x.frame?.key.endsWith('/verb:kill/arm:press'));
+        expect(press.length).toBeGreaterThan(0);
+        const rec = on.value.out.records.find((r) => r.arm === 'press');
+        const kept = new Set(rec.cycles.map((c) => JSON.stringify([c.body, tileOf(c.cell)])));
+        for (const { frame } of press) {
+            expect(kept.has(JSON.stringify([frame.target, frame.stance]))).toBe(true);
+            expect(frame.danger).toBe(null);
+        }
+        // every kept strike was shown, in the record's order (the last segment's stream is the record's run)
+        const last = press.filter((x) => x.segment === 2).map((x) => JSON.stringify([x.frame.target, x.frame.stance]));
+        const shown = last.filter((k, i) => i === 0 || k !== last[i - 1]);
+        const order = rec.cycles.map((c) => JSON.stringify([c.body, tileOf(c.cell)]))
+            .filter((k, i, a) => i === 0 || k !== a[i - 1]);
+        expect(shown).toEqual(order);
+    }, 600_000);
+
+    it('⛓⛓ the danger\'s kind is read off the source\'s own fields', () => {
+        expect(dangerKindOf({ kind: 'hazard', id: 'lavachain@1,2', phase: { tag: 'lavachain' } })).toBe('phase');
+        expect(dangerKindOf({ kind: 'hazard', id: 'spinningaxe@1,2', axe: { cx: 1 } })).toBe('phase');
+        for (const k of ['arrow', 'chaser', 'spinner', 'spit', 'bomb']) expect(dangerKindOf({ kind: k })).toBe('forecast');
+        for (const k of ['hazard', 'enemy', 'crusher', 'terrain', 'pit', 'danger']) expect(dangerKindOf({ kind: k })).toBe('volume');
+        expect(dangerKindOf(null)).toBe(null);
+        // ⛓ every source kind `dangerMap.js` writes is one of those
+        const dm = readFileSync(join(HERE, 'dangerMap.js'), 'utf8');
+        const kinds = new Set([...dm.matchAll(/\bkind: '([a-z-]+)'/g)].map((m) => m[1]));
+        expect([...kinds].sort()).toEqual(['arrow', 'bomb', 'chaser', 'crusher', 'danger', 'enemy', 'hazard', 'pit',
+            'spinner', 'spit', 'terrain']);
+    });
+
+    it('⛓⛓ only an install reaches a frame: every solverBot site is one guarded line, and the setter reads no deadline', () => {
+        const bot = readFileSync(join(HERE, 'solverBot.js'), 'utf8');
+        const lines = bot.split('\n').filter((l) => /\bprogressFrame\(/.test(l));
+        expect(lines.length).toBe(6);
+        expect(lines.every((l) => /^\s*if \(activeProgress !== null\) progressFrame\(\{[^}]*\}\); \/\/ ⛓ TC2/.test(l))).toBe(true);
+        expect(bot).not.toMatch(/\bframeEntered\b|\bdangerKindOf\b/);
+        const own = readFileSync(join(HERE, 'solveProgress.js'), 'utf8');
+        const body = own.slice(own.indexOf('let frameEntries'), own.indexOf('// ── the snapshot'));
+        expect(body.length).toBeGreaterThan(500);
+        expect(body).not.toMatch(/shouldStop|activeDeadline|performance|Date\.|emit\(|work\(|dangerAt|probe\w*\(/);
     });
 });

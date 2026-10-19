@@ -150,10 +150,11 @@ function capturingService(game, perturb = (rows) => rows, editPlan = null) {
     const seen = [];
     return {
         seen,
-        start(request) {
+        start(request, opts) {
             const h = inner.start(request);
             if (h.result.ok && editPlan) h.result.plan = editPlan(h.result.plan);
-            seen.push({ request, result: h.result });
+            // ⛓ RETRY ATTEMPT — what the playback TOLD the service this start is (`opts.attempt`)
+            seen.push({ request, result: h.result, attempt: opts?.attempt });
             if (h.result.ok) {
                 game.drainRows = perturb(h.result.plan.expected.map((r, t) => ({ t, level: r.level, x: r.x, y: r.y })),
                     seen.length - 1);
@@ -637,11 +638,11 @@ const cutAnswer = (pass) => ({ ok: false, kind: 'refusal', pass, message: CUT_MS
 function scriptSolves(e, script) {
     const inner = e.service.start;
     let n = 0;
-    e.service.start = (request) => {
+    e.service.start = (request, opts) => {
         n += 1;
         const step = script[n];
-        if (!step) return inner(request);
-        e.service.seen.push({ request, scripted: step });
+        if (!step) return inner(request, opts);
+        e.service.seen.push({ request, scripted: step, attempt: opts?.attempt });
         const names = (request.passes ?? ANYTIME_PASSES).map((p) => p.pass);
         const settle = (result, answered) => ({ settled: true, started: true, startedAt: 0, result, provisional: result, answered,
             passes: result.passes ?? [], cancel() {} });
@@ -669,8 +670,8 @@ function editingService(game, edit) {
     const inner = capturingService(game);
     return {
         seen: inner.seen,
-        start(request) {
-            const h = inner.start(request);
+        start(request, opts) {
+            const h = inner.start(request, opts);
             if (h.result.ok) edit(h.result.plan, inner.seen.length - 1);
             return h;
         },
@@ -718,6 +719,21 @@ describe('⛓ ANYTIME / O2 / O3 → DETERMINISTIC BUDGET — a solve cut at its 
         expect(e.service.seen[1].request.passes.map((p) => p.pass)).toEqual(['dashless', 'full']);
         expect(e.service.seen[1].request.budgetWork).toBe(R);
         expect(e.notes.some((n) => new RegExp(`solving again, the room held… \\(budget ${R} work units, retry 1\\)`).test(n ?? ''))).toBe(true);
+    });
+
+    it('⛓ RETRY ATTEMPT — the playback TELLS the service which attempt each start is: the first as retry 0, the held retry as retry 1 with both budgets (metadata: the request is not where it rides)', () => {
+        const e = engineOver(A);
+        scriptSolves(e, { 1: 'cut', 2: 'cut' });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.failures.length > 0, 80000);
+        expect(e.service.seen.map((s) => s.attempt)).toEqual([
+            { retry: 0, budgets: [SOLVER_BUDGET_WORK] }, { retry: 1, budgets: [SOLVER_BUDGET_WORK, R] }]);
+        for (const s of e.service.seen) {
+            expect(Object.keys(s.request)).not.toContain('attempt');
+            expect(Object.keys(s.request)).not.toContain('progressAttempt');
+        }
+        // a copy each time: the playback's own `budgets` growing later does not rewrite what an earlier start was told
+        expect(e.service.seen[0].attempt.budgets).toEqual([SOLVER_BUDGET_WORK]);
     });
 
     it('the retry RESUMES at the first unanswered pass: a dashless DECLINE, full cut → the retry asks FULL only', () => {

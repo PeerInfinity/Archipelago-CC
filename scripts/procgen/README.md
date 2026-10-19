@@ -22,9 +22,9 @@ byte-deterministic. They share these conventions:
   | code | outcome | when |
   |---|---|---|
   | 0 | `ok` | |
-  | 1 | `usage` | bad or unknown flag / value, missing or unknown subcommand, a step without `-i` — refused before any work |
+  | 1 | `usage` | bad or unknown flag / value (a non-integer `--seed`, `--quota maze=x`, a flag with no value), a substrate that is not registered or that the driver's layout cannot place, missing or unknown subcommand, a step without `-i` — refused before any work |
   | 2 | `oracle_mismatch` | the world was built and its outputs written, but the sphere oracle disagrees with the plan (`sphere-step` compile/run/append, `dump-sphere-growth`). This was exit 1 before 2026-10-18 |
-  | 3 | `input` | an input file (`-i`, `--source`, `--params`, `--sphere-log`, `--atlas`, `--jta-dataset-file`) is missing, is not JSON, or is an envelope of another kind / a newer version |
+  | 3 | `input` | an input file (`-i`, `--config`, `--source`, `--params`, `--sphere-log`, `--atlas`, `--jta-dataset-file`) is missing, is not JSON, fails its schema (`--config`), or is an envelope of another kind / a newer version |
   | 4 | `internal` | anything else thrown while the pipeline ran |
 
   A crash while a module is still loading exits 1 (Node owns that exit).
@@ -34,7 +34,24 @@ byte-deterministic. They share these conventions:
   `error` (`{message}` or null), `completed` / `next` (step names, step
   drivers only), `outputs` (`envelope` / `rules` / `dump` → absolute paths, or
   `<stdout>`), `oracle` (`{checked, errors}` where there is an oracle, else
-  null) and `summary` (seed plus the driver's counts).
+  null), `summary` (seed plus the driver's counts) and `config` (the parsed
+  flags after `--config`, or null when the run failed before parsing).
+- **One argv parser** (`cliFlags.js`). Each driver declares the flags it
+  takes as a table keyed by the flag (`'--seed': W.seed`), and `parseFlags`
+  checks every value once: integers are integers, `WxH` is two integers,
+  `id=N` needs both halves, and `--param key=value` turns a plain decimal into
+  a number and leaves anything else a string on every driver. The parse result
+  is the object a dump echoes as its `config`, key order included.
+- **`--config PATH`** reads a JSON object of the same keys the parser
+  produces (a dump's `config` is one; so is a `--json-status` `config`), then
+  applies the flags on top: a flag always wins, a repeatable map flag
+  (`--quota`, `--items`, `--param`) merges into the file's map per id, and a
+  list flag (`--atlas`) appends. Paths inside it resolve against the current
+  directory, like the flags. The file is checked against a schema derived
+  from the driver's own flag table — `--config-schema` prints it (JSON Schema
+  2020-12, each key with its `x-flags` and `default`) — and an unknown key, a
+  wrong type, a missing file or bad JSON exits 3. A dump fed its own `config`
+  rebuilds the same dump.
 - **`--help` (or `-h`)** prints the driver's usage, flag table and the flags
   derived from its parser, then exits 0 without running anything.
 - **Format stamp.** Envelopes open with `kind` (`sphere-envelope`,
@@ -44,11 +61,21 @@ byte-deterministic. They share these conventions:
   another mode's envelope or a newer version by name. An unstamped envelope
   (written before the stamp, or by hand) still loads. The panel's envelope
   download and Load envelope use the same stamp.
-- **One substrate set.** Every driver registers the same substrates
-  (`registerPipelineSubstrates.js`: maze, text_adventure, jta, bounce,
-  runner, omsi). Whether a substrate fits a given driver is decided by the
-  driver: a zone substrate on the grid-growth driver is refused by name, not
-  reported as "not registered".
+- **One substrate set, read from the registry.** Every driver loads the
+  libraries `frontend/modules/procgenCore/substrateLibraries.js` lists (the
+  same list the matrix generator and the regenerate worker read), so every
+  substrate the app registers can be named, Seedling and noiz2sa included.
+  Loading happens when the run starts, not on `--help`. Whether a substrate
+  fits a given driver is decided by its layout (`pipelineLayoutsOf`: sphere,
+  spiral, grid or topdown): a zone substrate on the grid-growth driver is refused by
+  name, not reported as "not registered".
+- **`list-substrates.js`** prints that registry: one line per substrate
+  (label, layouts, how many capability statements it answers yes, the
+  library that registered it), or with `--json` a `substrate-list` object
+  (`list_version` 1) carrying each entry's `layouts`, `realiser`,
+  `defaultProcgenParams` and every capability statement with its answer.
+  `--layout spiral` keeps the ones a layout can place, `--id ID` picks
+  substrates, and `--json --fields` adds every field the entry declares.
 
 ## dump-grid-growth.js
 
@@ -67,7 +94,7 @@ node scripts/procgen/dump-grid-growth.js \
 
 `--help` lists every flag. Use `--mix id=W` instead of `--quota id=N`
 to drive weighted-mix mode. The script stays headless — substrate
-libraries are imported for the registry side-effects but no UI or
+libraries are imported for their registry entries but no UI or
 state-manager wiring runs.
 
 Output shape:

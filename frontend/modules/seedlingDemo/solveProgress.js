@@ -32,11 +32,15 @@
  *  - ⛓ HAMMER-PHASE RK2 — v2 ADDITIONS (still `v: 2`): the kind `precondition` (a STATE GATE: the run or the world is
  *    not in the state the action needs, whatever the search does), `lastWhy.name` (the thrown error's class, or null),
  *    and rules naming more of the solver's own refusal families (the schema doc's §5, "v2 additions (RK2)").
+ *  - ⛓ HAMMER-PHASE TC2 — v2 ADDITION (still `v: 2`): `frame`, THE ACTIVE FRAME'S DETAIL — the target, the stance cell
+ *    and the danger blocking the corridor, for the innermost open frame that has them, overwritten as the path moves
+ *    (never a list). Each value is one the solver had already computed (a climb's `hit`, a rung row's `target` /
+ *    `stance`, a verb's obstacle and stance, the press arm's strike); `progressFrame` only copies it.
  */
 
 /**
  * The snapshot's schema version (`v`). ⛓ RK: 2 — `tree.rejectionKinds` and `lastWhy` (the schema doc's §5). ⛓ RK2's
- * additions (`precondition`, `lastWhy.name`) are additive within 2: no consumer gates on `v`.
+ * additions (`precondition`, `lastWhy.name`) and ⛓ TC2's (`frame`) are additive within 2: no consumer gates on `v`.
  */
 export const SOLVE_PROGRESS_VERSION = 2;
 
@@ -340,7 +344,7 @@ export function progressEnter(key, role, label) {
     if (seg === null || seg.stack.length === 0) return null;
     const node = childOf(parentOf(seg), key, role, label);
     node.attempts += 1;
-    const frame = { node, cursor: null, rung: null, lastRefused: null };
+    const frame = { node, cursor: null, rung: null, lastRefused: null, detail: null };
     seg.stack.push(frame);
     emit(p, role);
     return frame;
@@ -412,6 +416,7 @@ export function progressRung(rung) {
     node.attempts += 1;
     f.rung = node;
     f.cursor = node;
+    clearRungDetail(f);
     emit(p, 'rung');
 }
 
@@ -434,6 +439,12 @@ export function progressRow(rung, refused, extra) {
     if (f.rung === null || f.rung.label !== rung) {
         f.rung = childOf(f.node, `rung:${rung}`, 'rung', rung);
         f.rung.attempts += 1;
+        clearRungDetail(f);
+    }
+    // ⛓ TC2 — the row's own `target` / `stance` (the rung wrote them on its trace row) are the climb's frame detail
+    if (extra && (typeof extra.target === 'string' || extra.stance)) {
+        noteDetail(f, { ...(typeof extra.target === 'string' ? { target: extra.target } : {}),
+            ...(extra.stance ? { stance: extra.stance } : {}) });
     }
     if (extra && typeof extra.arm === 'string') {
         f.cursor = childOf(f.rung, `arm:${extra.arm}`, 'arm', extra.arm);
@@ -593,7 +604,7 @@ export function progressSegment(name, run, fn) {
     root.attempts = 1;
     const seg = {
         name: String(name), index: p.segments, level: run?.level ?? null, outcome: 'running',
-        root, stack: [{ node: root, cursor: null, rung: null, lastRefused: null }], goal: null,
+        root, stack: [{ node: root, cursor: null, rung: null, lastRefused: null, detail: null }], goal: null,
         tiles: new Map(), tileLevel: null,
         asks: {}, work: { shouldStop: 0, ticks: 0, previews: 0, previewStates: 0, searchStates: 0, expansions: 0 },
         readers: null, lastWhy: null, lastSource: null,
@@ -621,6 +632,89 @@ export function progressSegment(name, run, fn) {
 export function progressReaders(readers) {
     const seg = activeProgress.seg;
     if (seg !== null && seg.readers === null) seg.readers = readers;
+}
+
+// ── the active frame (⛓ TC2) ─────────────────────────────────────────────
+
+/** How many times `progressFrame` was entered in this process — the gate's "unhooked, it never runs" counter. */
+let frameEntries = 0;
+export const frameEntered = () => frameEntries;
+
+/** A position in px → its tile on the tile map (`[col, row]`, `PROGRESS_TILE`), or null. */
+function tileOf(at) {
+    if (at === null || at === undefined || !Number.isFinite(at.x) || !Number.isFinite(at.y)) return null;
+    return [Math.floor(at.x / PROGRESS_TILE), Math.floor(at.y / PROGRESS_TILE)];
+}
+
+/**
+ * ⛓ TC2 — the danger's KIND, read off the probe's first source (the one the trace's `obstacle.id` names), by its
+ * own fields: `phase` — a chain's / beam's rect or an axe's blade AT THIS TICK (`dangerMap.hazardDanger` sets
+ * `phase` / `axe`); `forecast` — a body stepped or carried to the sample's tick (an arrow, a chaser, a spinner, a
+ * spit, a bomb's blast); `volume` — a static volume (a hazard's census volume, a static enemy, a crusher, a lethal
+ * tile or pit, an armed lane). ⛔ Pure: no probe is asked.
+ */
+const FORECAST_SOURCES = new Set(['arrow', 'chaser', 'spinner', 'spit', 'bomb']);
+export function dangerKindOf(source) {
+    if (source === null || source === undefined) return null;
+    if (source.phase !== undefined || source.axe !== undefined) return 'phase';
+    return FORECAST_SOURCES.has(source.kind) ? 'forecast' : 'volume';
+}
+
+/**
+ * ⛓ TC2 — the bounded summary of a probe's hit (`probeCorridor` / `probeSamples`: `{x, y, tick, sources}`): its
+ * first source's id, the absolute tick and tile it was met at, and its kind. Null for no hit.
+ */
+function dangerOf(hit) {
+    if (hit === null || hit === undefined || typeof hit !== 'object') return null;
+    const s = hit.sources?.[0] ?? null;
+    return { source: s?.id ?? null, tick: Number.isFinite(hit.tick) ? hit.tick : null, kind: dangerKindOf(s),
+        at: tileOf(hit) };
+}
+
+/** Merge `d` (`target` / `stance` / `danger`, each already summarised) into frame `f`'s detail. */
+function noteDetail(f, d) {
+    const was = f.detail ?? { target: null, stance: null, danger: null };
+    f.detail = {
+        target: Object.hasOwn(d, 'target') ? (typeof d.target === 'string' ? d.target : null) : was.target,
+        stance: Object.hasOwn(d, 'stance') ? tileOf(d.stance) : was.stance,
+        danger: Object.hasOwn(d, 'danger') ? d.danger : was.danger,
+    };
+}
+
+/** A climb's cursor moved to another rung: the previous rung's target and stance are not this one's. */
+function clearRungDetail(f) {
+    if (f.detail !== null) f.detail = { target: null, stance: null, danger: f.detail.danger };
+}
+
+/**
+ * ⛓ TC2 — the open frame on top of the stack has this DETAIL, already computed by the solver: `target` (a body or
+ * obstacle id), `stance` (a position in px; kept as its tile), `danger` (a probe's hit; kept as `dangerOf`'s bounded
+ * summary). Only the keys present are written. ⛔ EMIT-ONLY: no hook call, no ask, no work unit; reached only behind
+ * `activeProgress !== null`. Outside a segment it records nothing.
+ *
+ * @param {{target?: ?string, stance?: ?{x: number, y: number}, danger?: ?object}} d
+ */
+export function progressFrame(d) {
+    frameEntries += 1;
+    const seg = activeProgress.seg;
+    if (seg === null || seg.stack.length === 0) return;
+    noteDetail(top(seg), Object.hasOwn(d, 'danger') ? { ...d, danger: dangerOf(d.danger) } : d);
+}
+
+/**
+ * The snapshot's `frame`: the INNERMOST open frame that carries detail — its active node (a climb's cursor: the rung
+ * or arm on), and that detail — or null. ONE object, recomputed at each peek, never a list.
+ */
+function frameOf(seg) {
+    for (let i = seg.stack.length - 1; i >= 0; i -= 1) {
+        const f = seg.stack[i];
+        if (f.detail === null) continue;
+        const d = f.detail;
+        return { key: (f.cursor ?? f.node).key, target: d.target,
+            stance: d.stance === null ? null : [d.stance[0], d.stance[1]],
+            danger: d.danger === null ? null : { ...d.danger, at: d.danger.at === null ? null : [...d.danger.at] } };
+    }
+    return null;
 }
 
 // ── the snapshot ───────────────────────────────────────────────────────
@@ -658,6 +752,7 @@ function snapshotOf(p) {
         tiles: t === null ? null : { level: t.level, tile: PROGRESS_TILE, cols: t.cols, rows: t.rows, cells },
         budget: { asks: { ...seg.asks }, work: { ...seg.work, ...counted } },
         lastWhy: seg.lastWhy === null ? null : { ...seg.lastWhy },
+        frame: frameOf(seg),
         ...(p.beat.count > 0 ? { heartbeat: { at: p.beat.at, count: p.beat.count } } : {}),
     };
 }

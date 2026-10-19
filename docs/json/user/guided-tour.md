@@ -1,6 +1,6 @@
 # Guided Tour
 
-Ten minutes, nothing to install, no server to set up — everything below runs in the [live demo](https://peerinfinity.github.io/Archipelago-CC/) in your browser. (New to Archipelago itself? Read the [Introduction to Archipelago](./introduction-to-archipelago.md) first; this tour assumes the basics.)
+Ten minutes, nothing to install, no server to set up — everything below runs in the [live demo](https://peerinfinity.github.io/Archipelago-CC/) in your browser. (New to Archipelago itself? Read the [Introduction to Archipelago](../intro/introduction-to-archipelago.md) first; this tour assumes the basics.)
 
 One warning before you start: the app opens with a *lot* of panels. That's normal — it's a workbench, and this tour only uses a handful of tabs. Ignore the rest; nothing breaks if you never touch them. If you ever rearrange things into a mess, the **JSON** panel's *Reset Default Mode* button restores the default layout.
 
