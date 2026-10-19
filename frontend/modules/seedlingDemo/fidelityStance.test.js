@@ -37,7 +37,6 @@ import { SolverRefusal, solveSegment } from './solverBot.js';
 import { canCross } from './seedlingCanCross.js';
 import { chestStanceBand } from './chest.js';
 import { HITBOX } from './playerPhysicsV1.js';
-import { withContactFidelity } from './contactFidelity.js';
 import {
     L48_LOCK, STANCE_WITNESSES, stanceStaging,
 } from '../../../scripts/procgen/plan-seedling-stance-witness.mjs';
@@ -87,11 +86,10 @@ describe('fidelity STANCE — D2: the chest stance on a half tile', () => {
         '%s: the route step solves with ONE chest record, on the 8 px lattice (STANCE_REENTRY)',
         async (name, id) => {
             const { run, staging } = await runFor(name);
-            // ⛓ fidelity wave-16 harvest: the committed tape was recorded with every ice waypoint parked on; with
-            // `waypointSlide` ON (⚖ default since 2026-10-14) the solver walks L46/L48's ice shorter (game-witnessed in
-            // `fidelityWaypointSlide`), so this STANCE row pins the walk the tape recorded.
-            const out = withContactFidelity({ waypointSlide: false },
-                () => solveSegment({ run, goals: witness(name).goals, name, boot: staging.boot }));
+            // ⛓ seedling-fidelity-interims (2026-10-19): the tape is re-recorded at the defaults (`waypointSlide` ON, the
+            // ice walked shorter) and game-checked, so this row runs the defaults (it pinned the slide OFF since the
+            // wave-16 harvest, when the tape still walked the ice parked).
+            const out = solveSegment({ run, goals: witness(name).goals, name, boot: staging.boot });
             expect(out.records.filter((r) => r.strategy === 'chest').map((r) => r.chest.id)).toEqual([id]);
             expect(run.ledger('chestOpens').map((c) => c.id)).toEqual([id]);
             expect(out.fineLatticeWalks.some((f) => /^STANCE_REENTRY chest\(/.test(f.refused))).toBe(true);
@@ -117,9 +115,9 @@ describe('fidelity STANCE — D2: the keylock stance, both states', () => {
     it('OPEN (flag {48,1} cleared): the build has no lock and the same arrival solves into L47', async () => {
         const { run, staging } = await runFor('stance-l48-keylock-open');
         expect(run.world.activators.map((a) => a.id)).not.toContain(L48_LOCK.id);
-        // ⛓ fidelity wave-16 harvest: the tape's ice walk, as above (`waypointSlide` OFF for this row).
-        const out = withContactFidelity({ waypointSlide: false }, () => solveSegment({ run,
-            goals: witness('stance-l48-keylock-open').goals, name: 'stance-l48-open', boot: staging.boot }));
+        // ⛓ seedling-fidelity-interims (2026-10-19): the tape's ice walk at the defaults, as above.
+        const out = solveSegment({ run,
+            goals: witness('stance-l48-keylock-open').goals, name: 'stance-l48-open', boot: staging.boot });
         expect(run.level).toBe(47);
         expect(out.perTick.length).toBe(tape('stance-l48-keylock-open').tick_count);
     });

@@ -1,0 +1,2 @@
+failed /home/user/Archipelago-CC/scripts/procgen/seedlingConstantsCensus.test.js :: the mutants — each in a temp copy of the closure (b) PREDICTED GREEN: a new literal inside a cosmetic table
+failed /home/user/Archipelago-CC/scripts/procgen/seedlingSolverSurface.test.js :: the committed contract equals a fresh census (i) every static row's files and site counts match

@@ -626,6 +626,17 @@ describe('hammer-phase RK — progressKind: the solver\'s own words, read on the
                 + 'certified clean (stall 3 at sample 5, the dash chain 2 t after the resume) was HIT on the run at t40 '
                 + 'by axe@64,32 — the run bills what the certificate priced clean, so it is not walked on (driven '
                 + 't30..t41).', { obstacle: { kind: 'danger', id: 'axe@64,32' } }), 'danger'],
+            // axePricedCrossing — the forced-hit rung's reason with the axe certificate's clause (`AXEPRICED, …`)
+            ...['the corridor is hit at every phase (52 member(s) over 1 family, fewest contact samples 1), and no '
+                + 'crossing was admitted: stall 2 at sample 14 (walk): the crossing dies on the fork at t81 (lava, after '
+                + 'spinningaxe:spinningaxe@256,144 hit it at t48)',
+            'the corridor entered 31 tick(s) after the doorstep (chain+6) crosses free of blade contact in its preview — '
+                + 'a gap exists, so no hit is forced',
+            '30 of the 52 member(s) were priced before the deadline (`axe-dodge`) — a certificate that gave up is not one']
+                .map((tail) => ['axePricedCrossing', { rung: 'forced-hit', why: 'no forced hit is proven from (296.0,104.0): '
+                    + '1296 prefix(es) of 2 tick(s) are still hitless (first [· ·]), and depth 3 needs 46656 more fork '
+                    + 'step(s) than the budget\'s 668 — a search that gave up is not a proof (1332 fork step(s)); and by the '
+                    + `axe's phase certificate (AXEPRICED, 22 preview(s)): ${tail}` }, 'exhausted']),
             // arrowLaneCrossing — the ARMED lane's refusal (`ARROWLANE —`)
             ['arrowLaneCrossing', refusal('solverBot(t) reach-exit (1,2)->L3: ARROWLANE — the corridor crosses an '
                 + 'ARMED lane (separated: arrowtrap@16,32; arrows are not dodged, they are billed) and the crossing is '
@@ -651,7 +662,7 @@ describe('hammer-phase RK — progressKind: the solver\'s own words, read on the
             ['sealDoorApproach', refusal('x: solid:finaldoor selects \'approach\', which is NOT REGISTERED — no '
                 + 'executor clears this flag yet', { obstacle: { kind: 'clear-tag', reason: 'no-verb' } }), 'unmodelled'],
         ];
-        for (const sw of ['axeTimingRung', 'arrowLaneCrossing', 'sealDoorApproach']) {
+        for (const sw of ['axeTimingRung', 'arrowLaneCrossing', 'sealDoorApproach', 'axePricedCrossing']) {
             expect(Object.hasOwn(CONTACT_FIDELITY, sw)).toBe(true);
             const rows = CORPUS.filter((c) => c[0] === sw);
             expect(rows.length).toBeGreaterThan(0);

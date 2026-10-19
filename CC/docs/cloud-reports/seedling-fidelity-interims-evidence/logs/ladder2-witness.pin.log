@@ -1,0 +1,11 @@
+PASS: ladder2-l59-grenade: the model replays it into L67 — 144 observations, ends {"level":67,"x":216,"y":120}
+PASS: ladder2-l59-grenade: the plan needs no DODGE row — the exact pricing alone certifies it (no DODGE row)
+PASS: ladder2-l59-grenade: the walk ARMS grenade@112,112 and is not inside its blast — armed on update 68; the walk leaves before the blast
+PASS: the committed ladder2-l59-grenade is what this script produces today — byte-identical
+PASS: ladder2-l104-beam: the model replays it into L105 — 279 observations, ends {"level":105,"x":216,"y":72}
+PASS: ladder2-l104-beam: the plan is the DODGE rung's PHASE arm (PHASE arm: stall 15 t at walk-offset 88 (partial: the walk then meets jellyfish@72,40))
+PASS: ladder2-l104-beam: the walk enters beamtower@16,56's census volume and the beam never touches it — 56 observation(s) inside the volume, 0 contact(s)
+PASS: the committed ladder2-l104-beam is what this script produces today — byte-identical
+
+all checks green
+exit 0 at 00:44:05

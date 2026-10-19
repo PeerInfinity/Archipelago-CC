@@ -1,0 +1,12 @@
+FAIL: both switches OFF: the staging REFUSES on the kill arm's dwell (the survey's step-50 text) — solverBot(survey-step-50) reach-exit (224,160)->L32: the danger map forbids (72.65027025319233,66.46403942178905) — chaser:bobsoldier@48,80 (inside leash 80 (d=7.1), box grown 0.8 px/tick x 0 + pad 16
+PASS: bobsoldier2-l30-dash-stance: the model replays it — no hit, still in L30, bobsoldier@48,80 ALIVE on 2 hits at the end — hits 0, level 30, body (74.59,73.76) h2
+PASS: bobsoldier2-l30-dash-stance: the tape round-trips through the tape format
+wrote frontend/modules/seedlingDemo/fixtures/tapes/bobsoldier2-l30-dash-stance.json
+PASS: both switches ON: the staging SOLVES
+FAIL: the plan kills the BobSoldier by the chaser arm, from the stance (88,56), inside the forecast's bound — dwell 0/10 t, undefined strike(s)
+PASS: bobsoldier2-l30-torch: the model replays it — zero hits, the body killed, the crossing into L32 — hits 0, ends {"level":32,"x":80,"y":128}
+PASS: bobsoldier2-l30-torch: the tape round-trips through the tape format
+wrote frontend/modules/seedlingDemo/fixtures/tapes/bobsoldier2-l30-torch.json
+
+2 CHECK(S) FAILED
+exit 1 at 00:43:53

@@ -1,0 +1,25 @@
+# box lock: TAKEN by probe-seedling-divergence-sweep.mjs (browser, pid 6190) — head 3ce9e2688, 1 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+INFO: mode bare: 2 legs in 2 page(s) (of 851 legs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 1: collideLinePointsExact,wallFlyerSwordHits,drillLive,bobSoldierLive,wallFlyerKill,wallFlyerShieldBump,darkTrapLight,spearingWindow,fallBurnsPress,bulbLive,baitForecast,forcedHits,bombPusherLive,totemShotBlastInt,rebootShake,strikeIframeLapse,fallRockPostFall,forecastSpeedByTerrain,buttonFallReleaseStep,waypointSlide,lavaChainPlayerHit,ceremonyShove,flyerLive,beamTowerDrift,beamTowerBeamHit,spinningAxePlayerHit,sealDoorApproach,axeTimingRung,axeGateTransit,statueTalkRange
+AXE_DODGE: page 1: setting default (model default on)
+UPGRADE-WINDOW: page 1: setting 85
+DASH_ONLY_WINDOW: page 1: setting default
+DASH_SHAPE: page 1: setting default
+INFO: page 1 booted in 23 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 378 start (page 1, pageLeg 0)
+ROW {"id":378,"key":"level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144","mode":"bare","producer":"solver","page":1,"pageLeg":0,"level":40,"arrive":[928,96],"goal":"Level 040 - Totem Part 64,144","kind":"location","sphere":"5.5","before":{"slots":[],"has":[]},"landed":{"level":40,"x":928,"y":96,"jumps":1,"replaced":null},"rngSplitAtArrival":{"echo":false,"latch":null,"begin":null},"answer":{"ok":true,"action":"force-re-arrival"},"end":"failed","failed":"the solver declined Level 040 - Totem Part 64,144 in level 40 (refusal): solverBot: no REACHABLE stance inside buttonroom@1…
+INFO: page 1: 2 page error(s), ~2 swaps
+RECYCLE: page 1: launch 64 ms, newPage 43 ms, pageClose 16 ms, browserClose 133 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 2: collideLinePointsExact,wallFlyerSwordHits,drillLive,bobSoldierLive,wallFlyerKill,wallFlyerShieldBump,darkTrapLight,spearingWindow,fallBurnsPress,bulbLive,baitForecast,forcedHits,bombPusherLive,totemShotBlastInt,rebootShake,strikeIframeLapse,fallRockPostFall,forecastSpeedByTerrain,buttonFallReleaseStep,waypointSlide,lavaChainPlayerHit,ceremonyShove,flyerLive,beamTowerDrift,beamTowerBeamHit,spinningAxePlayerHit,sealDoorApproach,axeTimingRung,axeGateTransit,statueTalkRange
+AXE_DODGE: page 2: setting default (model default on)
+UPGRADE-WINDOW: page 2: setting 85
+DASH_ONLY_WINDOW: page 2: setting default
+DASH_SHAPE: page 2: setting default
+INFO: page 2 booted in 22 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 381 start (page 2, pageLeg 0)
+ROW {"id":381,"key":"level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144","mode":"bare","producer":"solver","page":2,"pageLeg":0,"level":40,"arrive":[848,16],"goal":"Level 040 - Totem Part 64,144","kind":"location","sphere":"5.5","before":{"slots":[],"has":[]},"landed":{"level":40,"x":848,"y":16,"jumps":1,"replaced":null},"rngSplitAtArrival":{"echo":false,"latch":null,"begin":null},"answer":{"ok":true,"action":"force-re-arrival"},"end":"failed","failed":"the solver declined Level 040 - Totem Part 64,144 in level 40 (refusal): solverBot: no REACHABLE stance inside buttonroom…
+INFO: page 2: 2 page error(s), ~2 swaps
+RECYCLE: page 2: launch 55 ms, newPage 36 ms, pageClose 13 ms, browserClose 130 ms
+INFO: sweep done
