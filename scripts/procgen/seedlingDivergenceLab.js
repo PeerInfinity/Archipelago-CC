@@ -175,7 +175,9 @@ export async function createLab() {
         return diff;
     }
 
-    async function serveLeg({ leg, budgetMs = 90000, producer = 'solver', nameCut = false, captureRequests = false }) {
+    async function serveLeg({ leg, budgetMs = 90000, producer = 'solver', nameCut = false, captureRequests = false,
+        // ⛓ MEMORY PROBE's split arm (measurement only; off-default rows are stamped `hitSampleMs` by the probe)
+        hitSampleMs = 25 }) {
         const eng = producer === 'walker' ? walkerEngine() : engine;
         st.failed = null;
         st.notes = [];
@@ -208,7 +210,7 @@ export async function createLab() {
             roomHits.samples += 1;
             roomHits.max = Math.max(roomHits.max ?? 0, s.hits);
             hitRec.observe(s, { tape: tapeOf() });
-        }, 25);
+        }, hitSampleMs);
         const answer = eng.walkTo(goal);
         const t0 = performance.now();
         let end = 'timeout';

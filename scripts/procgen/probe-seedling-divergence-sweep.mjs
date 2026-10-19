@@ -67,6 +67,8 @@
  *                        Each sample prints a `MEMPROBE leg <id>` line; the row gets `memory` (`summarizeMemory`: the
  *                        whole leg and its `solving` span) and `memoryProbeMs`; `--memory-out` gets the whole curve,
  *                        one line per leg. The sampler is `seedlingMemoryProbe.js` (bounded: it halves past 1200).
+ *                        `--memory-probe-ms=<ms>,hit-sample-ms=<n>` = the SPLIT ARM: the lab's 25 ms `botStatus` hit
+ *                        sampler runs every <n> ms instead (rows stamped `hitSampleMs`; `roomHits` is coarser there).
  *   --capture-requests=<jsonl>  ⛓ REQUEST CAPTURE (default OFF): append every solve request each leg made, in order, AS THE
  *                        WORKER RECEIVED IT (`seedlingSolveRequestCodec.captureRequest`: no `levelSource`; Map/Set tagged), with
  *                        its pass rows and work units — one line per leg `{id, key, requests}`. The rows are unchanged
@@ -120,7 +122,7 @@ import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { FLASH_PANEL, clickPanelTab, createRoomPlay, slotBlockOf, withSlotBlock } from './seedlingRoomPlay.js';
 import { legSelectors, pickLegs } from './seedling-divergence-legs.mjs';
-import { callDelta, createMemorySampler, formatMemorySample, parseMemoryProbeMs, readGameMemoryInPage, summarizeMemory } from './seedlingMemoryProbe.js';
+import { callDelta, createMemorySampler, formatMemorySample, parseMemoryProbe, readGameMemoryInPage, summarizeMemory } from './seedlingMemoryProbe.js';
 
 argvHelp(import.meta.url);
 
@@ -440,7 +442,7 @@ async function main() {
     // ⛓ REQUEST CAPTURE — empty = off (today's run: no request is serialized)
     const CAPTURE = arg('capture-requests', '');
     // ⛓ MEMORY PROBE — 0 = off (today's run: nothing sampled, nothing wrapped, no row field); parsed before a browser
-    const MEM_PROBE = parseMemoryProbeMs(arg('memory-probe-ms', ''));
+    const { ms: MEM_PROBE, hitSampleMs: HIT_SAMPLE } = parseMemoryProbe(arg('memory-probe-ms', ''));
     const MEM_OUT = arg('memory-out', '');
     const FROM = Number(arg('from', '0'));
     const LIMIT = Number(arg('limit', '100000'));
@@ -517,7 +519,7 @@ async function main() {
         // ⛓ FREEZE LATCH (§5.89) — a throttled (measurement-only) run says so on every row
         if (CPU_THROTTLE) row = { ...row, cpuThrottle: CPU_THROTTLE };
         // ⛓ MEMORY PROBE — a probed (measurement-only) run says so on every row
-        if (MEM_PROBE) row = { ...row, memoryProbeMs: MEM_PROBE };
+        if (MEM_PROBE) row = { ...row, memoryProbeMs: MEM_PROBE, ...(HIT_SAMPLE ? { hitSampleMs: HIT_SAMPLE } : {}) };
         const line = JSON.stringify(stampSolverKnobs(stampBudget(row, LEG_BUDGET), KNOBS));
         console.log(`ROW ${line.length > 600 ? `${line.slice(0, 600)}…` : line}`);
         if (OUT) appendFileSync(OUT, `${line}\n`);
@@ -721,7 +723,8 @@ async function main() {
         if (MEM_PROBE) {
             await memCdp.send('Performance.enable');
             const counted = await page.evaluate(() => window.__div.installCallCounter());
-            console.log(`MEMPROBE: page ${pageNo}: every ${MEM_PROBE} ms (measurement only; rows stamped memoryProbeMs); call counter ${counted ? 'on' : 'NOT installed'}`);
+            console.log(`MEMPROBE: page ${pageNo}: every ${MEM_PROBE} ms (measurement only; rows stamped memoryProbeMs); call counter ${counted ? 'on' : 'NOT installed'}`
+                + `${HIT_SAMPLE ? `; SPLIT ARM: the lab's hit sampler every ${HIT_SAMPLE} ms (not 25; rows stamped hitSampleMs)` : ''}`);
         }
         const granted = [];
         let swaps = 0;
@@ -813,7 +816,7 @@ async function main() {
                 // eslint-disable-next-line no-await-in-loop
                 const r = await page.evaluate((a) => window.__div.serveLeg(a).then((x) => JSON.parse(JSON.stringify(x))),
                     { leg, budgetMs: LEG_BUDGET, producer: PRODUCER, nameCut: LEG_BUDGET !== LEG_BUDGET_MS_DEFAULT,
-                        ...(CAPTURE ? { captureRequests: true } : {}) });
+                        ...(CAPTURE ? { captureRequests: true } : {}), ...(HIT_SAMPLE ? { hitSampleMs: HIT_SAMPLE } : {}) });
                 // ⛓ REQUEST CAPTURE — off the row, into their own file
                 const { requests, ...served } = r;
                 if (CAPTURE) appendFileSync(CAPTURE, `${JSON.stringify({ id: leg.id, key: leg.key ?? null, requests: requests ?? [] })}\n`);

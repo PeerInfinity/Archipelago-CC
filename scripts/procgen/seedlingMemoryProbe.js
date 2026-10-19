@@ -25,7 +25,26 @@ export const MEMORY_PROBE_MIN_MS = 250;
 /** The sampler's default bound on kept samples. */
 export const MEMORY_PROBE_MAX_SAMPLES = 1200;
 
-/** `--memory-probe-ms` → 0 (off, the default) or an interval in ms (≥ MEMORY_PROBE_MIN_MS). Throws by name. */
+/**
+ * `--memory-probe-ms` → `{ms, hitSampleMs}`: `ms` 0 (off, the default) or an interval (≥ MEMORY_PROBE_MIN_MS);
+ * `hitSampleMs` null (the lab's own 25 ms) or the SPLIT ARM's hit-sampler interval, written `<ms>,hit-sample-ms=<n>`
+ * (measurement only: the lab's `botStatus` poll is most of the bridge traffic while a leg waits, so slowing it splits
+ * per-call retention from per-frame retention; every row is stamped `hitSampleMs`). Throws by name.
+ */
+export function parseMemoryProbe(spec) {
+    const [head, ...opts] = String(spec ?? '').split(',').map((x) => x.trim());
+    const ms = parseMemoryProbeMs(head);
+    let hitSampleMs = null;
+    for (const o of opts.filter(Boolean)) {
+        const m = /^hit-sample-ms=(\d+)$/.exec(o);
+        if (!m || Number(m[1]) < 5) throw new Error(`--memory-probe-ms: ${JSON.stringify(o)} is not hit-sample-ms=<ms >= 5>`);
+        hitSampleMs = Number(m[1]);
+    }
+    if (hitSampleMs !== null && !ms) throw new Error('--memory-probe-ms: hit-sample-ms needs the probe on (an interval first)');
+    return { ms, hitSampleMs };
+}
+
+/** `--memory-probe-ms`'s interval → 0 (off, the default) or ms (≥ MEMORY_PROBE_MIN_MS). Throws by name. */
 export function parseMemoryProbeMs(spec) {
     const s = String(spec ?? '').trim();
     if (!s || s === '0') return 0;

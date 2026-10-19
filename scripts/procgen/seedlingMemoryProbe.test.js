@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { MEMORY_PROBE_MIN_MS, callDelta, createMemorySampler, formatMemorySample, parseMemoryProbeMs, readGameMemoryInPage,
+import { MEMORY_PROBE_MIN_MS, callDelta, createMemorySampler, formatMemorySample, parseMemoryProbe, parseMemoryProbeMs, readGameMemoryInPage,
     slope, summarizeMemory } from './seedlingMemoryProbe.js';
 
 describe('seedlingMemoryProbe — parseMemoryProbeMs', () => {
@@ -11,6 +11,17 @@ describe('seedlingMemoryProbe — parseMemoryProbeMs', () => {
         expect(parseMemoryProbeMs(String(MEMORY_PROBE_MIN_MS))).toBe(MEMORY_PROBE_MIN_MS);
         expect(() => parseMemoryProbeMs('100')).toThrow(/--memory-probe-ms=100/);
         expect(() => parseMemoryProbeMs('1.5e3x')).toThrow(/--memory-probe-ms/);
+    });
+});
+
+describe('seedlingMemoryProbe — parseMemoryProbe (the split arm)', () => {
+    it('`<ms>` alone keeps the lab\'s own hit sampler; `<ms>,hit-sample-ms=<n>` is the split arm; bad specs throw', () => {
+        expect(parseMemoryProbe('')).toEqual({ ms: 0, hitSampleMs: null });
+        expect(parseMemoryProbe('2000')).toEqual({ ms: 2000, hitSampleMs: null });
+        expect(parseMemoryProbe('2000,hit-sample-ms=1000')).toEqual({ ms: 2000, hitSampleMs: 1000 });
+        expect(() => parseMemoryProbe('2000,hits=1000')).toThrow(/hit-sample-ms=/);
+        expect(() => parseMemoryProbe('2000,hit-sample-ms=1')).toThrow(/hit-sample-ms=/);
+        expect(() => parseMemoryProbe('0,hit-sample-ms=1000')).toThrow(/needs the probe on/);
     });
 });
 
