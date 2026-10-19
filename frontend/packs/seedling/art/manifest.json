@@ -367,6 +367,31 @@
       "file": "sheets/SnowHill.png",
       "w": 96,
       "h": 64
+    },
+    "ShrumBlue": {
+      "file": "sheets/ShrumBlue.png",
+      "w": 144,
+      "h": 32
+    },
+    "ShrumDark": {
+      "file": "sheets/ShrumDark.png",
+      "w": 144,
+      "h": 48
+    },
+    "Slash": {
+      "file": "sheets/Slash.png",
+      "w": 80,
+      "h": 32
+    },
+    "SlashDark": {
+      "file": "sheets/SlashDark.png",
+      "w": 80,
+      "h": 32
+    },
+    "GhostSword": {
+      "file": "sheets/GhostSword.png",
+      "w": 120,
+      "h": 7
     }
   },
   "sprites": {
@@ -1185,6 +1210,350 @@
         8
       ],
       "as3": "SnowHill.as: Game.sprSnowHill y = -8"
+    },
+    "seedling:player/shrum": {
+      "sheet": "ShrumBlue",
+      "fw": 16,
+      "fh": 16,
+      "frames": 18,
+      "origin": [
+        8,
+        8
+      ],
+      "anims": {
+        "down-walk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "fps": 15
+        },
+        "down-stand": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1
+          ],
+          "fps": 1
+        },
+        "side-walk": {
+          "clock": "fps",
+          "frames": [
+            3,
+            4,
+            5,
+            4
+          ],
+          "fps": 15
+        },
+        "side-stand": {
+          "clock": "fps",
+          "frames": [
+            3,
+            4
+          ],
+          "fps": 1
+        },
+        "up-walk": {
+          "clock": "fps",
+          "frames": [
+            6,
+            7,
+            8,
+            7
+          ],
+          "fps": 15
+        },
+        "up-stand": {
+          "clock": "fps",
+          "frames": [
+            6,
+            7
+          ],
+          "fps": 1
+        },
+        "swim-down-walk": {
+          "clock": "fps",
+          "frames": [
+            9,
+            10,
+            11,
+            10
+          ],
+          "fps": 5
+        },
+        "swim-down-stand": {
+          "clock": "fps",
+          "frames": [
+            9,
+            10
+          ],
+          "fps": 1
+        },
+        "swim-side-walk": {
+          "clock": "fps",
+          "frames": [
+            12,
+            13,
+            14,
+            13
+          ],
+          "fps": 5
+        },
+        "swim-side-stand": {
+          "clock": "fps",
+          "frames": [
+            12,
+            13
+          ],
+          "fps": 1
+        },
+        "swim-up-walk": {
+          "clock": "fps",
+          "frames": [
+            15,
+            16,
+            17,
+            16
+          ],
+          "fps": 5
+        },
+        "swim-up-stand": {
+          "clock": "fps",
+          "frames": [
+            15,
+            16
+          ],
+          "fps": 1
+        }
+      },
+      "as3": "Player.as:35-37 imgShrum → sprShrum; Player.as:383 centerOO; Player.as:635-660 addAnimations (walk fps 15 / swim 5, stand fps 1)"
+    },
+    "seedling:player/shrumDark": {
+      "sheet": "ShrumDark",
+      "fw": 16,
+      "fh": 16,
+      "frames": 27,
+      "origin": [
+        8,
+        8
+      ],
+      "anims": {
+        "down-walk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "fps": 15
+        },
+        "down-stand": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1
+          ],
+          "fps": 1
+        },
+        "side-walk": {
+          "clock": "fps",
+          "frames": [
+            3,
+            4,
+            5,
+            4
+          ],
+          "fps": 15
+        },
+        "side-stand": {
+          "clock": "fps",
+          "frames": [
+            3,
+            4
+          ],
+          "fps": 1
+        },
+        "up-walk": {
+          "clock": "fps",
+          "frames": [
+            6,
+            7,
+            8,
+            7
+          ],
+          "fps": 15
+        },
+        "up-stand": {
+          "clock": "fps",
+          "frames": [
+            6,
+            7
+          ],
+          "fps": 1
+        },
+        "swim-down-walk": {
+          "clock": "fps",
+          "frames": [
+            9,
+            10,
+            11,
+            10
+          ],
+          "fps": 5
+        },
+        "swim-down-stand": {
+          "clock": "fps",
+          "frames": [
+            9,
+            10
+          ],
+          "fps": 1
+        },
+        "swim-side-walk": {
+          "clock": "fps",
+          "frames": [
+            12,
+            13,
+            14,
+            13
+          ],
+          "fps": 5
+        },
+        "swim-side-stand": {
+          "clock": "fps",
+          "frames": [
+            12,
+            13
+          ],
+          "fps": 1
+        },
+        "swim-up-walk": {
+          "clock": "fps",
+          "frames": [
+            15,
+            16,
+            17,
+            16
+          ],
+          "fps": 5
+        },
+        "swim-up-stand": {
+          "clock": "fps",
+          "frames": [
+            15,
+            16
+          ],
+          "fps": 1
+        }
+      },
+      "as3": "Player.as:38-39 sprShrumDark (row 2 = the final scene's \"die\", not drawn); Player.as:383 centerOO; Player.as:635-660 addAnimations (walk fps 15 / swim 5, stand fps 1)"
+    },
+    "seedling:player/slash": {
+      "sheet": "Slash",
+      "fw": 16,
+      "fh": 32,
+      "frames": 5,
+      "origin": [
+        0,
+        16
+      ],
+      "anims": {
+        "slash": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "fps": 30
+        },
+        "slashnarrow": {
+          "clock": "fps",
+          "frames": [
+            1,
+            2,
+            3
+          ],
+          "fps": 20
+        }
+      },
+      "as3": "Player.as:40-41 sprSlash; :390-393 — slash [0..4] at swordSpeed 30, slashnarrow [1,2,3] at swordSpeedDash 20 (Player.as:131-132)"
+    },
+    "seedling:player/slashDark": {
+      "sheet": "SlashDark",
+      "fw": 16,
+      "fh": 32,
+      "frames": 5,
+      "origin": [
+        0,
+        16
+      ],
+      "anims": {
+        "slash": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "fps": 30
+        },
+        "slashnarrow": {
+          "clock": "fps",
+          "frames": [
+            1,
+            2,
+            3
+          ],
+          "fps": 20
+        }
+      },
+      "as3": "Player.as:42-43 sprSlashDark; :394-397 — slash [0..4] at swordSpeed 30, slashnarrow [1,2,3] at swordSpeedDash 20 (Player.as:131-132)"
+    },
+    "seedling:player/ghostSword": {
+      "sheet": "GhostSword",
+      "fw": 24,
+      "fh": 7,
+      "frames": 5,
+      "origin": [
+        0,
+        3.5
+      ],
+      "anims": {
+        "slash": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            2,
+            3,
+            3,
+            4
+          ],
+          "fps": 30
+        },
+        "slashnarrow": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 20
+        }
+      },
+      "as3": "Player.as:44-45 sprGhostSword; :399-405 slash [0,1,2,2,3,3,4] at 30, slashnarrow [0,1,2,3] at 20"
     }
   }
 }
