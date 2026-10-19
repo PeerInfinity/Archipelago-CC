@@ -17966,6 +17966,13 @@ function deriveKillByCeiling(run, body, contacts) {
  *   · the STANCE: a walkable tile centre and a facing whose `spearRect` overlaps the pole's bob-invariant core
  *     (the census rect is the union over the bob, 4 px top and bottom of which the hitbox leaves at some phase) and
  *     no other press responder, with the player box clear of the body, reached by `stanceReaches`.
+ *   · ⛓ housekeep D2 — the SUB-ORDER, and the press in ANOTHER room. With no Spear the Spear is the sub-order the
+ *     route owes (the refusal below says so). It is not the only way to light the pole: the pole boots LIT from its
+ *     cleared tag (`PERSISTENCE_RESPONSE.lightpole` 'light'), and a CROSS-ROOM `ButtonRoom` (`room >= 0`) writes
+ *     that tag from its own level (`ButtonRoom.as:93`, `Game.setPersistence(t, persist, room)`) — the rules' darktrap
+ *     event (`seedlingObstacleEvents.deriveButtonEvents` + `poleKillsOf`), which the solver discharges as a
+ *     `clear-tag` goal in the PRESSER's room (`execCrossRoomPress`). This arm never authors that press (it is
+ *     another room's walk); a pole lit that way is the `wait` branch above on the next build.
  *
  * @returns {{pole, stance?, dir?, wait?, why}|{pole: null, why}}
  */
