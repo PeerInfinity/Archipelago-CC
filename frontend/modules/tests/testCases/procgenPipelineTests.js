@@ -296,6 +296,7 @@ registerTest({
  */
 async function procgenPipelineBounceEditStillOpens(testController) {
     const PRESET = 'shipped:maze-bounce-sphere-mix';
+    const REGION = 'region_3_2';
     try {
         testController.eventBus.publish('ui:activatePanel', { panelId: 'procgenPipelinePanel' });
         const panel = await testController.pollForValue(
@@ -312,8 +313,13 @@ async function procgenPipelineBounceEditStillOpens(testController) {
         const first = await runAll('the preset world compiled');
         testController.reportCondition('Run all compiled the world', !!first?.rulesJson);
         if (!first) return testController.getOverallResult();
-        const region = [...panel._stepState.grow.grid.allRegions()].find((r) => r.substrate === 'bounce');
-        testController.reportCondition(`⛓ premise: a bounce region (${region?.region_id})`, !!region);
+        // ⛓ (l) 2026-10-18 — region_3_2 is the zone whose N exit the editor's
+        //   readout flagged IMPOSSIBLE under the experimental DEFAULTS: a `dj`
+        //   zone, whose spring clears the 520 px gap only under its own physics.
+        const region = [...panel._stepState.grow.grid.allRegions()].find((r) => r.region_id === REGION);
+        testController.reportCondition(`⛓ premise: ${REGION} is a bounce region`, region?.substrate === 'bounce');
+        testController.assertEqual('⛓ premise: …built under the dj physics profile', 'dj',
+            String(region?.playable_payload?.params?.physics?.profile));
         if (!region) return testController.getOverallResult();
         const btn = [...panel._renderRegionEditRow(panel._nodeForRegion(region), region)
             .querySelectorAll('button')].find((b) => b.textContent === 'Edit ▸');
@@ -328,6 +334,11 @@ async function procgenPipelineBounceEditStillOpens(testController) {
         testController.assertEqual('…in pipeline mode (its Save writes back)', 'pipeline', String(editor?._session?.mode));
         testController.assertEqual('no refusal was shown', '', String(panel.warning ?? ''));
         if (!editor) return testController.getOverallResult();
+        const status = await testController.pollForValue(
+            () => editor.rootElement?.querySelector('.bre-status')?.textContent ?? null,
+            'the editor drew its status line', 8000, 50);
+        testController.assertEqual(`⛓⛓ (l) the editor reads ${REGION} as valid under the zone's OWN physics`,
+            '✓ valid', String(status));
         editor._save();
         const saved = await testController.pollForValue(
             () => (panel.message?.startsWith('Saved edits') && !panel._stepState?.compile ? panel.message : null),
@@ -344,9 +355,9 @@ async function procgenPipelineBounceEditStillOpens(testController) {
 
 registerTest({
     id: 'procgen-pipeline-bounce-edit-still-opens',
-    name: 'Procgen Pipeline: Edit ▸ on a bounce region still opens the Bounce Region Editor and its Save reaches the pipeline',
+    name: 'Procgen Pipeline: Edit ▸ on a bounce region still opens the Bounce Region Editor, reads it valid under its own physics, and its Save reaches the pipeline',
     description: 'Preset "Maze + bounce (sphere growth)" → Run all → a bounce region\'s own Edit ▸ → the Bounce '
-               + 'Region Editor holds that region in pipeline mode → its Save → the pipeline wrote it back and '
+               + 'Region Editor holds region_3_2 in pipeline mode and reads it "✓ valid" (the readout derives under the zone\'s dj physics, as the save does) → its Save → the pipeline wrote it back and '
                + 'invalidated 4 → Run all compiles with the oracle clean.',
     testFunction: procgenPipelineBounceEditStillOpens,
     category: 'procgenPipeline',

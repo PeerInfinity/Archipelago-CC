@@ -1500,7 +1500,7 @@
             "id": "procgen-pipeline-bounce-edit-still-opens",
             "enabled": true,
             "category": "procgenPipeline",
-            "_comment": "(k) 2026-10-18 control: the panel door (bounce) beside the new lab route. Maze + bounce (sphere growth) → Run all → a bounce region's Edit ▸ → the Bounce Region Editor holds it in pipeline mode → its own Save → written back, 4 invalidated → Run all, oracle clean. Runs in fast."
+            "_comment": "(k) 2026-10-18 control: the panel door (bounce) beside the new lab route. Maze + bounce (sphere growth) → Run all → region_3_2's Edit ▸ → the Bounce Region Editor holds it in pipeline mode and reads it ✓ valid ((l): the readout derives under the zone's dj physics, the save path's own derive) → its own Save → written back, 4 invalidated → Run all, oracle clean. Runs in fast."
         },
         {
             "id": "quick-launch-button-opens-panel-never-in-layout",

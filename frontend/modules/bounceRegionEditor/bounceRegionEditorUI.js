@@ -40,12 +40,10 @@
 import rawEventBus from '../../app/core/eventBus.js';
 import { renderLevel } from './levelRenderer.js';
 import {
-    generateZoneForSpecs, BOUNCE_LIBRARY_ITEMS,
+    generateZoneForSpecs, BOUNCE_LIBRARY_ITEMS, deriveBounceLevelRules,
 } from '../bounceDemo/bounceDemoLibrary.js';
 import { validateLevel, braidBlueInvariantErrors } from '../bounceDemo/level.js';
-import {
-    deriveAccessRules, deriveBraidAccessRules, formatRule,
-} from '../bounceDemo/deriveRules.js';
+import { formatRule } from '../bounceDemo/deriveRules.js';
 import { resolvePhysicsStamp } from '../bounceDemo/physics.js';
 import { portalSide } from '../bounceDemo/sideExits.js';
 import { bounceStack } from '../bounceDemo/fixtures/bounceStack.js';
@@ -60,7 +58,7 @@ import {
 import { createEditSession, describeOps, group } from '../procgenCore/editCore.js';
 import { bounceEditAdapter } from './bounceEditAdapter.js';
 import { deletePlatformOps, ENTITY_KINDS } from './bounceLevelOps.js';
-import { buildEditedRegion } from './buildEditedRegion.js';
+import { buildEditedRegion, deriveSettingsOf } from './buildEditedRegion.js';
 
 const FIXTURES = {
     bounceStack, easyTower, springGap, fork, fillerClimb,
@@ -339,14 +337,12 @@ export class BounceRegionEditorUI {
         ];
         let ruleLines = [];
         try {
-            // Derive under the editor's effective settings (seeded from the
-            // contract, so initial display matches the generator).
-            const s = this._session?.settings ?? {};
-            const freeArrow = s.freeArrow ?? contract.freeArrow;
-            const braid = (s.mode === 'braid') || !!(contract?.mode === 'braid') || !!freeArrow;
-            const derived = braid
-                ? deriveBraidAccessRules(level, { freeArrow })
-                : deriveAccessRules(level);
+            // ⛓ THE SAVE'S OWN DERIVE, under the SAVE'S settings
+            //   (deriveSettingsOf) — the readout used to derive under the
+            //   experimental DEFAULTS whatever the zone's physics profile, and
+            //   flagged a dj zone's reachable exit IMPOSSIBLE (2026-10-18).
+            const derived = deriveBounceLevelRules(
+                level, deriveSettingsOf(contract, this._session?.settings));
             for (const [id, a] of Object.entries(derived.exits ?? {})) {
                 ruleLines.push(`exit ${id}: ${formatRule(a.minimalSets)}`);
             }
