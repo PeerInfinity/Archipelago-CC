@@ -53,7 +53,7 @@
  * whatever the route delivered: step 211 (L113, FinalDoor, 16 Seals) could never solve.
  */
 
-import { mergeSaveArray } from '../../frontend/modules/seedlingDemo/saveArrayRules.js';
+import { mergeSaveArray, sealLogSlots } from '../../frontend/modules/seedlingDemo/saveArrayRules.js';
 
 /**
  * @param {object} a
@@ -194,14 +194,17 @@ export function deriveStagedGrant({ earlier, pickups, game, latchItems, unpresen
  * in: `keys` the grant's Boss Keys, each counted array the AP adapter's writes for N copies (indices / identities
  * 0..N-1), every one through `saveArrayRules.mergeSaveArray`. `save` is the authority — a committed tape's own
  * arrays are never shortened or reordered, only extended. `keys: false` leaves the keys as `save` holds them (a
- * committed tape's visit: `tapeCoversVisit` already holds its keys to the walk's).
+ * committed tape's visit: `tapeCoversVisit` already holds its keys to the walk's). `sealsRequired` is the world's
+ * `seals_required` (default 16): the seal log fills per `saveArrayRules.sealLogSlots`.
  */
-export function stageGrantSave(save, grant, { keys = true } = {}) {
+export function stageGrantSave(save, grant, { keys = true, sealsRequired } = {}) {
     const out = { totem_parts: [], keys: [], seal_parts: [], ...(save ?? {}) };
     if (!grant) return out;
     if (keys) out.keys = mergeSaveArray('keys', out.keys, grant.keys);
     for (const [name, n] of Object.entries(grant.saveCounts ?? {})) {
-        out[name] = mergeSaveArray(name, out[name], Array.from({ length: n }, (_, i) => i));
+        // ⛓ R4b — the seal log honours `seals_required` and the 16-slot cap (`saveArrayRules.sealLogSlots`).
+        const slots = name === 'seal_parts' ? sealLogSlots(n, sealsRequired) : n;
+        out[name] = mergeSaveArray(name, out[name], Array.from({ length: slots }, (_, i) => i));
     }
     return out;
 }

@@ -3,7 +3,7 @@
   "source_log": "frontend/presets/seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl",
   "seed": 1,
   "seed_name": "14089154938208861744",
-  "locations": 41,
+  "locations": 48,
   "spheres": 13,
   "order": [
     {
@@ -38,6 +38,12 @@
     },
     {
       "sphere": "1.2",
+      "location": "Level 019 - Shieldspire",
+      "item": "Seal",
+      "level": 19
+    },
+    {
+      "sphere": "1.3",
       "location": "Level 036 - Chest",
       "item": "Seal",
       "level": 36
@@ -70,6 +76,12 @@
       "sphere": "3.1",
       "location": "Level 032 - Bob Boss",
       "item": "Fire",
+      "level": 32
+    },
+    {
+      "sphere": "3.2",
+      "location": "Level 032 - Times",
+      "item": "Seal",
       "level": 32
     },
     {
@@ -170,6 +182,12 @@
     },
     {
       "sphere": "6.4",
+      "location": "Level 057 - Tentacled Beast",
+      "item": "Seal",
+      "level": 57
+    },
+    {
+      "sphere": "6.5",
       "location": "Level 064 - Ghostspear",
       "item": "Ghost Spear",
       "level": 64
@@ -187,6 +205,12 @@
       "level": 67
     },
     {
+      "sphere": "7.3",
+      "location": "Level 069 - Lights",
+      "item": "Seal",
+      "level": 69
+    },
+    {
       "sphere": "8.1",
       "location": "Level 012 - Witch",
       "item": "Progressive Sword",
@@ -194,18 +218,24 @@
     },
     {
       "sphere": "8.2",
+      "location": "Level 043 - Totem of Lacste",
+      "item": "Seal",
+      "level": 43
+    },
+    {
+      "sphere": "8.3",
       "location": "Level 068 - Health",
       "item": "Health",
       "level": 68
     },
     {
-      "sphere": "8.3",
+      "sphere": "8.4",
       "location": "Level 071 - Chest",
       "item": "Seal",
       "level": 71
     },
     {
-      "sphere": "8.4",
+      "sphere": "8.5",
       "location": "Level 074 - Darkshield",
       "item": "Progressive Shield",
       "level": 74
@@ -230,12 +260,18 @@
     },
     {
       "sphere": "10.3",
+      "location": "Level 082 - King of Fire",
+      "item": "Seal",
+      "level": 82
+    },
+    {
+      "sphere": "10.4",
       "location": "Level 098 - Chest",
       "item": "Seal",
       "level": 98
     },
     {
-      "sphere": "10.4",
+      "sphere": "10.5",
       "location": "Level 106 - Ghostsword",
       "item": "Ghost Sword Fusion",
       "level": 106
@@ -245,6 +281,12 @@
       "location": "Level 109 - Firewand",
       "item": "Fire Wand Fusion",
       "level": 109
+    },
+    {
+      "sphere": "11.2",
+      "location": "Level 112 - Owl",
+      "item": "Seal",
+      "level": 112
     },
     {
       "sphere": "12.1",

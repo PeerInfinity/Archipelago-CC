@@ -56,6 +56,9 @@ class GameMetadata:
     # possible (the runtime's Restart warps to the start); None = the document states none (absent = false).
     return_to_menu: Optional[bool] = None
     original_world_class_name: Optional[str] = None  # Original class name from exporter (preserved during game name override)
+    # world[player_id].option_effects: what the world's OWN options do to its pool and rules (see
+    # _template_option_effects.py). OPT-IN: a document without the block generates exactly as before.
+    option_effects: List[Dict[str, Any]] = field(default_factory=list)
 
 
 @dataclass
@@ -300,7 +303,7 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
             resolved_values[k] = v
 
     # Merge top-level attributes from world_data
-    skip_keys = INTERNAL_SETTINGS | {'options', 'option_definitions', 'dungeons', 'shops', 'game'}
+    skip_keys = INTERNAL_SETTINGS | {'options', 'option_definitions', 'option_effects', 'dungeons', 'shops', 'game'}
     for k, v in world_data.items():
         if k not in skip_keys:
             resolved_values[k] = v
@@ -333,6 +336,7 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
         return_to_menu=exporter_data.get('return_to_menu'),
         # Track original world class name from exporter (preserved during game name override)
         original_world_class_name=original_world_class_name,
+        option_effects=list(world_data.get('option_effects', []) or []),
     )
 
 
@@ -1072,10 +1076,15 @@ def extract_world_attributes(json_data: Dict[str, Any], player_id: str = '1') ->
             'use_auto_indirect_conditions',
             'player_name',  # Read-only property on base World class
             'web',  # Handled by WebWorld class (theme, tutorials)
+            'option_effects',  # _template_option_effects' input, not an attribute
         }
 
         for key, value in world_data.items():
             if key in skip_settings:
+                continue
+            # An option_effects world's slot_data is fill_slot_data's (read off the options), not an attribute.
+            # Only there: the older packages carry it as an attribute too, and stay byte-identical.
+            if key == 'slot_data' and world_data.get('option_effects'):
                 continue
             # Only include complex types (dicts, lists) or specific primitives
             # that are likely game-specific computed attributes

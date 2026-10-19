@@ -57,6 +57,10 @@ class RuleCodeGenerator(
         # Items that can actually be obtained (in pool, canonical placements, or starting inventory)
         # Used to detect unsatisfiable Has rules referencing virtual/computed items
         self.obtainable_items: Optional[Set[str]] = None
+        # world[p].option_effects `item_count` bindings: (item, default count) -> the Options class whose value
+        # replaces that count at generation time (Has(item, FromOption(Cls))). Empty unless the document opts in.
+        self.option_count_bindings: Dict[Any, str] = {}
+        self.used_option_classes: Set[str] = set()
 
     def set_obtainable_items(self, items: Set[str]) -> None:
         """Set the items that can actually be obtained during gameplay."""

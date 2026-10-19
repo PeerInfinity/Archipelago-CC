@@ -194,7 +194,8 @@ export function flashNameForLedgerRow(row, deps) {
         const index = entity?.attrs?.totempart;
         return index === undefined || index === null ? null : `totem${index}`;
     }
-    const tag = row.kind === 'encounter' ? String(row.id).split('@')[0] : row.tag;
+    // ⛓ R4b — a boss row's id key IS upstream's flash name (`owl`, `shieldspire`, `times`, …, `ap_locations`).
+    const tag = row.kind === 'encounter' || row.kind === 'boss' ? String(row.id).split('@')[0] : row.tag;
     if (typeof tag !== 'string' || tag === '') return null;
     if (apLocationNames.has(tag)) return tag;
     // The one derived hop: the tag names an item, and the game config's own
@@ -951,7 +952,7 @@ export async function loadSeedlingRandomizer({
     }
 
     const { set: vanilla } = exporter.vanillaRecordSet(embed, mapDoc);
-    const { table, entries, encounters } = rewriter.buildPlacementTable({
+    const { table, entries, encounters, reports } = rewriter.buildPlacementTable({
         locationItemOf,
         ledger: ledgerUsed,
         rooms: mapDoc.levels,
@@ -983,6 +984,8 @@ export async function loadSeedlingRandomizer({
         table,
         entries,
         encounters,
+        // ⛓ R4b (rules-boss-locations) — the boss kills: not rewritten, reported at a fixed address (part 2 binds them)
+        reports,
         replaced,
         set,
         invalidation,

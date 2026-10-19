@@ -6,6 +6,7 @@ Contains the rules generator and rule analysis utilities.
 import re
 from typing import Dict, List, Optional, Set
 
+from ._template_option_effects import option_count_bindings
 from .constants import BOOLEAN_RULE_TYPES
 from .constants import BUILTIN_SETTINGS
 from .extractors import ExtractedData, HelperData
@@ -256,6 +257,7 @@ def generate_rules_py(data: ExtractedData) -> str:
 
     rule_builder_generator = RuleCodeGenerator(game_name, data.metadata.resolved_values, data.metadata.option_definitions)
     rule_builder_generator.set_helpers(set(data.helpers.keys()), helper_bodies, helper_params, helper_defaults, data.original_placements)
+    rule_builder_generator.option_count_bindings = option_count_bindings(data.metadata.option_effects)
 
     # Build set of obtainable items (in pool, canonical placements, or starting inventory)
     # Used to detect unsatisfiable Has rules referencing virtual/computed items
@@ -544,6 +546,11 @@ def _setup_dungeon_bosses(multiworld, player: int) -> None:
     imports_section = ''
     if rule_builder_imports:
         imports_section = f'\nfrom ._ext import {rule_builder_imports_str}\n'
+
+    # world[p].option_effects: a count read from the world's own option
+    if rule_builder_generator.used_option_classes:
+        imports_section += ('from rule_builder.field_resolvers import FromOption\n'
+                            f'from .Options import {", ".join(sorted(rule_builder_generator.used_option_classes))}\n')
 
     # Add CollectionState import if we have helpers, lambda rules, or dungeons
     collection_state_import = ''

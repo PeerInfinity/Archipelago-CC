@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 from .Items import item_table, ItemData, SeedlingPlaythroughItem
 from .Locations import location_table, SeedlingPlaythroughLocation
 from .Options import SeedlingPlaythroughOptions
+from Options import OptionError
 from .Regions import create_regions
 from .Rules import set_rules
 
@@ -24,7 +25,7 @@ from .Rules import set_rules
 # Item pool counts from original generation (excluding locked placements)
 ITEMPOOL_COUNTS: Dict[str, int] = {
     "Progressive Sword": 2,
-    "Seal": 16,
+    "Seal": 23,
     "Red Key": 1,
     "Progressive Shield": 2,
     "Green Key": 1,
@@ -75,6 +76,25 @@ LOCKED_PLACEMENTS: Dict[str, str] = {
 STARTING_ITEMS: Dict[str, int] = {
 
 }
+
+
+# Option effects (world[p].option_effects): an option whose value bounds a Has() count, by the item it counts
+OPTION_ITEM_COUNTS: List[tuple] = [
+    ('seals_required', 'Seal'),
+]
+
+# Option effects: (option, value, item, locations) — while the option holds that value, those locations hold item
+OPTION_LOCATION_ITEMS: List[tuple] = [
+    ('boss_location_items', 1, 'Nothing', [
+        'Level 019 - Shieldspire',
+        'Level 032 - Times',
+        'Level 043 - Totem of Lacste',
+        'Level 057 - Tentacled Beast',
+        'Level 069 - Lights',
+        'Level 082 - King of Fire',
+        'Level 112 - Owl',
+    ]),
+]
 
 
 class SeedlingPlaythroughWeb(WebWorld):
@@ -144,18 +164,25 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
         "Level 012 - Chest": "Seal",
         "Level 015 - Chest": "Seal",
         "Level 017 - Chest": "Seal",
+        "Level 019 - Shieldspire": "Seal",
         "Level 025 - Chest": "Seal",
+        "Level 032 - Times": "Seal",
         "Level 036 - Chest": "Seal",
         "Level 038 - Chest": "Seal",
         "Level 040 - Chest": "Seal",
+        "Level 043 - Totem of Lacste": "Seal",
         "Level 046 - Chest": "Seal",
         "Level 048 - Chest": "Seal",
+        "Level 057 - Tentacled Beast": "Seal",
         "Level 063 - Chest": "Seal",
+        "Level 069 - Lights": "Seal",
         "Level 071 - Chest": "Seal",
         "Level 080 - Chest": "Seal",
+        "Level 082 - King of Fire": "Seal",
         "Level 086 - Chest": "Seal",
         "Level 090 - Chest": "Seal",
         "Level 098 - Chest": "Seal",
+        "Level 112 - Owl": "Seal",
         "L12 flag 4: bosslock@416,240 cleared": "L12 flag 4: bosslock@416,240 cleared",
         "L12 flag 5: bosslock@432,240 cleared": "L12 flag 5: bosslock@432,240 cleared",
         "L12 flag 11: bosslock@112,192 cleared": "L12 flag 11: bosslock@112,192 cleared",
@@ -213,18 +240,25 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
         "Level 012 - Chest": "Seal",
         "Level 015 - Chest": "Seal",
         "Level 017 - Chest": "Seal",
+        "Level 019 - Shieldspire": "Seal",
         "Level 025 - Chest": "Seal",
+        "Level 032 - Times": "Seal",
         "Level 036 - Chest": "Seal",
         "Level 038 - Chest": "Seal",
         "Level 040 - Chest": "Seal",
+        "Level 043 - Totem of Lacste": "Seal",
         "Level 046 - Chest": "Seal",
         "Level 048 - Chest": "Seal",
+        "Level 057 - Tentacled Beast": "Seal",
         "Level 063 - Chest": "Seal",
+        "Level 069 - Lights": "Seal",
         "Level 071 - Chest": "Seal",
         "Level 080 - Chest": "Seal",
+        "Level 082 - King of Fire": "Seal",
         "Level 086 - Chest": "Seal",
         "Level 090 - Chest": "Seal",
         "Level 098 - Chest": "Seal",
+        "Level 112 - Owl": "Seal",
         "L12 flag 4: bosslock@416,240 cleared": "L12 flag 4: bosslock@416,240 cleared",
         "L12 flag 5: bosslock@432,240 cleared": "L12 flag 5: bosslock@432,240 cleared",
         "L12 flag 11: bosslock@112,192 cleared": "L12 flag 11: bosslock@112,192 cleared",
@@ -288,6 +322,7 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
         "L12 flag 12: bosslock@32,864 cleared": True,
         "Level 015 - Chest": True,
         "Level 017 - Chest": True,
+        "Level 019 - Shieldspire": True,
         "L19 flag 1: bosslock@48,32 cleared": True,
         "Level 019 - Boss Key 0": True,
         "Level 020 - Shield": True,
@@ -299,6 +334,7 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
         "L30 flag 2: bosslock@224,208 cleared": True,
         "L31 flag 0: bosslock@192,432 cleared": True,
         "Level 032 - Bob Boss": True,
+        "Level 032 - Times": True,
         "Level 036 - Chest": True,
         "Level 038 - Chest": True,
         "L39 flag 8: wandlock@144,592 cleared": True,
@@ -310,12 +346,14 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
         "Level 040 - Boss Key 2": True,
         "Level 041 - Totem Part 240,144": True,
         "Level 042 - Totem Part 184,152": True,
+        "Level 043 - Totem of Lacste": True,
         "Level 043 - Wand": True,
         "Level 046 - Chest": True,
         "L48 flag 1: bosslock@48,144 cleared": True,
         "Level 048 - Chest": True,
         "Level 049 - Conch": True,
         "Level 055 - Boss Key 3": True,
+        "Level 057 - Tentacled Beast": True,
         "L63 flag 1: lightpole@64,88 cleared": True,
         "L62 flag 0: lightpole@120,200 cleared": True,
         "Level 063 - Chest": True,
@@ -323,17 +361,20 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
         "Level 067 - Boss Key 4": True,
         "Level 068 - Health": True,
         "L68 flag 0: bosslock@16,32 cleared": True,
+        "Level 069 - Lights": True,
         "Level 071 - Chest": True,
         "L71 flag 2: shieldlock@288,256 cleared": True,
         "Level 074 - Darkshield": True,
         "Level 079 - Darksuit": True,
         "Level 080 - Chest": True,
+        "Level 082 - King of Fire": True,
         "Level 086 - Chest": True,
         "Level 089 - Feather": True,
         "Level 090 - Chest": True,
         "Level 098 - Chest": True,
         "Level 106 - Ghostsword": True,
         "Level 109 - Firewand": True,
+        "Level 112 - Owl": True,
         "L112 flag 1: rocklock@112,16 cleared": True,
         "L113 flag 0: finaldoor@112,0 cleared": True,
         "L114 flag 0: watcher@72,72 cleared": True,
@@ -361,6 +402,7 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
             self.options.randomize_items.value = False
             if self.options.use_canonical_options.value:
                 self._load_canonical_options()
+        self._check_option_effects()
 
     def _load_canonical_options(self) -> None:
         """Load options from _worldgen_options.json for canonical seed generation.
@@ -413,6 +455,39 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
                     except (ValueError, KeyError, AttributeError):
                         pass  # Keep existing value
 
+    def _option_location_items(self) -> Dict[str, str]:
+        """Location -> item for every OPTION_LOCATION_ITEMS row whose option holds its value."""
+        out: Dict[str, str] = {}
+        for option, value, item, locations in OPTION_LOCATION_ITEMS:
+            if getattr(self.options, option).value == value:
+                for location in locations:
+                    out[location] = item
+        return out
+
+    def _option_item_pool_counts(self) -> Dict[str, int]:
+        """ITEMPOOL_COUNTS under the chosen options: each swapped location trades its canonical item."""
+        counts = dict(ITEMPOOL_COUNTS)
+        for location, item in self._option_location_items().items():
+            canonical = self.canonical_placements.get(location)
+            if canonical is None or counts.get(canonical, 0) <= 0:
+                raise OptionError(f"{self.player_name}: option effect on {location!r} has no canonical item "
+                                  f"in the pool to replace")
+            counts[canonical] -= 1
+            counts[item] = counts.get(item, 0) + 1
+        return counts
+
+    def _check_option_effects(self) -> None:
+        """Refuse, by name, a count option the pool cannot meet under the chosen options."""
+        counts = self._option_item_pool_counts()
+        for option, item in OPTION_ITEM_COUNTS:
+            needed = getattr(self.options, option).value
+            held = counts.get(item, 0)
+            if needed > held:
+                swapped = ', '.join(f"{o} = {getattr(self.options, o).current_key}"
+                                    for o, _v, _i, _l in OPTION_LOCATION_ITEMS)
+                raise OptionError(f"{self.player_name}: {option} = {needed} needs {needed} {item!r}, but the "
+                                  f"pool holds only {held}" + (f" with {swapped}" if swapped else ""))
+
     def create_regions(self) -> None:
         """Create regions, locations, and connections."""
         create_regions(self.multiworld, self.player)
@@ -429,7 +504,7 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
         # Then create the random item pool
         item_pool = []
 
-        for item_name, count in ITEMPOOL_COUNTS.items():
+        for item_name, count in self._option_item_pool_counts().items():
             # Skip event items
             if item_name not in item_table or item_table[item_name].id is None:
                 continue
@@ -532,7 +607,9 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
             key=lambda x: 0 if x[0] in advancement_locs else 1
         )
 
+        option_items = self._option_location_items()
         for location_name, item_name in sorted_placements:
+            item_name = option_items.get(location_name, item_name)
             location = self.multiworld.get_location(location_name, self.player)
 
             # Skip if already filled (e.g., by _place_locked_items or generate_basic)
@@ -598,4 +675,7 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
 
     def fill_slot_data(self) -> Dict[str, Any]:
         """Return data for the client."""
-        return {}
+        return {
+            "boss_location_items": self.options.boss_location_items.value,
+            "seals_required": self.options.seals_required.value,
+        }

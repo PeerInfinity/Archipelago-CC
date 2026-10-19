@@ -330,6 +330,15 @@ export const ENCOUNTER_REFUSAL = (e) => `"${e.location}" is an ENCOUNTER (a ${e.
     + 'comes from the property path — there is no entity to walk onto';
 
 /**
+ * ⛓ R4b (rules-boss-locations) — why a vanilla-arm BOSS KILL has no cell yet: the row reports at its fixed
+ * address (the game's own clear) and is never rewritten; the bot has no fight executor for it. Refused by name, so
+ * every location is still accounted for (entries + refusals + events).
+ */
+export const BOSS_REPORT_REFUSAL = (r) => `"${r.location}" is a BOSS KILL (a ${r.entityType} in level ${r.level}, `
+    + `reported at {${r.address?.level},${r.address?.tag}}): the vanilla arm does not rewrite it and the bot has no `
+    + 'fight executor for it — there is no entity to walk onto';
+
+/**
  * ⛓⛓ ENCOUNTERS — the drops the solver has an encounter EXECUTOR for: `solverBot.ENCOUNTER_EXECUTORS`'s keys
  * (L32's Bob Boss → `Fire`, L12's Witch → `Progressive Sword`, the dark sword). This file imports no model, so
  * the list is restated here and PINNED equal to the registry (`seedlingVanillaArmMap.test.js`): a new executor
@@ -383,17 +392,18 @@ export function rulesAtlasOf(rules, atlases = [SEEDLING_PLAYTHROUGH_ATLAS_DOC], 
  * @param {object} o
  * @param {Array} o.entries      the vanilla arm's placement entries
  * @param {Array} [o.encounters] the vanilla arm's encounter rows
+ * @param {Array} [o.reports]    ⛓ R4b — the boss-kill rows (`buildPlacementTable`'s `reports`), refused by name
  * @param {object} o.set         the delivered (rewritten) level set: `rooms[]` of `{id, source:{record}}`
  * @param {Map<string, object>} o.regions  regionId → `flash_seedling` payload
  * @param {object} o.rules       the raw rules.json (for the links)
  * @param {object} [o.atlasDoc]  ⛓ ENCOUNTERS — the atlas the rules name (`rulesAtlasOf`): the encounters' anchors
  * @param {string} [o.atlasId]   the id the rules name (for the refusal's wording)
  */
-export function vanillaArmPlaybackMap({ entries = [], encounters = [], set = null, regions, rules = null,
+export function vanillaArmPlaybackMap({ entries = [], encounters = [], reports = [], set = null, regions, rules = null,
     atlasDoc = null, atlasId = null }) {
     const rooms = new Map((set?.rooms ?? []).map((r) => [r.id, r]));
     const bound = [];
-    const refused = [];
+    const refused = reports.map((r) => ({ location: r.location, why: BOSS_REPORT_REFUSAL(r) }));
     for (const e of encounters) {
         if (!BOUND_ENCOUNTER_DROPS.includes(e.vanillaItem)) {
             refused.push({ location: e.location, why: ENCOUNTER_REFUSAL(e) });
@@ -449,7 +459,7 @@ export function realRoomPlaybackMap(loaded, rawRules, { atlases = [SEEDLING_PLAY
     // whose load DELIVERED a rewritten set.
     if (!loaded.set) return null;
     return vanillaArmPlaybackMap({ entries: loaded.entries ?? [], encounters: loaded.encounters ?? [],
-        set: loaded.set, regions, rules: rawRules, ...rulesAtlasOf(rawRules, atlases) });
+        reports: loaded.reports ?? [], set: loaded.set, regions, rules: rawRules, ...rulesAtlasOf(rawRules, atlases) });
 }
 
 const ROOMS_OF = Object.freeze({ flash_seedling_gen: 'generated rooms', flash_seedling: 'atlas rooms' });

@@ -1398,17 +1398,52 @@ export const R7_GOAL_LEDGER = Object.freeze([
         id: 'seed@L115', kind: 'ending', tag: 'seed', level: 115, flag: 'cutscene[2]',
         cite: 'End/4.oel:131', gate: 'FinalDoor: all 16 seals + {114,0}',
     }),
+    // ⛓ R4b (rules-boss-locations) — the two encounters carry a FIXED REPORT ADDRESS. The R4 AS3
+    // (PeerInfinity/Seedling `r4-boss-report`) makes both REPORT a location instead of granting: the Fire
+    // drop clears `(32, Fire.BOSS_DROP_TAG = 4)` and the Witch's dark sword clears `(12, DarkSword.WITCH_TAG
+    // = 1)`. No entity in the room carries that tag, so the address is the row's own field, not a lookup.
     Object.freeze({
         id: 'fire@L32', kind: 'encounter', tag: null, level: 32, flag: 'hasFire',
-        cite: 'BobBoss.as:194, tag -1',
+        address: Object.freeze({ level: 32, tag: 4 }),
+        cite: 'BobBoss.as:194, tag -1; r4-boss-report: Fire.BOSS_DROP_TAG = 4',
         gate: 'D3, boss key 1; non-persistent SPAWN, persistent FLAG',
     }),
     Object.freeze({
         id: 'darksword@L12', kind: 'encounter', tag: null, level: 12, flag: 'hasDarkSword',
-        cite: 'Witch.as:32-52',
+        address: Object.freeze({ level: 12, tag: 1 }),
+        cite: 'Witch.as:32-52; r4-boss-report: DarkSword.WITCH_TAG = 1',
         gate: '`hasWand && !hasDarkSword`, dialogue to completion; ⚠ constructed tag -1, '
             + 'so its persistence write lands on the PREVIOUS level\'s tag 29',
     }),
+    // ⛓⛓ R4b (rules-boss-locations; ⚖ the user 2026-10-19, "All 7 bosses") — THE BOSS KILLS ARE
+    // LOCATIONS, as upstream's `boss_locations` defines them (`worlds/seedling/Locations.py`, ids
+    // 20000008/13/18/23/33/38/43). Each REPORTS through the one mechanism every check uses: a persistence
+    // CLEAR at a fixed `(level, tag)` (rules-boss-report-as3 D1/D2). Six bosses already clear their own OEL
+    // tag on the kill; Times (Bob) clears `BobBoss.KILLED_TAG = 3` on the R4 AS3. `entity` names the body
+    // whose tile the location stands on (the fight's own placement, never a hand tile); `label` is
+    // upstream's location name. The vanilla item is the `bossLocationItems` option's (default Seal).
+    ...[
+        ['owl', 112, { type: 'finalboss' }, 0, 'Owl', 'Enemies/FinalBoss.as:219-222 (endAnim clears tag, tag+1)',
+            'End/Boss arena; the Owl dies to shoves into lava'],
+        ['shieldspire', 19, { type: 'shieldboss' }, 0, 'Shieldspire', 'Enemies/ShieldBoss.as:64-68 (startDeath)',
+            'Dungeon2/6; the ShieldBoss body is the door'],
+        ['times', 32, { type: 'fallrocklarge', attrs: { bossrock: '1', thirdboss: '1' } }, 3, 'Times',
+            'r4-boss-report: BobBoss.death bossType 2 clears KILLED_TAG = 3 (FallRockLarge.as starts the fight)',
+            'D3, boss key 1; the third BobBoss'],
+        ['tentacledbeast', 57, { type: 'tentaclebeast' }, 0, 'Tentacled Beast',
+            'Enemies/TentacleBeast.as:96-104 (maxTentacles <= 0 clears tag)', 'Dungeon5/Boss; cut every Tentacle'],
+        ['totem', 43, { type: 'bosstotem' }, 5, 'Totem of Lacste', 'Enemies/BossTotem.as:466-480 (removed)',
+            'Dungeon4/Boss; all five totem parts (r4-boss-report ccdf189) + the Wand (`onlyHitBy = "Wand"`)'],
+        ['lights', 69, { type: 'lightbosscontroller' }, 0, 'Lights',
+            'Enemies/LightBossController.as:103-108 (endState)', 'Dungeon6/Boss; kill every LightBoss flier'],
+        ['kingoffire', 82, { type: 'lavaboss' }, 0, 'King of Fire', 'Enemies/LavaBoss.as:131-141 (startDeath)',
+            'Dungeon7/Boss; reflect a LavaBall into it, then strike'],
+    ].map(([key, level, entity, tag, label, cite, gate]) => Object.freeze({
+        id: `${key}@L${level}`, kind: 'boss', tag: entity.type, level, label,
+        entity: Object.freeze({ ...entity, ...(entity.attrs ? { attrs: Object.freeze({ ...entity.attrs }) } : {}) }),
+        address: Object.freeze({ level, tag }),
+        flag: `levelPersistence {${level},${tag}} cleared`, cite, gate,
+    })),
 ]);
 
 /**
@@ -1462,6 +1497,12 @@ export function goalHeldBy(row, fields) {
             : bool(fields[`save.${row.flag}`]);
     case 'encounter':
         return bool(fields[`save.${row.flag}`]);
+    case 'boss': {
+        // ⛓ R4b — a boss kill is held once its report address is CLEARED; the save's own readout.
+        const clears = fields['save.levelPersistence'];
+        return Array.isArray(clears)
+            ? bool(clears.some((c) => c.level === row.address.level && c.tag === row.address.tag)) : null;
+    }
     case 'key': {
         const arr = fields['save.hasKey'];
         const kt = Number(/\[(\d)\]/.exec(row.flag)?.[1]);
@@ -1520,6 +1561,8 @@ export const GOAL_PLACEMENT_WITNESS = Object.freeze({
     totempart: true,
     encounter: false,
     ending: false,
+    // ⛓ R4b — the clear at the report address IS the held reading, so it names its own placement.
+    boss: false,
 });
 
 /**

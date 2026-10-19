@@ -14,6 +14,7 @@
     "_rule_expressions.py",
     "_sanitization.py",
     "_template_init.py",
+    "_template_option_effects.py",
     "_template_options.py",
     "_template_regions.py",
     "_template_rules.py",

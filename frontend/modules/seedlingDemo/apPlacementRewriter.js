@@ -212,8 +212,8 @@ function recordsByLevel(rooms) {
  * @param {Array<object>} deps.ledger    the goal ledger (`R7_GOAL_LEDGER`, 41 rows)
  * @param {Array<object>} deps.rooms     level RECORDS (`{level, entities, …}`)
  * @param {number} deps.selfPlayer       the slot this panel plays
- * @returns {{table: Map<string, object>, entries: object[], encounters: object[],
- *            lookBook: Map<string, string[]>}}
+ * @returns {{table: Map<string, object>, entries: object[], encounters: object[], reports: object[],
+ *            lookBook: Map<string, string[]>}}  `reports`: the boss-kill rows (R4b), not rewritten
  */
 export function buildPlacementTable({ locationItemOf, ledger, rooms, selfPlayer } = {}) {
     if (typeof locationItemOf !== 'function') {
@@ -233,6 +233,7 @@ export function buildPlacementTable({ locationItemOf, ledger, rooms, selfPlayer 
     // --- pass 1: resolve every row's entity, and build the look book ---------
     const resolved = [];
     const encounters = [];
+    const reports = [];
     const lookBook = new Map();
     for (const row of rows) {
         const found = byLevel.get(row.level);
@@ -260,6 +261,14 @@ export function buildPlacementTable({ locationItemOf, ledger, rooms, selfPlayer 
             // off it, since no pickup report ever names the location.
             encounters.push({ ledgerId: row.id, level: row.level, location,
                 entityType: entity.type, vanillaItem: item, flag: row.flag ?? null });
+            continue;
+        }
+        if (row.kind === 'boss') {
+            // ⛓ R4b (rules-boss-locations) — NOT REWRITTEN: a boss kill REPORTS at its fixed `address` (the
+            // game's own clear; the R4 AS3 for Times). Listed by name so R4b part 2 (the host) can make them
+            // table entries; until then no room changes for them.
+            reports.push({ ledgerId: row.id, level: row.level, location, address: { ...row.address },
+                entityType: entity.type, vanillaItem: item });
             continue;
         }
         const look = lookOfRow(row, entity, item);
@@ -321,7 +330,7 @@ export function buildPlacementTable({ locationItemOf, ledger, rooms, selfPlayer 
         table.set(key, entry);
         entries.push(entry);
     }
-    return { table, entries, encounters, lookBook };
+    return { table, entries, encounters, reports, lookBook };
 }
 
 /**
