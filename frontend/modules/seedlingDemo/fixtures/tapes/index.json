@@ -4,7 +4,7 @@
   "tapes": [
     {
       "file": "axe-l48-reach-l49.json",
-      "tickCount": 368,
+      "tickCount": 330,
       "bootLevel": 48,
       "tapeVersion": 8,
       "noHazards": []
@@ -379,14 +379,14 @@
     },
     {
       "file": "l30keylock-pit224.json",
-      "tickCount": 347,
+      "tickCount": 320,
       "bootLevel": 30,
       "tapeVersion": 8,
       "noHazards": []
     },
     {
       "file": "l30keylock-pit240.json",
-      "tickCount": 360,
+      "tickCount": 341,
       "bootLevel": 30,
       "tapeVersion": 8,
       "noHazards": []
@@ -479,7 +479,7 @@
     },
     {
       "file": "ladder2-l104-beam.json",
-      "tickCount": 278,
+      "tickCount": 261,
       "bootLevel": 104,
       "tapeVersion": 8,
       "noHazards": []
@@ -559,7 +559,7 @@
     },
     {
       "file": "pushblock-l65-reach-l68.json",
-      "tickCount": 347,
+      "tickCount": 345,
       "bootLevel": 65,
       "tapeVersion": 8,
       "noHazards": []
@@ -2003,14 +2003,14 @@
     },
     {
       "file": "stance-l46-chest.json",
-      "tickCount": 1044,
+      "tickCount": 868,
       "bootLevel": 46,
       "tapeVersion": 8,
       "noHazards": []
     },
     {
       "file": "stance-l48-chest.json",
-      "tickCount": 540,
+      "tickCount": 449,
       "bootLevel": 48,
       "tapeVersion": 8,
       "noHazards": []
@@ -2024,14 +2024,14 @@
     },
     {
       "file": "stance-l48-keylock-open.json",
-      "tickCount": 454,
+      "tickCount": 231,
       "bootLevel": 48,
       "tapeVersion": 8,
       "noHazards": []
     },
     {
       "file": "stance-l48-keylock-south.json",
-      "tickCount": 369,
+      "tickCount": 322,
       "bootLevel": 48,
       "tapeVersion": 8,
       "noHazards": []
