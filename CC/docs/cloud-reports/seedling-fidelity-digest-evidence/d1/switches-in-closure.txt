@@ -1,0 +1,22 @@
+modules in the closure: 74; mutable switches: 21
+L switch NEAREST_TILE_INDEX                   frontend/modules/seedlingDemo/levelWorld.js  {enabled}
+L switch SOLID_GRID                           frontend/modules/seedlingDemo/levelWorld.js  {enabled}
+L switch CONTACT_FIDELITY                     frontend/modules/seedlingDemo/contactFidelity.js  {collideLinePointsExact,wallFlyerSwordHits,drillLive,bobSoldierLive,wallFlyerKill,wallFlyerShieldBump,darkTrapLight,spearingWindow,fallBurnsPress,bulbLive,baitForecast,forcedHits,bombPusherLive,movingWait,totemShotBlastInt,rebootShake,strikeIframeLapse,fallRockPostFall,forecastSpeedByTerrain,arrivalButtonArm,unbilledDamageGate,buttonFallReleaseStep,waypointSlide,lavaChainPlayerHit,ceremonyShove,flyerLive,beamTowerDrift,beamTowerBeamHit,spinningAxePlayerHit,partialDodgeReprobe,chaserSpinnerWalls,corridorBodyPricing,sealDoorApproach,arrowLaneCrossing,axeTimingRung,axeGateTransit,statueTalkRange}
+L switch KILLLOCK_BODIES                      frontend/modules/seedlingDemo/killLockBodies.js  {jellyfishLive,lavaRunnerLive,chaserKillArm,turretRemovalLedger,darkShieldIceTurret}
+L switch PUSH_SPEAR_DIRECTION                 frontend/modules/seedlingDemo/pushables.js  {enabled}
+L switch STATIC_SWORD_ARM                     frontend/modules/seedlingDemo/enemyDamage.js  {enabled}
+L switch WAND_VERB                            frontend/modules/seedlingDemo/wandVerb.js  {enabled}
+L switch PICKUP_REMOVED_NEXT_FRAME            frontend/modules/seedlingDemo/pickupRemoval.js  {enabled}
+L switch PRESS_KILL_COST                      frontend/modules/seedlingDemo/pressKillCost.js  {enabled}
+L switch PRESS_KILL_COST_COUNTS               frontend/modules/seedlingDemo/pressKillCost.js  {cellsHit,cellsMiss,forecastShifted,forecastCut,hammerSkipped,hammerAsked,lineHit,lineMiss}
+- switch STRIKE_SCAN_COST                     frontend/modules/seedlingDemo/pressKillCost.js  {enabled}
+- switch STRIKE_SCAN_COST_COUNTS              frontend/modules/seedlingDemo/pressKillCost.js  {lineCarried,lineAsked,booksOpened,cellsBoxed,cellsSkipped,scansUnboxed}
+- switch PRESS_KILL_BOMBS                     frontend/modules/seedlingDemo/pressKillCost.js  {enabled}
+- switch PRESS_KILL_BOMBS_COUNTS              frontend/modules/seedlingDemo/pressKillCost.js  {strikeAsked,strikeRefused,refugeAsked,refugeRefused}
+- switch REFUGE_ETA_CUT                       frontend/modules/seedlingDemo/pressKillCost.js  {enabled}
+- switch REFUGE_ETA_CUT_COUNTS                frontend/modules/seedlingDemo/pressKillCost.js  {previews,cut}
+L switch GHOST_SPINNER_PRESS                  frontend/modules/seedlingDemo/ghostSpinnerPress.js  {enabled}
+- switch GHOST_SEARCH_BUCKETS                 frontend/modules/seedlingDemo/ghostSpinnerPress.js  {enabled}
+- switch GHOST_KILL_RUNG                      frontend/modules/seedlingDemo/ghostSpinnerPress.js  {enabled}
+L switch GHOSTSWORD_PRESS                     frontend/modules/seedlingDemo/ghostSword.js  {enabled}
+L switch GHOSTSWORD_MOTION                    frontend/modules/seedlingDemo/ghostSword.js  {enabled}

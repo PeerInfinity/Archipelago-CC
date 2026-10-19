@@ -54,7 +54,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 61,
-            "count": 100,
+            "count": 101,
             "id": "check"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 426,
+        "blockStyle": 427,
         "browser": 144,
-        "cited": 221,
-        "files": 439,
+        "cited": 222,
+        "files": 440,
         "lineStyle": 13,
-        "withDocblock": 439,
-        "withFlags": 355
+        "withDocblock": 440,
+        "withFlags": 356
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -247,7 +247,8 @@ export const INSTRUMENTS = frz({
         "flags": [
             "includes: /\\bincludes\\(\\s*'--([a-zA-Z][a-zA-Z0-9-]*)'/g",
             "startsWith: /startsWith\\(\\s*[`']--([a-zA-Z][a-zA-Z0-9-]*)=/g",
-            "case: /\\bcase\\s+'--([a-zA-Z][a-zA-Z0-9-]*)'\\s*:/g"
+            "case: /\\bcase\\s+'--([a-zA-Z][a-zA-Z0-9-]*)'\\s*:/g",
+            "table: /^\\s*'--([a-zA-Z][a-zA-Z0-9-]*)'\\s*:/gm"
         ],
         "helperDecl": "/^\\s*(?:export )?const ([a-zA-Z][a-zA-Z0-9]*) = (?:async\\s+)?(?:function\\b|\\([^)]*\\)\\s*=>|[a-zA-Z_$][\\w$]*\\s*=>)/gm — then `<helper>('x')`, within 400 characters of a mention of both `argv` and a `--${…}` template",
         "unresolvedByDesign": "/\\((?:never written|retired)\\)/ within 120 characters after a citation, on the same line — the citation is then of a PLAN or of a RETIRED instrument, and is dropped from both directions of the table"
@@ -4454,6 +4455,44 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling in the pipeline, T2: the ONE real Seedling room that the shuffled spiral placed among three maze rooms PLAYS in the Seedling wasm.",
             "path": "scripts/procgen/check-seedling-spiral-room-play.mjs"
+        },
+        {
+            "argvHelpers": [
+                "body"
+            ],
+            "browser": false,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "full",
+                "only"
+            ],
+            "file": "check-seedling-string-pull-fast.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "full"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "check-seedling-string-pull-fast — **`STRING_PULL_FAST` IS ANSWER-IDENTICAL ON THE REAL CORPUS** (seedling hammer-phase SP, D2).",
+            "path": "scripts/procgen/check-seedling-string-pull-fast.mjs"
         },
         {
             "argvHelpers": [],

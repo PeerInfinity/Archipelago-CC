@@ -1,0 +1,5 @@
+{"tick":0,"strategy":{"verb":"kill","rung":"kill","climb":1,"arm":"chaser","target":"puncher@128,624","stance":{"x":136,"y":616}},"obstacle":{"kind":"danger","id":"puncher@128,624","sources":["chaser:puncher@128,624","chaser:puncher@128,624"]},"goal":"collect-placement","rejected":["avoid","time","bait"]}
+{"tick":633,"strategy":{"verb":"walk"},"obstacle":null,"goal":"collect-placement","rejected":["keep-plan","sword-dash window: not-faster"]}
+{"tick":673,"strategy":{"verb":"collect"},"obstacle":null,"goal":"collect-placement","rejected":["chest"]}
+{"record":{"goal":"collect-placement","strategy":"kill","target":"puncher@128,624"}}
+{"record":{"goal":"collect-placement","strategy":"collect"}}

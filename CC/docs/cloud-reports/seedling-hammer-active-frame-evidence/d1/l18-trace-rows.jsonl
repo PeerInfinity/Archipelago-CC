@@ -1,0 +1,4 @@
+{"tick":0,"strategy":{"verb":"kill"},"obstacle":{"kind":"solid","id":"lock@144,112"},"goal":"reach-exit","rejected":["kill by the room's own ceiling","hold"]}
+{"tick":409,"strategy":{"verb":"walk"},"obstacle":null,"goal":"reach-exit","rejected":["keep-plan","sword-dash window: not-faster"]}
+{"record":{"goal":"reach-exit","strategy":"kill"}}
+{"record":{"goal":"reach-exit"}}

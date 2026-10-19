@@ -1,0 +1,5 @@
+m4 (the fast arm drops the X-first corner query) survived the first pass (mutants.txt: every row green).
+tools/m4search.mjs, run against the scratch tree WITH m4 applied, sampled 1,505 atlas plans and found 4 whose answer
+turns on that corner (L1 lattice 16, L2 lattice 8, L3 lattice 8, L3 lattice 16). Pinned as stringPullFast.test.js's
+"the X-first corner sample decides these plans" rows. Re-run with m4 applied in the scratch tree: 4 failed / 4.
+At head (m4 reverted): 4 passed.

@@ -15,6 +15,7 @@
  *                         region's `manaEnabled` half stays there)
  *   `offersPlayback`      the body of `loopState._regionOffersPlayback`
  *   `botHonorsInstant`    `loopState.regionBotHonorsInstant`, on the entry
+ *   `pipelineLayoutsOf`   the engine's sphere / spiral / grid refusals
  *   `generationCostOf`    the entry half of `procgenPipeline/presetRun.js`'s
  *                         `substrateGenerationCost` (which re-exports
  *                         `GENERATION_COST` for its importers)
@@ -40,6 +41,34 @@ export function regionRealiserKind(entry) {
     if (typeof entry?.generateZoneForSpecs === 'function'
         || typeof entry?.generateZoneForSpecsGen === 'function') return REALISER_KINDS.ZONE;
     return null;
+}
+
+/** ⛓ The pipeline's layouts, as data (the drivers' families). */
+export const PIPELINE_LAYOUTS = Object.freeze({ SPHERE: 'sphere', SPIRAL: 'spiral', GRID: 'grid', TOPDOWN: 'topdown' });
+
+/**
+ * ⛓⛓ **WHICH PIPELINE LAYOUTS CAN PLACE A REGION OF THIS ENTRY?** The
+ * engine's own refusals, as one answer:
+ *
+ *   sphere  `growSpheres` / `generateRegionGen` — a region realiser
+ *           (`regionRealiserKind`)
+ *   spiral  `arrangeShuffledSpiral` — `zoneCount` or `generateRegionCore`
+ *   grid    the grid-growth driver's `buildRegion` — `generateRegionCore` only
+ *   topdown the topdown relayout's `generateRegionGen` — a region realiser
+ *
+ * The CLI drivers refuse a quota naming an entry outside their layout with this
+ * before any work runs, and `list-substrates.js` prints it.
+ * @returns {string[]} in `PIPELINE_LAYOUTS` order
+ */
+export function pipelineLayoutsOf(entry) {
+    const out = [];
+    if (regionRealiserKind(entry) !== null) out.push(PIPELINE_LAYOUTS.SPHERE);
+    if (typeof entry?.zoneCount === 'number' || typeof entry?.generateRegionCore === 'function') {
+        out.push(PIPELINE_LAYOUTS.SPIRAL);
+    }
+    if (typeof entry?.generateRegionCore === 'function') out.push(PIPELINE_LAYOUTS.GRID);
+    if (regionRealiserKind(entry) !== null) out.push(PIPELINE_LAYOUTS.TOPDOWN);
+    return out;
 }
 
 /** ⛓ The loop-mode capture shapes (see `captureShapeOf`). */

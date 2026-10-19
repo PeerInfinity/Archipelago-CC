@@ -9,8 +9,9 @@ A generated world is a graph of connected regions, each rendered by a **substrat
 - **Maze** — walk a grid maze, pick up items, dodge patrolling hazards
 - **Bounce** — a Doodle-Jump-style vertical platformer where movement abilities (arrows, springs, jetpacks, colored platforms) are the progression items
 - **Text Adventure** — the region as prose with clickable exits and locations
-- **Flash** — a recompiled Flash game embedded as a region
-- **Journey to Ascension** — zones of the idle game as regions
+- **Noiz2sa** — a stage of Kenta Cho's bullet-hell shoot-'em-up
+- **Seedling** — rooms of the Flash game *Seedling*, recompiled to run in the browser: real rooms from the game, or new rooms generated in its style
+- **Journey to Ascension** and **Idle Loops** — zones of these idle games as regions, in loop mode
 
 What each one lets you do — play by hand, record and replay in loop mode, hand to the Playback Bot, grow to order, edit — differs from substrate to substrate; [What each substrate can do](./procgen-substrates.md) has the chart, generated from the code.
 
@@ -30,6 +31,7 @@ Extras that build on this:
 - **Loop mode** — generation can embed loop-mode costs, turning the generated world into an incremental game ([Loops](./loops.md)).
 - **Step-by-step generation** — the pipeline can run as discrete steps whose intermediate results you can inspect and edit (including a per-region geometry editor for bounce regions), then continue.
 - **Real Archipelago seeds** — a generated world converts to a Python APWorld via the [world generator](../../../world_generator/README.md) and runs through real multiworld generation; the result is still playable in the frontend.
+- **From the command line** — the pipeline also runs headless in Node; see the [headless procgen scripts](../../../scripts/procgen/README.md).
 
 ## Learn more
 

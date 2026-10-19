@@ -1,0 +1,10 @@
+{"seg":0,"frame":null,"site":"segment","snapshots":7}
+{"seg":0,"frame":{"key":"segment/goal#0/walk/climb/rung:avoid","target":null,"stance":null,"danger":{"source":"sandtrap@64,16","tick":20,"kind":"volume","at":[3,1]}},"site":"rung","snapshots":1}
+{"seg":0,"frame":{"key":"segment/goal#0/walk/climb/rung:pull","target":null,"stance":null,"danger":{"source":"sandtrap@64,16","tick":20,"kind":"volume","at":[3,1]}},"site":"rung","snapshots":1}
+{"seg":0,"frame":{"key":"segment/goal#0/walk/climb/rung:time","target":null,"stance":null,"danger":{"source":"sandtrap@64,16","tick":20,"kind":"volume","at":[3,1]}},"site":"rung","snapshots":1}
+{"seg":0,"frame":{"key":"segment/goal#0/walk/climb/rung:bait","target":null,"stance":null,"danger":{"source":"sandtrap@64,16","tick":20,"kind":"volume","at":[3,1]}},"site":"rung","snapshots":3}
+{"seg":0,"frame":{"key":"segment/goal#0/walk/climb/rung:bait","target":"bob@112,48","stance":[3,1],"danger":{"source":"sandtrap@64,16","tick":20,"kind":"volume","at":[3,1]}},"site":"walk","snapshots":6}
+{"seg":0,"frame":null,"site":"walk","snapshots":5}
+{"seg":0,"frame":{"key":"segment/goal#0/walk/climb/rung:avoid","target":null,"stance":null,"danger":{"source":"sandtrap@64,16","tick":72,"kind":"volume","at":[3,1]}},"site":"rung","snapshots":9}
+{"seg":0,"frame":null,"site":"walk","snapshots":8}
+{"ok":true,"tally":{"snapshots":41,"withFrame":21,"nullFrame":20,"noKey":0}}

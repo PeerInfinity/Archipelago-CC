@@ -60,9 +60,10 @@ describe('quickLaunch generated HELP_SECTIONS', () => {
         expect(HELP_SECTIONS).toEqual(buildHelpSections());
     });
 
-    it('is the eight marked directories, by order, labelled by their READMEs', () => {
+    it('is the nine marked directories, by order, labelled by their READMEs', () => {
         expect(HELP_SECTIONS.map((s) => [s.order, s.audience, s.dir, s.label])).toEqual([
             [0, 'panel', 'user/modules', 'Panel Guides'],
+            [5, 'user', 'intro', 'Start Here'],
             [10, 'user', 'user', 'User Guides'],
             [20, 'user', 'features', 'Features'],
             [30, 'user', 'games', 'Playable Games'],
