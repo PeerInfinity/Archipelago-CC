@@ -23597,3 +23597,301 @@ OFF at the SP head:
 - solve time −10 % overall, L12 −35 %, L40's finished p90 1.1 → 0.57 s.
 
 It does **not** clear L40's 397 / 414 band: those solves run past 84 s, and ~1.4× does not bring them under 90 s.
+
+### Seedling fidelity INTERIMS — the producer pins retired by game-checked re-records (six of nine)
+
+⚖ The user (2026-10-18) chose "INTERIMS retire": on this branch, game-checked re-records of the nine producers that
+seedling-fidelity-producers pinned OFF as named INTERIMs are the job. No model, solver or `CONTACT_FIDELITY` change.
+The report is `CC/docs/cloud-reports/seedling-fidelity-interims.md`.
+
+**Census (D1).** Each producer planned at the defaults with its pin removed reproduces the producers report's numbers to
+the tick (15 tapes move, the rest byte-identical).
+
+**Retired (D2), each moved tape recorded on the game** (p4f, headless, `check-seedling-bot-differential --record
+--only=…`; "the model reproduces the recording it just made"; tapeRunner's 617 pairs pass):
+- `stance-witness` (`waypointSlide`): stance-l46-chest 1044 → 868 t, l48-chest 540 → 449, l48-keylock-open 454 → 231,
+  l48-keylock-south 369 → 322.
+- `axe-witness` (`waypointSlide`): axe-l48-reach-l49 368 → 330.
+- `l30keylock` (`strikeIframeLapse`): pit224 347 → 320, pit240 360 → 341; the chaser stance is now (88,88).
+- `pushblock-witness` (`strikeIframeLapse`): pushblock-l65-reach-l68 347 → 345.
+- `ladder2-witness` (KILLLOCK `jellyfishLive`): ladder2-l104-beam 278 → 261.
+- `u10-puncher-dwell`, the admitted arm only: 200 → 200 t, the presses at 14/44/74 (were 14/47/80); its observation
+  stream is byte-identical. The positive control `u10-puncher-dwell-refused` keeps `strikeIframeLapse` OFF, scoped and
+  named as the control's setting: ON, no stance of 56 round the puncher is refused by the punch.
+
+**Stopped.** `bobsoldier2` (the torch tape feeds `pickup-removal-witness.json`, another instrument's fixture; the BEFORE
+arm no longer refuses on the dwell), `f1-l5-open-lock` (it IS the `baitForecast` OFF control's witness;
+`f1-bodies-oracle.json` reads its 437 t), `l40button-witness` (at the defaults `lobberHoldRefusal` throws; with
+`movingWait` ON, l42's walk throws on the Explosion → Enemy arm, BOMBBLAST's region). Every ON tape of the first two
+also reproduces on the game; the recordings are in the report's evidence.
+
+### Seedling fidelity WATCHERTALK — the Watcher's `{114,0}` is earned by talking (switch OFF)
+
+Wave 19, planner `seedling-fidelity-planning-9`. The report is `CC/docs/cloud-reports/seedling-fidelity-watchertalk.md`.
+
+**The finding.** The AP event "talk to the Watcher" is the clear-tag `{114,0}` on `watcher@72,72`, and it gates the
+FinalDoor. The Watcher is typed "Watcher" (`Watcher.as:48`), in no solids list, so `world.solids` never holds it. Two
+spellings answered the clear-tag, and both were wrong:
+- the solver's `execClearTag` found no solid at (72,72) and took `already-clear`. Route survey step 210 "SOLVED" in
+  4 ticks this way, with `watcherTalks` and `earnedClears` empty: the flag was never written. Step 211 opened the door
+  only because the survey's grants stage `{114,0}`;
+- the JS runtime's pre-check (`jsRuntimeSolver.clearTagVerbOf`) refused the sweep's two L114 legs `no-verb` on
+  `solid:watcher` before asking the solver. With the pre-check opened and no verb, the solver "solves" them in 0 ticks.
+
+**The verb.** `CONTACT_FIDELITY.watcherTalkVerb` (OFF, byte-identical; `SEEDLING_WATCHER_TALK_VERB=0|1`).
+- `refineStrategy` selects `talk` for `solid:watcher`; the shared table is untouched.
+- `execClearTag` binds the run's watcher roster where no solid stands, and runs the existing `talk` verb
+  (`resolveTalkStrategy` + `execTalk`). It is certified by `run.watcherTalks` holding the `doneTalking()` write, as well
+  as by the `earnedClears` row.
+- A SILENT watcher answers by its census reason: a tag cleared at boot is `already-clear`; an empty `text` is
+  `cannot-act` (it never writes its tag).
+
+**Measured.** ON, both sweep legs (node bare pass, with the JS arc's one line applied in a scratch copy) solve by
+`talk` in 398 t. The survey moves only step 210: 4 t with no flag → 406 t earning `{114,0}`. Steps 209 and 211 (L113)
+are unchanged, and local OFF equals CI 39153361080 on all 212 steps. The six producer `--check`s are identical ON.
+
+**Witnesses** (p4f, game-recorded): `watchertalk-l114-clear-16` and `-32`, from (64,128) and (80,128). The game reports
+"watcher@72,72 -> 114:0 off at tick 380 (cause done, page 20 of 20)", and the model reproduces both at 0 px.
+
+**Trap candidate.** *A clear-tag that finds no body is not proof the flag is clear.* `already-clear` reads "no solid
+here" as "the build left it out". That holds for a body that is a solid; for an NPC (no collider) it is a false solve
+with 0 ticks and no write.
+
+### Seedling fidelity AXEFORCEDU — a spinning axe's forced U, certified and priced: the knockback kills
+
+Slice `seedling-fidelity-axeforcedu` (wave 19, planner `seedling-fidelity-planning-9`), base `4667f7e353` (main: DIGEST
+harvested). One switch, **OFF**, OFF byte-inert. The report is `CC/docs/cloud-reports/seedling-fidelity-axeforcedu.md`.
+
+**D1 — the axe legs at base** (sweep 39153416627, survey 39153361080; node, each row's `seamTime`, the page's budget
+flow). Legs 603 (L71 north), 636 (L75 north) and 774 (L103) reproduce: the dashless pass answers EXHAUSTED on the blade
+in 1,213 / 2,125 / 1,562 of the retry's 2,560 work units (the AXE arm's stall search 598 / 1,711 / 1,027 previews, the
+bent corridors bounded at 60), and the full pass is cut (`kill-chaser` / `axe-dodge` / `axe-dodge`). The forced-hit
+rung is not proven: *"depth 3 needs 46656 more fork step(s) than the budget's 668"*. Leg 760 (L101 stairs) is `done`
+at this baseline (354 t, a dodge and a kill, stable over seam ±3). Survey: only step 149 (= 636) refuses at an axe.
+**The priced count with the knockback stepped by the run is not AXETIMING's ~1–2 hits.** Every member of each corridor
+(every doorstep phase, and every dash-chain phase in the full pass) driven on a fork **dies**: L71 by lava (the hit's
+knockback throws the player east out of the one-tile lane beside the hub) or by the third hit (pinned: each knockback
+pushes the walk back into the next sweep); L103 by its pit. In L75 the model refuses to step: the hit's camera shake
+leaves `lavarunner@104,64` neither surely on nor surely off screen (⚖ never the cosmetic RNG).
+
+**D2 — `axePricedCrossing`** (`SEEDLING_AXE_PRICED_CROSSING`; `axePricedCrossing.js`, the ladder right after the
+forced-hit rung, only on an axe-only danger with a fork). The certificate: the AXE arm's corridor at every phase of the
+axe (doorstep stalls 0 … period − 1, × the dash chain's 10 phases when the pass may dash), each member priced by
+`axeHitsPlayer` on its pre-move boxes; it holds when no member crosses free of blade contact (and refuses by name,
+"a gap exists", when one does: L61 under the timing rung OFF). The crossing: members driven on forks, fewest contact
+samples first (8); admitted only alive, at the goal, axe hits only, inside `FORCED_HITS`' budget; the fewest-billed is
+replayed live and billed as a `forced-hit` row with `proof: {kind: 'axe-phase'}`. A refusal appends one clause to the
+ladder's last reason (the progress kind is unchanged: `exhausted`). Rows: `fidelityAxePriced.test.js` (18).
+
+**D3 — game witnesses** (p4f headless, 0 px with `spinningAxePlayerHit` ON; OFF parts at the hit):
+`axeforcedu-l71-603-member` (417 rows: the blade at t48, the lava, the respawn at (296,104) at t81, and the loop) and
+`axeforcedu-l103-774-member` (554 rows: the blade at t156, the pit, the respawn at (24,72) at t178).
+
+**Movers: none.** Sweep (node, the page budget, the 82 axe-room legs): ON = OFF on outcome, ticks and message for 79;
+603 / 636 / 774 refuse with the clause added; the dashless pass spends +22 work units where it reaches the rung, and no
+pass's answer moves. Survey (local, the 24 axe-room steps): OFF = CI on all 24; ON = OFF on all 24 (149 gains the
+clause). The rung's gate (every reason a spinning axe) keeps it out of every other room.
+
+Trap candidates:
+1. *A priced hit is priced with its knockback, or it is not priced.* AXETIMING's 1–2 hits ignored the knockback; the
+   run's billing throws the player into lava and pits at every phase. Count hits on a fork of the run, never on a
+   preview that cannot be hit.
+2. *A knockback pushes WITH the blade.* `hitPlayer`'s point is the foot of the perpendicular on the blade two updates
+   back, so on a corridor against the blade every hit pushes the walk back into the next sweep: a pinned walk bills a
+   hit a revolution until it dies.
+3. *A hit opens the shake band, and the band can hide a body's wake.* After any priced hit, a chaser near the screen
+   edge makes the run refuse to step; a priced crossing in such a room is undecidable, not cheap.
+
+### Seedling fidelity HOUSEKEEP — named refusals, the lightpole's label, the walker's beam towers
+
+Wave 19, three small items. The report is `CC/docs/cloud-reports/seedling-fidelity-housekeep.md`.
+
+**D1 — a solver can't-do that arrives as a plain throw leaves `solveSegment` as a `SolverRefusal`.**
+- The census is by code (`@babel/parser`, `evidence/tools/census-throws.mjs`): `solveSegment` / `twoPassSolve`'s import
+  closure holds 196 reachable plain-`Error` throw sites. 3 are converted, 128 are the model's own named refusals of a
+  state it does not transcribe (kept, unmeasured), 65 are invariants (argument contracts, the tape's contract, internal
+  consistency).
+- MEASURED, the non-refusal throws the survey (45 refused steps, local) and the sweep baseline (851 legs) reach: three.
+  `levelRun`'s press on a FROZEN tick (sweep 631, survey 122; coded `FROZEN_TICK_PRESS`), `findExit`'s teleporter on a
+  PIT tile (survey 113, 191; a `BotDriverV2Error`) — and ROCKMOVE's orphan button (`runHold`'s "NO responder", legs
+  311/313/634 under its remove arm).
+- Each is NAMED where the solver first sees it (`obstacle` on the error), and becomes a refusal only at the OUTERMOST
+  `solveSegment` (`REFUSAL_BY_NAME`, `refusingByName`). Kinds: `unmodelled-frozen-press`, `unmodelled-pit-teleporter`
+  (RK `unmodelled`, by field), `orphan-presser` (RK `does-not-apply`, by its words).
+- Byte-inert: tapes, the six `--check`s and the identity block do not move; the words of every refusal are unchanged
+  (the orphan presser's gain one sentence).
+
+**D2.** `PERSISTENCE_RESPONSE.lightpole` is `'light'`, not `'cosmetic'`: a cleared tag boots the pole LIT, and
+`darkTrapLight` (ON) kills the DarkTraps its light reaches. No reader branches on the value. `deriveLightPole`'s
+docblock names the cross-room press (a `ButtonRoom` in another level writes the pole's tag: the rules' darktrap
+event, discharged by `execCrossRoomPress` in the presser's room, never by the light arm).
+
+**D3 — `CONTACT_FIDELITY.walkerBeamTowers` (OFF).** The walker's planner read a BeamTower's PLACEMENT while the run
+walks into its drifted Solid. Giving `livePerVisitOpts` the family alone moves nothing: `plannerObstacleAt`'s named-key
+path drops it (r8Acceptance's `plannerDropsSixFamilies`), so ON forwards it there too. Measured ON (model): of the
+sweep's 18 beam-tower-room legs, the real `createRuntimeWalker` loop moves 1 (782, L105); the survey's five
+beam-tower steps are identical. The game's answer is the sweep's `producer=walker` A/B (the report names it).
+
+**Trap candidates:**
+
+1. *The brief's "plain `Error`" was the wrong filter.* Two of the three measured crashes were `BotDriverV2Error`s, a
+   named class. The question a sweep row asks is "is it a `SolverRefusal`", and a census by class name misses them.
+2. *A refusal must not be catchable when the run is half-stepped.* The frozen-tick press throws inside `advance`, after
+   the tick began mutating the run. Converting it at the throw would let a rung catch it and go on from a corrupt run;
+   converting it at the outermost segment keeps every inner control path the object it was.
+3. *A family in the bag is not a family in the query.* `livePerVisitOpts` feeding `beamTowers` changes nothing while the
+   node test destructures named keys. Measure the consumer, not the builder.
+4. *A progress hook's onProgress at `segment` runs OUTSIDE the segment's body.* A "nested" solve started from it is not
+   nested. Fire the nested call from a site emitted inside (`walk`).
+
+### Seedling fidelity BOMBBLAST — a bomb's Explosion lands on a body (`bombBlastBody`, OFF)
+
+Wave 19 (model coverage). The Explosion's `"Enemy"` arm (`Enemy.hit(4, Point, 1)` + knockback) was a by-name refusal in
+`levelRun`, and hammer BW's bombstand solve reaches it (leg 381: t1294 #10 on `bob@272,112`; with the strike lapse ON,
+t1339 #11 on `spinner@192,160`). The report is `CC/docs/cloud-reports/seedling-fidelity-bombblast.md`.
+
+**The game first.** `probe-seedling-bomb-blast-body.mjs` (p4f, headless) records every Bob/BobSoldier/Spinner row per
+tick. Two witnesses extend BW's prefixes with idle ticks:
+- t1294: #10 at (268, 118) lands on a Bob (hits 0 → 1, `hits_timer` 30, knocked back) AND a Spinner (1 → 2).
+- t1340: #11 on the same Bob (1 → 2) and the player.
+- With the lapse ON, t1339: #11 at (250, 160) KILLS a Spinner (2 → 3, velocity unchanged), and it is gone at t1350.
+- No blast can reach the BobSoldier: it is at (880, 832), and every bomb lands within 256 px of (112, 128).
+
+**The model** (switch ON): `bombBlastHitChaser` / `bombBlastHitSpinner` in `drainBombBlastsNow`. Both witnesses
+reproduce at 0 px over their WHOLE tapes, but only with `chaserSpinnerWalls` ON: from t1219, `bob@304,144` stops on a
+spinner in the game and walks through it in the model. That divergence comes before any blast and is not this arm's.
+It is fresh evidence for L40CONTACT's OFF switch.
+
+The walk's chaser forecast steps the same blasts (D3). A forecast taken at t1285 holds the Bob at 0 px against the
+live run through t1300; built OFF, it is 8 px astray with hits 0 by t1297.
+
+**Measured movers.**
+- L40 survey steps 78/108/110/112 are byte-identical OFF vs ON.
+- The local L40 sweep is 17/18 identical by key. Leg 414 moved by a seam-clock difference (4972 vs 4981), far from
+  the lobber.
+- Bounded vitest with the default flipped in code: only the two default pins go red.
+- Hammer's `plan-seedling-hammer-bw-bombstand --check`: the two blast-refusal rows move. With the lapse ON, the ON
+  solve passes #11 and returns at t1667 with 0 hits. With the lapse OFF, it passes #10 and stops at t1572 on a
+  combat-ladder exhaustion.
+- The escape's reach is unchanged (closure census: 144 units, the same read-binding set). No digest field is needed.
+
+**Trap candidates.**
+- A blast row is billed at `updateLists()`, after `ticksCompleted` has counted the tick. The arm's rows carry
+  `ticksCompleted`, an advance-time arm carries `+ 1`, and the player's `playerHits` row reads one tick on.
+- The run's `spinnerBodies` keeps a faded spinner (alpha < 0) one tick past the game's removal. This holds for a
+  press kill too. The kill ledger's `removedTick` is the game's.
+### Seedling hammer-phase PR — solve-progress residue
+
+⚖ The user (2026-10-18) picked the solve-progress residue in the replan and ruled *a NEW `soft-lock` refusal kind* for
+the Watcher's Seed refusal. The report is `CC/docs/cloud-reports/seedling-hammer-progress-residue.md`.
+
+**W0** at `0f4bcfaef5`. The identity block is XC's W0 (ENEMY `f0bec576`). The six `--check`s are `405d9c4b b76f6483
+465a8b46 35456fbc 6cd35fe1 3d41b9fb`. Reference MATCH; tapeRunner **617 `8f27f975`**; surface 314 · constants 6,028. The
+bounded vitest over RK2's 30 files plus `escapeCrossPassCache` and `stringPullFast` passes 927 / 927. RK2's runtime
+census is unchanged: `pending` 32, `exhausted` 12, `bound` 7, `does-not-apply` 3, `danger` 1, no `other`.
+
+**D1 — the census.** Every throw site of `solverBot.js`'s and `twoPassSolve.js`'s import closure: 63 files with a site,
+1,352 sites. Only `solverBot.js` builds a `SolverRefusal`, so only its sentences can be `other`: any other module's throw
+is `error` at worst. A run-time-spelling instrument expands each `${…}` to each literal inside it and to a value. It finds
+RK2's 4 static `other` sites, of which 2 are an artefact of reading `${…}` unexpanded (`:8959` / `:8971` already match
+at run time). It also finds two sites RK2's head hid: `:16920` read `bound` off the variable `${bound}`, and `:23599`'s
+`failed to apply` branch. And it finds `levelRun`'s two plain-`Error` Seed throws, which say "is a SOFT-LOCK" and were
+`error`.
+
+**D2 — `soft-lock`.** The kind sits immediately before `other`, and `other` stays last. The rule reads the sentence's own
+claim, `is a soft-lock` / `is a SOFT-LOCK`. It covers `execTalk`'s live-Seed refusal (RK2's pinned residue, re-pinned)
+and `levelRun`'s two throws (`lastWhy.name` stays `Error`). It never reads the bare noun: `resolveTalkStrategy`'s
+"(a soft-lock)" no-stance refusal stays `exhausted`. The rest:
+- `:16920` → `diverged` (`is NOT latched in the live run`);
+- `:23599`'s branch → `exhausted` (`failed to apply`, which its frontier sibling already read that way);
+- `planSwordDash`'s bare `deadline` → `deadline`.
+
+The run-time residue is 0. `v` stays 2.
+
+**D3 — counts.** `caches: {stringPull, escapeCrossPass}` and `churn: {opened, succeeded, rejected, moved}`: counts
+only, fixed key sets, ≤ 222 bytes at any snapshot. The string-pull count is one guarded line in `botDriverV2`'s memo. On
+L40 it reads 47,073 hits and 44,962 misses. The escape member is a per-segment delta of `ESCAPE_CROSS_PASS_CACHE_COUNTS`.
+On L18 with XC ON it reads: pass 1, 542 stored; passes 2 and 3, 542 cross-pass hits each. ⚠ **Its solver-side line is
+held.** XC's "ON is OFF" rows compare the whole progress stream ON and OFF: with the line, 10 of them go red, and
+without it all 17 pass. Until those rows drop `caches`, an installer wires the member from its hook (`progressCaches`).
+`churn` reads only the frames the emitter already opens: coarse, but free.
+
+**Gates.** The digest, `shouldStop` and asks are equal hooked and unhooked (L18 `230dc0ff` 165, L40 `3addc379` 167). RK's
+v1 md5s and TC2's stream md5 are unchanged, with `caches` / `churn` dropped from the projections. Unhooked,
+`cacheEntered()` stays at 0. 6 / 6 mutants caught.
+
+Lesson: *a field that reports a switch breaks every "ON is OFF" proof that compares the whole stream.* The stream's
+identity rows must name the fields they compare, or a new observation becomes a regression by construction.
+### Seedling hammer-phase XF — XC flip prep
+
+⚖ The user (2026-10-18) picked "XC flip, then the floor flip". Every flip is the user's call: this slice builds the
+evidence and a flip-ready branch (`seedling-hammer-xc-flip`, never merged by the slice). The report is
+`CC/docs/cloud-reports/seedling-hammer-xc-flip-prep.md`.
+
+**The gap it closes (fidelity-9's condition).** No row had put a drifting beam tower inside a CACHED SEARCH.
+- No committed room can: spinners live in L18 / 39 / 40 / 92 and towers in L103–108. The escape searches only after a
+  press LANDS on a spinner, so a tower room returns at `no-landing`. L104 returns even earlier, at the shield's
+  `unmodelled` probe, and dropping the shield only moves it to `no-landing`.
+- Measured over the six producers, killgate s2 / s5 / s9 and the L18 sweep: 0 escape calls in a tower world. Of L18's
+  56,655 calls, 54,471 end at `no-landing` and 2,028 search.
+- So two rows were constructed in `escapeCrossPassCache.test.js`, over L18 with one tower added at (92, 84):
+  - **two seam times 45 ticks apart.** The hammers' phase is the same (`gameTime % 45`) and the drift's is opposite
+    (its period is 90). With no tower, or with the drift OFF, the two answer alike. With the drift ON, both escapes
+    search (75 vs 9,685 expansions) and answer differently. ON there are two entries and then two hits; verify finds
+    0 mismatches;
+  - **a visit-only pair.** One run's tower switches are OFF for 40 ticks: one seam, tick, clock and player, and the
+    digests differ in `visit` alone. A key without `visit` (mutant M9) turns this row red. The seam-time row stays
+    green under M9, because `staging` and `clock` already part its two digests.
+
+**The flip branch** changes the default only (`=0` turns it OFF). On it: the identity block is W0's, all six
+`--check`s exit 0, the tier is 22 files / 375 tests green, and verify mode over the producers and both L18 sweeps finds
+**0 mismatches in 94,280 verified hits**.
+
+**The floor** (`STRIKE_ETA_FLOOR`, floor + cache ÷ today, 3 interleaved rounds):
+- L18 sweep **0.99×**; floor + cache ÷ cache is 1.40×;
+- staging A **0.43×**;
+- L40 flat.
+
+It is not answer-identical. All 45 L18 residues still solve, 24 shorter and 21 longer (19,545 → 19,558 t), and
+staging A's kill moves t3100 → t1740. L40's answer is unchanged.
+
+### Seedling hammer-phase LB — the L40 chest band + HX
+
+⚖ The user (2026-10-18): *"If there are solves that are blocked by timeouts, could we simply increase the timeout?"*
+Measured on divergence legs 397 / 414 (L40, the chest), at the defaults and with `chaserSpinnerWalls` +
+`bombBlastBody` ON. The report is `CC/docs/cloud-reports/seedling-hammer-l40-band.md`.
+
+**No.** With the work budget removed (in node; no default moved):
+- 414 finishes its search at 5,954 units a pass (5,208 with the walls) and refuses EXHAUSTED: the chest's tile lies in
+  `bobsoldier@880,832`'s volume (CW's guard);
+- 397 refuses at 156 units at any budget, on the press kill's own HAMMER_SAFETY corner.
+
+Over 21 seam times per leg per arm, nothing solves (168 rows: 2 legs × 4 arms, the guards ON and OFF). The `timeout` ↔ `failed` swap is two clocks on one solve:
+- ~70 % of the wall is the press kill re-deriving its strike every strikeless tick (`deriveStrike` → `previewWalk`),
+  which asks almost no work units;
+- the 640 units go afterwards to DETOUR's via set (543 of them on 414).
+
+The anytime full pass then repeats the dashless pass unit for unit.
+
+**HX, two switches in `pressKillGuards.js`, both OFF:**
+- `PRESS_KILL_SHAKE_GUARD` (HO1): the strike preview's chaser-forecast band throw refuses that candidate by name (kind
+  `unmodelled`), and the strikeless kill waits the band out a refuge tick at a time. 414's atlas boot: THREW t2439 →
+  REFUSED t5672 on the guard.
+- `PRESS_KILL_REBOOT_GUARD` (HO2): the first death inside the press kill refuses it (`SolverRefusal`, `danger`). With
+  the walls ON: 9 deaths to the 11,418-t bound → REFUSED t1202.
+
+ON moves no identity row, producer, tapeRunner pair (621) or progress solve. The reboot guard moves G1's and SF's L40
+witness rows (2195 → 1216, 1629 → 778: refusals whose kill crosses a death). Gate `hammerPressKillGuards.test.js`.
+
+**Hand-overs.**
+- The guard (fidelity), then CW's joint chooser (hammer).
+- DETOUR's spend on a covered goal tile (fidelity).
+- The anytime pass repeat (JS arc / XF).
+- A second band throw from the walk's own `probeCorridor` (unassigned).
+- The same throw from the press kill's REFUGE preview (`deriveRefuge`, 414 seam 5135): hammer, once it has a fixture.
+- `narrow`'s *"is dangerous too"* classifies `other` (PR).
+
+**Trap candidates.**
+- A work unit is a deadline ask, and the press kill asks almost none. A leg can spend its whole wall budget inside
+  one rung while its work budget is untouched, so "ran out of units" and "ran out of time" name different rungs.
+- Refusing a strike candidate IS waiting: a strikeless press-kill tick takes a refuge and derives again.

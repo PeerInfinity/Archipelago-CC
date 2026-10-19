@@ -1,0 +1,8 @@
+     ✓ bombBlastBody ships OFF 1ms
+     ✓ the GAME: t1294 lands on a Bob (0 → 1) and a Spinner (1 → 2); t1340 on the Bob (1 → 2) and the player 2ms
+     ✓ OFF: the run still refuses #10's blast on bob@272,112 by name  677ms
+     × ON: the model is the game at every window tick (0 px; hits, hits_timer, velocity), and the arm's rows 477ms
+     ✓ the GAME: t1339 takes a Spinner 2 → 3 with no knockback, and it is gone at t1350 1ms
+     ✓ ON: the model is the game at every window tick, the kill is a spinnerKills row by bomb, removed t1350  412ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 5 passed (6)

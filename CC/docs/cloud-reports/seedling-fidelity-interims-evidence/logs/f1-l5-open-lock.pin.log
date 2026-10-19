@@ -1,0 +1,9 @@
+PASS: ⛓⛓ the open-lock arrival DECLINES, and by the new name — solverBot(f1-l5-open-lock) reach-exit (48,112)->L6 -> bait (bob@48,80) stance -> bait (bob@16,80) stance -> kill (bob@16,80): held button@48,48 for the whole bound of 318 tick(s) and the condition never became true
+PASS: ⛓ one body is left, bob@16,80, alive with two hits — [["bob@16,80",58.86901937906977,84.14465648205615,2]]
+PASS: ⛓ and the player took no hit — []
+PASS: ⛓⛓ the tape replays the solve run exactly (player and every body, every tick) — 437 ticks
+PASS: ⛓ the committed f1-l5-open-lock-bait is what this script produces today — byte-identical
+## f1-l5-open-lock-bait: 437 ticks
+
+all checks green
+exit 0 at 00:43:53

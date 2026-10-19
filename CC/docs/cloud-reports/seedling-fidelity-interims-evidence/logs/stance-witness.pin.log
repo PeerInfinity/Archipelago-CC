@@ -1,0 +1,25 @@
+PASS: stance-l46-chest: the model replays it inside L46 — 1045 observations, ends {"level":46,"x":431.0499999999997,"y":58.90000000000035}
+PASS: stance-l46-chest: the plan opens the chest once (one `chest` record) — ["chest"]
+PASS: stance-l46-chest: chest@424,40 opened — [["chest@424,40",796]]
+PASS: the committed stance-l46-chest is what this script produces today — byte-identical
+PASS: stance-l48-chest: the model replays it inside L48 — 541 observations, ends {"level":48,"x":159.0500000000002,"y":201.05000000000064}
+PASS: stance-l48-chest: the plan opens the chest once (one `chest` record) — ["chest"]
+PASS: stance-l48-chest: chest@152,184 opened — [["chest@152,184",389]]
+PASS: the committed stance-l48-chest is what this script produces today — byte-identical
+PASS: stance-l48-keylock-open: the model replays it into L47 — 455 observations, ends {"level":47,"x":224,"y":136}
+PASS: stance-l48-keylock-open: with {48,1} cleared the build has no bosslock@48,144 — []
+PASS: stance-l48-keylock-open: the walk passes south of the lock's row (y > 161) in L48 — max y in L48 301.6733400252709
+PASS: the committed stance-l48-keylock-open is what this script produces today — byte-identical
+PASS: stance-l48-keylock-south: the model replays it into L53 — 370 observations, ends {"level":53,"x":200,"y":72}
+PASS: stance-l48-keylock-south: the plan applies `keylock` to bosslock@48,144 — ["keylock"]
+PASS: stance-l48-keylock-south: bosslock@48,144 opened in the replay — openActivators held it
+PASS: the committed stance-l48-keylock-south is what this script produces today — byte-identical
+PASS: stance-l48-keylock-north: the model replays it inside L48 — 201 observations, ends {"level":48,"x":56.37466981807847,"y":140.62906685041494}
+PASS: stance-l48-keylock-north: bosslock@48,144 never opened (no key-line touch from the north) — openActivators never held it
+PASS: stance-l48-keylock-north: the lean pins the box above the lock (y < 144) — max y 140.62906685041494
+PASS: stance-l48-keylock-north: the box rests over the lock's columns (x 48..64), flush on its top — {"at":{"x":56.37466981807847,"y":140.62906685041494},"box":{"x":54.37466981807847,"y":138.62906685041494,"right":58.37466981807847,"bottom":143.62906685041494}}
+PASS: stance-l48-keylock-north: the run holds key 3 (the lock's own) — [0,1,2,3]
+PASS: the committed stance-l48-keylock-north is what this script produces today — byte-identical
+
+all checks green
+exit 0 at 00:44:12

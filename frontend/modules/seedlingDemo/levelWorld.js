@@ -3001,9 +3001,17 @@ export const PERSISTENCE_RESPONSE = Object.freeze({
     // circle, which over-avoids in the safe direction. Allowed, recorded.
     watcher: 'silence',               // NPCs/Watcher.as:44-66
     // `LightPole.activate = !checkPersistence(tag)` drives a light radius;
-    // its type is "LightPole", which is in no solids list, and nothing this
-    // model consults reads `activate`.
-    lightpole: 'cosmetic',            // Scenery/LightPole.as:50
+    // its type is "LightPole", which is in no solids list, so a clear moves
+    // no GEOMETRY — but it is not cosmetic: a cleared tag boots the pole LIT
+    // (`levelRun`'s pole state, `activate` from the flag), and a lit light
+    // within `radiusMin` of a `DarkTrap` kills it. Read by
+    // `levelRun.stepDarkTrapsNow` (`CONTACT_FIDELITY.darkTrapLight`, ON),
+    // `solverBot.deriveLightPole` (the kill rung's light arm) and the rules'
+    // `seedlingObstacleEvents.poleKillsOf` (the cross-room press that lights
+    // it). ⛓ housekeep D2: this label read 'cosmetic' ("nothing this model
+    // consults reads `activate`") from R4 until darkTrapLight made it stale;
+    // no reader branches on it ('light' and 'cosmetic' both build no solid).
+    lightpole: 'light',               // Scenery/LightPole.as:50
     // `Oracle` picks which of two strings it says. Its collider does not move.
     oracle: 'cosmetic',               // NPCs/Oracle.as:26
 });

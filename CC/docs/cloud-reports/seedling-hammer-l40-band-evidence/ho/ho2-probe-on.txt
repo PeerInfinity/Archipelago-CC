@@ -1,0 +1,2 @@
+SolverRefusal t 1202 deaths [ 1202 ] perTick 1202 obstacle {"kind":"danger","id":"bob@736,752"} solverBot(lb-ho2) chest (880,816) stance -> kill (spinner@880,848) by press: the player died at t1202 (chaser bob@736,752) while pressing spinner@880,848, after
+s 55.931

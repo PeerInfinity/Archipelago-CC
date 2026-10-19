@@ -1,0 +1,11 @@
+PASS: ladder2-l59-grenade: the model replays it into L67 — 144 observations, ends {"level":67,"x":216,"y":120}
+PASS: ladder2-l59-grenade: the plan needs no DODGE row — the exact pricing alone certifies it (no DODGE row)
+PASS: ladder2-l59-grenade: the walk ARMS grenade@112,112 and is not inside its blast — armed on update 68; the walk leaves before the blast
+wrote frontend/modules/seedlingDemo/fixtures/tapes/ladder2-l59-grenade.json
+PASS: ladder2-l104-beam: the model replays it into L105 — 262 observations, ends {"level":105,"x":216,"y":72}
+PASS: ladder2-l104-beam: the plan is the DODGE rung's PHASE arm (PHASE arm: stall 15 t at walk-offset 88)
+PASS: ladder2-l104-beam: the walk enters beamtower@16,56's census volume and the beam never touches it — 46 observation(s) inside the volume, 0 contact(s)
+wrote frontend/modules/seedlingDemo/fixtures/tapes/ladder2-l104-beam.json
+
+all checks green
+exit 0 at 00:44:05

@@ -179,8 +179,9 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ hammer-phase C2: +1 (275) — `hammer-c2-l18-ghostspinner` (no dialogue), inert.
         // ⛓ fidelity L40BUTTON: +2 (277) — `l40button-l41-part0`, `l40button-l42-part0` (no dialogue), inert.
         // ⛓ fidelity SEALDOOR: +3 (280) — `sealdoor-l113-clear`, `sealdoor-l113-exit`, `sealdoor-l113-noseal-control` (no dialogue), inert.
-        expect(rows).toHaveLength(280);
-        expect(rows.length - parted.length).toBe(279);
+        // ⛓ fidelity WATCHERTALK: +2 (282) — `watchertalk-l114-clear-16`, `watchertalk-l114-clear-32` (the Watcher's dialogue is paged, not auto-advanced), inert.
+        expect(rows).toHaveLength(282);
+        expect(rows.length - parted.length).toBe(281);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {

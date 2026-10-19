@@ -70,6 +70,7 @@ export const moduleInfo = {
   name: 'flashPanel',
   title: 'Flash Panel',
   componentType: 'flashPanel',
+  docs: 'docs/json/user/modules/flashPanel.md',
   icon: '🎮',
   column: 2,
   category: 'Embedding and Windows',

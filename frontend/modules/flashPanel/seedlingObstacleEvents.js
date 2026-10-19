@@ -361,8 +361,9 @@ export function deriveButtonEvents(rows, ctx) {
 
 /**
  * ⛓⛓ RULES darktrap-events — **THE BODIES A LIT POLE KILLS.** A `LightPole` is solid in neither state, so a
- * cross-room clear of its tag looked cosmetic to `persistenceEffect` (the model's `PERSISTENCE_RESPONSE` says
- * `'cosmetic'`: nothing the model's GEOMETRY consults reads `activate`). It is not: `activate =
+ * cross-room clear of its tag looked cosmetic to `persistenceEffect` (the model's `PERSISTENCE_RESPONSE` said
+ * `'cosmetic'` before fidelity wave 19, `'light'` from it: nothing the model's GEOMETRY consults reads `activate`).
+ * It is not: `activate =
  * !checkPersistence(tag)` drives a `Light` with `radiusMin` 28, and `DarkTrap.update` starts dying the first tick a
  * non-player light comes within `radiusMin` of it (`enemyDamage.DARKTRAP_LIGHT_DEATH`; fidelity STATICLADDER D2).
  * A darktrap's contact is a barrier (fidelity DARKTRAPQ W1/W1c: frozen, then killed, at any walk or dash timing),

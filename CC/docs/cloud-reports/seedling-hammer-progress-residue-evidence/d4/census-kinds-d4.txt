@@ -1,0 +1,25 @@
+exhausted 12 [
+  "row:avoid no admissible corridor with the danger map's # volume(s) for",
+  "row:avoid no admissible corridor with the danger map's # volume(s) fo",
+  "row:bait no stance within puncher@#,#'s leash (#) both pulls its",
+  'search depth first (deepest #) and then breadth first: no state re'
+]
+bound 7 [
+  'row:time the aim is # px away and `mover.MOVER_RANGE` measures this',
+  'row:time the aim is # px away and `mover.MOVER_RANGE` measures this '
+]
+pending 32 [
+  "leave levelRun: spinner@#,#'s removal at tick # OPENS # kill ",
+  'leave solverBot(r#-d#) reach-exit (#,#)->L# -> kill: `Game.to',
+  'leave solverBot(r#-solve-#) reach-exit (#,#)->L# -> kill: `G',
+  'leave levelRun: the removal of bob@#,# at tick # (an arrow kil',
+  'leave solverBot(r#-solve-#) reach-exit (#,#)->L# -> kill: `Game'
+]
+does-not-apply 3 [
+  'row:bait sandtrap@#,# is a STATIC census body (`speed #`, and this ',
+  'row:bait sandtrap@#,# is a STATIC census body (`speed #`, and this',
+  'row:avoid every reason the probe gave is a TurretSpit (spit:turret@#,'
+]
+danger 1 [
+  'row:avoid the danger-forbidden corridor STILL probes dangerous at (#'
+]

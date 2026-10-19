@@ -201,15 +201,10 @@ export async function ladder2Visit(ticks, w, gameTimeAt1) {
 }
 
 /**
- * ⚖ PINNED `jellyfishLive` OFF (KILLLOCK) — an INTERIM (seedling-fidelity-producers, 2026-10-16). The tapes were planned
- * before the jellyfish was stepped. The wave-8 harvest (`d9f182f71d`, ⚖ user 2026-10-06) turned KILLLOCK's
- * `jellyfishLive` ON and added `ladder2-l104-beam` to `r8Acceptance`'s jellyfish exposure (L104/L105); its re-pin list
- * missed this producer (no CI job runs it), so `--check` has drifted since. ON, the solver sees L104's jellyfish and
- * `ladder2-l104-beam`'s plan moves (278 → 261 ticks); the committed tape still replays at 0 px with it ON
- * (`fidelityLadder2`). ⛔ RETIRE THIS PIN with a re-record ON: the plan re-derived under the flipped default, recorded on
- * the game (p4f, 0 px), and its roster rows re-pinned — a roster move, so the user's licence.
+ * ⚖ RETIRED 2026-10-19 (seedling-fidelity-interims): the KILLLOCK `jellyfishLive` OFF INTERIM pin
+ * (seedling-fidelity-producers, 2026-10-16). Planned at the defaults (the jellyfish live) and recorded on the game (p4f,
+ * headless; the model reproduces the recording): ladder2-l104-beam 278 → 261 t; ladder2-l59-grenade does not move.
  */
-const PINNED_KILLLOCK = Object.freeze({ jellyfishLive: false });
 
 // ⚠ A bare import does nothing (`check-procgen-help`'s import door): the work is `main()`'s.
 async function main() {
@@ -286,7 +281,4 @@ async function main() {
     console.log('\nall checks green');
 }
 
-if (isEntryPoint(import.meta.url)) {
-    const { withKillLockBodies } = await import(join(MODULE, 'killLockBodies.js'));
-    await withKillLockBodies(PINNED_KILLLOCK, main);
-}
+if (isEntryPoint(import.meta.url)) await main();

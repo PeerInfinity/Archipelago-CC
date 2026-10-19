@@ -1,0 +1,6 @@
+302ac203890b9640b9f95a0bf0485052a3ff41ff
+ M CC/docs/cloud-reports/seedling-fidelity-housekeep-evidence/tools/battery.sh
+?? CC/docs/cloud-reports/seedling-fidelity-housekeep-evidence/d3/on/
+?? CC/docs/cloud-reports/seedling-fidelity-housekeep-evidence/d3/vitest-extra.txt
+?? CC/docs/cloud-reports/seedling-fidelity-housekeep-evidence/d3/vitest-files-licence.txt
+?? scripts/procgen/zz-survey-scratch-housekeep.mjs

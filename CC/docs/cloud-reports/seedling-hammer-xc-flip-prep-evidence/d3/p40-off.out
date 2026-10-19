@@ -1,0 +1,2 @@
+r5-l40-part5 L40 hook=peek deadline=never run 1/1: 4880 ms — SOLVED 679 t (1 pass(es))
+  answer 3addc3798712900a1155934ad303a8e8 · hook calls 372 · longest gap 174 ms (before call 44, rung) · snapshots 1 · final 3696 bytes · peek ms median - max -
