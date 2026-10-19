@@ -1,0 +1,1 @@
+LB 414/i0 seam=5131 budget=640 walls+blast: refusal work=643 answer=668f4ca7 wall=100361ms :: solverBot(wasm-location-40): the caller's anytime deadline (`shouldStop`) was reached at the `walk` site before solverBot(wasm-location-40) apitem (880,816) contact's corridor (attempt 1) — the segment's own work is boun

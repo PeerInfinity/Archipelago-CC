@@ -1,0 +1,1 @@
+LB 414/i0 seam=5131 budget=1000000000 walls+blast: refusal work=10416 answer=3946a36f wall=353487ms :: solverBot(wasm-location-40) apitem (880,816) contact: the combat ladder is EXHAUSTED. The corridor passes through danger at (888.2,852.4) — chaser:bobsoldier@880,832 (the sword: `swordHitting`'s `collideLine("Player", …)
