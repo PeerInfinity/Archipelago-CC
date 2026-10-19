@@ -43,7 +43,7 @@ run-name: >-
   ids=${{ inputs.ids }} keys=${{ inputs.keys }} flags=${{ inputs.stage_flags }}
   contact=${{ inputs.contact_fidelity }} axe=${{ inputs.axe_dodge }} window=${{ inputs.upgrade_window_work }}
   dashonly=${{ inputs.dash_only_window }} dash=${{ inputs.dash_shape }} budget=${{ inputs.leg_budget_ms }}
-  census=${{ inputs.seam_census }} fault=${{ inputs.test_fault }}
+  census=${{ inputs.seam_census }} mem=${{ inputs.memory_probe_ms }} fault=${{ inputs.test_fault }}
 on:
   workflow_dispatch:
     inputs:
@@ -149,6 +149,14 @@ on:
           replay-seedling-solve-request.mjs replays in node. The rows are unchanged.
         type: boolean
         default: false
+      memory_probe_ms:
+        description: >-
+          Empty = off (today's run). Otherwise an interval in ms (>= 250): MEASUREMENT ONLY (slice seedling-js-wasm-oom)
+          — each leg samples the game's o1heap arena, its clock and the engine's phase, the bridge calls and the
+          parent's JS heap (MEMPROBE lines in shard.log); rows gain `memory` + `memoryProbeMs`, and each shard writes
+          memory-<i>.jsonl (the whole curves) into its artifact.
+        type: string
+        default: ''
       seam_census:
         description: >-
           Empty = off. Otherwise '<from>..<to>' (ticks): after the shards, each leg's FIRST captured request is
@@ -320,6 +328,7 @@ jobs:
           DASH_SHAPE: ${{ inputs.dash_shape }}
           LEG_BUDGET: ${{ inputs.leg_budget_ms }}
           CAPTURE: ${{ inputs.capture_requests && 'on' || '' }}
+          MEM: ${{ inputs.memory_probe_ms }}
           TEST_FAULT: ${{ inputs.test_fault }}
         run: |
           set -o pipefail
@@ -346,7 +355,7 @@ jobs:
             --producer="$PRODUCER" --page="$PAGE" --page-legs="$PAGE_LEGS" --out=$D/rows-$I.jsonl $DUMP $STAGE ${CONTACT:+--contact-fidelity="$CONTACT"} \
             --stage-flags="$STAGE_FLAGS" ${AXE_DODGE:+--axe-dodge="$AXE_DODGE"} ${LEG_BUDGET:+--leg-budget-ms="$LEG_BUDGET"} \
             ${UPGRADE_WINDOW:+--upgrade-window-work="$UPGRADE_WINDOW"} ${DASH_ONLY:+--dash-only-window="$DASH_ONLY"} \
-            ${DASH_SHAPE:+--dash-shape="$DASH_SHAPE"} ${CAPTURE:+--capture-requests=$D/requests-$I.jsonl} 2>&1 | tee "$L"
+            ${DASH_SHAPE:+--dash-shape="$DASH_SHAPE"} ${CAPTURE:+--capture-requests=$D/requests-$I.jsonl} ${MEM:+--memory-probe-ms="$MEM" --memory-out=$D/memory-$I.jsonl} 2>&1 | tee "$L"
           RC=$?
           set -e
           echo "MEASURED: shard $SHARD rc=$RC wall $(( $(date +%s) - S ))s load $(cut -d' ' -f1-3 /proc/loadavg) nproc $(nproc) at ${GITHUB_SHA}"

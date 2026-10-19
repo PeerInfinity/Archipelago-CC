@@ -11094,6 +11094,8 @@ export const INSTRUMENTS = frz({
                 "leg-budget-ms",
                 "legs",
                 "limit",
+                "memory-out",
+                "memory-probe-ms",
                 "mode",
                 "out",
                 "page",
@@ -11184,6 +11186,18 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "limit"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "memory-out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "memory-probe-ms"
                 },
                 {
                     "how": [
