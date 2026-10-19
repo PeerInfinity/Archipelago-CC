@@ -23895,3 +23895,37 @@ witness rows (2195 → 1216, 1629 → 778: refusals whose kill crosses a death).
 - A work unit is a deadline ask, and the press kill asks almost none. A leg can spend its whole wall budget inside
   one rung while its work budget is untouched, so "ran out of units" and "ran out of time" name different rungs.
 - Refusing a strike candidate IS waiting: a strikeless press-kill tick takes a refuge and derives again.
+### Seedling fidelity APBOSSES — the R4 boss reports, mirrored (`apReportBosses`, OFF)
+
+Wasm rebuild R2, item R4 (⚖ user 2026-10-19: all seven bosses report, Bob is always fought, every map). The AS3 is
+PeerInfinity/Seedling `r4-boss-report` @ `0eda15f785` and is in no wasm until R7, so the switch ships OFF and flips
+inside the R7 landing merge. The report is `CC/docs/cloud-reports/seedling-fidelity-apbosses.md`.
+
+**The model, ON** (`apReportBosses.js`, `levelRun`, `levelWorld`, `solverBot`):
+- Bob has no `hasFire` guard. His final death clears {32,3}, then drops the Fire (tag 4) only while {32,4} holds.
+- The arena rock's landing (and a rock built fallen) adds the boss while {32,3} holds, and only then writes
+  `playerPosition`. Otherwise it adds the Fire while {32,4} holds, otherwise nothing.
+- `Fire.removed()` and `DarkSword.removed()` grant nothing and clear their own slot in band. Neither writes a tag −1
+  slot ({31,29}, {11,29}).
+- The Witch adds the sword while `hasWand` and {12,1} holds, even when the sword already came from the server.
+- The run reads the three slots off its own persistence (`run.apReportSlotHeld`). The build accepts them as read; OFF
+  they are orphan throws. The executors finish on the reports, and an encounter goal resolves its executor by the ROOM.
+
+**Measured.**
+- OFF is byte-inert: the identity block equals W0's (`738b7ab5`), and so do the tapeRunner pairs (621 `fceca579`).
+- ON moves one producer (`solve-seedling-r9-campaign --check`, at `r9-solve-32`) and one survey step (51, L32: SOLVED
+  1056 t → REFUSED). It also moves five tapes × two faces (the L32 burns and `enc-l32-fire-return`) and 24 bounded
+  vitest rows in 8 files.
+- Every L32 mover is one gap: the model has no channel for the HOST's grant of a reported item mid-visit. So the burn
+  out of the arena refuses by name (`precondition`) when the Fire was not already held.
+
+**Hand-overs.**
+- The host's grant of a report's item, with its latency measured on R7 (JS arc / rules arc R4b).
+- Four boss rooms cannot be BUILT with their kill slot cleared: `finalboss`, `tentaclebeast`, `bosstotem` and
+  `lightbosscontroller` have no `PERSISTENCE_RESPONSE`. The totem's kill also never reaches `pendingEarnedClears`.
+
+**Trap candidates.**
+- A runtime-spawned pickup's slot is read by NO placed entity, so the orphan-clear guard calls the game's own state a
+  derivation error. The reader is the runtime spawner (the rock, the Witch), and the build has to be told so.
+- `playerPosition` rode on the boss's spawn arm all along. At `f8d9bc1` the arm always ran (the ctor guard was a
+  no-op), so "the landing writes the respawn point" was true only by accident.
