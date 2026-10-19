@@ -43,6 +43,7 @@ User-friendly guides still to be written. See the corresponding technical refere
 - [Bounce Region Editor](./bounceRegionEditor.md) — Editing a generated bounce zone's platforms and seeing the rules they make
 - [Procgen Lab](./procgenLab.md) — The maze and Seedling room labs inside the app
 - [Substrate Registry](./substrateRegistry.md) — Every kind of region a world can be built from, and what each can do
+- [Flash Panel](./flashPanel.md) — Playing Seedling as part of an Archipelago world
 
 ## Core Service Modules
 

@@ -792,6 +792,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The Exits panel shows every region exit (transition between regions) in the game, with real-time accessibility status and the logic required to traverse each one."
     },
     {
+        "path": "docs/json/user/modules/flashPanel.md",
+        "title": "Flash Panel",
+        "section": "user/modules",
+        "summary": "The Flash Panel plays Seedling — the original Flash game, recompiled to run in the browser — as part of an Archipelago world. Opening a chest or picking up an item in the game checks that location…"
+    },
+    {
         "path": "docs/json/user/modules/gameStatePanel.md",
         "title": "Game State Panel",
         "section": "user/modules",
@@ -1168,6 +1174,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/modules/editor.md",
             "docs/json/user/modules/events.md",
             "docs/json/user/modules/exits.md",
+            "docs/json/user/modules/flashPanel.md",
             "docs/json/user/modules/gameStatePanel.md",
             "docs/json/user/modules/helpers.md",
             "docs/json/user/modules/iframeManagerPanel.md",
