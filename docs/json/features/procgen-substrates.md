@@ -10,7 +10,7 @@ The columns here are in id order. In the app, every list of substrates — the p
 
 <!-- GENERATED:substrate-capability-chart BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**29 statements · 9 substrates · 39 registry fields read (42 of the developer matrix's 92, counting the parents of the fields read) · 50 not yet read.**
+**29 statements · 9 substrates · 39 registry fields read (42 of the developer matrix's 93, counting the parents of the fields read) · 51 not yet read.**
 
 ## Play
 
@@ -64,11 +64,11 @@ The columns here are in id order. In the app, every list of substrates — the p
 | | What you can do | Bounce Demo | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Noiz2sa | Idle Loops | Runner Demo | Text Adventure |
 |---|---|---|---|---|---|---|---|---|---|---|
 | E1 | Its rooms can be edited | ✓ in a panel | ✓ on a lab page | ✓ on a lab page | ✗ | ✓ on a lab page | ✗ | ✗ | ✗ | ✗ |
-| E2 | A region of a saved world can be opened in an editor and saved back | ✓ | ✗ (note 1) | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✓ |
+| E2 | A region of a saved world can be opened in an editor and saved back | ✓ | ✗ (note 1) | ✓ | ✗ | ✓ | ✗ | ✗ | ✗ | ✓ |
 | E3 | An exit can be moved to another side (and a side can hold more than one) | ◐ one exit per side | ✓ and a side can hold more than one | ✓ and a side can hold more than one | ✓ and a side can hold more than one | ✗ | ✓ and a side can hold more than one | ✓ and a side can hold more than one | ◐ one exit per side | ✓ and a side can hold more than one |
 | E4 | The editor's validity report checks its location and exit names | ✓ | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 
-1. Seedling (region atlas): a Seedling sidecar payload is an ATLAS REFERENCE (`atlas_ref` / `atlas_region` / `atlas_sub_region` / `level`), not an authored room record — the room lives in the level set and the atlas that the region marking tool and `watch.html` own, and a rules.json carries neither, so there is no one-room document to hand the lab's edit arm.
+1. Seedling (region atlas): this is a room from the original Seedling game, and those are read-only in a world: its access rules come from the game's committed playthrough atlas, not from the room's layout, so an edit here would leave them wrong. (Its sidecar is an ATLAS REFERENCE — `atlas_ref` / `level` — with no room data in it.) A change to a real-game room goes in as a reviewed level-set patch (`SEEDLING_SET_PATCHES`).
 
 ## Fields behind each row
 
@@ -166,6 +166,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Generate* — It has its own settings in the generation form
 - *Generate* — A world of it can start with an empty inventory
 - *Edit* — Its rooms can be edited: on a lab page
+- *Edit* — A region of a saved world can be opened in an editor and saved back
 - *Edit* — An exit can be moved to another side (and a side can hold more than one): and a side can hold more than one
 - *Edit* — The editor's validity report checks its location and exit names
 
@@ -310,8 +311,8 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 
 ## Fields no statement reads yet
 
-50 fields of the developer matrix are not behind any row above — plumbing a person does not choose a substrate by, or a capability not yet put into words:
+51 fields of the developer matrix are not behind any row above — plumbing a person does not choose a substrate by, or a capability not yet put into words:
 
-`applyContentModules`, `applyPipelineConfig`, `backPortalGated`, `buildLibraryRegionParams`, `buildRegionContract`, `buildRegionParams`, `buildZoneSpecs`, `canHostExitGatesBraid`, `defaultProcgenParams`, `driftItems`, `emitsSpiralContent`, `exitGateVeto`, `extractPathsAndObstacles`, `extractZoneRules`, `fillerItem`, `gateHostingHint`, `gateableItems`, `getSpiralContent`, `hostsSurplusExitsNatively`, `id`, `iframeId`, `instantiateAtlasEntryForSpecs`, `instantiateLibraryEntryForSpecs`, `label`, `libraryEntryRefusal`, `loadRegionEvent`, `loopSupport.customQueues`, `loopSupport.playClock`, `onContentEdit`, `pipelineConfigFromParams`, `pipelineConfigKeys`, `placeFromItems`, `placeFromRules`, `prepareSphereGrowth`, `priceRegions`, `procgenParamsFromPayload`, `recordablePipelineConfig`, `regionGeometry`, `regionSourceDefault`, `renderLibraryProcgenParams`, `restartWarp`, `rulesJsonBlocks`, `serializeWorld`, `sidecarFields`, `spiralContentConfigKey`, `spiralItemCapacity`, `validateLibraryEntry`, `victoryItem`, `zoneConfigFromSlot`, `zoneOfPayload`
+`applyContentModules`, `applyPipelineConfig`, `backPortalGated`, `buildLibraryRegionParams`, `buildRegionContract`, `buildRegionParams`, `buildZoneSpecs`, `canHostExitGatesBraid`, `defaultProcgenParams`, `driftItems`, `emitsSpiralContent`, `exitGateVeto`, `extractPathsAndObstacles`, `extractZoneRules`, `fillerItem`, `gateHostingHint`, `gateableItems`, `getSpiralContent`, `hostsSurplusExitsNatively`, `id`, `iframeId`, `instantiateAtlasEntryForSpecs`, `instantiateLibraryEntryForSpecs`, `label`, `libraryEntryRefusal`, `loadRegionEvent`, `loopSupport.customQueues`, `loopSupport.playClock`, `onContentEdit`, `pipelineConfigFromParams`, `pipelineConfigKeys`, `placeFromItems`, `placeFromRules`, `prepareSphereGrowth`, `priceRegions`, `procgenParamsFromPayload`, `recordablePipelineConfig`, `regionEditStatus`, `regionGeometry`, `regionSourceDefault`, `renderLibraryProcgenParams`, `restartWarp`, `rulesJsonBlocks`, `serializeWorld`, `sidecarFields`, `spiralContentConfigKey`, `spiralItemCapacity`, `validateLibraryEntry`, `victoryItem`, `zoneConfigFromSlot`, `zoneOfPayload`
 
 <!-- GENERATED:substrate-capability-chart END -->

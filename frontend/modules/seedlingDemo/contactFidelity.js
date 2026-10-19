@@ -661,9 +661,10 @@ export const CONTACT_FIDELITY = {
      * written (`watcherTalks` empty), and the JS runtime's pre-check (`clearTagVerbOf`) refuses the sweep's legs
      * `no-verb` on `solid:watcher`. ON the clear-tag binds the run's watcher, selects `talk`, walks to a talk stance,
      * pages the dialogue (`execTalk`) and finishes on `watcherTalks` + the `earnedClears` row. OFF: byte-identical.
-     * `SEEDLING_WATCHER_TALK_VERB=0|1` for a node measurement.
+     * ✅ ON by default since the user's flip (⚖ "Flip watcherTalkVerb", 2026-10-19); `SEEDLING_WATCHER_TALK_VERB=0|1`
+     * for a node measurement.
      */
-    watcherTalkVerb: false,
+    watcherTalkVerb: true,
     /**
      * seedling-fidelity-housekeep D3 — THE WALKER'S PLANNER SEES A BEAM TOWER'S DRIFT (`botDriverV2.livePerVisitOpts`
      * carries the `beamTowers` family, and `plannerObstacleAt` forwards it on the named-key path).

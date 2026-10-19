@@ -36,7 +36,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingLibrary.js"
         },
         {
-            "fields": 32,
+            "fields": 34,
             "id": "flash_seedling_gen",
             "label": "Seedling (generated room)",
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingGenBuild.js"
@@ -152,6 +152,7 @@ export const REGISTRY = frz({
         {
             "rows": [
                 "exitSides",
+                "regionEditStatus",
                 "regionRoundTrip",
                 "roomEditor"
             ],
@@ -5713,6 +5714,79 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "flash_seedling_gen"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Editing",
+            "name": "regionEditStatus"
+        },
+        {
+            "carriedBy": [
                 "bounce",
                 "flash_seedling",
                 "flash_seedling_gen",
@@ -5795,6 +5869,7 @@ export const REGISTRY = frz({
             "carriedBy": [
                 "bounce",
                 "flash_seedling",
+                "flash_seedling_gen",
                 "maze",
                 "text_adventure"
             ],
@@ -5820,10 +5895,13 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "flash_seedling_gen",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "{open, save}",
+                    "type": "object",
+                    "value": [
+                        "open",
+                        "save"
+                    ]
                 },
                 {
                     "id": "jta",
@@ -6197,10 +6275,11 @@ export const REGISTRY = frz({
                 {
                     "id": "bounce",
                     "present": true,
-                    "short": "{kind, open}",
+                    "short": "{kind, module, open}",
                     "type": "object",
                     "value": [
                         "kind",
+                        "module",
                         "open"
                     ]
                 },

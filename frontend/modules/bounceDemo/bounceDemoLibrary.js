@@ -659,6 +659,25 @@ export function* generateZoneForSpecsGen({
  * generator uses (braid: deriveBraidAccessRules with terminalPortals; column:
  * deriveAccessRules), so an unedited save reproduces the original rules.
  */
+/**
+ * ⛓ **THE ONE DERIVE A LEVEL'S RULES COME FROM** under a region's settings —
+ * the re-assembly below (an editor Save) and the Bounce Region Editor's own
+ * readout both call it, so the readout cannot judge a level under physics the
+ * save does not use. ⛔ MEASURED 2026-10-18 before it was shared: the readout
+ * derived under the experimental DEFAULTS (spring rise 473 px) on a `dj` zone
+ * (544 px) and flagged maze-bounce-sphere-mix's `region_3_2` exit
+ * `side_exit_N` "unreachable under every ability set" over a 520 px gap the
+ * save path derives as `[springs]`.
+ */
+export function deriveBounceLevelRules(level, {
+    physicsProfile = 'experimental', mode = 'column', freeArrow = 'right',
+} = {}) {
+    const C = resolvePhysicsStamp(physicsProfile);
+    return mode === 'braid'
+        ? deriveBraidAccessRules(level, { constants: C, freeArrow, terminalPortals: true })
+        : deriveAccessRules(level, { constants: C });
+}
+
 export function assembleBounceRegionFromLevel(level, {
     region_id,
     exitSpecs = [],
@@ -710,12 +729,7 @@ export function assembleBounceRegionFromLevel(level, {
         return { id: s.id, requirement: physics, authored };
     });
 
-    if (!derived) {
-        const C = resolvePhysicsStamp(physicsProfile);
-        derived = mode === 'braid'
-            ? deriveBraidAccessRules(level, { constants: C, freeArrow, terminalPortals: true })
-            : deriveAccessRules(level, { constants: C });
-    }
+    if (!derived) derived = deriveBounceLevelRules(level, { physicsProfile, mode, freeArrow });
 
     const sidePortals = {};
     for (const e of exits) sidePortals[e.side] = e.id;
@@ -963,9 +977,15 @@ export function createBounceSubstrateEntry({
          * ⚠ `open` returns a PROMISE where the maze/Seedling `lab` kind
          * returns synchronously; no caller reads the return value (the ONE
          * return path is `onSave`), and `_editRegion` ignores it.
+         *
+         * ⛓ `module` is the app module whose panel `open` hands the session
+         * to: `regionEditors.openRoomEditor` enables it first (⚖
+         * region-editor-launch Q1), which creates the panel when the layout
+         * has none — `ui:activatePanel` alone only raises an existing tab.
          */
         roomEditor: Object.freeze({
             kind: 'panel',
+            module: 'bounceRegionEditor',
             open: (session) => import('../bounceRegionEditor/index.js')
                 .then((m) => m.openBounceRegionEditor(session)),
         }),

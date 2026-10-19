@@ -940,16 +940,25 @@ export const substrateRegistryEntry = Object.freeze({
      * there is no one-room set document for the lab's EDIT arm to open, and
      * nothing a save could be written back INTO on this side.
      *
-     * ⛓ `roomEditor` above stays exactly as it is: the pipeline's own Edit
-     * still opens a Seedling room from a LIVE run, where the level set is in
-     * hand. It is the DOCUMENT direction that has no answer.
+     * ⛓ `roomEditor` above stays exactly as it is. ⚠ MEASURED 2026-10-18: the
+     * pipeline's Edit ▸ does NOT open a Seedling room either — the lab door
+     * takes a SET document, and the pipeline builds one only through this
+     * declaration (`procgenPipeline/pipelineRoomEdit.js`), so a pipeline
+     * press shows this refusal.
+     *
+     * ⚖ region-editor-launch Q4 (the user, 2026-10-19): a real-game room is
+     * READ-ONLY in a world, for good — not a gap waiting for a document. Its
+     * access rules come from the committed playthrough atlas, not from the
+     * room's geometry, and fidelity witnesses the model against the delivered
+     * set; a change to a real-game room goes in as a reviewed
+     * `SEEDLING_SET_PATCHES` row. So the sentence says WHY, to a reader.
      */
     regionRoundTrip: Object.freeze({
-        refused: 'a Seedling sidecar payload is an ATLAS REFERENCE '
-            + '(`atlas_ref` / `atlas_region` / `atlas_sub_region` / `level`), not an authored '
-            + 'room record — the room lives in the level set and the atlas that the region '
-            + 'marking tool and `watch.html` own, and a rules.json carries neither, so there '
-            + 'is no one-room document to hand the lab\'s edit arm.',
+        refused: 'this is a room from the original Seedling game, and those are read-only in a '
+            + 'world: its access rules come from the game\'s committed playthrough atlas, not '
+            + 'from the room\'s layout, so an edit here would leave them wrong. (Its sidecar is an '
+            + 'ATLAS REFERENCE — `atlas_ref` / `level` — with no room data in it.) A change to a '
+            + 'real-game room goes in as a reviewed level-set patch (`SEEDLING_SET_PATCHES`).',
     }),
 });
 

@@ -483,6 +483,37 @@ export const substrateRegistryEntry = Object.freeze({
 
     /** The same lab page as `flash_seedling` — Seedling's room editor is `watch.html`'s edit arm. */
     roomEditor: FLASH_SEEDLING_ENTRY.roomEditor,
+
+    /**
+     * ⛓⛓ region-editor-launch S2 (⚖ the user, 2026-10-19, Q3) — **A GENERATED
+     * ROOM OPENS IN THE SEEDLING LAB FROM A WORLD**: the pipeline's Edit ▸ and
+     * the APWorld Editor's. Doors and AP locations stay put; a changed room is
+     * re-certified with the generator's oracle and flagged on
+     * `generation.edited`. See `seedlingDemo/seedlingGenRegionRoundTrip.js`.
+     * ⛔ DYNAMIC, like bounce's `roomEditor.open`: the round trip imports the
+     * generator, and this entry stays light (both callers await it).
+     */
+    regionRoundTrip: Object.freeze({
+        open: (ctx) => import('../seedlingDemo/seedlingGenRegionRoundTrip.js').then((m) => m.default.open(ctx)),
+        save: (saved, ctx) => import('../seedlingDemo/seedlingGenRegionRoundTrip.js')
+            .then((m) => m.default.save(saved, ctx)),
+    }),
+
+    /**
+     * ⛓ region-editor-launch S2 — what an EDITED room's flag says, for the
+     * pipeline's region row, its Save message and its Compile line (a world's
+     * live region and a sidecar payload both carry `generation`). `null` for a
+     * room nobody edited; `flagged` when the generator's oracle no longer
+     * reaches every location with the doors as walls.
+     */
+    regionEditStatus: (payload) => {
+        const edited = payload?.generation?.edited;
+        if (!edited) return null;
+        return edited.certified
+            ? { flagged: false, text: 'edited — still certified (every location reachable)' }
+            : { flagged: true, text: `edited — NOT certified: ${(edited.failures ?? []).join(', ')} `
+                + 'not reachable with the doors as walls' };
+    },
 });
 
 // Side-effect on import — the standing convention (substrate-registry.md).

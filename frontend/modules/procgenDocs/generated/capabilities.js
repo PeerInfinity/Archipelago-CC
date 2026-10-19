@@ -290,6 +290,11 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "edit",
+                    "statement": "A region of a saved world can be opened in an editor and saved back",
+                    "text": null
+                },
+                {
+                    "group": "edit",
                     "statement": "An exit can be moved to another side (and a side can hold more than one)",
                     "text": "and a side can hold more than one"
                 },
@@ -981,9 +986,9 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 92,
+        "fields": 93,
         "fieldsRead": 39,
-        "fieldsUnread": 50,
+        "fieldsUnread": 51,
         "statements": 29,
         "substrates": 9
     },
@@ -4479,7 +4484,7 @@ export const CAPABILITIES = frz({
                     "why": [
                         {
                             "field": "roomEditor",
-                            "value": "{kind, open}"
+                            "value": "{kind, module, open}"
                         }
                     ]
                 },
@@ -4595,7 +4600,7 @@ export const CAPABILITIES = frz({
                 {
                     "id": "flash_seedling",
                     "kind": "no",
-                    "text": "a Seedling sidecar payload is an ATLAS REFERENCE (`atlas_ref` / `atlas_region` / `atlas_sub_region` / `level`), not an authored room record — the room lives in the level set and the atlas that the region marking tool and `watch.html` own, and a rules.json carries neither, so there is no one-room document to hand the lab's edit arm.",
+                    "text": "this is a room from the original Seedling game, and those are read-only in a world: its access rules come from the game's committed playthrough atlas, not from the room's layout, so an edit here would leave them wrong. (Its sidecar is an ATLAS REFERENCE — `atlas_ref` / `level` — with no room data in it.) A change to a real-game room goes in as a reviewed level-set patch (`SEEDLING_SET_PATCHES`).",
                     "why": [
                         {
                             "field": "regionRoundTrip",
@@ -4605,12 +4610,12 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "flash_seedling_gen",
-                    "kind": "no",
+                    "kind": "yes",
                     "text": null,
                     "why": [
                         {
                             "field": "regionRoundTrip",
-                            "value": "—"
+                            "value": "{open, save}"
                         }
                     ]
                 },
@@ -4982,6 +4987,7 @@ export const CAPABILITIES = frz({
         "priceRegions",
         "procgenParamsFromPayload",
         "recordablePipelineConfig",
+        "regionEditStatus",
         "regionGeometry",
         "regionSourceDefault",
         "renderLibraryProcgenParams",

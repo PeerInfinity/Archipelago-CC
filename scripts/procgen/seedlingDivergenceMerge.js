@@ -23,9 +23,17 @@
  * Each row's `seamTime` (the arrival game clock its first solve was staged at) prints on one `SEAM-TIME:` line, `id@time:end`.
  * A `HANG:` line in a shard log with no row behind it (a teardown that hung AFTER its legs reported) is a WARNING:
  * the rows are complete.
+ * RUNNER SPEED (slice `seedling-js-runner-stamp`), informational, never a fail: one `RUNNER:` line per shard, its
+ * median page boot (the logs' `booted in` lines) and its play rate (ticks drained per second of play, from the rows),
+ * each also as a fraction of the run's median shard; a shard below `SLOW_RUNNER_FRACTION` on either is
+ * `SLOW-RUNNER`, and each `timeout` row prints on a `TIMEOUT:` line with its shard and that tag — so a timeout on a
+ * degraded runner (§5.102: run 38994029714 shard 9, play ~4x slow) reads as one at a glance. Read from what the shard
+ * already did: no extra game work, and nothing a solve is asked or answers moves.
  *
  * CLI (the merge job): node scripts/procgen/seedlingDivergenceMerge.js <rows.jsonl> <plan.json> [<shard.log>…]
  * Prints the verdict lines; exit 1 when any line is a `MERGE-FAIL`.
+ * CLI (a shard's summary): node scripts/procgen/seedlingDivergenceMerge.js --shard-stamp <rows-i.jsonl> <shard.log>
+ * Prints that shard's `RUNNER:` line (no run median: one shard alone has nothing to compare against).
  */
 import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
@@ -42,11 +50,94 @@ export const SOLVER_KNOB_KEYS = Object.freeze(['upgradeWindowWork', 'dashOnlyWin
 export const legBudgetOf = (x) => x?.legBudgetMs ?? LEG_BUDGET_MS_DEFAULT;
 
 /**
+ * ⛓ RUNNER SPEED — a shard is flagged `SLOW-RUNNER` when its boot speed or its play rate is below this fraction of
+ * the run's median shard. MEASURED over the 11 full 851-row sweeps of §5.102 (38994029714, 39070804748 …
+ * 39153418159; 110 shards): every healthy shard sat at ≥ 0.72 (boot) and ≥ 0.91 (play); the one degraded runner
+ * (38994029714 shard 9) at 0.19 and 0.35.
+ */
+export const SLOW_RUNNER_FRACTION = 0.5;
+
+const median = (xs) => {
+    const v = xs.filter((x) => Number.isFinite(x)).sort((a, b) => a - b);
+    if (!v.length) return null;
+    const m = v.length >> 1;
+    return v.length % 2 ? v[m] : (v[m - 1] + v[m]) / 2;
+};
+
+/** A shard log's number (its `SHARD i/n:` line) and its page boots in s (its `INFO: page N booted in X s` lines). */
+export function bootsOfLog(text) {
+    const shard = /^SHARD (\d+)\//m.exec(text);
+    const boots = [...text.matchAll(/^INFO: page \d+ booted in (\d+) s/gm)].map((m) => Number(m[1]));
+    return { shard: shard ? Number(shard[1]) : null, boots };
+}
+
+/**
+ * A row's PLAY: the ticks it drained, and the wall ms of its leg minus its solves (`history[].solvedMs`) and its
+ * latch waits (`latchWaits[].waitedMs`; absent on rows before §5.89 = 0). What is left still carries the ship and the
+ * tail, the same on every shard, so a ratio between shards cancels it. `null` for a row that drained nothing.
+ */
+export function playOfRow(r) {
+    const drained = Number(r?.rowsDrained) || 0;
+    if (drained <= 0 || !Number.isFinite(r?.ms)) return null;
+    const sum = (xs, k) => (xs ?? []).reduce((a, x) => a + (Number(x?.[k]) || 0), 0);
+    const playMs = r.ms - sum(r.history, 'solvedMs') - sum(r.latchWaits, 'waitedMs');
+    return playMs > 0 ? { drained, playMs } : null;
+}
+
+/** A shard's play rate, pooled over its rows (Σ drained / Σ play s): long legs weigh more. `null` with no play. */
+export function playRate(rows) {
+    let drained = 0;
+    let playMs = 0;
+    for (const r of rows) {
+        const p = playOfRow(r);
+        if (p) { drained += p.drained; playMs += p.playMs; }
+    }
+    return playMs > 0 ? { ticksPerSec: (drained * 1000) / playMs, legs: rows.filter((r) => playOfRow(r)).length } : null;
+}
+
+/** One shard's stamp: `{ shard, bootS (median), boots, ticksPerSec, playLegs }` (null where it has no data). */
+export function shardStamp({ shard, rows = [], boots = [] }) {
+    const p = playRate(rows);
+    return { shard, bootS: median(boots), boots: boots.length, ticksPerSec: p?.ticksPerSec ?? null, playLegs: p?.legs ?? 0 };
+}
+
+const fmt = (x, d = 1) => (x === null ? '-' : x.toFixed(d));
+
+/** A shard's `RUNNER:` line (with `of` = the run's fractions when there is a run to compare against). */
+export function runnerLine(st, of) {
+    const boot = st.bootS === null ? 'boot -' : `boot ${fmt(st.bootS)} s (${st.boots} page(s))`;
+    const play = st.ticksPerSec === null ? 'play -' : `play ${fmt(st.ticksPerSec)} ticks/s (${st.playLegs} leg(s))`;
+    if (!of) return `RUNNER: shard ${st.shard} ${boot}, ${play}`;
+    const x = (f) => (f === null ? '' : ` x${fmt(f, 2)}`);
+    return `RUNNER: shard ${st.shard} ${boot}${x(of.boot)}, ${play}${x(of.play)}${of.slow ? ' SLOW-RUNNER' : ''}`;
+}
+
+/**
+ * The run's stamp: each shard's speed as a fraction of the median shard (boot: median s / the shard's s, so higher is
+ * faster on both), `slow` when either is below `fraction`. Returns `{ stamps, medians, slow: Set<shard>, lines }`.
+ */
+export function runnerStamp(stamps, fraction = SLOW_RUNNER_FRACTION) {
+    const medians = { bootS: median(stamps.map((s) => s.bootS)), ticksPerSec: median(stamps.map((s) => s.ticksPerSec)) };
+    const slow = new Set();
+    const lines = [];
+    if (!stamps.some((s) => s.bootS !== null || s.ticksPerSec !== null)) return { stamps, medians, slow, lines };
+    lines.push(`RUNNER-MEDIAN: boot ${fmt(medians.bootS)} s, play ${fmt(medians.ticksPerSec)} ticks/s; SLOW-RUNNER below x${fraction} of either`);
+    for (const st of [...stamps].sort((a, b) => a.shard - b.shard)) {
+        const boot = st.bootS > 0 && medians.bootS !== null ? medians.bootS / st.bootS : null;
+        const play = st.ticksPerSec !== null && medians.ticksPerSec > 0 ? st.ticksPerSec / medians.ticksPerSec : null;
+        const isSlow = (boot !== null && boot < fraction) || (play !== null && play < fraction);
+        if (isSlow) slow.add(st.shard);
+        lines.push(runnerLine(st, { boot, play, slow: isSlow }));
+    }
+    return { stamps, medians, slow, lines };
+}
+
+/**
  * The verdict. `plan` is `--shard-plan=<n> --json` (`{ legs, shards: [{ shard, ids }] }`); `hangLines` the `HANG:`
  * lines of the shard logs. Returns the lines to print, whether the merge fails, the never-reported ids per shard and
  * their union (sorted).
  */
-export function mergeVerdict({ rows, plan, hangLines = [] }) {
+export function mergeVerdict({ rows, plan, hangLines = [], shardLogs = [] }) {
     const lines = [];
     const fail = (msg) => lines.push(`MERGE-FAIL: ${msg}`);
     const ids = new Set(rows.map((r) => r.id));
@@ -114,17 +205,39 @@ export function mergeVerdict({ rows, plan, hangLines = [] }) {
     // ⛓ HIT TICKS (S5-2) — information about the model, so never a MERGE-FAIL
     const hitCensus = unbilledHitCensus(rows);
     lines.push(...hitCensus.lines);
-    return { lines, failed: lines.some((l) => l.startsWith('MERGE-FAIL')), missing, redispatch };
+    // ⛓ RUNNER SPEED — information about the runner, so never a MERGE-FAIL
+    const shardOf = new Map((plan.shards ?? []).flatMap((s) => s.ids.map((id) => [id, s.shard])));
+    const boots = new Map();
+    for (const text of shardLogs) {
+        const b = bootsOfLog(text);
+        if (b.shard !== null) boots.set(b.shard, b.boots);
+    }
+    const stamps = (plan.shards ?? []).map((s) => shardStamp({ shard: s.shard, rows: rows.filter((r) => shardOf.get(r.id) === s.shard), boots: boots.get(s.shard) ?? [] }));
+    const runner = runnerStamp(stamps);
+    lines.push(...runner.lines);
+    for (const r of rows.filter((x) => x.end === 'timeout')) {
+        const s = shardOf.get(r.id);
+        lines.push(`TIMEOUT: ${r.id} L${r.level ?? '?'} shard ${s ?? '?'}${runner.slow.has(s) ? ' SLOW-RUNNER' : ''}`);
+    }
+    return { lines, failed: lines.some((l) => l.startsWith('MERGE-FAIL')), missing, redispatch, slowShards: [...runner.slow].sort((a, b) => a - b) };
 }
 
 const readRows = (path) => readFileSync(path, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+const readText = (f) => { try { return readFileSync(f, 'utf8'); } catch { return null; } };
+
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href && process.argv[2] === '--shard-stamp') {
+    // ⛓ a shard's own stamp (its summary step): rows and log may be missing on a red shard — the line says `-`
+    const [rowsPath, logPath] = process.argv.slice(3);
+    const text = readText(logPath) ?? '';
+    const b = bootsOfLog(text);
+    const rows = readText(rowsPath) === null ? [] : readRows(rowsPath);
+    console.log(runnerLine(shardStamp({ shard: b.shard ?? '?', rows, boots: b.boots })));
+} else if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
     const [rowsPath, planPath, ...logs] = process.argv.slice(2);
-    const hangLines = logs.flatMap((f) => {
-        try { return readFileSync(f, 'utf8').split('\n').filter((l) => l.startsWith('HANG:')); } catch { return []; }
-    });
-    const v = mergeVerdict({ rows: readRows(rowsPath), plan: JSON.parse(readFileSync(planPath, 'utf8')), hangLines });
+    const shardLogs = logs.map(readText).filter((t) => t !== null);
+    const hangLines = shardLogs.flatMap((t) => t.split('\n').filter((l) => l.startsWith('HANG:')));
+    const v = mergeVerdict({ rows: readRows(rowsPath), plan: JSON.parse(readFileSync(planPath, 'utf8')), hangLines, shardLogs });
     for (const l of v.lines) console.log(l);
     process.exitCode = v.failed ? 1 : 0;
 }

@@ -84,7 +84,7 @@ async function main() {
         if (!ok) failures += 1;
         console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}${detail ? ` — ${detail}` : ''}`);
     };
-    check('the switch ships OFF (each plan turns it on for its own solve)', CONTACT_FIDELITY.watcherTalkVerb === false);
+    check('the switch ships ON (planning-9\'s flip; each plan still turns it on for its own solve)', CONTACT_FIDELITY.watcherTalkVerb === true);
     const levelSource = atlasLevelSource();
     for (const w of WATCHERTALK_WITNESSES) {
         const plan = await watchertalkPlan(w);

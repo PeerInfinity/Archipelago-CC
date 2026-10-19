@@ -69,7 +69,7 @@
  */
 
 import { generateSeedlingLevel, placementTagId, seedlingOracle } from './procgenSeedling.js';
-import { VERDICT } from './procgenOracle.js';
+import { VERDICT, collectGoal } from './procgenOracle.js';
 import {
     POST_FEATHER_PALETTE, POST_SHIELD_PALETTE, POST_SWIM_PALETTE, PRE_SWORD_PALETTE, POST_SWORD_PALETTE,
 } from './procgenPalette.js';
@@ -163,6 +163,69 @@ function generatorInput(regionId, seed, size, knobs) {
         ...(knobs.require !== undefined
             ? { require: parsed('require', parseItemRequireList) } : {}),
     };
+}
+
+/**
+ * ⛓ region-editor-launch S2 — **THE GENERATOR'S OWN DRAW OF A STORED ROOM.** A
+ * payload keeps the seed it was drawn with (after any re-roll), its final
+ * `size` and its knobs (`generation` spreads them), so one call reproduces the
+ * draw — and with it the `model` the generator certified the room under, which
+ * is what an EDITED room is re-certified against.
+ */
+export function redrawGenRoom(payload, regionId = '?') {
+    const knobs = knobsOf({ seedlingGen: payload?.generation ?? {} });
+    return generateSeedlingLevel(generatorInput(regionId, payload.seed, payload.size, knobs));
+}
+
+/**
+ * ⛓⛓ region-editor-launch S2 (⚖ the user, 2026-10-19: an edited generated room
+ * is re-checked at Save; a failing room is SAVED and FLAGGED, never refused) —
+ * **IS THIS ROOM STILL WHAT THE GENERATOR GUARANTEED?** The generator's own
+ * oracle (never the hammer-phase solver: a tape producer whose legs take
+ * minutes), under the model of the room's own draw (`redrawGenRoom`), with
+ * every door as a WALL — the G2 rule `goalHoldsWithDoorsAsWalls` applies — once
+ * per goal: the generator's own (`goal_cell`) and then every other location's,
+ * each as a collect goal on a pickup placed there.
+ *
+ * ⛓ MEASURED (2026-10-19): 18–69 ms a solve; every committed generated room
+ * certifies unedited.
+ *
+ * @returns {{certified: boolean, failures: string[]}} `failures` names each
+ *   location whose solve did not come back SOLVED, with the verdict
+ */
+export function certifyGenRoom(payload, regionId = '?') {
+    const drawn = redrawGenRoom(payload, regionId);
+    const items = bootItems(payload.generation?.biome);
+    const doorKeys = new Set(payload.exits.flatMap((e) => (e.exit_tiles ?? []).map(([tx, ty]) => cellKey({ tx, ty }))));
+    const layers = payload.record.layers.map((layer) => {
+        if (!Array.isArray(layer.tiles)) return layer;
+        const wall = layer.tiles.find(([tx, ty]) => tx === 0 && ty === 0)?.[2];
+        return { ...layer, tiles: layer.tiles.map((t) => (doorKeys.has(cellKey({ tx: t[0], ty: t[1] }))
+            ? [t[0], t[1], wall, ...t.slice(3)] : t)) };
+    });
+    const failures = [];
+    // ⛓ The GOAL first — `goal_cell`, where the draw's pickup stands (location 0
+    //   when the room has locations; a room may have none) — then every other
+    //   location, each given a pickup of its own.
+    const goal = payload.goal_cell;
+    const targets = [{ name: 'the goal', cell: goal, own: true },
+        ...payload.locations.filter((l) => cellKey(l.cell) !== cellKey(goal))
+            .map((l) => ({ name: l.name, cell: l.cell, own: false }))];
+    for (const t of targets) {
+        const x = t.cell.tx * TILE_SIZE;
+        const y = t.cell.ty * TILE_SIZE;
+        // ⛓ The draw's own record fields (`level`, …) under the payload's room:
+        //   the sidecar keeps only the core record (`coreLevelRecord`).
+        let record = { ...drawn.record, ...payload.record, layers };
+        if (!t.own) {
+            record = { ...record, entities: [...(record.entities ?? []).filter((e) => !(e.x === x && e.y === y)),
+                { type: 'torchpickup', x, y, attrs: {} }] };
+        }
+        const model = { boot: drawn.model.boot, goals: Object.freeze([collectGoal(x, y)]) };
+        const verdict = seedlingOracle({ model, items }).solve(record).verdict;
+        if (verdict !== VERDICT.SOLVED) failures.push(`${t.name} (${String(verdict)})`);
+    }
+    return { certified: failures.length === 0, failures };
 }
 
 /**

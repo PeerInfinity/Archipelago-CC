@@ -1,0 +1,16 @@
+⏳ run 39208419566: waiting on "JavaScript Unit Tests (Vitest shard 3/3)" queued, "JavaScript Unit Tests (Vitest shard 1/3)" queued, "JavaScript Unit Tests (slow Vitest)" queued, "JavaScript Unit Tests (Vitest shard 2/3)" queued
+⏳ run 39208419566: waiting on "JavaScript Unit Tests (Vitest shard 3/3)" in_progress, "JavaScript Unit Tests (Vitest shard 1/3)" queued, "JavaScript Unit Tests (slow Vitest)" queued, "JavaScript Unit Tests (Vitest shard 2/3)" queued
+⏳ run 39208419566: waiting on "JavaScript Unit Tests (Vitest shard 3/3)" in_progress, "JavaScript Unit Tests (Vitest shard 1/3)" in_progress, "JavaScript Unit Tests (slow Vitest)" queued, "JavaScript Unit Tests (Vitest shard 2/3)" queued
+⏳ run 39208419566: waiting on "JavaScript Unit Tests (Vitest shard 3/3)" in_progress, "JavaScript Unit Tests (Vitest shard 1/3)" in_progress, "JavaScript Unit Tests (slow Vitest)" in_progress, "JavaScript Unit Tests (Vitest shard 2/3)" queued
+⏳ run 39208419566: waiting on "JavaScript Unit Tests (Vitest shard 3/3)" in_progress, "JavaScript Unit Tests (slow Vitest)" in_progress, "JavaScript Unit Tests (Vitest shard 2/3)" queued
+⏳ run 39208419566: waiting on "JavaScript Unit Tests (slow Vitest)" in_progress, "JavaScript Unit Tests (Vitest shard 2/3)" queued
+⏳ run 39208419566: waiting on "JavaScript Unit Tests (slow Vitest)" in_progress, "JavaScript Unit Tests (Vitest shard 2/3)" in_progress
+⏳ run 39208419566: waiting on "JavaScript Unit Tests (Vitest shard 2/3)" in_progress
+CI vitest @ 470b797b — run 39208419566 in_progress (2026-10-19T06:10:46Z)
+  job "JavaScript Unit Tests (Vitest shard 1/3)"  completed success  286/7341
+  job "JavaScript Unit Tests (Vitest shard 2/3)"  completed failure  286/7270 (1 failed)
+  job "JavaScript Unit Tests (Vitest shard 3/3)"  completed success  285/6566
+  job "JavaScript Unit Tests (slow Vitest)"  completed success  19/254
+  suite: vitest (unfiltered)  857/21177   (21176 passed | 0 skipped | 1 failed)
+  slow battery                19/254   (254 passed | 0 failed)
+⛔ red member(s): "JavaScript Unit Tests (Vitest shard 2/3)" failure
