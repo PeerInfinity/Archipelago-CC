@@ -153,6 +153,8 @@ import {
     STATIC_SWORD_ARM, STATIC_SWORD_DEATH, stepTurret,
     // ⛓ seedling-fidelity-bulb D3: `bulbLive` gates the segment's kill-veto needs.
     CONTACT_FIDELITY,
+    // ⛓ fidelity APBOSSES D2: the R4 slots the Witch and Bob executors read (`apReportBosses`, OFF).
+    BOB_ARENA_LEVEL, BOB_KILLED_TAG, DARK_SWORD_WITCH_TAG, FIRE_BOSS_DROP_TAG, WITCH_LEVEL,
     // ⛓⛓⛓ seedling-fidelity-wand D2: the `wand` verb (behind `WAND_VERB`).
     WAND_VERB, WAND_WINDOW, wandShotSpawn, wandShotVelocity, withWandVerb,
     createWandShot, stepWandShot, wandShotRect, MAGICAL_LOCK_OPEN_TICK_OFFSET,
@@ -188,8 +190,6 @@ import { AXE_PRICED_CROSSING, AXE_PRICED_TRACE, admitAxeCrossing } from './axePr
 // ⛓ seedling-fidelity-arrowlane D2 — the armed-lane crossing arm (`ARROW_LANE_CROSSING`, OFF).
 import { ARROW_LANE_CROSSING, ARROW_LANE_TRACE, LaneCrossingExcept, admitLaneCrossing, laneCrossingExcept,
     laneCrossingFor } from './arrowLaneCrossing.js';
-// ⛓ fidelity APBOSSES D2 — the R4 slots the Witch and Bob executors read (`CONTACT_FIDELITY.apReportBosses`, OFF).
-import { BOB_ARENA_LEVEL, BOB_KILLED_TAG, DARK_SWORD_WITCH_TAG, FIRE_BOSS_DROP_TAG, WITCH_LEVEL } from './apReportBosses.js';
 
 /**
  * ⛓⛓⛓ THE TRANSIT PROBE'S OWN NON-VACUITY, AS A FUNCTION.

@@ -71,6 +71,8 @@ export { hasDropDeath, tileUnder } from './bulb.js';
 export { CONTACT_FIDELITY } from './contactFidelity.js';
 // ⛓ seedling-fidelity-bombpusher D3: the lobber's own stepping, for the danger map's WAIT arm.
 export { BOMB, stepBomb, stepBombPusher } from './bombPusher.js';
+// ⛓ fidelity APBOSSES D2: the R4 slots the Witch and Bob executors read (`CONTACT_FIDELITY.apReportBosses`, OFF).
+export { BOB_ARENA_LEVEL, BOB_KILLED_TAG, DARK_SWORD_WITCH_TAG, FIRE_BOSS_DROP_TAG, WITCH_LEVEL } from './apReportBosses.js';
 // chest.js — botDriverV2, solverBot · seedling 3
 export { CHEST, chestProbeLine, chestStanceBand } from './chest.js';
 // combat.js — dangerMap, encounters, solverBot, strikePolicy · seedling 9
