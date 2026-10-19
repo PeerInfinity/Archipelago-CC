@@ -93,10 +93,13 @@ describe('the vanilla arm\'s map — seedling_playthrough, every name accounted 
         }
         expect(events.length).toBe([...locations.values()].filter((l) => l.id === null).length);
         expect(goals.length + refused.length + events.length).toBe(locations.size);
-        // ⛓ ENCOUNTERS — the table's entries AND both encounter rows (each has an executor); nothing is refused.
+        // ⛓ ENCOUNTERS — the table's entries AND both encounter rows (each has an executor).
         expect(goals.map((g) => g.name).sort())
             .toEqual([...LOADED.entries, ...LOADED.encounters].map((e) => e.location).sort());
-        expect(refused).toEqual([]);
+        // ⛓ R4b (rules-boss-locations) — the seven boss kills are REFUSED BY NAME (no fight executor yet), never dropped.
+        expect(refused.map((r) => r.name).sort()).toEqual(LOADED.reports.map((r) => r.location).sort());
+        expect(LOADED.reports).toHaveLength(7);
+        for (const r of refused) expect(r.refused, r.name).toContain('is a BOSS KILL');
         // ⛔ The game plays the REWRITE: each goal names the entity the delivered room holds — the rewriter's
         // own type — at the table's (level, tag); the map document's vanilla type would not be found there.
         for (const g of goals) {
@@ -187,8 +190,8 @@ describe('⛓ OBSTACLE EVENTS — a game-state event is the map\'s THIRD class (
         const rules = structuredClone(PT);
         const loc = Object.values(rules.regions['1']).flatMap((r) => r.locations ?? []).find((l) => l.event_id === 'flag:L0:4');
         loc.event_kind = 'some_future_kind';
-        const map = vanillaArmPlaybackMap({ entries: LOADED.entries, encounters: LOADED.encounters, set: LOADED.set,
-            regions: MAP.regions, rules });
+        const map = vanillaArmPlaybackMap({ entries: LOADED.entries, encounters: LOADED.encounters, reports: LOADED.reports,
+            set: LOADED.set, regions: MAP.regions, rules });
         expect(map.events.map((e) => e.location)).not.toContain(loc.name);
         expect(map.entries.map((e) => e.location)).not.toContain(loc.name);
         expect(map.refused.find((r) => r.location === loc.name)?.why).toMatch(/kind "some_future_kind".*not bound as a pickup/);

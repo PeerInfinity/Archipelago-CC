@@ -139,9 +139,12 @@ describe('the ledger row → flash_name derivation', () => {
         expect(Object.keys(LEDGER_FLASH_NAME_REMAINDER)).toEqual([]);
     });
 
+    // ⛓ R4b (rules-boss-locations): the seven boss rows derive upstream's own flash names (`owl`, `times`, …).
     it('exactly ONE derived name is absent from ap_locations: the Seed', () => {
         const missing = R7_GOAL_LEDGER.filter((r) => !AP_NAMES.has(nameOf(r))).map((r) => r.id);
         expect(missing).toEqual(['seed@L115']);
+        expect(R7_GOAL_LEDGER.filter((r) => r.kind === 'boss').map(nameOf).sort())
+            .toEqual(['kingoffire', 'lights', 'owl', 'shieldspire', 'tentacledbeast', 'times', 'totem']);
     });
 });
 
@@ -149,22 +152,25 @@ describe('the per-preset census — direct, via the AP id, unjoined', () => {
     it(`seedling_playthrough: all ${R7_GOAL_LEDGER.length} DIRECT, nothing joined by id, \
         nothing dropped`, () => {
         const { census, ledgerUsed } = resolverFor('seedling_playthrough');
-        expect(census).toMatchObject({ direct: 41, viaApId: 0, total: 41 });
+        expect(census).toMatchObject({ direct: 48, viaApId: 0, total: 48 });   // ⛓ R4b: 41 + the seven bosses
         expect(census.unjoined).toEqual([]);
         expect(ledgerUsed).toHaveLength(R7_GOAL_LEDGER.length);
     });
 
-    it('seedling (stage 1): 0 direct, 40 VIA THE AP ID, and only the Seed dropped', () => {
+    // ⛓ R4b: the upstream preset is generated with `boss_locations` OFF, so the seven boss rows join nothing there.
+    it('seedling (stage 1): 0 direct, 40 VIA THE AP ID, and only the Seed and the seven boss kills dropped', () => {
         const { census, ledgerUsed } = resolverFor('seedling');
-        expect(census).toMatchObject({ direct: 0, viaApId: 40, total: 41 });
-        expect(census.unjoined).toEqual(['seed@L115 (seed)']);
+        expect(census).toMatchObject({ direct: 0, viaApId: 40, total: 48 });
+        expect(census.unjoined).toEqual(['seed@L115 (seed)', 'owl@L112 (owl)', 'shieldspire@L19 (shieldspire)',
+            'times@L32 (times)', 'tentacledbeast@L57 (tentacledbeast)', 'totem@L43 (totem)', 'lights@L69 (lights)',
+            'kingoffire@L82 (kingoffire)']);
         expect(ledgerUsed).toHaveLength(40);
     });
 
     it('seedling_atlas: one location, nothing joins ⇒ the (iii) refusal', () => {
         const { census } = resolverFor('seedling_atlas');
         expect(census.direct + census.viaApId).toBe(0);
-        expect(census.unjoined).toHaveLength(41);
+        expect(census.unjoined).toHaveLength(R7_GOAL_LEDGER.length);
     });
 
     /**
@@ -265,7 +271,7 @@ describe('the REAL stateManager builder, driven in node', () => {
     it('and the whole load runs off it, for all three presets, with the census intact', async () => {
         const want = {
             seedling: { verdict: 'eligible', direct: 0, viaApId: 40 },
-            seedling_playthrough: { verdict: 'eligible', direct: 41, viaApId: 0 },
+            seedling_playthrough: { verdict: 'eligible', direct: 48, viaApId: 0 },
             // ⛓ G7: `seedling_atlas` was refused here by (iii) — the defect of
             // plan §12.4. Its one location is now bound on the ATLAS arm.
             seedling_atlas: { verdict: 'eligible', arm: 'atlas' },
@@ -377,13 +383,13 @@ describe('the whole construction, driven in node', () => {
      * refusal is unchanged for rules with NO real rooms — shown here on the
      * same rules with their sidecars removed.
      */
-    it('0 of 41 and no real rooms refuses at PLACEMENT, and the refusal carries the count', async () => {
+    it('0 of 48 and no real rooms refuses at PLACEMENT, and the refusal carries the count', async () => {
         const noRooms = structuredClone(RULES.seedling_atlas);
         delete noRooms.preset_sidecars;
         const r = await load('seedling_atlas', { rawRules: noRooms });
         expect(r.verdict).toBe('ineligible');
         expect(r.eligibility.failed).toBe('placement');
-        expect(r.why).toMatch(/0 of 41/);
+        expect(r.why).toMatch(new RegExp(`0 of ${R7_GOAL_LEDGER.length}`));
         expect(r.delivery).toBeNull();
         expect(r.checkBinding).toBeNull();
     });

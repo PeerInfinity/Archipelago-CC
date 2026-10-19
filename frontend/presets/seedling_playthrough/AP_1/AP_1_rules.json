@@ -1773,7 +1773,24 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "Level 019 - Shieldspire",
+            "id": 30000007,
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Sword"
+              }
+            },
+            "item": {
+              "name": "Seal",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
       },
       "level_19__r3c3": {
         "name": "level_19__r3c3",
@@ -1928,7 +1945,7 @@
         "locations": [
           {
             "name": "Level 020 - Shield",
-            "id": 30000007,
+            "id": 30000008,
             "access_rule": {
               "rule": "True_"
             },
@@ -2156,7 +2173,7 @@
         "locations": [
           {
             "name": "Level 025 - Chest",
-            "id": 30000008,
+            "id": 30000009,
             "access_rule": {
               "rule": "True_"
             },
@@ -2384,7 +2401,7 @@
         "locations": [
           {
             "name": "Level 029 - Boss Key 1",
-            "id": 30000009,
+            "id": 30000010,
             "access_rule": {
               "rule": "True_"
             },
@@ -2572,7 +2589,7 @@
         "locations": [
           {
             "name": "Level 030 - Torchpickup",
-            "id": 30000010,
+            "id": 30000011,
             "access_rule": {
               "rule": "True_"
             },
@@ -2868,7 +2885,7 @@
         "locations": [
           {
             "name": "Level 032 - Bob Boss",
-            "id": 30000011,
+            "id": 30000012,
             "access_rule": {
               "rule": "Or",
               "children": [
@@ -2888,6 +2905,33 @@
             },
             "item": {
               "name": "Fire",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          },
+          {
+            "name": "Level 032 - Times",
+            "id": 30000013,
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Seal",
               "player": 1,
               "advancement": true,
               "type": "progression"
@@ -2986,7 +3030,7 @@
         "locations": [
           {
             "name": "Level 036 - Chest",
-            "id": 30000012,
+            "id": 30000014,
             "access_rule": {
               "rule": "True_"
             },
@@ -3167,7 +3211,7 @@
         "locations": [
           {
             "name": "Level 038 - Chest",
-            "id": 30000013,
+            "id": 30000015,
             "access_rule": {
               "rule": "True_"
             },
@@ -3246,7 +3290,7 @@
         "locations": [
           {
             "name": "Level 039 - Totem Part 72,40",
-            "id": 30000014,
+            "id": 30000016,
             "access_rule": {
               "rule": "True_"
             },
@@ -3324,7 +3368,7 @@
         "locations": [
           {
             "name": "Level 040 - Totem Part 64,144",
-            "id": 30000018,
+            "id": 30000020,
             "access_rule": {
               "rule": "True_"
             },
@@ -3580,7 +3624,7 @@
         "locations": [
           {
             "name": "Level 040 - Totem Part 160,640",
-            "id": 30000017,
+            "id": 30000019,
             "access_rule": {
               "rule": "True_"
             },
@@ -3593,7 +3637,7 @@
           },
           {
             "name": "Level 040 - Chest",
-            "id": 30000016,
+            "id": 30000018,
             "access_rule": {
               "rule": "True_"
             },
@@ -3744,7 +3788,7 @@
         "locations": [
           {
             "name": "Level 040 - Boss Key 2",
-            "id": 30000015,
+            "id": 30000017,
             "access_rule": {
               "rule": "True_"
             },
@@ -4095,7 +4139,7 @@
         "locations": [
           {
             "name": "Level 041 - Totem Part 240,144",
-            "id": 30000019,
+            "id": 30000021,
             "access_rule": {
               "rule": "True_"
             },
@@ -4122,7 +4166,7 @@
         "locations": [
           {
             "name": "Level 042 - Totem Part 184,152",
-            "id": 30000020,
+            "id": 30000022,
             "access_rule": {
               "rule": "True_"
             },
@@ -4203,21 +4247,10 @@
                   }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    }
-                  ]
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
                 }
               ]
             }
@@ -4261,7 +4294,36 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "Level 043 - Totem of Lacste",
+            "id": 30000023,
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Totem Shard",
+                    "count": 5
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Seal",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
       },
       "level_43__r13c7": {
         "name": "level_43__r13c7",
@@ -4280,21 +4342,10 @@
                   }
                 },
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Progressive Sword"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Ghost Spear"
-                      }
-                    }
-                  ]
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
                 }
               ]
             }
@@ -4310,7 +4361,7 @@
         "locations": [
           {
             "name": "Level 043 - Wand",
-            "id": 30000021,
+            "id": 30000024,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -4729,7 +4780,7 @@
         "locations": [
           {
             "name": "Level 046 - Chest",
-            "id": 30000022,
+            "id": 30000025,
             "access_rule": {
               "rule": "True_"
             },
@@ -5820,7 +5871,7 @@
         "locations": [
           {
             "name": "Level 048 - Chest",
-            "id": 30000023,
+            "id": 30000026,
             "access_rule": {
               "rule": "True_"
             },
@@ -5873,7 +5924,7 @@
         "locations": [
           {
             "name": "Level 049 - Conch",
-            "id": 30000024,
+            "id": 30000027,
             "access_rule": {
               "rule": "True_"
             },
@@ -7000,7 +7051,7 @@
         "locations": [
           {
             "name": "Level 055 - Boss Key 3",
-            "id": 30000025,
+            "id": 30000028,
             "access_rule": {
               "rule": "True_"
             },
@@ -7120,7 +7171,41 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "Level 057 - Tentacled Beast",
+            "id": 30000029,
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Seal",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
       },
       "level_58__r1c2": {
         "name": "level_58__r1c2",
@@ -8075,7 +8160,7 @@
         "locations": [
           {
             "name": "Level 063 - Chest",
-            "id": 30000026,
+            "id": 30000030,
             "access_rule": {
               "rule": "True_"
             },
@@ -8215,7 +8300,7 @@
         "locations": [
           {
             "name": "Level 064 - Ghostspear",
-            "id": 30000027,
+            "id": 30000031,
             "access_rule": {
               "rule": "True_"
             },
@@ -8357,7 +8442,7 @@
         "locations": [
           {
             "name": "Level 067 - Boss Key 4",
-            "id": 30000028,
+            "id": 30000032,
             "access_rule": {
               "rule": "True_"
             },
@@ -8455,7 +8540,7 @@
         "locations": [
           {
             "name": "Level 068 - Health",
-            "id": 30000029,
+            "id": 30000033,
             "access_rule": {
               "rule": "True_"
             },
@@ -8605,6 +8690,73 @@
           }
         ]
       },
+      "level_69": {
+        "name": "level_69",
+        "exits": [
+          {
+            "name": "level_69 -> level_36",
+            "connected_region": "level_36",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level 069 - Lights",
+            "id": 30000034,
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Seal",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
       "level_70": {
         "name": "level_70",
         "exits": [
@@ -8613,6 +8765,33 @@
             "connected_region": "level_66__r5c4",
             "access_rule": {
               "rule": "True_"
+            }
+          },
+          {
+            "name": "level_70 -> level_69",
+            "connected_region": "level_69",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -8667,7 +8846,7 @@
         "locations": [
           {
             "name": "Level 071 - Chest",
-            "id": 30000030,
+            "id": 30000035,
             "access_rule": {
               "rule": "True_"
             },
@@ -8952,7 +9131,7 @@
         "locations": [
           {
             "name": "Level 074 - Darkshield",
-            "id": 30000031,
+            "id": 30000036,
             "access_rule": {
               "rule": "True_"
             },
@@ -9155,7 +9334,7 @@
         "locations": [
           {
             "name": "Level 079 - Darksuit",
-            "id": 30000032,
+            "id": 30000037,
             "access_rule": {
               "rule": "True_"
             },
@@ -9254,7 +9433,7 @@
         "locations": [
           {
             "name": "Level 080 - Chest",
-            "id": 30000033,
+            "id": 30000038,
             "access_rule": {
               "rule": "True_"
             },
@@ -9375,7 +9554,35 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "Level 082 - King of Fire",
+            "id": 30000039,
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Seal",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
       },
       "level_83": {
         "name": "level_83",
@@ -9519,7 +9726,7 @@
         "locations": [
           {
             "name": "Level 086 - Chest",
-            "id": 30000034,
+            "id": 30000040,
             "access_rule": {
               "rule": "True_"
             },
@@ -10049,7 +10256,7 @@
         "locations": [
           {
             "name": "Level 089 - Feather",
-            "id": 30000035,
+            "id": 30000041,
             "access_rule": {
               "rule": "True_"
             },
@@ -10151,7 +10358,7 @@
         "locations": [
           {
             "name": "Level 090 - Chest",
-            "id": 30000036,
+            "id": 30000042,
             "access_rule": {
               "rule": "True_"
             },
@@ -10630,7 +10837,7 @@
         "locations": [
           {
             "name": "Level 098 - Chest",
-            "id": 30000037,
+            "id": 30000043,
             "access_rule": {
               "rule": "True_"
             },
@@ -11047,7 +11254,7 @@
         "locations": [
           {
             "name": "Level 106 - Ghostsword",
-            "id": 30000038,
+            "id": 30000044,
             "access_rule": {
               "rule": "True_"
             },
@@ -11195,7 +11402,7 @@
         "locations": [
           {
             "name": "Level 109 - Firewand",
-            "id": 30000039,
+            "id": 30000045,
             "access_rule": {
               "rule": "True_"
             },
@@ -11263,6 +11470,33 @@
           }
         ],
         "locations": [
+          {
+            "name": "Level 112 - Owl",
+            "id": 30000046,
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "Seal",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          },
           {
             "name": "L112 flag 1: rocklock@112,16 cleared",
             "id": null,
@@ -11629,7 +11863,7 @@
         "locations": [
           {
             "name": "Level 115 - The Seed",
-            "id": 30000040,
+            "id": 30000047,
             "access_rule": {
               "rule": "True_"
             },
@@ -12147,7 +12381,7 @@
         "groups": [],
         "classification": "progression",
         "type": null,
-        "max_count": 16
+        "max_count": 23
       },
       "The Seed": {
         "name": "The Seed",
@@ -12433,6 +12667,14 @@
         "event": true,
         "type": "Event",
         "max_count": 1
+      },
+      "Nothing": {
+        "name": "Nothing",
+        "id": 30000019,
+        "groups": [],
+        "classification": "filler",
+        "type": null,
+        "max_count": 0
       }
     }
   },
@@ -12442,7 +12684,7 @@
   "itempool_counts": {
     "1": {
       "Progressive Sword": 2,
-      "Seal": 16,
+      "Seal": 23,
       "Red Key": 1,
       "Progressive Shield": 2,
       "Green Key": 1,
@@ -12489,8 +12731,58 @@
     "1": {
       "game": "Seedling Playthrough",
       "world_class_name": "SeedlingPlaythroughWorld",
-      "options": {},
-      "world_directory": "seedlingplaythrough"
+      "options": {
+        "boss_location_items": 0,
+        "seals_required": 16
+      },
+      "world_directory": "seedlingplaythrough",
+      "option_definitions": {
+        "boss_location_items": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "seal",
+            "1": "filler"
+          },
+          "default": 0,
+          "display_name": "Boss Location Items"
+        },
+        "seals_required": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 23,
+          "default": 16,
+          "display_name": "Seals Required"
+        }
+      },
+      "slot_data": {
+        "boss_location_items": 0,
+        "seals_required": 16
+      },
+      "option_effects": [
+        {
+          "kind": "item_count",
+          "option": "seals_required",
+          "item": "Seal",
+          "count": 16,
+          "why": "every Has(Seal, default) in these rules (the FinalDoor event, the doorway behind it) reads N"
+        },
+        {
+          "kind": "location_items",
+          "option": "boss_location_items",
+          "value": 1,
+          "item": "Nothing",
+          "locations": [
+            "Level 019 - Shieldspire",
+            "Level 032 - Times",
+            "Level 043 - Totem of Lacste",
+            "Level 057 - Tentacled Beast",
+            "Level 069 - Lights",
+            "Level 082 - King of Fire",
+            "Level 112 - Owl"
+          ],
+          "why": "with `filler`, the seven boss kills hold the filler and the pool keeps the 16 chest Seals"
+        }
+      ]
     }
   },
   "game_info": {
@@ -12541,9 +12833,7 @@
       "overlay": "frontend/modules/flashPanel/seedlingPlaythroughOverlay.js",
       "pixel_masks": "frontend/modules/seedlingDemo/seedlingPixelMasks.js (via levelWorld)",
       "ledger": "frontend/modules/seedlingDemo/r7Acceptance.js R7_GOAL_LEDGER",
-      "never_enter_levels": [
-        69
-      ],
+      "never_enter_levels": [],
       "overlay_rows": [
         {
           "tag": "cover",
@@ -12608,7 +12898,7 @@
         {
           "tag": "bosstotem",
           "kind": "gated",
-          "cite": "Enemies/BossTotem.as:715-721 (hit() passes through only while `fullyActivated && activationRestTime <= 0`) + the five totempart pickups"
+          "cite": "Enemies/BossTotem.as:262 (`onlyHitBy = \"Wand\"`) + Enemies/Enemy.as:149 + Projectiles/WandShot.as:116 + BossTotem.as:715-721 (hit() passes through only while `fullyActivated && activationRestTime <= 0`) + the five totempart pickups"
         },
         {
           "tag": "finalboss",
@@ -12664,12 +12954,12 @@
           "cite": "Puzzlements/Lock.as:39-46 (check) + Lock.as:activationStep + Puzzlements/Button.as:28-47 + Puzzlements/PushableBlock.as (no persistence) + branch claude/seedling-fidelity-return-l15-l14-3rcmml @ c96dc77bad (D1) / f1aac13107 (D2, the Conch)"
         }
       ],
-      "atlas_id": "seedling-db0a4f7f"
+      "atlas_id": "seedling-db4c2681"
     }
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-db0a4f7f",
+      "atlas_id": "seedling-db4c2681",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -12686,7 +12976,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_0",
           "atlas_sub_region": "r1c6",
           "level": 0,
@@ -12698,7 +12988,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_0",
           "atlas_sub_region": "r2c13",
           "level": 0,
@@ -12763,7 +13053,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_0",
           "atlas_sub_region": "r4c16",
           "level": 0,
@@ -12775,7 +13065,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_0",
           "atlas_sub_region": "r8c0",
           "level": 0,
@@ -13100,7 +13390,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_0",
           "atlas_sub_region": "r11c19",
           "level": 0,
@@ -13165,7 +13455,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_0",
           "atlas_sub_region": "r14c0",
           "level": 0,
@@ -13177,7 +13467,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_1",
           "level": 1,
           "tile_size": 16,
@@ -13241,7 +13531,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_2",
           "level": 2,
           "tile_size": 16,
@@ -13383,7 +13673,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_3",
           "atlas_sub_region": "r0c4",
           "level": 3,
@@ -13552,7 +13842,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_3",
           "atlas_sub_region": "r8c6",
           "level": 3,
@@ -13617,7 +13907,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_4",
           "level": 4,
           "tile_size": 16,
@@ -13733,7 +14023,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_5",
           "atlas_sub_region": "r1c1",
           "level": 5,
@@ -13798,7 +14088,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_5",
           "atlas_sub_region": "r1c5",
           "level": 5,
@@ -13915,7 +14205,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_6",
           "level": 6,
           "tile_size": 16,
@@ -14031,7 +14321,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_7",
           "level": 7,
           "tile_size": 16,
@@ -14147,7 +14437,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_8",
           "level": 8,
           "tile_size": 16,
@@ -14263,7 +14553,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_9",
           "level": 9,
           "tile_size": 16,
@@ -14379,7 +14669,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_10",
           "level": 10,
           "tile_size": 16,
@@ -14495,7 +14785,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_11",
           "level": 11,
           "tile_size": 16,
@@ -14611,7 +14901,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_12",
           "atlas_sub_region": "r0c19",
           "level": 12,
@@ -14988,7 +15278,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_12",
           "atlas_sub_region": "r0c37",
           "level": 12,
@@ -15105,7 +15395,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_12",
           "atlas_sub_region": "r13c6",
           "level": 12,
@@ -15170,7 +15460,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_12",
           "atlas_sub_region": "r40c4",
           "level": 12,
@@ -15261,7 +15551,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_12",
           "atlas_sub_region": "r42c29",
           "level": 12,
@@ -15326,7 +15616,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_12",
           "atlas_sub_region": "r44c19",
           "level": 12,
@@ -15391,7 +15681,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_13",
           "level": 13,
           "tile_size": 16,
@@ -15559,7 +15849,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_14",
           "level": 14,
           "tile_size": 16,
@@ -15675,7 +15965,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_15",
           "atlas_sub_region": "r1c5",
           "level": 15,
@@ -15740,7 +16030,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_15",
           "atlas_sub_region": "r1c9",
           "level": 15,
@@ -15805,7 +16095,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_15",
           "atlas_sub_region": "r6c8",
           "level": 15,
@@ -15817,7 +16107,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_16",
           "atlas_sub_region": "r1c1",
           "level": 16,
@@ -16116,7 +16406,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_16",
           "atlas_sub_region": "r4c21",
           "level": 16,
@@ -16181,7 +16471,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_17",
           "level": 17,
           "tile_size": 16,
@@ -16427,7 +16717,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_18",
           "atlas_sub_region": "r1c1",
           "level": 18,
@@ -16492,7 +16782,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_18",
           "atlas_sub_region": "r7c10",
           "level": 18,
@@ -16557,7 +16847,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_19",
           "atlas_sub_region": "r1c1",
           "level": 19,
@@ -16622,7 +16912,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_19",
           "atlas_sub_region": "r1c5",
           "level": 19,
@@ -16634,7 +16924,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_19",
           "atlas_sub_region": "r3c3",
           "level": 19,
@@ -16646,7 +16936,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_19",
           "atlas_sub_region": "r5c5",
           "level": 19,
@@ -16711,7 +17001,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_20",
           "atlas_sub_region": "r1c4",
           "level": 20,
@@ -16776,7 +17066,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_20",
           "atlas_sub_region": "r1c12",
           "level": 20,
@@ -16788,7 +17078,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_20",
           "atlas_sub_region": "r3c1",
           "level": 20,
@@ -16853,7 +17143,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_21",
           "level": 21,
           "tile_size": 16,
@@ -17047,7 +17337,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_22",
           "level": 22,
           "tile_size": 16,
@@ -17267,7 +17557,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_23",
           "level": 23,
           "tile_size": 16,
@@ -17383,7 +17673,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_24",
           "level": 24,
           "tile_size": 16,
@@ -17525,7 +17815,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_25",
           "level": 25,
           "tile_size": 16,
@@ -17693,7 +17983,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_26",
           "atlas_sub_region": "r2c4",
           "level": 26,
@@ -17810,7 +18100,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_26",
           "atlas_sub_region": "r13c8",
           "level": 26,
@@ -17875,7 +18165,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_27",
           "level": 27,
           "tile_size": 16,
@@ -17991,7 +18281,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_28",
           "atlas_sub_region": "r0c6",
           "level": 28,
@@ -18108,7 +18398,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_28",
           "atlas_sub_region": "r1c18",
           "level": 28,
@@ -18173,7 +18463,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_28",
           "atlas_sub_region": "r11c4",
           "level": 28,
@@ -18238,7 +18528,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_29",
           "atlas_sub_region": "r2c2",
           "level": 29,
@@ -18355,7 +18645,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_29",
           "atlas_sub_region": "r5c0",
           "level": 29,
@@ -18420,7 +18710,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_29",
           "atlas_sub_region": "r9c3",
           "level": 29,
@@ -18432,7 +18722,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_30",
           "atlas_sub_region": "r0c4",
           "level": 30,
@@ -18497,7 +18787,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_30",
           "atlas_sub_region": "r2c10",
           "level": 30,
@@ -18692,7 +18982,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_30",
           "atlas_sub_region": "r8c13",
           "level": 30,
@@ -18757,7 +19047,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_30",
           "atlas_sub_region": "r16c17",
           "level": 30,
@@ -18769,7 +19059,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_30",
           "atlas_sub_region": "r17c11",
           "level": 30,
@@ -18781,7 +19071,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_31",
           "atlas_sub_region": "r5c24",
           "level": 31,
@@ -18872,7 +19162,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_31",
           "atlas_sub_region": "r24c10",
           "level": 31,
@@ -18937,7 +19227,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_32",
           "level": 32,
           "tile_size": 16,
@@ -19053,7 +19343,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_33",
           "level": 33,
           "tile_size": 16,
@@ -19117,7 +19407,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_34",
           "level": 34,
           "tile_size": 16,
@@ -19207,7 +19497,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_35",
           "level": 35,
           "tile_size": 16,
@@ -19271,7 +19561,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_36",
           "level": 36,
           "tile_size": 16,
@@ -19327,6 +19617,32 @@
                 "x": 160,
                 "y": 384
               }
+            },
+            {
+              "exit_id": "in_light_boss_exit_L69_112_96",
+              "kind": "teleporter",
+              "exit_tiles": [
+                [
+                  7,
+                  6
+                ]
+              ],
+              "entrance_tile": [
+                7,
+                6
+              ],
+              "entrance_spawn": {
+                "x": 112,
+                "y": 96
+              },
+              "exitName": null,
+              "targetRegion": null,
+              "targetExitId": "out_lightbosscontroller_72_72",
+              "target_level": 69,
+              "target_spawn": {
+                "x": 64,
+                "y": 64
+              }
             }
           ]
         }
@@ -19335,7 +19651,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_37",
           "atlas_sub_region": "r0c18",
           "level": 37,
@@ -19426,7 +19742,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_37",
           "atlas_sub_region": "r5c33",
           "level": 37,
@@ -19438,7 +19754,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_37",
           "atlas_sub_region": "r9c36",
           "level": 37,
@@ -19503,7 +19819,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_37",
           "atlas_sub_region": "r12c6",
           "level": 37,
@@ -19620,7 +19936,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_38",
           "atlas_sub_region": "r0c9",
           "level": 38,
@@ -19737,7 +20053,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_38",
           "atlas_sub_region": "r12c5",
           "level": 38,
@@ -19749,7 +20065,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_39",
           "atlas_sub_region": "r0c9",
           "level": 39,
@@ -19814,7 +20130,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_39",
           "atlas_sub_region": "r2c11",
           "level": 39,
@@ -19879,7 +20195,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_40",
           "atlas_sub_region": "r0c53",
           "level": 40,
@@ -19996,7 +20312,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_40",
           "atlas_sub_region": "r23c29",
           "level": 40,
@@ -20425,7 +20741,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_40",
           "atlas_sub_region": "r32c36",
           "level": 40,
@@ -20437,7 +20753,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_40",
           "atlas_sub_region": "r36c35",
           "level": 40,
@@ -20449,7 +20765,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_40",
           "atlas_sub_region": "r36c37",
           "level": 40,
@@ -20461,7 +20777,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_40",
           "atlas_sub_region": "r48c54",
           "level": 40,
@@ -20473,7 +20789,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_41",
           "atlas_sub_region": "r4c3",
           "level": 41,
@@ -20538,7 +20854,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_41",
           "atlas_sub_region": "r4c15",
           "level": 41,
@@ -20550,7 +20866,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_41",
           "atlas_sub_region": "r7c15",
           "level": 41,
@@ -20562,7 +20878,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_42",
           "level": 42,
           "tile_size": 16,
@@ -20626,7 +20942,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_43",
           "atlas_sub_region": "r3c8",
           "level": 43,
@@ -20665,7 +20981,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_43",
           "atlas_sub_region": "r8c7",
           "level": 43,
@@ -20677,7 +20993,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_43",
           "atlas_sub_region": "r13c7",
           "level": 43,
@@ -21054,7 +21370,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_44",
           "atlas_sub_region": "r0c4",
           "level": 44,
@@ -21119,7 +21435,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_44",
           "atlas_sub_region": "r4c2",
           "level": 44,
@@ -21184,7 +21500,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_44",
           "atlas_sub_region": "r6c4",
           "level": 44,
@@ -21249,7 +21565,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_45",
           "atlas_sub_region": "r0c7",
           "level": 45,
@@ -21366,7 +21682,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_45",
           "atlas_sub_region": "r4c18",
           "level": 45,
@@ -21378,7 +21694,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_45",
           "atlas_sub_region": "r6c15",
           "level": 45,
@@ -21390,7 +21706,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_45",
           "atlas_sub_region": "r14c2",
           "level": 45,
@@ -21402,7 +21718,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_46",
           "atlas_sub_region": "r0c11",
           "level": 46,
@@ -21519,7 +21835,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_46",
           "atlas_sub_region": "r1c26",
           "level": 46,
@@ -21531,7 +21847,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_46",
           "atlas_sub_region": "r6c24",
           "level": 46,
@@ -21570,7 +21886,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_46",
           "atlas_sub_region": "r23c5",
           "level": 46,
@@ -21582,7 +21898,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_46",
           "atlas_sub_region": "r24c8",
           "level": 46,
@@ -21594,7 +21910,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_46",
           "atlas_sub_region": "r25c3",
           "level": 46,
@@ -21606,7 +21922,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_47",
           "atlas_sub_region": "r1c21",
           "level": 47,
@@ -21618,7 +21934,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_47",
           "atlas_sub_region": "r2c9",
           "level": 47,
@@ -21735,7 +22051,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_47",
           "atlas_sub_region": "r7c3",
           "level": 47,
@@ -21747,7 +22063,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_47",
           "atlas_sub_region": "r8c20",
           "level": 47,
@@ -21759,7 +22075,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_47",
           "atlas_sub_region": "r10c5",
           "level": 47,
@@ -21771,7 +22087,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_47",
           "atlas_sub_region": "r13c5",
           "level": 47,
@@ -21783,7 +22099,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_47",
           "atlas_sub_region": "r14c18",
           "level": 47,
@@ -21795,7 +22111,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_47",
           "atlas_sub_region": "r14c22",
           "level": 47,
@@ -21807,7 +22123,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_47",
           "atlas_sub_region": "r19c10",
           "level": 47,
@@ -21819,7 +22135,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_48",
           "atlas_sub_region": "r2c10",
           "level": 48,
@@ -21858,7 +22174,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_48",
           "atlas_sub_region": "r4c3",
           "level": 48,
@@ -21870,7 +22186,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_48",
           "atlas_sub_region": "r7c0",
           "level": 48,
@@ -21935,7 +22251,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_48",
           "atlas_sub_region": "r11c9",
           "level": 48,
@@ -21947,7 +22263,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_48",
           "atlas_sub_region": "r18c7",
           "level": 48,
@@ -22012,7 +22328,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_49",
           "level": 49,
           "tile_size": 16,
@@ -22102,7 +22418,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_50",
           "level": 50,
           "tile_size": 16,
@@ -22218,7 +22534,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_51",
           "atlas_sub_region": "r2c6",
           "level": 51,
@@ -22230,7 +22546,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_51",
           "atlas_sub_region": "r3c4",
           "level": 51,
@@ -22242,7 +22558,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_51",
           "atlas_sub_region": "r3c10",
           "level": 51,
@@ -22359,7 +22675,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_51",
           "atlas_sub_region": "r14c6",
           "level": 51,
@@ -22424,7 +22740,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_52",
           "level": 52,
           "tile_size": 16,
@@ -22644,7 +22960,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_53",
           "atlas_sub_region": "r2c2",
           "level": 53,
@@ -22761,7 +23077,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_53",
           "atlas_sub_region": "r9c10",
           "level": 53,
@@ -22773,7 +23089,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_53",
           "atlas_sub_region": "r14c9",
           "level": 53,
@@ -22838,7 +23154,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_54",
           "atlas_sub_region": "r1c8",
           "level": 54,
@@ -22903,7 +23219,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_54",
           "atlas_sub_region": "r8c11",
           "level": 54,
@@ -22915,7 +23231,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_54",
           "atlas_sub_region": "r10c5",
           "level": 54,
@@ -22927,7 +23243,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_54",
           "atlas_sub_region": "r13c9",
           "level": 54,
@@ -22939,7 +23255,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_54",
           "atlas_sub_region": "r16c8",
           "level": 54,
@@ -22951,7 +23267,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_54",
           "atlas_sub_region": "r18c15",
           "level": 54,
@@ -22963,7 +23279,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_54",
           "atlas_sub_region": "r18c19",
           "level": 54,
@@ -22975,7 +23291,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_54",
           "atlas_sub_region": "r19c13",
           "level": 54,
@@ -22987,7 +23303,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_54",
           "atlas_sub_region": "r27c8",
           "level": 54,
@@ -23052,7 +23368,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_55",
           "level": 55,
           "tile_size": 16,
@@ -23116,7 +23432,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_56",
           "level": 56,
           "tile_size": 16,
@@ -23206,7 +23522,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_57",
           "level": 57,
           "tile_size": 16,
@@ -23322,7 +23638,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_58",
           "atlas_sub_region": "r1c2",
           "level": 58,
@@ -23334,7 +23650,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_58",
           "atlas_sub_region": "r1c4",
           "level": 58,
@@ -23373,7 +23689,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_58",
           "atlas_sub_region": "r2c1",
           "level": 58,
@@ -23385,7 +23701,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_58",
           "atlas_sub_region": "r2c5",
           "level": 58,
@@ -23397,7 +23713,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_58",
           "atlas_sub_region": "r3c3",
           "level": 58,
@@ -23409,7 +23725,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_58",
           "atlas_sub_region": "r4c1",
           "level": 58,
@@ -23474,7 +23790,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_58",
           "atlas_sub_region": "r6c5",
           "level": 58,
@@ -23513,7 +23829,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_59",
           "level": 59,
           "tile_size": 16,
@@ -23733,7 +24049,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_60",
           "atlas_sub_region": "r5c0",
           "level": 60,
@@ -23798,7 +24114,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_60",
           "atlas_sub_region": "r5c9",
           "level": 60,
@@ -23863,7 +24179,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_61",
           "atlas_sub_region": "r0c7",
           "level": 61,
@@ -24032,7 +24348,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_61",
           "atlas_sub_region": "r0c10",
           "level": 61,
@@ -24149,7 +24465,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_61",
           "atlas_sub_region": "r13c12",
           "level": 61,
@@ -24214,7 +24530,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_62",
           "level": 62,
           "tile_size": 16,
@@ -24486,7 +24802,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_63",
           "atlas_sub_region": "r0c1",
           "level": 63,
@@ -24707,7 +25023,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_63",
           "atlas_sub_region": "r5c14",
           "level": 63,
@@ -24719,7 +25035,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_63",
           "atlas_sub_region": "r6c9",
           "level": 63,
@@ -24784,7 +25100,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_63",
           "atlas_sub_region": "r6c15",
           "level": 63,
@@ -24796,7 +25112,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_63",
           "atlas_sub_region": "r10c2",
           "level": 63,
@@ -24913,7 +25229,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_64",
           "level": 64,
           "tile_size": 16,
@@ -24977,7 +25293,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_65",
           "atlas_sub_region": "r0c2",
           "level": 65,
@@ -25094,7 +25410,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_65",
           "atlas_sub_region": "r0c8",
           "level": 65,
@@ -25159,7 +25475,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_65",
           "atlas_sub_region": "r4c13",
           "level": 65,
@@ -25224,7 +25540,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_66",
           "atlas_sub_region": "r5c4",
           "level": 66,
@@ -25289,7 +25605,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_66",
           "atlas_sub_region": "r9c8",
           "level": 66,
@@ -25354,7 +25670,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_67",
           "atlas_sub_region": "r3c2",
           "level": 67,
@@ -25366,7 +25682,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_67",
           "atlas_sub_region": "r6c11",
           "level": 67,
@@ -25431,7 +25747,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_68",
           "atlas_sub_region": "r1c1",
           "level": 68,
@@ -25443,7 +25759,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_68",
           "atlas_sub_region": "r3c1",
           "level": 68,
@@ -25504,11 +25820,75 @@
           ]
         }
       },
+      "level_69": {
+        "substrate": "flash_seedling",
+        "playable_payload": {
+          "gameId": "seedling",
+          "atlas_ref": "seedling-db4c2681",
+          "atlas_region": "level_69",
+          "level": 69,
+          "tile_size": 16,
+          "exits": [
+            {
+              "exit_id": "in_pit_L70_3_7",
+              "kind": "teleporter",
+              "exit_tiles": [
+                [
+                  3,
+                  7
+                ]
+              ],
+              "entrance_tile": [
+                3,
+                7
+              ],
+              "entrance_spawn": {
+                "x": 48,
+                "y": 112
+              },
+              "exitName": null,
+              "targetRegion": null,
+              "targetExitId": "out_pit_3_7",
+              "target_level": 70,
+              "target_spawn": {
+                "x": 32,
+                "y": 32
+              }
+            },
+            {
+              "exit_id": "out_lightbosscontroller_72_72",
+              "kind": "teleporter",
+              "exit_tiles": [
+                [
+                  4,
+                  4
+                ]
+              ],
+              "entrance_tile": [
+                4,
+                4
+              ],
+              "entrance_spawn": {
+                "x": 64,
+                "y": 48
+              },
+              "exitName": "level_69 -> level_36",
+              "targetRegion": "level_36",
+              "targetExitId": "in_light_boss_exit_L69_112_96",
+              "target_level": 36,
+              "target_spawn": {
+                "x": 112,
+                "y": 96
+              }
+            }
+          ]
+        }
+      },
       "level_70": {
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_70",
           "level": 70,
           "tile_size": 16,
@@ -25564,6 +25944,32 @@
                 "x": 64,
                 "y": 80
               }
+            },
+            {
+              "exit_id": "out_pit_3_7",
+              "kind": "teleporter",
+              "exit_tiles": [
+                [
+                  2,
+                  2
+                ]
+              ],
+              "entrance_tile": [
+                2,
+                2
+              ],
+              "entrance_spawn": {
+                "x": 32,
+                "y": 16
+              },
+              "exitName": "level_70 -> level_69",
+              "targetRegion": "level_69",
+              "targetExitId": "in_pit_L70_3_7",
+              "target_level": 69,
+              "target_spawn": {
+                "x": 48,
+                "y": 112
+              }
             }
           ]
         }
@@ -25572,7 +25978,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_71",
           "atlas_sub_region": "r0c6",
           "level": 71,
@@ -25767,7 +26173,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_71",
           "atlas_sub_region": "r11c7",
           "level": 71,
@@ -25779,7 +26185,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_71",
           "atlas_sub_region": "r13c7",
           "level": 71,
@@ -25844,7 +26250,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_71",
           "atlas_sub_region": "r14c12",
           "level": 71,
@@ -25883,7 +26289,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_71",
           "atlas_sub_region": "r16c19",
           "level": 71,
@@ -25922,7 +26328,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_72",
           "level": 72,
           "tile_size": 16,
@@ -26038,7 +26444,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_73",
           "atlas_sub_region": "r0c4",
           "level": 73,
@@ -26103,7 +26509,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_73",
           "atlas_sub_region": "r3c7",
           "level": 73,
@@ -26168,7 +26574,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_74",
           "level": 74,
           "tile_size": 16,
@@ -26284,7 +26690,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_75",
           "level": 75,
           "tile_size": 16,
@@ -26400,7 +26806,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_76",
           "level": 76,
           "tile_size": 16,
@@ -26516,7 +26922,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_77",
           "level": 77,
           "tile_size": 16,
@@ -26632,7 +27038,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_78",
           "atlas_sub_region": "r0c2",
           "level": 78,
@@ -26697,7 +27103,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_78",
           "atlas_sub_region": "r0c16",
           "level": 78,
@@ -26762,7 +27168,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_79",
           "atlas_sub_region": "r0c4",
           "level": 79,
@@ -26853,7 +27259,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_79",
           "atlas_sub_region": "r8c4",
           "level": 79,
@@ -26918,7 +27324,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_80",
           "atlas_sub_region": "r0c2",
           "level": 80,
@@ -26983,7 +27389,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_80",
           "atlas_sub_region": "r6c4",
           "level": 80,
@@ -26995,7 +27401,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_80",
           "atlas_sub_region": "r8c1",
           "level": 80,
@@ -27007,7 +27413,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_80",
           "atlas_sub_region": "r8c4",
           "level": 80,
@@ -27019,7 +27425,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_80",
           "atlas_sub_region": "r12c3",
           "level": 80,
@@ -27031,7 +27437,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_80",
           "atlas_sub_region": "r16c1",
           "level": 80,
@@ -27122,7 +27528,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_82",
           "level": 82,
           "tile_size": 16,
@@ -27212,7 +27618,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_83",
           "level": 83,
           "tile_size": 16,
@@ -27302,7 +27708,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_84",
           "atlas_sub_region": "r0c0",
           "level": 84,
@@ -27393,7 +27799,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_84",
           "atlas_sub_region": "r2c4",
           "level": 84,
@@ -27536,7 +27942,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_84",
           "atlas_sub_region": "r3c0",
           "level": 84,
@@ -27601,7 +28007,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_85",
           "level": 85,
           "tile_size": 16,
@@ -27899,7 +28305,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_86",
           "level": 86,
           "tile_size": 16,
@@ -27963,7 +28369,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_87",
           "atlas_sub_region": "r0c23",
           "level": 87,
@@ -28028,7 +28434,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_87",
           "atlas_sub_region": "r1c3",
           "level": 87,
@@ -28301,7 +28707,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_87",
           "atlas_sub_region": "r7c10",
           "level": 87,
@@ -28313,7 +28719,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_87",
           "atlas_sub_region": "r7c13",
           "level": 87,
@@ -28325,7 +28731,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_88",
           "level": 88,
           "tile_size": 16,
@@ -28493,7 +28899,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_89",
           "atlas_sub_region": "r1c10",
           "level": 89,
@@ -28558,7 +28964,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_89",
           "atlas_sub_region": "r1c15",
           "level": 89,
@@ -28623,7 +29029,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_89",
           "atlas_sub_region": "r4c4",
           "level": 89,
@@ -28635,7 +29041,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_89",
           "atlas_sub_region": "r6c16",
           "level": 89,
@@ -28647,7 +29053,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_89",
           "atlas_sub_region": "r9c6",
           "level": 89,
@@ -28659,7 +29065,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_89",
           "atlas_sub_region": "r11c12",
           "level": 89,
@@ -28776,7 +29182,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_90",
           "level": 90,
           "tile_size": 16,
@@ -28840,7 +29246,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_91",
           "level": 91,
           "tile_size": 16,
@@ -28956,7 +29362,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_92",
           "atlas_sub_region": "r1c7",
           "level": 92,
@@ -28968,7 +29374,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_92",
           "atlas_sub_region": "r3c12",
           "level": 92,
@@ -28980,7 +29386,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_92",
           "atlas_sub_region": "r4c2",
           "level": 92,
@@ -29045,7 +29451,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_92",
           "atlas_sub_region": "r7c8",
           "level": 92,
@@ -29057,7 +29463,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_92",
           "atlas_sub_region": "r7c17",
           "level": 92,
@@ -29122,7 +29528,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_93",
           "atlas_sub_region": "r10c7",
           "level": 93,
@@ -29187,7 +29593,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_93",
           "atlas_sub_region": "r14c7",
           "level": 93,
@@ -29252,7 +29658,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_94",
           "atlas_sub_region": "r2c16",
           "level": 94,
@@ -29369,7 +29775,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_94",
           "atlas_sub_region": "r3c4",
           "level": 94,
@@ -29381,7 +29787,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_95",
           "level": 95,
           "tile_size": 16,
@@ -29601,7 +30007,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_96",
           "level": 96,
           "tile_size": 16,
@@ -29717,7 +30123,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_97",
           "level": 97,
           "tile_size": 16,
@@ -29833,7 +30239,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_98",
           "level": 98,
           "tile_size": 16,
@@ -29949,7 +30355,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_99",
           "atlas_sub_region": "r2c4",
           "level": 99,
@@ -30014,7 +30420,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_99",
           "atlas_sub_region": "r2c7",
           "level": 99,
@@ -30079,7 +30485,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_100",
           "atlas_sub_region": "r2c3",
           "level": 100,
@@ -30144,7 +30550,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_100",
           "atlas_sub_region": "r4c10",
           "level": 100,
@@ -30183,7 +30589,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_101",
           "atlas_sub_region": "r0c6",
           "level": 101,
@@ -30222,7 +30628,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_101",
           "atlas_sub_region": "r4c2",
           "level": 101,
@@ -30365,7 +30771,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_101",
           "atlas_sub_region": "r4c9",
           "level": 101,
@@ -30430,7 +30836,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_102",
           "atlas_sub_region": "r5c3",
           "level": 102,
@@ -30547,7 +30953,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_102",
           "atlas_sub_region": "r5c9",
           "level": 102,
@@ -30664,7 +31070,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_103",
           "level": 103,
           "tile_size": 16,
@@ -30780,7 +31186,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_104",
           "level": 104,
           "tile_size": 16,
@@ -30896,7 +31302,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_105",
           "level": 105,
           "tile_size": 16,
@@ -31012,7 +31418,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_106",
           "level": 106,
           "tile_size": 16,
@@ -31102,7 +31508,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_107",
           "atlas_sub_region": "r0c2",
           "level": 107,
@@ -31219,7 +31625,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_107",
           "atlas_sub_region": "r2c5",
           "level": 107,
@@ -31231,7 +31637,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_108",
           "atlas_sub_region": "r2c0",
           "level": 108,
@@ -31296,7 +31702,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_108",
           "atlas_sub_region": "r5c8",
           "level": 108,
@@ -31308,7 +31714,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_108",
           "atlas_sub_region": "r8c8",
           "level": 108,
@@ -31320,7 +31726,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_108",
           "atlas_sub_region": "r11c8",
           "level": 108,
@@ -31385,7 +31791,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_109",
           "level": 109,
           "tile_size": 16,
@@ -31475,7 +31881,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_110",
           "level": 110,
           "tile_size": 16,
@@ -31539,7 +31945,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_111",
           "level": 111,
           "tile_size": 16,
@@ -31655,7 +32061,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_112",
           "level": 112,
           "tile_size": 16,
@@ -31797,7 +32203,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_113",
           "level": 113,
           "tile_size": 16,
@@ -32095,7 +32501,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_114",
           "level": 114,
           "tile_size": 16,
@@ -32211,7 +32617,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_115",
           "atlas_sub_region": "r2c2",
           "level": 115,
@@ -32223,7 +32629,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_115",
           "atlas_sub_region": "r4c4",
           "level": 115,
@@ -32235,7 +32641,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_115",
           "atlas_sub_region": "r5c1",
           "level": 115,
@@ -32247,7 +32653,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_115",
           "atlas_sub_region": "r6c7",
           "level": 115,
@@ -32259,7 +32665,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_115",
           "atlas_sub_region": "r8c2",
           "level": 115,
@@ -32271,7 +32677,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_115",
           "atlas_sub_region": "r8c7",
           "level": 115,
@@ -32283,7 +32689,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-db0a4f7f",
+          "atlas_ref": "seedling-db4c2681",
           "atlas_region": "level_115",
           "atlas_sub_region": "r9c4",
           "level": 115,

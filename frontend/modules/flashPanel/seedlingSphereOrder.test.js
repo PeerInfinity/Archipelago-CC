@@ -57,9 +57,11 @@ describe('the endgame gate holds in the order itself', () => {
     // ⛔ The check that would have caught it: the first sphere log took The Seed
     // holding TWELVE seals, because the FinalDoor sits UNDER the exits to the
     // Seed room instead of between them.
-    it('collects all sixteen seals BEFORE the Seed', () => {
+    // ⛓ R4b (rules-boss-locations): the pool holds 23 (16 chests + 7 bosses, upstream's `boss_locations`); the
+    //   door still needs SEAL_TOTAL (the default `seals_required`), and that many come before the Seed.
+    it('collects the sixteen seals the FinalDoor needs BEFORE the Seed (23 in the pool)', () => {
         const seals = ORDER.order.filter((r) => r.item === 'Seal');
-        expect(seals).toHaveLength(SEAL_TOTAL);
+        expect(seals).toHaveLength(23);
         expect(nthItem('Seal', SEAL_TOTAL)).toBeLessThan(firstItem('The Seed'));
     });
 

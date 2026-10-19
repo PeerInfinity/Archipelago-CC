@@ -360,9 +360,12 @@ describe('⛓ RULES (B) — every pit `fallthrough` derives a one-way exit', () 
             .filter((c) => c.from[0] === regionIdFor(71) && c.from[1].startsWith('out_pit_'));
         expect(pit).toEqual([{ from: [regionIdFor(71), 'out_pit_10_17'], to: [regionIdFor(82), 'in_pit_L71_10_17'], one_way: true }]);
         // ⛓ RULES game-truth-gaps: L57 lifted too (⚖ 2026-10-06), so L56's pit into it is wired.
-        expect(OV.NEVER_ENTER_LEVELS).toEqual([69]);
+        // ⛓ R4b (rules-boss-locations): and L69 (⚖ 2026-10-19, "All 7 bosses"), so L70's pit into it is wired.
+        expect(OV.NEVER_ENTER_LEVELS).toEqual([]);
         expect(atlas.vanilla_layout.connections.filter((c) => c.from[0] === regionIdFor(56) && c.from[1].startsWith('out_pit_'))
             .map((c) => c.to[0])).toEqual([regionIdFor(57)]);
+        expect(atlas.vanilla_layout.connections.filter((c) => c.from[0] === regionIdFor(70) && c.from[1].startsWith('out_pit_'))
+            .map((c) => c.to[0])).toEqual([regionIdFor(69)]);
     });
 });
 
@@ -542,15 +545,17 @@ describe('⛓⛓ E5 — a `named_rooms` arrival is a connection, and its source 
             namedRooms: set.named_rooms,
         };
         /**
-         * ⛔ THE LIST IS THE PLAYTHROUGH OVERLAY'S OWN, NEVER TYPED. It was
-         * [57, 69, **82**] until ⛓ RULES (B) (⚖ 2026-10-04) lifted L82, and is
-         * [57, 69] until ⛓ RULES game-truth-gaps (⚖ 2026-10-06) lifted L57, and is [69]
-         * now — a row that typed any of them would be measuring a ruling rather than reading it.
+         * ⛔ THE LIST WAS THE PLAYTHROUGH OVERLAY'S OWN. It was [57, 69, **82**] until ⛓ RULES (B)
+         * (⚖ 2026-10-04) lifted L82, [57, 69] until ⛓ RULES game-truth-gaps (⚖ 2026-10-06) lifted L57, and [69]
+         * until ⛓ R4b (⚖ 2026-10-19, "All 7 bosses") lifted L69: the playthrough's list is EMPTY now. The
+         * MECHANISM this row measures still stands for any overlay that names a level, so it names the last
+         * trap room itself, with the cite it carried — the overlay's empty list is pinned where it lives.
          */
+        expect(OV.NEVER_ENTER_LEVELS).toEqual([]);
         const overlay = {
             neverEnter: {
-                levels: OV.NEVER_ENTER_LEVELS,
-                cite: OV.NEVER_ENTER_CITE,
+                levels: [69],
+                cite: { 69: 'Enemies/LightBossController.as:104 — the exit teleporter is created on death' },
             },
         };
         const guarded = deriveAtlas(rooms, overlay, deps);
@@ -562,7 +567,7 @@ describe('⛓⛓ E5 — a `named_rooms` arrival is a connection, and its source 
         expect(namedOf(open)).toHaveLength(15);
         expect(namedOf(guarded)).toHaveLength(13);
         expect(namedOf(guarded).map((c) => c.from[0])
-            .filter((r) => OV.NEVER_ENTER_LEVELS.some((l) => r === `level_${l}`)))
+            .filter((r) => overlay.neverEnter.levels.some((l) => r === `level_${l}`)))
             .toEqual([]);
         // ⛓ TWO refused: L69 holds TWO triggers (a `<watcher>` and its boss
         //   controller) — 15 - 2 = 13. ⛓ RULES (B): it was FIVE while L82 (one
@@ -642,7 +647,7 @@ describe('⛔ E5 — the producer keeps the hole, and the committed atlas does n
         expect([...args.matchAll(/namedRooms/g)]).toHaveLength(1);
         expect(args).toContain('namedRooms: ARENA_NAMED_ROOMS');
         expect(args).not.toContain('named_rooms');
-        expect(OV.DEATH_EXIT_ARENAS.map((a) => a.namedRoom)).toEqual(['tentacle_beast_mouth']);
+        expect(OV.DEATH_EXIT_ARENAS.map((a) => a.namedRoom)).toEqual(['tentacle_beast_mouth', 'light_boss_exit']);
     });
 
     /**
@@ -650,8 +655,10 @@ describe('⛔ E5 — the producer keeps the hole, and the committed atlas does n
      * committed atlas under the playthrough's never-enter list. ⛓ RULES (B) lifted L82 (TEN -> ELEVEN);
      * ⛓ RULES game-truth-gaps lifted L57 (its `<tentaclebeast>` and its `<watcher>`: ELEVEN -> THIRTEEN),
      * and the committed atlas now carries ONE of them itself, the mouth, so level_58 is reached.
+     * ⛓ R4b lifted L69 (its `<lightbosscontroller>` and its `<watcher>`: THIRTEEN -> FIFTEEN, the whole manifest),
+     * and the committed atlas carries TWO: the mouth and the Lights' exit to level_36.
      */
-    it('the whole manifest adds THIRTEEN connections; the committed atlas carries exactly one, the mouth into level_58', () => {
+    it('the whole manifest adds FIFTEEN connections; the committed atlas carries exactly the two arena exits', () => {
         const committed = JSON.parse(readFileSync(fileURLToPath(
             new URL('../flashPanel/atlases/seedling-playthrough.json', import.meta.url)), 'utf8'));
         const { set } = vanillaRecordSet(
@@ -671,7 +678,7 @@ describe('⛔ E5 — the producer keeps the hole, and the committed atlas does n
         const NAMED = /^in_(moonrock_target|dark_shrum_death|bloody_seed_ending|light_boss_exit|tentacle_beast_mouth)_/;
         const key = (c) => `${c.from[0]} -> ${c.to[0]}`;
         const added = guarded.atlas.vanilla_layout.connections.filter((c) => NAMED.test(c.to[1]));
-        expect(added).toHaveLength(15 - 2);
+        expect(added).toHaveLength(15);
         expect(added.map(key).sort()).toEqual([
             'level_0 -> level_2',
             'level_103 -> level_1',
@@ -683,13 +690,15 @@ describe('⛔ E5 — the producer keeps the hole, and the committed atlas does n
             'level_43 -> level_1',
             'level_57 -> level_1',
             'level_57 -> level_58',
+            'level_69 -> level_1',
+            'level_69 -> level_36',
             'level_82 -> level_1',
             'level_89 -> level_1',
             'level_94 -> level_1',
         ].sort());
         // ⛓ the committed atlas: exactly the ARENA's warp, at the AS3's door (the manifest row's exitOffset)
         const committedNamed = committed.vanilla_layout.connections.filter((c) => NAMED.test(c.to[1]));
-        expect(committedNamed.map(key)).toEqual(['level_57 -> level_58']);
+        expect(committedNamed.map(key)).toEqual(['level_57 -> level_58', 'level_69 -> level_36']);
         const mouth = committed.regions.find((r) => r.region_id === 'level_57').exits
             .find((e) => e.exit_id === committedNamed[0].from[1]);
         expect(mouth.entrance_tile).toEqual([6, 4]);
@@ -712,8 +721,9 @@ describe('⛔ E5 — the producer keeps the hole, and the committed atlas does n
         // …and the shape the hole is part of, so a rebuild that silently gained
         // the manifest's connections is a VALUE failure here.
         // ⛓ RULES game-truth-gaps: 113 -> 114 (L57), 314 -> 318 (L56's pit, L58's two doors, the mouth).
-        expect(out).toContain('114 regions');
+        // ⛓ R4b: 114 -> 115 (L69), 318 -> 320 (L70's pit in, the Lights' exit out).
+        expect(out).toContain('115 regions');
         // ⛓ RULES (B): 312 -> 314, L71's pit into L82 and L96's door into it.
-        expect(out).toContain('318 one-way connections');
+        expect(out).toContain('320 one-way connections');
     }, 120000);
 });

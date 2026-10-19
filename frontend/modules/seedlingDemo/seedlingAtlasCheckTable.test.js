@@ -117,7 +117,11 @@ describe('seedlingAtlasCheckTable — every committed real-room preset, bound or
             'sword', 'torchpickup', 'wand']);
         expect(entries).toHaveLength(19);
         const encounters = refused.filter((r) => /no entity on tile/.test(r.why)).map((r) => r.location).sort();
-        expect(encounters).toEqual(['Level 012 - Witch', 'Level 032 - Bob Boss']);
+        // ⛓ R4b (rules-boss-locations): the seven boss kills stand on a BODY, not a granting entity, so this
+        //   arm refuses them by name too; they report at a fixed address (the rewriter's `reports`).
+        expect(encounters).toEqual(['Level 012 - Witch', 'Level 019 - Shieldspire', 'Level 032 - Bob Boss',
+            'Level 032 - Times', 'Level 043 - Totem of Lacste', 'Level 057 - Tentacled Beast', 'Level 069 - Lights',
+            'Level 082 - King of Fire', 'Level 112 - Owl']);
         expect(refused.find((r) => r.location === 'Level 010 - Sword').why)
             .toBe(ATLAS_CHECK_REFUSALS.propertyPath('sword', 'Sword'));
         expect(refused.find((r) => r.location === 'Level 030 - Torchpickup').why)

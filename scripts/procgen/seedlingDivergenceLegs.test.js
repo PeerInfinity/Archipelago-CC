@@ -200,9 +200,10 @@ describe('the committed playthrough\'s leg list', () => {
         const gated = legs.filter((l) => l.arrive.events);
         // ⛓ RULES l38-button-event added 5 (flag:L39:8: 4 staged, 1 skipped — the event's own goal);
         //   RULES watcher-event 4 (flag:L114:0, staged `otherLevel` on L115's four return legs through the FinalDoor)
-        expect(gated.length).toBe(48);
+        //   R4b boss-locations 1 (the Owl's location reached back through L113, gated by flag:L112:1, staged)
+        expect(gated.length).toBe(49);
         expect(gated.every((l) => (l.stagedEvents?.length > 0) !== Boolean(l.skip))).toBe(true);
-        expect(gated.filter((l) => l.stagedEvents).length).toBe(39);
+        expect(gated.filter((l) => l.stagedEvents).length).toBe(40);
         expect(gated.filter((l) => l.skip).every((l) => /^goal-is-a-staged-event: /.test(l.skip))).toBe(true);
         const plain = legs.filter((l) => !l.arrive.events && !l.goalEvents);
         expect(plain.every((l) => !('stagedEvents' in l) && !('skip' in l))).toBe(true);
@@ -213,21 +214,23 @@ describe('the committed playthrough\'s leg list', () => {
         const goal = legs.filter((l) => l.goalEvents);
         const by = {};
         for (const l of goal) (by[l.goalEvents.join('+')] ??= []).push(l.id);
+        // ⛓ R4b (rules-boss-locations): the SAME legs by key, every id from 352 on shifted by the 12 new boss/L69 legs
+        //   ([[feedback_divergence_leg_ids_shift]]); no leg gained or lost a goal event.
         expect(by).toEqual({
-            'flag:L0:4': [50], 'flag:L0:1': [102, 112, 122, 132, 142, 152, 162], 'flag:L24:0': [178], 'flag:L39:8': [365],
-            'flag:L62:0': [541, 546, 551, 556, 561, 589], 'flag:L63:1': [543, 548, 553, 558, 563, 567, 572, 577, 582],
-            'flag:L71:2': [640, 642], 'flag:L12:7+flag:L12:12': [658],
-            'flag:L112:1': [808, 809, 815, 816, 822, 823, 829, 830, 836, 837],
-            'flag:L114:0': [810, 811, 812, 817, 818, 819, 824, 825, 826, 831, 832, 838, 839],
-            'flag:L113:0': [847, 848, 849, 850],
+            'flag:L0:4': [50], 'flag:L0:1': [102, 112, 122, 132, 142, 152, 162], 'flag:L24:0': [178], 'flag:L39:8': [368],
+            'flag:L62:0': [546, 551, 556, 561, 566, 594], 'flag:L63:1': [548, 553, 558, 563, 568, 572, 577, 582, 587],
+            'flag:L71:2': [648, 650], 'flag:L12:7+flag:L12:12': [668],
+            'flag:L112:1': [820, 821, 827, 828, 834, 835, 841, 842, 848, 849],
+            'flag:L114:0': [822, 823, 824, 829, 830, 831, 836, 837, 838, 843, 844, 850, 851],
+            'flag:L113:0': [859, 860, 861, 862],
         });
         // staged through the arrival's own channel: every goal event is in stagedEvents, after the arrival's
         for (const l of goal) expect(l.stagedEvents.slice(-l.goalEvents.length).map((e) => e.eventId), l.key).toEqual(l.goalEvents);
         // the Watcher's talk (`flag:L114:0`) is in another level than the FinalDoor's L113: otherLevel
-        expect(legs[811].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
+        expect(legs[823].stagedEvents).toEqual([{ eventId: 'flag:L114:0', level: 114, tag: 0, otherLevel: true }]);
         // the Or: no Ghost Spear at sphere 5.x, so the lit pole stages; L63's pole for an L62 exit is otherLevel
-        expect(legs[541].sphere.inventory).not.toContain('Ghost Spear');
-        expect(legs[543].stagedEvents).toEqual([{ eventId: 'flag:L63:1', level: 63, tag: 1, otherLevel: true }]);
+        expect(legs[546].sphere.inventory).not.toContain('Ghost Spear');
+        expect(legs[548].stagedEvents).toEqual([{ eventId: 'flag:L63:1', level: 63, tag: 1, otherLevel: true }]);
         // a goal that needs no event keeps no goalEvents key at all (its row is byte-identical)
         expect(legs.filter((l) => !l.goalEvents).every((l) => !('goalEvents' in l))).toBe(true);
     });
