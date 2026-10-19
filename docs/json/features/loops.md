@@ -67,7 +67,7 @@ Mana is the core resource that limits what you can accomplish in a single loop.
 
 - **Base mana**: 100
 - **Mana per item**: Each inventory item adds 10 to your max mana
-- **Max mana formula**: `100 + (itemCount * 10)`
+- **Max mana formula**: `100 + (itemCount * 10)`, plus any bonus a substrate in the world adds
 - Mana is consumed continuously as actions execute (not all at once)
 - When mana hits 0, the loop resets
 - On reset, mana refills to its current maximum
@@ -114,12 +114,14 @@ Or select "Loops" from the mode selector in the frontend.
 
 ### Building a Queue
 
-When Loops mode is active, clicking in the tracker queues actions instead of executing them directly:
+In the Loops panel itself, **Explore Region** and a click on an available exit or location row of a region's block append that action to the queue. The [Region Graph](../user/modules/regionGraph.md) and the Menu panel's exit buttons always append in loop mode.
+
+A click in the tracker panels (Regions, Locations, Exits) depends on the **Click-to-queue** setting (`moduleSettings.loops.clickToQueue`, in the panel's Controls): **Off** (the default) — the click acts at once, as it does outside loop mode; **Append to queue** — it adds the one action to the end of the queue, if the queue ends in that region; **Rebuild path (advanced)** — it replaces the queue with a path to the target:
 
 - **Click a location** → Pathfinding calculates the route from Menu to the location's region, queues all the intermediate region moves, then queues the location check (or an explore action if the location is undiscovered)
 - **Click an exit** → Queues region moves along the path to the exit's source region, then moves through the exit (or queues an explore if the exit is undiscovered)
 
-Each click replaces the current queue with a fresh path to the clicked target.
+In *Rebuild path*, each click replaces the current queue with a fresh path to the clicked target.
 
 **Routes start at Menu** — `findDiscoveredPath` sources every route from
 `startRegions[0]`, the region the [Menu panel](../modules/menuPanel.md) owns.
@@ -186,7 +188,7 @@ Explore actions can be set to repeat. When a repeating explore action completes,
 
 Everything above describes a queue of *tracker* actions — moves, explores, location checks — executed by a timer. When a region is backed by a **substrate** (an actual game: a maze, a text adventure, Journey to Ascension, Idle Loops, a runner or bounce level), the queue can hand that region over to you, to a recording, or to the game's own automation.
 
-The unit of that choice is a **block**: one visit to one region, i.e. the run of queued entries between the move that brings you in and the move that takes you out. Visit the same region twice and you get two blocks, each with its own settings. Every block's header carries a row of radios:
+The unit of that choice is a **block**: one visit to one region, i.e. the run of queued entries between the move that brings you in and the move that takes you out. Visit the same region twice and you get two blocks, each with its own settings. A block of a substrate region carries a row of **Mode** radios in its expanded details:
 
 | Mode | What happens when the queue reaches the block |
 |------|-----------------------------------------------|
@@ -382,17 +384,17 @@ Each action row expands to show:
 | Base cost | Raw mana cost from cost data |
 | Level discount | Reduction from region XP level |
 | Final cost | Actual mana charged |
-| Mana before | Mana at start of action |
-| Mana after | Predicted remaining mana |
-| Predicted time | Estimated real-time duration |
+| Remaining | Predicted mana left after the action (red when below 0) |
 
 ### Color Coding
 
-Mana remaining is color-coded:
+In the Loops panel, each queued action's remaining mana is color-coded:
 - **Green** (`loop-mana-good`): > 50% mana remaining
 - **Yellow** (`loop-mana-warn`): 10–50% mana remaining
 - **Red** (`loop-mana-low`): < 10% mana remaining
 - **Red** (`loop-mana-insufficient`): mana goes negative (action won't complete)
+
+In Loop Stats, a row is drawn red when the mana runs out before or during it, has a blue edge while it runs, and is faded once completed.
 
 ### Previous vs. Current
 
@@ -410,9 +412,16 @@ Settings that survive across sessions (stored in localStorage):
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `defaultSpeed` | 10 | Game speed multiplier |
+| `defaultSpeed` | 100 | Game speed multiplier |
 | `autoRestart` | false | Auto-restart loop on mana depletion |
+| `loopModeEnabled` | false | Enter loop mode at start-up |
+| `clickToQueue` | `off` | What a tracker click does in loop mode: `off`, `append` or `rebuildPath` |
+| `autoResumeOnNewAction` | false | Resume a finished queue when an action is added |
+| `autoRemoveCompleted` | false | Drop completed actions from the queue |
 | `instantMode` | false | Complete actions in one frame |
+| `keepFocused` | false | Keep substrate panels from coming to the front while the queue runs |
+| `defaultBlockMode` | `record` | The mode a new block starts in |
+| `autoSwitchToPlaybackAfterRecord` | true | Switch a block to Playback after recording it |
 
 ### Settings File
 
@@ -522,8 +531,8 @@ The loops module uses a dispatcher-based event system:
 
 | Event | Published By | Description |
 |-------|-------------|-------------|
-| `loopState:manaChanged` | LoopState | Mana value updated |
-| `loopState:xpChanged` | LoopState | Region XP changed |
+| `gameState:manaChanged` | GameState | Mana value updated |
+| `gameState:xpChanged` | GameState | Region XP changed |
 | `loopState:queueUpdated` | LoopState | Action queue modified |
 | `loopState:progressUpdated` | LoopState | Frame-by-frame progress tick |
 | `loopState:actionCompleted` | LoopState | Single action finished |
@@ -531,7 +540,7 @@ The loops module uses a dispatcher-based event system:
 | `loopState:loopReset` | LoopState | Loop reset (mana refilled) |
 | `loopState:pauseStateChanged` | LoopState | Processing state transition |
 | `loopState:speedChanged` | LoopState | Game speed adjusted |
-| `loopUI:modeChanged` | LoopUI | Loop mode toggled on/off |
+| `gameState:loopModeChanged` | GameState | Loop mode toggled on/off |
 | `costDataManager:loaded` | CostDataManager | Cost data loaded or generated |
 
 ## Testing

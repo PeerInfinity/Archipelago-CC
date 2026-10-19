@@ -4,7 +4,7 @@ This is the documentation for the Archipelago JSON Export Tools and its web clie
 
 This project is a fork of the main Archipelago project that focuses on three areas:
 
-1.  **Procedural generation**: a pipeline that generates complete, playable randomizer worlds in the browser, with each region drawn by a pluggable *substrate*: a maze, a text adventure, a platformer, a shoot-'em-up stage, or a room of a recompiled Flash game.
+1.  **Procedural generation**: a pipeline that generates complete, playable randomizer worlds in the browser, with each region drawn by a pluggable *substrate*: a maze, a text adventure, a platformer, a run of shoot-'em-up scenes, or a room of a recompiled Flash game.
 2.  **Export**: a Python-based system that writes a game's logic (location access rules, region connections, item data) to a standardized JSON format, the same `rules.json` that generated worlds compile to.
 3.  **The web client**: a modular, feature-rich client that loads this JSON to play, track and visualize a world, with logic-aware tracking, accessibility analysis, and other tools.
 

@@ -18,6 +18,7 @@ import {
 import { applyRegionXpCostEffect } from './xpFormulas.js';
 import {
   DEFAULT_REGION_COST,
+  DEFAULT_LOCATION_COST,
   START_REGION_MOVE_COST,
 } from '../shared/procgen/loopCostGenerator.js';
 import { formatAnnotations } from './blockAnnotations.js';
@@ -1007,9 +1008,10 @@ export class LoopBlockBuilder {
       const costSpan = document.createElement('span');
       costSpan.className = 'compact-item-cost';
       const locCostDataManager = getCostDataManager();
+      // (the `: 100` this replaces displayed 10x what the queue charges)
       const locBaseCost = locCostDataManager?.isLoaded()
         ? locCostDataManager.getLocationCost(locationDef.name)
-        : 100;
+        : DEFAULT_LOCATION_COST;
       const locXpData = loopState.getRegionXP(regionName);
       const locFinalCost = applyRegionXpCostEffect(
         locBaseCost,

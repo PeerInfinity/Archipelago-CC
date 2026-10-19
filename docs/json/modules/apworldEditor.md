@@ -7,7 +7,7 @@ locations, access rules and items directly; it displays *every* top-level key th
 document carries; and it is the door to every other editor that owns part of that
 document.
 
-- User guide: _not yet written_ — see [TODO](../user/modules/TODO.md)
+- User guide: [APWorld Editor](../user/modules/apworldEditor.md)
 - Record in the cross-arc queue (an untracked record kept outside the repository since 2026-09-14) §5n.
 
 ## Key files

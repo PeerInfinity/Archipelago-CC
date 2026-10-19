@@ -20,8 +20,8 @@ The seed picks one world among all the ones these settings allow; the same seed 
 
 Beside **Run all** is a button for the NEXT step only. Each step's output shows below in the **Sphere pipeline** section, where it can be looked at, and some can be edited, before the next step runs.
 
-1. Press **Run 1 Plan**: the plan — which items each sphere holds and how many regions it needs.
-2. Press **Run 2a Allocate**: each region gets its substrate (here, always Maze).
+1. Press **Run 1 Plan**: the plan — which items each sphere holds.
+2. Press **Run 2a Allocate**: how many regions, and how many empty filler regions, each wave of the plan gets. (The next step, *2b Topology*, gives each region its substrate — here, always Maze.)
 3. Press **Run all (finish)** to run the remaining steps.
 
 **◀ Previous sphere** drops the last sphere built, so it can be grown again; **Reset** clears the steps.
@@ -34,9 +34,9 @@ Beside **Run all** is a button for the NEXT step only. Each step's output shows 
 2. Press **⏯** (Step): the bot takes one action and stops. Its status line says what it is doing.
 3. Press **▶** (Play) and open the **Maze Room** to watch it walk the rest of the way. **⏹** stops it.
 
-- **⏭** (Instant) plays the rest at once, without walking; **↺** (Reset) starts the run over.
-- **Manual walk-to**: pick a region (and optionally a cell), press **Go**, and the bot walks the player there — handy for looking at one room. It is off while a sphere run is going.
-- **Route clicks to bot**: with it on, a click on a location in the **Locations** or **Exits** panel sends the bot there instead of checking it at once.
+- **⏭** (Instant) plays the rest at once, without walking; **↺** (Reset) starts the bot over; locations already checked stay checked, and it skips them.
+- **Manual walk-to**: pick a region, type a cell's **x** and **y**, press **Go**, and the bot walks the player there — handy for looking at one room. It is off while a sphere run is going.
+- **Route clicks to bot**: with it on, a click on a location in the **Locations** panel sends the bot there instead of checking it at once, and a click on an exit in the **Exits** panel sends it through that exit.
 - You can always walk yourself: click into the **Maze Room** and use the arrow keys.
 
 ## Tidy up

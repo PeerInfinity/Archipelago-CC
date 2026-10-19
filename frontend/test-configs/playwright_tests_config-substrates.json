@@ -510,7 +510,7 @@
             "id": "seedling-js-runtime-graphics-pack-boots",
             "enabled": true,
             "category": "Seedling JS runtime",
-            "_comment": "GRAPHICS G1. flashPanel.runtime = js + seedlingJsGraphics = seedling + seedlingJsCamera = follow on seedling_atlas_location: the page boots with the seedling + archipelago content packs (frontend/packs), every sheet decodes, sprites are drawn in the follow view, zero console errors; the camera switch back to room is applied live (no re-mount). seedling-js batch."
+            "_comment": "GRAPHICS G1. flashPanel.runtime = js + seedlingJsGraphics = seedling + seedlingJsCamera = follow on seedling_atlas_location: the page boots with the seedling + archipelago content packs (frontend/packs), every sheet decodes, sprites are drawn in the follow view, zero console errors; G2: the player is drawn from the pack (seedling:player/shrum) and ArrowRight/ArrowLeft play side-walk unmirrored/mirrored; the camera switch back to room is applied live (no re-mount). seedling-js batch."
         },
         {
             "id": "seedling-js-runtime-solver-opens-kill-lock",
