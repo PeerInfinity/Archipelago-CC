@@ -39,7 +39,7 @@
  *  - ⛓ HAMMER-PHASE PR — v2 ADDITIONS (still `v: 2`): the kind `soft-lock` (the refusal's own words say the action
  *    would wedge the GAME: a Seed collected on a page that never ends), and two bounded COUNT objects per segment —
  *    `caches` (the string-pull memo's and the cross-pass escape cache's hits and misses, `null` per member when its
- *    switch is OFF or it has no data — the escape member is wired by an installer, `progressCaches`) and `churn` (the frames the active path opened and closed, and the climb
+ *    switch is OFF or it has no data — the escape member is handed in by `solveSegmentUnder`, `progressCaches`) and `churn` (the frames the active path opened and closed, and the climb
  *    cursor's moves). Counts only, never ratios (the view does the arithmetic); nothing in them grows with the solve.
  */
 
@@ -700,11 +700,10 @@ export function progressStringPull(hit) {
  * ⛓ PR — the segment's view of the cross-pass escape cache: `counts` is `solverBot.ESCAPE_CROSS_PASS_CACHE_COUNTS`
  * (process-wide, summed over every scope) when the switch is ON and a scope is in hand, else `null`. Read once, at
  * the segment's start (the first call wins, as `progressReaders`); the snapshot reports what moved since.
- * ⚠ WHO CALLS IT: an installer that knows the cache is in hand, from its hook's first call of the segment (site
- * `segment`, where `seg` is already open). The solver-side call — one line beside `solveSegmentUnder`'s
- * `progressReaders` — is HELD: XC's "ON is OFF" rows (`escapeCrossPassCache.test.js`, XF's) compare the whole progress
- * stream ON and OFF, and a member that reports the switch differs by design. Until they compare it without `caches`,
- * the member is `null` on every solve no installer wires (the PR report names the line).
+ * WHO CALLS IT: `solveSegmentUnder`, one line beside `progressReaders` inside its `if (activeProgress !== null)` block
+ * (XC's "ON is OFF" rows compare the progress stream without `caches`, since a member that reports the switch differs
+ * by design). The first call wins, and an installer's hook at site `segment` runs before the solver's line, so an
+ * installer that calls it there overrides the solver's hand-in.
  */
 export function progressCaches(counts) {
     cacheEntries += 1;
