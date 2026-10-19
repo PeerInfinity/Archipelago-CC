@@ -87,7 +87,11 @@ const hook = (site, peek) => {
                 n.children.forEach(walk);
             };
             walk(s.tree);
-            segs.push({ name: s.segment.name, level: s.segment.level, outcome: s.segment.outcome, asks: s.budget.asks,
+            // --other: every node holding an `other`-kind rejection, with its reason keys (for PR)
+            const others = [];
+            const scan = (n) => { if (n.rejectionKinds.other) others.push({ key: n.key, rejections: n.rejections }); n.children.forEach(scan); };
+            if (has('other')) scan(s.tree);
+            segs.push({ ...(has('other') ? { others } : {}), name: s.segment.name, level: s.segment.level, outcome: s.segment.outcome, asks: s.budget.asks,
                 work: s.budget.work, rejectionKinds: kinds, attemptsByRole: roles, lastWhy: s.lastWhy, heartbeat: s.heartbeat ?? null,
                 topNodes: topNodes(s.tree) });
         }
