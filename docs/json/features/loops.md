@@ -444,6 +444,8 @@ Loops mode integrates tightly with the discovery system:
 - Only discovered regions and exits can be used for pathfinding
 - Exploring a region triggers discovery events, revealing locations and exits
 - The explore action publishes `loop:exploreCompleted` through the dispatcher chain
+- **Loop mode turns Discovery mode on** for as long as it is on: eight `moduleSettings.discovery.*` settings are forced as session-only overrides (never saved), and leaving loop mode clears them. The discovery module owns the values and the one serialised writer (`frontend/modules/discovery/worldDiscoveryMode.js`); the loops event coordinator calls its `syncDiscoveryOverrides` public function on every loop-mode change.
+- **A world can choose its own Discovery mode** through its per-player `discovery_mode` block (the Procgen Pipeline's *Discovery mode* select, `--discovery-mode` on the drivers). Without the block, loop mode alone decides, as above. With `enabled: false`, Discovery mode is off even in loop mode and every region, location and exit counts as discovered, so pathfinding reaches all of them. With `enabled: true`, loop mode behaves as without the block, and outside loop mode the world is walk-to-reveal. The [Discovery panel guide](../user/modules/discoveryPanel.md) has the table.
 
 ### GameState Path
 

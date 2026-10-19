@@ -27,6 +27,21 @@ These appear when **Show Debug Options** is enabled:
 | **Click Discovers Location** | Clicking an undiscovered location automatically discovers it. |
 | **Show Undiscovered Details** | Show full details (region, rules, status) for undiscovered locations instead of minimal "???" info. |
 
+## Loop Mode and a World's Own Discovery Mode
+
+Some settings above can be set for you for the length of a session. They are never saved, so your own values come back when the session's reason for them ends or the page reloads:
+
+- **Loop mode turns Discovery mode on.** While loop mode is on, Discovery mode is on with these values: regions are discovered when an exit leading to them is discovered, undiscovered items show as "???", undiscovered region names are hidden, auto-discover and click-discovers-region are off, and the location check UI is disabled. Leaving loop mode restores your settings. Unchecking **Enable Discovery Mode** in loop mode lasts only until loop mode is next switched on or the page reloads.
+- **A generated world can choose its own Discovery mode.** The Procgen Pipeline's **Discovery mode** select (beside **Enable loop mode**) writes the choice into the world, so a saved world reopens the same way:
+
+| Discovery mode | In loop mode | Without loop mode |
+|---|---|---|
+| **Same as loop mode** (default) | Discovery on, as above | Your own settings |
+| **On** | Discovery on, as above | Walk-to-reveal: entering a region reveals it, its locations and its exits; undiscovered items show as "???"; clicking a discovered exit in the Regions or Exits panel moves you |
+| **Off** | Discovery off, and every region, location and exit counts as discovered, so the Loops queue can be planned through any of them | Discovery off |
+
+Clicking an exit with Discovery mode on otherwise only discovers it; the move happens only in a walk-to-reveal world.
+
 ## Discovery State Lists
 
 When debug options are shown, three collapsible sections display everything that has been discovered:
