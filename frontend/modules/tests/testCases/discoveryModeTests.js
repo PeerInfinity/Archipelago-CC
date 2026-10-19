@@ -68,12 +68,6 @@ async function withPersistedDiscovery(testController, persisted, body) {
   const key = `${PREFIX}enableDiscoveryMode`;
   const before = settingsManager.settings?.moduleSettings?.discovery?.enableDiscoveryMode;
   await settingsManager.updateSetting(key, persisted);
-  // ⚠ Settle first with a neutral world: loops' rulesLoaded handler awaits a
-  // fetch for a URL-path load (a previous row's preset reload), and an
-  // in-memory load landing inside that await has its fresh-cost flag consumed
-  // by the stale handler (pre-existing race, recorded as B4) — measured: loop
-  // mode never auto-enabled right after test_region_graph_node_picker.
-  await loadWorld(testController, mazeWorld({ enableLoopMode: false }), 'discoveryModeSettle');
   try {
     return await body();
   } finally {
@@ -239,6 +233,54 @@ async function worldOnWithoutLoops(testController) {
   });
 }
 
+/**
+ * B4 — an in-memory loop world published while loops is still handling the
+ * previous world's rulesLoaded (it awaits a fetch of that world's rules file
+ * for a real path) must come up in loop mode with ITS OWN costs. Reproduced
+ * deterministically: world B is published from inside A's rulesLoaded, so it
+ * always lands inside loops' await. Before the load-generation fix the stale
+ * handler consumed B's fresh-cost flag, B's own rulesLoaded then cleared B's
+ * loop_costs, and loop mode stayed off.
+ */
+async function inMemoryLoadDuringPresetLoad(testController) {
+  return withPersistedDiscovery(testController, false, async () => {
+    const pathA = './presets/procgen_maze/AP_1/AP_1_rules.json';
+    const jsonA = await (await fetch(pathA)).json();
+    testController.reportCondition('world A carries no loop_costs (the measured case)', !jsonA.loop_costs);
+    const worldB = mazeWorld({ enableLoopMode: true });
+    const labelB = 'loopsLoadRaceB';
+    let publishedInsideA = false;
+    let bLoaded = false;
+    const unsub = testController.eventBus.subscribe('stateManager:rulesLoaded', (data) => {
+      if (data?.source === pathA && !publishedInsideA) {
+        publishedInsideA = true;
+        testController.eventBus.publish('files:jsonLoaded',
+          { jsonData: worldB, selectedPlayerId: '1', sourceName: labelB }, 'tests');
+      } else if (data?.source === labelB) {
+        bLoaded = true;
+      }
+    }, 'tests');
+    try {
+      testController.eventBus.publish('files:jsonLoaded',
+        { jsonData: jsonA, selectedPlayerId: '1', sourceName: pathA }, 'tests');
+      const loaded = await testController.pollForCondition(() => bLoaded, 'world B rulesLoaded', 15000, 100);
+      testController.reportCondition('world B was published from inside A\'s rulesLoaded', publishedInsideA);
+      testController.reportCondition('world B finished loading', loaded);
+    } finally {
+      unsub?.();
+    }
+    await testController.stateManager.pingWorker('after-loops-load-race', 3000);
+    const on = await testController.pollForCondition(loopModeOn, 'loop mode on for world B', 8000, 100);
+    testController.reportCondition('B4: loop mode auto-enabled for world B', on);
+    const costs = api('loops', 'getCostDataManager')?.();
+    const want = Object.keys(worldB.loop_costs?.['1']?.regions ?? {}).sort();
+    const have = Object.keys(costs?.costData?.regions ?? costs?.getCostData?.()?.regions ?? {}).sort();
+    testController.reportCondition(`B4: the loaded costs are world B's (${have.length} regions)`,
+      want.length > 0 && same(want, have));
+    return testController.getOverallResult();
+  });
+}
+
 const ROWS = [
   ['discovery-default-loop-override-unchanged', 'Discovery: default world in loop mode — the eight overrides exactly as before; B1 leak fixed', defaultLoopOverrideUnchanged,
     'Loads a loop world with NO discovery_mode block and asserts the eight session-only overrides and their values, that the persisted value is untouched, that leaving loop mode clears all eight, and that a world without loop_costs loaded over a loop world leaves none behind'],
@@ -248,6 +290,8 @@ const ROWS = [
     'Loop world with discovery_mode enabled:true: the loop-mode bundle; leaving loop mode switches to walk-to-reveal'],
   ['discovery-world-on-without-loops', 'Discovery: a world with discovery ON without loop mode (walk-to-reveal, B2)', worldOnWithoutLoops,
     'No loop costs, discovery_mode enabled:true: the walk-to-reveal bundle, a click on a discovered exit moves and reveals; a world without the block and hand-enabled discovery still only discovers'],
+  ['loops-inmemory-load-during-preset-load', 'Loops: a loop world loaded in memory during a preset load keeps its loop mode (B4)', inMemoryLoadDuringPresetLoad,
+    'Publishes a loop world from inside a preset\'s rulesLoaded, so it lands while loops awaits that preset\'s fetch, and asserts it comes up in loop mode with its own loop_costs'],
 ];
 
 for (const [id, name, testFunction, description] of ROWS) {

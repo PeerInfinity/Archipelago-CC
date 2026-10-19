@@ -61,6 +61,37 @@ byte-deterministic. They share these conventions:
   another mode's envelope or a newer version by name. An unstamped envelope
   (written before the stamp, or by hand) still loads. The panel's envelope
   download and Load envelope use the same stamp.
+- **The same drivers as a function.** `runPipeline.js` runs any of the six
+  in-process and returns what the CLI would have written:
+
+  ```js
+  import { runPipeline } from './scripts/procgen/runPipeline.js';
+  const { rulesJson, dump } = await runPipeline({
+      driver: 'dump-shuffled-spiral', config: { seed: 3, quotas: { maze: 3, jta: 2 } },
+  });
+  const { envelope } = await runPipeline({ driver: 'topdown-step', config: {}, source: rulesJson });
+  ```
+
+  `config` takes the driver's `--config` keys (same schema, same defaults); a
+  `*-step` driver runs its `run` subcommand, from `envelope` when given. It
+  returns `{rulesJson, dump, envelope, summary, oracleErrors}` and writes no
+  file. Importing the module loads nothing (the engine and substrate
+  libraries load on the first call), it never calls `process.exit`, and a
+  bad request throws `UsageError` / `InputError` — `EXIT[outcomeOf(err)]` is
+  the code the CLI would have exited with.
+- **The contract is tested.** `scripts/procgen/cliContract.test.js` (default
+  vitest tier, so every CI push) spawns the drivers and checks all of the
+  above: empty stdout unless `-o -`, the exit code and status object of each
+  refusal, every envelope at every step against its schema, every rules.json
+  against `frontend/schema/rules.schema.json`, and each dump rebuilt from its
+  own `config`.
+- **Envelope schemas.** `frontend/schema/envelopes/<kind>.schema.json`
+  describes every top-level field of an envelope, generated from the mode's
+  field table (`node scripts/procgen/generate-envelope-schemas.mjs`, `--check`
+  to gate). Fields marked `"x-visibility": "internal"` (`rng`, `regionsRng`,
+  `batchStart`, `nodes`, the tagged `grid`, …) are resume state: carry them
+  through untouched and do not read them; their shape may change without a
+  version bump.
 - **One substrate set, read from the registry.** Every driver loads the
   libraries `frontend/modules/procgenCore/substrateLibraries.js` lists (the
   same list the matrix generator and the regenerate worker read), so every

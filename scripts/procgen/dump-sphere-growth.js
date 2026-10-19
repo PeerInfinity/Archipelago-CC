@@ -211,7 +211,7 @@ const FLAGS = {
     '-h': W.help,
 };
 
-function parseArgs(argv) {
+function parseArgs(argv, { configDoc = null } = {}) {
     const out = parseFlags(argv, FLAGS, {
         seed: 1,
         region: { width: 8, height: 6 },
@@ -245,7 +245,7 @@ function parseArgs(argv) {
         atlasPlacement: 'sorter',
         rulesOut: null,
         out: './sphere-growth-dump.json',
-    }, { metaUrl: import.meta.url });
+    }, { metaUrl: import.meta.url, configDoc });
     if (Object.keys(out.items).length === 0) {
         // Sensible default pool for quick runs.
         out.items = { key_red: 1, key_green: 1, key_blue: 1, key_yellow: 1, victory: 1 };
@@ -283,14 +283,22 @@ function shapeRegions(grid) {
 
 // --- main ---
 
-async function main(status) {
-    const config = parseOrUsage(() => parseArgs(process.argv.slice(2)));
-    status.config = config;
-    await loadPipelineSubstrates();
-    checkSubstrateIds(config, {
-        layout: 'sphere', tool: 'dump-sphere-growth', counts: { quotas: '--quota' }, start: 'start',
-    });
+/** ⛓ A config OBJECT (the `--config` keys) → the parsed config; for `runPipeline`. */
+export const resolveConfig = (doc) => parseArgs([], { configDoc: doc });
 
+/** ⛓ The substrate ids this driver's config names, and the layout that must place them. */
+export const SUBSTRATE_CHECK = Object.freeze({
+    layout: 'sphere', tool: 'dump-sphere-growth', counts: { quotas: '--quota' }, start: 'start',
+});
+
+/**
+ * Build the dump from a parsed config. Writes nothing (`--atlas` pools are
+ * READ); the substrate libraries must already be loaded. `log` receives the
+ * progress lines the CLI prints on stderr.
+ * @returns {Promise<{dump: object, rulesJson: object, summary: object, oracleErrors: string[],
+ *          arrowNote: string, startingItems: string[]}>}
+ */
+export async function build(config, { log = () => {} } = {}) {
     // Merged item library + victory resolution via the shared substrate-hook
     // assembly (same path the panel + sphere-step CLI use).
     const selectedSubs = new Set(Object.keys(config.quotas));
@@ -362,7 +370,7 @@ async function main(status) {
             throw new InputError(`atlas pool ${p} is invalid: ${vr.errors.join('; ')}`);
         }
         substrateConfig[pool.game] = { atlasDoc: pool };
-        console.error(`  atlas pool: ${pool.pool_id} (${pool.entries.length} regions) `
+        log(`  atlas pool: ${pool.pool_id} (${pool.entries.length} regions) `
             + `-> substrateConfig['${pool.game}'].atlasDoc`);
         if (config.atlasPlacement === 'sorter') {
             // MUTATES `plan` — the required items are scheduled into earlier
@@ -373,7 +381,7 @@ async function main(status) {
                 quota: config.quotas[`atlas:${pool.game}`],
             });
             atlasAssignments.push(...sorted.assignments);
-            for (const line of formatAtlasSortReport(sorted)) console.error(`  ${line}`);
+            for (const line of formatAtlasSortReport(sorted)) log(`  ${line}`);
         }
     }
 
@@ -460,16 +468,29 @@ async function main(status) {
         regions: shapeRegions(grid),
         rulesJson,
     };
+    const summary = {
+        seed: config.seed, regionsBuilt: stats.regionsBuilt,
+        stopReason: stats.stopReason ?? null, substrateCounts: stats.substrateCounts ?? null,
+    };
+    return { dump, rulesJson, summary, oracleErrors, arrowNote, startingItems };
+}
+
+async function main(status) {
+    const config = parseOrUsage(() => parseArgs(process.argv.slice(2)));
+    status.config = config;
+    await loadPipelineSubstrates();
+    checkSubstrateIds(config, SUBSTRATE_CHECK);
+    const {
+        dump, rulesJson, summary, oracleErrors, arrowNote, startingItems,
+    } = await build(config, { log: (line) => console.error(line) });
+    const { stats, plan } = dump;
 
     const outPath = resolve(process.cwd(), config.out);
     mkdirSync(dirname(outPath), { recursive: true });
     writeFileSync(outPath, JSON.stringify(dump, null, 2));
     console.error(`Wrote ${outPath}`);
     status.outputs.dump = outPath;
-    status.summary = {
-        seed: config.seed, regionsBuilt: stats.regionsBuilt,
-        stopReason: stats.stopReason ?? null, substrateCounts: stats.substrateCounts ?? null,
-    };
+    status.summary = summary;
     if (config.rulesOut) {
         const rulesPath = resolve(process.cwd(), config.rulesOut);
         mkdirSync(dirname(rulesPath), { recursive: true });

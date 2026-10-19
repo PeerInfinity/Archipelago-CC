@@ -153,7 +153,7 @@ const FLAGS = {
     '-h': W.help,
 };
 
-function parseArgs(argv) {
+function parseArgs(argv, { configDoc = null } = {}) {
     const out = parseFlags(argv, FLAGS, {
         subcommand: null,
         // world flags (used by `plan` / `run`)
@@ -192,7 +192,7 @@ function parseArgs(argv) {
         rulesOut: null,
         from: null,
         to: null,
-    }, { subcommand: true, metaUrl: import.meta.url });
+    }, { subcommand: true, metaUrl: import.meta.url, configDoc });
     // Default item pool for world-building subcommands. `append` reads --items
     // as the NEW sphere's content, so an empty list there means "just relocate
     // the goal" — don't inject a default pool.
@@ -289,17 +289,73 @@ function writeOut(path, obj, fallbackName) {
 // addresses. Say so — and name the ones this run's START POINT is already past,
 // because those will NOT fire (the step that replays them is not going to run).
 // Re-run with --from <stage> to apply them.
-function announceEdits(env, firstStep) {
+function announceEdits(env, firstStep, log = (m) => process.stderr.write(m)) {
     if (!env.edits?.length) return;
-    process.stderr.write(`[sphere-step] ${env.edits.length} recorded edit`
+    log(`[sphere-step] ${env.edits.length} recorded edit`
         + `${env.edits.length === 1 ? '' : 's'} on the envelope\n`);
     for (const e of sphereEditsBehind(env, firstStep)) {
-        process.stderr.write(`[sphere-step] \u26a0 '${e.op}' is staged before ${firstStep}`
+        log(`[sphere-step] \u26a0 '${e.op}' is staged before ${firstStep}`
             + ' — NOT replayed on this run (re-run with --from <its stage>)\n');
     }
 }
 
+/**
+ * The `run` subcommand's body: run `env` to `args.to` (default compile), from
+ * `args.from` or, without it, from the first step whose output is missing.
+ */
+async function runToEnd(env, args, { log, onProgress }) {
+    const to = args.to ?? 'compile';
+    if (args.from) {
+        // Explicit override: resume from the named step.
+        announceEdits(env, args.from, log);
+        env.completed = SPHERE_STEPS.indexOf(args.from) - 1;
+        await runToStep(env, to, { onProgress });
+    } else {
+        // Auto-detect the resume point from which step outputs are
+        // present (parity with the panel's Load-envelope behavior) —
+        // a partial / hand-edited envelope resumes from the first step
+        // whose output is missing. presence = keep, absence = recompute.
+        const at = detectCompleted(env) + 1;
+        if (at < SPHERE_STEPS.length) {
+            log(`[sphere-step] auto-resume from ${SPHERE_STEPS[at]}\n`);
+        }
+        announceEdits(env, SPHERE_STEPS[Math.min(at, SPHERE_STEPS.length - 1)], log);
+        await resumeEnvelope(env, to, { onProgress });
+    }
+}
+
 // --- main ---
+
+/** ⛓ A config OBJECT (the `--config` keys) → the parsed config of a `run`; for `runPipeline`. */
+export const resolveConfig = (doc) => ({ ...parseArgs([], { configDoc: doc }), subcommand: 'run' });
+
+/** ⛓ The substrate ids this driver's config names, and the layout that must place them. */
+export const SUBSTRATE_CHECK = Object.freeze({
+    layout: 'sphere', tool: 'sphere-step', counts: { quotas: '--quota' }, start: 'start',
+});
+
+/**
+ * `run`, in-process: a new envelope from the parsed config (or `envelope`, a
+ * serialized one to resume), run to `config.to` (default compile). Writes
+ * nothing; the substrate libraries must already be loaded.
+ * @returns {Promise<{envelope: object, rulesJson: object|null, oracleErrors: string[], summary: object}>}
+ */
+export async function build(config, { envelope = null, log = () => {}, onProgress = null } = {}) {
+    const env = envelope ? deserializeEnvelope(structuredClone(envelope)) : newEnvelope(buildConfig(config));
+    await runToEnd(env, config, { log, onProgress });
+    const rulesJson = env.compile?.rulesJson ?? null;
+    return {
+        envelope: serializeEnvelope(env),
+        rulesJson,
+        oracleErrors: env.compile?.oracleErrors ?? [],
+        summary: {
+            seed: env.config?.seed ?? null,
+            completed: SPHERE_STEPS[env.completed] ?? null,
+            driver: rulesJson?.procgen_metadata?.['1']?.driver ?? null,
+            regions: rulesJson ? Object.keys(rulesJson.regions?.['1'] ?? {}).length : null,
+        },
+    };
+}
 
 async function main(status) {
     const args = parseOrUsage(() => parseArgs(process.argv.slice(2)));
@@ -314,7 +370,7 @@ async function main(status) {
         throw new UsageError(`unknown subcommand '${sub}'`);
     }
     await loadPipelineSubstrates();
-    checkSubstrateIds(args, { layout: 'sphere', tool: 'sphere-step', counts: { quotas: '--quota' }, start: 'start' });
+    checkSubstrateIds(args, SUBSTRATE_CHECK);
 
     // Load or create the envelope. `append` accepts EITHER a saved envelope or a
     // bare finished rules.json (reconstructed via its embedded sphere_tree —
@@ -357,24 +413,7 @@ async function main(status) {
             seed: args.seed,
         }, { onProgress });
     } else if (sub === 'run') {
-        const to = args.to ?? 'compile';
-        if (args.from) {
-            // Explicit override: resume from the named step.
-            announceEdits(env, args.from);
-            env.completed = SPHERE_STEPS.indexOf(args.from) - 1;
-            await runToStep(env, to, { onProgress });
-        } else {
-            // Auto-detect the resume point from which step outputs are
-            // present (parity with the panel's Load-envelope behavior) —
-            // a partial / hand-edited envelope resumes from the first step
-            // whose output is missing. presence = keep, absence = recompute.
-            const at = detectCompleted(env) + 1;
-            if (at < SPHERE_STEPS.length) {
-                process.stderr.write(`[sphere-step] auto-resume from ${SPHERE_STEPS[at]}\n`);
-            }
-            announceEdits(env, SPHERE_STEPS[Math.min(at, SPHERE_STEPS.length - 1)]);
-            await resumeEnvelope(env, to, { onProgress });
-        }
+        await runToEnd(env, args, { log: (m) => process.stderr.write(m), onProgress });
     } else {
         await runStep(sub, env, { onProgress });
     }
