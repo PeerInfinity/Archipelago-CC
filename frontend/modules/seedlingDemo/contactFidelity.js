@@ -729,6 +729,22 @@ export const CONTACT_FIDELITY = {
      * OFF: never asked, byte-identical. `SEEDLING_COVERED_GOAL_REFUSAL=0|1` for a node measurement.
      */
     coveredGoalRefusal: false,
+    /**
+     * fidelity L40GUARD D4 (hammer LB hand-over #6) — AN UNCERTAIN SHAKE BAND OVER A BODY THAT STEPS THE SAME ON AND OFF
+     * SCREEN IS STEPPED, NOT THROWN (`levelRun.shakeBandMootNow`): at rest (`v` 0), no i-frames, no player overlap, no
+     * terrain arm under it, alive and not falling. The jiggle is still not modelled (⚖ 2026-10-10); the band's answer is
+     * simply not needed. Any other body under an uncertain band still throws by name. OFF: never asked, byte-identical.
+     * `SEEDLING_SHAKE_BAND_MOOT=0|1` for a node measurement.
+     */
+    shakeBandMoot: false,
+    /**
+     * fidelity L40GUARD D4 (hammer LB hand-over #7) — A SWORD SWING AT A SPINNER THROUGH A SOLID MISSES
+     * (`levelRun.spinnerSwingBlockedNow`), as `Player.slash`'s `collideLine("Solid")` gate runs it (`Player.as:917`; the
+     * drill's and the wallflyer's arms already model it): a `landed: false` press row instead of the LOS assertion's
+     * throw. Witnessed on the game (`l40guard-spinner-los`). OFF: the assertion, byte-identical.
+     * `SEEDLING_SPINNER_SWING_LOS=0|1` for a node measurement.
+     */
+    spinnerSwingLineOfSight: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -877,6 +893,10 @@ if (globalThis.process?.env?.SEEDLING_GUARD_APPROACH_STANCE === '1') CONTACT_FID
 if (globalThis.process?.env?.SEEDLING_GUARD_APPROACH_STANCE === '0') CONTACT_FIDELITY.guardApproachStance = false;
 if (globalThis.process?.env?.SEEDLING_COVERED_GOAL_REFUSAL === '1') CONTACT_FIDELITY.coveredGoalRefusal = true;
 if (globalThis.process?.env?.SEEDLING_COVERED_GOAL_REFUSAL === '0') CONTACT_FIDELITY.coveredGoalRefusal = false;
+if (globalThis.process?.env?.SEEDLING_SHAKE_BAND_MOOT === '1') CONTACT_FIDELITY.shakeBandMoot = true;
+if (globalThis.process?.env?.SEEDLING_SHAKE_BAND_MOOT === '0') CONTACT_FIDELITY.shakeBandMoot = false;
+if (globalThis.process?.env?.SEEDLING_SPINNER_SWING_LOS === '1') CONTACT_FIDELITY.spinnerSwingLineOfSight = true;
+if (globalThis.process?.env?.SEEDLING_SPINNER_SWING_LOS === '0') CONTACT_FIDELITY.spinnerSwingLineOfSight = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

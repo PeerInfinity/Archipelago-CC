@@ -1,0 +1,60 @@
+{
+ "game": "seedling",
+ "name": "l40guard-walk-east",
+ "boot": {
+  "level": 40,
+  "x": 760,
+  "y": 848
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [],
+ "equips": [],
+ "pins": [
+  "sound",
+  "dead_frames"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 0,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 987286273
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasFire": true,
+   "hasWand": false,
+   "hasFireWand": false,
+   "canSwim": false,
+   "hasSpear": false,
+   "hasDarkShield": false,
+   "hasDarkSuit": false,
+   "hasDarkSword": false,
+   "hasFeather": false,
+   "hasTorch": true
+  },
+  "hits_max": 3,
+  "time": 4800,
+  "primary": 0
+ },
+ "tick_count": 160,
+ "inputs": [
+  {
+   "key": "right",
+   "from": 0,
+   "to": 160
+  }
+ ],
+ "tape_version": 8,
+ "description": "scratch l40guard witness"
+}
