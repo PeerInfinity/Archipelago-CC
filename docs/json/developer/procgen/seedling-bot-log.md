@@ -23780,6 +23780,33 @@ live run through t1300; built OFF, it is 8 px astray with hits 0 by t1297.
   `ticksCompleted`, an advance-time arm carries `+ 1`, and the player's `playerHits` row reads one tick on.
 - The run's `spinnerBodies` keeps a faded spinner (alpha < 0) one tick past the game's removal. This holds for a
   press kill too. The kill ledger's `removedTick` is the game's.
+
+### Seedling fidelity watcherTalkVerb flip — the Watcher's {114,0} is earned by talking, ON by default
+
+⚖ The user (2026-10-19): *"Flip watcherTalkVerb"*. WATCHERTALK's switch (`CONTACT_FIDELITY.watcherTalkVerb`, section
+above) now ships ON. The JS arc's `jsRuntimeSolver.clearTagVerbOf` gives `solid:watcher` the same `talk` verb while the
+switch is on. That one line rides in this flip (the JS arc reviewed it). `talk` is already a `STRATEGY_EXECUTORS` row,
+so `registered` needed no widening.
+
+**Why.** OFF, a clear-tag naming `watcher@72,72` found no solid (the Watcher has no collider) and took the
+`already-clear` arm: survey step 210 "solved" in 4 ticks with the flag never written. The sweep's two L114 legs never
+reached the solver: the JS pre-check refused them `no-verb`.
+
+**Measured** (flip branch `c08144d5f9` on main `008215fa52`):
+- keyed sweep on the two L114 legs, captures on (A 39201717081, the 30 default keys; B 39201723835, + the switch):
+  **843 and 846 failed (no solver goal) → done** on the game;
+- route survey, flip 39201730777 vs a main control 39201738027: **one mover, step 210 (L114) SOLVED 4 t → SOLVED 406 t**
+  (the talk). Every other step is identical; both 165 / 45 / 1 / 1 of 212;
+- JSUT 39201698137 21172/21172; full tier 39201745114 and probe battery 39201747835 green.
+
+**Pins moved:** the `contactFidelity.test` defaults; `fidelityWatcherTalk` "ships ON";
+`plan-seedling-watchertalk-witness.mjs`'s "the switch ships ON" check. Its plans turn the switch on for their own
+solves, so its tapes don't move. No other producer names the switch.
+
+Trap candidate (from the survey compare): `survey-seedling-shards.mjs --fetch=<run>` into a cache that already holds
+another run left the old `survey.json` in place, so two runs read byte-identical. Download each run's
+`seedling-survey-merged` artifact into its own directory before comparing.
+
 ### Seedling hammer-phase PR — solve-progress residue
 
 ⚖ The user (2026-10-18) picked the solve-progress residue in the replan and ruled *a NEW `soft-lock` refusal kind* for

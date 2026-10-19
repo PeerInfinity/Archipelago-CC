@@ -2499,6 +2499,62 @@ registerTest({
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
+/**
+ * ⛓⛓ ⚖ region-editor-launch Q1 — **EDIT ▸ WITH NO MAZE LAB ON SCREEN OPENS
+ * ONE.** Before the shared opener the hub's press said *"Open Procgen Lab — maze
+ * first"*. The row closes every real maze lab tab (Golden Layout's own
+ * `remove()`, what the × does), presses Edit ▸ on the fixture's maze region, and
+ * asserts a maze lab was made, the room session parked for THAT region and no
+ * refusal printed. ⛓ The made tab is left on screen — the layout is put back.
+ */
+export async function apworldEditOpensAClosedMazeLab(testController) {
+    const REGION = 'region_1_0';
+    try {
+        const panel = await openHub(testController, FOUR_PLAYER_PATH);
+        if (!panel) return testController.getOverallResult();
+        const items = window.goldenLayoutInstance?.getAllContentItems?.() ?? [];
+        for (const p of labPanelInstances().filter((x) => x.substrate === 'maze')) {
+            items.find((it) => it.isComponent && it.container === p.container)?.remove();
+        }
+        const gone = await testController.pollForValue(
+            () => (findLabPanel('maze') ? null : true), 'every maze lab tab closed', 8000, 50);
+        testController.reportCondition('⛓ premise: no maze lab is on screen', !!gone);
+        if (!gone) return testController.getOverallResult();
+
+        selectTab(panel, 'regions');
+        const btn = await testController.pollForValue(
+            () => editButtonFor(REGION), `the "${REGION}" Edit button`, 8000, 50);
+        testController.reportCondition('a maze region offers Edit ▸', !!btn && !btn.disabled);
+        if (!btn) return testController.getOverallResult();
+        btn.click();
+
+        const made = await testController.pollForValue(
+            () => findLabPanel('maze'), 'Edit ▸ opened a maze lab', 8000, 50);
+        testController.reportCondition('⛓⛓ Edit ▸ OPENED a maze lab', !!made);
+        const parked = await testController.pollForValue(
+            () => (panel.roomEditorSession?.region === REGION ? panel.roomEditorSession : null),
+            'the room session is parked for the region', 8000, 50);
+        testController.reportCondition('…and the room is open in it for THIS region', !!parked);
+        testController.reportCondition('⛔ no refusal was printed',
+            !String(panel._opMessage ?? '').startsWith('Edit refused'));
+        panel._closeRoomEditor();
+    } catch (error) {
+        testController.reportCondition(`Test error: ${error.message}`, false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-edit-opens-a-closed-maze-lab',
+    name: 'APWorld Editor: Edit ▸ on a maze region with no maze lab on screen opens one',
+    description: '⚖ region-editor-launch Q1. Closes every Procgen Lab — maze tab, presses Edit ▸ on the '
+               + 'four-player fixture\'s maze region, and asserts a maze lab was made, the room session is '
+               + 'parked for that region and no refusal was printed. The made tab stays (the layout is put back).',
+    testFunction: apworldEditOpensAClosedMazeLab,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
 /* ══════════════════════════════════════════════════════════════════════
  * H5 — THE SIDECAR-BLOCK LINKS
  * ══════════════════════════════════════════════════════════════════════ */

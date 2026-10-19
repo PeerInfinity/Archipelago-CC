@@ -52,7 +52,7 @@ import { springGap } from '../bounceDemo/fixtures/springGap.js';
 import { fork } from '../bounceDemo/fixtures/fork.js';
 import { fillerClimb } from '../bounceDemo/fixtures/fillerClimb.js';
 import {
-    getModuleApis, setPanelInstance, consumePendingSession, LOAD_EVENT,
+    getModuleApis, getPanelInstance, setPanelInstance, consumePendingSession, LOAD_EVENT,
     openRegionInApworldEditor,
 } from './index.js';
 import { createEditSession, describeOps, group } from '../procgenCore/editCore.js';
@@ -131,6 +131,10 @@ export class BounceRegionEditorUI {
         };
         rawEventBus.subscribe(LOAD_EVENT, onLoad, 'bounceRegionEditor');
         this._unsub = () => rawEventBus.unsubscribe(LOAD_EVENT, onLoad, 'bounceRegionEditor');
+        // ⛔ MEASURED 2026-10-19 (region-editor-launch): nothing called `destroy()`
+        //   when the tab closed, so the dead mount kept its LOAD_EVENT listener
+        //   and could take the next Edit ▸'s session. Golden Layout's own event.
+        container?.on?.('destroy', () => this.destroy());
         this.render();
     }
 
@@ -141,7 +145,8 @@ export class BounceRegionEditorUI {
     onPanelResize() {}
     destroy() {
         if (this._unsub) { this._unsub(); this._unsub = null; }
-        setPanelInstance(null);
+        // ⛓ Only if it is still US: a newer mount may already have taken the slot.
+        if (getPanelInstance() === this) setPanelInstance(null);
     }
 
     // ── Session loading ─────────────────────────────────────────────────

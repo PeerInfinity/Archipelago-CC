@@ -140,9 +140,10 @@ describe('regionRoundTripOf — the declaration, resolved off the registry', () 
         expect(rt).toBe(null);
         expect(why).toContain('ATLAS REFERENCE');
         expect(why).toContain('atlas_ref');
-        // ⛓ …and its ROOM EDITOR declaration is untouched: the pipeline still
-        //   opens a Seedling room from a live run. It is the DOCUMENT direction
-        //   that has no answer.
+        // ⚖ region-editor-launch Q4: read-only BY RULING, and the sentence says why.
+        expect(why).toContain('read-only');
+        // ⛓ …and its ROOM EDITOR declaration is untouched (the lab page edits a
+        //   real-game room standalone); it is the WORLD direction that refuses.
         expect(substrateRegistry.get('flash_seedling').roomEditor.kind).toBe('lab');
     });
 

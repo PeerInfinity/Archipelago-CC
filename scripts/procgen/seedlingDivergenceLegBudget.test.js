@@ -129,7 +129,9 @@ describe('the MERGE refuses a mixed-budget merge by name', () => {
     it('the default merge prints exactly today\'s lines (no budget line)', () => {
         const v = mergeVerdict({ rows: [r(1, 90000), r(2, 90000)], plan: planOf() });
         expect(v.failed).toBe(false);
-        expect(v.lines).toEqual(['MERGE: 2 rows, 2 distinct legs of 2; ends {"timeout":2}']);
+        // ⛓ the runner stamp (slice `seedling-js-runner-stamp`) adds one TIMEOUT line per timeout row, nothing else here
+        expect(v.lines.filter((l) => !l.startsWith('TIMEOUT: '))).toEqual(['MERGE: 2 rows, 2 distinct legs of 2; ends {"timeout":2}']);
+        expect(v.lines.filter((l) => l.startsWith('TIMEOUT: '))).toHaveLength(2);
     });
 
     it('an off-default merge, every row stamped: green, and the budget named', () => {

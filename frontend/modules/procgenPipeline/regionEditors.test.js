@@ -259,3 +259,103 @@ describe('regionEditors — a declaration it cannot open is NAMED', () => {
         expect(mod.getRegionEditor('maze')).not.toBe(mine);
     });
 });
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⚖ region-editor-launch Q1 — THE ONE OPENER makes the editor's panel
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('openRoomEditor — the host first, then the door', () => {
+    const noSleep = () => Promise.resolve();
+    /** A module manager stand-in whose create MOUNTS a lab panel (registers it). */
+    function fakeApi({ enabled = true, mounts = true } = {}) {
+        const calls = [];
+        const state = { enabled };
+        return {
+            calls,
+            getAllModuleStates: () => ({ [mod.LAB_PANEL_MODULE]: { enabled: state.enabled } }),
+            async enableModule(id) {
+                calls.push(['enable', id]);
+                if (id === mod.LAB_PANEL_MODULE) {
+                    state.enabled = true;
+                    labRoomEditor.registerLabPanelInstance(fakePanel('maze'));
+                }
+            },
+            async createPanelInstance(id, s) {
+                calls.push(['create', id, s.substrate]);
+                if (mounts) labRoomEditor.registerLabPanelInstance(fakePanel(s.substrate));
+            },
+        };
+    }
+    afterEach(() => mod.clearRoomEditorHostRequests());
+
+    it('⛓ a lab page with a mounted panel: no panel is made, the door opens', async () => {
+        labRoomEditor.registerLabPanelInstance(fakePanel('maze'));
+        const api = fakeApi();
+        const handle = await mod.openRoomEditor('maze', { record: RECORD, room: 0, onSave() {} }, { api });
+        expect(handle.ok).toBe(true);
+        expect(api.calls).toEqual([]);
+        handle.close();
+    });
+
+    it('⛓⛓ no lab panel: ONE is created for THAT page and the door opens on it', async () => {
+        const api = fakeApi();
+        const handle = await mod.openRoomEditor('maze', { record: RECORD, room: 1, onSave() {} },
+            { api, sleep: noSleep });
+        expect(api.calls).toEqual([['create', 'procgenLabPanel', 'maze']]);
+        expect(handle.ok).toBe(true);
+        expect(labRoomEditor.findLabPanel('maze').loads).toEqual([RECORD]);
+        handle.close();
+    });
+
+    it('⛔ a double press makes ONE panel, not two', async () => {
+        const api = fakeApi();
+        const [a, b] = await Promise.all([
+            mod.ensureRoomEditorHost('maze', { api, sleep: noSleep }),
+            mod.ensureRoomEditorHost('maze', { api, sleep: noSleep }),
+        ]);
+        expect(a.ok && b.ok).toBe(true);
+        expect(api.calls.filter((c) => c[0] === 'create')).toHaveLength(1);
+    });
+
+    it('⚠ the lab module DISABLED (its last tab closed): enabled first, and a Seedling page still gets its own', async () => {
+        const api = fakeApi({ enabled: false });
+        const seedlingPage = substrateRegistry.get('flash_seedling').roomEditor.page;
+        const out = await mod.ensureRoomEditorHost('flash_seedling', { api, sleep: noSleep });
+        expect(out.ok).toBe(true);
+        expect(api.calls).toEqual([['enable', 'procgenLabPanel'], ['create', 'procgenLabPanel', seedlingPage]]);
+        // …and for the maze, enabling alone was the answer
+        labRoomEditor.clearLabPanelInstances();
+        const api2 = fakeApi({ enabled: false });
+        expect((await mod.ensureRoomEditorHost('maze', { api: api2, sleep: noSleep })).ok).toBe(true);
+        expect(api2.calls).toEqual([['enable', 'procgenLabPanel']]);
+    });
+
+    it('⛔ a panel that never appears is a REFUSAL with a sentence, not a hang or a throw', async () => {
+        const api = fakeApi({ mounts: false });
+        const handle = await mod.openRoomEditor('maze', { record: RECORD, room: 0, onSave() {} },
+            { api, timeoutMs: 0, sleep: noSleep });
+        expect(handle.ok).toBe(false);
+        expect(handle.why).toContain('Procgen Lab — maze');
+    });
+
+    it('⛔ no module manager (a headless caller): the old "open it first" sentence', async () => {
+        const out = await mod.ensureRoomEditorHost('maze', { api: null });
+        expect(out.ok).toBe(false);
+        expect(out.why).toContain('Open "Procgen Lab — maze" first');
+    });
+
+    it('⛓ a PANEL door: its declared module is ENABLED (that creates a missing panel), then `open` runs', async () => {
+        const opened = [];
+        const id = 'probe_panel';
+        substrateRegistry.register({ id, label: id,
+            roomEditor: { kind: 'panel', module: 'someEditor', open: (s) => opened.push(s) } });
+        const api = fakeApi();
+        await mod.openRoomEditor(id, { region: { region_id: 'r' } }, { api });
+        expect(api.calls).toEqual([['enable', 'someEditor']]);
+        expect(opened).toHaveLength(1);
+    });
+
+    it('⛓ bounce declares the module its panel lives in', () => {
+        expect(substrateRegistry.get('bounce').roomEditor.module).toBe('bounceRegionEditor');
+    });
+});

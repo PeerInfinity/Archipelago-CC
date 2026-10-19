@@ -33,6 +33,25 @@ const SCENARIO_SECTION = 'scenario';
 const shownLabel = (nameEl) => [...(nameEl?.childNodes ?? [])]
     .filter((n) => n.nodeType === Node.TEXT_NODE).map((n) => n.textContent).join('').trim();
 
+/**
+ * ⛓ ⚖ region-editor-launch Q1 — CLOSE every real maze lab the way its tab's ×
+ * does (Golden Layout's own `remove()` on the item), so the row presses Edit ▸
+ * with NO maze lab on screen. Answers how many it closed.
+ */
+function closeRealLabs(page) {
+    const items = window.goldenLayoutInstance?.getAllContentItems?.() ?? [];
+    let closed = 0;
+    for (const p of labPanelInstances().filter((x) => x.substrate === page)) {
+        const item = items.find((it) => it.isComponent && it.container === p.container);
+        if (item) { item.remove(); closed += 1; }
+    }
+    return closed;
+}
+
+const tabOf = (componentType) => (window.goldenLayoutInstance?.getAllContentItems?.() ?? [])
+    .find((it) => it.isComponent && it.componentType === componentType) ?? null;
+const moduleEnabled = (moduleId) => window.moduleManagerApi?.getAllModuleStates?.()?.[moduleId]?.enabled === true;
+
 async function procgenPipelineSubstrateRowsShowLabelAndCard(testController) {
     testController.eventBus.publish('ui:activatePanel', { panelId: 'procgenPipelinePanel' });
     const panel = await testController.pollForValue(
@@ -152,7 +171,8 @@ registerTest({
  * the door is handed a one-entry region library and asks for room 0 → close
  * UNEDITED → Run all → the compiled rules.json is byte-identical → Edit ▸
  * again, take the room's obstacles out, close → the grid region lost them →
- * Run all → the compiled world moved. And with NO lab mounted, Edit ▸ says why.
+ * Run all → the compiled world moved. And with NO maze lab on screen, Edit ▸
+ * opens one (⚖ region-editor-launch Q1).
  *
  * ⛔ NO IFRAME IS WAITED ON — the host is a panel-shaped stub and the row
  * publishes the page's three phases itself (`apworldEditOpensTheLabDoorAndItsSaveIsOneOp`
@@ -170,10 +190,6 @@ async function procgenPipelineMazeEditRoundTrip(testController) {
             'the Procgen Pipeline panel', 8000, 50);
         testController.reportCondition('the Procgen Pipeline panel is mounted', !!panel);
         if (!panel) return testController.getOverallResult();
-
-        const displaced = labPanelInstances().filter((p) => p.substrate === 'maze');
-        for (const p of displaced) unregisterLabPanelInstance(p);
-        restore = () => { for (const p of displaced) registerLabPanelInstance(p); };
 
         const runAll = async (label) => {
             await panel._runGeneration();
@@ -193,17 +209,29 @@ async function procgenPipelineMazeEditRoundTrip(testController) {
         const editButton = () => [...panel._renderRegionEditRow(panel._nodeForRegion(region), region)
             .querySelectorAll('button')].find((b) => b.textContent === 'Edit ▸');
 
-        /* ── (0) no lab mounted: the press SAYS so (the defect was a silent no-op) ── */
+        /* ── (0) ⚖ region-editor-launch Q1: NO maze lab on screen → Edit ▸ OPENS one ── */
+        closeRealLabs('maze');
+        const gone = await testController.pollForValue(
+            () => (labPanelInstances().some((p) => p.substrate === 'maze') ? null : true),
+            'every maze lab tab closed', 8000, 50);
+        testController.reportCondition('⛓ premise: no maze lab is on screen', !!gone);
         panel.warning = '';
         editButton()?.click();
-        const refusal = await testController.pollForValue(
-            () => (panel.warning?.startsWith('Edit refused:') ? panel.warning : null),
-            'the refusal is shown', 8000, 50);
-        testController.reportCondition(`⛔ with no maze lab mounted, Edit ▸ shows the door's refusal (${refusal})`,
-            !!refusal && /Procgen Lab/.test(refusal));
-        testController.reportCondition('…in the panel\'s own warning line',
-            [...document.querySelectorAll(`${PANEL_SELECTOR} .procgen-pipeline-warning`)]
-                .some((w) => w.textContent === refusal));
+        const made = await testController.pollForValue(
+            () => labPanelInstances().find((p) => p.substrate === 'maze') ?? null,
+            'Edit ▸ opened a maze lab', 8000, 50);
+        testController.reportCondition('⛓⛓ with no maze lab on screen, Edit ▸ OPENED one', !!made);
+        const editing = await testController.pollForValue(
+            () => (panel.message?.startsWith('Editing') ? panel.message : null),
+            'the panel says the room is open in the lab', 8000, 50);
+        testController.reportCondition('…and the room is open there, with no refusal', !!editing && !panel.warning);
+        // ⛓ The real lab stays on screen (the layout is put back); for the
+        //   round trips it is stood aside behind the stub, as before.
+        panel._labRoomHandle?.close?.();
+        panel._labRoomHandle = null;
+        const displaced = labPanelInstances().filter((p) => p.substrate === 'maze');
+        for (const p of displaced) unregisterLabPanelInstance(p);
+        restore = () => { for (const p of displaced) registerLabPanelInstance(p); };
 
         /* ── the stub host ── */
         const sent = { load: null, navigate: null };
@@ -277,9 +305,9 @@ async function procgenPipelineMazeEditRoundTrip(testController) {
 
 registerTest({
     id: 'procgen-pipeline-maze-edit-round-trip',
-    name: 'Procgen Pipeline: Edit ▸ on a maze region opens the maze lab, an unedited Save moves nothing, an edit reaches the compiled world',
-    description: 'Preset "Maze demo (sphere growth)" → Run all → the region row\'s own Edit ▸. With no maze lab '
-               + 'mounted the door\'s refusal is shown in the panel\'s warning line. With a stub host the door is '
+    name: 'Procgen Pipeline: Edit ▸ on a maze region opens the maze lab (making the tab if none is open), an unedited Save moves nothing, an edit reaches the compiled world',
+    description: 'Preset "Maze demo (sphere growth)" → Run all → the region row\'s own Edit ▸. With every maze lab '
+               + 'tab closed, Edit ▸ opens one and the room with it (no refusal). With a stub host the door is '
                + 'handed a one-entry region library and asks for room 0; an unedited close recompiles to the same '
                + 'rules.json, and a close with the room\'s obstacles removed reaches the grid and the compiled sidecar.',
     testFunction: procgenPipelineMazeEditRoundTrip,
@@ -323,6 +351,14 @@ async function procgenPipelineBounceEditStillOpens(testController) {
         if (!region) return testController.getOverallResult();
         const btn = [...panel._renderRegionEditRow(panel._nodeForRegion(region), region)
             .querySelectorAll('button')].find((b) => b.textContent === 'Edit ▸');
+        // ⚖ region-editor-launch Q1 — the press is made with the editor's tab
+        //   CLOSED (its × disables the module, one tick later): `ui:activatePanel`
+        //   alone only raised an existing tab, so this press used to do nothing.
+        await window.panelManager?.destroyPanelByComponentType?.('bounceRegionEditorPanel');
+        const closed = await testController.pollForValue(
+            () => (!tabOf('bounceRegionEditorPanel') && !moduleEnabled('bounceRegionEditor') ? true : null),
+            'the Bounce Region Editor tab is closed', 8000, 50);
+        testController.reportCondition('⛓ premise: the Bounce Region Editor is NOT on screen', !!closed);
         panel.warning = '';
         btn?.click();
         const editor = await testController.pollForValue(
@@ -330,7 +366,7 @@ async function procgenPipelineBounceEditStillOpens(testController) {
                 const e = bounceEditorInstance();
                 return e?._session?.label === region.region_id ? e : null;
             }, 'the Bounce Region Editor holds the region', 8000, 50);
-        testController.reportCondition('⛓ the Bounce Region Editor opened on THIS region', !!editor);
+        testController.reportCondition('⛓ the Bounce Region Editor opened (its tab re-made) on THIS region', !!editor);
         testController.assertEqual('…in pipeline mode (its Save writes back)', 'pipeline', String(editor?._session?.mode));
         testController.assertEqual('no refusal was shown', '', String(panel.warning ?? ''));
         if (!editor) return testController.getOverallResult();
@@ -355,11 +391,87 @@ async function procgenPipelineBounceEditStillOpens(testController) {
 
 registerTest({
     id: 'procgen-pipeline-bounce-edit-still-opens',
-    name: 'Procgen Pipeline: Edit ▸ on a bounce region still opens the Bounce Region Editor, reads it valid under its own physics, and its Save reaches the pipeline',
-    description: 'Preset "Maze + bounce (sphere growth)" → Run all → a bounce region\'s own Edit ▸ → the Bounce '
-               + 'Region Editor holds region_3_2 in pipeline mode and reads it "✓ valid" (the readout derives under the zone\'s dj physics, as the save does) → its Save → the pipeline wrote it back and '
+    name: 'Procgen Pipeline: Edit ▸ on a bounce region opens the Bounce Region Editor (even with its tab closed), reads it valid under its own physics, and its Save reaches the pipeline',
+    description: 'Preset "Maze + bounce (sphere growth)" → Run all → the Bounce Region Editor tab CLOSED → a bounce '
+               + 'region\'s own Edit ▸ → the tab is re-made and the Bounce Region Editor holds region_3_2 in pipeline mode and reads it "✓ valid" (the readout derives under the zone\'s dj physics, as the save does) → its Save → the pipeline wrote it back and '
                + 'invalidated 4 → Run all compiles with the oracle clean.',
     testFunction: procgenPipelineBounceEditStillOpens,
     category: 'procgenPipeline',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
+
+/**
+ * ⛓⛓⛓ ⚖ region-editor-launch S2 — **Edit ▸ ON A GENERATED SEEDLING ROOM, THROUGH
+ * THE REAL SEEDLING LAB.** Preset "generated host" → Run all → the generated
+ * room's own Edit ▸ → the Seedling lab (made if absent) holds the one-room set
+ * with the room OPEN on its EDIT arm (the page's own `#editRoomClose` enabled)
+ * → the row presses that close, UNEDITED → the pipeline wrote the room back and
+ * cleared 4 → Run all → the rules.json is byte-identical. ⛔ No stub: what this
+ * row proves is that the page accepts the round trip's document and hands back
+ * one `save` can read. Edits and their certification are vitest's
+ * (`seedlingGenRegionRoundTrip.test.js`, `pipelineRoomEdit.test.js`).
+ */
+async function procgenPipelineSeedlingGenEditRoundTrip(testController) {
+    const PRESET = 'shipped:seedling-generated-host-demo';
+    try {
+        testController.eventBus.publish('ui:activatePanel', { panelId: 'procgenPipelinePanel' });
+        const panel = await testController.pollForValue(
+            () => document.querySelector(PANEL_SELECTOR)?.__panel ?? null,
+            'the Procgen Pipeline panel', 8000, 50);
+        testController.reportCondition('the Procgen Pipeline panel is mounted', !!panel);
+        if (!panel) return testController.getOverallResult();
+        const runAll = async (label) => {
+            await panel._runGeneration();
+            return testController.pollForValue(
+                () => panel._stepState?.compile?.rulesJson ?? null, label, 60000, 100);
+        };
+        panel._applyPreset(PRESET);
+        const before = await runAll('the preset world compiled');
+        testController.reportCondition('Run all compiled the world', !!before);
+        if (!before) return testController.getOverallResult();
+        const region = [...panel._stepState.grow.grid.allRegions()].find((r) => r.substrate === 'flash_seedling_gen');
+        testController.reportCondition(`⛓ premise: a generated Seedling region (${region?.region_id})`, !!region);
+        if (!region) return testController.getOverallResult();
+        const btn = [...panel._renderRegionEditRow(panel._nodeForRegion(region), region)
+            .querySelectorAll('button')].find((b) => b.textContent === 'Edit ▸');
+        panel.warning = '';
+        btn?.click();
+        const editing = await testController.pollForValue(
+            () => (panel.message?.startsWith('Editing') ? panel.message : (panel.warning || null)),
+            'the pipeline opened the room (or said why not)', 15000, 50);
+        testController.reportCondition(`Edit ▸ opened the room in the Seedling lab (${editing})`,
+            !!editing && editing.startsWith('Editing'));
+        const lab = labPanelInstances().find((p) => p.substrate === 'seedling');
+        const closeBtn = await testController.pollForValue(() => {
+            const b = lab?.iframe?.contentDocument?.getElementById('editRoomClose');
+            return b && !b.disabled ? b : null;
+        }, 'the Seedling lab holds the room OPEN on its EDIT arm', 60000, 100);
+        testController.reportCondition('⛓⛓ the page accepted the one-room set and opened room 0', !!closeBtn);
+        if (!closeBtn) return testController.getOverallResult();
+        closeBtn.click();
+        const saved = await testController.pollForValue(
+            () => (panel.message?.startsWith('Saved edits') && !panel._stepState?.compile ? panel.message
+                : (panel.warning?.startsWith('Save refused') ? panel.warning : null)),
+            'the close was written back', 15000, 50);
+        testController.reportCondition(`the page's close was written back and cleared 4 (${saved})`,
+            !!saved && saved.startsWith('Saved edits'));
+        const after = await runAll('the world recompiled after the unedited save');
+        testController.assertEqual('⛓⛓ an unedited Save through the REAL page recompiles to the SAME rules.json',
+            JSON.stringify(before), JSON.stringify(after));
+    } catch (error) {
+        testController.reportCondition(`Test error: ${error.message}`, false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'procgen-pipeline-seedling-gen-edit-round-trip',
+    name: 'Procgen Pipeline: Edit ▸ on a generated Seedling room opens it in the Seedling lab, and an unedited close recompiles to the same world',
+    description: '⚖ region-editor-launch S2. Preset "generated host" → Run all → the generated room\'s Edit ▸ → the real '
+               + 'Seedling lab holds the one-room set with room 0 open on its EDIT arm → the row presses the page\'s own '
+               + 'close → the pipeline wrote it back and cleared 4 → Run all → the rules.json is byte-identical.',
+    testFunction: procgenPipelineSeedlingGenEditRoundTrip,
+    category: 'procgenPipeline',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+

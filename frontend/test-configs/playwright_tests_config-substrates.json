@@ -741,6 +741,12 @@
             "_comment": "APWorld hub H4b. The lab door end to end without an iframe: the host is a PANEL-SHAPED stub (W4's own contract shape, the same one createPageLabTransport implements) and the three phases of labRoomEditor's contract are published on procgenLab:levelChanged. The first version mounted the real maze lab; the page connected inside the row's own poll, opened room 0 for real and published its OWN close, so onSave fired with the page's UNEDITED record and the row measured a no-op — a live page and a synthetic one cannot both author the same conversation. Asserts the handed document is a ONE-ENTRY region library, the navigate asks for ?source=set&room=0, the close returns exactly ONE hub op moving payload AND the one rule the door proved it authored, the exit targets and baked AP location names the library capture strips are restored, and ONE Undo folds it all away."
         },
         {
+            "id": "apworld-edit-opens-a-closed-maze-lab",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "region-editor-launch Q1 (the user, 2026-10-19: one shared opener). Closes every real maze lab tab, presses the hub's Edit ▸ on a maze region, and asserts regionEditors.openRoomEditor MADE a maze lab and parked the room session for that region with no refusal — before, the press said 'Open Procgen Lab — maze first'. The made tab is left on screen."
+        },
+        {
             "id": "apworld-bounce-reverse-link-selects-the-region",
             "enabled": true,
             "category": "apworldEditor",
@@ -1497,6 +1503,12 @@
             "_comment": "SUBSTRATE CHART S4. The pipeline's Substrates (click to add) rows, a selected row and the sphere per-region override options show the live entry's label and hover cardText(cardOf(entry, capabilityRows(getAll()))) computed in the row; the stored value stays the id. Category procgenPipeline is claimed by no batch, so it runs in the default batch (fast). Restores the Scenario Pool collapse state and the active substrate dict."
         },
         {
+            "id": "procgen-pipeline-seedling-gen-edit-round-trip",
+            "enabled": true,
+            "category": "procgenPipeline",
+            "_comment": "region-editor-launch S2 (the user, 2026-10-19, Q3): a generated Seedling room opens from the pipeline's Edit ▸ in the REAL Seedling lab (one-room set, EDIT arm, room 0), the row presses the page's own #editRoomClose unedited, and the recompiled rules.json is byte-identical. No stub host: the point is that the page accepts the round trip's document and hands back one save can read."
+        },
+        {
             "id": "procgen-pipeline-maze-edit-round-trip",
             "enabled": true,
             "category": "procgenPipeline",
@@ -1568,6 +1580,30 @@
             "enabled": true,
             "category": "Feature checks",
             "_comment": "SLOWSOLVE (slice seedling-slowsolve-check, 2026-10-16). The walk row of feature check seedling-dash-window: runtime js + the solver on + the view on always (the user, 2026-10-16) + the upgrade window 85 (session-only, restored), seedling_playthrough loaded, the sword granted through the Inventory panel (slotted), the panel stages the l12-dash-cut demo (divergence leg 108): with the dash-only window OFF (session-only) the full (dash) pass ends refused at the window and the bot crosses to L33; then the dash-only window at its default (ON since the dash flip, the user 2026-10-16), still window 85: the full pass ends solved (328 t, its kept dashes) and the bot crosses again; the world is reloaded. Manual batch feature-checks."
+        },
+        {
+            "id": "feature-check-region-edit-maze-lab-closed",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "REGION EDITING (region-editor-launch S1+S2, the user 2026-10-19: walked by hand before Seedling editing is called settled). The walk row of feature check region-edit-maze-lab-closed: the maze-sphere-demo world; the Procgen Lab — maze tab CLOSED; a maze region's Edit ▸ re-makes it with the room open; the lab's CLOSE writes it back; Run 4 Compile, oracle ✓. Manual batch feature-checks."
+        },
+        {
+            "id": "feature-check-region-edit-seedling-generated",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "REGION EDITING (region-editor-launch S1+S2, the user 2026-10-19: walked by hand before Seedling editing is called settled). The walk row of feature check region-edit-seedling-generated: the generated-host world; a generated room's Edit ▸ opens the real Seedling lab; CLOSE unedited (no flag); a wall painted on a far floor cell (PAINT/wall, canvas clicks in the iframe) → row '✎ edited'; the goal walled in → saved, pipeline warning 'NOT certified', row '⚠ edited, uncertified', and the ⚠ line under Run 4 Compile. Manual batch feature-checks."
+        },
+        {
+            "id": "feature-check-region-edit-seedling-real-game",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "REGION EDITING (region-editor-launch S1+S2, the user 2026-10-19: walked by hand before Seedling editing is called settled). The walk row of feature check region-edit-seedling-real-game: the Seedling sphere-leaf world; a real-game (flash_seedling) room's Edit ▸ refuses with 'this is a room from the original Seedling game …'. Manual batch feature-checks."
+        },
+        {
+            "id": "feature-check-region-edit-apworld-editor",
+            "enabled": true,
+            "category": "Feature checks",
+            "_comment": "REGION EDITING (region-editor-launch S1+S2, the user 2026-10-19: walked by hand before Seedling editing is called settled). The walk row of feature check region-edit-apworld-editor: the generated-host world opened in the APWorld Editor; a generated region's Edit ▸ opens the Seedling lab; CLOSE returns one undoable op (↶ Undo enabled). Manual batch feature-checks."
         },
         {
             "id": "tutorial-walk-guided-tour",
