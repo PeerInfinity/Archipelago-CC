@@ -240,12 +240,15 @@ export class TutorialUI {
 
     async _init() {
         await this._loadSettings();
-        if (await settingsManager.getSetting(SETTING(RETIRED_PROGRESS_KEY), undefined) !== undefined) {
-            // undefined deletes the stored path (settingsManager copyPath).
-            settingsManager.updateModuleSetting(MODULE_ID, RETIRED_PROGRESS_KEY, undefined)?.catch?.(() => {});
-        }
+        await this._deleteRetiredProgress();
         this.render();
         await this._startFromUrl();
+    }
+
+    /** A Resume record stored before ⚖ 2026-10-19, deleted (undefined deletes the stored path: settingsManager copyPath). */
+    async _deleteRetiredProgress() {
+        if (await settingsManager.getSetting(SETTING(RETIRED_PROGRESS_KEY), undefined) === undefined) return;
+        await settingsManager.updateModuleSetting(MODULE_ID, RETIRED_PROGRESS_KEY, undefined)?.catch?.(() => {});
     }
 
     /** `?tutorial=<id>[&tutorialStep=<n>]` (tutorialUrl.js), once per page load. */
