@@ -54,7 +54,7 @@ on:
       page:
         description: The wasm build to drive (a directory under frontend/modules/flashPanel/wasm).
         type: string
-        default: seedling_bot_ap_p4f
+        default: seedling_bot_ap_p4g
       mode:
         description: inv (the AP route's inventory, granted through the AP path) or bare (no grants).
         type: string

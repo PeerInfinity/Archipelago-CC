@@ -78,7 +78,7 @@ if (!process.argv.includes(SEGMENTS_FLAG)) {
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4g';
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
 /**
  * ⛓ SEEDLING HAMMER HK — the page on `SEEDLING_PORT`, as `derive-seedling-tick0`

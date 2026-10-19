@@ -51,7 +51,7 @@ describe('loadFromJSON — retired top-level keys', () => {
 describe('loadFromJSON — the F2 slot-map keys refuse their document-level block', () => {
   const OLD = {
     region_atlas: { atlas_id: 'seedling-abc', game: 'seedling', map_document: 'seedling-map.json' },
-    flash_panel: { config: 'seedling.json', wasm: 'seedling_bot_ap_p4f/game.html' },
+    flash_panel: { config: 'seedling.json', wasm: 'seedling_bot_ap_p4g/game.html' },
     provenance: { generator: 'make-seedling-playthrough-rules' },
   };
 

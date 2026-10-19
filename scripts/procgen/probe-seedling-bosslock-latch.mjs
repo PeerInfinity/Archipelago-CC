@@ -59,7 +59,7 @@ async function main() {
     const TICKS = Number(arg('ticks', '240'));
     const only = arg('only', '') ? new Set(arg('only', '').split(',').map(Number)) : null;
     const strict = new Set(arg('strict', '30,48').split(',').filter(Boolean).map(Number));
-    const PAGE = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f';
+    const PAGE = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4g';
     if (!existsSync(join(REPO, 'frontend/modules/flashPanel/wasm', PAGE))) { console.log(`SKIP: no wasm artifact ${PAGE}`); process.exit(0); }
     const PAGE_URL = `${HOST}/frontend/modules/flashPanel/wasm/${PAGE}/game.html`;
     const { PIN_NAMES, parseTape } = await import(join(REPO, 'frontend/modules/seedlingDemo/tapeFormat.js'));

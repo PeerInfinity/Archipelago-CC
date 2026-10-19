@@ -105,7 +105,7 @@ async function main() {
     const CROSS = arg('cross', 'on') !== 'off';
     const rules = JSON.parse(readFileSync(join(REPO, RULES_FILE), 'utf8'));
     const PAGE_NAME = rules.flash_panel?.[Object.keys(rules.flash_panel ?? {})[0]]?.wasm
-        ?? Object.values(rules).find((v) => v?.['1']?.flash_panel)?.['1']?.flash_panel?.wasm ?? 'seedling_bot_ap_p4f';
+        ?? Object.values(rules).find((v) => v?.['1']?.flash_panel)?.['1']?.flash_panel?.wasm ?? 'seedling_bot_ap_p4g';
     const page0 = typeof PAGE_NAME === 'string' && PAGE_NAME.includes('/') ? PAGE_NAME.split('/')[0] : PAGE_NAME;
     const WASM_DIR = join(REPO, 'frontend/modules/flashPanel/wasm', page0);
     if (!existsSync(WASM_DIR)) { console.log(`SKIP: no wasm artifact at ${WASM_DIR}`); process.exit(0); }

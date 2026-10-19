@@ -37,7 +37,7 @@ describe('the sweep\'s run-name stamps every input that changes a measurement', 
     it('renders the defaults the way a dispatch would', () => {
         const inputs = resolveInputs(text, {});
         expect(renderRunName(runNameTemplate(text), inputs)).toBe(
-            'Divergence sweep inv/solver/seedling_bot_ap_p4f legs=1 stage=true capture=false '
+            'Divergence sweep inv/solver/seedling_bot_ap_p4g legs=1 stage=true capture=false '
             + 'ids= keys= flags= contact= axe= window= dashonly= dash= budget= census= mem= fault=');
         expect(renderRunName(runNameTemplate(text),
             resolveInputs(text, { contact_fidelity: 'all', capture_requests: 'true' })))

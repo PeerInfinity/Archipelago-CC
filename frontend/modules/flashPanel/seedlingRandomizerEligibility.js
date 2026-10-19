@@ -150,13 +150,24 @@ export const FREEZE_CAPABILITY = 'freeze';
 export const SINCE_BEGIN_CAPABILITY = 'sincebegin';
 
 /**
+ * ⛓ The wasm rebuild R2 (R4, 2026-10-19): THE BOSSES REPORT. A build declaring
+ * `bossreport` reports all seven boss kills as locations, and the Witch's dark
+ * sword (L12, `DarkSword.WITCH_TAG`) and the Bob Boss's Fire drop (L32,
+ * `Fire.BOSS_DROP_TAG`; the kill is `BobBoss.KILLED_TAG`) as locations whose
+ * items the HOST grants — the game no longer grants Fire or the dark sword. A
+ * build without it grants them itself, so the host refuses the report rows by
+ * name there. Measured by `strings`: the three tag constants.
+ */
+export const BOSS_REPORT_CAPABILITY = 'bossreport';
+
+/**
  * ⛓ THE DECLARED VOCABULARY. A manifest entry may only name capabilities from
  * this list — otherwise `"apitm"` would silently mean "this build does not
  * have it" and the feature would vanish with no error anywhere.
  */
 export const WASM_BUILD_CAPABILITIES = Object.freeze(
     [AP_ITEM_CAPABILITY, ARM_CAPABILITY, HOLD_CAPABILITY, TAG_CAPABILITY,
-        FREEZE_CAPABILITY, SINCE_BEGIN_CAPABILITY]);
+        FREEZE_CAPABILITY, SINCE_BEGIN_CAPABILITY, BOSS_REPORT_CAPABILITY]);
 
 /**
  * ⛓ SEEDLING JS J1 — THE JS RUNTIME'S OWN ANSWER (`flashPanel.runtime: 'js'`).

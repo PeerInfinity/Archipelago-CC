@@ -55,7 +55,7 @@ async function main() {
     const { atlasLevelSource } = await M('levelSource.js');
     const { stepOffArms, stepOffSolverArms, compactTicks } = await M('fidelityStepOff.js');
 
-    const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f';
+    const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4g';
     const PAGE_URL = `http://localhost:${process.env.SEEDLING_PORT || '8000'}`
         + `/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
     if (!existsSync(join(REPO, 'frontend/modules/flashPanel/wasm', PAGE_NAME, 'game.html'))) {
