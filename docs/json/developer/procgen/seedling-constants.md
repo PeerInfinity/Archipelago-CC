@@ -512,7 +512,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**13 named scalars** are `physics` or `rule` (13 with an AS3 anchor), and **147 small tables** (at most 16 literals) hold at least one (96 with an AS3 reference).
+**13 named scalars** are `physics` or `rule` (12 with an AS3 anchor), and **147 small tables** (at most 16 literals) hold at least one (96 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -528,7 +528,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `SHIELD_FORCE` | seedlingDemo/bobBossFight.js | 5 | physics | magnitude | Player.as:shieldForce |
 | `STATUE_TALK_RANGE` | seedlingDemo/endingChain.js | 32 | rule | bound | NPCs/Statue.as:talkRange |
 | `NO_FORCE_CAP` | seedlingDemo/enemyDamage.js | -1 | physics | sentinel | Enemies/Enemy.as:maxForce |
-| `TIME_PER_FRAME` | seedlingDemo/lavaChain.js | 45 | rule | magnitude | Game.as:timePerFrame |
+| `TIME_PER_FRAME` | seedlingDemo/lavaChain.js | 45 | rule | magnitude |  |
 
 | table | file | literals | physics/rule | classes | kinds | AS3 |
 |---|---|---|---|---|---|---|
