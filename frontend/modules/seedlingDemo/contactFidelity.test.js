@@ -174,7 +174,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity AXEFORCEDU D2: `axePricedCrossing` (a spinning axe's forced U, crossed and its hits billed) ships OFF.
             axePricedCrossing: false,
             // ⛓ fidelity WATCHERTALK D2: `watcherTalkVerb` (the Watcher's {114,0} clear-tag talks) ships OFF.
-            watcherTalkVerb: false });
+            watcherTalkVerb: false,
+            // ⛓ housekeep D3: `walkerBeamTowers` (the walker's planner reads the beam towers' drifted Solids) ships OFF.
+            walkerBeamTowers: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

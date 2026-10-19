@@ -929,7 +929,8 @@ export const PRESS_ARM_POLICY = Object.freeze({
     // and the census prices the toggle at exactly that one flag: `tset -1`
     // (no group), L65 has no activators, the darktrap is 40 px outside the
     // light's 28 px reach, and `PERSISTENCE_RESPONSE.lightpole` is
-    // 'cosmetic', so banking the clear changes no geometry on re-entry.
+    // 'light' (solid in neither state), so banking the clear changes no
+    // geometry on re-entry — only whether the pole boots lit.
     // ⚠ It is a TOGGLE behind a 25-tick `hitsTimer`, not a latch.
     LightPole: {
         policy: 'modelled',

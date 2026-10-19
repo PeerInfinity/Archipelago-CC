@@ -664,6 +664,21 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_WATCHER_TALK_VERB=0|1` for a node measurement.
      */
     watcherTalkVerb: false,
+    /**
+     * seedling-fidelity-housekeep D3 — THE WALKER'S PLANNER SEES A BEAM TOWER'S DRIFT (`botDriverV2.livePerVisitOpts`
+     * carries the `beamTowers` family, and `plannerObstacleAt` forwards it on the named-key path).
+     *
+     *     BeamTower.as:100-103  y += 0.3 * Math.sin(Game.worldFrame(100, 2) / 100 * 2 * Math.PI);  — the Solid rides on `y`
+     *
+     * `beamTowerDrift` (ON) moves the tower's Solid in the run, and the solver's own plans read it through the run's full
+     * bag (`liveBag: run.liveGeometryOpts()`). The walker's do not: `livePerVisitOpts` builds no `beamTowers` key, and
+     * `plannerObstacleAt`'s named-key path forwards eight families only (`R8_NORMALIZE_LIVE_BATCH.plannerDropsSixFamilies`
+     * lists `beamTowers` as dropped) — so the walker (`jsRuntimeWalker`), `synthesizeLegs` and the verbs' mid-leg probes
+     * plan against the tower's PLACEMENT while the run walks into its drifted Solid. ON: both carry the run's drifted
+     * rects (`liveGeometryOpts().beamTowers`). ⛔ OFF by default (no licence; measured movers in the housekeep report);
+     * `SEEDLING_WALKER_BEAM_TOWERS=0|1` for a node measurement, and the sweep's `contact_fidelity` input for CI.
+     */
+    walkerBeamTowers: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -801,6 +816,9 @@ if (globalThis.process?.env?.SEEDLING_AXE_PRICED_CROSSING === '0') CONTACT_FIDEL
 // ⛓ fidelity WATCHERTALK D2: `SEEDLING_WATCHER_TALK_VERB=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_WATCHER_TALK_VERB === '1') CONTACT_FIDELITY.watcherTalkVerb = true;
 if (globalThis.process?.env?.SEEDLING_WATCHER_TALK_VERB === '0') CONTACT_FIDELITY.watcherTalkVerb = false;
+// ⛓ housekeep D3: `SEEDLING_WALKER_BEAM_TOWERS=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_WALKER_BEAM_TOWERS === '1') CONTACT_FIDELITY.walkerBeamTowers = true;
+if (globalThis.process?.env?.SEEDLING_WALKER_BEAM_TOWERS === '0') CONTACT_FIDELITY.walkerBeamTowers = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

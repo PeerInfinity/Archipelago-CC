@@ -197,6 +197,9 @@ import { ARROW_LANE_CROSSING, ARROW_LANE_TRACE, LaneCrossingExcept, admitLaneCro
  *
  * @param {Array<{x:number,y:number,tick:number}>} samples in walk order
  * @param {number} startTick the run's own clock when the corridor was planned
+ *
+ * ⛓ housekeep D1: its five throws STAY plain `Error`s — each is the instrument's own invariant (a probe that
+ * sampled nothing, or whose clock stopped), a bug in the solver's transit probe, never a can't-do of the room.
  */
 export function assertTransitSamplesCarryEtas(samples, startTick,
     what = 'the transit probe') {
@@ -363,6 +366,76 @@ export class SolverRefusal extends Error {
          * the field is what a caller reads.
          */
         this.bound = bound;
+    }
+}
+
+/**
+ * ⛓⛓ seedling-fidelity-housekeep D1 — **A SOLVER CAN'T-DO THAT ARRIVES AS A PLAIN THROW, NAMED, THEN REFUSED.**
+ *
+ * Three throws a solve reaches are not `SolverRefusal`s, and a sweep row or a survey row read each as a crash
+ * (measured: sweep leg 631, survey steps 113 / 122 / 191, ROCKMOVE's orphan-button legs 311 / 313 / 634):
+ *   · `levelRun`'s press on a FROZEN tick (`code: 'FROZEN_TICK_PRESS'`: a press the game drops under
+ *     `Game.freezeObjects` / `frozenTimer`) — the solver's presses are not scheduled around a freeze;
+ *   · `botDriverV2.findExit`'s teleporter standing on a PIT tile — the goal is a door the model does not transcribe;
+ *   · `botDriverV2.runHold`'s presser that NO responder answers — the hold verb does not apply to it.
+ * Each is NAMED where the solver first sees it (`nameRefusal`: the error gains `obstacle` and `refusalByName`, so a
+ * progress frame it unwinds through reads the obstacle's kind), and becomes a `SolverRefusal` only at the OUTERMOST
+ * `solveSegment` (`refusingByName`). ⛔ NOT INSIDE THE LADDER: a frozen-tick press throws mid-`advance`, after the
+ * tick has begun mutating the run, so a rung that caught it as a refusal would go on from a half-stepped run. And
+ * not catchable means not a new control path: inside the solve every throw is the object it was, so a solve that
+ * did not throw is byte-identical; one that threw now ends REFUSED, with the same words (the orphan presser's gain one
+ * sentence) and the obstacle. The census of every plain-`Error` throw a solve reaches, and why the rest stay errors,
+ * is `CC/docs/cloud-reports/seedling-fidelity-housekeep.md`.
+ */
+export const REFUSAL_BY_NAME = Object.freeze({
+    /** a thrown error's `code` → the obstacle kind it names (the model sets the code; the solver owns the kind) */
+    codes: Object.freeze({ FROZEN_TICK_PRESS: 'unmodelled-frozen-press' }),
+    kinds: Object.freeze(['unmodelled-frozen-press', 'unmodelled-pit-teleporter', 'orphan-presser']),
+});
+
+/** Name `e` (a non-refusal thrown under a solve) as a solver can't-do: `obstacle` + `refusalByName`. Returns `e`. */
+function nameRefusal(e, obstacle, clause = '') {
+    if (e === null || typeof e !== 'object' || e instanceof SolverRefusal || e.refusalByName === true) return e;
+    e.refusalByName = true;
+    e.obstacle = obstacle;
+    if (clause) e.message += clause;
+    return e;
+}
+
+/** A coded throw (`REFUSAL_BY_NAME.codes`) named; anything else returned untouched. */
+function nameRefusalByCode(e) {
+    const kind = typeof e?.code === 'string' && Object.hasOwn(REFUSAL_BY_NAME.codes, e.code)
+        ? REFUSAL_BY_NAME.codes[e.code] : null;
+    return kind === null ? e : nameRefusal(e, { kind, code: e.code });
+}
+
+/** `run.advance(held)`, a coded throw named on its way out (the solve's own advance: `solveSegment`'s view). */
+function advanceNamingRefusals(run, held) {
+    try {
+        return run.advance(held);
+    } catch (e) {
+        throw nameRefusalByCode(e);
+    }
+}
+
+/** How deep the `solveSegment`s on the stack are: only the outermost turns a named throw into a refusal. */
+let refusalByNameDepth = 0;
+
+/** `fn()` as one segment; at the outermost, a named non-refusal leaves as a `SolverRefusal` (its `cause`). */
+function refusingByName(fn) {
+    refusalByNameDepth += 1;
+    try {
+        return fn();
+    } catch (e) {
+        if (refusalByNameDepth !== 1) throw e;
+        const named = nameRefusalByCode(e);
+        if (named?.refusalByName !== true || named instanceof SolverRefusal) throw e;
+        const r = new SolverRefusal(named.message, { obstacle: named.obstacle });
+        r.cause = named;
+        r.byName = { name: named.name, code: named.code ?? null };
+        throw r;
+    } finally {
+        refusalByNameDepth -= 1;
     }
 }
 
@@ -8681,12 +8754,50 @@ function execHold(run, perTick, resolved, ctx) {
     if (resolved.latched === true && resolved.stance === null) {
         return runLatchedWait(run, perTick, resolved, ctx.what, pace);
     }
-    return runHold(run, perTick, {
-        presser: { x: resolved.target.x, y: resolved.target.y },
-        ticks: resolved.hold.ticks,
-        until: resolved.hold.until,
-        ...(pace === null ? {} : { pace }),
-    }, ctx.what, ctx.before);
+    try {
+        return runHold(run, perTick, {
+            presser: { x: resolved.target.x, y: resolved.target.y },
+            ticks: resolved.hold.ticks,
+            until: resolved.hold.until,
+            ...(pace === null ? {} : { pace }),
+        }, ctx.what, ctx.before);
+    } catch (e) {
+        throw orphanPresserNamed(e, run, resolved.target);
+    }
+}
+
+/**
+ * ⛓ housekeep D1 — a `reach-exit` goal's door, with `findExit`'s PIT-tile throw named: the teleporter's tile is a pit
+ * (`level.pitTiles`, `findExit`'s own test), whose trigger and fall edge fire on one tick — FlashPunk bookkeeping the
+ * physics does not transcribe (survey steps 113 / 191: L43's door to L37, L100's to L101).
+ */
+function findExitNamed(level, exit) {
+    try {
+        return findExit(level, exit);
+    } catch (e) {
+        if (!(e instanceof BotDriverV2Error)) throw e;
+        const tp = level.teleporters.find((t) => t.x === exit.x && t.y === exit.y);
+        const tx = tp ? Math.floor(tp.x / TILE_SIZE) : null;
+        const ty = tp ? Math.floor(tp.y / TILE_SIZE) : null;
+        if (!tp || tp.deactivated || !level.pitTiles.some((t) => t.tx === tx && t.ty === ty)) throw e;
+        throw nameRefusal(e, { kind: 'unmodelled-pit-teleporter', id: `teleporter@${tp.x},${tp.y}`, tile: [tx, ty] });
+    }
+}
+
+/**
+ * ⛓ housekeep D1 — `runHold`'s "NO responder" throw, named: the presser at `at` publishes a group no responder,
+ * pulser or arrow trap of this level answers and it is not a cross-room presser (`runHold`'s own test, read on the
+ * same world). ROCKMOVE D3: L29's / L74's button once its fallrock is removed (legs 311 / 313 / 634).
+ */
+function orphanPresserNamed(e, run, at) {
+    if (!(e instanceof BotDriverV2Error)) return e;
+    const w = run.world;
+    const p = (w.pressers ?? []).find((q) => q.x === at.x && q.y === at.y);
+    if (!p || p.room >= 0) return e;
+    const answers = (list) => (list ?? []).some((a) => a.t === p.t);
+    if (answers(w.activators) || answers(w.pulsers) || answers(w.arrowTraps)) return e;
+    return nameRefusal(e, { kind: 'orphan-presser', id: `${p.tag}@${p.x},${p.y}` }, ' ⛓ A presser no responder '
+        + 'answers is not an obstacle a hold clears: the hold resolves to NOTHING in this level (housekeep D1).');
 }
 
 /**
@@ -17861,6 +17972,13 @@ function deriveKillByCeiling(run, body, contacts) {
  *   · the STANCE: a walkable tile centre and a facing whose `spearRect` overlaps the pole's bob-invariant core
  *     (the census rect is the union over the bob, 4 px top and bottom of which the hitbox leaves at some phase) and
  *     no other press responder, with the player box clear of the body, reached by `stanceReaches`.
+ *   · ⛓ housekeep D2 — the SUB-ORDER, and the press in ANOTHER room. With no Spear the Spear is the sub-order the
+ *     route owes (the refusal below says so). It is not the only way to light the pole: the pole boots LIT from its
+ *     cleared tag (`PERSISTENCE_RESPONSE.lightpole` 'light'), and a CROSS-ROOM `ButtonRoom` (`room >= 0`) writes
+ *     that tag from its own level (`ButtonRoom.as:93`, `Game.setPersistence(t, persist, room)`) — the rules' darktrap
+ *     event (`seedlingObstacleEvents.deriveButtonEvents` + `poleKillsOf`), which the solver discharges as a
+ *     `clear-tag` goal in the PRESSER's room (`execCrossRoomPress`). This arm never authors that press (it is
+ *     another room's walk); a pole lit that way is the `wait` branch above on the next build.
  *
  * @returns {{pole, stance?, dir?, wait?, why}|{pole: null, why}}
  */
@@ -18326,14 +18444,15 @@ function solveSegmentDeadlined(o) {
     const shouldStop = o?.shouldStop ?? null;
     // ⛔ No hook: the segment runs under whatever deadline is already active —
     // none at all for every committed caller — so the default is untouched.
-    if (shouldStop === null) return solveSegmentUnder(o);
+    // ⛓ housekeep D1: inside the deadline (its clause reaches the refusal), inside the progress segment.
+    if (shouldStop === null) return refusingByName(() => solveSegmentUnder(o));
     if (typeof shouldStop !== 'function') {
         fail(`solveSegment: shouldStop must be a function (site) => boolean or null, got `
             + `${typeof shouldStop} — the deadline is a callback the caller owns, never a `
             + 'number of milliseconds this module would read a clock for.');
     }
     return withSolveDeadline({ shouldStop, fineCheckpoints: o.fineCheckpoints ?? false },
-        () => solveSegmentUnder(o));
+        () => refusingByName(() => solveSegmentUnder(o)));
 }
 
 /**
@@ -18580,7 +18699,7 @@ function solveSegmentUnder({
                 && (tapeTick - prefix.length) % WALK_CHECK_TICKS === 0 && fineDeadlineReached('walk')) {
                 refuseWalkDeadline(`after ${tapeTick - prefix.length} tick(s) of the segment's drive`);
             }
-            const out = inner.advance(held);
+            const out = advanceNamingRefusals(inner, held); // ⛓ housekeep D1: a coded throw named on its way out
             if (activeProgress !== null) progressTick(inner.level);
             if (!dashedBefore && inner.progress('slashInfo').state.slashDashed === true) {
                 dashesPressed += 1;
@@ -23354,7 +23473,7 @@ function solveSegmentUnder({
             continue;
         }
         if (goal.kind === 'reach-exit') {
-            const { index, teleporter } = findExit(run.world, goal.exit);
+            const { index, teleporter } = findExitNamed(run.world, goal.exit);
             const centre = {
                 x: teleporter.rect.x + TILE_SIZE / 2,
                 y: teleporter.rect.y + TILE_SIZE / 2,
