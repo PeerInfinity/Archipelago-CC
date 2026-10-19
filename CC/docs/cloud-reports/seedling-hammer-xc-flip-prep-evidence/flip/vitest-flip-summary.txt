@@ -1,0 +1,25 @@
+ ✓ frontend/modules/seedlingDemo/solverBot.test.js (102 tests) 22211ms
+ ✓ frontend/modules/seedlingDemo/hammerDashShape.test.js (20 tests) 6764ms
+ ✓ frontend/modules/seedlingDemo/solveProgress.test.js (43 tests) 78145ms
+ ✓ frontend/modules/seedlingDemo/solveProgressTap.test.js (34 tests) 60ms
+ ✓ frontend/modules/seedlingDemo/hammerEscape.test.js (18 tests) 10299ms
+ ✓ frontend/modules/seedlingDemo/twoPassSolve.test.js (12 tests) 934ms
+ ✓ frontend/modules/seedlingDemo/hammerFightFallback.test.js (12 tests) 66972ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostSpinner.test.js (11 tests) 9530ms
+ ✓ frontend/modules/seedlingDemo/escapeCrossPassCache.test.js (19 tests) 141190ms
+ ✓ scripts/procgen/lintGateLabels.test.js (14 tests) 216ms
+ ✓ frontend/modules/seedlingDemo/solveProgressHeartbeat.test.js (5 tests) 52206ms
+ ✓ frontend/modules/seedlingDemo/hammerFight.test.js (9 tests) 19548ms
+ ✓ frontend/modules/seedlingDemo/hammerApproach.test.js (8 tests) 9924ms
+ ✓ frontend/modules/seedlingDemo/hammerPressKillDoneOnWalk.test.js (9 tests) 8118ms
+ ✓ frontend/modules/seedlingDemo/levelRunStateDigest.test.js (8 tests) 1218ms
+ ✓ frontend/modules/seedlingDemo/hammerPressBombs.test.js (8 tests) 5264ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostWall.test.js (6 tests) 321ms
+ ✓ frontend/modules/seedlingDemo/hammerRefugeCut.test.js (6 tests) 7561ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostSearch.test.js (5 tests) 7409ms
+ ✓ frontend/modules/seedlingDemo/solverBotLethalPit.test.js (4 tests) 51ms
+ ✓ frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js (16 tests) 111141ms
+ ✓ frontend/modules/seedlingDemo/hammerGhostKillRung.test.js (6 tests) 279772ms
+ Test Files  22 passed (22)
+      Tests  375 passed (375)
+rc=0
