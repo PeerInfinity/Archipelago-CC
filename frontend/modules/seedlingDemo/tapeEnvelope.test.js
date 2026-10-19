@@ -100,7 +100,8 @@ describe('readEnvelope over the committed Seedling roster', () => {
         // ⛓ hammer-phase C2: +1 (275) — `hammer-c2-l18-ghostspinner`.
         // ⛓ fidelity L40BUTTON: +2 (277) — `l40button-l41-part0`, `l40button-l42-part0`.
         // ⛓ fidelity SEALDOOR: +3 (280) — `sealdoor-l113-clear`, `sealdoor-l113-exit`, `sealdoor-l113-noseal-control`.
-        expect(names.length).toBe(280);
+        // ⛓ fidelity WATCHERTALK: +2 (282) — `watchertalk-l114-clear-16`, `watchertalk-l114-clear-32`.
+        expect(names.length).toBe(282);
         for (const name of names) {
             const env = readEnvelope(rawTape(name));
             expect(Object.keys(env), name).toEqual(ENVELOPE_FIELDS);

@@ -1,0 +1,36 @@
+== p1: 3 red, 13 green  (-t 'soft-lock|family')
+   RED ⛓⛓⛓ each family's real sentence, read out of solverBot.js, has its kind
+       AssertionError: expected [ [ …(2) ], [ …(2) ], [ …(2) ], …(29) ] to deeply equal [ [ …(2) ], [ …(2) ], [ …(2) ], …(29) ]
+   RED ⛓⛓ no rule is keyed on a rung: every family's sentence has the same kind under every rung the solver names
+       AssertionError: expected [ …(2) ] to deeply equal [ …(2) ]
+   RED ⛓⛓⛓ soft-lock: the three sentences whose own words say "is a soft-lock", a refusal and two plain levelRun errors
+       AssertionError: expected 'other' to be 'soft-lock' // Object.is equality
+== p2: 3 red, 19 green  (-t 'order|RK')
+   RED ⛓⛓ closed over the source: every search bound and every clear-tag reason the solver writes has its kind
+       AssertionError: expected 'soft-lock' to be 'other' // Object.is equality
+   RED ⛓⛓⛓ each family's real sentence, read out of solverBot.js, has its kind
+       AssertionError: expected 'soft-lock' to be 'other' // Object.is equality
+   RED ⛓⛓⛓ the order: `soft-lock` is immediately before `other`, and `other` stays last (⚖ js-7: the chips follow it)
+       AssertionError: expected 'soft-lock' to be 'other' // Object.is equality
+== p3: 1 red, 13 green  (-t 'soft-lock|stretched')
+   RED ⛓⛓ not stretched: a sentence that names a soft-lock as the REASON a search left stances out keeps the search's kind
+       AssertionError: expected 'soft-lock' to be 'exhausted' // Object.is equality
+== p4: 3 red, 5 green  (-t 'unhooked|guarded')
+   RED ⛓⛓⛓ L18 hammer room (residue 21): the answer, shouldStop and the asks are W0's hooked and unhooked; unhooked, no cache count is read
+       AssertionError: expected 463 to be +0 // Object.is equality
+   RED ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, shouldStop and the asks are W0's hooked and unhooked; unhooked, no cache count is read
+       AssertionError: expected 92035 to be +0 // Object.is equality
+   RED ⛓⛓ only an install reaches a cache count: each call site is one guarded line, and the counters read no deadline
+       AssertionError: expected '        progressStringPull(v !== unde…' to match /^\s*if \(activeProgress !== null\) p…/\
+== p5: 1 red, 0 green  (-t 'cross-pass escape cache ON')
+   RED ⛓⛓⛓ non-vacuous, the cross-pass escape cache ON (the test only, wired by its hook): L18's segments report the solve's own hits and misses
+       AssertionError: expected [ 'hits', 4878 ] to deeply equal [ 'hits', 1084 ]
+== p6: 4 red, 0 green  (-t 'bounded')
+   RED ⛓⛓⛓ L18 hammer room (residue 21): `caches` and `churn` are ONE bounded object of counts at EVERY snapshot, and never fall
+       AssertionError: expected false to be true // Object.is equality
+   RED ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): `caches` and `churn` are ONE bounded object of counts at EVERY snapshot, and never fall
+       AssertionError: expected false to be true // Object.is equality
+   RED ⛓⛓⛓ L6 ladder climb: `caches` and `churn` are ONE bounded object of counts at EVERY snapshot, and never fall
+       AssertionError: expected false to be true // Object.is equality
+   RED ⛓⛓⛓ L3 plain walk: `caches` and `churn` are ONE bounded object of counts at EVERY snapshot, and never fall
+       AssertionError: expected false to be true // Object.is equality

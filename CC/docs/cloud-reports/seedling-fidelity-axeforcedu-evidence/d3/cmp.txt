@@ -1,0 +1,6 @@
+== l603
+axeHit OFF: 417 ticks compared, worst |Δ| 104.54066361748511, first parting 48; model hits [t84 lava lava@L71, t219 lava lava@L71, t284 lava lava@L71, t400 lava lava@L71]; game hits 0/1
+axeHit ON : 417 ticks compared, worst |Δ| 0, first parting none; model hits [t48 spinningaxe spinningaxe@256,144, t128 spinningaxe spinningaxe@256,144, t208 spinningaxe spinningaxe@256,144, t288 spinningaxe spinningaxe@256,144, t368 spinningaxe spinningaxe@256,144]; game hits 0/1
+== l774
+axeHit OFF: 554 ticks compared, worst |Δ| 121.32162092387472, first parting 156; model hits []; game hits 0/1/
+axeHit ON : 554 ticks compared, worst |Δ| 0, first parting none; model hits [t156 spinningaxe spinningaxe@112,144]; game hits 0/1/

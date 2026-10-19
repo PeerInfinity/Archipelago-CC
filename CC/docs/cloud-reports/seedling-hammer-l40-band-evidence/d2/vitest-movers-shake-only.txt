@@ -1,0 +1,19 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/home/user/Archipelago-CC[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/hammerStrikeEtaFloor.test.js [2m([22m[2m16 tests[22m[2m)[22m[33m 258784[2mms[22m[39m
+     [33m[2m✓[22m[39m t190: ON presses 65 ticks earlier, at a cell OFF's floor skipped at that tick [33m 4780[2mms[22m[39m
+     [33m[2m✓[22m[39m t160 / t240 / t330: the admissible floor ALONE would refuse there; ON keeps a strike (the measured ETA) [33m 6228[2mms[22m[39m
+     [33m[2m✓[22m[39m K = 0 is OFF's pass: past the budget a cell is asked OFF's floor, so ON with no previews returns OFF's strike [33m 8212[2mms[22m[39m
+     [33m[2m✓[22m[39m the budget is taken: t190 needs eight previews for ON's earlier strike, t1450 more than sixteen [33m 8682[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ it is G1's OFF walk for 602 ticks (the kill's first landing at t501 is shared), then it parts [33m 1578[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON: the solve's executed prefix IS the witness, key for key [33m 229274[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerGhostKillRung.test.js [2m([22m[2m6 tests[22m[2m)[22m[33m 471360[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the kill rung refuses staging A's ghost primary at t0, by name (the BEFORE) [33m 2004[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ON: the rung asks the press kill, and the solve's executed prefix IS the witness, key for key [33m 469317[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[32m22 passed[39m[22m[90m (22)[39m
+[2m   Start at [22m 05:52:01
+[2m   Duration [22m 486.50s[2m (transform 6.44s, setup 0ms, import 25.20s, tests 730.14s, environment 0ms)[22m
+

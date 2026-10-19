@@ -27,6 +27,7 @@ import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
 import { twoPassSolve } from './twoPassSolve.js';
 import { SPINNER } from './spinner.js';
 import { canonicalDigestText } from './levelRun.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
 import { PRESS_KILL_COST_COUNTS, resetPressKillCostCounts } from './pressKillCost.js';
 import { withSolveProgress } from './solveProgress.js';
 import {
@@ -127,6 +128,49 @@ function l18At(T, shift = 0) {
     const run = createRunForStaging(stagingOf(L18.tape, null, shift), SOURCE);
     for (let t = 0; t < T; t += 1) run.advance(heldKeysAt(tape, t));
     return run;
+}
+
+/**
+ * ⛓ XF — A BEAM TOWER INSIDE A SEARCH. No committed room holds both a spinner and a beam tower (the atlas: spinners
+ * in L18 / 39 / 40 / 92, towers in L103–108; the escape searches only after a press LANDS on a spinner, so a tower room
+ * returns at `no-landing`, or earlier at the shield's `unmodelled` probe). So L18's record gains one tower, at
+ * (92, 84), holding its side (up, rate 4: its beam never crosses the tape's walk): its 16x32 Solid stands beside the
+ * player at t76, where XC's t77 press lands and the escape searches. The tape's walk to t76 is the tower-free one
+ * (the player's state at t76 measured equal).
+ *   - `TOWER_SHIFT` 45 ticks of `seam.time`: one hammer period (`gameTime % 45`), half the tower's drift period
+ *     (`worldFrame(time, 100, 2)` spans 90) — the same fight, the drift's phase opposite.
+ *   - `TOWER_STILL` 40: the tower's two BEAMTOWER switches OFF for the first 40 ticks, so it is built and drifts from
+ *     t40 — one seam, one tick, one clock, one player: the digests differ in `visit` alone.
+ */
+const TOWER_SOURCE = (() => {
+    const rec = SOURCE(18);
+    const mine = { ...rec, entities: [...rec.entities,
+        { type: 'beamtower', x: 92, y: 84, attrs: { direction: '1', rate: '4' } }] };
+    return (n) => (n === 18 ? mine : SOURCE(n));
+})();
+const TOWER_SHIFT = 45;
+const TOWER_STILL = 40;
+
+/** L18 (with the tower, unless `source` says otherwise) at `shift` ticks of `seam.time`, driven along the tape to `T`. */
+function towerRunAt(T, { shift = 0, stillUntil = 0, source = TOWER_SOURCE } = {}) {
+    const tape = loadTape(L18.tape);
+    const run = createRunForStaging(stagingOf(L18.tape, null, shift), source);
+    const was = { drift: CONTACT_FIDELITY.beamTowerDrift, hit: CONTACT_FIDELITY.beamTowerBeamHit };
+    for (let t = 0; t < T; t += 1) {
+        try {
+            if (t < stillUntil) Object.assign(CONTACT_FIDELITY, { beamTowerDrift: false, beamTowerBeamHit: false });
+            run.advance(heldKeysAt(tape, t));
+        } finally {
+            Object.assign(CONTACT_FIDELITY, { beamTowerDrift: was.drift, beamTowerBeamHit: was.hit });
+        }
+    }
+    return run;
+}
+
+/** XC's spinner-row call: from `T` holding the tape's keys, the press at `T + 1` on the first spinner. */
+function towerCall(run, T) {
+    return { state: run.state, at: T, keys: [heldKeysAt(loadTape(L18.tape), T)], pressAt: T + 1,
+        id: run.entities('spinnerBodies')[0].id };
 }
 
 /** The answer's own bytes. */
@@ -367,6 +411,120 @@ describe('hammer-phase XC — the key', () => {
             HAMMER_ESCAPE_TRACE.sink = null;
         }
         expect(entered).toBe(2);
+    }, 120_000);
+
+    it('⛓⛓⛓ a drifting beam tower inside a SEARCH (L18 + a tower): two seam times a hammer period apart — the drift alone parts the answers, two entries, verify 0 mismatches', () => {
+        const T = 76;
+        const ask = (run) => pressEscape(run, towerCall(run, T));
+        // ⛓ the tower is beside the walk, not on it (the player at t76 is the tower-free run's), and no shield is
+        // carried (the forecast names nothing unmodelled)
+        const bare = towerRunAt(T, { source: SOURCE });
+        expect(canonicalDigestText(towerRunAt(T).state)).toBe(canonicalDigestText(bare.state));
+        expect(bare.inventory.hasShield).not.toBe(true);
+        // ⛓ the control: with no tower, or with the tower's drift OFF, the two seam times answer alike (the hammers'
+        // phase is `gameTime % 45`: a 45-tick shift is the same fight)
+        expect(answerText(ask(towerRunAt(T, { shift: TOWER_SHIFT, source: SOURCE }))))
+            .toBe(answerText(ask(towerRunAt(T, { source: SOURCE }))));
+        const wasDrift = CONTACT_FIDELITY.beamTowerDrift;
+        let still;
+        try {
+            CONTACT_FIDELITY.beamTowerDrift = false;
+            still = [0, TOWER_SHIFT].map((shift) => answerText(ask(towerRunAt(T, { shift }))));
+        } finally {
+            CONTACT_FIDELITY.beamTowerDrift = wasDrift;
+        }
+        expect(still[1]).toBe(still[0]);
+        // ⛓ OFF, the drift ON (the default): the tower's `y` differs, both escapes SEARCH, and the answers differ
+        expect(wasDrift).toBe(true);
+        const a0 = towerRunAt(T);
+        const b0 = towerRunAt(T, { shift: TOWER_SHIFT });
+        expect(a0.stateDigest({ parts: true }).parts.visit).not.toBe(b0.stateDigest({ parts: true }).parts.visit);
+        const offRows = [];
+        HAMMER_ESCAPE_TRACE.sink = (r) => { offRows.push(r.searches.reduce((s, x) => s + x.expansions, 0)); };
+        let off0;
+        let off1;
+        try {
+            off0 = ask(a0);
+            off1 = ask(b0);
+        } finally {
+            HAMMER_ESCAPE_TRACE.sink = null;
+        }
+        expect(offRows.length).toBe(2);
+        for (const n of offRows) expect(n).toBeGreaterThan(0);
+        expect(offRows[0]).not.toBe(offRows[1]);
+        expect(answerText(off0)).not.toBe(answerText(off1));
+        // ⛓ ON in one scope: two misses, two entries, each OFF's answer; asked again, each is served its own
+        const searched = [];
+        HAMMER_ESCAPE_TRACE.sink = (r) => { searched.push(r.searches.length); };
+        try {
+            scoped((scope) => {
+                const a = scope.adopt(towerRunAt(T));
+                const b = scope.adopt(towerRunAt(T, { shift: TOWER_SHIFT }));
+                resetEscapeCrossPassCacheCounts();
+                expect(answerText(ask(a))).toBe(answerText(off0));
+                expect(answerText(ask(b))).toBe(answerText(off1));
+                expect(ESCAPE_CROSS_PASS_CACHE_COUNTS.misses).toBe(2);
+                expect(scope.entries.size).toBe(2);
+                expect(answerText(ask(b))).toBe(answerText(off1));
+                expect(answerText(ask(a))).toBe(answerText(off0));
+                expect(ESCAPE_CROSS_PASS_CACHE_COUNTS.hits).toBe(2);
+            });
+        } finally {
+            HAMMER_ESCAPE_TRACE.sink = null;
+        }
+        // the two misses searched; the two hits replayed their rows
+        expect(searched.slice(0, 2).every((n) => n > 0)).toBe(true);
+        // ⛓ verify mode: each hit recomputed, 0 mismatches
+        const scope = escapeCrossPassScope();
+        withCache({ enabled: true, verify: true }, () => withEscapeCrossPassScope(scope, () => {
+            const a = scope.adopt(towerRunAt(T));
+            const b = scope.adopt(towerRunAt(T, { shift: TOWER_SHIFT }));
+            resetEscapeCrossPassCacheCounts();
+            for (const run of [a, b, a, b]) ask(run);
+        }));
+        expect(ESCAPE_CROSS_PASS_CACHE_COUNTS.verified).toBe(2);
+        expect(ESCAPE_CROSS_PASS_CACHE_COUNTS.verifyMismatches).toBe(0);
+        expect([...ESCAPE_CROSS_PASS_CACHE_MISMATCHES]).toEqual([]);
+    }, 120_000);
+
+    it('⛓⛓⛓ the digest\'s `visit` part is in the key: one seam, one tick, one clock, the tower drifted from two ticks — the digests differ in `visit` ALONE, and the answers differ', () => {
+        const T = 76;
+        const ask = (run) => pressEscape(run, towerCall(run, T));
+        const pa = towerRunAt(T).stateDigest({ parts: true }).parts;
+        const pb = towerRunAt(T, { stillUntil: TOWER_STILL }).stateDigest({ parts: true }).parts;
+        // ⛓ the only part apart is `visit`: a key without it confuses these two runs
+        expect(Object.keys(pa).filter((k) => pa[k] !== pb[k])).toEqual(['visit']);
+        const offRows = [];
+        HAMMER_ESCAPE_TRACE.sink = (r) => { offRows.push(r.searches.reduce((s, x) => s + x.expansions, 0)); };
+        let offA;
+        let offB;
+        try {
+            offA = answerText(ask(towerRunAt(T)));
+            offB = answerText(ask(towerRunAt(T, { stillUntil: TOWER_STILL })));
+        } finally {
+            HAMMER_ESCAPE_TRACE.sink = null;
+        }
+        for (const n of offRows) expect(n).toBeGreaterThan(0);
+        expect(offA).not.toBe(offB);
+        scoped((scope) => {
+            const a = scope.adopt(towerRunAt(T));
+            const b = scope.adopt(towerRunAt(T, { stillUntil: TOWER_STILL }));
+            resetEscapeCrossPassCacheCounts();
+            expect(answerText(ask(a))).toBe(offA);
+            expect(answerText(ask(b))).toBe(offB);
+            expect(ESCAPE_CROSS_PASS_CACHE_COUNTS.misses).toBe(2);
+            expect(ESCAPE_CROSS_PASS_CACHE_COUNTS.hits).toBe(0);
+            expect(scope.entries.size).toBe(2);
+        });
+        const scope = escapeCrossPassScope();
+        withCache({ enabled: true, verify: true }, () => withEscapeCrossPassScope(scope, () => {
+            const a = scope.adopt(towerRunAt(T));
+            const b = scope.adopt(towerRunAt(T, { stillUntil: TOWER_STILL }));
+            resetEscapeCrossPassCacheCounts();
+            for (const run of [a, b, b, a]) ask(run);
+        }));
+        expect(ESCAPE_CROSS_PASS_CACHE_COUNTS.verified).toBe(2);
+        expect(ESCAPE_CROSS_PASS_CACHE_COUNTS.verifyMismatches).toBe(0);
     }, 120_000);
 
     it('⛓⛓⛓ the arguments: `pressAt` and the held sets\' ORDER are in the key — each variant is OFF\'s answer', async () => {

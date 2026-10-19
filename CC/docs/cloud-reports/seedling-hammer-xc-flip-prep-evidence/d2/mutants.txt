@@ -1,0 +1,11 @@
+== M9-digest-without-visit: rc=1 3 ⎯⎯⎯⎯⎯⎯⎯
+   RED hammer-phase XC — the deadline (js-7 condition 1) > ⛓⛓⛓ a budget that trips mid-search gives OFF's answer, stream and asks — a hit tripped at its k-th ask included
+   RED hammer-phase XC — the key > ⛓⛓⛓ the digest is per CALL: a call that builds a lazy visit state is never stored, so the next run builds it too (the per-tick mutant's trap)
+   RED hammer-phase XC — the key > ⛓⛓⛓ the digest's `visit` part is in the key: one seam, one tick, one clock, the tower drifted from two ticks — the digests differ in `visit` A
+== M1-no-digest: rc=1 5 ⎯⎯⎯⎯⎯⎯⎯
+   RED hammer-phase XC — the deadline (js-7 condition 1) > ⛓⛓⛓ a budget that trips mid-search gives OFF's answer, stream and asks — a hit tripped at its k-th ask included
+   RED hammer-phase XC — the key > ⛓⛓ the clocked hazard in a beam-tower room (L104): the escape is entered, the two seam times are two entries
+   RED hammer-phase XC — the key > ⛓⛓⛓ a drifting beam tower inside a SEARCH (L18 + a tower): two seam times a hammer period apart — the drift alone parts the answers, two entri
+   RED hammer-phase XC — the key > ⛓⛓⛓ the clocked hazard: one call at two seam times across the hammer's phase is two entries, and the two answers differ
+   RED hammer-phase XC — the key > ⛓⛓⛓ the digest's `visit` part is in the key: one seam, one tick, one clock, the tower drifted from two ticks — the digests differ in `visit` A
+mutant tree restored to the source

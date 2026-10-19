@@ -1,0 +1,11 @@
+THREW Error chaserForecast: whether bob bob@736,800 is on screen depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not indexable (camera.js, "THE SHAKE, AND WHY
+    at onScreenAt (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/levelRun.js:8119:23)
+    at Object.step (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/levelRun.js:8275:35)
+    at previewWalk (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:5493:27)
+    at deriveRefuge (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:10027:15)
+    at refugeNow (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:14985:35)
+    at refuge (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:14993:31)
+    at noStrikeMove (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:11556:9)
+    at moveNow (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:14989:35)
+    at execKillByPressOnce (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:15093:34)
+    at execKillByPress (file:///home/user/Archipelago-CC/frontend/modules/seedlingDemo/solverBot.js:14734:16)

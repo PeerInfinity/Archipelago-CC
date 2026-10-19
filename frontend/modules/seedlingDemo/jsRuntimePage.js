@@ -67,6 +67,13 @@
  * paint draws `playerOps`. `__seedlingJsGraphics.player` reads back the keys
  * and frame it drew. With no stack nothing here runs.
  *
+ * ⛓ GRAPHICS G3 — and so are the enemies, spinners and arrows
+ * (`seedlingEnemySkin.js`): `enemySkinView(run)` after every game tick, folded
+ * into each body's own FlashPunk state (`stepEnemySkin`: its Spritemap and
+ * end-of-anim callback, mirror, hit tint), and `enemyOps` at each paint; the
+ * AP items are drawn as their looks (`apItemOps`). `__seedlingJsGraphics.enemies`
+ * reads back what was drawn, body by body. With no stack nothing here runs.
+ *
  * ⛓ KILLLOCK HOOK — `?killLockBodies=<keys>|none` (the `SEEDLING_KILLLOCK_BODIES`
  * grammar) sets this page's `killLockBodies` switches before its first run;
  * absent = the defaults. The panel adds it only when its settings are
@@ -89,6 +96,7 @@ import {
 } from './rectPalette.js';
 import { CAMERA_MODES, cameraView, paintOps, roomOps } from './seedlingSkinRenderer.js';
 import { playerOps, skinView, stepPlayerSkin } from './seedlingPlayerSkin.js';
+import { apItemOps, enemyOps, enemySkinView, stepEnemySkin } from './seedlingEnemySkin.js';
 import { loadPackStack, packsBaseUrl, parseRegistry } from '../contentPacks/contentPacks.js';
 import { browserDecoder, createArtLibrary, loadSheetImages } from '../artLibrary/artLibrary.js';
 
@@ -177,6 +185,8 @@ export function mountJsRuntimePage(win = window) {
         paintMs: { last: 0, avg: 0, max: 0 },
         // ⛓ G2 — the player picture's own state (one step per game tick) and the last paint's player ops.
         skin: null, player: null,
+        // ⛓ G3 — the bodies' pictures (one step per game tick) and the last paint's body ops.
+        enemySkin: null, enemies: null,
     };
     let graphicsLoad = 0;
     function setGraphics({ graphics: stack, camera } = {}) {
@@ -186,7 +196,7 @@ export function mountJsRuntimePage(win = window) {
         }
         if (stack === undefined || stack === graphics.stack) return Promise.resolve(graphics.status);
         const ticket = ++graphicsLoad;
-        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null });
+        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null, enemySkin: null, enemies: null });
         if (!stack) { graphics.status = 'off'; return Promise.resolve('off'); }
         graphics.status = 'loading';
         return loadGraphicsStack(stack, { win }).then(({ art, images, failed }) => {
@@ -228,6 +238,7 @@ export function mountJsRuntimePage(win = window) {
         get frames() { return graphics.frames; },
         get paintMs() { return { ...graphics.paintMs }; },
         get player() { return graphics.player ? { ...graphics.player } : null; },
+        get enemies() { return graphics.enemies ? { ...graphics.enemies, ops: graphics.enemies.ops.map((o) => ({ ...o })) } : null; },
         get packsOfKeys() { return graphics.art ? Object.fromEntries(graphics.art.keys().map((k) => [k, graphics.art.packOf(k)])) : null; },
         set: setGraphics,
     };
@@ -268,7 +279,10 @@ export function mountJsRuntimePage(win = window) {
         let n = 0;
         while (acc >= TICK_MS && n < MAX_TICKS_PER_FRAME) {
             runtime.tick(heldFromCodes(down));
-            if (graphics.stack) graphics.skin = stepPlayerSkin(graphics.skin, skinView(runtime.run), runtime.ticks);
+            if (graphics.stack) {
+                graphics.skin = stepPlayerSkin(graphics.skin, skinView(runtime.run), runtime.ticks);
+                graphics.enemySkin = stepEnemySkin(graphics.enemySkin, enemySkinView(runtime.run), runtime.ticks);
+            }
             acc -= TICK_MS;
             n += 1;
         }
@@ -345,8 +359,17 @@ export function mountJsRuntimePage(win = window) {
         graphics.player = playerSprites.length
             ? { anim: graphics.skin?.anim ?? null, ops: playerSprites.map((o) => ({ key: o.key, frame: o.frame, flipX: o.flipX, tint: o.tint ?? null, pack: art.packOf(o.key) })) }
             : null;
+        const ev = art ? enemySkinView(runtime.run) : null;
+        const entitySprites = ev ? enemyOps(ev, art, { skin: graphics.enemySkin }) : [];
+        const apItemSprites = art ? apItemOps(apItems, art, AP_ITEM_COLOUR) : null;
+        graphics.enemies = ev
+            ? { bodies: ev.chasers.length + ev.spinners.length + ev.arrows.length, apItems: apItemSprites.length,
+                ops: [...entitySprites, ...apItemSprites].map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, tint: o.tint ?? null,
+                    pack: o.key ? art.packOf(o.key) : null })) }
+            : null;
         const ops = roomOps(world, art, {
             level, tick: runtime.ticks, player: playerBoxAt(state.x, state.y), playerSprites, apItems,
+            ...(art ? { apItemSprites, entitySprites } : {}),
         });
         const view = cameraView(graphics.camera, world, state, runtime.run);
         graphics.counts = { ops: ops.length, ...paintOps(ctx, ops, art ? graphics.images : null, view, canvas, { tinted }) };

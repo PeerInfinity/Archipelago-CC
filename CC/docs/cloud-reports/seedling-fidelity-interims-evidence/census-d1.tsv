@@ -1,0 +1,25 @@
+axe-witness	axe-l48-reach-l49.json	MOVED	368 -> 330	fields: tick_count,inputs,description
+axe-witness	axe-l61-reach-l62.json	SAME
+axe-witness	axe-l61-reach-l63.json	SAME
+axe-witness	axe-l71-reach-l76.json	SAME
+bobsoldier2	bobsoldier2-l30-dash-stance.json	MOVED	145 -> 168	fields: tick_count,inputs,description
+bobsoldier2	bobsoldier2-l30-torch.json	MOVED	460 -> 395	fields: tick_count,inputs,description
+f1-l5-open-lock	f1-l5-open-lock-bait.json	MOVED	437 -> 90	fields: tick_count,inputs,description
+l30keylock	l30keylock-pit224-before.json	SAME
+l30keylock	l30keylock-pit224.json	MOVED	347 -> 320	fields: tick_count,inputs,description
+l30keylock	l30keylock-pit240.json	MOVED	360 -> 341	fields: tick_count,inputs,description
+l40-mw	l40button-l41-part0.json	MOVED	1543 -> 1601	fields: tick_count,inputs,description
+ladder2-witness	ladder2-l104-beam.json	MOVED	278 -> 261	fields: tick_count,inputs,description
+ladder2-witness	ladder2-l59-grenade.json	SAME
+pushblock-witness	pushblock-l65-reach-l63.json	SAME
+pushblock-witness	pushblock-l65-reach-l68.json	MOVED	347 -> 345	fields: tick_count,inputs,description
+pushblock-witness	pushblock-l65-sword-press.json	SAME
+stance-witness	stance-l46-chest.json	MOVED	1044 -> 868	fields: tick_count,inputs,description
+stance-witness	stance-l48-chest.json	MOVED	540 -> 449	fields: tick_count,inputs,description
+stance-witness	stance-l48-keylock-north.json	SAME
+stance-witness	stance-l48-keylock-open.json	MOVED	454 -> 231	fields: tick_count,inputs,description
+stance-witness	stance-l48-keylock-south.json	MOVED	369 -> 322	fields: tick_count,inputs,description
+u10-puncher-dwell	u10-puncher-dwell-refused.json	MOVED	34 -> 50	fields: tick_count,inputs,description
+u10-puncher-dwell	u10-puncher-dwell.json	MOVED	200 -> 200	fields: inputs,description
+u10s	u10-puncher-dwell-refused.json	MOVED	34 -> 50	fields: boot,tick_count,inputs,description
+u10s	u10-puncher-dwell.json	MOVED	200 -> 200	fields: inputs,description
