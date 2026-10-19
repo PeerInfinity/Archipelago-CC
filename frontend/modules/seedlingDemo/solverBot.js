@@ -178,6 +178,8 @@ import { activeProgress, progressAsked, progressEnter, progressFrame, progressGo
     progressSite, progressStatesFor, progressTick, withSolveProgress } from './solveProgress.js';
 // ⛓ seedling-fidelity-forcedhit D2 — the forced-hit rung's proof and crossing (`FORCED_HITS`, OFF).
 import { FORCED_HITS, FORCED_HIT_TRACE, planForcedCrossing, proveForcedHit, worldHitsOf } from './forcedHit.js';
+// ⛓ seedling-fidelity-axeforcedu D2 — a spinning axe's forced U, crossed and billed (`AXE_PRICED_CROSSING`, OFF).
+import { AXE_PRICED_CROSSING, AXE_PRICED_TRACE, admitAxeCrossing } from './axePricedCrossing.js';
 // ⛓ seedling-fidelity-arrowlane D2 — the armed-lane crossing arm (`ARROW_LANE_CROSSING`, OFF).
 import { ARROW_LANE_CROSSING, ARROW_LANE_TRACE, LaneCrossingExcept, admitLaneCrossing, laneCrossingExcept,
     laneCrossingFor } from './arrowLaneCrossing.js';
@@ -21468,6 +21470,247 @@ function solveSegmentUnder({
             lastWhy = forcedWhy;
             lastOption = 'forced-hit';
             lastBound = undefined;
+        }
+        /**
+         * ── rung 6½: AXE PRICED (seedling-fidelity-axeforcedu D2; `axePricedCrossing.js`) ── the forced-hit rung's
+         * verdict for the one corridor class its input tree cannot reach: a spinning axe met far out along the walk's
+         * own corridor. Asked ONLY here, after every rung above refused, only behind `AXE_PRICED_CROSSING` (OFF:
+         * absent, no row, the refusal word for word the BEFORE one), only when every reason is a spinning axe (the
+         * AXE arm's `axeOnly`), and on a segment with a fork.
+         *   1. THE CERTIFICATE: the corridor entered at every phase of the axe — the doorstep stalls `0 … period − 1`
+         *      (and the dash chain's phases when this pass may dash) — and no member crosses free of blade contact,
+         *      priced by `axeHitsPlayer` on each sample's pre-move box at the visit's update count.
+         *   2. THE CROSSING: the members, fewest contact samples first, driven on forks; the run bills the hits
+         *      (knockback, i-frames); admitted only reaching the goal alive, axe hits only, inside `FORCED_HITS`.
+         *   3. THE BILL: the fewest-billed member replayed on the live run, whose rows must be the fork's; a
+         *      `forced-hit` row with `proof: {kind: 'axe-phase'}`, and `forcedHits` carries it.
+         */
+        if (AXE_PRICED_CROSSING.enabled && axeOnly && fork !== null && Array.isArray(corridor) && corridor.length > 0) {
+            if (activeProgress !== null) progressRung('forced-hit');
+            const pricedRefused = { rung: lastOption, why: lastWhy };
+            const at = { level: run.level, x: run.state.x, y: run.state.y, tick: perTick.length };
+            const axeIds = hit.sources.map((s) => s.id).join(', ');
+            const hitAxes = hit.sources.map((s) => s.axe);
+            const clockP = axeVisitClock(run);
+            const t0 = run.ticksCompleted;
+            const { rest, offsetStep } = AXE_TIMING_RUNG;
+            let previews = 0;
+            let tripped = false;
+            const ask = () => {
+                if (previews >= AXE_PRICED_CROSSING.maxPreviews) return false;
+                if (deadlineReached('axe-dodge')) { tripped = true; return false; }
+                previews += 1;
+                return true;
+            };
+            const roomAxes = (run.world.combat?.hazards ?? []).filter((x) => x.tag === 'spinningaxe')
+                .map((x) => ({ cx: x.cx, cy: x.cy, rate: Number(x.attrs?.rate ?? 0) }));
+            const inReach = (sm) => hitAxes.some((a) => axeCanReach(a, playerBoxAt(sm.x, sm.y)));
+            /** Blade contact at sample index `i` (tick `t0 + i + 1`): the run's own billing predicate. */
+            const contactAt = (p, i) => {
+                const u = t0 + i + 1 - clockP.v + AXE_UPDATE_OFFSET;
+                return u >= 1 && roomAxes.some((axe) => axeHitsPlayer(axe, u, playerBoxAt(p.x, p.y)) !== null);
+            };
+            const inv = run.progress('inventory');
+            const weapon = run.progress('primaryWeapon');
+            const mayDash = dashMode !== 'none' && !axisAligned && !undashed && !!(inv?.hasSword || inv?.hasGhostSword)
+                && ['sword', 'ghostsword'].includes(weapon);
+            const pattern = inv?.hasGhostSword ? GHOST_DASH_CHAIN_PATTERN : DASH_CHAIN_PATTERN;
+            const families = [{ label: 'walk', offset: null }];
+            if (mayDash) {
+                for (let o = 0; o < ORDINARY_SWING_PERIOD; o += offsetStep) families.push({ label: `chain+${o}`, offset: o });
+            }
+            let door = 0;
+            let span = 1;
+            const strikeFor = (r, fam, s) => (axisAligned ? null : strikePolicyFor(r, fam.offset === null ? { dashMode }
+                : { dashMode, dashPlan: (() => {
+                    const ticks = new Set();
+                    const resume = t0 + door + s;
+                    for (let w = resume + fam.offset; w < resume + span + ORDINARY_SWING_PERIOD; w += ORDINARY_SWING_PERIOD) {
+                        for (const d of pattern) ticks.add(w + d);
+                    }
+                    return { ticks, starts: [], windows: [], why: `⛓ AXEPRICED: the chain every ${ORDINARY_SWING_PERIOD} t `
+                        + `from ${fam.offset} t after the walk resumes` };
+                })() }));
+            const optsFor = (fam, s) => ({ strike: strikeFor(run, fam, s), ...(axisAligned ? { axisAligned } : {}),
+                ...(s > 0 ? { stall: { at: door, ticks: s } } : {}) });
+            const completed = (w) => !w.truncated || w.truncated.kind === 'crossed';
+            const contactsOf = (sm) => sm.reduce((n, p, i) => n + (contactAt(p, i) ? 1 : 0), 0);
+            let why = null;
+            const members = [];
+            let period = null;
+            if (clockP.v === null) why = `the axe's update count is not known here (${clockP.why})`;
+            else if (!ask()) why = tripped ? 'the deadline (`axe-dodge`)' : 'the preview bound';
+            else {
+                period = Math.max(...hitAxes.map((a) => a.period));
+                const base = previewWalk(run, corridor, tolerance, optsFor(families[0], 0));
+                door = Math.min(Math.max(0, hit.tick - t0 - 1), base.samples.length - 1);
+                while (door > 0 && inReach(base.samples[door])) door -= 1;
+                span = Math.max(1, base.samples.length - door);
+                // a player already in reach cannot wait where it stands: the crossing starts now, at its one phase
+                const stalls = inReach(base.samples[door]) ? 1 : period;
+                fams: for (const fam of families) {
+                    for (let s = 0; s <= Math.min(rest, stalls - 1); s += 1) {
+                        let w = base;
+                        if (fam.offset !== null || s > 0) {
+                            if (!ask()) break fams;
+                            w = previewWalk(run, corridor, tolerance, optsFor(fam, s));
+                        }
+                        members.push({ fam, s, done: completed(w), contacts: contactsOf(w.samples), ticks: w.samples.length });
+                    }
+                    if (stalls <= rest + 1) continue;
+                    // ⛓ the rest screen (the AXE arm's): a longer stall is the rest-length walk shifted
+                    if (!ask()) break;
+                    const scr = previewWalk(run, corridor, tolerance, optsFor(fam, rest));
+                    const sm = scr.samples;
+                    const still = sm.length > door + rest && sm[door + rest - 1].x === sm[door + rest - 2]?.x
+                        && sm[door + rest - 1].y === sm[door + rest - 2]?.y;
+                    for (let s = rest + 1; s < stalls; s += 1) {
+                        if (still) {
+                            const shift = s - rest;
+                            const stand = sm[door + rest - 1];
+                            let n = 0;
+                            for (let i = 0; i < sm.length + shift; i += 1) {
+                                const p = i < door + rest ? sm[i] : (i < door + s ? stand : sm[i - shift]);
+                                if (contactAt(p, i)) n += 1;
+                            }
+                            members.push({ fam, s, done: completed(scr), contacts: n, ticks: sm.length + shift });
+                        } else {
+                            if (!ask()) break fams;
+                            const w = previewWalk(run, corridor, tolerance, optsFor(fam, s));
+                            members.push({ fam, s, done: completed(w), contacts: contactsOf(w.samples), ticks: w.samples.length });
+                        }
+                    }
+                }
+                const expected = families.length * stalls;
+                const clean = members.find((m) => m.done && m.contacts === 0);
+                if (members.length < expected) {
+                    why = `${members.length} of the ${expected} member(s) were priced before `
+                        + `${tripped ? 'the deadline (`axe-dodge`)' : `the preview bound (${AXE_PRICED_CROSSING.maxPreviews})`} — `
+                        + 'a certificate that gave up is not one';
+                } else if (clean) {
+                    why = `the corridor entered ${clean.s} tick(s) after the doorstep (${clean.fam.label}) crosses free of `
+                        + 'blade contact in its preview — a gap exists, so no hit is forced';
+                } else if (!members.some((m) => m.done)) {
+                    why = `no member of the ${expected} completes the corridor in its preview`;
+                }
+            }
+            const certRow = { kind: 'axe-phase', axes: axeIds, door, period, families: families.length,
+                members: members.length, completed: members.filter((m) => m.done).length,
+                minContacts: members.some((m) => m.done) ? Math.min(...members.filter((m) => m.done).map((m) => m.contacts))
+                    : null, previews };
+            const rejected = [];
+            let best = null;
+            if (why === null) {
+                const spent = forcedHits.reduce((n, f) => n + f.billed.length, 0);
+                const hitsMax = run.progress('inventory')?.hitsMax ?? 3;
+                const hitsNow = worldHitsOf(run).hits;
+                const tries = members.filter((m) => m.done)
+                    .sort((x, y) => x.contacts - y.contacts || x.ticks - y.ticks || x.s - y.s)
+                    .slice(0, AXE_PRICED_CROSSING.forkCandidates);
+                for (const m of tries) {
+                    const label = `stall ${m.s} at sample ${door} (${m.fam.label})`;
+                    if (!ask()) { rejected.push({ candidate: label, why: tripped ? 'the deadline' : 'the preview bound' }); break; }
+                    // the member's own prefix (walk to the doorstep + the stall), then the corridor driven on
+                    const pre = previewWalk(run, corridor, tolerance, optsFor(m.fam, m.s)).samples.slice(0, door + m.s);
+                    const f = fork();
+                    if (f === null) { rejected.push({ candidate: label, why: 'the caller\'s deadline tripped' }); break; }
+                    const h0 = (f.ledger('playerHits') ?? []).length;
+                    const d0 = (f.ledger('playerDeaths') ?? []).length;
+                    const keys = [];
+                    let transition = null;
+                    try {
+                        for (const sm of pre) {
+                            const held = new Set(sm.held);
+                            keys.push(held);
+                            const o = f.advance(held);
+                            if (o.transition) { transition = o.transition; break; }
+                        }
+                        if (transition === null) {
+                            const wps = corridor.slice(Math.max(0, pre.at(-1)?.wp ?? 0));
+                            const strike = strikeFor(f, m.fam, m.s);
+                            for (let wi = 0; wi < wps.length; wi += 1) {
+                                const last = wi === wps.length - 1;
+                                const t = drive(f, wps[wi], keys, {
+                                    until: (last && crossTo) ? 'transition' : 'arrival', tolerance,
+                                    maxTicks: maxTicksPerTarget, avoidVolumes: true, contacts, crossTo, grazes: [], strike,
+                                    axisAligned, intermediate: !last,
+                                    what: `${what} (axe-priced ${label}) waypoint ${wi} (${wps[wi].x},${wps[wi].y})`,
+                                });
+                                if (t && crossTo) { transition = t; break; }
+                            }
+                        }
+                    } catch (e) {
+                        /**
+                         * ⛔ A DEATH FIRST, THEN THE DRIVER'S WORDS: a hit's knockback that lands the player in lava or
+                         * a pit is a death (`playerDeaths`) and a respawn at the room's entry, after which the drive
+                         * walks on to its bound — the timeout would hide what the run billed.
+                         */
+                        const deaths = (f.ledger('playerDeaths') ?? []).slice(d0);
+                        const took = (f.ledger('playerHits') ?? []).slice(h0);
+                        rejected.push({ candidate: label, billed: took.length, ...(deaths.length ? { died: deaths[0].t ?? null } : {}),
+                            // the instrument's copy of the member's keys (a game witness replays them); inert without a sink
+                            ...(AXE_PRICED_TRACE.sink ? { keys: keys.map((k) => [...k].sort()) } : {}),
+                            why: deaths.length
+                                ? `the crossing dies on the fork at t${deaths[0].t ?? '?'} (${deaths[0].cause ?? deaths[0].source ?? 'death'}`
+                                    + `${took[0] ? `, after ${took[0].source}:${took[0].id} hit it at t${took[0].t}` : ''})`
+                                : `${e instanceof BotDriverV2Error ? '' : 'the model refused: '}`
+                                    + String(e?.message ?? e).split('\n')[0].slice(0, 200) });
+                        continue;
+                    }
+                    const billed = (f.ledger('playerHits') ?? []).slice(h0).map((h) => ({ t: h.t, level: h.level,
+                        source: h.source, id: h.id, hits: h.hits }));
+                    const adm = admitAxeCrossing({ billed, died: (f.ledger('playerDeaths') ?? []).length - d0,
+                        crossed: !crossTo || transition?.to_level === crossTo.level, hitsMax, hitsNow,
+                        budgetLeft: FORCED_HITS.maxPerSegment - spent, maxHitsPerCrossing: FORCED_HITS.maxHitsPerCrossing,
+                        margin: FORCED_HITS.margin });
+                    if (!adm.ok) { rejected.push({ candidate: label, why: adm.why, billed: billed.length }); continue; }
+                    if (best === null || billed.length < best.billed.length
+                        || (billed.length === best.billed.length && keys.length < best.keys.length)) {
+                        best = { label, keys, billed, transition };
+                    }
+                    if (best.billed.length === 0) break;
+                }
+                if (best === null) {
+                    why = `the corridor is hit at every phase (${members.length} member(s) over ${families.length} `
+                        + `famil${families.length === 1 ? 'y' : 'ies'}, fewest contact samples ${certRow.minContacts}), and no `
+                        + 'crossing was admitted: ' + rejected.map((r) => `${r.candidate}: ${r.why}`).join(' · ');
+                }
+            }
+            if (best !== null) {
+                rowFor('forced-hit', pricedRefused, { proof: certRow, candidate: best.label, billed: best.billed,
+                    ticks: best.keys.length });
+                const hitsBefore = run.ledger('playerHits').length;
+                const from = perTick.length;
+                let transition = null;
+                for (let i = 0; i < best.keys.length; i += 1) {
+                    perTick.push(best.keys[i]);
+                    const o = run.advance(best.keys[i]);
+                    if (o.transition) {
+                        transition = o.transition;
+                        if (i !== best.keys.length - 1) {
+                            fail(`${what} -> axe-priced: the replay crossed to level ${transition.to_level} at tick `
+                                + `${i + 1} of ${best.keys.length} — the fork did not (the fork is not this run).`);
+                        }
+                    }
+                }
+                const got = run.ledger('playerHits').slice(hitsBefore).map((h) => `${h.t}:${h.source}:${h.id}`).join(',');
+                const want = best.billed.map((h) => `${h.t}:${h.source}:${h.id}`).join(',');
+                if (got !== want || (best.transition === null) !== (transition === null)) {
+                    fail(`${what} -> axe-priced: the replay billed [${got}] where the fork billed [${want}] — the fork is `
+                        + 'not this run.');
+                }
+                if (best.billed.length > 0) {
+                    forcedHits.push({ tick: from, what, proof: certRow, candidate: `axe-priced ${best.label}`,
+                        billed: best.billed, ticks: best.keys.length, damage: worldHitsOf(run) });
+                }
+                AXE_PRICED_TRACE.sink?.({ what, at, cert: certRow, outcome: 'billed', candidate: best.label,
+                    billed: best.billed, ticks: best.keys.length, keys: best.keys.map((k) => [...k].sort()), rejected,
+                    damage: worldHitsOf(run) });
+                return { forced: { transition }, escalations };
+            }
+            AXE_PRICED_TRACE.sink?.({ what, at, cert: certRow, outcome: rejected.length ? 'no-crossing' : 'not-certified',
+                rejected, why });
+            lastWhy = `${lastWhy}; and by the axe's phase certificate (AXEPRICED, ${previews} preview(s)): ${why}`;
         }
         /**
          * ── rung 7: ARROW-LANE (seedling-fidelity-arrowlane D2; ⚖ the user, 2026-10-16, "arrows aren't supposed to
