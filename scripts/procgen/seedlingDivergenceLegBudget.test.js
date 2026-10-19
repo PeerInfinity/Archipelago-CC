@@ -62,10 +62,12 @@ describe('the STAMP', () => {
     it('the probe emits EVERY row through the stamp (the one door: run, skipped, boot-failed, hang rows)', () => {
         // ⛓ DASH-ONLY WINDOW — the solver knobs' stamp wraps the same door (`seedlingDivergenceWindow.test.js`)
         expect(SRC).toMatch(/const line = JSON\.stringify\(stampSolverKnobs\(stampBudget\(row, LEG_BUDGET\), KNOBS\)\);/);
-        // emit's one write: no row reaches the file another way (the other write is the REQUEST CAPTURE's own file)
+        // emit's one write: no row reaches the file another way (the other writes are the REQUEST CAPTURE's and the
+        // MEMORY PROBE's own files)
         expect(SRC.match(/appendFileSync\(OUT,/g)).toHaveLength(1);
-        expect(SRC.match(/appendFileSync\(/g)).toHaveLength(2);
+        expect(SRC.match(/appendFileSync\(/g)).toHaveLength(3);
         expect(SRC).toMatch(/if \(CAPTURE\) appendFileSync\(CAPTURE, /);
+        expect(SRC).toMatch(/if \(MEM_OUT\) appendFileSync\(MEM_OUT, /);
     });
 
     it('the serve gets the budget (no literal 90000 left at the call) and names a cut only off the default', () => {
