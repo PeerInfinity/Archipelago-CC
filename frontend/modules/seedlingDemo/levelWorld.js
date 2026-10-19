@@ -81,6 +81,7 @@ import { PROFILE } from './seedlingProfile.js';
 // `breakableRocks.js` — leaf-ward again, not a cycle.
 import { outOfBandFlagForWriter } from './outOfBandLedger.js';
 import { CONTACT_FIDELITY } from './contactFidelity.js';
+import { reportSlotsReadBy } from './apReportBosses.js';
 
 /**
  * The player hitbox origin, for recovering the entity position from a box.
@@ -5909,6 +5910,11 @@ export function buildLevelWorld(levelRecord, {
     // derivation error this throw exists for, and so is any clear when the
     // caller passed no `nextLevelRecord`.
     let outOfBandClears = [];
+    // ⛓ fidelity APBOSSES D2 (`CONTACT_FIDELITY.apReportBosses`): the R4 slots a RUNTIME entity reads — the arena rock
+    // {3, 4} (`FallRockLarge.as:118, 123` @0eda15f785), the Witch {1} (`Witch.as:50`) — are read, not orphans.
+    if (clearedTags && CONTACT_FIDELITY.apReportBosses) {
+        for (const t of reportSlotsReadBy(levelRecord.entities, arenaRockOf)) if (clearedTags.has(t)) clearsUsed.add(t);
+    }
     if (clearedTags) {
         const raw = [...clearedTags].filter((t) => !clearsUsed.has(t));
         const writers = raw.length > 0 ? outOfBandWritersOnto(level, nextLevelRecord) : [];

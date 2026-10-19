@@ -1,0 +1,19 @@
+== census-seedling-solver-surface
+RED drift: import:contactFidelity.js#CONTACT_FIDELITY table {"sites":48,"files":{"arrowLaneCrossing.js":4,"axePricedCrossing.js":4,"botDriverV2.js":3,"forcedHit.js":4,"solverBot.js":31,"strikePolicy.js":2}} fresh {"sites":51,"files":{"arrowLaneCrossing.js":4,"axePricedCrossing.js":4,"botDriverV2.js":3,"forcedHit.js":4,"solverBot.js":34,"strikePolicy.js":2}}
+RED door: frontend/modules/seedlingDemo/solverBot.js:192 imports apReportBosses.js directly — a family file imports a seedlingDemo module only if it is a family file or the door, solverView.js
+RED: 12 finding(s) — run --write, then classify
+rc=1
+== census-seedling-constants
+RED  docs/json/developer/procgen/seedling-constants.md: the CENSUS region is stale — --write
+
+FAIL — 34 red item(s)
+rc=1
+== witness-seedling-entities
+PASS — scripts/procgen/seedling-entity-witnesses.json names all 566 number leaves
+rc=0
+== witness-seedling-profile
+PASS — scripts/procgen/seedling-profile-witnesses.json names all 138 keys
+PASS — scripts/procgen/seedling-profile-witnesses-full.json names all 138 keys
+rc=0
+== roster
+282

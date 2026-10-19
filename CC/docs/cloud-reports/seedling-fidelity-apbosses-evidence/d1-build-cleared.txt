@@ -1,0 +1,20 @@
+OFF Times {32,3} THROWS: level 32: the tape clears tag(s) 3, which no entity in this level reads. A clear is derived from a named blocker; one that matches nothing is a deriva
+OFF Fire {32,4} THROWS: level 32: the tape clears tag(s) 4, which no entity in this level reads. A clear is derived from a named blocker; one that matches nothing is a deriva
+OFF Dark Sword {12,1} THROWS: level 12: the tape clears tag(s) 1, which no entity in this level reads. A clear is derived from a named blocker; one that matches nothing is a deriva
+OFF Owl {112,0} THROWS: level 112: the tape clears tag 0, which is also carried by "finalboss" at (64,96) — a class with NO declared persistence response. Every class that re
+OFF Owl+1 {112,1} BUILDS
+OFF Shieldspire {19,0} BUILDS
+OFF Tentacled Beast {57,0} THROWS: level 57: the tape clears tag 0, which is also carried by "tentaclebeast" at (80,48) — a class with NO declared persistence response. Every class that
+OFF Totem of Lacste {43,5} THROWS: level 43: the tape clears tag 5, which is also carried by "bosstotem" at (152,168) — a class with NO declared persistence response. Every class that r
+OFF Lights {69,0} THROWS: level 69: the tape clears tag 0, which is also carried by "lightbosscontroller" at (72,72) — a class with NO declared persistence response. Every clas
+OFF King of Fire {82,0} BUILDS
+ON  Times {32,3} BUILDS
+ON  Fire {32,4} BUILDS
+ON  Dark Sword {12,1} BUILDS
+ON  Owl {112,0} THROWS: level 112: the tape clears tag 0, which is also carried by "finalboss" at (64,96) — a class with NO declared persistence response. Every class that re
+ON  Owl+1 {112,1} BUILDS
+ON  Shieldspire {19,0} BUILDS
+ON  Tentacled Beast {57,0} THROWS: level 57: the tape clears tag 0, which is also carried by "tentaclebeast" at (80,48) — a class with NO declared persistence response. Every class that
+ON  Totem of Lacste {43,5} THROWS: level 43: the tape clears tag 5, which is also carried by "bosstotem" at (152,168) — a class with NO declared persistence response. Every class that r
+ON  Lights {69,0} THROWS: level 69: the tape clears tag 0, which is also carried by "lightbosscontroller" at (72,72) — a class with NO declared persistence response. Every clas
+ON  King of Fire {82,0} BUILDS
