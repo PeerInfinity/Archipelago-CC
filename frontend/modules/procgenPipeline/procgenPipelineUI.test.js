@@ -601,6 +601,16 @@ function withoutConceptsRow(el) {
     return el;
 }
 
+/**
+ * ⛓ DISCOVERY × LOOPS (2026-10-18) — the *Discovery mode* row is NEW after the
+ * R1 capture: the same splice, and its own rows are the `Discovery mode` suite.
+ */
+const DISCOVERY_ROW_CLASS = 'procgen-pipeline-field procgen-pipeline-discovery-mode';
+function withoutDiscoveryRow(el) {
+    el.children = el.children.filter((c) => c.className !== DISCOVERY_ROW_CLASS);
+    return el;
+}
+
 describe('R1 — the Parameters section binds the same bag keys it bound before the split', () => {
     it.each(Object.keys(PARAMETER_KEYS_BEFORE_R1))('⛓ %s: every control\'s key, against the captured fixture', (mode) => {
         const written = new Set();
@@ -612,7 +622,7 @@ describe('R1 — the Parameters section binds the same bag keys it bound before 
         ctx._saveToLocalStorage = () => {};
         ctx._handEditedGridKeys = new Set();
         withFakeDocument(() => {
-            for (const c of controls(withoutArrivalRow(withoutConceptsRow(ctx._renderParams())))) { perturb(c); c.fire('change'); }
+            for (const c of controls(withoutDiscoveryRow(withoutArrivalRow(withoutConceptsRow(ctx._renderParams()))))) { perturb(c); c.fire('change'); }
         });
         expect([...written].sort()).toEqual(PARAMETER_KEYS_BEFORE_R1[mode]);
         // ⛓ F1: a changed grid control records its key as hand-edited (a
@@ -663,7 +673,7 @@ describe('R1 — the Parameters section draws the DOM it drew before the split',
         ctx.params = { ...panelDefaultParams(), enableHazards: true };
         ctx._activeSubstrateDict = () => ({ maze: 1, bounce: 1, runner: 1 });
         ctx._saveToLocalStorage = () => {};
-        const html = withFakeDocument(() => serialize(withoutParamKeys(unwrapForms(withoutArrivalRow(withoutConceptsRow(ctx._renderParams()))))));
+        const html = withFakeDocument(() => serialize(withoutParamKeys(unwrapForms(withoutDiscoveryRow(withoutArrivalRow(withoutConceptsRow(ctx._renderParams())))))));
         expect(createHash('sha256').update(html).digest('hex')).toBe(PARAMETERS_SECTION_SHA256_BEFORE_R1[mode]);
     });
 
@@ -683,6 +693,31 @@ describe('R1 — the Parameters section draws the DOM it drew before the split',
                 expect(ctx.params[b.dataset.paramKey]).toBe(3);
             }
         });
+    });
+});
+
+describe('DISCOVERY × LOOPS — the *Discovery mode* select (`params.discoveryMode`)', () => {
+    it.each(Object.keys(PARAMETERS_SECTION_SHA256_BEFORE_R1))('%s: ONE row, follow/on/off, "Same as loop mode" by default; choosing writes the bag key', (mode) => {
+        expect(panelDefaultParams().discoveryMode).toBe('follow');
+        const ctx = Object.create(ProcgenPipelineUI.prototype);
+        ctx.mode = mode;
+        ctx.params = { ...panelDefaultParams() };
+        ctx._activeSubstrateDict = () => ({ maze: 1 });
+        let saves = 0;
+        ctx._saveToLocalStorage = () => { saves += 1; };
+        ctx._handEditedGridKeys = new Set();
+        withFakeDocument(() => {
+            const rows = ctx._renderParams().children.filter((c) => c.className === DISCOVERY_ROW_CLASS);
+            expect(rows).toHaveLength(1);
+            const [select] = controls(rows[0]);
+            expect(select.dataset.paramKey).toBe('discoveryMode');
+            expect(select.children.map((o) => o.value)).toEqual(['follow', 'on', 'off']);
+            expect(select.value).toBe('follow');
+            select.value = 'off';
+            select.fire('change');
+        });
+        expect(ctx.params.discoveryMode).toBe('off');
+        expect(saves).toBe(1);
     });
 });
 

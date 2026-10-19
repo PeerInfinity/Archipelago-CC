@@ -35,6 +35,11 @@ export class DiscoveryState {
     this.discoveredLocations = new Set();
     this.discoveredExits = new Map(); // regionName -> Set of exit names
 
+    // A world whose `discovery_mode` block says enabled:false has nothing
+    // to discover: initialize() then marks every region, location and exit
+    // discovered, so Loops can plan anywhere (set by the discovery module).
+    this.allDiscovered = false;
+
     log('info', '[DiscoveryState] Constructed');
   }
 
@@ -88,6 +93,11 @@ export class DiscoveryState {
     log('info', '[DiscoveryState] Initializing discoverable data...');
     if (!this.stateManager || !this.eventBus) {
       log('error', '[DiscoveryState] Cannot initialize: Dependencies not set.');
+      return;
+    }
+
+    if (this.allDiscovered && this._discoverEverything()) {
+      if (this.eventBus) this.eventBus.publish('discovery:changed', {});
       return;
     }
 
@@ -153,6 +163,27 @@ export class DiscoveryState {
     if (this.eventBus) {
       this.eventBus.publish('discovery:changed', {});
     }
+  }
+
+  /**
+   * Mark every region, location and exit in the static data discovered.
+   * @returns {boolean} false when static data is not available yet
+   * @private
+   */
+  _discoverEverything() {
+    const regions = this.stateManager?.getStaticData?.()?.regions;
+    if (!regions) return false;
+    for (const [regionName, region] of regions) {
+      this.discoveredRegions.add(regionName);
+      const exits = new Set();
+      (region?.exits || []).forEach((exit) => exits.add(exit.name));
+      this.discoveredExits.set(regionName, exits);
+      (region?.locations || []).forEach((location) => {
+        if (location.name) this.discoveredLocations.add(location.name);
+      });
+    }
+    log('info', `[DiscoveryState] World has discovery off: all ${regions.size} regions discovered`);
+    return true;
   }
 
   // --- Discovery Checking Methods ---

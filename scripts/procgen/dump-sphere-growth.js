@@ -67,6 +67,9 @@
  *                            entries: 'cost' (default) | 'speed' | 'both'
  *                            | 'none'. Only meaningful with
  *                            --enable-loop-mode.
+ *   --discovery-mode MODE    the world's Discovery mode: 'follow' (default —
+ *                            writes nothing; discovery follows loop mode) |
+ *                            'on' | 'off' → rules.json discovery_mode[slot].
  *   --consumable-tiles N     per-maze-region cross-game consumable tiles (X1).
  *                            Default 0 = OFF: the content pass draws no rng and
  *                            emits no sidecar key, so every existing preset
@@ -193,6 +196,7 @@ const FLAGS = {
     '--param': W.param,
     '--enable-loop-mode': W.enableLoopMode,
     '--region-xp-effect': W.regionXpEffect,
+    '--discovery-mode': W.discoveryMode,
     '--consumable-tiles': W.consumableTiles,
     '--consumable-count': W.consumableCount,
     '--mana-tiles': W.manaTiles,
@@ -416,6 +420,7 @@ async function main(status) {
         // pre-flag output for non-loop runs.
         enableLoopMode: config.enableLoopMode,
         regionXpEffect: config.regionXpEffect,
+        discoveryMode: config.discoveryMode ?? 'follow',
         procgenMetadata: {
             driver: 'sphere-growth',
             stop_reason: stats.stopReason,

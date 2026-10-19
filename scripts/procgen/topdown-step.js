@@ -42,6 +42,7 @@
  *                           driver 'top-down-sphere' + sphere_tree/_plan
  *   --enable-loop-mode      compute loop_costs in the rules.json
  *   --region-xp-effect E    loop-mode xp effect (default cost)
+ *   --discovery-mode M      follow (default: discovery follows loop mode) | on | off
  * I/O flags (all subcommands):
  *   -i, --input <envelope.json>   prior step's envelope
  *   -o, --out <envelope.json>     where to write the resulting envelope ('-' = stdout)
@@ -93,6 +94,7 @@ const FLAGS = {
     '--sphere-log': flag('sphereLog', KIND.str),
     '--enable-loop-mode': W.enableLoopMode,
     '--region-xp-effect': W.regionXpEffect,
+    '--discovery-mode': W.discoveryMode,
     '-i': W.input,
     '--input': W.input,
     '-o': W.out,
@@ -186,6 +188,7 @@ function buildEnv(args) {
         sphereLog,
         enableLoopMode: args.enableLoopMode,
         regionXpEffect: args.regionXpEffect,
+        discoveryMode: args.discoveryMode ?? 'follow',
     });
 }
 

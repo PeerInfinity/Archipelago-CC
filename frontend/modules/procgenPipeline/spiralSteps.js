@@ -221,6 +221,7 @@ function stepCompile(env) {
         seed: c.seed,
         enableLoopMode: !!c.enableLoopMode,
         regionXpEffect: c.regionXpEffect ?? 'cost',
+        discoveryMode: c.discoveryMode ?? 'follow',
         // The goal ③ realised (an envelope from before ③ reported one keeps
         // the completion item it was given).
         completionConditionItem: goalItem !== undefined ? goalItem : (c.completionConditionItem ?? null),
