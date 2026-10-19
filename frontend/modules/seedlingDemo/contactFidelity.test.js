@@ -169,7 +169,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             axeGateTransit: true,
             // ⛓ fidelity DASHSTEP D2: `statueTalkRange` (a statue's talk circle is its class's 32 px) shipped OFF;
             // ⛓ planning-9's flip (⚖ user "Harvest, then flip it ON", 2026-10-17) turns it ON.
-            statueTalkRange: true });
+            statueTalkRange: true,
+            // ⛓ fidelity WATCHERTALK D2: `watcherTalkVerb` (the Watcher's {114,0} clear-tag talks) ships OFF.
+            watcherTalkVerb: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

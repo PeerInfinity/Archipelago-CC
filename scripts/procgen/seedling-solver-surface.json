@@ -1322,9 +1322,9 @@
       "class": "seedling",
       "form": "live-state",
       "files": {
-        "solverBot.js": 2
+        "solverBot.js": 3
       },
-      "sites": 2,
+      "sites": 3,
       "seen": "static",
       "via": [
         "direct"
@@ -1340,9 +1340,9 @@
       "class": "seedling",
       "form": "event-ledger",
       "files": {
-        "solverBot.js": 1
+        "solverBot.js": 2
       },
-      "sites": 1,
+      "sites": 2,
       "seen": "static",
       "via": [
         "direct"
@@ -1364,9 +1364,9 @@
         "crusherBait.js": 2,
         "dangerMap.js": 1,
         "solveProgress.js": 2,
-        "solverBot.js": 230
+        "solverBot.js": 231
       },
-      "sites": 294,
+      "sites": 295,
       "seen": "both",
       "via": [
         "direct",
@@ -2056,9 +2056,9 @@
       "class": "seedling",
       "form": "constant",
       "files": {
-        "solverBot.js": 1
+        "solverBot.js": 2
       },
-      "sites": 1,
+      "sites": 2,
       "seen": "static",
       "via": [
         "direct"
@@ -3920,10 +3920,10 @@
         "arrowLaneCrossing.js": 4,
         "botDriverV2.js": 1,
         "forcedHit.js": 4,
-        "solverBot.js": 28,
+        "solverBot.js": 30,
         "strikePolicy.js": 2
       },
-      "sites": 39,
+      "sites": 41,
       "seen": "static",
       "via": [
         "import"
