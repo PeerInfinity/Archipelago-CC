@@ -300,10 +300,10 @@ The region below is rendered by `--write`; do not edit it by hand.
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
 | physics | 5 | 1572 | 447 | 2024 |
-| rule | 8 | 1022 | 496 | 1526 |
+| rule | 13 | 1049 | 497 | 1559 |
 | cosmetic | 0 | 62 | 14 | 76 |
 | structural | 14 | 377 | 2028 | 2419 |
-| unclassified | 5 | 27 | 1 | 33 |
+| unclassified | 0 | 0 | 0 | 0 |
 | total | 32 | 3060 | 2986 | 6078 |
 
 Class × kind (physics and rule rows only):
@@ -311,7 +311,7 @@ Class × kind (physics and rule rows only):
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
 | physics | 1743 | 0 | 97 | 123 | 4 | 57 | 2024 |
-| rule | 500 | 139 | 240 | 22 | 533 | 92 | 1526 |
+| rule | 506 | 139 | 240 | 22 | 560 | 92 | 1559 |
 
 Rows whose note starts `REVIEW:`: **114**.
 
@@ -512,10 +512,15 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**13 named scalars** are `physics` or `rule` (13 with an AS3 anchor), and **147 small tables** (at most 16 literals) hold at least one (96 with an AS3 reference).
+**18 named scalars** are `physics` or `rule` (13 with an AS3 anchor), and **147 small tables** (at most 16 literals) hold at least one (96 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
+| `BOB_KILLED_TAG` | seedlingDemo/apReportBosses.js | 3 | rule | magnitude |  |
+| `FIRE_BOSS_DROP_TAG` | seedlingDemo/apReportBosses.js | 4 | rule | magnitude |  |
+| `DARK_SWORD_WITCH_TAG` | seedlingDemo/apReportBosses.js | 1 | rule | magnitude |  |
+| `BOB_ARENA_LEVEL` | seedlingDemo/apReportBosses.js | 32 | rule | magnitude |  |
+| `WITCH_LEVEL` | seedlingDemo/apReportBosses.js | 12 | rule | magnitude |  |
 | `BOSS_IFRAMES` | seedlingDemo/bobBoss.js | 30 | rule | bound | Enemies/Enemy.as:hitsTimerMax |
 | `FORM_TRANSITION_FRAMES` | seedlingDemo/bobBoss.js | 120 | rule | bound | Enemies/BobBoss.as:nextBossTimerMax |
 | `FORMING_FRAMES` | seedlingDemo/bobBoss.js | 60 | rule | bound | Enemies/BobBoss.as:formingTimerMax |

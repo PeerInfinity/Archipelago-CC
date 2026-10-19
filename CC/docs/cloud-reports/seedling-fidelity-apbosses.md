@@ -8,7 +8,7 @@
 | Session | `seedling-fidelity-apbosses` (planner `seedling-fidelity-planning-9`, wasm rebuild R2, item R4) |
 | Start SHA | `76a4dacb7f` (= main 76a4dacb7f; the harness branch already sat there) |
 | Harness branch | `claude/seedling-boss-report-locations-wv1rt2` |
-| Commits | W0 + D2 `18ab1aa6` · the door/census fix + the OFF/ON batteries `8b3f6355` · records + this report (the head) |
+| Commits | W0 + D2 `18ab1aa6` · the door/census fix + the OFF/ON batteries `8b3f6355` · records + this report `dab66eb3` · the constants classification (the head) |
 | AS3 read | PeerInfinity/Seedling `r4-boss-report` @ `0eda15f785` against the pin `f8d9bc1` (`git -C vendor/seedling diff f8d9bc1 0eda15f785`; 5 files, +39 −18). The `vendor/seedling` gitlink was NOT moved |
 | Evidence | `CC/docs/cloud-reports/seedling-fidelity-apbosses-evidence/` (`w0/`, `after/`, `d4on/`, `d2/`, `survey/`, `tools/`, `d1-build-cleared.txt`) |
 
@@ -114,7 +114,7 @@ of them the model writes and which it cannot rebuild.
 | tapeRunner pairs | 621 `fceca579` | **621 `fceca579`** |
 | bounded vitest | 86 / 2,614 | **87 / 2,636** (the new file adds 1 / 22) |
 | surface census | GREEN 314 | RED: the door rule (`solverBot.js` imported `apReportBosses.js` directly) + new rows → fixed in `8b3f6355` (import through `solverView.js`, `--write`, classified): **GREEN 320** |
-| constants census | 6,041 | stale region → `--write`: **6,078 PASS** |
+| constants census | 6,041 | stale region → `--write`: **6,078 PASS**. ⚠ `--check` PASSES with new literals unclassified; the gate that catches them is `seedlingConstantsCensus.test.js` › *zero unclassified rows*, red on CI at `dab66eb3` (1 of 21,277). Fixed in the final commit: seven reviewed rows in `seedling-constants-fields.csv`, `--profile-rows`, `--write` → the test 24/24 |
 | entities / profile / roster | 566 / 138 / 282 | equal |
 
 The bounded set was re-run at the final code, OFF: **87 / 2,636 green** (`after/vitest-final.txt`).
@@ -309,7 +309,12 @@ So the flip and the R7 re-record must land in one merge.
 - `seedling-bot-log.md`: the APBOSSES entry, with two trap candidates (the orphan guard meets a runtime reader;
   `playerPosition` rode on the spawn arm).
 - No tape, no tape-index row and no roster pin is added or moved, so the roster stays 282.
-- Surface census GREEN 320, constants 6,078 PASS, both `--write`/`--check`.
+- Surface census GREEN 320, constants 6,078 PASS, both `--write`/`--check`. The seven reviewed constants rows
+  (`seedling-constants-fields.csv`) are in the head commit.
+- CI `JavaScript Unit Tests`: at `dab66eb3` (run 39319904325), 21,276 / 21,277, with the 1 red the constants
+  classification above, and the slow battery 254 / 254. The head's run is quoted in the final chat message.
+- Trap candidate (third): `census-seedling-constants --check` is GREEN on a new UNCLASSIFIED literal. The gate is the
+  vitest row, so a slice that runs only the CLI `--check` ships a red CI.
 - The reference: regenerated for my doc edits only; the 4 environmental regions are as at the base.
 - Bounded vitest AFTER, at the final code, OFF: **87 files / 2,636 green** (`after/vitest-final.txt`).
 
