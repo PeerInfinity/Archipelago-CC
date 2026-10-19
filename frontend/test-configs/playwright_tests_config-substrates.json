@@ -513,6 +513,12 @@
             "_comment": "GRAPHICS G1. flashPanel.runtime = js + seedlingJsGraphics = seedling + seedlingJsCamera = follow on seedling_atlas_location: the page boots with the seedling + archipelago content packs (frontend/packs), every sheet decodes, sprites are drawn in the follow view, zero console errors; G2: the player is drawn from the pack (seedling:player/shrum) and ArrowRight/ArrowLeft play side-walk unmirrored/mirrored; the camera switch back to room is applied live (no re-mount). seedling-js batch."
         },
         {
+            "id": "seedling-js-runtime-graphics-enemies",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "GRAPHICS G3. jsRuntime.html?graphics=seedling&camera=follow mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 14 (six Bobs): each Bob is drawn as seedling:enemy/bob from the seedling pack, every sheet decodes, the Bobs' frames advance (the per-tick reducer is live), zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+        },
+        {
             "id": "seedling-js-runtime-solver-opens-kill-lock",
             "enabled": true,
             "category": "Seedling JS runtime",
