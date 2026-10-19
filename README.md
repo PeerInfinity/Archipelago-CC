@@ -22,7 +22,7 @@ Substrates include a grid maze, a text adventure, a Doodle-Jump-style platformer
 
 The primary driver, **sphere growth**, plans the item-progression spheres first and then grows a world guaranteed to realise them; the plan doubles as a verification oracle. Other modes lay worlds out as a shuffled spiral, or start from an existing game's `rules.json` and realise each of its regions as a generated room. Generated worlds compile to the same `rules.json` format as exported games, so they play in the browser, track, and run through real Archipelago multiworld generation.
 
-**From the command line:** the pipeline also runs headless in Node, so external tools can script it. The scripts in [`scripts/procgen/`](./scripts/procgen/README.md) generate a world from command-line options and write a standard `rules.json`; the same options and seed always produce the same file.
+**From the command line:** the pipeline also runs headless in Node, so external tools can script it. The scripts in [`scripts/procgen/`](./scripts/procgen/README.md) generate a world from command-line options and write a standard `rules.json`; the same options and seed always produce the same file. They take options or a `--config` file, report documented exit codes and a JSON status summary, and the same drivers can be called from JavaScript; see [Scripting the pipeline drivers](./scripts/procgen/README.md#scripting-the-pipeline-drivers).
 
 See [Procedural Generation](./docs/json/features/procgen.md) for the feature, [What each substrate can do](./docs/json/features/procgen-substrates.md) for the capability chart, and the [procgen developer documentation](./docs/json/developer/procgen/README.md) for the architecture.
 
