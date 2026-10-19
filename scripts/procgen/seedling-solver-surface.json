@@ -16,6 +16,7 @@
     "forcedHit.js",
     "hazards.js",
     "mover.js",
+    "pressKillGuards.js",
     "solveProgress.js",
     "solverBot.js",
     "spaceTimeReach.js",
@@ -699,9 +700,9 @@
         "dangerMap.js": 2,
         "director.js": 4,
         "forcedHit.js": 2,
-        "solverBot.js": 59
+        "solverBot.js": 62
       },
-      "sites": 121,
+      "sites": 124,
       "seen": "both",
       "via": [
         "direct",
@@ -766,7 +767,7 @@
           "botDriverV2.js": 5,
           "dangerMap.js": 1,
           "forcedHit.js": 1,
-          "solverBot.js": 5
+          "solverBot.js": 8
         },
         "playerHits": {
           "botDriverV2.js": 6,
@@ -1249,9 +1250,9 @@
       "files": {
         "botDriverV2.js": 3,
         "dangerMap.js": 3,
-        "solverBot.js": 103
+        "solverBot.js": 104
       },
-      "sites": 109,
+      "sites": 110,
       "seen": "both",
       "via": [
         "direct",

@@ -178,6 +178,9 @@ import { HOLD_FIRST_KEY_SETS, SPACE_TIME_CHECK_EVERY, SPACE_TIME_KEY_SETS, bestF
 import { activeProgress, progressAsked, progressEnter, progressFrame, progressGoal, progressHeartbeat, progressLeave,
     progressPreview, progressReaders, progressRow, progressRun, progressRung, progressSearch, progressSegment,
     progressSite, progressStatesFor, progressTick, withSolveProgress } from './solveProgress.js';
+// ⛓ hammer-phase LB (HX) — the press kill's shake-band and reboot guards (`PRESS_KILL_SHAKE_GUARD`, `PRESS_KILL_REBOOT_GUARD`, OFF).
+import { PRESS_KILL_GUARD_COUNTS, PRESS_KILL_REBOOT_GUARD, PRESS_KILL_SHAKE_GUARD, isShakeBandThrow }
+    from './pressKillGuards.js';
 // ⛓ seedling-fidelity-forcedhit D2 — the forced-hit rung's proof and crossing (`FORCED_HITS`, OFF).
 import { FORCED_HITS, FORCED_HIT_TRACE, planForcedCrossing, proveForcedHit, worldHitsOf } from './forcedHit.js';
 // ⛓ seedling-fidelity-axeforcedu D2 — a spinning axe's forced U, crossed and billed (`AXE_PRICED_CROSSING`, OFF).
@@ -10581,7 +10584,19 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
     const walks = new Map();
     const walkTo = (cell) => {
         if (walks.has(cell)) return walks.get(cell);
-        const walk = previewWalk(run, [{ x: cell.x, y: cell.y }], DEFAULT_TOLERANCE);
+        let walk;
+        try {
+            walk = previewWalk(run, [{ x: cell.x, y: cell.y }], DEFAULT_TOLERANCE);
+        } catch (e) {
+            // ⛓ hammer-phase LB (HO1, `PRESS_KILL_SHAKE_GUARD`; OFF rethrows): a preview the camera's shake band
+            // cannot answer refuses this CANDIDATE by name; its walk reads as truncated, so no pass picks it.
+            if (!PRESS_KILL_SHAKE_GUARD.enabled || !isShakeBandThrow(e)) throw e;
+            PRESS_KILL_GUARD_COUNTS.shakeRefused += 1;
+            const out = { walk: { truncated: { kind: 'shake-band' }, samples: [] }, eta: 0, unsafe: null,
+                shake: e.message.split(' depends on')[0].replace(/^chaserForecast: /, '') };
+            walks.set(cell, out);
+            return out;
+        }
         let unsafe = null;
         if (!walk.truncated) {
             for (const sm of walk.samples) {
@@ -10669,7 +10684,14 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
     const rejected = [];
     for (const o of opportunities) {
         // `previewWalk` returns the samples `drive` would spend getting there.
-        const { walk, unsafe } = walkTo(o.cell);
+        const { walk, unsafe, shake } = walkTo(o.cell);
+        if (shake !== undefined) {
+            rejected.push({ option: `strike (${o.cell.x},${o.cell.y}) at +${o.i}`,
+                why: `the preview cannot be asked inside the camera's shake band: ${shake} depends on where `
+                    + 'inside `Game.shake`\'s jiggle the camera landed, and the jiggle\'s value is not modelled '
+                    + '(PRESS_KILL_SHAKE_GUARD: the candidate is refused, and the kill waits the band out)' });
+            continue;
+        }
         if (walk.truncated) {
             rejected.push({ option: `strike (${o.cell.x},${o.cell.y}) at +${o.i}`,
                 why: 'the preview TRUNCATED — the corridor the controller would take is '
@@ -15221,11 +15243,24 @@ function execKillByPressOnce(run, perTick, resolved, ctx) {
                 throw new SolverBotError(`${e.message} ${why}`, { code: e.code });
             }
             const before = (run.ledger('spinnerPressHits') ?? []).length;
+            const diedBefore = PRESS_KILL_REBOOT_GUARD.enabled ? (run.ledger('playerDeaths') ?? []).length : 0;
             perTick.push(held);
             const { transition } = run.advance(held);
             if (transition) {
                 fail(`${ctx.what}: the run crossed to level ${transition.to_level} while `
                     + `pressing ${plan.id}. A kill does not survive the door (trap 150).`);
+            }
+            // ⛓ hammer-phase LB (HO2, `PRESS_KILL_REBOOT_GUARD`; OFF never reads the ledger): a death reboots the room,
+            // so the schedule no longer describes the run — refused by name on the tick of the first death.
+            if (PRESS_KILL_REBOOT_GUARD.enabled && (run.ledger('playerDeaths') ?? []).length > diedBefore) {
+                const d = run.ledger('playerDeaths').at(-1);
+                PRESS_KILL_GUARD_COUNTS.rebootRefused += 1;
+                throw new SolverRefusal(`${ctx.what}: the player died at t${d.t ?? run.ticksCompleted} `
+                    + `(${d.source ?? 'death'}${d.id ? ` ${d.id}` : ''}) while pressing ${plan.id}, after ${landings.length} `
+                    + `landing(s) — a death reboots the room: every body is rebuilt (${plan.id}'s hits with it) and `
+                    + 'the player respawns at the arrival, so the strike schedule no longer describes the run '
+                    + '(PRESS_KILL_REBOOT_GUARD: the kill is refused at the first reboot, not re-run to its bound).',
+                { goal: ctx.goal, obstacle: { kind: 'danger', id: d.id ?? null }, perTick: [...perTick] });
             }
             for (const h of (run.ledger('spinnerPressHits') ?? []).slice(before)) {
                 if (h.landed) landings.push({ t: h.t, id: h.id, hits: h.hits });

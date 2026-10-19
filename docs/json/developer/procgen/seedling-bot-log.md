@@ -23854,3 +23854,44 @@ evidence and a flip-ready branch (`seedling-hammer-xc-flip`, never merged by the
 
 It is not answer-identical. All 45 L18 residues still solve, 24 shorter and 21 longer (19,545 → 19,558 t), and
 staging A's kill moves t3100 → t1740. L40's answer is unchanged.
+
+### Seedling hammer-phase LB — the L40 chest band + HX
+
+⚖ The user (2026-10-18): *"If there are solves that are blocked by timeouts, could we simply increase the timeout?"*
+Measured on divergence legs 397 / 414 (L40, the chest), at the defaults and with `chaserSpinnerWalls` +
+`bombBlastBody` ON. The report is `CC/docs/cloud-reports/seedling-hammer-l40-band.md`.
+
+**No.** With the work budget removed (in node; no default moved):
+- 414 finishes its search at 5,954 units a pass (5,208 with the walls) and refuses EXHAUSTED: the chest's tile lies in
+  `bobsoldier@880,832`'s volume (CW's guard);
+- 397 refuses at 156 units at any budget, on the press kill's own HAMMER_SAFETY corner.
+
+Over 21 seam times per leg per arm, nothing solves (168 rows: 2 legs × 4 arms, the guards ON and OFF). The `timeout` ↔ `failed` swap is two clocks on one solve:
+- ~70 % of the wall is the press kill re-deriving its strike every strikeless tick (`deriveStrike` → `previewWalk`),
+  which asks almost no work units;
+- the 640 units go afterwards to DETOUR's via set (543 of them on 414).
+
+The anytime full pass then repeats the dashless pass unit for unit.
+
+**HX, two switches in `pressKillGuards.js`, both OFF:**
+- `PRESS_KILL_SHAKE_GUARD` (HO1): the strike preview's chaser-forecast band throw refuses that candidate by name (kind
+  `unmodelled`), and the strikeless kill waits the band out a refuge tick at a time. 414's atlas boot: THREW t2439 →
+  REFUSED t5672 on the guard.
+- `PRESS_KILL_REBOOT_GUARD` (HO2): the first death inside the press kill refuses it (`SolverRefusal`, `danger`). With
+  the walls ON: 9 deaths to the 11,418-t bound → REFUSED t1202.
+
+ON moves no identity row, producer, tapeRunner pair (621) or progress solve. The reboot guard moves G1's and SF's L40
+witness rows (2195 → 1216, 1629 → 778: refusals whose kill crosses a death). Gate `hammerPressKillGuards.test.js`.
+
+**Hand-overs.**
+- The guard (fidelity), then CW's joint chooser (hammer).
+- DETOUR's spend on a covered goal tile (fidelity).
+- The anytime pass repeat (JS arc / XF).
+- A second band throw from the walk's own `probeCorridor` (unassigned).
+- The same throw from the press kill's REFUGE preview (`deriveRefuge`, 414 seam 5135): hammer, once it has a fixture.
+- `narrow`'s *"is dangerous too"* classifies `other` (PR).
+
+**Trap candidates.**
+- A work unit is a deadline ask, and the press kill asks almost none. A leg can spend its whole wall budget inside
+  one rung while its work budget is untouched, so "ran out of units" and "ran out of time" name different rungs.
+- Refusing a strike candidate IS waiting: a strikeless press-kill tick takes a refuge and derives again.
