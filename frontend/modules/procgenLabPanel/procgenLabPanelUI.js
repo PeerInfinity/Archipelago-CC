@@ -176,7 +176,6 @@ export class ProcgenLabPanelUI {
          * `findLabPanel` handed Edit ▸ a panel no longer on screen. Golden
          * Layout's own `destroy` event is what the app's other panels hang it on.
          */
-        container?.on?.('destroy', () => this.destroy());
         this._render();
     }
 

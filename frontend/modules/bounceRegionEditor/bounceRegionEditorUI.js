@@ -134,7 +134,6 @@ export class BounceRegionEditorUI {
         // ⛔ MEASURED 2026-10-19 (region-editor-launch): nothing called `destroy()`
         //   when the tab closed, so the dead mount kept its LOAD_EVENT listener
         //   and could take the next Edit ▸'s session. Golden Layout's own event.
-        container?.on?.('destroy', () => this.destroy());
         this.render();
     }
 
