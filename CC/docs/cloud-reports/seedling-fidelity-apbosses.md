@@ -8,7 +8,7 @@
 | Session | `seedling-fidelity-apbosses` (planner `seedling-fidelity-planning-9`, wasm rebuild R2, item R4) |
 | Start SHA | `76a4dacb7f` (= main 76a4dacb7f; the harness branch already sat there) |
 | Harness branch | `claude/seedling-boss-report-locations-wv1rt2` |
-| Commits | W0 + D2 `18ab1aa6` · the door/census fix + the OFF/ON batteries `8b3f6355` · records + this report `dab66eb3` · the constants classification (the head) |
+| Commits | W0 + D2 `18ab1aa6` · the door/census fix + the OFF/ON batteries `8b3f6355` · records + this report `dab66eb3` · the constants classification `c43037c5` · the docs index (the head) |
 | AS3 read | PeerInfinity/Seedling `r4-boss-report` @ `0eda15f785` against the pin `f8d9bc1` (`git -C vendor/seedling diff f8d9bc1 0eda15f785`; 5 files, +39 −18). The `vendor/seedling` gitlink was NOT moved |
 | Evidence | `CC/docs/cloud-reports/seedling-fidelity-apbosses-evidence/` (`w0/`, `after/`, `d4on/`, `d2/`, `survey/`, `tools/`, `d1-build-cleared.txt`) |
 
@@ -312,7 +312,9 @@ So the flip and the R7 re-record must land in one merge.
 - Surface census GREEN 320, constants 6,078 PASS, both `--write`/`--check`. The seven reviewed constants rows
   (`seedling-constants-fields.csv`) are in the head commit.
 - CI `JavaScript Unit Tests`: at `dab66eb3` (run 39319904325), 21,276 / 21,277, with the 1 red the constants
-  classification above, and the slow battery 254 / 254. The head's run is quoted in the final chat message.
+  classification above, and the slow battery 254 / 254. At `c43037c5` (run 39321796543), again 21,276 / 21,277: the
+  docs index (`docsIndex.js`, `README.md`'s index region), which the constants doc's regenerated region moved. It was
+  regenerated in the last commit. The head's run is quoted in the final chat message.
 - Trap candidate (third): `census-seedling-constants --check` is GREEN on a new UNCLASSIFIED literal. The gate is the
   vitest row, so a slice that runs only the CLI `--check` ships a red CI.
 - The reference: regenerated for my doc edits only; the 4 environmental regions are as at the base.
