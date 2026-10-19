@@ -54,7 +54,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 61,
-            "count": 100,
+            "count": 101,
             "id": "check"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 425,
+        "blockStyle": 426,
         "browser": 143,
-        "cited": 221,
-        "files": 438,
+        "cited": 222,
+        "files": 439,
         "lineStyle": 13,
-        "withDocblock": 438,
-        "withFlags": 354
+        "withDocblock": 439,
+        "withFlags": 355
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -4455,6 +4455,44 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling in the pipeline, T2: the ONE real Seedling room that the shuffled spiral placed among three maze rooms PLAYS in the Seedling wasm.",
             "path": "scripts/procgen/check-seedling-spiral-room-play.mjs"
+        },
+        {
+            "argvHelpers": [
+                "body"
+            ],
+            "browser": false,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "full",
+                "only"
+            ],
+            "file": "check-seedling-string-pull-fast.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "full"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "check-seedling-string-pull-fast — **`STRING_PULL_FAST` IS ANSWER-IDENTICAL ON THE REAL CORPUS** (seedling hammer-phase SP, D2).",
+            "path": "scripts/procgen/check-seedling-string-pull-fast.mjs"
         },
         {
             "argvHelpers": [],

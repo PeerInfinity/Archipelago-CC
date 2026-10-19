@@ -1,0 +1,99 @@
+{
+ "totalMs": 6266,
+ "inclusive": {
+  "planWaypoints": {
+   "ms": 9,
+   "pct": 0.1
+  },
+  "controllerPathClear": {
+   "ms": 2,
+   "pct": 0
+  },
+  "plannerObstacleAt": {
+   "ms": 11,
+   "pct": 0.2
+  },
+  "planTilePath": {
+   "ms": 5,
+   "pct": 0.1
+  },
+  "isWalkableTile": {
+   "ms": 4,
+   "pct": 0.1
+  },
+  "plannerBlockerAt": {
+   "ms": 6,
+   "pct": 0.1
+  },
+  "coerceTerrainState": {
+   "ms": 11,
+   "pct": 0.2
+  },
+  "twoPassSolve": {
+   "ms": 5297,
+   "pct": 84.5
+  }
+ },
+ "topSelf": [
+  [
+   "step",
+   789,
+   12.6
+  ],
+  [
+   "(garbage collector)",
+   689,
+   11
+  ],
+  [
+   "nearestTileScanIndexed",
+   677,
+   10.8
+  ],
+  [
+   "assertNormalizedLiveOpts",
+   541,
+   8.6
+  ],
+  [
+   "solidCandidates",
+   430,
+   6.9
+  ],
+  [
+   "collidesSolid",
+   254,
+   4.1
+  ],
+  [
+   "(anon)",
+   209,
+   3.3
+  ],
+  [
+   "layerOf",
+   137,
+   2.2
+  ],
+  [
+   "spinnerForecastWithPress",
+   111,
+   1.8
+  ],
+  [
+   "collideLineSolid",
+   98,
+   1.6
+  ],
+  [
+   "stepSpinner",
+   92,
+   1.5
+  ],
+  [
+   "updateTeleporters",
+   89,
+   1.4
+  ]
+ ]
+}

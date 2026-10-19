@@ -1,0 +1,344 @@
+{
+  "mode": "test-substrates",
+  "batch": null,
+  "testIds": "seedling-js-runtime-bot-completes-atlas-location",
+  "flavour": "unbundled",
+  "budgetMs": null,
+  "pageDiagnostics": {
+    "consoleErrors": 1,
+    "pageErrors": 0,
+    "handlerErrors": {
+      "logged": 0,
+      "pageCount": 0,
+      "rows": []
+    }
+  },
+  "summary": {
+    "totalRun": 1,
+    "passedCount": 1,
+    "failedCount": 0,
+    "failedConditionsCount": 0,
+    "enabledCount": 1,
+    "notRunCount": 0,
+    "notRunIds": [],
+    "importFailureCount": 0
+  },
+  "testDetails": [
+    {
+      "id": "seedling-js-runtime-bot-completes-atlas-location",
+      "name": "Seedling JS runtime: the Playback Bot completes seedling_atlas_location (a real room)",
+      "status": "passed",
+      "category": "Seedling JS runtime",
+      "startTime": "2026-10-18T21:16:36.682Z",
+      "endTime": "2026-10-18T21:16:42.672Z",
+      "durationMs": 5990,
+      "conditions": [
+        {
+          "description": "the playback bot is mounted",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:36.800Z"
+        },
+        {
+          "description": "the panel is on the js transport",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:37.251Z"
+        },
+        {
+          "description": "embedded sphere log loaded",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:37.452Z"
+        },
+        {
+          "description": "the panel is on the JS transport",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:37.703Z"
+        },
+        {
+          "description": "the atlas arm loaded on the JS runtime",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:37.954Z"
+        },
+        {
+          "description": "the atlas arm only BINDS (no delivery, no reset)",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:37.954Z"
+        },
+        {
+          "description": "clean slate: the glue holds no delivery and no start set from an earlier preset",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:37.954Z"
+        },
+        {
+          "description": "the JS page runs the vanilla map",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:38.155Z"
+        },
+        {
+          "description": "the sphere log starts in the atlas room (its chest)",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:38.155Z"
+        },
+        {
+          "description": "the Playback Bot completed seedling_atlas_location (an atlas room, then two maze rooms)",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:42.661Z"
+        },
+        {
+          "description": "every sphere-log location is checked",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:42.664Z"
+        },
+        {
+          "description": "the goal (Victory) is held",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:42.664Z"
+        },
+        {
+          "description": "the bot crossed OUT of the atlas room through its door (gameState path: region_2_3, region_3_3)",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:42.665Z"
+        },
+        {
+          "description": "the page took the house door (a pendingExit from level 86)",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:42.665Z"
+        },
+        {
+          "description": "the bot wrote a status log to read errors out of",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:42.665Z"
+        },
+        {
+          "description": "no error: status at any point",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:42.665Z"
+        },
+        {
+          "description": "no death and no halt on the JS runtime",
+          "status": "passed",
+          "timestamp": "2026-10-18T21:16:42.665Z"
+        }
+      ],
+      "logs": [
+        {
+          "message": "[seedling-js-runtime-bot-completes-atlas-location] Polling for value: \"playback bot panel instance\" (timeout: 5000ms, interval: 100ms)...",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:36.699Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-atlas-location] Value found for: \"playback bot panel instance\".",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:36.799Z"
+        },
+        {
+          "message": "Condition: \"the playback bot is mounted\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:36.799Z"
+        },
+        {
+          "message": "runtime = js (session override); loading ./presets/seedling_atlas_location/AP_1/AP_1_rules.json…",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:36.804Z"
+        },
+        {
+          "message": "Waiting for event: stateManager:rulesLoaded (timeout: 8000ms)",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:36.816Z"
+        },
+        {
+          "message": "Tracking event listener for stateManager:rulesLoaded (total: 1)",
+          "type": "debug",
+          "timestamp": "2026-10-18T21:16:36.816Z"
+        },
+        {
+          "message": "Removed tracking for event listener on stateManager:rulesLoaded",
+          "type": "debug",
+          "timestamp": "2026-10-18T21:16:36.969Z"
+        },
+        {
+          "message": "Event received: stateManager:rulesLoaded",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:36.969Z"
+        },
+        {
+          "message": "Event data: {\"snapshot\":{\"snapshotCount\":2,\"inventory\":{\"key_blue\":0,\"key_red\":0,\"Victory\":0},\"flags\":[],\"events\":[],\"checkedLocations\":[],\"regionReachability\":{\"Menu\":\"reachable\",\"region_2_2\":\"reachable\",\"region_2_3\":\"unreachable\",\"region_3_3\":\"unreachable\"},\"locationReachability\":{\"Starting House - Chest\":\"reachable\",\"region_2_3__loc_0__5_2\":\"unreachable\",\"region_3_3__loc_0__1_3\":\"unreachable\"},\"player\":{\"name\":\"Player 1\",\"id\":\"1\",\"slot\":\"1\",\"team\":0},\"game\":\"Procgen Maze\",\"gameMode\":null,\"debugMode\":false,\"autoCollectEventsEnabled\":true,\"startRegions\":{\"default\":[\"Menu\"],\"available\":[]},\"prog_items\":{\"1\":{}}},\"gameName\":\"Procgen Maze\",\"playerId\":\"1\",\"source\":\"./presets/seedling_atlas_location/AP_1/AP_1_rules.json\"}",
+          "type": "debug",
+          "timestamp": "2026-10-18T21:16:36.969Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-atlas-location] Polling for value: \"the flash panel mounted the js transport (a fresh adapter)\" (timeout: 30000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:36.997Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-atlas-location] Value found for: \"the flash panel mounted the js transport (a fresh adapter)\".",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:37.251Z"
+        },
+        {
+          "message": "Condition: \"the panel is on the js transport\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:37.251Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-atlas-location] Polling for condition: \"the preset's EMBEDDED sphere log was loaded\" (timeout: 10000ms, interval: 200ms)...",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:37.251Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-atlas-location] Condition met for: \"the preset's EMBEDDED sphere log was loaded\".",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:37.452Z"
+        },
+        {
+          "message": "Condition: \"embedded sphere log loaded\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:37.452Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-atlas-location] Polling for value: \"the flash panel mounted the JS runtime page (a fresh adapter)\" (timeout: 30000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:37.453Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-atlas-location] Value found for: \"the flash panel mounted the JS runtime page (a fresh adapter)\".",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:37.703Z"
+        },
+        {
+          "message": "Condition: \"the panel is on the JS transport\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:37.703Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-atlas-location] Polling for value: \"the panel bound the ATLAS arm (its AP load) and holds the atlas name → cell map\" (timeout: 30000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:37.703Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-atlas-location] Value found for: \"the panel bound the ATLAS arm (its AP load) and holds the atlas name → cell map\".",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:37.954Z"
+        },
+        {
+          "message": "Condition: \"the atlas arm loaded on the JS runtime\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:37.954Z"
+        },
+        {
+          "message": "Condition: \"the atlas arm only BINDS (no delivery, no reset)\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:37.954Z"
+        },
+        {
+          "message": "Condition: \"clean slate: the glue holds no delivery and no start set from an earlier preset\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:37.954Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-atlas-location] Polling for value: \"the JS runtime page is running a room of the vanilla map\" (timeout: 15000ms, interval: 200ms)...",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:37.954Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-atlas-location] Value found for: \"the JS runtime page is running a room of the vanilla map\".",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:38.155Z"
+        },
+        {
+          "message": "Condition: \"the JS page runs the vanilla map\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:38.155Z"
+        },
+        {
+          "message": "sphere log locations: [\"Starting House - Chest\",\"region_2_3__loc_0__5_2\",\"region_3_3__loc_0__1_3\"]; bot start region 'region_2_2'",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:38.155Z"
+        },
+        {
+          "message": "Condition: \"the sphere log starts in the atlas room (its chest)\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:38.155Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-atlas-location] Polling for condition: \"the bot drained its sphere queue (or named an error)\" (timeout: 90000ms, interval: 250ms)...",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:38.160Z"
+        },
+        {
+          "message": "[seedling-js-runtime-bot-completes-atlas-location] Condition met for: \"the bot drained its sphere queue (or named an error)\".",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:42.661Z"
+        },
+        {
+          "message": "Condition: \"the Playback Bot completed seedling_atlas_location (an atlas room, then two maze rooms)\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:42.661Z"
+        },
+        {
+          "message": "Condition: \"every sphere-log location is checked\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:42.664Z"
+        },
+        {
+          "message": "Condition: \"the goal (Victory) is held\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:42.664Z"
+        },
+        {
+          "message": "gameState path (regionMove destinations): [\"region_2_2\",\"region_2_3\",\"region_3_3\"]",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:42.665Z"
+        },
+        {
+          "message": "Condition: \"the bot crossed OUT of the atlas room through its door (gameState path: region_2_3, region_3_3)\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:42.665Z"
+        },
+        {
+          "message": "Condition: \"the page took the house door (a pendingExit from level 86)\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:42.665Z"
+        },
+        {
+          "message": "Condition: \"the bot wrote a status log to read errors out of\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:42.665Z"
+        },
+        {
+          "message": "Condition: \"no error: status at any point\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:42.665Z"
+        },
+        {
+          "message": "Condition: \"no death and no halt on the JS runtime\" - PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:42.665Z"
+        },
+        {
+          "message": "Test completion signal: PASSED",
+          "type": "info",
+          "timestamp": "2026-10-18T21:16:42.672Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2026-10-18T21:16:42.672Z"
+        },
+        {
+          "message": "No active event listeners to clean up",
+          "type": "debug",
+          "timestamp": "2026-10-18T21:16:42.672Z"
+        }
+      ]
+    }
+  ],
+  "importFailures": [],
+  "completedAt": "2026-10-18T21:16:42.673Z",
+  "frozen": {
+    "head": "6305b1af3e66bf8588dc6127d28c3b04415bfd24",
+    "tracked": "d41d8cd98f00b204e9800998ecf8427e",
+    "trackedLines": 0
+  },
+  "treeMoved": false
+}
