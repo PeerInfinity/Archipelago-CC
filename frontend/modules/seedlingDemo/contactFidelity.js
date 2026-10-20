@@ -771,6 +771,16 @@ export const CONTACT_FIDELITY = {
      * ✅ ON by default since the user's flip (⚖ "Flip all four", 2026-10-19); `SEEDLING_SPINNER_SWING_LOS=0|1` for a node measurement.
      */
     spinnerSwingLineOfSight: true,
+    /**
+     * fidelity LIGHTS (wave 20) — THE L69 LIGHTS FIGHT IS STEPPED (`lightBoss.js`, `levelRun.stepLightsNow`): the intro
+     * NPC (an X release within 24 px opens it, the pages freeze the room, its removal spawns the six fliers), the
+     * `LightBossController`'s three `worldFrame` patterns and their shots, the six `LightBoss` fliers (their contact and
+     * the `LightBossShot`s billed on the player; a sword / spear press hits them, `Enemy.hit`, `hitsMax` 3), the
+     * `LightBossTotem` Solid, and `endState()` (the {69,0} report and the exit Teleporter to L36). The solver's
+     * `solid:lightbosscontroller` row (`lights`) fights it. OFF: nothing here runs, byte-identical.
+     * `SEEDLING_LIGHTS_BOSS_FIGHT=0|1` for a node measurement.
+     */
+    lightsBossFight: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -926,6 +936,9 @@ if (globalThis.process?.env?.SEEDLING_SHAKE_BAND_MOOT === '1') CONTACT_FIDELITY.
 if (globalThis.process?.env?.SEEDLING_SHAKE_BAND_MOOT === '0') CONTACT_FIDELITY.shakeBandMoot = false;
 if (globalThis.process?.env?.SEEDLING_SPINNER_SWING_LOS === '1') CONTACT_FIDELITY.spinnerSwingLineOfSight = true;
 if (globalThis.process?.env?.SEEDLING_SPINNER_SWING_LOS === '0') CONTACT_FIDELITY.spinnerSwingLineOfSight = false;
+// ⛓ fidelity LIGHTS: `SEEDLING_LIGHTS_BOSS_FIGHT=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_LIGHTS_BOSS_FIGHT === '1') CONTACT_FIDELITY.lightsBossFight = true;
+if (globalThis.process?.env?.SEEDLING_LIGHTS_BOSS_FIGHT === '0') CONTACT_FIDELITY.lightsBossFight = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

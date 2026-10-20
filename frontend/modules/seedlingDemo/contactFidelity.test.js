@@ -187,7 +187,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             apReportBosses: true,
             // ⛓ fidelity L40GUARD: `guardApproachStance` (D2), `coveredGoalRefusal` (D3), `shakeBandMoot` and
             // `spinnerSwingLineOfSight` (D4) shipped OFF; ⛓ planning-9's flip (⚖ user "Flip all four", 2026-10-19) turns them ON.
-            guardApproachStance: true, coveredGoalRefusal: true, shakeBandMoot: true, spinnerSwingLineOfSight: true });
+            guardApproachStance: true, coveredGoalRefusal: true, shakeBandMoot: true, spinnerSwingLineOfSight: true,
+            // ⛓ fidelity LIGHTS (wave 20): the L69 fight's model and verb, OFF.
+            lightsBossFight: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

@@ -82,6 +82,7 @@ import { PROFILE } from './seedlingProfile.js';
 import { outOfBandFlagForWriter } from './outOfBandLedger.js';
 import { CONTACT_FIDELITY } from './contactFidelity.js';
 import { reportSlotsReadBy } from './apReportBosses.js';
+import { lightsWorldRows } from './lightBossWorld.js';
 
 /**
  * The player hitbox origin, for recovering the entity position from a box.
@@ -3814,6 +3815,8 @@ export function normalizeLiveOpts(o) {
         pushables: o.pushables ?? null,
         fallenRocks: o.fallenRocks ?? null,
         beamTowers: o.beamTowers ?? null,
+        // ⛓ fidelity LIGHTS D2: only carried when a caller passes one (OFF: the bag's keys as before).
+        ...(o.lightTotems ? { lightTotems: o.lightTotems } : {}),
         beforeTypeFlip: o.beforeTypeFlip ?? false,
     };
 }
@@ -4501,6 +4504,12 @@ export function buildLevelWorld(levelRecord, {
             const now = o.beamTowers.get(s.beamTowerId);
             if (now) return now.rect;
         }
+        // ⛓ fidelity LIGHTS D2: the `LightBossTotem` — a wall until its `die` render writes `type = ""`. A missing entry is
+        // the standing totem.
+        if (o.lightTotems && s.lightTotemId) {
+            const now = o.lightTotems.get(s.lightTotemId);
+            if (now && now.gone) return null;
+        }
         return s.rect;
     };
     /**
@@ -4571,6 +4580,8 @@ export function buildLevelWorld(levelRecord, {
      * wall, it is the only thing between the player and the ending.
      */
     const finalDoors = [];
+    /** ⛓ fidelity LIGHTS D2: the `lightbosscontroller`s (`lightBoss.lightsWorldRows`); only returned while ON. */
+    const lightsControllers = [];
     /**
      * ⛓ R5: the entities a HELD ITEM removed at build time.
      *
@@ -4735,6 +4746,14 @@ export function buildLevelWorld(levelRecord, {
         // this tag" would be wrong in two of the three.
         const entityTag = tagOf(e.type, e.attrs);
         let clearedHere = false;
+        // ⛓⛓⛓ SEEDLING FIDELITY LIGHTS D2 (`CONTACT_FIDELITY.lightsBossFight`; OFF: nothing). `check()` builds the
+        // totem (a 16x16 Solid) while the controller's tag holds, and `endState()`'s exit Teleporter once it is cleared.
+        if (e.type === 'lightbosscontroller' && CONTACT_FIDELITY.lightsBossFight) {
+            const rows = lightsWorldRows(e, x, y, entityTag, clearedTags);
+            if (rows.totem) solids.push(rows.totem);
+            if (rows.exit) teleporters.push(rows.exit);
+            lightsControllers.push(rows.controller);
+        }
         // ⚠ AN "APPEAR" CLASS IS ABSENT ON A FRESH BOOT, and that is the
         // exact mirror of a parked FallRock. `MoonrockPile.check()` is
         // `if (tag >= 0 && checkPersistence(tag)) remove(this)` — its own
@@ -6186,6 +6205,8 @@ export function buildLevelWorld(levelRecord, {
          * the run's per-visit business.
          */
         shieldBosses,
+        // ⛓ fidelity LIGHTS D2: present only while `CONTACT_FIDELITY.lightsBossFight` is ON (OFF: the world's keys as before).
+        ...(CONTACT_FIDELITY.lightsBossFight ? { lightsControllers } : {}),
         /**
          * ⛓⛓⛓ R6 slice 6c: the final door, `{id, tag, x, y, ex, ey,
          * persistTag, standingRect}`.
