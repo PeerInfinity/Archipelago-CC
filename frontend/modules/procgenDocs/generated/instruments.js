@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 81,
-            "count": 128,
+            "browser": 82,
+            "count": 129,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 433,
-        "browser": 146,
+        "blockStyle": 434,
+        "browser": 147,
         "cited": 227,
-        "files": 446,
+        "files": 447,
         "lineStyle": 13,
-        "withDocblock": 446,
-        "withFlags": 362
+        "withDocblock": 447,
+        "withFlags": 363
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -14405,6 +14405,81 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-v8-seam — does the GAME honour a tape v8 `seam` block, and does its latch report back what the block declared?",
             "path": "scripts/procgen/probe-seedling-v8-seam.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "budget-s",
+                "expect",
+                "host",
+                "max-restarts",
+                "only",
+                "order",
+                "until"
+            ],
+            "file": "probe-seedling-walk-order.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "budget-s"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "expect"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "max-restarts"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "order"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "until"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling WALK ORDER (slice `bot-route-chooser`, ⚖ the user 2026-10-20: *\"the playback bot restarts the second dungeon twice because the sphere order says to collect some seals elsewhere first\"*) — the Playback Bot plays `seedling_playthrough` from the new game under a walk order (`playbackBot/walkOrder.js`) on the r…",
+            "path": "scripts/procgen/probe-seedling-walk-order.mjs"
         },
         {
             "argvHelpers": [

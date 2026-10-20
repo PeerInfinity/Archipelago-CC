@@ -7,7 +7,7 @@
  */
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
-import { WALK_ORDERS, chooseWalkTarget, frozenFindPath, goalItemOf, rowMetaOf, walkCandidates } from './walkOrder.js';
+import { WALK_ORDERS, chooseWalkTarget, frozenFindPath, goalItemOf, integerSphereOf, rowMetaOf, walkCandidates } from './walkOrder.js';
 import { PlaybackBotUI } from './playbackBotUI.js';
 
 const row = (locationName, regionName, sphereIndex, fractionalIndex) => ({ locationName, regionName, sphereIndex, fractionalIndex });
@@ -21,6 +21,13 @@ describe('walkOrder — pure', () => {
         expect(walkCandidates({ order: WALK_ORDERS.sphereCheapest, queue, checked }).map((e) => e.locationName)).toEqual(['B']);
         expect(walkCandidates({ order: WALK_ORDERS.reachableCheapest, queue, checked, isAccessible: (n) => n !== 'C' })
             .map((e) => e.locationName)).toEqual(['B', 'G']);
+    });
+
+    it('the integer sphere reads both shapes: a number, or sphereState\'s whole label ("1.10")', () => {
+        expect([0, '0.4', '1.10', '12', null, undefined].map((s) => integerSphereOf({ sphereIndex: s }))).toEqual([0, 0, 1, 12, null, null]);
+        const labelled = [row('A', 'Pit', '0.1', null), row('B', 'East', '0.2', null), row('C', 'Far', '1.1', null)];
+        expect(walkCandidates({ order: WALK_ORDERS.sphereCheapest, queue: labelled, checked: new Set(['A']) })
+            .map((e) => e.locationName)).toEqual(['B']);
     });
 
     it('cheapest by restarts then hops; the goal last; a candidate with no route falls back to the listed head', () => {
@@ -105,12 +112,12 @@ describe('walkOrder — the bot walks by cost', () => {
         return null;
     };
     const rules = {
-        regions: { 1: { Menu: { exits: [{ name: 'GameStart', connected_region: 'Start' }] }, Pit: { locations: [{ name: 'A Pit' }] },
+        regions: { 1: { Menu: { exits: [{ name: 'GameStart', connected_region: 'Start' }] }, Pit: { locations: [{ name: 'A Pit' }, { name: 'Z Pit' }] },
             East: { locations: [{ name: 'B East' }] } } },
         start_regions: { 1: { default: ['Menu'] } },
         exporter: { 1: { return_to_menu: true } },
     };
-    const staticData = { regions: new Map([['Pit', { locations: [{ name: 'A Pit' }] }], ['East', { locations: [{ name: 'B East' }] }]]) };
+    const staticData = { regions: new Map([['Pit', { locations: [{ name: 'A Pit' }, { name: 'Z Pit' }] }], ['East', { locations: [{ name: 'B East' }] }]]) };
 
     function makeBot() {
         const calls = [];
@@ -122,8 +129,9 @@ describe('walkOrder — the bot walks by cost', () => {
             return { mode: 'world', target: 'Menu' };
         };
         ref.bot = new PlaybackBotUI({
-            getSphereData: () => [{ sphereIndex: 0, fractionalIndex: 1, locations: ['A Pit'] },
-                { sphereIndex: 0, fractionalIndex: 2, locations: ['B East'] }],
+            // sphereState's own shape: the whole label as `sphereIndex` (the live page's; see `integerSphereOf`)
+            getSphereData: () => [{ sphereIndex: '0.1', locations: ['A Pit'] }, { sphereIndex: '0.2', locations: ['B East'] },
+                { sphereIndex: '1.1', locations: ['Z Pit'] }],
             getStaticData: () => staticData,
             getRulesJson: () => rules,
             getActiveController: () => controller,
@@ -158,9 +166,9 @@ describe('walkOrder — the bot walks by cost', () => {
         expect(bot.getWalkOrder()).toBe(WALK_ORDERS.inOrder);
         bot.onRegionMove({ targetRegion: 'Start' });
         await bot.play();
-        expect(await drive(bot, walkTos)).toEqual(['A Pit', 'B East']);
-        expect(bot.getRouteStats()).toMatchObject({ restarts: 1, legs: 2 });
-        expect(bot.getStatus()).toMatch(/^finished — 2 locations visited/);
+        expect(await drive(bot, walkTos)).toEqual(['A Pit', 'B East', 'Z Pit']);
+        expect(bot.getRouteStats()).toMatchObject({ restarts: 1, legs: 3 });
+        expect(bot.getStatus()).toMatch(/^finished — 3 locations visited/);
     });
 
     for (const order of [WALK_ORDERS.sphereCheapest, WALK_ORDERS.reachableCheapest]) {
@@ -171,9 +179,9 @@ describe('walkOrder — the bot walks by cost', () => {
             await bot.play();
             expect(walkTos()[0]).toEqual({ kind: 'exit', name: 'toEast' });
             expect(bot.getCurrentHead().locationName).toBe('B East');
-            expect(await drive(bot, walkTos)).toEqual(['B East', 'A Pit']);
-            expect(bot.getRouteStats()).toEqual({ restarts: 0, transitions: 4, legs: 2 });
-            expect(bot.getStatus()).toMatch(/^finished — 2 locations visited/);
+            expect(await drive(bot, walkTos)).toEqual(['B East', 'A Pit', 'Z Pit']);
+            expect(bot.getRouteStats()).toEqual({ restarts: 0, transitions: 4, legs: 3 });
+            expect(bot.getStatus()).toMatch(/^finished — 3 locations visited/);
         });
     }
 

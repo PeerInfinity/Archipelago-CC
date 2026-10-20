@@ -55,14 +55,26 @@ export function rowMetaOf(rules, playerId = '1') {
     return meta;
 }
 
+/**
+ * A queue row's INTEGER sphere. ⚠ `sphereState` hands the bot the whole label as `sphereIndex` (`"0.4"`, with
+ * `fractionalIndex` null), not the integer half — measured on the live page, where reading it as a number made the
+ * lowest-sphere filter match nothing and `sphere-cheapest` fell back to the listed order. Either shape reads here.
+ */
+export function integerSphereOf(entry) {
+    const s = entry?.sphereIndex;
+    if (s === null || s === undefined || s === '') return null;
+    const n = Number(String(s).split('.')[0]);
+    return Number.isFinite(n) ? n : null;
+}
+
 /** The candidate rows of `order`: unchecked queue rows, scoped to the lowest open integer sphere or to accessible. */
 export function walkCandidates({ order, queue, checked, isAccessible = null }) {
     const open = (queue ?? []).filter((e) => !checked.has(e.locationName));
     if (order === WALK_ORDERS.sphereCheapest) {
-        const spheres = open.map((e) => e.sphereIndex).filter((s) => s !== null && s !== undefined);
+        const spheres = open.map(integerSphereOf).filter((n) => n !== null);
         if (spheres.length === 0) return open;
         const low = Math.min(...spheres);
-        return open.filter((e) => e.sphereIndex === low);
+        return open.filter((e) => integerSphereOf(e) === low);
     }
     if (order === WALK_ORDERS.reachableCheapest && typeof isAccessible === 'function') {
         return open.filter((e) => isAccessible(e.locationName));
