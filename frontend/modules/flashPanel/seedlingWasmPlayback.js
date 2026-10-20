@@ -105,7 +105,7 @@ import {
 } from '../seedlingDemo/wasmArrival.js';
 import {
     adoptedClockStaging, heldArrivalClockStaging, adoptionRefusal, adoptRefusalIsTransient, arrivalHoldBlocker, queuedSwapPush, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, crossLevelEnd, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
-    firstDivergence, foldDrain, goalAction, keysHeldAtReset, latchExpired, latchWatch, locationGoalServed, encounterReportServed, liveDeclarations, MAX_RECOVERIES, newGameBeginEntry, newGameCeremony,
+    firstDivergence, foldDrain, goalAction, keysHeldAtReset, latchExpired, latchWatch, locationGoalServed, encounterReportServed, encounterDropDelivery, liveDeclarations, MAX_RECOVERIES, newGameBeginEntry, newGameCeremony,
     observeLatch,
     primarySplitRefusal, shadowMismatch, talkCircleGuard, talkCirclesAt, TUTORIAL_DISMISS_KEY, TUTORIAL_FADE_FRAMES,
     shippedTape, tapeEquips, TAPE_KEY_RELEASES, wasmGoalRefusal, expiryAction, expiryFailure, SOLVE_RETRY_BUDGET_FACTOR,
@@ -126,7 +126,7 @@ import { parsePendingCheck } from './seedlingCheckBinding.js';
 import { mountedRecordsOf, WALK_TAPE_PRODUCER } from '../seedlingDemo/wasmWalkTape.js';
 import { playerDamageFromStatus, stagedHitsMismatch } from '../seedlingDemo/playerDamage.js';
 import {
-    deliveredItems, deliveredSaveArrays, deliveryRefusal, DELIVERY_FALLBACK, DELIVERY_POLICY, equipSlotRefusal, firstTickSlotRefusal, itemDelta, itemsAfterWrites,
+    deliveredItems, deliveredSaveArrays, deliveryRefusal, DELIVERY_FALLBACK, DELIVERY_POLICY, SLOT_ITEM_PROPERTIES, equipSlotRefusal, firstTickSlotRefusal, itemDelta, itemsAfterWrites,
     liveSaveArrays, mergeSaveArrays, saveArraysOfWrites, saveDelta, slotsAfterDelivery, stageItems, stageSaveArrays,
 } from '../seedlingDemo/wasmDelivery.js';
 
@@ -378,6 +378,8 @@ export function createWasmPlayback({
         deliveries: [], deliveryDeferred: [], gateHeld: 0,
         // ⛓ SERVED LOCATION — deliveries that met a location goal whose own check had fired: no freeze, no re-solve
         deliveryServed: [],
+        // ⛓ R7 — encounter drops (the host's copy of the room's own drop) written + re-entered, not waited out.
+        deliveryEncounterDrop: [],
         // ⛓ ENCOUNTERS-2 — deliveries the game already showed (the room granted the item): admitted, nothing replanned
         deliveryInGame: 0,
         // ⛓ DELIVERY TICK — each self-check the next goal waited on: `{location, level, tick, settled, delivered, waitedMs, why?}`
@@ -2080,7 +2082,12 @@ export function createWasmPlayback({
         const added = deliveredSaveArrays({ staging: room.staging, status: st, save });
         const refusal = deliveryRefusal({ staging: room.staging, shipped: room.shipped, items, save, status: st, levelSource, equips: roomEquips(room) });
         const atArrival = room.shipped.length === 0 || (room.adopted && room.shipped.length === 1 && room.shipped[0].length === 0);
-        if (refusal && !atArrival) { deferDelivery(refusal, phase); return; }
+        // ⛓ R7 — the room's ENCOUNTER DROP from the host (L32's Fire after Bob's report): written now and the room
+        // re-entered from the live game (the at-arrival branch), never waited out — it opens this room's own exit.
+        const drop = refusal && !atArrival ? encounterDropDelivery({ level: room.level, status: st, refusal,
+            slotItems: itemDelta(st.items, items).filter((d) => SLOT_ITEM_PROPERTIES.includes(d.property)).map((d) => d.property) }) : null;
+        if (drop) stats.deliveryEncounterDrop.push({ level: room.level, item: drop.flag, ledger: drop.id, phase });
+        if (refusal && !atArrival && !drop) { deferDelivery(refusal, phase); return; }
         const row = { level: room.level, goal: goal?.name ?? goal?.kind ?? null, phase, tick: room.shipped.length, items: itemDelta(st.items, items),
             save: saveDelta(liveSaveArrays(st), save), heldKeys: [], outcome: refusal ? 'forced' : 'replanning', policy: DELIVERY_POLICY, ...(refusal ? { clause: refusal.clause, why: refusal.why } : {}) };
         stats.deliveries.push(row);
