@@ -1036,7 +1036,7 @@ const ENCOUNTER_MAX_TICKS = 8000;
 
 /**
  * ⛓ fidelity APBOSSES D2 (`CONTACT_FIDELITY.apReportBosses`) — the R4 slots, read off the RUN
- * (`run.apReportSlotHeld`): the encounter finishes on the location's REPORT, never on the item, which the host grants.
+ * (`run.apReportSlotHeld`): the encounter finishes on the location's REPORT, never on the item, an ordinary AP item.
  */
 const apKilledHeld = (run) => run.apReportSlotHeld(BOB_ARENA_LEVEL, BOB_KILLED_TAG);
 const apDropHeld = (run) => run.apReportSlotHeld(BOB_ARENA_LEVEL, FIRE_BOSS_DROP_TAG);

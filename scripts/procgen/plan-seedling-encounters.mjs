@@ -18,9 +18,9 @@
  *                         spawned at the player's feet, its ceremony, `hasDarkSword`.
  *
  * ⛓⛓ fidelity APFLIP (D3/D6, `CONTACT_FIDELITY.apReportBosses` ON, the p4g wasm = vendor/seedling `ccdf189776`): the
- * R4 AS3 REPORTS Bob's kill {32,3}, his Fire drop {32,4} and the Witch's sword {12,1}, and grants neither item (the
- * HOST does, and the probe has no host). So a tape that fights Bob WITHOUT Fire ends in the arena after the Fire's
- * ceremony and `IDLE_AFTER` idle ticks (`L32_ROOM_GOAL`): the burn would need the host's grant (APBOSSES H1). The
+ * R4 AS3 REPORTS Bob's kill {32,3}, his Fire drop {32,4} and the Witch's sword {12,1}, and grants neither item (each is
+ * an ordinary AP item, and the probe receives none). So a tape that fights Bob WITHOUT Fire ends in the arena after
+ * the Fire's ceremony and `IDLE_AFTER` idle ticks (`L32_ROOM_GOAL`): the burn needs Fire from item logic. The
  * return visit `enc-l32-fire-return` is replaced by `apb-l32-both-reported` (Fire held AND both slots reported: the
  * boss is no longer removed by `hasFire`, it is the SLOT that keeps him out). The `apb-*` blocks are APBOSSES §D3's
  * witnesses, plus the Totem gate's `apb-l43-totem-no-parts` (`BossTotem.as:291` @ccdf189776).
@@ -96,7 +96,7 @@ async function main() {
     let WITCH = null;
     const persistence = (extra) => [...U5.persistence, ...extra.map(([level, tag]) => ({ level, tag, note: '' }))];
     const L32_GOAL = Object.freeze({ kind: 'encounter', at: { x: 64, y: 128 }, drop: { item: 'Fire' }, then: 'reach-pit' });
-    /** ⛓ APFLIP: the same encounter, ending in the arena (no Fire is granted without the host, so no burn). */
+    /** ⛓ APFLIP: the same encounter, ending in the arena (the game grants no Fire and the probe receives no items, so no burn). */
     const L32_ROOM_GOAL = Object.freeze({ ...L32_GOAL, then: null });
     /** ⛓ APFLIP: idle ticks after the last goal, so the stream carries the room's quiet frames past the ceremony. */
     const IDLE_AFTER = 30;
@@ -127,7 +127,7 @@ async function main() {
             + '`FallRockLarge.update` snaps the player to y 125 and re-adds the boss at once (`cameraTimer == 0`). '
             + `Solved by \`solveSegment\` (the encounter goal, no arm leg): ${out.perTick.length} ticks, seven landings, `
             + 'the Fire. ⛓ fidelity APFLIP (R4, p4g): the kill reports {32,3} and the collect {32,4}, and NO Fire is '
-            + `granted (the host grants it), so the tape ends in the arena, ${IDLE_AFTER} idle ticks after the Fire's `
+            + `granted (Fire is an ordinary AP item; the probe receives none), so the tape ends in the arena, ${IDLE_AFTER} idle ticks after the Fire's `
             + 'ceremony. Authored by scripts/procgen/plan-seedling-encounters.mjs.';
         emit(NAME, tapeJson(NAME, U5, over, idled(out.perTick), out.equips, description));
         console.log(`## ${NAME}: ${out.perTick.length} ticks, equips ${JSON.stringify(out.equips)}`);
@@ -183,13 +183,13 @@ async function main() {
     {
         const NAME = 'apb-l32-fresh-no-fire';
         const { run, out } = solve(NAME, { ...U5, equips: [] }, [{ ...L32_ROOM_GOAL }]);
-        check('⛓⛓ no Fire, fresh: the fight, both reports, and `hasFire` stays FALSE (the probe has no host)',
+        check('⛓⛓ no Fire, fresh: the fight, both reports, and `hasFire` stays FALSE (the probe receives no items)',
             slotReported(run, 32, 3) && slotReported(run, 32, 4) && run.progress('inventory').hasFire !== true
             && run.level === 32 && run.ledger('playerHits').length === 0,
             `level ${run.level}, ${out.perTick.length} t, ${bobFlags(run)}`);
         const description = '⛓⛓ fidelity APFLIP D3 (APBOSSES §D3) — L32 FRESH without Fire: '
             + '`swim-u5-bobboss-encounter`\'s staging, unchanged. The fight, the kill reports {32,3}, the Fire drop is '
-            + 'collected and reports {32,4}; R4 grants nothing (`Fire.as:49-55` @ccdf189776, the host grants it), so '
+            + 'collected and reports {32,4}; R4 grants nothing (`Fire.as:49-55` @ccdf189776; Fire is an ordinary AP item), so '
             + `\`hasFire\` stays false and the tape ends in the arena ${IDLE_AFTER} idle ticks after the Fire's ceremony `
             + `(${out.perTick.length + IDLE_AFTER} ticks). Authored by scripts/procgen/plan-seedling-encounters.mjs.`;
         emit(NAME, tapeJson(NAME, U5, {}, idled(out.perTick), out.equips, description));
@@ -398,7 +398,7 @@ async function main() {
             + '(the JS arc\'s logical-links B session: the walk\'s own inventory, the shield and the torch held, 35 '
             + 'cleared flags, the arrival\'s rng), solved by the worker\'s shipping pass (dashless): '
             + `${out.perTick.length} ticks, the arm, seven landings, the Fire. ⛓ fidelity APFLIP (R4, p4g): the kill `
-            + 'reports {32,3}, the collect {32,4}, and NO Fire is granted (the host does), so the plan stops at the '
+            + 'reports {32,3}, the collect {32,4}, and NO Fire is granted (Fire is an ordinary AP item), so the plan stops at the '
             + `collect and the tape ends ${IDLE_AFTER} idle ticks later in the arena (it was the 1,049-tick plan to the pit `
             + 'before R4). Authored by scripts/procgen/plan-seedling-encounters.mjs.';
         const tape = {
