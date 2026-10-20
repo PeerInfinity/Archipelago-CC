@@ -79,7 +79,9 @@
  * which is the sharpest possible statement of what the abort buys.
  *
  * Usage:
- *   node scripts/procgen/plan-seedling-r6-shieldboss.mjs [--write | --check]
+ *   node scripts/procgen/plan-seedling-r6-shieldboss.mjs            # plan + report
+ *   node scripts/procgen/plan-seedling-r6-shieldboss.mjs --write    # write both tapes
+ *   node scripts/procgen/plan-seedling-r6-shieldboss.mjs --check    # both committed tapes are byte-identical
  */
 
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
