@@ -109,7 +109,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 7,
+            "count": 8,
             "id": "measure"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 432,
+        "blockStyle": 433,
         "browser": 146,
         "cited": 226,
-        "files": 445,
+        "files": 446,
         "lineStyle": 13,
-        "withDocblock": 445,
-        "withFlags": 361
+        "withDocblock": 446,
+        "withFlags": 362
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7053,6 +7053,71 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "measure-apworld-raw-view — **WHAT COUNTS AS \"TOO BIG\" FOR THE APWORLD HUB'S RAW VIEW, MEASURED IN A REAL BROWSER** (APWORLD EDITOR HUB slice H2; ⚖ user: *\"Or maybe this should be disabled if the data is too big.",
             "path": "scripts/procgen/measure-apworld-raw-view.mjs"
+        },
+        {
+            "argvHelpers": [
+                "argOf",
+                "seedDir"
+            ],
+            "browser": false,
+            "category": "measure",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json",
+                "legs",
+                "log",
+                "penalties",
+                "preset",
+                "rules"
+            ],
+            "file": "measure-bot-route-orders.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "legs"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "log"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "penalties"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "preset"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "rules"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "measure-bot-route-orders — **WHAT ORDER SHOULD THE PLAYBACK BOT VISIT LOCATIONS IN?** Prices the bot's walk route under several orderings of the same sphere log, offline: no browser, no game.",
+            "path": "scripts/procgen/measure-bot-route-orders.mjs"
         },
         {
             "argvHelpers": [],
