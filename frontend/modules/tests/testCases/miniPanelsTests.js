@@ -1,6 +1,9 @@
 /**
  * In-app tests for the mini row (modules/miniPanels) and its Quick Launch section.
  *
+ * ⛓ Enrolled in the substrates roster (the default modules.json): test-regression's modules-nograph.json has no
+ * Playback Bot or Tutorial.
+ *
  * ⛓ Every row drives the live default layout through the miniPanels module's public functions or the
  * Quick Launch section's own buttons, and reads the result off Golden Layout (`mini-row:` stacks) and the DOM.
  *
@@ -40,6 +43,10 @@ async function resetMini(testController) {
     await mini('setBotMini')(false);
     await mini('setChecksOn')(false);
     await mini('setLocked')(true);
+    const { bot, checks, tutorial } = state().available;
+    testController.reportCondition('this mode loads the Playback Bot, Checks and Tutorial modules (the default modules.json)',
+        bot && checks && tutorial);
+    if (!(bot && checks && tutorial)) return false;
     const clean = await testController.pollForCondition(
         () => !anyMiniStack() && state().bot !== 'mini' && state().checks === 'off',
         'the mini row to be empty', TIMEOUT_MS, POLL_MS);
@@ -76,6 +83,8 @@ async function checksThenBotThenExpand(testController) {
         const botFitted = await testController.pollForCondition(
             () => (miniStackOf('playbackBotPanel')?.element?.offsetHeight ?? 999) <= FITTED_MAX_PX,
             'the bot row fitted to its content', TIMEOUT_MS, POLL_MS);
+        testController.log(`bot mini row: stack ${miniStackOf('playbackBotPanel')?.element?.offsetHeight}px, `
+            + `content ${document.querySelector('.playback-bot-panel')?.offsetHeight}px`);
         testController.reportCondition(`the bot row is fitted (≤ ${FITTED_MAX_PX}px)`, botFitted);
 
         document.querySelector('.pb-mini-expand')?.click();

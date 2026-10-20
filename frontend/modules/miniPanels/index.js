@@ -87,8 +87,15 @@ async function ensureItem({ moduleId, componentType }) {
     return item;
 }
 
+let lastPublished = null;
+
+/** Publish CHANGED_EVENT when what getState reports moved (Golden Layout's stateChanged fires on every resize). */
 function changed() {
-    bus?.publish(CHANGED_EVENT, getState(), MODULE_ID);
+    const now = getState();
+    const key = JSON.stringify(now);
+    if (key === lastPublished) return;
+    lastPublished = key;
+    bus?.publish(CHANGED_EVENT, now, MODULE_ID);
 }
 
 /** Measure a mini panel's content (its mini content element's natural height). */

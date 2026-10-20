@@ -478,27 +478,6 @@
       "order": 58,
       "category": "Storage",
       "_comment": "local-storage V1 (2026-09-27): the Storage panel (declared keys, sections Unknown-first, Clear per row/section) and the quota notice. ⚖ RULED: each row sets its own state and restores the origin; the quota row is LAST in its group. Enrolled here (defaultEnabledState is false)."
-    },
-    {
-      "id": "mini-panels-checks-then-bot-then-expand",
-      "enabled": true,
-      "order": 59,
-      "category": "Mini Panels",
-      "_comment": "Mini panels (2026-10-20): the mini row above the middle column (modules/miniPanels) and its Quick Launch section. Each row sets its own state (all wishes off, locked) and puts it back. Enrolled here (defaultEnabledState is false)."
-    },
-    {
-      "id": "mini-panels-locked-and-draggable",
-      "enabled": true,
-      "order": 60,
-      "category": "Mini Panels",
-      "_comment": "Mini panels (2026-10-20): the mini row above the middle column (modules/miniPanels) and its Quick Launch section. Each row sets its own state (all wishes off, locked) and puts it back. Enrolled here (defaultEnabledState is false)."
-    },
-    {
-      "id": "mini-panels-quick-launch-section",
-      "enabled": true,
-      "order": 61,
-      "category": "Mini Panels",
-      "_comment": "Mini panels (2026-10-20): the mini row above the middle column (modules/miniPanels) and its Quick Launch section. Each row sets its own state (all wishes off, locked) and puts it back. Enrolled here (defaultEnabledState is false)."
     }
   ]
 }

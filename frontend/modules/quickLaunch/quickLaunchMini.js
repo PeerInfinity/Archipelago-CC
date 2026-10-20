@@ -88,7 +88,8 @@ export class MiniSection {
         row.title = MINI_TEXT.title[key];
         row.dataset.mini = key;
         row.dataset.state = value;
-        const toggle = el('button', `ql-ctl ${MINI_CONTROLS.toggle}`, MINI_TEXT.button[key][value]);
+        // ⛔ NOT `.ql-ctl`: that class means "an edit-mode control" (the Quick Launch tests wait for none outside edit mode).
+        const toggle = el('button', MINI_CONTROLS.toggle, MINI_TEXT.button[key][value]);
         toggle.type = 'button';
         toggle.addEventListener('click', () => onClick());
         row.append(el('span', MINI_CONTROLS.name, name), el('span', MINI_CONTROLS.state, MINI_TEXT.state[key][value]), toggle);
