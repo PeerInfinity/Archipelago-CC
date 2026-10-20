@@ -1,0 +1,73 @@
+{
+ "name": "l32-rock-walkout",
+ "levels": [
+  30,
+  32
+ ],
+ "tapeFile": "frontend/modules/seedlingDemo/fixtures/tapes/swim-u5-bobboss-encounter.json",
+ "tapePatch": {
+  "inputsUntil": 840,
+  "tick_count": 980,
+  "append": [
+   {
+    "key": "down",
+    "from": 840,
+    "to": 980
+   }
+  ],
+  "equips": []
+ },
+ "arms": [
+  {
+   "name": "vanilla"
+  },
+  {
+   "name": "move-88-128",
+   "ops": [
+    {
+     "op": "move",
+     "level": 32,
+     "type": "fallrocklarge",
+     "x": 64,
+     "y": 128,
+     "to": {
+      "x": 88,
+      "y": 128
+     }
+    }
+   ]
+  },
+  {
+   "name": "move-96-128",
+   "ops": [
+    {
+     "op": "move",
+     "level": 32,
+     "type": "fallrocklarge",
+     "x": 64,
+     "y": 128,
+     "to": {
+      "x": 96,
+      "y": 128
+     }
+    }
+   ]
+  },
+  {
+   "name": "move-40-128",
+   "ops": [
+    {
+     "op": "move",
+     "level": 32,
+     "type": "fallrocklarge",
+     "x": 64,
+     "y": 128,
+     "to": {
+      "x": 40,
+      "y": 128
+     }
+    }
+   ]
+  }
+ ]
+}

@@ -277,9 +277,16 @@ describe('4 · PERSISTENCE — a live arrival after a death in L32 ({32,1} clear
         expect(mapped.goal?.kind).toBe('encounter');
         const request = arrivalSolveRequest({ staging, solverGoal: mapped.goal, levelSource: src, records });
         const result = createInPlaceSolveService().start(request).result;
-        expect(result.ok, result.message).toBe(true);
-        expect(result.plan.verbs).not.toContain('arm');
-        expect(result.plan.expected.at(-1).level).toBe(30);
+        // ⛓ fidelity APFLIP D6 (`apReportBosses` ON at the R7 merge): the staging and the fallen rock are as before,
+        // but R4's Fire drop grants NOTHING (the HOST grants it, APBOSSES H1, not built), so the mapped goal's
+        // `then: 'reach-pit'` is refused BY NAME at the burn — a `precondition`, after the fight and both reports.
+        // ⚠ The JS arc's to wire: `arrivalSolverGoal` should end an L32 encounter in the room until the host grant
+        // (H1) lands (the campaign's `r9-solve-32` and `enc-l32-*` tapes already do, `then: null`).
+        expect(mapped.goal.then).toBe('reach-pit');
+        expect(result.ok).toBe(false);
+        expect(result.kind).toBe('refusal');
+        expect(result.message).toMatch(/burns only with Fire, and under `apReportBosses` the Fire pickup grants nothing/);
+        expect(result.message).toMatch(/this run holds none\.$/);
     }, 180_000);
 });
 

@@ -188,12 +188,7 @@
         }
     ],
     "despawn": [],
-    "equips": [
-        {
-            "t": 833,
-            "slot": 1
-        }
-    ],
+    "equips": [],
     "pins": [
         "sound",
         "dead_frames"
@@ -244,7 +239,7 @@
     },
     "tick0": null,
     "hold": false,
-    "tick_count": 1049,
+    "tick_count": 862,
     "inputs": [
         {
             "key": "up",
@@ -510,64 +505,9 @@
             "key": "primary",
             "from": 830,
             "to": 831
-        },
-        {
-            "key": "left",
-            "from": 833,
-            "to": 839
-        },
-        {
-            "key": "up",
-            "from": 833,
-            "to": 867
-        },
-        {
-            "key": "right",
-            "from": 839,
-            "to": 840
-        },
-        {
-            "key": "right",
-            "from": 846,
-            "to": 847
-        },
-        {
-            "key": "left",
-            "from": 851,
-            "to": 852
-        },
-        {
-            "key": "right",
-            "from": 858,
-            "to": 859
-        },
-        {
-            "key": "left",
-            "from": 863,
-            "to": 864
-        },
-        {
-            "key": "down",
-            "from": 867,
-            "to": 868
-        },
-        {
-            "key": "up",
-            "from": 868,
-            "to": 869
-        },
-        {
-            "key": "primary",
-            "from": 873,
-            "to": 874
-        },
-        {
-            "key": "up",
-            "from": 927,
-            "to": 950
         }
     ],
     "name": "enc-l32-live-arrival",
-    "description": "⛓⛓ seedling-fidelity-encounters2 D1/D2 — L32's Bob Boss from the LIVE page's arrival (the JS arc's logical-links B session: the walk's own inventory, the shield and the torch held, 35 cleared flags, the arrival's rng), solved by the worker's shipping pass (dashless): 1049 ticks, the arm, seven landings, the Fire, the burn, the pit to L30. It is the plan CI saw leave at t932 (y 33.85 → 34.25): on the game it plays to its end at 0 px; that divergence is the panel's clearing write `hasFire = false` while its delivery gate holds the Fire. Authored by scripts/procgen/plan-seedling-encounters.mjs.",
+    "description": "⛓⛓ seedling-fidelity-encounters2 D1/D2 — L32's Bob Boss from the LIVE page's arrival (the JS arc's logical-links B session: the walk's own inventory, the shield and the torch held, 35 cleared flags, the arrival's rng), solved by the worker's shipping pass (dashless): 832 ticks, the arm, seven landings, the Fire. ⛓ fidelity APFLIP (R4, p4g): the kill reports {32,3}, the collect {32,4}, and NO Fire is granted (the host does), so the plan stops at the collect and the tape ends 30 idle ticks later in the arena (it was the 1,049-tick plan to the pit before R4). Authored by scripts/procgen/plan-seedling-encounters.mjs.",
     "note": ""
 }

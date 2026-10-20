@@ -77,7 +77,7 @@ import {
     AP_ITEM_CAPABILITY,
     buildNameFromWasmPath,
     capabilitiesOf,
-    JS_RUNTIME_CAPABILITIES,
+    jsRuntimeCapabilities,
     JS_TRANSPORT,
     RANDOMIZER_ARMS,
     seedlingRandomizerEligibility,
@@ -924,7 +924,7 @@ export async function loadSeedlingRandomizer({
             importModule, log,
             // ⛓ R9 slice P4E: the build's `tag` capability, from DATA, and what
             // a delivery needs if the table allocates a tag.
-            tagCapable: (transport === JS_TRANSPORT ? JS_RUNTIME_CAPABILITIES
+            tagCapable: (transport === JS_TRANSPORT ? jsRuntimeCapabilities()
                 : (capabilitiesOf(manifest, buildNameFromWasmPath(flashPanel?.wasm)).capabilities ?? []))
                 .includes(TAG_CAPABILITY),
             embed, bot,

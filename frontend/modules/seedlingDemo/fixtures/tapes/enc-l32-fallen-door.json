@@ -38,12 +38,7 @@
         }
     ],
     "despawn": [],
-    "equips": [
-        {
-            "t": 839,
-            "slot": 1
-        }
-    ],
+    "equips": [],
     "pins": [
         "sound",
         "dead_frames"
@@ -101,7 +96,7 @@
     },
     "tick0": null,
     "hold": false,
-    "tick_count": 1055,
+    "tick_count": 868,
     "inputs": [
         {
             "key": "primary",
@@ -347,79 +342,9 @@
             "key": "primary",
             "from": 836,
             "to": 837
-        },
-        {
-            "key": "primary",
-            "from": 839,
-            "to": 840
-        },
-        {
-            "key": "left",
-            "from": 839,
-            "to": 845
-        },
-        {
-            "key": "up",
-            "from": 839,
-            "to": 873
-        },
-        {
-            "key": "right",
-            "from": 845,
-            "to": 846
-        },
-        {
-            "key": "right",
-            "from": 852,
-            "to": 853
-        },
-        {
-            "key": "primary",
-            "from": 853,
-            "to": 854
-        },
-        {
-            "key": "left",
-            "from": 857,
-            "to": 858
-        },
-        {
-            "key": "right",
-            "from": 864,
-            "to": 865
-        },
-        {
-            "key": "left",
-            "from": 869,
-            "to": 870
-        },
-        {
-            "key": "down",
-            "from": 873,
-            "to": 874
-        },
-        {
-            "key": "up",
-            "from": 874,
-            "to": 875
-        },
-        {
-            "key": "primary",
-            "from": 879,
-            "to": 880
-        },
-        {
-            "key": "primary",
-            "from": 933,
-            "to": 934
-        },
-        {
-            "key": "up",
-            "from": 933,
-            "to": 956
         }
     ],
     "name": "enc-l32-fallen-door",
-    "description": "⛓⛓ seedling-fidelity-encounters D2 — L32's encounter from a ROCK-FALLEN arrival. `swim-u5-bobboss-encounter`'s staging with {32,1} cleared (the state after a death mid-fight), entered through the L30 door: the rock is built fallen on the door's stairs, the arrival (80,128) is inside it, `FallRockLarge.update` snaps the player to y 125 and re-adds the boss at once (`cameraTimer == 0`). Solved by `solveSegment` (the encounter goal, no arm leg): 1055 ticks, seven landings, the Fire, the burn, the pit to L30. Authored by scripts/procgen/plan-seedling-encounters.mjs.",
+    "description": "⛓⛓ seedling-fidelity-encounters D2 — L32's encounter from a ROCK-FALLEN arrival. `swim-u5-bobboss-encounter`'s staging with {32,1} cleared (the state after a death mid-fight), entered through the L30 door: the rock is built fallen on the door's stairs, the arrival (80,128) is inside it, `FallRockLarge.update` snaps the player to y 125 and re-adds the boss at once (`cameraTimer == 0`). Solved by `solveSegment` (the encounter goal, no arm leg): 838 ticks, seven landings, the Fire. ⛓ fidelity APFLIP (R4, p4g): the kill reports {32,3} and the collect {32,4}, and NO Fire is granted (the host grants it), so the tape ends in the arena, 30 idle ticks after the Fire's ceremony. Authored by scripts/procgen/plan-seedling-encounters.mjs.",
     "note": ""
 }

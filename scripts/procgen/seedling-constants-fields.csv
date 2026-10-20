@@ -1866,6 +1866,13 @@ frontend/modules/seedlingDemo/spinningAxe.js|axeLine|axeLine,physics,magnitude,,
 frontend/modules/seedlingDemo/spinningAxe.js|axeHitsPlayer|axeHitsPlayer,physics,magnitude,,the hub rect is endRectSide / 2 either side of the hub (SpinningAxe.as:58)
 frontend/modules/seedlingDemo/spinningAxe.js|axeCanReach|axeCanReach,rule,magnitude,,+1 px for the blade line's integer endpoints — a conservative doorstep reach and not a danger verdict
 frontend/modules/seedlingDemo/spinningAxe.js|axeHitPoint|axeHitPoint,physics,magnitude,,SpinningAxe.hitPlayer: the slope at a + 2·spinRate / 180·π and the perpendicular foot's m·m + 1 (SpinningAxe.as:69-73)
+frontend/modules/seedlingDemo/apReportBosses.js|BOB_KILLED_TAG|(module),rule,magnitude,,R4 @0eda15f785 BobBoss.KILLED_TAG: the slot the Bob kill clears in L32 (Times)
+frontend/modules/seedlingDemo/apReportBosses.js|FIRE_BOSS_DROP_TAG|(module),rule,magnitude,,R4 @0eda15f785 Fire.BOSS_DROP_TAG: the slot the Bob Boss drop carries in L32 (Fire)
+frontend/modules/seedlingDemo/apReportBosses.js|DARK_SWORD_WITCH_TAG|(module),rule,magnitude,,R4 @0eda15f785 DarkSword.WITCH_TAG: the slot the Witch's sword carries in L12 (Dark Sword)
+frontend/modules/seedlingDemo/apReportBosses.js|BOB_ARENA_LEVEL|(module),rule,magnitude,,the BobBoss arena's level (Dungeon3/11.oel = L32)
+frontend/modules/seedlingDemo/apReportBosses.js|WITCH_LEVEL|(module),rule,magnitude,,the Witch's level (L12)
+frontend/modules/seedlingDemo/apReportBosses.js|AP_REPORT_ROWS|(module),rule,sentinel,,R4 report rows: the (level; tag) slot each kill or pickup clears and its upstream boss_locations id
+frontend/modules/seedlingDemo/apReportBosses.js|fallRockLargeSpawn|fallRockLargeSpawn,rule,magnitude,,FallRockLarge @0eda15f785: the boss it adds is form 0 (bossType 0)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,

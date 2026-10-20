@@ -179,7 +179,10 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ housekeep D3: `walkerBeamTowers` (the walker's planner reads the beam towers' drifted Solids) ships OFF.
             walkerBeamTowers: false,
             // ⛓ fidelity BOMBBLAST D2: `bombBlastBody` (a bomb's Explosion lands on a body) ships OFF.
-            bombBlastBody: false });
+            bombBlastBody: false,
+            // ⛓ fidelity APBOSSES D2: `apReportBosses` (the R4 boss-report AS3) shipped OFF; ⛓ APFLIP D6 flipped it ON
+            // inside the R7 merge (⚖ user 2026-10-19, "ON in R7 merge").
+            apReportBosses: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

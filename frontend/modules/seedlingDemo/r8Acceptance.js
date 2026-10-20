@@ -1278,17 +1278,6 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             addedBy: 'Seedling fidelity BOBSOLDIER W4 (the guard found it)',
             why: 'one boot tick in L30, 131.9 px from the BobSoldier. Nothing moves.',
         }),
-        Object.freeze({
-            name: 'r9-solve-32', levels: Object.freeze([30]), bobs: 1, ticks: 81,
-            addedBy: 'Seedling fidelity BOBSOLDIER W4 (the guard found it)',
-            why: 'L30 for 81 ticks at >= 176 px from the BobSoldier — outside its leash. No hit.',
-        }),
-        Object.freeze({
-            name: 'swim-u5-bobboss-encounter', levels: Object.freeze([30]), bobs: 1, ticks: 81,
-            addedBy: 'Seedling fidelity BOBSOLDIER W4 (the guard found it)',
-            why: 'the walk into the BobBoss arena crosses L30 for 81 ticks at >= 176 px from the BobSoldier. '
-                + 'No hit.',
-        }),
         /**
          * ⛓⛓⛓ seedling-fidelity-killlock K1 — `jellyfish` joins the scope at the wave-8 harvest (the user's ruling
          * turned `jellyfishLive` ON). The guard named these three; the slice measured every committed tape
@@ -1407,16 +1396,48 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'body. Recorded on the game with `hits` 0.',
         }),
         /** ⛓⛓ seedling-fidelity-encounters — the two L32 witnesses fall into L30, predicted exposed before the guard ran. */
+        /**
+         * ⛓⛓ fidelity APFLIP (the R4 AS3, p4g) — predicted before the guard ran. `enc-l32-fallen-door`,
+         * `enc-l32-live-arrival`, `r9-solve-32` and `swim-u5-bobboss-encounter` now END IN L32 (the Fire's collect grants
+         * nothing, so no burn, no pit to L30) and their rows went; `enc-l32-fire-return` is retired (deleted, replaced
+         * by `apb-l32-both-reported`). The new witnesses: the three Witch tapes in L12 (a puncher room), the two L32
+         * tapes that still take the burned pit to L30, and the Totem gate's walk out to L40.
+         */
         Object.freeze({
-            name: 'enc-l32-fallen-door', levels: Object.freeze([30]), bobs: 1, ticks: 81,
-            addedBy: 'Seedling fidelity ENCOUNTERS D2 (the rock-fallen arrival witness)',
-            why: 'the encounter from a rock-fallen L32 arrival ends with the pit to L30: 81 ticks there at >= 180 px '
-                + 'from the BobSoldier — outside its leash. Recorded on the game with `hits` 0.',
+            name: 'apb-l32-both-reported', levels: Object.freeze([30]), bobs: 1, ticks: 81,
+            addedBy: 'Seedling fidelity APFLIP D3 (both R4 slots reported, the Fire held)',
+            why: 'the burned pit from L32 to L30: 81 ticks there at the pit landing (232, 5..88), far from the '
+                + 'BobSoldier. Recorded on the game (p4g) with `hits` 0.',
         }),
         Object.freeze({
-            name: 'enc-l32-fire-return', levels: Object.freeze([30]), bobs: 1, ticks: 81,
-            addedBy: 'Seedling fidelity ENCOUNTERS D2 (the return-visit witness)',
-            why: 'the burned pit from L32 to L30: 81 ticks there at >= 180 px from the BobSoldier. No hit.',
+            name: 'apb-l32-fresh-fire-held', levels: Object.freeze([30]), bobs: 1, ticks: 81,
+            addedBy: 'Seedling fidelity APFLIP D3 (fresh, the Fire from the server)',
+            why: 'the fight, both reports, the burn and the pit to L30: 81 ticks there at the pit landing, far from '
+                + 'the BobSoldier. Recorded on the game (p4g) with `hits` 0.',
+        }),
+        Object.freeze({
+            name: 'apb-l12-witch-slot-held', levels: Object.freeze([12]), bobs: 1, ticks: 601,
+            addedBy: 'Seedling fidelity APFLIP D3 (the Witch, {12,1} held)',
+            why: '`enc-l12-witch`\'s walk under its R4 name: 601 ticks in L12, a puncher room, never inside its '
+                + 'reach. Recorded on the game (p4g) with `hits` 0.',
+        }),
+        Object.freeze({
+            name: 'apb-l12-witch-server-sword', levels: Object.freeze([12]), bobs: 1, ticks: 583,
+            addedBy: 'Seedling fidelity APFLIP D3 (the Witch, the sword from the server)',
+            why: 'the same talk with `textExtra1`: 583 ticks in L12, never inside the puncher\'s reach. Recorded on '
+                + 'the game (p4g) with `hits` 0.',
+        }),
+        Object.freeze({
+            name: 'apb-l12-witch-reported', levels: Object.freeze([12]), bobs: 1, ticks: 602,
+            addedBy: 'Seedling fidelity APFLIP D3 (the Witch, {12,1} reported)',
+            why: '`apb-l12-witch-slot-held`\'s inputs replayed with nothing added: 602 ticks in L12, never inside '
+                + 'the puncher\'s reach. Recorded on the game (p4g) with `hits` 0.',
+        }),
+        Object.freeze({
+            name: 'apb-l43-totem-no-parts', levels: Object.freeze([40]), bobs: 1, ticks: 183,
+            addedBy: 'Seedling fidelity APFLIP D2/D3 (the Totem gate, no parts)',
+            why: 'the open stairs from L43 to L40: 183 ticks at L40\'s stairs landing (328, 600..685). Recorded on '
+                + 'the game (p4g) with `hits` 0.',
         }),
         Object.freeze({
             name: 'enc-l12-witch', levels: Object.freeze([12]), bobs: 1, ticks: 601,
@@ -1441,12 +1462,6 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             why: 'three spear thrusts at `pushableblockspear@176,128` from its own pocket and the walk to '
                 + '`teleporter@184,64`: 347 ticks in L65 with `bob@208,80`, the last on L68\'s arrival (no '
                 + 'bridged body). Recorded on the game with `hits` 0.',
-        }),
-        Object.freeze({
-            name: 'enc-l32-live-arrival', levels: Object.freeze([30]), bobs: 1, ticks: 81,
-            addedBy: 'Seedling fidelity ENCOUNTERS2 D2 (the live-arrival witness)',
-            why: 'the live page\'s L32 arrival: the fight, the Fire, the burn, then the pit to L30 at t969 — 81 ticks '
-                + 'there, below the stairs, away from the BobSoldier. Recorded on the game with `hits` 0.',
         }),
         /** ⛓⛓⛓ seedling-fidelity-l12keyline — the way ROUND L12's sealed lock, a puncher room. */
         Object.freeze({

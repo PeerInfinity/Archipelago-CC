@@ -380,7 +380,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // ⛓⛓⛓ Seedling fidelity STANCE: the keylock control, ending on L53's arrival.
             'stance-l48-keylock-south',
             // ⛓⛓⛓ Seedling fidelity BOBSOLDIER: the four L30 crossers the guard named, then the two witnesses.
-            'r9-solve-30', 'r9-solve-31', 'r9-solve-32', 'swim-u5-bobboss-encounter',
+            // ⛓ fidelity APFLIP: `r9-solve-32` and `swim-u5-bobboss-encounter` end in L32 now (no Fire, no pit).
+            'r9-solve-30', 'r9-solve-31',
             // ⛓ KILLLOCK K1 at the wave-8 harvest: the three jellyfish-room tapes the guard named.
             'axe-l61-reach-l63', 'burn-l44-reach-exit', 'ladder2-l104-beam',
             'bobsoldier-sword', 'bobsoldier-kill', 'bobsoldier-corpse',
@@ -394,14 +395,17 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'wallflyer-kill', 'wallflyer-kill-flight', 'wallflyer-shield-bump',
             // ⛓ Seedling fidelity CRUSHER: the round-trip witness ends on its L40 arrival.
             'crusher-l42-round-trip',
-            // ⛓ Seedling fidelity ENCOUNTERS: the two L32 witnesses end in L30.
-            'enc-l32-fallen-door', 'enc-l32-fire-return',
+            // ⛓ Seedling fidelity ENCOUNTERS: the two L32 witnesses ended in L30 — ⛓ APFLIP: `enc-l32-fallen-door`
+            // ends in L32 now and `enc-l32-fire-return` is retired.
+            // ⛓ fidelity APFLIP D3: the Witch's three R4 witnesses (L12), the two L32 → L30 pits, the Totem's L40 stairs.
+            'apb-l32-both-reported', 'apb-l32-fresh-fire-held',
+            'apb-l12-witch-slot-held', 'apb-l12-witch-server-sword', 'apb-l12-witch-reported',
+            'apb-l43-totem-no-parts',
             // ⛓ Seedling fidelity ENCOUNTERS D3: the Witch witness, in L12 (a puncher room).
             'enc-l12-witch',
             // ⛓ Seedling fidelity PUSHBLOCK: the two L65 spear-thrust witnesses (a bob room).
             'pushblock-l65-reach-l63', 'pushblock-l65-reach-l68',
-            // ⛓ Seedling fidelity ENCOUNTERS2 D2: the live-arrival witness ends in L30 too.
-            'enc-l32-live-arrival',
+            // ⛓ Seedling fidelity ENCOUNTERS2 D2: the live-arrival witness ended in L30 too — ⛓ APFLIP: in L32 now.
             // ⛓ Seedling fidelity L12KEYLINE: the way round the sealed lock, in L12 (a puncher room).
             'l12keyline-134-round',
         ]);
@@ -459,11 +463,15 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ ENCOUNTERS2 D2 adds one (86) — `enc-l32-live-arrival` (its L30 fall).
         // ⛓ Seedling fidelity L12KEYLINE adds one (87) — `l12keyline-134-round` (L12).
         // ⛓ Seedling fidelity L30KEYLOCK adds three (90) — `l30keylock-pit224-before`, `l30keylock-pit224`,
-        expect(out.exposed).toBe(90);
+        // ⛓ fidelity APFLIP: −5 +6 (91) — `enc-l32-fallen-door`, `enc-l32-live-arrival`, `r9-solve-32`,
+        // `swim-u5-bobboss-encounter` end in L32 now, `enc-l32-fire-return` is retired; the six `apb-*` above.
+        expect(out.exposed).toBe(91);
         expect(out.tapes).toEqual([
+            'apb-l12-witch-reported', 'apb-l12-witch-server-sword', 'apb-l12-witch-slot-held',
+            'apb-l32-both-reported', 'apb-l32-fresh-fire-held', 'apb-l43-totem-no-parts',
             'axe-l61-reach-l63',
             'bobsoldier-corpse', 'bobsoldier-kill', 'bobsoldier-sword',
-            'bobsoldier2-l30-dash-stance', 'bobsoldier2-l30-torch', 'burn-l24-reach-exit', 'burn-l44-reach-exit', 'cancross-l16-sword-none', 'crusher-l42-round-trip', 'dash-l16-sword-all', 'enc-l12-witch', 'enc-l32-fallen-door', 'enc-l32-fire-return', 'enc-l32-live-arrival', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin',
+            'bobsoldier2-l30-dash-stance', 'bobsoldier2-l30-torch', 'burn-l24-reach-exit', 'burn-l44-reach-exit', 'cancross-l16-sword-none', 'crusher-l42-round-trip', 'dash-l16-sword-all', 'enc-l12-witch', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin',
             'ghostsword-l30-bobsoldier', 'l12keyline-134-round', 'l14-swordless-detour', 'l30keylock-pit224', 'l30keylock-pit224-before', 'l30keylock-pit240',
             'ladder2-l104-beam',
             'prox-l29-key-return', 'prox-l40-turret-contact', 'prox-l40-turret-volley',
@@ -474,11 +482,10 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6', 'r9-l6-bob-press',
             'r9-l6-harmless-control', 'r9-l6-harmless-press', 'r9-l6-sword-dash-hit', 'r9-solve-0-v3',
             'r9-solve-12', 'r9-solve-13', 'r9-solve-14', 'r9-solve-15', 'r9-solve-16', 'r9-solve-21',
-            'r9-solve-22', 'r9-solve-30', 'r9-solve-31', 'r9-solve-32',
+            'r9-solve-22', 'r9-solve-30', 'r9-solve-31',
             'return-l15-conch', 'return-l15-walkin', 'robust-l16-l18-sword-conch', 'robust-l16-sword-idle1',
             'slots-l24-burn-cut-110', 'slots-l24-burn-cut-80', 'slots-l24-burn-fencepost', 'slots-l24-burn-fire-first', 'slots-l24-fire-first',
             'stance-l48-keylock-south',
-            'swim-u5-bobboss-encounter',
             'u10-puncher-dwell',
             'u10-puncher-dwell-refused', 'u11-dark-shield-bob', 'u11-dark-shield-puncher',
             'u11-facing-knockback', 'u11-facing-puncher',
@@ -655,8 +662,6 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // ⛓ fidelity BOBSOLDIER's four L30 crossers and its two witnesses — the mirror rule.
             'r9-solve-30': { tape: {}, levels: [30] },
             'r9-solve-31': { tape: {}, levels: [30] },
-            'r9-solve-32': { tape: {}, levels: [30] },
-            'swim-u5-bobboss-encounter': { tape: {}, levels: [30] },
             'bobsoldier-sword': { tape: {}, levels: [30] },
             'bobsoldier-kill': { tape: {}, levels: [30] },
             'bobsoldier-corpse': { tape: {}, levels: [30] },
@@ -672,10 +677,14 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'l30keylock-pit224': { tape: {}, levels: [22, 30] },
             'l30keylock-pit240': { tape: {}, levels: [22, 30] },
             // ⛓ fidelity ENCOUNTERS: the two L32 witnesses' L30 falls — the mirror rule.
-            'enc-l32-fallen-door': { tape: {}, levels: [30] },
-            'enc-l32-fire-return': { tape: {}, levels: [30] },
             'enc-l12-witch': { tape: {}, levels: [12] },
-            'enc-l32-live-arrival': { tape: {}, levels: [30] },
+            // ⛓ fidelity APFLIP D3's six — the mirror rule.
+            'apb-l32-both-reported': { tape: {}, levels: [30] },
+            'apb-l32-fresh-fire-held': { tape: {}, levels: [30] },
+            'apb-l12-witch-slot-held': { tape: {}, levels: [12] },
+            'apb-l12-witch-server-sword': { tape: {}, levels: [12] },
+            'apb-l12-witch-reported': { tape: {}, levels: [12] },
+            'apb-l43-totem-no-parts': { tape: {}, levels: [40] },
             // ⛓ fidelity L12KEYLINE's L12 witness — the mirror rule.
             'l12keyline-134-round': { tape: {}, levels: [12] },
             // ⛓ KILLLOCK K1 at the wave-8 harvest: the three jellyfish-room tapes — the mirror rule.

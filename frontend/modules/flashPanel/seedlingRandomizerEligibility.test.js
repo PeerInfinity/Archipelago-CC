@@ -24,6 +24,8 @@ import {
     capabilitiesOf,
     seedlingRandomizerEligibility,
 } from './seedlingRandomizerEligibility.js';
+import { BOSS_REPORT_CAPABILITY, jsRuntimeCapabilities } from './seedlingRandomizerEligibility.js';
+import { withContactFidelity } from '../seedlingDemo/contactFidelity.js';
 
 const path = (rel) => fileURLToPath(new URL(rel, import.meta.url));
 const readJson = (rel) => JSON.parse(readFileSync(path(rel), 'utf8'));
@@ -348,5 +350,24 @@ describe('the JS runtime transport (Seedling JS J1)', () => {
         const v = seedlingRandomizerEligibility({ flashPanel, transport: 'wasm', manifest, generated: GENERATED });
         expect(v).toMatchObject({ eligible: true, arm: 'generated' });
         expect(v.checks.find((c) => c.id === 'transport').why).toMatch(/^wasm transport/);
+    });
+});
+
+describe('⛓ fidelity APFLIP D5 — the JS runtime declares `bossreport` exactly when its R4 mirror is on', () => {
+    it('the capability is `bossreport`, in the declared vocabulary', () => {
+        expect(BOSS_REPORT_CAPABILITY).toBe('bossreport');
+        expect(WASM_BUILD_CAPABILITIES).toContain(BOSS_REPORT_CAPABILITY);
+    });
+    it('OFF → [apitem]', () => {
+        expect(withContactFidelity({ apReportBosses: false }, () => jsRuntimeCapabilities())).toEqual([AP_ITEM_CAPABILITY]);
+    });
+    it('ON → [apitem, bossreport]', () => {
+        expect(withContactFidelity({ apReportBosses: true }, () => jsRuntimeCapabilities()))
+            .toEqual([AP_ITEM_CAPABILITY, BOSS_REPORT_CAPABILITY]);
+    });
+    it('read LIVE: a toggle answers at once, both ways', () => {
+        const seen = [false, true, false].map((on) => withContactFidelity({ apReportBosses: on },
+            () => jsRuntimeCapabilities().includes(BOSS_REPORT_CAPABILITY)));
+        expect(seen).toEqual([false, true, false]);
     });
 });

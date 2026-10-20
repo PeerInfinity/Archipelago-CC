@@ -2,7 +2,7 @@
     "tape_version": 8,
     "game": "seedling",
     "name": "swim-u5-bobboss-encounter",
-    "description": "⛓⛓ SEEDLING SWIM U5 — L32's BobBoss encounter, SOLVED by `solverBot`'s `encounter` executor (`ENCOUNTER_EXECUTORS.Fire`) from the through-2.2 survey's step-30 boot (r8-solve-11's v8 block re-pointed at L32@72,120: the sword latched, the SHIELD held, hitsMax 3, damage ON). Every decision reads the BobBoss simulation family (`bobBossFight.js`): the rock arms at y < 120 (t=8, 174 dead frames); three forms die to seven landings (2 + 3 + 2; kills at t=99, 426 and 657), each searched against `run.bobBossForecast()` so no sword line and no body touches the player, each verified on the boss's own hits; fourteen dialogue pages; the Fire collected at t=839 ({32,1} and the out-of-band {31,29}); slot 1 equipped at t=840 (one tick after the flag: the slot array is rebuilt in the next frame); the burnable tree pressed at t=880 ({32,0}); the pit falls to L30 at t=976 and the transport coasts to the ground at t=1056. It is the first recording to hold the shield in a fight, which is what found `Player.shieldBump` (the shield shoves the boss). `r5-bobboss-fire` (noDamage, no shield, a hand cadence) stays the control.",
+    "description": "⛓⛓ SEEDLING SWIM U5 — L32's BobBoss encounter, SOLVED by `solverBot`'s `encounter` executor (`ENCOUNTER_EXECUTORS.Fire`) from the through-2.2 survey's step-30 boot (r8-solve-11's v8 block re-pointed at L32@72,120: the sword latched, the SHIELD held, hitsMax 3, damage ON). Every decision reads the BobBoss simulation family (`bobBossFight.js`): the rock arms at y < 120 (t=8, 174 dead frames); three forms die to seven landings (2 + 3 + 2; kills at t=99, 426 and 657), each searched against `run.bobBossForecast()` so no sword line and no body touches the player, each verified on the boss's own hits; fourteen dialogue pages; the Fire collected at t=839 ({32,1} and the out-of-band {31,29}); slot 1 equipped at t=840 (one tick after the flag: the slot array is rebuilt in the next frame); the burnable tree pressed at t=880 ({32,0}); the pit falls to L30 at t=976 and the transport coasts to the ground at t=1056. It is the first recording to hold the shield in a fight, which is what found `Player.shieldBump` (the shield shoves the boss). `r5-bobboss-fire` (noDamage, no shield, a hand cadence) stays the control. ⛓ fidelity APFLIP (R4, the p4g wasm @ccdf189776): the Fire's collect REPORTS {32,4} and grants nothing (the host does), so the t840 equip and the burn are gone: the tape is cut at t840 (every input before it unchanged) and ends 30 idle ticks later in the arena.",
     "boot": {
         "level": 32,
         "x": 72,
@@ -34,12 +34,7 @@
             "note": ""
         }
     ],
-    "equips": [
-        {
-            "t": 840,
-            "slot": 1
-        }
-    ],
+    "equips": [],
     "pins": [
         "sound",
         "dead_frames"
@@ -95,7 +90,7 @@
             "index": 1
         }
     },
-    "tick_count": 1056,
+    "tick_count": 870,
     "inputs": [
         {
             "key": "up",
@@ -351,76 +346,6 @@
             "key": "primary",
             "from": 837,
             "to": 838
-        },
-        {
-            "key": "primary",
-            "from": 840,
-            "to": 841
-        },
-        {
-            "key": "left",
-            "from": 840,
-            "to": 846
-        },
-        {
-            "key": "right",
-            "from": 846,
-            "to": 847
-        },
-        {
-            "key": "right",
-            "from": 853,
-            "to": 854
-        },
-        {
-            "key": "primary",
-            "from": 854,
-            "to": 855
-        },
-        {
-            "key": "left",
-            "from": 858,
-            "to": 859
-        },
-        {
-            "key": "right",
-            "from": 865,
-            "to": 866
-        },
-        {
-            "key": "left",
-            "from": 870,
-            "to": 871
-        },
-        {
-            "key": "up",
-            "from": 840,
-            "to": 874
-        },
-        {
-            "key": "down",
-            "from": 874,
-            "to": 875
-        },
-        {
-            "key": "up",
-            "from": 875,
-            "to": 876
-        },
-        {
-            "key": "primary",
-            "from": 880,
-            "to": 881
-        },
-        {
-            "key": "primary",
-            "from": 934,
-            "to": 935
-        },
-        {
-            "key": "up",
-            "from": 934,
-            "to": 957
         }
     ]
 }

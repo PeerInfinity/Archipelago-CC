@@ -1,0 +1,20 @@
+== step 28 — L19 ... SOLVED 568 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 446 ms
+== step 30 — L12 ... SOLVED 328 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2097 ms
+== step 32 — L12 ... SOLVED 311 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1581 ms
+== step 39 — L19 ... SOLVED 687 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 577 ms
+== step 43 — L12 ... SOLVED 2364 ticks, 4 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 37366 ms
+== step 49 — L31 ... SOLVED 336 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 545 ms
+== step 51 — L32 ... REFUSED — solverBot(survey-step-51) encounter (64,128)->Fire: the arena's exit (burnabletree@64,0) burns only with Fire, and under `apReportBosses` the Fire pickup grants
+== step 57 — L12 ... REFUSED — solverBot(survey-step-57) chest (320,816) stance: the re-planned corridor failed too — solverBot(survey-step-57) chest (320,816) stance waypoint 13 (328,834): t
+== step 74 — L12 ... SOLVED 953 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2708 ms
+== step 80 — L12 ... SOLVED 953 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2788 ms
+== step 94 — L57 ... NO-EDGE — the AP exit 'level_57 -> level_58__r4c1' is out_tentaclebeast_80_48, and the atlas has no such entity with `to` 58 in L57 — the two sources disagree.
+== step 113 — L43 ... REFUSED — the teleporter at (144,64) in level 43 stands ON a PIT tile (9,4). Walking into it fires the trigger and the pit edge in the same tick, and which one wins is Fl
+== step 115 — L12 ... SOLVED 1269 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 3132 ms
+== step 130 — L12 ... SOLVED 601 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2929 ms
+== step 144 — L12 ... REFUSED — solverBot(survey-step-144) reach-exit (32,848)->L83: applied 4 strategies for one goal [chest(chest@320,816), touch(shieldlocknorm@288,704), burn(burnabletree@4
+== step 161 — L82 ... REFUSED — solverBot(survey-step-161): no corridor for goal reach-exit toward (152,8) in level 82. Obstacle: solid:lavaboss (lavaboss@112,48). No strategy row exists for t
+== step 165 — L12 ... SOLVED 1269 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 2578 ms
+== step 175 — L12 ... REFUSED — solverBot(survey-step-175) reach-exit (32,848)->L83: applied 4 strategies for one goal [chest(chest@320,816), touch(shieldlocknorm@288,704), burn(burnabletree@4
+== step 182 — L82 ... REFUSED — solverBot(survey-step-182): no corridor for goal reach-exit toward (152,8) in level 82. Obstacle: solid:lavaboss (lavaboss@112,48). No strategy row exists for t
+== step 208 — L112 ... REFUSED — solverBot(survey-step-208): no corridor for goal reach-exit toward (120,8) in level 112. Obstacle: solid:rocklock (rocklock@112,16); also on the frontier: plant

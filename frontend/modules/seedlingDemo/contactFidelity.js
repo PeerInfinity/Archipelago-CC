@@ -702,6 +702,30 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_BOMB_BLAST_BODY=0|1` for a node measurement.
      */
     bombBlastBody: false,
+    /**
+     * fidelity APBOSSES D2 — THE R4 BOSS-REPORT AS3 (`apReportBosses.js`; PeerInfinity/Seedling `r4-boss-report`
+     * @ `0eda15f785`, ⚖ user 2026-10-19 Q1–Q3: all seven bosses report, Bob is always fought, every map).
+     *
+     *     BobBoss.as:31, 188-197        KILLED_TAG 3; no `hasFire` guard; the final death clears {32,3}, then adds
+     *                                   `Fire(…, BOSS_DROP_TAG)` only while {32,4} holds
+     *     FallRockLarge.as:116-127      the landing adds the boss while {32,3} holds, else the Fire while {32,4}, else
+     *                                   nothing (and `playerPosition` only with the boss)
+     *     Fire.as:49-55, DarkSword.as:49-58   `removed()` grants NOTHING (the host does) and clears its own slot
+     *     Witch.as:46-55                `doneTalking` adds the sword while `hasWand && checkPersistence(1)` in L12
+     *
+     * ON: the run reads {32,3} {32,4} {12,1} off its persistence (`run.persistenceHeld`), writes them in band, grants
+     * neither item, writes no tag −1 slot ({31,29} {11,29}), and the build accepts the three slots as read; the
+     * solver's Witch and Bob executors finish on the REPORT, never on the item. The six other bosses are unchanged
+     * (their kills already clear their OEL tag). `SEEDLING_AP_REPORT_BOSSES=0|1` for a node measurement.
+     *
+     * ⛓ fidelity APFLIP (vendor/seedling `ccdf189776`, the p4g wasm) adds, all behind this one switch: the Totem gate
+     * (`BossTotem.as:291`, `bossTotem.stepBossTotem`'s `allTotemParts`), the four boss rooms' persistence responses
+     * (`levelWorld.AP_BOSS_PERSISTENCE_RESPONSE`, H2), the totem's kill banked, the L32 arena rock's Solid at the
+     * entity's own placement (a delivered-set move), and the JS runtime's `bossreport` capability.
+     * ⚖ ON (user 2026-10-19, "Launch now; ON in R7 merge"): flipped by APFLIP inside js-7's one combined landing with
+     * the p4g gitlink, vendor/seedling `ccdf189776` and the rules arc's R4b; there is no OFF interim on main.
+     */
+    apReportBosses: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -845,6 +869,9 @@ if (globalThis.process?.env?.SEEDLING_WALKER_BEAM_TOWERS === '0') CONTACT_FIDELI
 // ⛓ fidelity BOMBBLAST D2: `SEEDLING_BOMB_BLAST_BODY=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_BOMB_BLAST_BODY === '1') CONTACT_FIDELITY.bombBlastBody = true;
 if (globalThis.process?.env?.SEEDLING_BOMB_BLAST_BODY === '0') CONTACT_FIDELITY.bombBlastBody = false;
+// ⛓ fidelity APBOSSES D2: `SEEDLING_AP_REPORT_BOSSES=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_AP_REPORT_BOSSES === '1') CONTACT_FIDELITY.apReportBosses = true;
+if (globalThis.process?.env?.SEEDLING_AP_REPORT_BOSSES === '0') CONTACT_FIDELITY.apReportBosses = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
