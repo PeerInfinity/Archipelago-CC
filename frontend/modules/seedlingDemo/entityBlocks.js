@@ -312,6 +312,9 @@ export const FAMILY_BLOCKS = deepFreeze([
     { family: 'bombs', kind: RUN_ENTITIES, blocks: ['explode'],
         solverReads: ['dangerMap', 'solverBot'], strategies: [],
         why: 'the `Bomb`s in flight, newest first (fidelity BOMBPUSHER: `levelRun.bombsNow`): position, velocity and the 30-update count to the `Explosion` (r 15) the 31st update adds.' },
+    { family: 'igneousTiles', kind: RUN_ENTITIES, blocks: ['stationary', 'proximity'],
+        solverReads: ['dangerMap'], strategies: [],
+        why: 'the room\'s Igneous-to-Lava tiles (type 31) with their render-driven clocks — `igneousCounter`, `igneousBreakApart`, `igneousFrame` and whether the tile has turned to lava (fidelity IGNEOUS: `levelRun.igneousTilesNow`, `igneousLava.js`); `null` while `CONTACT_FIDELITY.igneousLava` is off.' },
 
     /* ── the hazard volumes (`hazards.hazardVolume`, avoid volumes, unions over phase) ── */
     { family: 'volume:crusher', kind: VOLUME, blocks: ['lane-charge', 'contact'],
