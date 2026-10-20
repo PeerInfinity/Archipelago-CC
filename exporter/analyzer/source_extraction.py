@@ -13,7 +13,12 @@ import logging
 import textwrap
 import zipfile
 from typing import Optional, Callable
-import astunparse
+try:
+    import astunparse
+except ImportError:
+    # Pyodide has no astunparse; the stdlib's ast.unparse (3.9+) serves the one
+    # use below, whose output is only re-parsed, never compared as text.
+    import ast as astunparse
 
 from .cache import (
     file_content_cache,

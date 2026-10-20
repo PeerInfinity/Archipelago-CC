@@ -225,6 +225,74 @@ def _rule_needs_lambda(rule: dict) -> bool:
     return False
 
 
+def make_helper_generator(
+    game_name: str,
+    metadata,
+    helpers: Dict[str, HelperData],
+    placements: Optional[Dict[str, str]] = None,
+) -> HelperCodeGenerator:
+    """A HelperCodeGenerator configured for ``helpers``: known names, option
+    definitions (without them an option reads back as a world attribute) and
+    each helper's params/param_mappings/defaults."""
+    helper_generator = HelperCodeGenerator(
+        game_name,
+        resolved_values=metadata.resolved_values,
+        option_definitions=metadata.option_definitions
+    )
+    helper_generator.set_known_helpers(set(helpers.keys()))
+    helper_generator.set_placements(placements or {})
+
+    # Build helper data dict with param_mappings for AST_capability resolution
+    helper_data_dict = {}
+    for helper_name, helper_obj in helpers.items():
+        helper_data_dict[helper_name] = {
+            'params': helper_obj.params,
+            'param_mappings': helper_obj.param_mappings,
+            'defaults': helper_obj.defaults,
+        }
+    helper_generator.set_helper_data(helper_data_dict)
+    return helper_generator
+
+
+def generate_helper_functions(helper_generator: HelperCodeGenerator, helpers: Dict[str, HelperData]) -> List[str]:
+    """The Python source of each helper function, in ``helpers`` order.
+
+    Shared by ``generate_rules_py`` and ``exporter.script_api.helpers_to_python``
+    (helpers JSON -> Python in the browser), so the two cannot drift.
+    """
+    # Pre-scan all helper bodies for NamedTuple types
+    # This is needed so constructor calls can be resolved before code generation
+    for helper_data in helpers.values():
+        if helper_data.body:
+            helper_generator.prescan_for_namedtuples(helper_data.body)
+
+    return [
+        helper_generator.generate_helper_function(
+            helper_name,
+            helper_data.params,
+            helper_data.body,
+            helper_data.defaults
+        )
+        for helper_name, helper_data in helpers.items()
+    ]
+
+
+def render_helpers_section(helper_generator: HelperCodeGenerator, helper_functions: List[str]) -> str:
+    """The helper section of a Rules.py: NamedTuple classes, then the functions.
+
+    Called AFTER every other expression has been generated — rule expressions
+    can register NamedTuple types too, and the class list must include them.
+    """
+    if not helper_functions:
+        return ''
+    # Generate NamedTuple class definitions if any were encountered
+    namedtuple_classes = helper_generator.generate_namedtuple_classes()
+    if namedtuple_classes:
+        section = '\n\n# NamedTuple types for helper functions\n' + namedtuple_classes + '\n'
+        return section + '\n# Helper functions\n' + '\n\n\n'.join(helper_functions) + '\n'
+    return '\n\n# Helper functions\n' + '\n\n\n'.join(helper_functions) + '\n'
+
+
 def generate_rules_py(data: ExtractedData) -> str:
     """Generate Rules.py file content.
 
@@ -299,23 +367,7 @@ def generate_rules_py(data: ExtractedData) -> str:
             entrance_connections[exit_name] = exit_data.target_region
     rule_builder_generator.set_entrance_connections(entrance_connections)
 
-    helper_generator = HelperCodeGenerator(
-        game_name,
-        resolved_values=data.metadata.resolved_values,
-        option_definitions=data.metadata.option_definitions
-    )
-    helper_generator.set_known_helpers(set(data.helpers.keys()))
-    helper_generator.set_placements(data.original_placements)
-
-    # Build helper data dict with param_mappings for AST_capability resolution
-    helper_data_dict = {}
-    for helper_name, helper_obj in data.helpers.items():
-        helper_data_dict[helper_name] = {
-            'params': helper_obj.params,
-            'param_mappings': helper_obj.param_mappings,
-            'defaults': helper_obj.defaults,
-        }
-    helper_generator.set_helper_data(helper_data_dict)
+    helper_generator = make_helper_generator(game_name, data.metadata, data.helpers, data.original_placements)
 
     # Check if any rules need helpers or lambda
     has_helpers = bool(data.helpers)
@@ -333,22 +385,7 @@ def generate_rules_py(data: ExtractedData) -> str:
                 break
 
     # Generate helper functions
-    helper_functions = []
-    if has_helpers:
-        # Pre-scan all helper bodies for NamedTuple types
-        # This is needed so constructor calls can be resolved before code generation
-        for helper_data in data.helpers.values():
-            if helper_data.body:
-                helper_generator.prescan_for_namedtuples(helper_data.body)
-
-        for helper_name, helper_data in data.helpers.items():
-            func_code = helper_generator.generate_helper_function(
-                helper_name,
-                helper_data.params,
-                helper_data.body,
-                helper_data.defaults
-            )
-            helper_functions.append(func_code)
+    helper_functions = generate_helper_functions(helper_generator, data.helpers)
 
     # Collect all rules
     entrance_rules = []
@@ -450,15 +487,7 @@ def {func_name}(state: "CollectionState", player: int) -> bool:
 ''')
 
     # Build helper section
-    helpers_section = ''
-    if helper_functions:
-        # Generate NamedTuple class definitions if any were encountered
-        namedtuple_classes = helper_generator.generate_namedtuple_classes()
-        if namedtuple_classes:
-            helpers_section = '\n\n# NamedTuple types for helper functions\n' + namedtuple_classes + '\n'
-            helpers_section += '\n# Helper functions\n' + '\n\n\n'.join(helper_functions) + '\n'
-        else:
-            helpers_section = '\n\n# Helper functions\n' + '\n\n\n'.join(helper_functions) + '\n'
+    helpers_section = render_helpers_section(helper_generator, helper_functions)
 
     # Add defeat rule functions after helpers
     if defeat_rule_functions:
