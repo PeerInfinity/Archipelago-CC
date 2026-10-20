@@ -72,6 +72,16 @@ The bot keeps going loop after loop until the world is finished or you press **�
 
 Switching **Check next** stops whatever is running. The panel remembers your choice.
 
+## Walk order
+
+With **Check next** set to the sphere log, **Walk order** chooses which of its locations the bot walks to next:
+
+- **Sphere log, in order** (the default) — exactly as listed.
+- **Cheapest in the current sphere** — any location of the lowest sphere not yet finished, the one with the cheapest route first: the fewest returns to the menu, then the fewest region changes. Inside one sphere every location was reachable before any of them was collected, so any order there is still a valid playthrough. Before returning to the menu from a place it cannot walk out of, the bot first collects anything else it can walk to from there.
+- **Cheapest reachable location** — the cheapest route among every location reachable now, from any sphere.
+
+Both cheapest orders keep the location that holds the goal for last. In a Seedling playthrough, the in-order route returns to the menu five times; **Cheapest reachable location** returns once and changes region about a quarter less often. The line under the target shows the run's counts: restarts, region transitions and legs. Loop mode always follows the sphere order. Changing the walk order stops a running walk, and the panel remembers your choice.
+
 ## Without a generated world
 
 In an ordinary game's preset (one that is not procgen, such as Adventure), the bot has no rooms to walk: it checks each location and moves between regions directly, one action per tick at the chosen speed.

@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 28,
         "headings": 1140,
         "indexHeadings": 2,
-        "lines": 30973,
+        "lines": 30983,
         "pages": 4,
-        "words": 423776
+        "words": 423980
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -170,7 +170,7 @@ export const DOCS_INDEX = frz({
             "file": "playback-and-debugging.md",
             "h1": "Playback and Debugging Tools",
             "headings": 9,
-            "lines": 114,
+            "lines": 124,
             "links": [
                 "architecture.md",
                 "bounce.md",
@@ -179,7 +179,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/playback-and-debugging.md",
-            "words": 3474
+            "words": 3678
         },
         {
             "description": "How loop mode records what a player does in a region and plays it back: per-block modes (Manual, Record, Playback, Bot) and the Instant toggle, the saved-recording store, the capture contract that decides who records, queue annotations, summary substrates, reset handling and multi-run replay, and the strict action gate.",

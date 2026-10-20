@@ -231,7 +231,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 433,
         "browser": 146,
-        "cited": 226,
+        "cited": 227,
         "files": 446,
         "lineStyle": 13,
         "withDocblock": 446,
@@ -7061,7 +7061,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": false,
             "category": "measure",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/playback-and-debugging.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
                 "json",

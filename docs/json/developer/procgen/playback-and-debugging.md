@@ -13,6 +13,16 @@ A sphere-log-driven walker that auto-drives substrate panels through a recorded 
 - The module owns the `playbackBotPanel` Golden Layout panel, registers the `playback:command` publisher, and subscribes to `user/system:locationCheck` and `user:regionMove` on the dispatcher, forwarding them to the active panel's bot. An active-panel singleton (`setActivePanel`/`getActivePanel`) lets those dispatcher receivers reach the bot without circular imports — the same pattern mazeRoom and procgenPipeline use.
 - A persisted click-intercept toggle (`playbackBot_intercept`, off by default) and a bounded dispatcher event log (last 200 events) live in the panel UI.
 
+**Walk order (which sphere-log row next).** The walk loop's next target is the panel's setting `playbackBot_walkOrder` (`playbackBot/walkOrder.js`):
+- `sphere-in-order` (the default) is the queue head, and the walk loop's code path is the one it always had.
+- `sphere-cheapest` takes the lowest open integer sphere's unchecked rows. It adds the POCKET SWEEP: before a Restart out of a room no walk leaves, it takes any accessible row a walk from there reaches.
+- `reachable-cheapest` takes every unchecked row the live snapshot holds accessible.
+- Both price each candidate with `planRoute` (its hops, and whether it begins with a Restart) over ONE accessibility map of the flushed snapshot (`frozenFindPath`). They rank with `procgenCore/routeChooser.js` `chooseNext`: the fewest Restarts, then the fewest hops, the goal row last, ties progression-first then listed.
+- The chosen row is kept until it is checked. The run's counts (`getRouteStats`: restarts, region transitions, legs) show on their own line.
+- Loop mode keeps the sphere order.
+- The orderings were priced offline before the bot used one (`scripts/procgen/measure-bot-route-orders.mjs`). Seedling playthrough: listed 5 Restarts / 392 region transitions, `reachable-cheapest` 1 / 289, `sphere-cheapest` 1 / 357. Greedy is not always better (bakingadventure seed 01043188731678011336: 23 → 27).
+- The in-app row is `playback-bot-walk-order`.
+
 **Direct play (a plain rules.json).** A region with no substrate sidecar, whose controller is missing or refuses the walk (the maze fallback has no tile for it), is played by the bot itself: it publishes its own `user:locationCheck` / `user:regionMove` (tagged `fromBot`), one per tick at the bot's rate, at once under Instant, once under Step. Nothing in it is game-specific, so any non-procgen preset plays this way (the in-app row `playback-bot-direct-play-adventure`).
 - An event counts only when it LANDED: a check once the stateManager snapshot holds it, a move once gameState's current region is its target. A check or move the loop-mode gate (or the worker) refused leaves the cursor where it was, and the status says `blocked: …`.
 - In loop mode the bot never acts directly: only the Loops queue may (a direct check in a plain region would cost no mana).
