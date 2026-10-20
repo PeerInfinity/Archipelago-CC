@@ -116,12 +116,15 @@ export const BOSS_TOTEM = Object.freeze({
     kill: Object.freeze({ hitsMax: 5, hitsTimerMax: 20, onlyHitBy: 'Wand' }),
     /** ⛓ `activeOffScreen = true` — the camera is out of this one. */
     activeOffScreen: true,
+    // ⛓ APFLIP D2: re-cited at vendor/seedling `ccdf189776` (R4's totem gate added four lines at :287-290, so every
+    // line from the activation block down moved +4; the clamp above it did not).
     src: Object.freeze({
-        clamp: 'BossTotem.as:280-286 — above the activation block, no freeze test',
-        activate: 'BossTotem.as:287-293 — `FP.world.classCount(Wand) <= 0 && !activated`',
-        ramp: 'BossTotem.as:294-313',
-        preWakeSolid: 'BossTotem.as:315 — the ELSE of `if (activated)`',
-        rest: 'BossTotem.as:317-330',
+        clamp: 'BossTotem.as:280-286 @ccdf189776 — above the activation block, no freeze test',
+        activate: 'BossTotem.as:291-297 @ccdf189776 — `FP.world.classCount(Wand) <= 0 && !activated '
+            + '&& Player.hasAllTotemParts()` (the last clause is R4\'s, `CONTACT_FIDELITY.apReportBosses`)',
+        ramp: 'BossTotem.as:298-317 @ccdf189776',
+        preWakeSolid: 'BossTotem.as:319 @ccdf189776 — the ELSE of `if (activated)`',
+        rest: 'BossTotem.as:321-334 @ccdf189776',
     }),
 });
 
@@ -353,6 +356,8 @@ function bossLaserStep(b, { isSolid, playerBox }, out) {
  * @param {object}  b          the state, mutated
  * @param {object}  opts
  * @param {boolean} opts.wandGone      `FP.world.classCount(Wand) <= 0`
+ * @param {boolean} [opts.allTotemParts] ⛓ APFLIP D2: `Player.hasAllTotemParts()` this tick (R4's gate, the switch
+ *   ON); undefined = the pre-R4 edge
  * @param {boolean} opts.freezeObjects `Game.freezeObjects` for THIS tick
  * @param {number|null} opts.playerY   the player's y, or null if unmodelled
  * @param {?object} opts.playerBox     the player's box, for the laser and the body
@@ -371,7 +376,7 @@ function bossLaserStep(b, { isSolid, playerBox }, out) {
  */
 export function stepBossTotem(b, {
     wandGone, freezeObjects, playerY = null, playerBox = null,
-    isSolid = null, terrainState = null,
+    isSolid = null, terrainState = null, allTotemParts = undefined,
 }) {
     const out = {
         clampedY: null, activatedNow: false, walkingNow: false,
@@ -392,8 +397,11 @@ export function stepBossTotem(b, {
         const floor = bossTotemClampY(b);
         if (playerY < floor) out.clampedY = floor;
     }
-    // 2. the activation edge.
-    if (wandGone && !b.activated) {
+    // 2. the activation edge. ⛓ APFLIP D2 (`CONTACT_FIDELITY.apReportBosses`): R4 adds `&& Player.hasAllTotemParts()`
+    //    (`BossTotem.as:291` @ccdf189776), which the caller reads LIVE and passes as `allTotemParts`. Left out
+    //    (undefined), the edge is the pre-R4 line, so an OFF caller is byte-identical. Vanilla's Wand waits for the
+    //    parts itself (`Wand.update`); an `APItem` in its place does not, which is the case the clause exists for.
+    if (wandGone && !b.activated && allTotemParts !== false) {
         b.activated = true;
         b.sinceActivation = 0;
         out.activatedNow = true;

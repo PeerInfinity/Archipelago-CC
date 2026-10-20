@@ -133,7 +133,8 @@ describe('flash_seedling — the atlas install knob (S2 D1)', () => {
         //   (L15's L16 arrival column, L16's L18-side pocket, L39's L40-side pocket and one more).
         // ⛓ RULES game-truth-gaps: 175 -> 178 — L57 is lifted from never-enter (⚖ 2026-10-06): `level_57` itself, and
         //   L58's two sub-regions whose doors back into L57 are now wired (r4c1, r6c5).
-        expect(entry.zoneCount).toBe(178);
+        // ⛓ R4b (rules-boss-locations): 178 -> 179 — L69 is lifted from never-enter (⚖ 2026-10-19): `level_69` itself.
+        expect(entry.zoneCount).toBe(179);
         entry.prepareSphereGrowth({ params: {} });
         expect(entry.rulesJsonBlocks().region_atlas.atlas_id).toBe(SEEDLING_STARTER_ATLAS.atlas_id);
     });

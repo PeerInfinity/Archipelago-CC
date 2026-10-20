@@ -137,6 +137,11 @@ import {
 import { ARENA as BOB_BOSS_ARENA, FIRE as BOB_BOSS_FIRE } from './bobBoss.js';
 // ⛓⛓ Seedling fidelity ENCOUNTERS D3: L12's Witch and the DarkSword it adds.
 import { DARK_SWORD, darkSwordBox, darkSwordSpawnAt, witchGrants, witchText } from './witch.js';
+// ⛓ fidelity APBOSSES D2: the R4 boss-report AS3 (`CONTACT_FIDELITY.apReportBosses`).
+import {
+    AP_REPORT_ROWS, BOB_KILLED_TAG, FIRE_BOSS_DROP_TAG, DARK_SWORD_WITCH_TAG, bobBossFinalDeath, fallRockLargeSpawn,
+    reportPickupRemoved, witchGrantsReport,
+} from './apReportBosses.js';
 import { PICKUP_REMOVED_NEXT_FRAME } from './pickupRemoval.js';
 import {
     BOB_BOSS_ROCK_DEAD_FRAMES, beginBobBossDialogue, bobBossBox, bobBossHit, bobBossRockArms,
@@ -1060,6 +1065,29 @@ export function createLevelRun({
         // is what `Lock.check()` does to a freshly constructed `Game`.
         worlds.delete(n);
         activatorStates.delete(n);
+    };
+    /**
+     * ⛓ fidelity APBOSSES D2 (`CONTACT_FIDELITY.apReportBosses`) — `Game.checkPersistence` for the three R4 slots
+     * ({32,3} {32,4} {12,1}, `apReportBosses.js`): FALSE once the staging cleared it (`clearedByLevel`, the game's
+     * `persistence_cleared` at the boot or a declared row) or this run wrote it (`apReportWrite` banks into
+     * `pendingEarnedClears`, which the game's array holds from the write frame). ⛔ Authoritative for those slots only:
+     * other families keep ledgers of their own (`pickupFlags`, …), so a general reader here would be a wrong answer.
+     */
+    const apReportSlotHeldNow = (n, tag) => {
+        if (!AP_REPORT_ROWS.some((r) => r.changed && r.level === n && r.tag === tag)) {
+            throw new Error(`levelRun.apReportSlotHeld: {${n},${tag}} is not an R4 slot (the three a changed `
+                + 'writer clears: {32,3} {32,4} {12,1}).');
+        }
+        return !(clearedByLevel.get(n) ?? []).includes(tag) && !(pendingEarnedClears.get(n)?.has(tag) ?? false);
+    };
+    /** ⛓ fidelity APBOSSES D2: the R4 writes this run made, `"<level>:<tag>" -> {id, level, tag, t}` (an `earnedClears` feeder). */
+    const apReportFlags = new Map();
+    /** ⛓ fidelity APBOSSES D2: one IN-BAND `setPersistence(tag, false)` of an R4 writer, banked as every earned clear is. */
+    const apReportWrite = (w, id) => {
+        if (!pendingEarnedClears.has(w.level)) pendingEarnedClears.set(w.level, new Set());
+        pendingEarnedClears.get(w.level).add(w.tag);
+        const key = `${w.level}:${w.tag}`;
+        if (!apReportFlags.has(key)) apReportFlags.set(key, { id, level: w.level, tag: w.tag, t: ticksCompleted + 1 });
     };
     /**
      * ⛓⛓⛓ SEEDLING FIDELITY CROSSROOM D2 — **A CROSS-ROOM `ButtonRoom` WRITE INTO A
@@ -2593,8 +2621,8 @@ export function createLevelRun({
         // `fallRockStateFor` holds it as a 16x16 `createFallRock` that nothing
         // ever drops; the arena owns its landing (`stepBobBossArenaNow`).
         if (bobArena && !bobArena.none && bobArena.level === level && bobArena.landed) {
-            out.set(bobArena.rockId, { id: bobArena.rockId, tag: 'fallrocklarge',
-                rect: bobBossRockRect(), x: bobBossRockRect().x, y: bobBossRockRect().y });
+            const rr = bobArenaRockRect();
+            out.set(bobArena.rockId, { id: bobArena.rockId, tag: 'fallrocklarge', rect: rr, x: rr.x, y: rr.y });
         }
         // ⛓ U14-swim D1: a SET `Moonrock`, a 48x48 Solid from its landing (or
         // from its ctor, once `Game.moonrockSet`). `noclip` builds none.
@@ -3407,6 +3435,12 @@ export function createLevelRun({
      */
     let wandLeftTheWorld = false;
     /**
+     * ⛓ APFLIP D2: R4's totem gate, `Player.hasAllTotemParts()` read LIVE on the tick it is asked (`BossTotem.as:291`
+     * @ccdf189776), under `CONTACT_FIDELITY.apReportBosses`; undefined OFF, which `stepBossTotem` reads as the pre-R4
+     * edge.
+     */
+    const totemGateNow = () => (CONTACT_FIDELITY.apReportBosses === true ? hasAllTotemParts() : undefined);
+    /**
      * ⛓⛓ R5 SLICE 23: has the wand's approach FADE been spent this visit?
      *
      * ⛔⛔ THE FADE IS A FREEZE THAT FIRES ON APPROACH, NOT ON CONTACT, and
@@ -3541,6 +3575,8 @@ export function createLevelRun({
                 renderBossTotem(b);
                 stepBossTotem(b, {
                     wandGone: wandGoneNow,
+                    // ⛓ APFLIP D2: R4's `&& Player.hasAllTotemParts()`, read live (`totemGateNow`).
+                    allTotemParts: totemGateNow(),
                     // ⚠ TRUE FOR THE WHOLE SPAN, including the last frame.
                     // On the release frame the rock clears the flag BEFORE
                     // the boss updates (`addUpdate` prepends and the rocks
@@ -9450,6 +9486,15 @@ export function createLevelRun({
             const flag = outOfBandFlagFor(level, w.tag);
             bossFlags.set(ledgerKey(flag),
                 { ...flag, id: b.id ?? 'bosstotem', level, t: ticksCompleted });
+            // ⛓ APFLIP D4 (H2, `CONTACT_FIDELITY.apReportBosses`): the write is IN BAND (`BossTotem.as:482`
+            // @ccdf189776, the Totem of Lacste location), so it is banked like ShieldBoss's: a same-run re-entry of
+            // L43 builds the room with {43,5} cleared, and `check()` (`:462-468`) despawns the boss
+            // (`AP_BOSS_PERSISTENCE_RESPONSE.bosstotem`). OFF it reached `earnedClears` alone and a re-entry rebuilt
+            // the boss.
+            if (CONTACT_FIDELITY.apReportBosses === true) {
+                if (!pendingEarnedClears.has(flag.level)) pendingEarnedClears.set(flag.level, new Set());
+                pendingEarnedClears.get(flag.level).add(flag.tag);
+            }
             const kill = bossKills.find((k) => k.level === level && k.tagTick === null);
             if (kill) {
                 kill.tagTick = ticksCompleted;
@@ -14425,12 +14470,17 @@ export function createLevelRun({
                     // stepped yet this frame (the Witch updates first), so the
                     // sword is spawned where the player stands now.
                     if (w.tag === 'witch') {
-                        const grants = witchGrants(inventory);
+                        // ⛓ fidelity APBOSSES D2: ON, `Witch.as:50` @0eda15f785 — `hasWand &&
+                        // checkPersistence(DarkSword.WITCH_TAG)`, the slot read off the run; the sword carries the tag.
+                        const report = CONTACT_FIDELITY.apReportBosses;
+                        const slotHeld = report ? apReportSlotHeldNow(w.level, DARK_SWORD_WITCH_TAG) : null;
+                        const grants = report ? witchGrantsReport(inventory, { slotHeld }) : witchGrants(inventory);
                         witchLedger.push({ t: ticksCompleted, level: w.level, what: 'witch-close', id: w.id,
-                            cause: r.left ? 'left' : 'done', grants });
+                            cause: r.left ? 'left' : 'done', grants, ...(report ? { slotHeld } : {}) });
                         if (grants) {
                             const at = darkSwordSpawnAt(state);
-                            witchSword = { level: w.level, x: at.x, y: at.y, added: false, collected: false };
+                            witchSword = { level: w.level, x: at.x, y: at.y, added: false, collected: false,
+                                ...(report ? { tag: DARK_SWORD_WITCH_TAG } : {}) };
                         }
                     }
                 }
@@ -14893,6 +14943,16 @@ export function createLevelRun({
      * (`REFUSED_CLEAR_RESPONSES.arm`), and a death mid-fight is refused by
      * `stepBobBossArenaNow` before it can reboot.
      */
+    /**
+     * ⛓ APFLIP D1 (`CONTACT_FIDELITY.apReportBosses`): the arena rock's landed box at the ENTITY'S placement (the
+     * `thirdboss` rock's `world.fallRocks` row, the delivered set's x,y), not the vanilla constant. Read off the world
+     * each ask, so no new run state (the digest is untouched). OFF: `bobBossRockRect()`, the constant.
+     */
+    const bobArenaRockRect = () => {
+        if (CONTACT_FIDELITY.apReportBosses !== true) return bobBossRockRect();
+        const rock = (world.fallRocks ?? []).find((r) => r.thirdBoss === true);
+        return bobBossRockRect(rock ? { x: rock.x, y: rock.y } : null);
+    };
     const bobArenaNow = () => {
         if (bobArena && bobArena.level === level) return bobArena;
         const rock = (world.fallRocks ?? []).find((r) => r.thirdBoss === true);
@@ -14945,7 +15005,9 @@ export function createLevelRun({
         let npcFrozen = false;
         if (a.pending) {
             if (a.pending.fire) {
-                a.fire = { x: a.pending.at.x, y: a.pending.at.y };
+                // ⛓ fidelity APBOSSES D2: ON, the drop is `new Fire(…, BOSS_DROP_TAG)` — its tag rides on it.
+                a.fire = { x: a.pending.at.x, y: a.pending.at.y,
+                    ...(a.pending.tag !== undefined ? { tag: a.pending.tag } : {}) };
                 bobLedger({ what: 'fire-added', x: a.fire.x, y: a.fire.y });
             } else {
                 a.boss = createBobBossBody(a.pending.form);
@@ -15003,8 +15065,17 @@ export function createLevelRun({
                 bobNoInput = false;
                 damage = { ...damage, hits: 0, directionFace: -1 };
                 a.pending = r.spawn;
+                if (CONTACT_FIDELITY.apReportBosses && r.spawn.fire) {
+                    // ⛓ fidelity APBOSSES D2: `BobBoss.as:192-194` @0eda15f785 — `setPersistence(KILLED_TAG,
+                    // false)` (the `Times` report), THEN the drop only while `checkPersistence(BOSS_DROP_TAG)`.
+                    const death = bobBossFinalDeath({ dropHeld: apReportSlotHeldNow(level, FIRE_BOSS_DROP_TAG) });
+                    for (const w of death.writes) apReportWrite(w, b.id);
+                    bobLedger({ what: 'boss-killed', form: b.form,
+                        flag: { level, tag: BOB_KILLED_TAG, value: false }, drop: !!death.spawn });
+                    a.pending = death.spawn ? { fire: true, at: { ...r.spawn.at }, tag: FIRE_BOSS_DROP_TAG } : null;
+                }
                 bobLedger({ what: 'boss-removed', form: b.form,
-                    next: r.spawn.fire ? 'fire' : `form ${r.spawn.form}` });
+                    next: a.pending === null ? 'nothing' : (r.spawn.fire ? 'fire' : `form ${r.spawn.form}`) });
                 a.boss = null;
             }
         }
@@ -15060,12 +15131,24 @@ export function createLevelRun({
          */
         if (a.landed) {
             const pb = playerBoxAt(state.x, state.y);
-            const rr = bobBossRockRect();
+            const rr = bobArenaRockRect();
             if (pb.right > rr.x && pb.x < rr.right && pb.bottom > rr.y && pb.y < rr.bottom) {
                 const y = rr.y + (state.y - pb.y) - (pb.bottom - pb.y);
                 bobLedger({ what: 'rock-snap', from: state.y, to: y });
                 state = { ...state, y };
             }
+        }
+        if (a.spawnOnFirstFrame && CONTACT_FIDELITY.apReportBosses) {
+            // ⛓ fidelity APBOSSES D2: `FallRockLarge.as:116-127` @0eda15f785 — the boss while {32,3} holds (and only
+            // then `playerPosition`), else the Fire drop while {32,4} holds, else nothing. No `hasFire` read.
+            a.spawnOnFirstFrame = false;
+            const slots = { killedHeld: apReportSlotHeldNow(level, BOB_KILLED_TAG),
+                dropHeld: apReportSlotHeldNow(level, FIRE_BOSS_DROP_TAG) };
+            const s = fallRockLargeSpawn(slots);
+            if (s.playerPosition) worldCtor = { x: BOB_BOSS_ARENA.respawn.x, y: BOB_BOSS_ARENA.respawn.y };
+            a.pending = s.spawn?.fire ? { fire: true, at: { ...BOB_BOSS_FIRE.at }, tag: FIRE_BOSS_DROP_TAG } : s.spawn;
+            bobLedger({ what: 'rock-fallen-at-build', boss: s.spawn?.form === 0, fire: !!s.spawn?.fire, ...slots,
+                playerPosition: s.playerPosition ? { ...worldCtor } : null });
         }
         if (a.spawnOnFirstFrame) {
             a.spawnOnFirstFrame = false;
@@ -15109,6 +15192,19 @@ export function createLevelRun({
                     }
                     state = freed;
                     a.landed = true;
+                    if (CONTACT_FIDELITY.apReportBosses) {
+                        // ⛓ fidelity APBOSSES D2: `FallRockLarge.as:116-127` @0eda15f785, the same three-way as
+                        // the fallen-at-build arm above: the boss (+ `playerPosition`) / the Fire / nothing.
+                        const slots = { killedHeld: apReportSlotHeldNow(level, BOB_KILLED_TAG),
+                            dropHeld: apReportSlotHeldNow(level, FIRE_BOSS_DROP_TAG) };
+                        const s = fallRockLargeSpawn(slots);
+                        a.pending = s.spawn?.fire
+                            ? { fire: true, at: { ...BOB_BOSS_FIRE.at }, tag: FIRE_BOSS_DROP_TAG } : s.spawn;
+                        if (s.playerPosition) worldCtor = { x: BOB_BOSS_ARENA.respawn.x, y: BOB_BOSS_ARENA.respawn.y };
+                        bobLedger({ what: 'rock-landed', deadFrames: BOB_BOSS_ROCK_DEAD_FRAMES, ...slots,
+                            spawn: s.spawn?.fire ? 'fire' : (s.spawn ? 'boss' : 'nothing') });
+                        return;
+                    }
                     // ⛓ ENCOUNTERS D2: `new BobBoss(72, 72)`'s ctor REMOVES ITSELF
                     // when `Player.hasFire` (`BobBoss.as:37-41`) — the same gate the
                     // fallen-at-build arm above reads. No tape arms the rock holding it.
@@ -15428,7 +15524,7 @@ export function createLevelRun({
         // player's box (the snap is due on the next frame), so every other row is
         // byte-identical.
         const pb = a.landed ? playerBoxAt(state.x, state.y) : null;
-        const rr = a.landed ? bobBossRockRect() : null;
+        const rr = a.landed ? bobArenaRockRect() : null;
         const holds = a.landed && pb.right > rr.x && pb.x < rr.right && pb.bottom > rr.y && pb.y < rr.bottom;
         out.set('rock', { id: a.rockId, armed: a.armed, landed: a.landed, ...(holds ? { holdsPlayer: true } : {}) });
         if (b) {
@@ -15904,6 +16000,13 @@ export function createLevelRun({
         // what "a kill sets a flag" suggests. It belongs in this ledger
         // for that reason and not in a ledger of its own.
         for (const [key, r] of bossFlags) {
+            const [n, tag] = key.split(':').map(Number);
+            if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
+            if (out.some((o) => o.level === n && o.tag === tag)) continue;
+            out.push({ level: n, tag, by: r.id, t: r.t });
+        }
+        // ⛓ fidelity APBOSSES D2: the R4 writes — the Bob kill {32,3}, the Fire {32,4}, the dark sword {12,1}.
+        for (const [key, r] of apReportFlags) {
             const [n, tag] = key.split(':').map(Number);
             if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
             if (out.some((o) => o.level === n && o.tag === tag)) continue;
@@ -17221,6 +17324,12 @@ export function createLevelRun({
         get appliedTimedClears() { return appliedTimedClearsNow(); },
 
         get earnedClears() { return earnedClearsNow(); },
+        /**
+         * ⛓ fidelity APBOSSES D2 — `Game.checkPersistence(tag)` in `level` for an R4 slot ({32,3} {32,4} {12,1};
+         * any other slot throws). The solver's Witch and Bob executors read WHICH STATE the room is in off this,
+         * never off an item (⚖ "a way to know which state it's in").
+         */
+        apReportSlotHeld(n, tag) { return apReportSlotHeldNow(n, tag); },
         /** Is a touch-lock refusing input RIGHT NOW? The driver's gate. */
         get inputRefused() { return inputRefusedNow(); },
         /**
@@ -19525,9 +19634,10 @@ export function createLevelRun({
                             x: state.x, y: state.y });
                         ceremony = {
                             pickup: { tag: 'darksword', x: witchSword.x, y: witchSword.y, runtime: true,
-                                witchSword: true },
+                                witchSword: true, ...(witchSword.tag !== undefined ? { reportTag: witchSword.tag } : {}) },
                             level,
-                            item: DARK_SWORD.item,
+                            // ⛓ fidelity APBOSSES D2: ON, `DarkSword.removed()` grants nothing (the host does).
+                            item: witchSword.tag !== undefined ? null : DARK_SWORD.item,
                             keyType: null,
                             totemPart: null,
                             dialogue: beginDialogue(DARK_SWORD.text, { framesThisCharacter }),
@@ -19546,9 +19656,11 @@ export function createLevelRun({
                     spendCeremonyPhaseA('fire');
                     bobLedger({ what: 'fire-contact', x: state.x, y: state.y });
                     ceremony = {
-                        pickup: { tag: 'fire', x: fire.x, y: fire.y, runtime: true, bobFire: true },
+                        pickup: { tag: 'fire', x: fire.x, y: fire.y, runtime: true, bobFire: true,
+                            ...(fire.tag !== undefined ? { reportTag: fire.tag } : {}) },
                         level,
-                        item: 'fire',
+                        // ⛓ fidelity APBOSSES D2: ON, `Fire.removed()` grants nothing (the host does).
+                        item: fire.tag !== undefined ? null : 'fire',
                         keyType: null,
                         totemPart: null,
                         dialogue: beginDialogue(BOB_BOSS_FIRE.text, { framesThisCharacter }),
@@ -19771,7 +19883,20 @@ export function createLevelRun({
                     // item, below) and `if (checkPersistence(-1)) setPersistence(-1,
                     // false)`: an out-of-band write behind an out-of-band READ
                     // (`OUT_OF_BAND_WRITERS.DarkSword`, `ifFlagAlreadySet`). Reported.
-                    if (ceremony.pickup.witchSword) {
+                    if (ceremony.pickup.witchSword && ceremony.pickup.reportTag !== undefined) {
+                        // ⛓ fidelity APBOSSES D2: `DarkSword.as:49-58` @0eda15f785 — `if (checkPersistence(tag))
+                        // setPersistence(tag, false)`, IN BAND ({12,1}); no item, no tag −1 read or write.
+                        witchSword.collected = true;
+                        const at = level;
+                        const tag = ceremony.pickup.reportTag;
+                        removedWrite(() => {
+                            const rm = reportPickupRemoved('darksword', { held: apReportSlotHeldNow(at, tag) });
+                            for (const w of rm.writes) apReportWrite(w, `darksword@${at}`);
+                            witchLedger.push({ t: ticksCompleted + 1, level: at, what: 'darksword-removed',
+                                flag: rm.writes.length ? { level: at, tag, value: false } : null, outOfBand: false,
+                                writesWhen: 'ifFlagAlreadySet' });
+                        });
+                    } else if (ceremony.pickup.witchSword) {
                         witchSword.collected = true;
                         const flag = outOfBandFlagForWriter({ as3: 'DarkSword', level, tag: -1 });
                         const at = level;
@@ -19779,7 +19904,18 @@ export function createLevelRun({
                             flag: { level: flag.level, tag: flag.tag, value: false }, outOfBand: flag.outOfBand,
                             writesWhen: 'ifFlagAlreadySet' }));
                     }
-                    if (ceremony.pickup.bobFire) {
+                    if (ceremony.pickup.bobFire && ceremony.pickup.reportTag !== undefined) {
+                        // ⛓ fidelity APBOSSES D2: `Fire.as:49-55` @0eda15f785 — `setPersistence(tag, false)`, IN
+                        // BAND ({32,4}); no item (the host grants it), no {31,29}.
+                        bobArena.fireCollected = true;
+                        const at = level;
+                        removedWrite(() => {
+                            const rm = reportPickupRemoved('fire', { held: true });
+                            for (const w of rm.writes) apReportWrite(w, `fire@${at}`);
+                            bobLedger({ what: 'fire-removed', t: ticksCompleted + 1, level: at,
+                                flag: { level: at, tag: FIRE_BOSS_DROP_TAG, value: false }, outOfBand: false });
+                        });
+                    } else if (ceremony.pickup.bobFire) {
                         bobArena.fireCollected = true;
                         const flag = outOfBandFlagForWriter({ as3: 'Fire', level, tag: -1 });
                         const at = level;
@@ -19943,8 +20079,17 @@ export function createLevelRun({
             // ticks spent here too, so that is a REFUSAL rather than an
             // approximation.
             if (!noclip && !droppedRocksThisTick) {
+                // ⛓ APFLIP D2 (`CONTACT_FIDELITY.apReportBosses`): `classCount(Wand) <= 0`, the game's own test — a room
+                // whose Wand is already gone (its slot cleared, or an `apitem` in its place) holds none from the build.
+                const wandGoneLive = wandLeftTheWorld || (CONTACT_FIDELITY.apReportBosses === true
+                    && !(world.pickups ?? []).some((p) => p.tag === 'wand'));
                 for (const b of bossStateFor(level).values()) {
-                    if (!b.activated) continue;
+                    // ⛓ APFLIP D2: under the switch the activation EDGE is taken on a live tick too (R4,
+                    // `BossTotem.as:291` @ccdf189776: no Wand AND all five parts, read every tick), not only inside the
+                    // Wand's rock drop. Never inside a ceremony: there the edge is unmodelled and the boss stays asleep
+                    // (named, see the report). OFF, a sleeping boss is skipped as before.
+                    if (!b.activated && !(CONTACT_FIDELITY.apReportBosses === true && ceremony === null
+                        && wandGoneLive && totemGateNow() === true)) continue;
                     if (ceremony !== null) {
                         throw new Error('levelRun: a BossTotem is awake while a '
                             + 'ceremony is running. Its rumble and activation ramp '
@@ -19956,7 +20101,8 @@ export function createLevelRun({
                     }
                     const bossOpts = normalizeLiveOpts(liveSolidOpts());
                     const r = stepBossTotem(b, {
-                        wandGone: wandLeftTheWorld,
+                        wandGone: CONTACT_FIDELITY.apReportBosses === true ? wandGoneLive : wandLeftTheWorld,
+                        allTotemParts: totemGateNow(),
                         freezeObjects: false,
                         playerY: state.y,
                         playerBox: playerBoxAt(state.x, state.y),

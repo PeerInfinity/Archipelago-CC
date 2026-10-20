@@ -178,6 +178,17 @@ describe('save arrays — counted by the grant, staged by saveArrayRules', () =>
             .toEqual(Array.from({ length: 16 }, (_, i) => i));
     });
 
+    // ⛓ R4b (rules-boss-locations) — the seal log under `seals_required` (saveArrayRules.sealLogSlots).
+    it('seals honour seals_required: the door slot waits for the Nth Seal; nothing past 16 slots', () => {
+        const SIXTEEN = Array.from({ length: 16 }, (_, i) => i);
+        const eight = grantOf(SEALS.slice(0, 8).map((p) => p.location));
+        expect(stageGrantSave(null, eight, { sealsRequired: 8 }).seal_parts).toEqual(SIXTEEN);
+        expect(stageGrantSave(null, eight, { sealsRequired: 9 }).seal_parts).toEqual(SIXTEEN.slice(0, 8));
+        const all = grantOf(SEALS.map((p) => p.location));
+        expect(stageGrantSave(null, all, { sealsRequired: 23 }).seal_parts).toEqual(SIXTEEN.slice(0, 15));
+        expect(stageGrantSave(null, all).seal_parts).toEqual(SIXTEEN);
+    });
+
     it('totems COUNT-FILL: at least N indices, the smallest not held, sorted', () => {
         const g = grantOf(['totem 0', 'totem 1', 'totem 2']);
         expect(stageGrantSave(null, g).totem_parts).toEqual([0, 1, 2]);
@@ -201,8 +212,9 @@ describe('save arrays — counted by the grant, staged by saveArrayRules', () =>
 });
 
 // ⛓ the merge is the JS arc's module, IMPORTED — never a re-spelling (js-7 owns `saveArrayRules.js`)
-it('surveyGrants stages through saveArrayRules.mergeSaveArray (an import, not a fork)', () => {
+it('surveyGrants stages through saveArrayRules.mergeSaveArray + sealLogSlots (an import, not a fork)', () => {
     const src = readFileSync(new URL('./surveyGrants.js', import.meta.url), 'utf8');
-    expect(src).toMatch(/import \{ mergeSaveArray \} from '\.\.\/\.\.\/frontend\/modules\/seedlingDemo\/saveArrayRules\.js';/);
+    expect(src).toMatch(/import \{ mergeSaveArray, sealLogSlots \} from '\.\.\/\.\.\/frontend\/modules\/seedlingDemo\/saveArrayRules\.js';/);
+    expect(src).toMatch(/sealLogSlots\(/);
     expect(src.match(/mergeSaveArray\(/g)?.length).toBeGreaterThanOrEqual(2);
 });

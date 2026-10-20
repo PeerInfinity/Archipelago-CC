@@ -182,6 +182,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             walkerBeamTowers: false,
             // ⛓ fidelity BOMBBLAST D2: `bombBlastBody` (a bomb's Explosion lands on a body) ships OFF.
             bombBlastBody: false,
+            // ⛓ fidelity APBOSSES D2: `apReportBosses` (the R4 boss-report AS3) shipped OFF; ⛓ APFLIP D6 flipped it ON
+            // inside the R7 merge (⚖ user 2026-10-19, "ON in R7 merge").
+            apReportBosses: true,
             // ⛓ fidelity L40GUARD: `guardApproachStance` (D2), `coveredGoalRefusal` (D3), `shakeBandMoot` and
             // `spinnerSwingLineOfSight` (D4) shipped OFF; ⛓ planning-9's flip (⚖ user "Flip all four", 2026-10-19) turns them ON.
             guardApproachStance: true, coveredGoalRefusal: true, shakeBandMoot: true, spinnerSwingLineOfSight: true });

@@ -28,6 +28,7 @@
  */
 
 import { pollUntil } from './pollUntil.js';
+import { thresholdFillSlots } from './fillThreshold.js';
 
 /**
  * A method-call item write (`_setIfMissing`) is re-sent after this many queue
@@ -152,12 +153,15 @@ export class FlashBridgeAdapter {
      * the location a SECOND time and queues an undo that takes the granted
      * item straight back.
      *
-     * ⛔ A SET, NOT A DELETE. Two of the 41 locations (`fire@L32`,
-     * `darksword@L12`) are encounter grants with no pickup entity, are not
-     * rewritten, and MUST keep the property path. Empty by default: an adapter
-     * nobody told about a placement behaves exactly as it always has.
+     * ⛔ A SET, NOT A DELETE. Empty by default: an adapter nobody told about
+     * a placement behaves exactly as it always has. (⛓ R4b part 2: the two
+     * encounters, `fire@L32` and `darksword@L12`, are table rows now — the
+     * `bossreport` build reports them at a fixed address and grants nothing,
+     * so their property-path names are host-owned too.)
      */
     this.hostOwnedLocations = new Set();
+    /** ⛓ R4b part 2 — the slot's `slot_data` (`setSlotData`); null = none known. */
+    this.slotData = null;
 
     /**
      * ⛓⛓ **THE DELIVERY GATE** (Seedling mid-room replan). Optional
@@ -687,11 +691,13 @@ export class FlashBridgeAdapter {
     // ⛔ NEVER ON A HOST-OWNED LOCATION. A clearing write is an undo by
     // another name, and the property path already stands down there (see
     // `hostOwnedLocations`). Seedling's two encounters (`hasFire` at L32,
-    // `hasDarkSword` at L12) are the GAME's own grant: while their AP item is
-    // still on its way (or held by the delivery gate), clearing them took the
-    // drop back mid-room — the L32 burn never fired and the walk stopped at
-    // the pit mouth (fidelity ENCOUNTERS2: a `hasFire = false` write at t840
-    // reproduces CI's t932 divergence to the bit).
+    // `hasDarkSword` at L12) were the GAME's own grant before the `bossreport`
+    // build: while their AP item was still on its way (or held by the
+    // delivery gate), clearing them took the drop back mid-room — the L32 burn
+    // never fired and the walk stopped at the pit mouth (fidelity ENCOUNTERS2:
+    // a `hasFire = false` write at t840 reproduces CI's t932 divergence to the
+    // bit). ⛓ R4b part 2: they are host-owned table rows now, so they still
+    // stand down here.
     const writtenProperties = new Set(writes.map((w) => w.property));
     for (const loc of (this.config.locations || [])) {
       const propDef = this._findPropertyDef(loc.property);
@@ -740,10 +746,13 @@ export class FlashBridgeAdapter {
    * (`observed` + the slot number: a declared `path_reads` name) whose `empty` value means "not held".
    * `count` copies declare slots 0..count-1 here, with the slot as the identity / index; `_setIfMissing`
    * re-resolves each against the game's readouts (the missing ones only, the smallest unheld value).
+   * ⛓ R4b part 2 — a fill that names `required` (a `slot_data` key: Seedling's `!seal` → `seals_required`) is a
+   * THRESHOLD fill (`fillThreshold.thresholdFillSlots`): its last slot waits for the Nth copy, and no copy writes
+   * past `slots`. No such key in the slot data (an old preset) = the plain `min(count, slots)`.
    */
   _fillWritesFor(def, count) {
     const f = def.fill;
-    const n = Math.min(count, f.slots);
+    const n = thresholdFillSlots(count, f.slots, this._fillRequired(f));
     const out = [];
     for (let k = 0; k < n; k++) {
       const w = this._methodWriteFor({ ...def, args: [k, f.rule === 'log' ? k : f.value] });
@@ -752,6 +761,24 @@ export class FlashBridgeAdapter {
       out.push(w);
     }
     return out;
+  }
+
+  /**
+   * ⛓ R4b part 2 — the copies a threshold fill's last slot waits for: `slot_data[fill.required]` when it is an
+   * integer, else null (the plain fill).
+   */
+  _fillRequired(f) {
+    if (typeof f?.required !== 'string') return null;
+    const v = this.slotData?.[f.required];
+    return Number.isInteger(v) ? v : null;
+  }
+
+  /**
+   * ⛓ R4b part 2 — the loaded slot's `slot_data` (the rules' `world[<player>].slot_data`; what the server's
+   * `Connected` packet carries). Read by threshold fills (`_fillRequired`). null = none known.
+   */
+  setSlotData(slotData) {
+    this.slotData = slotData && typeof slotData === 'object' ? { ...slotData } : null;
   }
 
   /**

@@ -55,7 +55,7 @@ if (isEntryPoint(import.meta.url)) await main();
 async function main() {
     const HERE = dirname(fileURLToPath(import.meta.url));
     const REPO = join(HERE, '..', '..');
-    const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f';
+    const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4g';
     const PORT = process.env.SEEDLING_PORT || '8000';
     const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
     const PAGE_URL = `http://localhost:${PORT}/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;

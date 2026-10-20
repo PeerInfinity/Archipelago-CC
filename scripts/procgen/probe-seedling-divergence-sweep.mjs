@@ -46,7 +46,7 @@
  *                        its clock is never touched. ⛔ Never in a real sweep.
  *   --shard=i/n          only shard i of n (`partitionLegs`: price-balanced, longest first — CI's matrix)
  *   --shard-plan=n [--json]  print the partition (no browser, no box) — the CI plan job
- *   --page=<build>       drive another staged build (also SEEDLING_PAGE), e.g. seedling_bot_ap_p4f
+ *   --page=<build>       drive another staged build (also SEEDLING_PAGE), e.g. seedling_bot_ap_p4g
  *   --out=<jsonl>        append rows here (default stdout only)
  *   --producer=walker    §3: the same engine built with the walker INSTRUMENT (`producer: 'walker'`): the J2 WALKER's tape, shipped to the game
  *   --dump=<json>        write the page's delivered set + name map (the node bare pass stages from it)
@@ -488,7 +488,7 @@ async function main() {
     const GAME = 'seedling_playthrough';
     const RULES = `frontend/presets/${GAME}/AP_1/AP_1_rules.json`;
     const PRESET = JSON.parse(readFileSync(join(REPO, RULES), 'utf8'));
-    // ⛓ --page=<build> (e.g. seedling_bot_ap_p4f) drives another staged build: the rules the page fetches name it
+    // ⛓ --page=<build> (e.g. seedling_bot_ap_p4g) drives another staged build: the rules the page fetches name it
     const BUILD = arg('page', '') || process.env.SEEDLING_PAGE || '';
     const WASM_PAGE = BUILD ? `${BUILD}/game.html` : (slotBlockOf(PRESET, 'flash_panel')?.wasm ?? '');
     if (!WASM_PAGE || !existsSync(join(REPO, 'frontend/modules/flashPanel/wasm', WASM_PAGE))) {

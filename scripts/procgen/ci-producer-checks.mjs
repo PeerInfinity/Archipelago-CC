@@ -86,19 +86,7 @@ export const EXCLUDED = Object.freeze({
  * lines must equal `differs`. A new drift in any OTHER tape is red; so is the
  * producer going green (drop the entry — the debt was paid).
  */
-export const KNOWN_RED = Object.freeze({
-    'regenerate-r3-tapes': Object.freeze({
-        differs: Object.freeze(['r3-walk-3-torch', 'r3-walk-full']),
-        reason: 'first bad 0670ca91e6 (WATCHERFLIP D1: a silent WATCHER is no planner volume) '
-            + '— the synthesizer now finds a route 17 ticks shorter through the torch segment '
-            + 'than the committed one; the fix is a re-record (hammer-phase RR hand-over)',
-    }),
-    'regenerate-r4-tapes': Object.freeze({
-        differs: Object.freeze(['r4-walk-3-torch', 'r4-walk-full']),
-        reason: 'the same cause as regenerate-r3-tapes (the r4 walk replays the r3 torch '
-            + 'segment); the fix is a re-record (hammer-phase RR hand-over)',
-    }),
-});
+export const KNOWN_RED = Object.freeze({});
 
 /** The names a failing producer prints on its `DIFFERS x:` / `FAIL x:` lines. */
 export function failingNames(text) {

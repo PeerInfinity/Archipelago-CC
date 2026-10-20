@@ -2,7 +2,7 @@
  * seedlingWasmPlayback ⛓ MID-ROOM REPLAN — the engine's DELIVERY GATE (⚖ the user, 2026-10-03: an item that
  * arrives mid-room, from another player too, is replanned IN the room; never by leaving and re-entering it).
  *
- * The game is a FAKE over W1's recorded house arrival (`seedlingDemo/fixtures/wasm-arrival-p4f.json`) that
+ * The game is a FAKE over W1's recorded house arrival (`seedlingDemo/fixtures/wasm-arrival-p4g.json`) that
  * drains a plan a few rows per read and honours `botHold` (a frozen tape drains nothing); the adapter is a
  * fake delivery handle (`{setItemGate, writesOf, inventory, push}`) whose `push()` writes what the gate
  * returns. The SOLVE is real (the in-place service over the vanilla map). The live witness is
@@ -37,7 +37,7 @@ import { atlasLevelSource } from '../seedlingDemo/levelSource.js';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '../../..');
 const readJson = (rel) => JSON.parse(readFileSync(join(ROOT, rel), 'utf8'));
-const RECORDED = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-p4f.json').arrivals;
+const RECORDED = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-p4g.json').arrivals;
 const RECORDS = indexLevels(readJson('frontend/modules/flashPanel/atlases/seedling-map.json'));
 const HOUSE = 86;
 const A = RECORDED.find((a) => a.label.startsWith('A ') && a.status.level === HOUSE);

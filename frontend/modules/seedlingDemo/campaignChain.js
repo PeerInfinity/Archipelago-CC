@@ -280,7 +280,9 @@ export const CAMPAIGN_SEGMENTS = Object.freeze([
         why: 'L32 — grown by swim U13 at route step 30: Level 032 - Bob Boss (sphere '
             + '2.2) → Fire, the encounter (U5\'s `bobBossFight.js`), then the burned '
             + 'tree\'s pit. The survey\'s own solve is 1056 tick(s), 15 decision(s), 0 '
-            + 're-plan(s), passes [solve]',
+            + 're-plan(s), passes [solve]. ⛓ fidelity APFLIP (R4, `apReportBosses` ON): '
+            + 'the Fire drop REPORTS {32,4} and grants nothing (the host does), so the '
+            + 'segment ends in the arena after the collect (839 t), with no burn and no pit',
     }),
 ]);
 

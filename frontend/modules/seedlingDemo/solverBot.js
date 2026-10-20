@@ -153,6 +153,10 @@ import {
     STATIC_SWORD_ARM, STATIC_SWORD_DEATH, stepTurret,
     // ⛓ seedling-fidelity-bulb D3: `bulbLive` gates the segment's kill-veto needs.
     CONTACT_FIDELITY,
+    // ⛓ fidelity APBOSSES D2: the R4 slots the Witch and Bob executors read (`apReportBosses`, OFF).
+    BOB_ARENA_LEVEL, BOB_KILLED_TAG, DARK_SWORD_WITCH_TAG, FIRE_BOSS_DROP_TAG, WITCH_LEVEL,
+    // ⛓ fidelity L32 arena prefix: the rock's arm line (`arenaPrefixFor`).
+    bobBossRockArms,
     // ⛓⛓⛓ seedling-fidelity-wand D2: the `wand` verb (behind `WAND_VERB`).
     WAND_VERB, WAND_WINDOW, wandShotSpawn, wandShotVelocity, withWandVerb,
     createWandShot, stepWandShot, wandShotRect, MAGICAL_LOCK_OPEN_TICK_OFFSET,
@@ -1030,6 +1034,16 @@ const ENCOUNTER_REPOSITION_HORIZON = 48;
 /** The whole encounter's tick bound, arm to burn. */
 const ENCOUNTER_MAX_TICKS = 8000;
 
+/**
+ * ⛓ fidelity APBOSSES D2 (`CONTACT_FIDELITY.apReportBosses`) — the R4 slots, read off the RUN
+ * (`run.apReportSlotHeld`): the encounter finishes on the location's REPORT, never on the item, which the host grants.
+ */
+const apKilledHeld = (run) => run.apReportSlotHeld(BOB_ARENA_LEVEL, BOB_KILLED_TAG);
+const apDropHeld = (run) => run.apReportSlotHeld(BOB_ARENA_LEVEL, FIRE_BOSS_DROP_TAG);
+/** ⛓ fidelity APBOSSES D2: a `collected` row in this room after `from` with no item — an R4 pickup's ceremony (no grant). */
+const apReportCollected = (run, from) => run.ledger('collected')
+    .some((r) => r.t > from && r.level === run.level && r.item === null);
+
 /** The live boss's landed-hit count across forms: the `bobBossEvents` ledger's landings. */
 const bobLandings = (run) => run.ledger('bobBossEvents')
     .filter((r) => r.what === 'boss-hit' && r.landed).length;
@@ -1132,7 +1146,7 @@ function searchEncounterReposition(run) {
     return scored[0];
 }
 
-function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, refuse, equip }) {
+function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, refuse, equip, untilKill = false }) {
     const records = [];
     const start = perTick.length;
     const tick = (keys) => {
@@ -1173,7 +1187,11 @@ function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, r
      *     (`BobBoss.as:37-41`): no fight, no drop to collect; only the burn and
      *     the pit remain (`already` on the drop record).
      */
-    const already = run.progress('inventory')?.hasFire === true;
+    // ⛓ fidelity APBOSSES D2: ON, `BobBoss` has no `hasFire` guard (`BobBoss.as` @0eda15f785): the state is the
+    // two slots — {32,3} held → the fight; cleared with {32,4} held → the Fire drop alone; both cleared → nothing.
+    const report = CONTACT_FIDELITY.apReportBosses;
+    const killedAtEntry = report ? !apKilledHeld(run) : null;
+    const already = report ? killedAtEntry && !apDropHeld(run) : run.progress('inventory')?.hasFire === true;
     // A rock built fallen with the player INSIDE it (a door arrival) snaps the
     // player onto its top on the first live frame (`levelRun`'s `rock-snap`);
     // nothing can be planned from inside a Solid, so that frame is spent first.
@@ -1198,7 +1216,13 @@ function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, r
     let landings = 0;
     let cadence = CEREMONY_CADENCE_START;
     let inDialogue = false;
-    while (!already && !bobArena(run).has('fire') && !bobArena(run).has('fireCollected')) {
+    const fightGoesOn = () => (report
+        // ⛓ fidelity APBOSSES D2: until the kill's report; then, while the drop's slot holds, until the Fire is down.
+        // `untilKill` (an arena PREFIX, `arenaPrefixFor`): the kill's report alone; the drop is not this goal's.
+        ? (apKilledHeld(run) || (!untilKill && apDropHeld(run) && !bobArena(run).has('fire')
+            && !bobArena(run).has('fireCollected')))
+        : (!bobArena(run).has('fire') && !bobArena(run).has('fireCollected')));
+    while (!already && fightGoesOn()) {
         const arena = bobArena(run);
         const dlg = arena.get('dialogue');
         if (dlg?.open) {
@@ -1258,21 +1282,30 @@ function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, r
         }
     }
 
+    if (untilKill) {
+        // ⛓ fidelity L32 arena prefix: the kill is reported; `BobBoss.death`'s hold and the drop are left to the run.
+        if (apKilledHeld(run)) refuse(`${what}: the fight ended with {32,3} still held.`, { goal });
+        records.push({ goal: 'encounter', leg: 'kill', prefix: true, landings, pages, t: perTick.length });
+        return { records, landings, pages };
+    }
+
     // ── (c) the drop ──────────────────────────────────────────────────
     const fire = bobArena(run).get('fire');
     let fireLagSpent = false;
+    // ⛓ fidelity APBOSSES D2: ON, the item may already be HELD (from the server) and the drop still lies there.
+    const fireDone = (from) => (report ? apReportCollected(run, from) : run.progress('inventory')?.hasFire);
     if (fire) {
         row('collect');
         const aim = { x: fire.x, y: fire.y };
         const from = perTick.length;
-        while (!run.progress('inCeremony') && !run.progress('inventory')?.hasFire) {
+        while (!run.progress('inCeremony') && !fireDone(from)) {
             if (perTick.length - from > 400) refuse(`${what}: never touched the Fire at (${aim.x},${aim.y}).`, { goal });
             tick([...chooseHeld(run.state, aim, 0)]);
         }
         let c = CEREMONY_CADENCE_START;
         // ⛓⛓ ENCOUNTERS2 D3: over on the frame the Fire's `collected` record lands (see the Witch's).
         const fireCollected = () => run.ledger('collected').some((r) => r.t > from && r.item === 'fire');
-        while (!run.progress('inventory')?.hasFire && !fireCollected()) {
+        while (!(report ? fireDone(from) : run.progress('inventory')?.hasFire) && !fireCollected()) {
             if (perTick.length - from > 1200) refuse(`${what}: the Fire's ceremony never ended.`, { goal });
             const step = ceremonyCadenceStep(c);
             c = step.next;
@@ -1282,13 +1315,29 @@ function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, r
         // With `PICKUP_REMOVED_NEXT_FRAME` ON, `Fire.removed()` is the next frame's: spend it here. It is the
         // same idle frame the burn's equip below waits out ("one tick after the flag"), so the plan is the
         // same tick for tick under either switch.
-        if (!run.progress('inventory')?.hasFire) {
+        if (report ? !run.ledger('bobBossEvents').some((r) => r.what === 'fire-removed')
+            : !run.progress('inventory')?.hasFire) {
             tick([]);
             fireLagSpent = true;
         }
     }
     const writes = run.ledger('bobBossEvents').filter((r) => r.flag).map((r) => r.what);
-    if (already) {
+    if (report) {
+        // ⛓ fidelity APBOSSES D2: the REPORTS, read on the run's slots and its ledger: the kill's {32,3} (unless it was
+        // already cleared at entry) and, when a Fire was collected, its {32,4}.
+        const missing = [
+            ...(apKilledHeld(run) ? ['{32,3} still held'] : []),
+            ...(!killedAtEntry && !writes.includes('boss-killed') ? ['no `boss-killed` write'] : []),
+            ...(fire && !writes.includes('fire-removed') ? ['no `fire-removed` write'] : []),
+            ...(fire && apDropHeld(run) ? ['{32,4} still held'] : []),
+        ];
+        if (missing.length > 0) {
+            refuse(`${what}: the reports are not complete — ${missing.join(', ')}; writes [${writes.join(', ')}].`,
+                { goal });
+        }
+        records.push({ goal: 'encounter', leg: 'drop', report: true, killedAtEntry, collected: !!fire,
+            ...(already ? { already: true } : {}), landings, pages, t: perTick.length });
+    } else if (already) {
         records.push({ goal: 'encounter', leg: 'drop', already: true, landings, pages, t: perTick.length });
     } else if (!run.progress('inventory')?.hasFire || !(writes.includes('rock-armed') || arena0.get('rock').armed)
         || !writes.includes('fire-removed')) {
@@ -1304,6 +1353,11 @@ function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, r
         const burned = run.entities('burnedTrees');
         const standing = trees.filter((t) => !burned.has(t.id)
             && (run.world.pitTiles ?? []).some((pt) => rectsOverlapInclusive(t.rect, pt.rect)));
+        if (standing.length > 0 && report && run.progress('inventory')?.hasFire !== true) {
+            refuse(`${what}: the arena's exit (${standing.map((t) => t.id).join(', ')}) burns only with Fire, and under `
+                + '`apReportBosses` the Fire pickup grants nothing (`Fire.removed()` @0eda15f785 clears {32,4}; the HOST '
+                + 'grants the item): this run holds none.', { goal, obstacle: { kind: 'encounter', id: standing[0].id } });
+        }
         if (standing.length > 0) {
             const slots = run.progress('inventorySlots');
             const slot = slots.indexOf(INVENTORY_ITEM_IDS.fire);
@@ -1387,13 +1441,18 @@ function execWitchEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, ref
             goal, obstacle: { kind: 'unmodelled-encounter', id: `encounter@${goal.at.x},${goal.at.y}` } });
     }
     const inv = () => run.progress('inventory') ?? {};
-    if (inv().hasDarkSword === true) {
-        records.push({ goal: 'encounter', leg: 'drop', already: true, t: perTick.length });
+    // ⛓ fidelity APBOSSES D2: ON, the state is the slot {12,1} (`Witch.as:50` @0eda15f785), never the sword held.
+    const report = CONTACT_FIDELITY.apReportBosses;
+    if (report ? !run.apReportSlotHeld(WITCH_LEVEL, DARK_SWORD_WITCH_TAG) : inv().hasDarkSword === true) {
+        records.push({ goal: 'encounter', leg: 'drop', already: true, ...(report ? { report: true } : {}),
+            t: perTick.length });
         return { records };
     }
     if (inv().hasWand !== true) {
         refuse(`${what}: the Witch adds the dark sword only for a player holding the WAND `
-            + '(`Witch.doneTalking`: `Main.hasWand && !Main.hasDarkSword`); this run holds none, so her '
+            + (report ? '(`Witch.doneTalking` @0eda15f785: `Main.hasWand && checkPersistence(DarkSword.WITCH_TAG)`)'
+                : '(`Witch.doneTalking`: `Main.hasWand && !Main.hasDarkSword`)')
+            + '; this run holds none, so her '
             + 'dialogue would end with nothing added.', { goal, obstacle: { kind: 'encounter', id: witch.id } });
     }
     // ── (a) the stance ────────────────────────────────────────────────
@@ -1434,8 +1493,10 @@ function execWitchEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, ref
     // ⛓⛓ ENCOUNTERS2 D3: the ceremony is over on the frame its `collected` record lands; `hasDarkSword` is
     // `DarkSword.removed()`'s, which is that frame (`PICKUP_REMOVED_NEXT_FRAME` OFF) or the next (ON — the
     // game's). Either way the talk ends there: the next frame is free, and is the next leg's.
-    const swordCollected = () => run.ledger('collected').some((r) => r.t > from && r.item === 'darksword');
-    while (inv().hasDarkSword !== true && !swordCollected()) {
+    const swordCollected = () => (report ? apReportCollected(run, from)
+        : run.ledger('collected').some((r) => r.t > from && r.item === 'darksword'));
+    // ⛓ fidelity APBOSSES D2: ON, the sword may already be held (from the server); the ceremony is what ends it.
+    while ((report || inv().hasDarkSword !== true) && !swordCollected()) {
         if (perTick.length - from > WITCH_TALK_MAX) {
             refuse(`${what}: ${WITCH_TALK_MAX} ticks of the talk cadence and no dark sword `
                 + `(${run.ledger('witchEvents').map((r) => r.what).join(', ') || 'no Witch event'}).`, { goal });
@@ -1454,7 +1515,13 @@ function execWitchEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, ref
     }
     if (c.pressing) refuse(`${what}: the dark sword's ceremony ended with a press still down.`, { goal });
     // Set → `darksword-removed` is on the ledger; not yet set → its removal is the next frame's (the switch ON).
-    if (inv().hasDarkSword === true
+    // ⛓ fidelity APBOSSES D2: ON, the same two halves on the REPORT: the row on the ledger, or the collect frame.
+    if (report) {
+        if (!run.ledger('witchEvents').some((r) => r.what === 'darksword-removed') && !swordCollected()) {
+            refuse(`${what}: the dark sword's ceremony ended and the run's ledger holds no \`darksword-removed\` — `
+                + 'the report is not complete.', { goal });
+        }
+    } else if (inv().hasDarkSword === true
         ? !run.ledger('witchEvents').some((r) => r.what === 'darksword-removed')
         : !swordCollected()) {
         refuse(`${what}: hasDarkSword is set and the run's ledger holds no \`darksword-removed\` — the drop `
@@ -2412,6 +2479,42 @@ export const ENCOUNTER_EXECUTORS = Object.freeze({
     // `Progressive Sword`); `witch.js` + `levelRun`'s talker arm simulate it.
     'Progressive Sword': execWitchEncounter,
 });
+
+/**
+ * ⛓ fidelity APBOSSES D2 — the executor for an `encounter` goal. OFF: `ENCOUNTER_EXECUTORS[drop.item]`, verbatim. ON
+ * (`CONTACT_FIDELITY.apReportBosses`), the location is the REPORT and its AP item can be anything the server placed, so
+ * the ROOM decides first: an arena (`run.entities('bobBoss')` holds a rock) is Bob's, a speaking Witch is the Witch's;
+ * any other room falls back to the drop's row.
+ */
+/**
+ * ⛓ fidelity L32 arena prefix (R7, sweep legs 349 / 350) — A PIT PAST THE ARENA ROCK'S ARM LINE, WHILE BOB LIVES, IS
+ * REACHED THROUGH THE FIGHT. With `apReportBosses` ON, `FallRockLarge.as` (R4, vendor/seedling ccdf189) adds the boss
+ * while `checkPersistence(BobBoss.KILLED_TAG)` holds — no `hasFire` guard — so a walk to L32's pit arms the rock
+ * (`bobBossRockArms`, y only), lands it, and opens the boss's dialogue: the walk's `up` never pages it and the player
+ * stands frozen (measured: 400 ticks at (72,116.75), and the dash pass's planned press on the arm frame,
+ * `FROZEN_TICK_PRESS`). The encounter's own executor runs first, to the kill's report (`untilKill`), then the pit.
+ * OFF, an unarmed arena, a dead Bob, or a pit short of the arm line: null, byte-identical.
+ *
+ * @returns {?{kind: 'encounter', at: {x: number, y: number}, drop: {item: string}, then: null}}
+ */
+function arenaPrefixFor(run, goal) {
+    if (CONTACT_FIDELITY.apReportBosses !== true) return null;
+    const rock = bobArena(run)?.get('rock');
+    if (!rock || rock.armed || !apKilledHeld(run)) return null;
+    const pit = (run.world.pitTiles ?? []).find((p) => p.tx === goal.pit.tx && p.ty === goal.pit.ty);
+    if (!pit || !bobBossRockArms(pit.rect.y + pit.rect.h / 2)) return null;
+    // `at` names the encounter in its refusals: the pit it is the prefix of (the arena entity carries no position).
+    return { kind: 'encounter', at: { x: pit.rect.x + pit.rect.w / 2, y: pit.rect.y + pit.rect.h / 2 },
+        drop: { item: 'Fire' }, then: null };
+}
+
+function encounterExecutorFor(run, goal) {
+    if (CONTACT_FIDELITY.apReportBosses) {
+        if (run.entities('bobBoss')?.has('rock')) return execBobBossEncounter;
+        if ((run.entities('talkCircles') ?? []).some((c) => c.tag === 'witch')) return execWitchEncounter;
+    }
+    return ENCOUNTER_EXECUTORS[goal.drop.item];
+}
 
 /**
  * ⛔ THE BOUND ON STRATEGY APPLICATIONS PER GOAL, and it is named rather than
@@ -24045,6 +24148,14 @@ function solveSegmentUnder({
             });
         };
         if (goal.kind === 'reach-pit') {
+            const prefix = arenaPrefixFor(run, goal);
+            if (prefix) {
+                const enc = execBobBossEncounter(run, perTick, prefix, {
+                    what: `solverBot(${name}) reach-pit (${goal.pit.tx},${goal.pit.ty}) -> arena (${prefix.at.x},${prefix.at.y})`,
+                    walkTo, seeRow, saw, refuse, equip, untilKill: true,
+                });
+                records.push(...enc.records);
+            }
             execReachPit(goal, goal);
             continue;
         }
@@ -24061,7 +24172,7 @@ function solveSegmentUnder({
              */
             const whatEnc = `solverBot(${name}) encounter (${goal.at.x},${goal.at.y})`
                 + `->${goal.drop.item}`;
-            const exec = ENCOUNTER_EXECUTORS[goal.drop.item];
+            const exec = encounterExecutorFor(run, goal);
             if (!exec) {
                 refuse(`${whatEnc}: no encounter executor is registered for a `
                     + `'${goal.drop.item}' drop in level ${run.level}. An executor is derived from `

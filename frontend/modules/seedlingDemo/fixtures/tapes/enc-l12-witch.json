@@ -1145,6 +1145,6 @@
         }
     ],
     "name": "enc-l12-witch",
-    "description": "⛓⛓ seedling-fidelity-encounters D3 — L12's WITCH, holding the wand. From the survey's step-140 arrival (16,352) with the sword and the wand, the encounter goal walks into the Witch's talk circle, opens her dialogue on an X release (t 286), pages `textExtra` to its end (t 340); `Witch.doneTalking` adds a `DarkSword` at the player's feet (407,392), collected by overlap on the next frame; its ceremony is paged and the run holds `hasDarkSword`; then the walk out by the L95 door (t 601). Authored by scripts/procgen/plan-seedling-encounters.mjs.",
+    "description": "⛓⛓ seedling-fidelity-encounters D3 — L12's WITCH, holding the wand. From the survey's step-140 arrival (16,352) with the sword and the wand, the encounter goal walks into the Witch's talk circle, opens her dialogue on an X release (t 286), pages `textExtra` to its end (t 340); `Witch.doneTalking` adds a `DarkSword` at the player's feet (407,392), collected by overlap on the next frame; its ceremony is paged; ⛓ APFLIP (R4, `DarkSword.as:49-58` @ccdf189776): the collect reports {12,1} and grants nothing (the host does); then the walk out by the L95 door (t 601). Authored by scripts/procgen/plan-seedling-encounters.mjs.",
     "note": ""
 }

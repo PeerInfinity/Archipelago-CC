@@ -567,12 +567,18 @@ export const PLAYTHROUGH_ENTITY_OVERLAY = Object.freeze({
         + 'weapon. The spear is not an option here: it is D6 and this is D2, so the '
         + 'sword is the only reachable arm — stated as the sword rather than as the '
         + 'disjunction so the row cannot be read as licensing a spear-first route.'),
-    bosstotem: GATED(allOf(flag('hasTotemPartsAll'), A_WEAPON),
-        'Enemies/BossTotem.as:715-721 (hit() passes through only while '
-        + '`fullyActivated && activationRestTime <= 0`) + the five totempart pickups',
-        'the totem must be ACTIVATED by the five parts before any hit registers, and '
-        + 'then it takes damage from either weapon. ⛔ NOT the wand: `hit()` filters on '
-        + 'activation state, not on `t`.'),
+    // ⛓ R4b (rules-totem-gate-as3 D3 finding (3)) — THE WAND, NOT A WEAPON. This row said the totem "takes
+    // damage from either weapon. ⛔ NOT the wand", and the source says the opposite: the constructor sets
+    // `onlyHitBy = "Wand"` (`BossTotem.as:262`) and `Enemy.hit` drops every other `t` (`Enemy.as:149`); the
+    // only `t == "Wand"` caller is `WandShot.checkEntity` (`WandShot.as:116`, fired by `Player.wand()`).
+    // Vanilla never showed it (the Wand lies in this arena and is taken before the fight); a randomized set
+    // can arrive with the sword and no Wand. STRICTER: the crossing past the body now costs the Wand.
+    bosstotem: GATED(allOf(flag('hasTotemPartsAll'), flag('hasWand')),
+        'Enemies/BossTotem.as:262 (`onlyHitBy = "Wand"`) + Enemies/Enemy.as:149 + Projectiles/WandShot.as:116 '
+        + '+ BossTotem.as:715-721 (hit() passes through only while `fullyActivated && activationRestTime <= 0`) '
+        + '+ the five totempart pickups',
+        'the totem must be ACTIVATED by the five parts before any hit registers, and then only a WAND shot '
+        + 'damages it (`onlyHitBy = "Wand"`); the sword and the spear are dropped by `Enemy.hit`.'),
     finalboss: GATED(A_WEAPON,
         'Enemies/FinalBoss.as:231-236 (startDeath) + R6 §19.7 (the 109-tick death schedule)',
         'the Owl dies to shoves and its corpse becomes a Solid; a shove needs a weapon.'),
@@ -705,11 +711,13 @@ export function overlayEntitySemantics(entity, base, ctx = null) {
  * runtime-exit census as data (`DEATH_EXIT_ARENAS` below), and the arena is gated both ways
  * (`TENTACLE_ARENA`). L69 is unchanged.
  */
-export const NEVER_ENTER_LEVELS = Object.freeze([69]);
+// ⛓ R4b (rules-boss-locations) — L69 IS LIFTED TOO, like L57: the Lights kill is a LOCATION now (⚖ the user
+// 2026-10-19, "All 7 bosses"), and a location in a never-entered room is a lost collectible. Its exit is the
+// manifest's `light_boss_exit` (`LightBossController.as:104`), wired as `DEATH_EXIT_ARENAS` data and gated
+// both ways by `LIGHTS_ARENA`. The list stays exported (empty) so a reader of the ruling still finds it.
+export const NEVER_ENTER_LEVELS = Object.freeze([]);
 
-export const NEVER_ENTER_CITE = Object.freeze({
-    69: 'Enemies/LightBossController.as:104 — the exit teleporter is created on death',
-});
+export const NEVER_ENTER_CITE = Object.freeze({});
 
 /**
  * ⛓ RULES game-truth-gaps — WHAT THE TENTACLE BEAST'S ARENA COSTS, charged on every connection INTO
@@ -744,8 +752,26 @@ export const TENTACLE_ARENA = Object.freeze({
  * Watcher's are not exits of an arena) and gates every connection into or out of the arena. L69's
  * `light_boss_exit` would be one more row, once it is lifted.
  */
+/**
+ * ⛓ R4b (rules-boss-locations) — WHAT THE LIGHTS ARENA COSTS, charged on every connection INTO or OUT OF
+ * L69 (the L57 precedent). The way out is the teleporter `LightBossController.endState` creates when the
+ * last flier dies (`LightBossController.as:102-108`; the manifest's `light_boss_exit`, to L36). A
+ * `LightBoss` flier is an `Enemy` with `hitsMax = 3` and no `onlyHitBy` (`LightBoss.as:47`), so, as a
+ * Tentacle, it takes the sword slash, the spear thrust (`Player.genericHit`, `Player.as:1085`) and a wand
+ * shot (`WandShot.as:116`), and never Fire (`hitByFire` false, `Enemy.as:149-151`). The way in is L70's pit.
+ */
+export const LIGHTS_ARENA = Object.freeze({
+    level: 69,
+    condition: anyOf(flag('hasSword'), flag('hasSpear'), flag('hasWand')),
+    cite: 'Enemies/LightBossController.as:79,102-108 + Enemies/LightBoss.as:47 + Enemies/Enemy.as:141-160 '
+        + '+ Player.as:1085 + Projectiles/WandShot.as:116 + ⚖ the user 2026-10-19 ("All 7 bosses")',
+    why: 'the arena is left only by the teleporter the last flier\'s death creates, and a flier dies to '
+        + 'the sword, the spear or a wand shot.',
+});
+
 export const DEATH_EXIT_ARENAS = Object.freeze([
     Object.freeze({ level: TENTACLE_ARENA.level, namedRoom: 'tentacle_beast_mouth', ...TENTACLE_ARENA }),
+    Object.freeze({ level: LIGHTS_ARENA.level, namedRoom: 'light_boss_exit', ...LIGHTS_ARENA }),
 ]);
 
 /**
@@ -962,13 +988,17 @@ export const CROSS_ROOM_PREREQUISITES = Object.freeze([
  * the direction a guard may only move with a citation behind it.
  */
 export const LOCATION_GUARDS = Object.freeze({
+    // ⛔ R4b — NOT `hasWand`, though the totem's kill is (below): this row is the WAND's own location, and a
+    // Wand behind the Wand is a self-lock (vanilla placement unbeatable). Its condition is UNCHANGED; the
+    // weapon half is upstream parity (`Rules.py:625-627` Wand = Fire ∧ Shards), not a source fact about the
+    // kill, since the Wand is taken BEFORE the fight (vanilla `Wand.as:78` waits for the parts only).
     'wand@L43': Object.freeze({
         condition: allOf({ flag: 'hasTotemPartsAll' }, A_WEAPON),
-        cite: 'Enemies/BossTotem.as hit() (`fullyActivated && activationRestTime <= 0`) '
+        cite: 'Pickups/Wand.as:78 (inert until `Player.hasAllTotemParts()`) '
             + '+ Dungeon4/Boss.oel:238 — the Wand and the totem share one arena',
-        why: 'the BossTotem must be activated by all five parts before any hit registers, and it '
-            + 'takes damage from either weapon; the Wand lies in its arena, so this is a location '
-            + 'guard and not a crossing.',
+        why: 'the vanilla Wand cannot be taken until all five parts are held, and it lies in the '
+            + 'totem\'s arena, so this is a location guard and not a crossing. The weapon half is kept '
+            + 'as it stood (stricter than the source; R4b changes no existing guard\'s condition here).',
     }),
     'darksword@L12': Object.freeze({
         condition: flag('hasWand'),
@@ -983,6 +1013,51 @@ export const LOCATION_GUARDS = Object.freeze({
             + 'the fight is started by `FallRockLarge.as:115-117`',
         why: 'Fire is a boss DROP in an arena you walk into freely, so the fight is the gate and '
             + 'the location is the only place to hang it.',
+    }),
+    // ⛓⛓ R4b (rules-boss-locations) — THE SEVEN BOSS KILLS. Each fight stands in its arena with no crossing
+    // to hang a rule on, so the kill condition is the location's own guard; the arena's ACCESS is the region
+    // graph's. Each condition is the overlay's own body ruling where one exists, read against the AS3:
+    'owl@L112': Object.freeze({
+        condition: A_WEAPON,
+        cite: 'Enemies/FinalBoss.as:61 (`onlyHitBy = "Lava"`) + :116-123 (a lava tile hits it) + Enemy.as:173-178 '
+            + '(a filtered hit still knocks back) — the overlay\'s `finalboss` row',
+        why: 'the Owl only takes damage from lava, and the player drives it there by the knockback of any '
+            + 'strike; a strike needs a weapon.',
+    }),
+    'shieldspire@L19': Object.freeze({
+        condition: flag('hasSword'),
+        cite: 'Enemies/ShieldBoss.as:130-150 (hit) + Player.as:1099 — the overlay\'s `shieldboss` row',
+        why: 'the ShieldBoss dies to strikes while its shield is moved; the overlay rules the sword the only '
+            + 'reachable arm in D2.',
+    }),
+    'times@L32': Object.freeze({
+        condition: A_WEAPON,
+        cite: 'Enemies/BobBoss.as:167-179 (hit, no `onlyHitBy`) + :181-199 (the third death) — as `fire@L32`',
+        why: 'the third BobBoss\'s death IS the kill; the Fire drop (`fire@L32`) is priced the same.',
+    }),
+    'tentacledbeast@L57': Object.freeze({
+        condition: TENTACLE_ARENA.condition,
+        cite: 'Enemies/TentacleBeast.as:93-104 (`maxTentacles <= 0` → dead) + Enemies/Tentacle.as:52,66 '
+            + '(hitsMax 1, `canHit` while sitting; no `onlyHitBy`)',
+        why: 'the beast dies when its eight tentacles are cut — the sword, the spear or a wand shot (`TENTACLE_ARENA`).',
+    }),
+    'totem@L43': Object.freeze({
+        condition: allOf({ flag: 'hasTotemPartsAll' }, flag('hasWand')),
+        cite: 'Enemies/BossTotem.as:262 (`onlyHitBy = "Wand"`) + Enemy.as:149 + r4-boss-report ccdf189 '
+            + '(the fight waits for `Player.hasAllTotemParts()`); upstream Rules.py:660-667',
+        why: 'the fight starts only with all five parts, and only a Wand shot damages the totem.',
+    }),
+    'lights@L69': Object.freeze({
+        condition: LIGHTS_ARENA.condition,
+        cite: 'Enemies/LightBoss.as:47 (hitsMax 3; no `onlyHitBy`) + LightBossController.as:102-108 (endState)',
+        why: 'every LightBoss flier dies to the sword, the spear or a wand shot (`LIGHTS_ARENA`); the '
+            + 'controller clears its tag when the last goes.',
+    }),
+    'kingoffire@L82': Object.freeze({
+        condition: A_WEAPON,
+        cite: 'Enemies/LavaBoss.as:143-160 (hit needs a LavaBall first) + Projectiles/LavaBall.as:45-53,75 + '
+            + 'Player.as:1129-1132 (a strike reflects the ball)',
+        why: 'the King of Fire is hurt only after its own LavaBall is struck back into it; a strike needs a weapon.',
     }),
 });
 
@@ -1244,6 +1319,10 @@ export const OVERLAY_CONDITIONS = Object.freeze({
 });
 
 export const SEAL_ITEM_NAME = 'Seal';
+/**
+ * The Seals the FinalDoor needs by default — the game's own sixteen log slots. ⛓ R4b: no longer the number of
+ * Seals in the pool (23 under the default `boss_location_items: seal`); the world's `seals_required` option moves it.
+ */
 export const SEAL_TOTAL = 16;
 
 /** Resolve an overlay-only condition node, or null when it is not one of ours. */

@@ -73,6 +73,13 @@ class RuleExpressionMixin:
 
             self.required_imports.add('Has')
 
+            # world[p].option_effects `item_count`: this Has reads its count from the world's own option.
+            option_class = getattr(self, 'option_count_bindings', {}).get((item_name, count)) \
+                if isinstance(count, int) else None
+            if option_class:
+                self.used_option_classes.add(option_class)
+                return f'Has({repr(item_name)}, FromOption({option_class}))'
+
             # If count is a complex expression (dict), pass it as a rule reference
             if isinstance(count, dict):
                 # Convert the count expression to code

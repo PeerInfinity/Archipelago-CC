@@ -1,0 +1,165 @@
+{
+ "through-3.1 route-only": {
+  "steps": [
+   30,
+   30
+  ],
+  "differ": [
+   {
+    "step": 30,
+    "level": 32,
+    "old": [
+     {
+      "kind": "encounter",
+      "at": {
+       "x": 80,
+       "y": 128
+      },
+      "drop": {
+       "item": "Fire"
+      },
+      "then": "reach-pit",
+      "why": "Level 032 - Bob Boss (sphere 3.1) \u2192 Fire",
+      "location": "Level 032 - Bob Boss"
+     }
+    ],
+    "new": [
+     {
+      "kind": "encounter",
+      "at": {
+       "x": 80,
+       "y": 128
+      },
+      "drop": {
+       "item": "Fire"
+      },
+      "then": null,
+      "why": "Level 032 - Bob Boss (sphere 3.1) \u2192 Fire",
+      "location": "Level 032 - Bob Boss"
+     }
+    ]
+   }
+  ],
+  "L32": [
+   {
+    "step": 30,
+    "crossesTo": null,
+    "goals": [
+     {
+      "kind": "encounter",
+      "at": {
+       "x": 80,
+       "y": 128
+      },
+      "drop": {
+       "item": "Fire"
+      },
+      "then": null,
+      "why": "Level 032 - Bob Boss (sphere 3.1) \u2192 Fire",
+      "location": "Level 032 - Bob Boss"
+     }
+    ]
+   }
+  ]
+ },
+ "through-3.1 full": {
+  "steps": [
+   51,
+   51
+  ],
+  "differ": [
+   {
+    "step": 51,
+    "level": 32,
+    "old": [
+     {
+      "kind": "encounter",
+      "at": {
+       "x": 80,
+       "y": 128
+      },
+      "drop": {
+       "item": "Fire"
+      },
+      "then": "reach-pit",
+      "why": "Level 032 - Bob Boss (sphere 3.1) \u2192 Fire",
+      "location": "Level 032 - Bob Boss"
+     }
+    ],
+    "new": [
+     {
+      "kind": "encounter",
+      "at": {
+       "x": 80,
+       "y": 128
+      },
+      "drop": {
+       "item": "Fire"
+      },
+      "then": null,
+      "why": "Level 032 - Bob Boss (sphere 3.1) \u2192 Fire",
+      "location": "Level 032 - Bob Boss"
+     }
+    ]
+   }
+  ],
+  "L32": [
+   {
+    "step": 51,
+    "crossesTo": null,
+    "goals": [
+     {
+      "kind": "encounter",
+      "at": {
+       "x": 80,
+       "y": 128
+      },
+      "drop": {
+       "item": "Fire"
+      },
+      "then": null,
+      "why": "Level 032 - Bob Boss (sphere 3.1) \u2192 Fire",
+      "location": "Level 032 - Bob Boss"
+     }
+    ]
+   }
+  ]
+ },
+ "through-7.3 full": {
+  "steps": [
+   163,
+   163
+  ],
+  "differ": [],
+  "L32": [
+   {
+    "step": 51,
+    "crossesTo": 30,
+    "goals": [
+     {
+      "kind": "encounter",
+      "at": {
+       "x": 80,
+       "y": 128
+      },
+      "drop": {
+       "item": "Fire"
+      },
+      "then": "reach-pit",
+      "why": "Level 032 - Bob Boss (sphere 3.1) \u2192 Fire",
+      "location": "Level 032 - Bob Boss"
+     },
+     {
+      "kind": "collect-placement",
+      "placement": {
+       "x": 88,
+       "y": 128
+      },
+      "why": "Level 032 - Times (sphere 3.2) \u2192 Seal",
+      "location": "Level 032 - Times"
+     }
+    ]
+   }
+  ]
+ }
+}

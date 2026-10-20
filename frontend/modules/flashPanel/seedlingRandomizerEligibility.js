@@ -82,6 +82,8 @@
  * default and register as a pin in the four-way law the pin gate enforces.
  */
 
+import { CONTACT_FIDELITY } from '../seedlingDemo/contactFidelity.js';
+
 /** The one capability this arc defines: the build carries `Pickups/APItem.as`
  *  and its `<apitem>` element in `Game.as`'s XML loop. */
 export const AP_ITEM_CAPABILITY = 'apitem';
@@ -150,13 +152,24 @@ export const FREEZE_CAPABILITY = 'freeze';
 export const SINCE_BEGIN_CAPABILITY = 'sincebegin';
 
 /**
+ * ⛓ The wasm rebuild R2 (R4, 2026-10-19): THE BOSSES REPORT. A build declaring
+ * `bossreport` reports all seven boss kills as locations, and the Witch's dark
+ * sword (L12, `DarkSword.WITCH_TAG`) and the Bob Boss's Fire drop (L32,
+ * `Fire.BOSS_DROP_TAG`; the kill is `BobBoss.KILLED_TAG`) as locations whose
+ * items the HOST grants — the game no longer grants Fire or the dark sword. A
+ * build without it grants them itself, so the host refuses the report rows by
+ * name there. Measured by `strings`: the three tag constants.
+ */
+export const BOSS_REPORT_CAPABILITY = 'bossreport';
+
+/**
  * ⛓ THE DECLARED VOCABULARY. A manifest entry may only name capabilities from
  * this list — otherwise `"apitm"` would silently mean "this build does not
  * have it" and the feature would vanish with no error anywhere.
  */
 export const WASM_BUILD_CAPABILITIES = Object.freeze(
     [AP_ITEM_CAPABILITY, ARM_CAPABILITY, HOLD_CAPABILITY, TAG_CAPABILITY,
-        FREEZE_CAPABILITY, SINCE_BEGIN_CAPABILITY]);
+        FREEZE_CAPABILITY, SINCE_BEGIN_CAPABILITY, BOSS_REPORT_CAPABILITY]);
 
 /**
  * ⛓ SEEDLING JS J1 — THE JS RUNTIME'S OWN ANSWER (`flashPanel.runtime: 'js'`).
@@ -174,7 +187,22 @@ export const WASM_BUILD_CAPABILITIES = Object.freeze(
  * tag ALLOCATED (P4E) is refused by name, as on a wasm build without it.
  */
 export const JS_TRANSPORT = 'js';
+/**
+ * ⛓ The JS runtime's list as it stood before R4, `[apitem]`. ⚠ KEPT because it is imported from outside this file:
+ * `seedlingDemo/jsRuntimeCore.js:151` re-exports it (pinned by identity at `jsRuntimeCore.test.js:139`), and
+ * `seedlingRandomizerWiring.js` imported it. The live answer is `jsRuntimeCapabilities()` below.
+ */
 export const JS_RUNTIME_CAPABILITIES = Object.freeze([AP_ITEM_CAPABILITY]);
+/**
+ * ⛓ fidelity APFLIP D5 — THE JS RUNTIME'S CAPABILITIES, READ LIVE. The JS model reports the boss kills, the Witch's
+ * sword and Bob's Fire drop exactly when its R4 mirror is on (`CONTACT_FIDELITY.apReportBosses`, `apReportBosses.js`),
+ * so `bossreport` is declared then and only then. Read on every call (a toggled switch answers at once), never
+ * cached at import.
+ */
+export function jsRuntimeCapabilities() {
+    return CONTACT_FIDELITY.apReportBosses === true
+        ? [AP_ITEM_CAPABILITY, BOSS_REPORT_CAPABILITY] : [AP_ITEM_CAPABILITY];
+}
 /**
  * ⛓ J3 — the arms the JS runtime plays, by the arm an eligible verdict names
  * (`RANDOMIZER_ARMS`: a diverting check's id, or `vanilla` when none diverts).
@@ -275,7 +303,7 @@ function checkTransport({ flashPanel, transport }) {
 /** ── (ii) THE BUILD'S OWN DECLARATION ──────────────────────────────────── */
 function checkCapability({ flashPanel, manifest, transport }) {
     if (transport === JS_TRANSPORT) {
-        return JS_RUNTIME_CAPABILITIES.includes(AP_ITEM_CAPABILITY)
+        return jsRuntimeCapabilities().includes(AP_ITEM_CAPABILITY)
             ? pass(`the JS runtime declares ${AP_ITEM_CAPABILITY}`)
             : fail(`the JS runtime does not declare ${JSON.stringify(AP_ITEM_CAPABILITY)}`);
     }

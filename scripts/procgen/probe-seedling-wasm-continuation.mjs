@@ -212,10 +212,7 @@ async function main() {
             await assertLogicOnlyChannel(rp.gameFrame());
             await rp.waitFor("panel status 'ready'", async () => ((await page.evaluate(() =>
                 document.querySelector('.flash-panel-status')?.textContent ?? '')) === 'ready' ? 'ready' : null), 120000);
-            await rp.waitFor('the AP load finished', () => page.evaluate(async () => {
-                const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
-                return !!p?._apLoadResult;
-            }), 120000);
+            await rp.waitForApLoad(120000);
             await rp.waitFor('dispatcher wrapped', () => page.evaluate(async () => {
                 window.__checks = window.__checks ?? [];
                 const { getActivePanelInstance } = await import('./modules/flashPanel/index.js');

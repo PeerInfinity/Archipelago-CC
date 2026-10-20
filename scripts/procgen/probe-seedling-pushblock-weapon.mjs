@@ -59,7 +59,7 @@ async function main() {
     const REPO = join(HERE, '..', '..');
     const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
     const MODEL_ONLY = process.argv.includes('--model-only');
-    const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f';
+    const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4g';
     const PAGE_PORT = process.env.SEEDLING_PORT || '8000';
     const WASM_DIR = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
     const PAGE_URL = `http://localhost:${PAGE_PORT}/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;

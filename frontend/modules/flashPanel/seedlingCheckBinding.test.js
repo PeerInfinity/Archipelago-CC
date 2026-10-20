@@ -33,11 +33,12 @@ for (const region of Object.values(RULES.regions[SLOT])) {
         PLACED.set(loc.name, { name: loc.item.name, player: loc.item.player });
     }
 }
-const { table, entries, encounters } = buildPlacementTable({
+const { table, entries, fixed } = buildPlacementTable({
     locationItemOf: (n) => PLACED.get(n) ?? null,
     ledger: R7_GOAL_LEDGER,
     rooms: MAP.levels,
     selfPlayer: SELF_PLAYER,
+    bossReport: true,
 });
 
 const bindingFor = () => new SeedlingCheckBinding({ table, placementKey, selfPlayer: SELF_PLAYER });
@@ -89,8 +90,8 @@ describe('the filter is the PLACEMENT TABLE, never a vanilla tag list', () => {
     });
 
     it('every one of the table\'s addresses is answered, and the table is not small', () => {
-        expect(table.size).toBe(39);
-        for (const entry of entries) {
+        expect(table.size).toBe(48);  // 39 rewritten + the 9 fixed report rows (R4b part 2)
+        for (const entry of [...entries, ...fixed]) {
             expect(types(bindingFor().onStateReport('pendingCheck', report(entry))))
                 .toEqual(['locationCheck', 'apItemFound']);
         }
@@ -190,17 +191,108 @@ describe('the readout — "found X for Player Y"', () => {
 
 describe('what the adapter is told to stand down on', () => {
     /**
-     * ⛓ A SET, NOT A DELETE, and this is the row that says why. The two
-     * ENCOUNTER locations are boss/special grants with no pickup entity — they
-     * are not rewritten, no `APItem` stands there, and they MUST keep the
-     * adapter's property path.
+     * ⛓ A SET, NOT A DELETE. ⛓ R4b part 2: the nine report rows (seven boss kills, the Fire drop, the dark sword)
+     * are TABLE rows now, so the set is every table row — and the property path's own names for the two flags the
+     * host grants (`propertyLocations`), so it never undoes them.
      */
-    it('names the 39 rewritten locations and NOT the two encounters', () => {
+    it('names the 39 rewritten locations AND the 9 fixed report rows; and the property names it is handed', () => {
+        expect(fixed).toHaveLength(9);
         const owned = bindingFor().hostOwnedLocations();
-        expect(owned.size).toBe(39);
-        expect(encounters).toHaveLength(2);
-        for (const e of encounters) expect(owned.has(e.location)).toBe(false);
-        for (const e of entries) expect(owned.has(e.location)).toBe(true);
+        expect(owned.size).toBe(48);
+        for (const e of [...entries, ...fixed]) expect(owned.has(e.location)).toBe(true);
+        const named = new SeedlingCheckBinding({ table, placementKey, propertyLocations: ['Fire', 'Dark Sword', '', 7] })
+            .hostOwnedLocations();
+        expect(named.size).toBe(50);
+        expect(named.has('Fire') && named.has('Dark Sword')).toBe(true);
+    });
+});
+
+describe('⛓ R4b part 2 — the nine fixed-address report rows check like any other', () => {
+    const ADDRESSES = {
+        'Level 032 - Times': '32|3', 'Level 032 - Bob Boss': '32|4', 'Level 012 - Witch': '12|1',
+        'Level 112 - Owl': '112|0', 'Level 019 - Shieldspire': '19|0', 'Level 057 - Tentacled Beast': '57|0',
+        'Level 043 - Totem of Lacste': '43|5', 'Level 069 - Lights': '69|0', 'Level 082 - King of Fire': '82|0',
+    };
+    it('each of the 9 is a table row at its upstream address, and its clear checks it exactly once', () => {
+        expect(Object.fromEntries(fixed.map((e) => [e.location, placementKey(e.level, e.tag)]))).toEqual(ADDRESSES);
+        const b = bindingFor();
+        for (const [i, e] of fixed.entries()) {
+            const out = b.onStateReport('pendingCheck', report(e, { seq: i + 1 }));
+            expect(types(out), e.location).toEqual(['locationCheck', 'apItemFound']);
+            expect(out[0]).toMatchObject({ location: e.location, level: e.level, tag: e.tag });
+            expect(b.onStateReport('pendingCheck', report(e, { seq: 100 + i }))).toEqual([]);
+        }
+        expect(b.stats).toMatchObject({ checks: 9, repeats: 9 });
+    });
+
+    it('⛔ the retired FLAG path: `hasFire` / `hasDarkSword` turning true checks NOTHING (the host\'s own grant)', () => {
+        const b = bindingFor();
+        expect(b.onStateReport('hasFire', true)).toEqual([]);
+        expect(b.onStateReport('hasDarkSword', true)).toEqual([]);
+        expect(b.stats.checks).toBe(0);
+    });
+});
+
+describe('⛓ R4b part 2 — THE RECONCILE: a clear the single report slot lost is still checked', () => {
+    const owl = fixed.find((e) => e.location === 'Level 112 - Owl');
+    /** `FinalBoss.endAnim` clears (112,0) then (112,1) in ONE update: only the last reaches `pendingCheck`. */
+    it('the Owl: (112,0) and (112,1) cleared in one tick → the live report is (112,1); the re-read checks the Owl', () => {
+        const b = bindingFor();
+        expect(table.has(placementKey(112, 1))).toBe(false);  // (112,1) is the rocklock EVENT, not a location
+        const before = b.liveClears;
+        expect(b.onStateReport('pendingCheck', '7|112|1|0')).toEqual([]);
+        expect(b.liveClears).toBe(before + 1);  // the glue's trigger to re-read
+        const out = b.onReconcile([{ level: 112, tag: 0 }, { level: 112, tag: 1 }]);
+        expect(types(out)).toEqual(['locationCheck', 'apItemFound']);
+        expect(out[0]).toMatchObject({ location: owl.location, level: 112, tag: 0, at: 'reconcile' });
+        expect(b.stats).toMatchObject({ checks: 1, reconcile: 1, reconcileReads: 1 });
+        // once: neither a second re-read nor a late live report checks it again
+        expect(b.onReconcile([{ level: 112, tag: 0 }])).toEqual([]);
+        expect(b.onStateReport('pendingCheck', report(owl, { seq: 9 }))).toEqual([]);
+    });
+
+    it('a re-read credits only TABLE addresses, and not an already-checked one; no array is not a read', () => {
+        const b = bindingFor();
+        const [a, c] = entries;
+        b.onStateReport('pendingCheck', report(a));
+        const out = b.onReconcile([{ level: a.level, tag: a.tag }, { level: c.level, tag: c.tag }, { level: 0, tag: 29 }]);
+        expect(out.filter((e) => e.type === 'locationCheck').map((e) => e.location)).toEqual([c.location]);
+        expect(b.onReconcile(null)).toEqual([]);
+        expect(b.stats.reconcileReads).toBe(1);
+    });
+
+    it('⛔ the arming window holds: a clear refused there is NOT credited by a later re-read; a later LIVE clear is', () => {
+        const b = bindingFor();
+        const e = entries[0];
+        b.ignoreHostStart({ from: 4, to: 5 });
+        b.onStateReport('pendingCheck', report(e, { seq: 5 }));
+        expect(b.liveClears).toBe(0);  // a declaration asks for no re-read
+        expect(b.onReconcile([{ level: e.level, tag: e.tag }])).toEqual([]);
+        expect(types(b.onStateReport('pendingCheck', report(e, { seq: 6 })))).toEqual(['locationCheck', 'apItemFound']);
+    });
+
+    it('⛔ a host start\'s DECLARED addresses (coalesced: only the last reached `pendingCheck`) are never credited by a re-read', () => {
+        const b = bindingFor();
+        const [a, c, d] = entries;
+        // the tape declares a, c and d in one botStart: the window catches d's report; a and c never report
+        b.ignoreHostStart({ from: 4, to: 7, declared: [a, c, d].map((e) => ({ level: e.level, tag: e.tag, note: '' })) });
+        b.onStateReport('pendingCheck', report(d, { seq: 7 }));
+        // a live clear elsewhere (the Owl's (112,1), no table row) asks for the re-read, which sees all three cleared
+        b.onStateReport('pendingCheck', '8|112|1|0');
+        const cleared = [a, c, d].map((e) => ({ level: e.level, tag: e.tag }));
+        expect(b.onReconcile(cleared)).toEqual([]);
+        expect(b.stats.checks).toBe(0);
+        // ... and the same slot cleared LIVE later is a real collection
+        expect(types(b.onStateReport('pendingCheck', report(a, { seq: 9 })))).toEqual(['locationCheck', 'apItemFound']);
+        // an already-checked location re-declared stays checked, nothing new
+        b.ignoreHostStart({ from: 9, to: 10, declared: [{ level: a.level, tag: a.tag }] });
+        expect(b.unearned.has(placementKey(a.level, a.tag))).toBe(false);
+    });
+
+    it('a RESTORE asks for no re-read', () => {
+        const b = bindingFor();
+        b.onStateReport('pendingCheck', report(entries[0], { cleared: false }));
+        expect(b.liveClears).toBe(0);
     });
 });
 

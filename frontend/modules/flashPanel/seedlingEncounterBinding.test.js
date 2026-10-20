@@ -7,8 +7,9 @@
  *                `item` off the row; any other encounter row stays refused by name.
  *   2. MAPPING   `solverGoalFor` (and through it `wasmArrival.arrivalSolverGoal`) maps that goal to the solver's
  *                `encounter` goal, `then` off the level's control block.
- *   3. CHECK     the location's check is the GAME's flag (`hasFire` / `hasDarkSword`) turning true in the
- *                encounter's own level — never the plan, never an echo of the host's own item write.
+ *   3. CHECK     ⛓ R4b part 2: the location's check is the `bossreport` build's CLEAR at the row's fixed address
+ *                ((32,4) the Fire drop, (12,1) the dark sword) — a table row like any other; the old flag path
+ *                (`hasFire` / `hasDarkSword` turning true) is retired: on that build only the host's grant sets them.
  *   4. PERSISTENCE  a live arrival after a death in L32 ({32,1} cleared) is staged, mapped and SOLVED.
  *
  * ⛔ THE FIXTURE IS THE PRODUCTION LOAD (`loadSeedlingRandomizer` over the shipped rules, as
@@ -24,11 +25,13 @@ import {
     realRoomPlaybackMap, resolveSeedlingAtlasGoal, rulesAtlasOf, vanillaArmPlaybackMap,
 } from './seedlingPlaybackController.js';
 import { loadSeedlingRandomizer } from './seedlingRandomizerWiring.js';
-import { SeedlingRegionGlue, reportContext } from './seedlingRegionGlue.js';
+import { SeedlingRegionGlue } from './seedlingRegionGlue.js';
 import { FLASH_SEEDLING_LOAD_REGION_EVENT } from './flashSeedlingLibrary.js';
 import { ENCOUNTER_EXECUTORS } from '../seedlingDemo/solverBot.js';
 import { solverGoalFor, createInPlaceSolveService } from '../seedlingDemo/jsRuntimeSolver.js';
 import { arrivalSolveRequest, arrivalSolverGoal } from '../seedlingDemo/wasmArrival.js';
+import { withContactFidelity } from '../seedlingDemo/contactFidelity.js';
+import { encounterReportAddresses, encounterReportServed, locationGoalServed } from '../seedlingDemo/wasmPlayback.js';
 import { createRunForStaging, solveStaging, stagingFromTape } from '../seedlingDemo/tapeRunner.js';
 import { parseTape } from '../seedlingDemo/tapeFormat.js';
 import { atlasLevelSource } from '../seedlingDemo/levelSource.js';
@@ -69,8 +72,8 @@ describe('1 · BINDING — both encounters bound, each value read off the data',
             [WITCH, 'Progressive Sword', 'hasDarkSword'], [BOB, 'Fire', 'hasFire']].sort());
     });
 
-    it('L32 Bob Boss → {kind: encounter, at (64,128), drop Fire}; L12 Witch → at (416,384), drop Progressive Sword', () => {
-        expect(entryOf(BOB)).toEqual({ location: BOB, level: 32, kind: 'encounter', at: { x: 64, y: 128 },
+    it('L32 Bob Boss → {kind: encounter, at (80,128) — the delivered rock tile, rules-l32-rock-move — drop Fire}; L12 Witch → at (416,384), drop Progressive Sword', () => {
+        expect(entryOf(BOB)).toEqual({ location: BOB, level: 32, kind: 'encounter', at: { x: 80, y: 128 },
             drop: { item: 'Fire' }, flag: 'hasFire', entityType: 'fallrocklarge' });
         expect(entryOf(WITCH)).toEqual({ location: WITCH, level: 12, kind: 'encounter', at: { x: 416, y: 384 },
             drop: { item: 'Progressive Sword' }, flag: 'hasDarkSword', entityType: 'witch' });
@@ -115,7 +118,7 @@ describe('1 · BINDING — both encounters bound, each value read off the data',
     it('resolve → a `location` goal with no tag and an `encounter` block (one spelling: `atlasLocationGoal`)', () => {
         const r = resolveSeedlingAtlasGoal({ kind: 'location', name: BOB }, MAP);
         expect(r.goal).toEqual({ kind: 'location', level: 32, tag: null, entityType: 'fallrocklarge', name: BOB,
-            encounter: { at: { x: 64, y: 128 }, drop: { item: 'Fire' } } });
+            encounter: { at: { x: 80, y: 128 }, drop: { item: 'Fire' } } });
         expect(atlasLocationGoal(entryOf(BOB), BOB)).toEqual(r.goal);
         // a non-encounter entry's goal is unchanged
         const e = LOADED.entries[0];
@@ -127,10 +130,14 @@ describe('1 · BINDING — both encounters bound, each value read off the data',
 describe('2 · MAPPING — `solverGoalFor` / `arrivalSolverGoal` → the solver\'s encounter goal', () => {
     const goalOf = (name) => resolveSeedlingAtlasGoal({ kind: 'location', name }, MAP).goal;
 
-    it('L32 (a `fallthrough` room): then = reach-pit; L12: then = null — on the JS runtime\'s mapping', () => {
+    it('L32 (a `fallthrough` room): then = reach-pit with apReportBosses OFF, null with it ON; L12: then = null — on the JS runtime\'s mapping', () => {
         const l32 = createRunForStaging(tapeStaging('r5-bobboss-fire'), atlasLevelSource());
-        expect(solverGoalFor(goalOf(BOB), { run: l32, resolved: null })).toEqual({ goal: { kind: 'encounter',
-            at: { x: 64, y: 128 }, drop: { item: 'Fire' }, then: 'reach-pit' } });
+        expect(withContactFidelity({ apReportBosses: false }, () => solverGoalFor(goalOf(BOB), { run: l32, resolved: null })))
+            .toEqual({ goal: { kind: 'encounter', at: { x: 80, y: 128 }, drop: { item: 'Fire' }, then: 'reach-pit' } });
+        // ⛓ R7: ON, the Fire drop grants nothing and the moved rock frees the stairs — the encounter ends at the drop
+        // and its report, and the route's NEXT goal leaves the room.
+        expect(withContactFidelity({ apReportBosses: true }, () => solverGoalFor(goalOf(BOB), { run: l32, resolved: null })))
+            .toEqual({ goal: { kind: 'encounter', at: { x: 80, y: 128 }, drop: { item: 'Fire' }, then: null } });
         const l12 = createRunForStaging(tapeStaging('enc-l12-witch'), atlasLevelSource());
         expect(l12.level).toBe(12);
         expect(solverGoalFor(goalOf(WITCH), { run: l12, resolved: null })).toEqual({ goal: { kind: 'encounter',
@@ -143,8 +150,9 @@ describe('2 · MAPPING — `solverGoalFor` / `arrivalSolverGoal` → the solver\
         const arenas = [];
         for (const level of levels) {
             const run = createRunForStaging({ ...tapeStaging('r5-bobboss-fire'), boot: { ...tapeStaging('r5-bobboss-fire').boot, level } }, src);
-            const m = solverGoalFor({ kind: 'location', level, tag: null, encounter: { at: { x: 0, y: 0 }, drop: { item: 'Fire' } } },
-                { run, resolved: null });
+            // the ARENA reading is the OFF arm's (ON, no room asks for the pit — the row above)
+            const m = withContactFidelity({ apReportBosses: false }, () => solverGoalFor({ kind: 'location', level, tag: null,
+                encounter: { at: { x: 0, y: 0 }, drop: { item: 'Fire' } } }, { run, resolved: null }));
             if (m.goal.then === 'reach-pit') arenas.push(level);
         }
         expect(arenas).toEqual([32]);
@@ -154,8 +162,12 @@ describe('2 · MAPPING — `solverGoalFor` / `arrivalSolverGoal` → the solver\
     it('the wasm runtime\'s `arrivalSolverGoal` maps the same goals from a staging (no entity looked up)', () => {
         const src = atlasLevelSource();
         const s32 = tapeStaging('r5-bobboss-fire');
-        expect(arrivalSolverGoal(goalOf(BOB), { staging: s32, levelSource: src, record: src(32) }).goal)
-            .toEqual({ kind: 'encounter', at: { x: 64, y: 128 }, drop: { item: 'Fire' }, then: 'reach-pit' });
+        expect(withContactFidelity({ apReportBosses: false },
+            () => arrivalSolverGoal(goalOf(BOB), { staging: s32, levelSource: src, record: src(32) }).goal))
+            .toEqual({ kind: 'encounter', at: { x: 80, y: 128 }, drop: { item: 'Fire' }, then: 'reach-pit' });
+        expect(withContactFidelity({ apReportBosses: true },
+            () => arrivalSolverGoal(goalOf(BOB), { staging: s32, levelSource: src, record: src(32) }).goal))
+            .toEqual({ kind: 'encounter', at: { x: 80, y: 128 }, drop: { item: 'Fire' }, then: null });
         const s12 = tapeStaging('enc-l12-witch');
         expect(arrivalSolverGoal(goalOf(WITCH), { staging: s12, levelSource: src, record: src(12) }).goal)
             .toEqual({ kind: 'encounter', at: { x: 416, y: 384 }, drop: { item: 'Progressive Sword' }, then: null });
@@ -184,14 +196,22 @@ function glueWith(binding) {
     const glue = new SeedlingRegionGlue({ eventBus: { subscribe: () => () => {}, publish: () => {} },
         getDispatcher: () => ({ publish: (name, data) => published.push({ name, data }) }),
         loadRegionEvent: FLASH_SEEDLING_LOAD_REGION_EVENT, getPanel: () => null });
+    const cleared = [];
     const adapter = { teleport: vi.fn(), onStateReport: null, setHostOwnedLocations: vi.fn(),
-        gameState: { level: 0 }, expectedEchoValue: {} };
+        gameState: { level: 0 }, expectedEchoValue: {},
+        // ⛓ the game's cleared table, as `botStatus().persistence_cleared` reads it (the reconcile's source)
+        _getFlash: () => ({ botStatus: () => JSON.stringify({ persistence_cleared: cleared }) }) };
     glue.attachAdapter(adapter);
     glue.setCheckBinding(binding);
     /** One game report, the way `FlashBridgeAdapter._onStateChanged` makes it (state first, then the hook). */
     const report = (property, value) => { adapter.gameState[property] = value; adapter.onStateReport(property, value); };
     const checks = () => published.filter((p) => p.name === 'user:locationCheck').map((p) => p.data.locationName);
-    return { glue, adapter, report, checks };
+    /** One persistence write the game makes: the slot cleared in its table, and (unless `lost`) the report. */
+    const clear = (level, tag, { seq, lost = false } = {}) => {
+        cleared.push({ level, tag });
+        if (!lost) report('pendingCheck', `${seq}|${level}|${tag}|0`);
+    };
+    return { glue, adapter, report, checks, clear };
 }
 const freshBinding = async () => (await loadSeedlingRandomizer({
     flashPanel: PT.flash_panel['1'], manifest: readJson('./wasm/builds.json'), rawRules: PT, locations: locationsOf(PT),
@@ -200,66 +220,94 @@ const freshBinding = async () => (await loadSeedlingRandomizer({
     importModule: (u) => import(/* @vite-ignore */ u),
 })).checkBinding;
 
-describe('3 · CHECK — read off the GAME\'s flag in the encounter\'s own level, never the plan', () => {
-    it('`hasFire` → true while the game reports level 32 checks Bob Boss; `hasDarkSword` in 12 checks the Witch', async () => {
+describe('3 · CHECK — ⛓ R4b part 2: the fixed-address CLEAR, never the game\'s flag', () => {
+    it('(32,4) checks Bob Boss (the Fire drop), (12,1) the Witch (the dark sword), (32,3) Times (the kill)', async () => {
+        const g = glueWith(await freshBinding());
+        g.report('level', 32);
+        g.clear(32, 3, { seq: 1 });
+        g.clear(32, 4, { seq: 2 });
+        g.report('level', 12);
+        g.clear(12, 1, { seq: 3 });
+        expect(g.checks()).toEqual(['Level 032 - Times', BOB, WITCH]);
+    });
+
+    it('⛔ the RETIRED flag path: `hasFire` / `hasDarkSword` turning true checks NOTHING, in its own level or not', async () => {
         const g = glueWith(await freshBinding());
         g.report('level', 32);
         g.report('hasFire', true);
         g.report('level', 12);
         g.report('hasDarkSword', true);
-        expect(g.checks()).toEqual([BOB, WITCH]);
-        expect(g.glue.checkBinding.stats.encounterChecks).toBe(2);
-    });
-
-    it('⛔ NOT THE PLAN: a level-32 run whose flag never turns true checks nothing (a false report, a played-out goal)', async () => {
-        const g = glueWith(await freshBinding());
-        g.report('level', 32);
-        g.report('hasFire', false);
-        // the engine finishing its encounter goal reaches the glue as nothing at all: there is no plan input
-        g.report('level', 30);
         expect(g.checks()).toEqual([]);
     });
 
-    it('⛔ an ECHO of the host\'s own item write (an AP grant of Fire) is not the drop', async () => {
+    it('once: a second clear of the same address (a re-entry, a tape replay) does not check again', async () => {
         const g = glueWith(await freshBinding());
-        g.report('level', 32);
-        g.adapter.expectedEchoValue.hasFire = true;
-        expect(reportContext(g.adapter, 'hasFire', true)).toEqual({ level: 32, echo: true });
-        g.report('hasFire', true);
-        expect(g.checks()).toEqual([]);
-        expect(g.glue.checkBinding.stats.encounterEchoes).toBe(1);
-    });
-
-    it('⛔ the flag turning true in ANOTHER level (Fire collected elsewhere) is not the encounter', async () => {
-        const g = glueWith(await freshBinding());
-        g.report('level', 30);
-        g.report('hasFire', true);
-        expect(g.checks()).toEqual([]);
-        expect(g.glue.checkBinding.stats.encounterElsewhere).toBe(1);
-    });
-
-    it('once: a second flip (a reboot that re-set the flag) does not check again', async () => {
-        const g = glueWith(await freshBinding());
-        g.report('level', 32);
-        g.report('hasFire', true);
-        g.report('hasFire', false);
-        g.report('hasFire', true);
+        g.clear(32, 4, { seq: 1 });
+        g.clear(32, 4, { seq: 2 });
         expect(g.checks()).toEqual([BOB]);
     });
 
-    it('fail-closed: a report with no context (another caller) checks nothing', async () => {
-        const b = await freshBinding();
-        expect(b.onStateReport('hasFire', true)).toEqual([]);
+    it('⛓ THE OWL: (112,0) and (112,1) cleared in one tick — only (112,1) is reported — and the Owl is still checked', async () => {
+        const g = glueWith(await freshBinding());
+        g.clear(112, 0, { lost: true });  // overwritten in the single report slot before the host polled
+        g.clear(112, 1, { seq: 7 });      // the rocklock EVENT's slot, which reaches `pendingCheck`
+        expect(g.checks()).toEqual(['Level 112 - Owl']);
+        expect(g.glue.checkBinding.stats).toMatchObject({ reconcile: 1, reconcileReads: 1 });
     });
 
-    it('the property path stands down on its own names for the two flags (`Fire`, `Dark Sword`): no undo of the drop', async () => {
+    it('the property path stands down on its own names for the two flags (`Fire`, `Dark Sword`): no undo of the grant', async () => {
         const g = glueWith(await freshBinding());
         const owned = g.adapter.setHostOwnedLocations.mock.calls.at(-1)[0];
         expect(owned.has('Fire')).toBe(true);
         expect(owned.has('Dark Sword')).toBe(true);
-        // the encounter locations themselves are the binding's, not the property path's vocabulary
-        expect(owned.has(BOB)).toBe(false);
+        // ⛓ R4b part 2 — the encounter locations are TABLE rows now
+        expect(owned.has(BOB)).toBe(true);
         expect(owned.size).toBe(LOADED.table.size + 2);
+    });
+});
+
+/**
+ * ⛓ R7 — an ENCOUNTER leg is not interrupted by its OWN reports. The wasm playback's delivery gate freezes the room
+ * and re-plans when an item arrives mid-leg, unless the goal is SERVED; an encounter goal has no tag, so the kill's
+ * report ({32,3}, Times) delivered its item mid-fight, froze the Bob Boss leg at 818 t and re-staged it on
+ * `BobBoss.death`'s hold frame (logical-links B @c297b7ecd8: 1 divergence). The gate now also asks
+ * `encounterReportServed`: the reports the encounter itself produces (`R7_GOAL_LEDGER`'s fixed addresses in its level).
+ */
+describe('3b · the encounter\'s OWN reports serve it (the delivery gate does not re-plan on them)', () => {
+    const bob = () => resolveSeedlingAtlasGoal({ kind: 'location', name: BOB }, MAP).goal;
+    const witch = () => resolveSeedlingAtlasGoal({ kind: 'location', name: WITCH }, MAP).goal;
+    const cleared = (...a) => ({ persistence_cleared: a.map(([level, tag]) => ({ level, tag })) });
+
+    it('ON: Bob Boss reports the kill {32,3} and the drop {32,4}; the Witch {12,1} — read off R7_GOAL_LEDGER', () => {
+        withContactFidelity({ apReportBosses: true }, () => {
+            expect(encounterReportAddresses(bob()).map((a) => `${a.level},${a.tag}`).sort()).toEqual(['32,3', '32,4']);
+            expect(encounterReportAddresses(witch()).map((a) => `${a.level},${a.tag}`)).toEqual(['12,1']);
+        });
+    });
+
+    it('ON: an encounter leg that received its OWN {32,3} keeps running (served); {32,4} too', () => {
+        withContactFidelity({ apReportBosses: true }, () => {
+            expect(locationGoalServed(bob(), cleared([32, 1], [32, 3]))).toBe(false);   // the tagless goal alone never was
+            expect(encounterReportServed(bob(), cleared([32, 1], [32, 3]))).toBe(true);
+            expect(encounterReportServed(bob(), cleared([32, 1], [32, 3], [32, 4]))).toBe(true);
+        });
+    });
+
+    it('ON: a FOREIGN check still interrupts — the rock {32,1}, another room\'s clear, an empty set', () => {
+        withContactFidelity({ apReportBosses: true }, () => {
+            expect(encounterReportServed(bob(), cleared([32, 1]))).toBe(false);
+            expect(encounterReportServed(bob(), cleared([30, 2], [12, 1]))).toBe(false);
+            expect(encounterReportServed(bob(), cleared())).toBe(false);
+            // a non-encounter location goal is untouched (its own `locationGoalServed` is the only exemption)
+            expect(encounterReportServed({ kind: 'location', level: 32, tag: 0, name: 'x' }, cleared([32, 3]))).toBe(false);
+        });
+    });
+
+    it('OFF: byte-identical — no encounter report serves anything', () => {
+        withContactFidelity({ apReportBosses: false }, () => {
+            expect(encounterReportAddresses(bob())).toEqual([]);
+            expect(encounterReportServed(bob(), cleared([32, 3], [32, 4]))).toBe(false);
+        });
     });
 });
 
@@ -277,9 +325,13 @@ describe('4 · PERSISTENCE — a live arrival after a death in L32 ({32,1} clear
         expect(mapped.goal?.kind).toBe('encounter');
         const request = arrivalSolveRequest({ staging, solverGoal: mapped.goal, levelSource: src, records });
         const result = createInPlaceSolveService().start(request).result;
+        // ⛓ fidelity APFLIP D6 (`apReportBosses` ON at the R7 merge): the staging and the fallen rock are as before,
+        // but R4's Fire drop grants NOTHING ({32,4} is a plain location report; Fire is an ordinary received item).
+        // ⛓ R7: so `solverGoalFor` ends an
+        // arena encounter at the drop and its report under the switch (`then: null`, as the campaign's `r9-solve-32`
+        // and `enc-l32-*` tapes do) — it used to ask for `reach-pit` and was refused BY NAME at the burn.
+        expect(mapped.goal.then).toBe(null);
         expect(result.ok, result.message).toBe(true);
-        expect(result.plan.verbs).not.toContain('arm');
-        expect(result.plan.expected.at(-1).level).toBe(30);
     }, 180_000);
 });
 

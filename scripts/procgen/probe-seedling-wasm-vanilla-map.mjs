@@ -93,6 +93,39 @@ export function nearestDoorOnlyTarget(rules, from, candidates) {
     return best;
 }
 
+/**
+ * ⛓ ENCOUNTERS — the two bound encounters as the map spells them (`location@x,y->drop`, sorted), DERIVED: the anchor
+ * is `encounterAnchorOf` on the atlas the rules name (the page's own rule), and each anchor's tile must hold the
+ * ledger row's entity in the DELIVERED set — so a set patch that moves the entity (rules-l32-rock-move: Bob's rock
+ * (64,128) -> (88,128), tile [5,8]) moves the expectation with it, and an anchor off its entity throws by name.
+ */
+export async function expectedEncounters(preset) {
+    const HERE_ = dirname(fileURLToPath(import.meta.url));
+    const M = (p) => import(join(HERE_, '..', '..', 'frontend/modules', p));
+    const json = (rel) => JSON.parse(readFileSync(join(HERE_, '..', '..', 'frontend/modules', rel), 'utf8'));
+    const { encounterAnchorOf } = await M('flashPanel/seedlingPlaybackController.js');
+    const { R7_GOAL_LEDGER } = await M('seedlingDemo/r7Acceptance.js');
+    const { entityForLedgerRow, levelName, labelFor } = await M('seedlingDemo/seedlingAtlasDerivation.js');
+    const { vanillaRecordSet } = await M('seedlingDemo/levelSetExporter.js');
+    const atlasId = preset.region_atlas?.['1']?.atlas_id;
+    const file = json('flashPanel/atlases/atlas_files.json').atlases.find((a) => a.atlas_id === atlasId)?.file;
+    if (!file) throw new Error(`expectedEncounters: the rules name atlas ${atlasId}, which atlas_files.json does not list`);
+    const atlas = json(`flashPanel/atlases/${file}`);
+    const size = atlas.tile_space.tile_size;
+    const rooms = vanillaRecordSet(json('seedlingDemo/fixtures/seedling-vanilla-set.json'),
+        json('flashPanel/atlases/seedling-map.json')).set.rooms.map((r) => r.source.record);
+    return R7_GOAL_LEDGER.filter((row) => row.kind === 'encounter').map((row) => {
+        const location = `${levelName(row.level)} - ${labelFor(row)}`;
+        const { entity, item } = entityForLedgerRow(rooms[row.level], row);
+        const at = encounterAnchorOf(atlas, { level: row.level, location });
+        if (!at || !entity || Math.floor(entity.x / size) * size !== at.x || Math.floor(entity.y / size) * size !== at.y) {
+            throw new Error(`expectedEncounters: ${location}'s anchor ${JSON.stringify(at)} is not the tile of its delivered `
+                + `${entity?.type}@${entity?.x},${entity?.y}`);
+        }
+        return `${location}@${at.x},${at.y}->${item}`;
+    }).sort();
+}
+
 /** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
 if (isEntryPoint(import.meta.url)) await main();
 
@@ -122,6 +155,7 @@ async function main() {
     const MAX_CHECKS = Number(arg('max-checks', '3'));
     const PRESET = JSON.parse(readFileSync(join(REPO, 'frontend', RULES_PATH), 'utf8'));
     const REGIONS = PRESET.regions['1'];
+    const ENCOUNTERS = await expectedEncounters(PRESET);
     const START = REGIONS.Menu.exits[0].connected_region;
     const WASM_PAGE = slotBlockOf(PRESET, 'flash_panel')?.wasm ?? '';
     if (!WASM_PAGE || !existsSync(join(REPO, 'frontend/modules/flashPanel/wasm', WASM_PAGE))) {
@@ -385,6 +419,9 @@ async function main() {
             out('J surface', surf);
             check('J: on the JS runtime the AP load TAKES the vanilla arm — the map bound, no refusal',
                 surf?.arm === 'vanilla' && surf.entries > 0 && surf.apRefusal === null, JSON.stringify(surf));
+            // ⛓ R4b part 2 — a REFUSED load (the build lacks a capability the rules need, e.g. `bossreport`) has no set to
+            // measure: the refusal above is J's one named answer, and nothing below is read off a load that never ran.
+            if (surf?.apRefusal) return;
             check('J: the page mounted the delivered set as REAL rooms (all of them), and the explicit start booted level 0',
                 surf?.levelSet?.kind === 'real' && surf.levelSet.rooms > 0 && surf.levelSet.rooms === surf.levelSet.table_levels
                     && surf.reset?.mode === 'explicit-start' && surf.reset?.landed === true && surf.level === 0,
@@ -516,10 +553,7 @@ async function main() {
                 await assertLogicOnlyChannel(rp.gameFrame());
                 await rp.waitFor("panel status 'ready'", async () => ((await page.evaluate(() =>
                     document.querySelector('.flash-panel-status')?.textContent ?? '')) === 'ready' ? 'ready' : null), 120000);
-                await rp.waitFor('the AP load finished', () => page.evaluate(async () => {
-                    const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
-                    return !!p?._apLoadResult;
-                }), 120000);
+                await rp.waitForApLoad(120000);
                 await rp.waitFor('dispatcher wrapped', wrapDispatcher, 20000);
                 await rp.gameFrame().evaluate(installSwapCounter);
                 const map = await page.evaluate(async () => {
@@ -545,9 +579,9 @@ async function main() {
                 check(`${S}: the vanilla arm's map is BOUND — every location a goal, a named refusal or a game-state event, goals at the delivered entity`,
                     map.arm === 'vanilla' && map.entries + map.refused.length + map.events.length === locCount && map.entries > 0
                         && map.types.length === 1 && JSON.stringify([...map.events].sort()) === JSON.stringify(gameState)
-                        // ⛓ ENCOUNTERS — both bound, each at its atlas tile with the game's own drop
-                        && JSON.stringify(map.encounters) === JSON.stringify(['Level 012 - Witch@416,384->Progressive Sword',
-                            'Level 032 - Bob Boss@64,128->Fire'])
+                        // ⛓ ENCOUNTERS — both bound, each at its atlas tile with the game's own drop (`expectedEncounters`:
+                        //   read off the atlas the rules name, and each tile checked to hold its DELIVERED entity)
+                        && JSON.stringify(map.encounters) === JSON.stringify(ENCOUNTERS)
                         && map.delivered && map.apRefusal === null, JSON.stringify(map));
 
                 if (S === 'D') await runDirected();

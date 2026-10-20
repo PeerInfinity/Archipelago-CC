@@ -105,7 +105,7 @@ import {
 } from '../seedlingDemo/wasmArrival.js';
 import {
     adoptedClockStaging, heldArrivalClockStaging, adoptionRefusal, adoptRefusalIsTransient, arrivalHoldBlocker, queuedSwapPush, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, crossLevelEnd, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
-    firstDivergence, foldDrain, goalAction, keysHeldAtReset, latchExpired, latchWatch, locationGoalServed, liveDeclarations, MAX_RECOVERIES, newGameBeginEntry, newGameCeremony,
+    firstDivergence, foldDrain, goalAction, keysHeldAtReset, latchExpired, latchWatch, locationGoalServed, encounterReportServed, liveDeclarations, MAX_RECOVERIES, newGameBeginEntry, newGameCeremony,
     observeLatch,
     primarySplitRefusal, shadowMismatch, talkCircleGuard, talkCirclesAt, TUTORIAL_DISMISS_KEY, TUTORIAL_FADE_FRAMES,
     shippedTape, tapeEquips, TAPE_KEY_RELEASES, wasmGoalRefusal, expiryAction, expiryFailure, SOLVE_RETRY_BUDGET_FACTOR,
@@ -550,7 +550,9 @@ export function createWasmPlayback({
         const to = seqNow();
         ours = true;
         stats.hostStarts.push({ label, from, to });
-        if (to > from) getCheckBinding?.()?.ignoreHostStart?.({ from, to });
+        // ⛓ R4b part 2 — and the addresses the tape DECLARES: `botStart` writes them all in one call, so the single
+        // report slot carries only the last, and the binding's reconcile must not credit the rest off the table.
+        if (to > from) getCheckBinding?.()?.ignoreHostStart?.({ from, to, declared: tape?.persistence ?? [] });
         if (started !== 'ok') return `botStart refused the ${label} tape: ${started}`;
         return null;
     }
@@ -2000,7 +2002,8 @@ export function createWasmPlayback({
         // RELEASED the hold the plan ends on: retried every drain, it toggled ~520 times and the goal never saw
         // its held finish (the queued exit goal timed out at 60 s). Read it off the status first; touch nothing.
         if (pre && (pre.finished || !pre.armed)) { wait('the tape is at its end'); return; }
-        if (locationGoalServed(goal, pre)) {
+        // ⛓ R7 — an ENCOUNTER's own reports (the kill, the drop) are its goal being met, never news: the same wait.
+        if (locationGoalServed(goal, pre) || encounterReportServed(goal, pre)) {
             const why = `${goal.name ?? goal.kind} is served (its check fired) — the delivery lands after its tape ends`;
             if (gate.waiting !== why) stats.deliveryServed.push({ level: room.level, goal: goal.name ?? goal.kind, tick: pre.tick ?? null });
             wait(why);

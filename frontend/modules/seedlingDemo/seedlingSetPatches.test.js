@@ -15,6 +15,10 @@
  * ⚖ The user (2026-10-18), on fidelity ROCKMOVE: "Remove bundle" — L74's rock
  * + button, L39's rope rock, L29's rock + button (`ROCKMOVE_REMOVE_BUNDLE`;
  * `probe-seedling-rock-remove.mjs` is the game witness).
+ *
+ * ⚖ The user (2026-10-19, "Level-data patch"): the first `move` row —
+ * `l32-bossrock-moved`, Bob's arena rock 24 px right, off L32's stairs
+ * (`probe-seedling-l32-rock-move.mjs` is the game witness).
  */
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -26,6 +30,7 @@ import {
     PATCH_L110_FALL_TO_L2,
     PATCH_L29_BUTTON_REMOVED,
     PATCH_L29_FALLROCK_REMOVED,
+    PATCH_L32_BOSSROCK_MOVED,
     PATCH_L37_FALLROCK_REMOVED,
     PATCH_L39_FALLROCK_REMOVED,
     PATCH_L74_BUTTON_REMOVED,
@@ -80,14 +85,21 @@ const BUNDLE_ROOMS = {
         { type: 'button', x: 112, y: 128, attrs: { tset: '0' } }],
     door: { type: 'stairsdown', x: 112, y: 32, to: '31' } },
 };
-const PATCHED_ROOMS = [0, 29, 37, 39, 74];
+const PATCHED_ROOMS = [0, 29, 32, 37, 39, 74];
+/** L32's Bob-arena rock (`Dungeon3/Boss`) and the stairs it sealed; boxes are [x0,x1)×[y0,y1) in px. */
+const L32_ROCK = { type: 'fallrocklarge', x: 64, y: 128, attrs: { tset: '0', tag: '1', bossrock: '1', thirdboss: '1' } };
+const L32_STAIRS = { type: 'stairsdown', x: 72, y: 136, attrs: { flip: '0', to: '30', playerx: '224', playery: '176' } };
+const rockBox = (e) => [e.x, e.x + 32, e.y, e.y + 32];
+const stairsBox = (e) => [e.x, e.x + 16, e.y, e.y + 16];
+const overlaps = ([ax0, ax1, ay0, ay1], [bx0, bx1, by0, by1]) => ax0 < bx1 && bx0 < ax1 && ay0 < by1 && by0 < ay1;
+const largeRocksIn = (record) => record.entities.filter((e) => e.type === 'fallrocklarge');
 
 describe('the table the delivery carries', () => {
-    it('is the moonrock, L37 and ROCKMOVE bundle removals — the L110 repoint is stopped, its two candidates unapplied', () => {
+    it('is the moonrock, L37 and ROCKMOVE bundle removals, then the L32 move — the L110 repoint is stopped, its two candidates unapplied', () => {
         expect(SEEDLING_SET_PATCHES.map((p) => p.id))
             .toEqual([SET_PATCH_IDS.moonrockRemoved, SET_PATCH_IDS.l37FallrockRemoved,
                 'l74-fallrock-removed', 'l74-button-removed', 'l39-fallrock-removed',
-                'l29-fallrock-removed', 'l29-button-removed']);
+                'l29-fallrock-removed', 'l29-button-removed', 'l32-bossrock-moved']);
         expect(ROCKMOVE_REMOVE_BUNDLE.every((p) => p.op === 'remove' && Object.isFrozen(p))).toBe(true);
         expect(SEEDLING_SET_PATCHES).not.toContain(PATCH_L110_FALL_TO_L2);
         expect(SEEDLING_SET_PATCHES).not.toContain(PATCH_L110_FALL_OFF_STAIRS);
@@ -149,6 +161,54 @@ describe('the table the delivery carries', () => {
         });
     }
 
+    it('L32\'s Bob-arena rock moves to (88,128), off the stairs, attrs untouched; nothing else in L32 changes', () => {
+        const map = MAP();
+        const out = applySetPatches(map.levels);
+        expect(out[32].level).toBe(32);
+        expect(largeRocksIn(map.levels[32])).toEqual([L32_ROCK]);
+        expect(largeRocksIn(out[32])).toEqual([{ ...L32_ROCK, x: 88, y: 128 }]);
+        // the same entities in the same order, the rock's placement the only difference
+        expect(out[32].entities).toEqual(map.levels[32].entities.map((e) => (e.type === 'fallrocklarge'
+            ? { ...e, x: 88 } : e)));
+        expect(out[32].entities).toContainEqual(L32_STAIRS);
+        // vanilla's landed rock covers the stairs; the moved one clears them, and 24 px is the least that does
+        expect(overlaps(rockBox(L32_ROCK), stairsBox(L32_STAIRS))).toBe(true);
+        expect(overlaps(rockBox(largeRocksIn(out[32])[0]), stairsBox(L32_STAIRS))).toBe(false);
+        expect(overlaps(rockBox({ x: 87, y: 128 }), stairsBox(L32_STAIRS))).toBe(true);
+        // the arm test reads y alone (`p.y < fallTo − 16 − 8`), and y is kept
+        expect(PATCH_L32_BOSSROCK_MOVED.to).toEqual({ x: 88, y: 128 });
+        // the row alone touches L32 only, and the move stays a move (the rock is not dropped)
+        const alone = applySetPatches(map.levels, [PATCH_L32_BOSSROCK_MOVED]);
+        alone.forEach((r, i) => { if (i !== 32) expect(r).toBe(map.levels[i]); });
+        expect(alone[32].entities).toHaveLength(map.levels[32].entities.length);
+    });
+
+    it('the `move` op: idempotent, and REFUSES BY NAME — moved attrs, two matches, an occupied `to`, no `to`', () => {
+        const once = applySetPatches(MAP().levels, [PATCH_L32_BOSSROCK_MOVED]);
+        expect(applySetPatches(once, [PATCH_L32_BOSSROCK_MOVED])[32]).toBe(once[32]);
+        const p = PATCH_L32_BOSSROCK_MOVED;
+        const withL32 = (f) => { const m = MAP(); m.levels[32].entities = f(m.levels[32].entities); return m.levels; };
+        // another tag at the source: neither BEFORE nor AFTER
+        const retag = withL32((es) => es.map((e) => (e.type === 'fallrocklarge' ? { ...e, attrs: { ...e.attrs, tag: '9' } } : e)));
+        expect(() => applySetPatches(retag, [p])).toThrow(SetPatchError);
+        expect(() => applySetPatches(retag, [p])).toThrow(
+            /l32-bossrock-moved — level 32 holds no fallrocklarge@64,128 .* \(the BEFORE\) and 0 fallrocklarge@88,128 .* \(the AFTER\)/);
+        // two at the source
+        const two = withL32((es) => [...es, ...es.filter((e) => e.type === 'fallrocklarge')]);
+        expect(() => applySetPatches(two, [p])).toThrow(/l32-bossrock-moved — level 32 holds 2 fallrocklarge@64,128/);
+        // one already at the destination while the source still stands: a move would stack two
+        const stacked = withL32((es) => [...es, { ...L32_ROCK, x: 88 }]);
+        expect(() => applySetPatches(stacked, [p])).toThrow(/l32-bossrock-moved — level 32 already holds a fallrocklarge@88,128/);
+        // an applied record that ALSO holds another rock at the source is not "already applied"
+        const half = withL32((es) => [...es.map((e) => (e.type === 'fallrocklarge' ? { ...e, x: 88 } : e)),
+            { ...L32_ROCK, attrs: { tset: '0', tag: '7' } }]);
+        expect(() => applySetPatches(half, [p])).toThrow(/l32-bossrock-moved — level 32 holds no fallrocklarge@64,128/);
+        // a row with no `to`, and a missing level
+        expect(() => applySetPatches(MAP().levels, [{ ...p, to: undefined }])).toThrow(/l32-bossrock-moved — a `move` names no `to`/);
+        expect(() => applySetPatches(MAP().levels.filter((r) => r.level !== 32), [p]))
+            .toThrow(/l32-bossrock-moved — the levels hold 0 record\(s\) for level 32/);
+    });
+
     it('the RESPONDER CENSUS: each removed rock was its group\'s only responder bar L39\'s pulser, and no level writes into 29/39/74\'s rock tags', () => {
         const map = MAP();
         expect(respondersOf(map.levels[74], '0')).toEqual([BUNDLE_ROOMS[74].lost[1]]);
@@ -182,6 +242,7 @@ describe('the table the delivery carries', () => {
         expect(moonrocksIn(map.levels[0])).toHaveLength(1);
         expect(fallrocksIn(map.levels[37])).toHaveLength(1);
         for (const level of [29, 39, 74]) expect(fallrocksIn(map.levels[level]), `level ${level}`).toHaveLength(1);
+        expect(largeRocksIn(map.levels[32])).toEqual([L32_ROCK]);
     });
 
     it('is IDEMPOTENT — a patched document patches to itself', () => {
@@ -269,11 +330,11 @@ describe('the two L110 repoints (NOT in the table): the arithmetic of `checkFall
         expect(outs).toEqual([{ to_level: 2, ctor: { x: 64, y: 32 } }]);
     });
 
-    it('the table is PATCH_MOONROCK_REMOVED, PATCH_L37_FALLROCK_REMOVED and the five ROCKMOVE rows, in order', () => {
+    it('the table is PATCH_MOONROCK_REMOVED, PATCH_L37_FALLROCK_REMOVED, the five ROCKMOVE rows and the L32 move, in order', () => {
         expect(SEEDLING_SET_PATCHES).toEqual([PATCH_MOONROCK_REMOVED, PATCH_L37_FALLROCK_REMOVED,
             PATCH_L74_FALLROCK_REMOVED, PATCH_L74_BUTTON_REMOVED, PATCH_L39_FALLROCK_REMOVED,
-            PATCH_L29_FALLROCK_REMOVED, PATCH_L29_BUTTON_REMOVED]);
-        expect(ROCKMOVE_REMOVE_BUNDLE).toEqual(SEEDLING_SET_PATCHES.slice(2));
+            PATCH_L29_FALLROCK_REMOVED, PATCH_L29_BUTTON_REMOVED, PATCH_L32_BOSSROCK_MOVED]);
+        expect(ROCKMOVE_REMOVE_BUNDLE).toEqual(SEEDLING_SET_PATCHES.slice(2, 7));
     });
 });
 
@@ -283,14 +344,20 @@ describe('vanillaRecordSet carries the table — the single source of the delive
         expect(moonrocksIn(set.rooms[0].source.record)).toEqual([]);
         for (const level of [29, 37, 39, 74]) expect(fallrocksIn(set.rooms[level].source.record), `${level}`).toEqual([]);
         const ids = ['moonrock-removed', 'l37-fallrock-removed', 'l74-fallrock-removed', 'l74-button-removed',
-            'l39-fallrock-removed', 'l29-fallrock-removed', 'l29-button-removed'];
+            'l39-fallrock-removed', 'l29-fallrock-removed', 'l29-button-removed', 'l32-bossrock-moved'];
         expect(set.provenance.patches).toEqual(ids);
         expect(report.patches).toEqual(ids);
-        // eb8cc643 → ce77a823: the table gained the ROCKMOVE bundle (rules rock-remove)
-        expect(set.set_id).toBe('seedling-vanilla-record-ce77a823');
+        expect(largeRocksIn(set.rooms[32].source.record)).toEqual([{ ...L32_ROCK, x: 88, y: 128 }]);
+        // ce77a823 → f5bdb07d: the table gained the L32 move (rules l32-rock-move)
+        expect(set.set_id).toBe('seedling-vanilla-record-f5bdb07d');
+        // the delivery WITHOUT the L32 move (the l32 probe's control) keeps the pre-move id
+        expect(vanillaRecordSet(EMBED, MAP(), {
+            patches: SEEDLING_SET_PATCHES.filter((p) => p !== PATCH_L32_BOSSROCK_MOVED) }).set.set_id)
+            .toBe('seedling-vanilla-record-ce77a823');
         // the delivery WITHOUT the bundle (the rock-remove probe's control) keeps its pre-bundle id
         expect(vanillaRecordSet(EMBED, MAP(), {
-            patches: SEEDLING_SET_PATCHES.filter((p) => !ROCKMOVE_REMOVE_BUNDLE.includes(p)) }).set.set_id)
+            patches: SEEDLING_SET_PATCHES.filter((p) => !ROCKMOVE_REMOVE_BUNDLE.includes(p)
+                && p !== PATCH_L32_BOSSROCK_MOVED) }).set.set_id)
             .toBe('seedling-vanilla-record-eb8cc643');
         // the moonrock-only delivery (the L37 probe's control) keeps its pre-L37 id
         expect(vanillaRecordSet(EMBED, MAP(), { patches: [PATCH_MOONROCK_REMOVED] }).set.set_id)
@@ -305,7 +372,7 @@ describe('vanillaRecordSet carries the table — the single source of the delive
         expect(moonrocksIn(set.rooms[0].source.record)).toHaveLength(1);
     });
 
-    it('only rooms 0, 29, 37, 39 and 74 differ between the two', () => {
+    it('only rooms 0, 29, 32, 37, 39 and 74 differ between the two', () => {
         const a = vanillaRecordSet(EMBED, MAP(), { patches: [] }).set;
         const b = vanillaRecordSet(EMBED, MAP()).set;
         const differ = a.rooms.filter((r, i) => JSON.stringify(r) !== JSON.stringify(b.rooms[i])).map((r) => r.id);
@@ -320,7 +387,7 @@ describe('vanillaRecordSet carries the table — the single source of the delive
             for (const loc of region.locations ?? []) placed.set(loc.name, { name: loc.item.name, player: loc.item.player });
         }
         const { table } = buildPlacementTable({
-            locationItemOf: (n) => placed.get(n) ?? null, ledger: R7_GOAL_LEDGER, rooms: MAP().levels, selfPlayer: 1,
+            locationItemOf: (n) => placed.get(n) ?? null, ledger: R7_GOAL_LEDGER, rooms: MAP().levels, selfPlayer: 1, bossReport: true,
         });
         const { set } = rewriteRecordSet(vanillaRecordSet(EMBED, MAP()).set, table);
         const records = mountedRecordsOf(set);
@@ -329,6 +396,8 @@ describe('vanillaRecordSet carries the table — the single source of the delive
         expect(records.get(38).entities).toContainEqual(L38_BUTTON);
         for (const level of [29, 39, 74]) expect(fallrocksIn(records.get(level)), `${level}`).toEqual([]);
         expect(buttonsIn(records.get(29)).concat(buttonsIn(records.get(74)))).toEqual([]);
+        // the moved rock is an `encounter`/`boss` row (rewrite: false): the rewrite keeps it, where the move put it
+        expect(largeRocksIn(records.get(32))).toEqual([{ ...L32_ROCK, x: 88, y: 128 }]);
         expect(controlIn(records.get(110)).attrs).toEqual({ fallthrough: '0', xOff: '-256', yOff: '-272' });
     });
 });
@@ -342,6 +411,7 @@ describe('where it does NOT apply', () => {
         for (const [level, { lost }] of Object.entries(BUNDLE_ROOMS)) {
             for (const e of lost) expect(byLevel(Number(level)).entities, `${level}`).toContainEqual(e);
         }
+        expect(largeRocksIn(byLevel(32))).toEqual([L32_ROCK]);
     });
 
     it('a GENERATED set is built without it (seedlingGeneratedSet → buildLevelSet)', () => {

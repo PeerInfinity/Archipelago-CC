@@ -34,8 +34,9 @@ describe('levelRun.addEquips — a resumed window\'s equips, rebased by the call
     });
 
     it('refuses a tick that already equips (two writes of `Main.primary` on one observation)', () => {
-        // `r9-solve-32` declares its own `{t: 840, slot: 1}` at construction.
-        const run = runOf('r9-solve-32');
+        // `apb-l32-fresh-fire-held` declares its own `{t: 840, slot: 1}` at construction. ⛓ fidelity APFLIP: it was
+        // `r9-solve-32`'s, which ends in L32 under R4 (no Fire is granted, so no equip and no burn).
+        const run = runOf('apb-l32-fresh-fire-held');
         expect(() => run.addEquips([{ t: 840, slot: 1 }])).toThrow(/tick 840 already equips slot 1/);
     });
 

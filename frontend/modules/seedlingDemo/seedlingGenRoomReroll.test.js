@@ -522,11 +522,14 @@ describe('G8 — a room the budget cannot seat GROWS (⚖ user 2026-09-26, repla
      * `Victory`, and the maze room holding it carries the goal's library row. With that row emptied and the name
      * set back, the host build hashes to its previous value (5b7eb2d2 — measured), so those two are the whole move;
      * the two grid builds hold no goal and do not move.
+     * ⛓ RE-MEASURED at the wasm rebuild R2 (2026-10-19): `flash_panel.wasm` moved p4f → p4g (the default
+     * move). With `flashPanelWiring.json` set back to `seedling_bot_ap_p4f` all three hash to their previous
+     * values (e3d1d044 / 1b2ff6ee / 938da86e — measured), so the wiring is the whole move.
      */
     it.each([
-        ['grid 8x6 seed 2', () => GRID(2, 8, 6), 'e3d1d044'],
-        ['grid 10x10 seed 7', () => GRID(7, 10, 10), '1b2ff6ee'],
-        ['host (committed state) seed 3', () => withSeed(SEEDLING_GENERATED_HOST_STATE, 3), '938da86e'],
+        ['grid 8x6 seed 2', () => GRID(2, 8, 6), 'b6ac142d'],
+        ['grid 10x10 seed 7', () => GRID(7, 10, 10), '29ef3164'],
+        ['host (committed state) seed 3', () => withSeed(SEEDLING_GENERATED_HOST_STATE, 3), '377b4639'],
     ])('%s built before G8: byte-identical', async (_name, state, md5) => {
         const rulesJson = await build(state());
         expect(createHash('md5').update(JSON.stringify(rulesJson)).digest('hex').slice(0, 8)).toBe(md5);

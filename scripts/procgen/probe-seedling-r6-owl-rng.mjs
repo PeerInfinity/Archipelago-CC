@@ -101,7 +101,7 @@ const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
 // `SEEDLING_PORT` moves the server, as in the differential and the campaign pipeline.
 const PAGE_URL = `http://localhost:${process.env.SEEDLING_PORT || '8000'}/frontend/modules/flashPanel/wasm/`
-    + `${process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f'}/game.html`;
+    + `${process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4g'}/game.html`;
 
 const outArg = process.argv.indexOf('--out');
 const OUT = outArg >= 0

@@ -1,0 +1,1066 @@
+{
+  "build_manifest": [
+    {
+      "name": "seedling_bot_ap_p4d",
+      "capabilities": [
+        "arm",
+        "apitem"
+      ]
+    },
+    {
+      "name": "seedling_bot_ap_p4g",
+      "capabilities": [
+        "arm",
+        "apitem",
+        "hold",
+        "tag",
+        "freeze",
+        "sincebegin",
+        "bossreport"
+      ]
+    },
+    {
+      "name": "seedling_original",
+      "capabilities": []
+    }
+  ],
+  "port": "8209",
+  "arms": [
+    {
+      "id": "bob-nofire",
+      "build": "seedling_bot_ap_p4g",
+      "tape": "r5-bobboss-fire",
+      "ticks": 2500,
+      "finished": true,
+      "error": "",
+      "level": 32,
+      "items": {
+        "hitsMax": 3,
+        "hasTorch": false,
+        "hasDarkSuit": false,
+        "hasSpear": false,
+        "hasFeather": false,
+        "canSwim": false,
+        "hasFireWand": false,
+        "hasWand": false,
+        "hasFire": false,
+        "hasDarkShield": false,
+        "hasShield": false,
+        "hasGhostSword": false,
+        "hasDarkSword": false,
+        "hasSword": true
+      },
+      "clears": [
+        "32|1",
+        "32|3",
+        "32|4"
+      ],
+      "cleared": [
+        "32|1",
+        "32|3",
+        "32|4"
+      ],
+      "checks": [
+        "Level 032 - Times (reconcile)",
+        "Level 032 - Bob Boss (reconcile)"
+      ],
+      "hasFire": [
+        false
+      ],
+      "hasDarkSword": [
+        false
+      ],
+      "mobileClasses": [
+        "NPCs::Watcher",
+        "Player"
+      ],
+      "seals": null,
+      "reports": [
+        "1|32|1|0",
+        "2|32|3|0",
+        "3|32|4|0"
+      ],
+      "seqBefore": 0,
+      "declared": [],
+      "stats": {
+        "reports": 3,
+        "malformed": 0,
+        "restores": 0,
+        "unknown": 1,
+        "checks": 2,
+        "repeats": 2,
+        "armingWindow": 0,
+        "reconcile": 2,
+        "reconcileReads": 3
+      }
+    },
+    {
+      "id": "bob-serverfire",
+      "build": "seedling_bot_ap_p4g",
+      "tape": "r5-bobboss-fire+fire",
+      "ticks": 2500,
+      "finished": true,
+      "error": "",
+      "level": 32,
+      "items": {
+        "hitsMax": 3,
+        "hasTorch": false,
+        "hasDarkSuit": false,
+        "hasSpear": false,
+        "hasFeather": false,
+        "canSwim": false,
+        "hasFireWand": false,
+        "hasWand": false,
+        "hasFire": true,
+        "hasDarkShield": false,
+        "hasShield": false,
+        "hasGhostSword": false,
+        "hasDarkSword": false,
+        "hasSword": true
+      },
+      "clears": [
+        "32|1",
+        "32|3",
+        "32|4"
+      ],
+      "cleared": [
+        "32|1",
+        "32|3",
+        "32|4"
+      ],
+      "checks": [
+        "Level 032 - Times (reconcile)",
+        "Level 032 - Bob Boss (reconcile)"
+      ],
+      "hasFire": [
+        false,
+        true
+      ],
+      "hasDarkSword": [
+        false
+      ],
+      "mobileClasses": [
+        "NPCs::Watcher",
+        "Player"
+      ],
+      "seals": null,
+      "reports": [
+        "1|32|1|0",
+        "2|32|3|0",
+        "3|32|4|0"
+      ],
+      "seqBefore": 0,
+      "declared": [],
+      "stats": {
+        "reports": 3,
+        "malformed": 0,
+        "restores": 0,
+        "unknown": 1,
+        "checks": 2,
+        "repeats": 2,
+        "armingWindow": 0,
+        "reconcile": 2,
+        "reconcileReads": 3
+      }
+    },
+    {
+      "id": "l32-reentry-killed",
+      "build": "seedling_bot_ap_p4g",
+      "tape": "l32-reentry-killed",
+      "ticks": 90,
+      "finished": true,
+      "error": "",
+      "level": 32,
+      "items": {
+        "hitsMax": 3,
+        "hasTorch": false,
+        "hasDarkSuit": false,
+        "hasSpear": false,
+        "hasFeather": false,
+        "canSwim": false,
+        "hasFireWand": false,
+        "hasWand": false,
+        "hasFire": false,
+        "hasDarkShield": false,
+        "hasShield": true,
+        "hasGhostSword": false,
+        "hasDarkSword": false,
+        "hasSword": true
+      },
+      "clears": [
+        "32|3"
+      ],
+      "cleared": [
+        "32|1",
+        "32|3"
+      ],
+      "checks": [],
+      "hasFire": [
+        false
+      ],
+      "hasDarkSword": [
+        false
+      ],
+      "mobileClasses": [
+        "NPCs::Watcher",
+        "Pickups::Fire",
+        "Player"
+      ],
+      "seals": null,
+      "reports": [
+        "2|32|3|0"
+      ],
+      "seqBefore": 0,
+      "declared": [
+        "32|1",
+        "32|3"
+      ],
+      "stats": {
+        "reports": 1,
+        "malformed": 0,
+        "restores": 0,
+        "unknown": 0,
+        "checks": 0,
+        "repeats": 0,
+        "armingWindow": 1,
+        "reconcile": 0,
+        "reconcileReads": 0
+      }
+    },
+    {
+      "id": "l32-reentry-collected",
+      "build": "seedling_bot_ap_p4g",
+      "tape": "l32-reentry-collected",
+      "ticks": 90,
+      "finished": true,
+      "error": "",
+      "level": 32,
+      "items": {
+        "hitsMax": 3,
+        "hasTorch": false,
+        "hasDarkSuit": false,
+        "hasSpear": false,
+        "hasFeather": false,
+        "canSwim": false,
+        "hasFireWand": false,
+        "hasWand": false,
+        "hasFire": false,
+        "hasDarkShield": false,
+        "hasShield": true,
+        "hasGhostSword": false,
+        "hasDarkSword": false,
+        "hasSword": true
+      },
+      "clears": [
+        "32|4"
+      ],
+      "cleared": [
+        "32|1",
+        "32|3",
+        "32|4"
+      ],
+      "checks": [],
+      "hasFire": [
+        false
+      ],
+      "hasDarkSword": [
+        false
+      ],
+      "mobileClasses": [
+        "NPCs::Watcher",
+        "Player"
+      ],
+      "seals": null,
+      "reports": [
+        "3|32|4|0"
+      ],
+      "seqBefore": 0,
+      "declared": [
+        "32|1",
+        "32|3",
+        "32|4"
+      ],
+      "stats": {
+        "reports": 1,
+        "malformed": 0,
+        "restores": 0,
+        "unknown": 0,
+        "checks": 0,
+        "repeats": 0,
+        "armingWindow": 1,
+        "reconcile": 0,
+        "reconcileReads": 0
+      }
+    },
+    {
+      "id": "l32-leave-stairs-nofire",
+      "build": "seedling_bot_ap_p4g",
+      "tape": "l32-leave-stairs-nofire",
+      "ticks": 400,
+      "finished": true,
+      "error": "",
+      "level": 32,
+      "items": {
+        "hitsMax": 3,
+        "hasTorch": false,
+        "hasDarkSuit": false,
+        "hasSpear": false,
+        "hasFeather": false,
+        "canSwim": false,
+        "hasFireWand": false,
+        "hasWand": false,
+        "hasFire": false,
+        "hasDarkShield": false,
+        "hasShield": true,
+        "hasGhostSword": false,
+        "hasDarkSword": false,
+        "hasSword": true
+      },
+      "clears": [
+        "32|4"
+      ],
+      "cleared": [
+        "32|1",
+        "32|3",
+        "32|4"
+      ],
+      "checks": [],
+      "hasFire": [
+        false
+      ],
+      "hasDarkSword": [
+        false
+      ],
+      "mobileClasses": [
+        "NPCs::Watcher",
+        "Player"
+      ],
+      "seals": null,
+      "reports": [
+        "3|32|4|0"
+      ],
+      "seqBefore": 0,
+      "declared": [
+        "32|1",
+        "32|3",
+        "32|4"
+      ],
+      "stats": {
+        "reports": 1,
+        "malformed": 0,
+        "restores": 0,
+        "unknown": 0,
+        "checks": 0,
+        "repeats": 0,
+        "armingWindow": 1,
+        "reconcile": 0,
+        "reconcileReads": 0
+      }
+    },
+    {
+      "id": "l32-leave-pit-nofire",
+      "build": "seedling_bot_ap_p4g",
+      "tape": "l32-leave-pit-nofire",
+      "ticks": 400,
+      "finished": true,
+      "error": "",
+      "level": 32,
+      "items": {
+        "hitsMax": 3,
+        "hasTorch": false,
+        "hasDarkSuit": false,
+        "hasSpear": false,
+        "hasFeather": false,
+        "canSwim": false,
+        "hasFireWand": false,
+        "hasWand": false,
+        "hasFire": false,
+        "hasDarkShield": false,
+        "hasShield": true,
+        "hasGhostSword": false,
+        "hasDarkSword": false,
+        "hasSword": true
+      },
+      "clears": [
+        "32|4"
+      ],
+      "cleared": [
+        "5|0",
+        "8|0",
+        "8|1",
+        "10|0",
+        "32|1",
+        "32|3",
+        "32|4"
+      ],
+      "checks": [],
+      "hasFire": [
+        false
+      ],
+      "hasDarkSword": [
+        false
+      ],
+      "mobileClasses": [
+        "NPCs::Watcher",
+        "Player"
+      ],
+      "seals": null,
+      "reports": [
+        "7|32|4|0"
+      ],
+      "seqBefore": 0,
+      "declared": [
+        "5|0",
+        "8|0",
+        "8|1",
+        "10|0",
+        "32|1",
+        "32|3",
+        "32|4"
+      ],
+      "stats": {
+        "reports": 1,
+        "malformed": 0,
+        "restores": 0,
+        "unknown": 0,
+        "checks": 0,
+        "repeats": 0,
+        "armingWindow": 1,
+        "reconcile": 0,
+        "reconcileReads": 0
+      }
+    },
+    {
+      "id": "witch",
+      "build": "seedling_bot_ap_p4g",
+      "tape": "enc-l12-witch",
+      "ticks": 601,
+      "finished": true,
+      "error": "",
+      "level": 95,
+      "items": {
+        "hitsMax": 3,
+        "hasTorch": false,
+        "hasDarkSuit": false,
+        "hasSpear": false,
+        "hasFeather": false,
+        "canSwim": false,
+        "hasFireWand": false,
+        "hasWand": true,
+        "hasFire": false,
+        "hasDarkShield": false,
+        "hasShield": false,
+        "hasGhostSword": false,
+        "hasDarkSword": false,
+        "hasSword": true
+      },
+      "clears": [
+        "12|1"
+      ],
+      "cleared": [
+        "12|1"
+      ],
+      "checks": [
+        "Level 012 - Witch"
+      ],
+      "hasFire": [
+        false
+      ],
+      "hasDarkSword": [
+        false
+      ],
+      "mobileClasses": [
+        "Player"
+      ],
+      "seals": null,
+      "reports": [
+        "1|12|1|0"
+      ],
+      "seqBefore": 0,
+      "declared": [],
+      "stats": {
+        "reports": 1,
+        "malformed": 0,
+        "restores": 0,
+        "unknown": 0,
+        "checks": 1,
+        "repeats": 0,
+        "armingWindow": 0,
+        "reconcile": 0,
+        "reconcileReads": 1
+      }
+    },
+    {
+      "id": "owl",
+      "build": "seedling_bot_ap_p4g",
+      "tape": "r6-owl-kill",
+      "ticks": 816,
+      "finished": true,
+      "error": "",
+      "level": 112,
+      "items": {
+        "hitsMax": 3,
+        "hasTorch": false,
+        "hasDarkSuit": false,
+        "hasSpear": false,
+        "hasFeather": false,
+        "canSwim": false,
+        "hasFireWand": false,
+        "hasWand": false,
+        "hasFire": false,
+        "hasDarkShield": false,
+        "hasShield": false,
+        "hasGhostSword": false,
+        "hasDarkSword": false,
+        "hasSword": true
+      },
+      "clears": [
+        "112|1"
+      ],
+      "cleared": [
+        "112|0",
+        "112|1"
+      ],
+      "checks": [
+        "Level 112 - Owl (reconcile)"
+      ],
+      "hasFire": [
+        false
+      ],
+      "hasDarkSword": [
+        false
+      ],
+      "mobileClasses": [
+        "Enemies::FinalBoss",
+        "Player",
+        "Scenery::RockFall"
+      ],
+      "seals": null,
+      "reports": [
+        "2|112|1|0"
+      ],
+      "seqBefore": 0,
+      "declared": [],
+      "stats": {
+        "reports": 1,
+        "malformed": 0,
+        "restores": 0,
+        "unknown": 1,
+        "checks": 1,
+        "repeats": 0,
+        "armingWindow": 0,
+        "reconcile": 1,
+        "reconcileReads": 1
+      }
+    },
+    {
+      "id": "shieldspire",
+      "build": "seedling_bot_ap_p4g",
+      "tape": "r6-shield-kill",
+      "ticks": 653,
+      "finished": true,
+      "error": "",
+      "level": 19,
+      "items": {
+        "hitsMax": 3,
+        "hasTorch": false,
+        "hasDarkSuit": false,
+        "hasSpear": false,
+        "hasFeather": false,
+        "canSwim": false,
+        "hasFireWand": false,
+        "hasWand": false,
+        "hasFire": false,
+        "hasDarkShield": false,
+        "hasShield": false,
+        "hasGhostSword": false,
+        "hasDarkSword": false,
+        "hasSword": true
+      },
+      "clears": [
+        "19|0"
+      ],
+      "cleared": [
+        "19|0"
+      ],
+      "checks": [
+        "Level 019 - Shieldspire"
+      ],
+      "hasFire": [
+        false
+      ],
+      "hasDarkSword": [
+        false
+      ],
+      "mobileClasses": [
+        "NPCs::Sign",
+        "Player"
+      ],
+      "seals": null,
+      "reports": [
+        "1|19|0|0"
+      ],
+      "seqBefore": 0,
+      "declared": [],
+      "stats": {
+        "reports": 1,
+        "malformed": 0,
+        "restores": 0,
+        "unknown": 0,
+        "checks": 1,
+        "repeats": 0,
+        "armingWindow": 0,
+        "reconcile": 0,
+        "reconcileReads": 1
+      }
+    },
+    {
+      "id": "totem-all-parts",
+      "build": "seedling_bot_ap_p4g",
+      "tape": "r6-totem-kill",
+      "ticks": 780,
+      "finished": true,
+      "error": "",
+      "level": 43,
+      "items": {
+        "hitsMax": 3,
+        "hasTorch": false,
+        "hasDarkSuit": false,
+        "hasSpear": false,
+        "hasFeather": false,
+        "canSwim": false,
+        "hasFireWand": false,
+        "hasWand": true,
+        "hasFire": false,
+        "hasDarkShield": false,
+        "hasShield": false,
+        "hasGhostSword": false,
+        "hasDarkSword": false,
+        "hasSword": false
+      },
+      "clears": [
+        "43|0",
+        "43|5"
+      ],
+      "cleared": [
+        "43|0",
+        "43|1",
+        "43|2",
+        "43|3",
+        "43|5"
+      ],
+      "checks": [
+        "Level 043 - Wand",
+        "Level 043 - Totem of Lacste (reconcile)"
+      ],
+      "hasFire": [
+        false
+      ],
+      "hasDarkSword": [
+        false
+      ],
+      "mobileClasses": [
+        "NPCs::Watcher",
+        "Player"
+      ],
+      "seals": null,
+      "reports": [
+        "4|43|0|0",
+        "5|43|5|0"
+      ],
+      "seqBefore": 0,
+      "declared": [],
+      "stats": {
+        "reports": 2,
+        "malformed": 0,
+        "restores": 0,
+        "unknown": 0,
+        "checks": 2,
+        "repeats": 1,
+        "armingWindow": 0,
+        "reconcile": 1,
+        "reconcileReads": 2
+      }
+    },
+    {
+      "id": "totem-four-parts",
+      "build": "seedling_bot_ap_p4g",
+      "tape": "r6-totem-kill-4parts",
+      "ticks": 780,
+      "finished": true,
+      "error": "",
+      "level": 43,
+      "items": {
+        "hitsMax": 3,
+        "hasTorch": false,
+        "hasDarkSuit": false,
+        "hasSpear": false,
+        "hasFeather": false,
+        "canSwim": false,
+        "hasFireWand": false,
+        "hasWand": false,
+        "hasFire": false,
+        "hasDarkShield": false,
+        "hasShield": false,
+        "hasGhostSword": false,
+        "hasDarkSword": false,
+        "hasSword": false
+      },
+      "clears": [],
+      "cleared": [],
+      "checks": [],
+      "hasFire": [
+        false
+      ],
+      "hasDarkSword": [
+        false
+      ],
+      "mobileClasses": [
+        "Enemies::BossTotem",
+        "NPCs::Watcher",
+        "Pickups::Wand",
+        "Player"
+      ],
+      "seals": null,
+      "reports": [],
+      "seqBefore": 0,
+      "declared": [],
+      "stats": {
+        "reports": 0,
+        "malformed": 0,
+        "restores": 0,
+        "unknown": 0,
+        "checks": 0,
+        "repeats": 0,
+        "armingWindow": 0,
+        "reconcile": 0,
+        "reconcileReads": 0
+      }
+    },
+    {
+      "id": "door-N16-seals16",
+      "build": "seedling_bot_ap_p4g",
+      "tape": "final-door-16-slots",
+      "ticks": 105,
+      "finished": true,
+      "error": "",
+      "level": 113,
+      "items": {
+        "hitsMax": 3,
+        "hasTorch": false,
+        "hasDarkSuit": false,
+        "hasSpear": false,
+        "hasFeather": false,
+        "canSwim": false,
+        "hasFireWand": false,
+        "hasWand": false,
+        "hasFire": false,
+        "hasDarkShield": false,
+        "hasShield": false,
+        "hasGhostSword": false,
+        "hasDarkSword": false,
+        "hasSword": false
+      },
+      "clears": [
+        "114|0",
+        "113|0"
+      ],
+      "cleared": [
+        "113|0",
+        "114|0"
+      ],
+      "checks": [],
+      "hasFire": [
+        false
+      ],
+      "hasDarkSword": [
+        false
+      ],
+      "mobileClasses": [
+        "Player"
+      ],
+      "seals": {
+        "count": 16,
+        "required": 16,
+        "slots": 16
+      },
+      "reports": [
+        "1|114|0|0",
+        "2|113|0|0"
+      ],
+      "seqBefore": 0,
+      "declared": [
+        "114|0"
+      ],
+      "stats": {
+        "reports": 2,
+        "malformed": 0,
+        "restores": 0,
+        "unknown": 2,
+        "checks": 0,
+        "repeats": 0,
+        "armingWindow": 0,
+        "reconcile": 0,
+        "reconcileReads": 1
+      }
+    },
+    {
+      "id": "door-N16-seals15",
+      "build": "seedling_bot_ap_p4g",
+      "tape": "final-door-15-slots",
+      "ticks": 105,
+      "finished": true,
+      "error": "",
+      "level": 113,
+      "items": {
+        "hitsMax": 3,
+        "hasTorch": false,
+        "hasDarkSuit": false,
+        "hasSpear": false,
+        "hasFeather": false,
+        "canSwim": false,
+        "hasFireWand": false,
+        "hasWand": false,
+        "hasFire": false,
+        "hasDarkShield": false,
+        "hasShield": false,
+        "hasGhostSword": false,
+        "hasDarkSword": false,
+        "hasSword": false
+      },
+      "clears": [
+        "114|0"
+      ],
+      "cleared": [
+        "114|0"
+      ],
+      "checks": [],
+      "hasFire": [
+        false
+      ],
+      "hasDarkSword": [
+        false
+      ],
+      "mobileClasses": [
+        "Player"
+      ],
+      "seals": {
+        "count": 15,
+        "required": 16,
+        "slots": 15
+      },
+      "reports": [
+        "1|114|0|0"
+      ],
+      "seqBefore": 0,
+      "declared": [
+        "114|0"
+      ],
+      "stats": {
+        "reports": 1,
+        "malformed": 0,
+        "restores": 0,
+        "unknown": 1,
+        "checks": 0,
+        "repeats": 0,
+        "armingWindow": 0,
+        "reconcile": 0,
+        "reconcileReads": 0
+      }
+    },
+    {
+      "id": "door-N8-seals8",
+      "build": "seedling_bot_ap_p4g",
+      "tape": "final-door-16-slots",
+      "ticks": 105,
+      "finished": true,
+      "error": "",
+      "level": 113,
+      "items": {
+        "hitsMax": 3,
+        "hasTorch": false,
+        "hasDarkSuit": false,
+        "hasSpear": false,
+        "hasFeather": false,
+        "canSwim": false,
+        "hasFireWand": false,
+        "hasWand": false,
+        "hasFire": false,
+        "hasDarkShield": false,
+        "hasShield": false,
+        "hasGhostSword": false,
+        "hasDarkSword": false,
+        "hasSword": false
+      },
+      "clears": [
+        "114|0",
+        "113|0"
+      ],
+      "cleared": [
+        "113|0",
+        "114|0"
+      ],
+      "checks": [],
+      "hasFire": [
+        false
+      ],
+      "hasDarkSword": [
+        false
+      ],
+      "mobileClasses": [
+        "Player"
+      ],
+      "seals": {
+        "count": 8,
+        "required": 8,
+        "slots": 16
+      },
+      "reports": [
+        "1|114|0|0",
+        "2|113|0|0"
+      ],
+      "seqBefore": 0,
+      "declared": [
+        "114|0"
+      ],
+      "stats": {
+        "reports": 2,
+        "malformed": 0,
+        "restores": 0,
+        "unknown": 2,
+        "checks": 0,
+        "repeats": 0,
+        "armingWindow": 0,
+        "reconcile": 0,
+        "reconcileReads": 1
+      }
+    },
+    {
+      "id": "door-N8-seals7",
+      "build": "seedling_bot_ap_p4g",
+      "tape": "final-door-7-slots",
+      "ticks": 105,
+      "finished": true,
+      "error": "",
+      "level": 113,
+      "items": {
+        "hitsMax": 3,
+        "hasTorch": false,
+        "hasDarkSuit": false,
+        "hasSpear": false,
+        "hasFeather": false,
+        "canSwim": false,
+        "hasFireWand": false,
+        "hasWand": false,
+        "hasFire": false,
+        "hasDarkShield": false,
+        "hasShield": false,
+        "hasGhostSword": false,
+        "hasDarkSword": false,
+        "hasSword": false
+      },
+      "clears": [
+        "114|0"
+      ],
+      "cleared": [
+        "114|0"
+      ],
+      "checks": [],
+      "hasFire": [
+        false
+      ],
+      "hasDarkSword": [
+        false
+      ],
+      "mobileClasses": [
+        "Player"
+      ],
+      "seals": {
+        "count": 7,
+        "required": 8,
+        "slots": 7
+      },
+      "reports": [
+        "1|114|0|0"
+      ],
+      "seqBefore": 0,
+      "declared": [
+        "114|0"
+      ],
+      "stats": {
+        "reports": 1,
+        "malformed": 0,
+        "restores": 0,
+        "unknown": 1,
+        "checks": 0,
+        "repeats": 0,
+        "armingWindow": 0,
+        "reconcile": 0,
+        "reconcileReads": 0
+      }
+    },
+    {
+      "id": "p4d-bob-control",
+      "build": "seedling_bot_ap_p4d",
+      "tape": "r5-bobboss-fire",
+      "ticks": 2500,
+      "finished": true,
+      "error": "",
+      "level": 32,
+      "items": {
+        "hitsMax": 3,
+        "hasTorch": false,
+        "hasDarkSuit": false,
+        "hasSpear": false,
+        "hasFeather": false,
+        "canSwim": false,
+        "hasFireWand": false,
+        "hasWand": false,
+        "hasFire": true,
+        "hasDarkShield": false,
+        "hasShield": false,
+        "hasGhostSword": false,
+        "hasDarkSword": false,
+        "hasSword": true
+      },
+      "clears": [
+        "32|1",
+        "32|-1"
+      ],
+      "cleared": [
+        "31|29",
+        "32|1"
+      ],
+      "checks": [],
+      "hasFire": [
+        false,
+        true
+      ],
+      "hasDarkSword": [
+        false
+      ],
+      "mobileClasses": [
+        "NPCs::Watcher",
+        "Player"
+      ],
+      "seals": null,
+      "reports": [
+        "1|32|1|0",
+        "2|32|-1|0"
+      ],
+      "seqBefore": 0,
+      "declared": [],
+      "stats": {
+        "reports": 2,
+        "malformed": 0,
+        "restores": 0,
+        "unknown": 2,
+        "checks": 0,
+        "repeats": 0,
+        "armingWindow": 0,
+        "reconcile": 0,
+        "reconcileReads": 2
+      }
+    }
+  ]
+}

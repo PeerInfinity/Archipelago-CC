@@ -77,11 +77,12 @@ import {
     AP_ITEM_CAPABILITY,
     buildNameFromWasmPath,
     capabilitiesOf,
-    JS_RUNTIME_CAPABILITIES,
+    jsRuntimeCapabilities,
     JS_TRANSPORT,
     RANDOMIZER_ARMS,
     seedlingRandomizerEligibility,
     TAG_CAPABILITY,
+    BOSS_REPORT_CAPABILITY,
 } from './seedlingRandomizerEligibility.js';
 // ⛓ LIGHT: imports nothing, and is already in the panel's static closure.
 import { GEN_ROOM_TILE_SIZE, generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
@@ -194,7 +195,8 @@ export function flashNameForLedgerRow(row, deps) {
         const index = entity?.attrs?.totempart;
         return index === undefined || index === null ? null : `totem${index}`;
     }
-    const tag = row.kind === 'encounter' ? String(row.id).split('@')[0] : row.tag;
+    // ⛓ R4b — a boss row's id key IS upstream's flash name (`owl`, `shieldspire`, `times`, …, `ap_locations`).
+    const tag = row.kind === 'encounter' || row.kind === 'boss' ? String(row.id).split('@')[0] : row.tag;
     if (typeof tag !== 'string' || tag === '') return null;
     if (apLocationNames.has(tag)) return tag;
     // The one derived hop: the tag names an item, and the game config's own
@@ -906,6 +908,10 @@ export async function loadSeedlingRandomizer({
     });
 
     // ── (iii) the placement, and the full verdict ───────────────────────
+    // ⛓ The build's declared capabilities, from DATA (the JS runtime declares its own,
+    // read at load: `bossreport` is LIVE only while `apReportBosses` is ON).
+    const buildCapabilities = transport === JS_TRANSPORT ? jsRuntimeCapabilities()
+        : (capabilitiesOf(manifest, buildNameFromWasmPath(flashPanel?.wasm)).capabilities ?? []);
     const eligibility = seedlingRandomizerEligibility({
         flashPanel,
         transport,
@@ -924,9 +930,7 @@ export async function loadSeedlingRandomizer({
             importModule, log,
             // ⛓ R9 slice P4E: the build's `tag` capability, from DATA, and what
             // a delivery needs if the table allocates a tag.
-            tagCapable: (transport === JS_TRANSPORT ? JS_RUNTIME_CAPABILITIES
-                : (capabilitiesOf(manifest, buildNameFromWasmPath(flashPanel?.wasm)).capabilities ?? []))
-                .includes(TAG_CAPABILITY),
+            tagCapable: buildCapabilities.includes(TAG_CAPABILITY),
             embed, bot,
         });
     }
@@ -951,12 +955,31 @@ export async function loadSeedlingRandomizer({
     }
 
     const { set: vanilla } = exporter.vanillaRecordSet(embed, mapDoc);
-    const { table, entries, encounters } = rewriter.buildPlacementTable({
+    // ⛓⛓ R4b part 2 — THE `bossreport` GUARD. Only a build declaring it reports the nine boss/encounter rows
+    // (the seven kills, Fire (32,4), the dark sword (12,1)) and leaves Fire / the dark sword to the host. A build
+    // without it grants those itself and never clears the addresses, so its checks would never fire: the rows come
+    // back REFUSED BY NAME and the load is refused with them — never played with a check missing, never checked off
+    // the old encounter flags.
+    const bossReport = buildCapabilities.includes(BOSS_REPORT_CAPABILITY);
+    const { table, entries, fixed, refused: reportRefused, encounters, reports } = rewriter.buildPlacementTable({
         locationItemOf,
         ledger: ledgerUsed,
         rooms: mapDoc.levels,
         selfPlayer,
+        bossReport,
     });
+    if (reportRefused.length > 0) {
+        return refuse({
+            ...eligibility,
+            eligible: false,
+            verdict: 'ineligible',
+            failed: 'capability',
+            why: `capability: the build ${JSON.stringify(transport === JS_TRANSPORT ? JS_TRANSPORT
+                : buildNameFromWasmPath(flashPanel?.wasm))} does not declare \`${BOSS_REPORT_CAPABILITY}\`, so `
+                + `${reportRefused.length} location(s) of these rules would never be checked: `
+                + reportRefused.map((r) => r.why).join('; '),
+        }, { census, assets, refused: reportRefused });
+    }
     const { set, replaced } = rewriter.rewriteRecordSet(vanilla, table);
     const invalidation = exporter.apMappingInvalidation(set);
 
@@ -965,13 +988,13 @@ export async function loadSeedlingRandomizer({
         bot,
         log,
     }).arm(set, invalidation);
-    // ⛓ ENCOUNTERS — the two unrewritten rows are checked off their game flag (`SeedlingCheckBinding`'s head); the
-    // property path's own name for that flag (the game config's `locations[]`) is stood down with them.
+    // ⛓ R4b part 2 — the nine report rows are TABLE rows (checked at their fixed address, `SeedlingCheckBinding`'s
+    // head); the property path's own name for the two host-granted flags (the game config's `locations[]`:
+    // `hasFire` → `Fire`, `hasDarkSword` → `Dark Sword`) is stood down with them.
     const propertyNameOf = new Map((gameConfig?.locations ?? []).map((l) => [l.property, l.ap_name ?? l.flash_name]));
     const checkBinding = new SeedlingCheckBinding({
         table, placementKey: rewriter.placementKey, selfPlayer,
-        encounters: encounters.map((e) => ({ location: e.location, ledgerId: e.ledgerId, level: e.level, flag: e.flag,
-            propertyLocation: propertyNameOf.get(e.flag) ?? null })),
+        propertyLocations: fixed.map((e) => propertyNameOf.get(e.flag)).filter(Boolean),
     });
 
     return {
@@ -983,6 +1006,9 @@ export async function loadSeedlingRandomizer({
         table,
         entries,
         encounters,
+        // ⛓ R4b — the boss kills, described for the bot map (their checks are the table's `fixed` rows)
+        reports,
+        fixed,
         replaced,
         set,
         invalidation,

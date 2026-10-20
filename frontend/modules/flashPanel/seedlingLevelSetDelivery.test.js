@@ -43,7 +43,7 @@ function rewritten() {
     }
     const { table } = buildPlacementTable({
         locationItemOf: (n) => placed.get(n) ?? null,
-        ledger: R7_GOAL_LEDGER, rooms: MAP.levels, selfPlayer: SELF,
+        ledger: R7_GOAL_LEDGER, rooms: MAP.levels, selfPlayer: SELF, bossReport: true,
     });
     const { set } = rewriteRecordSet(vanillaRecordSet(EMBED, MAP).set, table);
     return { set, invalidation: apMappingInvalidation(set) };

@@ -42,34 +42,29 @@
  * so without this field a button could credit a check the player never earned.
  * The AS3 reports the value written; this requires a CLEAR.
  *
- * ── ⛓ THE TWO ENCOUNTER LOCATIONS ARE NOT HERE ──────────────────────────
+ * ── ⛓⛓ R4b part 2 — THE NINE REPORT ROWS ARE TABLE ROWS, AND THE FLAG PATH IS RETIRED ──
  *
- * `fire@L32` and `darksword@L12` are granted by a boss drop and a special
- * pickup, not by an `APItem`, so they are not rewritten. This module covers
- * the 39 that ARE rewritten, and `hostOwnedLocations()` names them so the
- * adapter can stand down on exactly those and no others.
+ * On a build declaring `bossreport` the seven boss kills, the Bob Boss's Fire drop `(32,4)` and the Witch's dark
+ * sword `(12,1)` REPORT through the same clear as every `APItem` (`apPlacementRewriter`'s `tagSource: 'fixed'`
+ * rows), and the game no longer grants Fire or the dark sword. So they are checked here like any other row, and
+ * the old ENCOUNTER path — a `hasFire` / `hasDarkSword` property turning true, echo- and level-filtered — is gone:
+ * on this build nothing but the host's own grant ever sets those flags, so reading them would check the location
+ * off the SERVER's item. A build without `bossreport` never gets here (the load refuses the nine by name).
+ * `hostOwnedLocations()` still names the property path's own names for the two flags (`propertyLocations`, the
+ * game config's `Fire` / `Dark Sword`), so the adapter stands down there and never undoes the host's grant.
  *
- * ── ⛓⛓ ENCOUNTERS — THE TWO, CHECKED OFF THE GAME'S OWN FLAG ─────────────
+ * ── ⛓⛓ THE RECONCILE — ONE REPORT SLOT, TWO CLEARS IN ONE FRAME ───────────
  *
- * Given `encounters` (the vanilla arm's rows: `{location, ledgerId, level,
- * flag, propertyLocation}`), a report of the row's `flag` (`hasFire`,
- * `hasDarkSword` — BridgeGeneric `stateChanged` of `Main.<flag>`, a
- * `state_properties` entry; the JS page reports the same property off its
- * run) turning TRUE is that location's check. ⛔ THE GAME'S FLAG, NEVER THE
- * PLAN: nothing here reads a goal, a tape or a solver's verdict. Two reports
- * of the flag are NOT the drop, and are refused (counted):
- *
- *   echo       the adapter's own write coming back (`expectedEchoValue`): an
- *              AP grant of the same item (Fire placed in a chest) sets the
- *              flag too, and is no fight;
- *   elsewhere  the flag turned true while the game reports another level
- *              than the encounter's (the drop is collected in its own room).
- *
- * The property path watched the same flags under the AP names `Fire` / `Dark
- * Sword`, which no location of these rules carries — so it dispatched a check
- * nothing could answer and queued an UNDO that took the drop straight back
- * (the burn after the Bob Boss would then fail). `hostOwnedLocations()` names
- * those property-path names too (`propertyLocation`), so it stands down there.
+ * `pendingCheck` is one string polled once per frame, so two clears in one update report only the LAST. The Owl
+ * does exactly that: `FinalBoss.endAnim` clears `tag` then `tag + 1` in one call (`FinalBoss.as:219-222`), so
+ * `(112,0)` — the Owl location — is overwritten by `(112,1)` (the rocklock event) before the host reads it. The
+ * event collector already met this (`seedlingEventCollector.onReconcile`, L38's ButtonRoom); this is the same fix
+ * for checks: after every live clear (`liveClears`) the glue re-reads the game's cleared table
+ * (`botStatus().persistence_cleared`) and `onReconcile` checks every table address found cleared and not yet
+ * checked. ⛔ The arming window still holds: a clear refused there (a tape's declaration the player never earned)
+ * — and every TABLE address the host's tape declared (`ignoreHostStart`'s `declared`; `botStart` writes them in
+ * one call, so the report slot carries only the last) — is remembered (`unearned`) and the reconcile does not
+ * credit it either. A later LIVE clear of the same slot still checks it.
  */
 
 import { parseSeqPayload } from './seqPayload.js';
@@ -110,7 +105,7 @@ export class SeedlingCheckBinding {
      *   two spellings of the address cannot drift.
      * @param {number} [deps.selfPlayer]  this slot, for the readout's wording.
      */
-    constructor({ table, placementKey, selfPlayer = null, encounters = [] } = {}) {
+    constructor({ table, placementKey, selfPlayer = null, propertyLocations = [] } = {}) {
         if (!(table instanceof Map)) {
             throw new Error('SeedlingCheckBinding: `table` (the placement table) is required — '
                 + 'this module never imports apPlacementRewriter, which costs a browser bundle '
@@ -128,9 +123,13 @@ export class SeedlingCheckBinding {
         /** ⛓ W2 — the host `botStart` arming windows, `{from, to}` seq ranges (⚖ W0-Q1). */
         this.hostStarts = [];
         this.stats = { reports: 0, malformed: 0, restores: 0, unknown: 0, checks: 0, repeats: 0, armingWindow: 0,
-            encounterChecks: 0, encounterEchoes: 0, encounterElsewhere: 0 };
-        /** ⛓ ENCOUNTERS — the rows checked off a game flag (`{location, ledgerId, level, flag, propertyLocation}`). */
-        this.encounters = (encounters ?? []).filter((e) => typeof e?.flag === 'string' && e.flag !== '');
+            reconcile: 0, reconcileReads: 0 };
+        /** ⛓ R4b part 2 — the property path's names for flags the host owns (`Fire`, `Dark Sword`): stood down. */
+        this.propertyLocations = (propertyLocations ?? []).filter((n) => typeof n === 'string' && n !== '');
+        /** ⛓ THE RECONCILE — clears reported outside a host start's arming window, of ANY slot (the glue's trigger). */
+        this.liveClears = 0;
+        /** ⛓ THE RECONCILE — table keys whose clear arrived inside an arming window (never credited by a re-read). */
+        this.unearned = new Set();
     }
 
     /**
@@ -152,10 +151,21 @@ export class SeedlingCheckBinding {
      * by that call and nothing else. (The seq is otherwise stripped and never
      * compared — `parsePendingCheck` — this is its one other use.)
      *
-     * @param {{from:number, to:number}} window  seqs read before / after `botStart`
+     * ⛓ R4b part 2 — `declared` (the tape's `persistence`, `[{level, tag}]`): `botStart` writes every declaration
+     * in ONE call, so `pendingCheck` reports only the last of them and the rest never reach the window test above.
+     * Every declared TABLE address not already checked is marked `unearned`, so the reconcile (which reads the
+     * game's whole cleared table) cannot credit a declaration either. A later live clear of it still checks.
+     *
+     * @param {{from:number, to:number, declared?: Array<{level:number, tag:number}>}} window  seqs read before /
+     *   after `botStart`, and the addresses the tape declared
      */
-    ignoreHostStart({ from, to } = {}) {
+    ignoreHostStart({ from, to, declared = [] } = {}) {
         if (!Number.isInteger(from) || !Number.isInteger(to) || to <= from) return false;
+        for (const d of Array.isArray(declared) ? declared : []) {
+            const key = this.placementKey(Number(d?.level), Number(d?.tag));
+            const entry = this.table.get(key);
+            if (entry && !this.checked.has(entry.location)) this.unearned.add(key);
+        }
         this.hostStarts.push({ from, to });
         if (this.hostStarts.length > 32) this.hostStarts.shift();
         return true;
@@ -175,8 +185,8 @@ export class SeedlingCheckBinding {
      */
     hostOwnedLocations() {
         return new Set([...[...this.table.values()].map((e) => e.location),
-            // ⛓ ENCOUNTERS — the property path's own names for the two flags (see the head).
-            ...this.encounters.map((e) => e.propertyLocation).filter(Boolean)]);
+            // ⛓ R4b part 2 — the property path's own names for the two host-granted flags (see the head).
+            ...this.propertyLocations]);
     }
 
     /**
@@ -184,13 +194,8 @@ export class SeedlingCheckBinding {
      *
      * @param {string} property
      * @param {*} value
-     * @param {{level?: number, echo?: boolean}} [ctx]  ⛓ ENCOUNTERS — the game's reported level and whether the
-     *   report is the adapter's own write coming back (the glue reads both off the adapter); absent = no encounter
-     *   check (fail-closed)
      */
-    onStateReport(property, value, ctx = {}) {
-        const enc = this.encounters.find((e) => e.flag === property);
-        if (enc) return this._encounterReport(enc, value, ctx);
+    onStateReport(property, value) {
         if (property !== 'pendingCheck') return [];
         const report = parsePendingCheck(value);
         if (!report) {
@@ -206,7 +211,10 @@ export class SeedlingCheckBinding {
             this.stats.restores += 1;
             return [];
         }
-        const entry = this.table.get(this.placementKey(report.level, report.tag));
+        const host = this.insideHostStart(report.seq);
+        if (!host) this.liveClears += 1;
+        const key = this.placementKey(report.level, report.tag);
+        const entry = this.table.get(key);
         if (!entry) {
             // Not a location: a lock, a door, a boss, a tape replay. The common
             // case by a wide margin, and deliberately silent.
@@ -217,39 +225,54 @@ export class SeedlingCheckBinding {
             this.stats.repeats += 1;
             return [];
         }
-        if (this.insideHostStart(report.seq)) {
+        if (host) {
             // ⚖ W0-Q1 — an UNEARNED declaration's echo, never a collection
             // (an earned one was a repeat, above). Counted, so a gate can tell
-            // "caught" from "never fired".
+            // "caught" from "never fired" — and remembered, so the reconcile
+            // cannot credit it from the game's table either.
             this.stats.armingWindow += 1;
+            this.unearned.add(key);
             return [];
         }
+        this.unearned.delete(key);
+        return this._check(entry);
+    }
+
+    _check(entry, at = 'live') {
         this.checked.add(entry.location);
         this.stats.checks += 1;
+        if (at === 'reconcile') this.stats.reconcile += 1;
         return [
             { type: 'locationCheck', location: entry.location, ledgerId: entry.ledgerId,
-                level: entry.level, tag: entry.tag },
+                level: entry.level, tag: entry.tag, ...(at === 'reconcile' ? { at } : {}) },
             { type: 'apItemFound', location: entry.location, item: entry.item,
                 player: entry.player, forSelf: entry.player === this.selfPlayer,
                 look: entry.look, ledgerId: entry.ledgerId },
         ];
     }
 
-    /** ⛓ ENCOUNTERS — the game's flag for an encounter row turned true: its check, unless an echo / elsewhere. */
-    _encounterReport(enc, value, { level = null, echo = false } = {}) {
-        if (value !== true) return [];
-        if (echo) { this.stats.encounterEchoes += 1; return []; }
-        if (level !== enc.level) { this.stats.encounterElsewhere += 1; return []; }
-        if (this.checked.has(enc.location)) { this.stats.repeats += 1; return []; }
-        this.checked.add(enc.location);
-        this.stats.encounterChecks += 1;
-        return [{ type: 'locationCheck', location: enc.location, ledgerId: enc.ledgerId, level: enc.level, tag: null,
-            flag: enc.flag }];
+    /**
+     * ⛓ THE RECONCILE (see the head) — the game's cleared slots as they stand after a live clear
+     * (`botStatus().persistence_cleared`, `[{level, tag}]`): every table address among them not yet checked, and
+     * not refused inside an arming window, is checked now. A readout with no such array is not a read.
+     */
+    onReconcile(cleared) {
+        if (!Array.isArray(cleared)) return [];
+        this.stats.reconcileReads += 1;
+        const out = [];
+        for (const c of cleared) {
+            const key = this.placementKey(Number(c?.level), Number(c?.tag));
+            const entry = this.table.get(key);
+            if (!entry || this.checked.has(entry.location) || this.unearned.has(key)) continue;
+            out.push(...this._check(entry, 'reconcile'));
+        }
+        return out;
     }
 
     /** The panel rebuilt its adapter; the game starts over, so may we. */
     onGameRestart() {
         this.checked.clear();
         this.hostStarts = [];
+        this.unearned.clear();
     }
 }

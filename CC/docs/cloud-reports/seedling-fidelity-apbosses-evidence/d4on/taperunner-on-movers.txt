@@ -1,0 +1,20 @@
+failed fixture differential enc-l32-fallen-door: JS stream matches the real game recording, exactly
+    Error: levelRun: the tape equips slot 1 at tick 839, but the run holds 1 item(s) (slots [0]) when `Bot.as` checks it (`drainEquipChecks`, the top of a tick: an item granted on that same observation is appended only in the frame's tail). `Inventory.getItem` on 
+failed fixture differential enc-l32-fire-return: JS stream matches the real game recording, exactly
+    Error: levelRun: a sword press at tick 1 would fire its rect on a FROZEN tick (a BobBossNPC dialogue), and `genericHit` returns immediately under `Game.freezeObjects` — so the press would do nothing at all. Press outside the freeze.
+failed fixture differential enc-l32-live-arrival: JS stream matches the real game recording, exactly
+    Error: levelRun: the tape equips slot 1 at tick 833, but the run holds 1 item(s) (slots [0]) when `Bot.as` checks it (`drainEquipChecks`, the top of a tick: an item granted on that same observation is appended only in the frame's tail). `Inventory.getItem` on 
+failed fixture differential r9-solve-32: JS stream matches the real game recording, exactly
+    Error: levelRun: the tape equips slot 1 at tick 840, but the run holds 1 item(s) (slots [0]) when `Bot.as` checks it (`drainEquipChecks`, the top of a tick: an item granted on that same observation is appended only in the frame's tail). `Inventory.getItem` on 
+failed fixture differential swim-u5-bobboss-encounter: JS stream matches the real game recording, exactly
+    Error: levelRun: the tape equips slot 1 at tick 840, but the run holds 1 item(s) (slots [0]) when `Bot.as` checks it (`drainEquipChecks`, the top of a tick: an item granted on that same observation is appended only in the frame's tail). `Inventory.getItem` on 
+failed the incremental stepping face (watch page) enc-l32-fallen-door: stepping to completion == runTape, byte for byte
+    Error: levelRun: the tape equips slot 1 at tick 839, but the run holds 1 item(s) (slots [0]) when `Bot.as` checks it (`drainEquipChecks`, the top of a tick: an item granted on that same observation is appended only in the frame's tail). `Inventory.getItem` on 
+failed the incremental stepping face (watch page) enc-l32-fire-return: stepping to completion == runTape, byte for byte
+    Error: levelRun: a sword press at tick 1 would fire its rect on a FROZEN tick (a BobBossNPC dialogue), and `genericHit` returns immediately under `Game.freezeObjects` — so the press would do nothing at all. Press outside the freeze.
+failed the incremental stepping face (watch page) enc-l32-live-arrival: stepping to completion == runTape, byte for byte
+    Error: levelRun: the tape equips slot 1 at tick 833, but the run holds 1 item(s) (slots [0]) when `Bot.as` checks it (`drainEquipChecks`, the top of a tick: an item granted on that same observation is appended only in the frame's tail). `Inventory.getItem` on 
+failed the incremental stepping face (watch page) r9-solve-32: stepping to completion == runTape, byte for byte
+    Error: levelRun: the tape equips slot 1 at tick 840, but the run holds 1 item(s) (slots [0]) when `Bot.as` checks it (`drainEquipChecks`, the top of a tick: an item granted on that same observation is appended only in the frame's tail). `Inventory.getItem` on 
+failed the incremental stepping face (watch page) swim-u5-bobboss-encounter: stepping to completion == runTape, byte for byte
+    Error: levelRun: the tape equips slot 1 at tick 840, but the run holds 1 item(s) (slots [0]) when `Bot.as` checks it (`drainEquipChecks`, the top of a tick: an item granted on that same observation is appended only in the frame's tail). `Inventory.getItem` on 

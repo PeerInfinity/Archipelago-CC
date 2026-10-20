@@ -1234,9 +1234,15 @@ const CHAIN_DECLARATIONS = Object.freeze([
          * because a `key` row asked for a clear in its level and the vanilla
          * `bosskey@112,64` carries no tag; a key's flip is now its own placement
          * witness (`GOAL_PLACEMENT_WITNESS`, the reason beside it).
+         *
+         * ⛓ R7 (the combined landing: p4g + R4b's boss rows) — the SEVENTH and EIGHTH: the boss kills are
+         * locations now (`kind: 'boss'`, held once the report address is cleared), and the chain already
+         * kills two of them. `r9-solve-19`'s ShieldBoss clears {19,0} (`shieldspire@L19`) and `r9-solve-32`'s
+         * third BobBoss clears {32,3} (`times@L32`). The full tier at de1c1f49c1 MEASURED both EARNED before
+         * they were declared ("EARNED but not declared").
          */
-        earns: Object.freeze(['sword@L10', 'chest@L11', 'bosskey0@L19', 'shield@L20', 'bosskey1@L29',
-            'fire@L32']),
+        earns: Object.freeze(['sword@L10', 'chest@L11', 'bosskey0@L19', 'shieldspire@L19', 'shield@L20',
+            'bosskey1@L29', 'fire@L32', 'times@L32']),
         /**
          * ⛓⛓ THE TIMED CLEARS, WITH THE INSTRUMENT THAT MEASURED EACH — THREE
          * ROWS FOR THREE CLEARS, one per `{level,tag}@at` a SEGMENT declares.

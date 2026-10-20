@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-db0a4f7f",
+  "atlas_id": "seedling-0c2152f7",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "db0a4f7f" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "0c2152f7" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -1427,6 +1427,13 @@
           "tile": [6,4],
           "vanilla_item": "Red Key",
           "sub_region": "r5c5"
+        },
+        {
+          "name": "Level 019 - Shieldspire",
+          "tile": [5,2],
+          "vanilla_item": "Seal",
+          "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+          "sub_region": "r1c5"
         }
       ],
       "annotations": { "rules_source": "analyzer" },
@@ -2324,8 +2331,20 @@
       "locations": [
         {
           "name": "Level 032 - Bob Boss",
-          "tile": [4,8],
+          "tile": [5,8],
           "vanilla_item": "Fire",
+          "access_rule": {
+            "rule": "Or",
+            "children": [
+              { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+              { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+            ]
+          }
+        },
+        {
+          "name": "Level 032 - Times",
+          "tile": [5,8],
+          "vanilla_item": "Seal",
           "access_rule": {
             "rule": "Or",
             "children": [
@@ -2444,6 +2463,12 @@
           "kind": "teleporter",
           "exit_tiles": [[2,8]],
           "entrance_tile": [2,8]
+        },
+        {
+          "exit_id": "in_light_boss_exit_L69_112_96",
+          "kind": "teleporter",
+          "exit_tiles": [[7,6]],
+          "entrance_tile": [7,6]
         }
       ],
       "locations": [
@@ -3217,6 +3242,19 @@
             ]
           },
           "sub_region": "r13c7"
+        },
+        {
+          "name": "Level 043 - Totem of Lacste",
+          "tile": [9,10],
+          "vanilla_item": "Seal",
+          "access_rule": {
+            "rule": "And",
+            "children": [
+              { "rule": "Has", "args": { "item_name": "Totem Shard", "count": 5 } },
+              { "rule": "Has", "args": { "item_name": "Wand" } }
+            ]
+          },
+          "sub_region": "r8c7"
         }
       ],
       "annotations": { "rules_source": "analyzer" },
@@ -3232,13 +3270,7 @@
               "rule": "And",
               "children": [
                 { "rule": "Has", "args": { "item_name": "Totem Shard", "count": 5 } },
-                {
-                  "rule": "Or",
-                  "children": [
-                    { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
-                    { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
-                  ]
-                }
+                { "rule": "Has", "args": { "item_name": "Wand" } }
               ]
             }
           },
@@ -4671,7 +4703,21 @@
           }
         }
       ],
-      "locations": [],
+      "locations": [
+        {
+          "name": "Level 057 - Tentacled Beast",
+          "tile": [5,3],
+          "vanilla_item": "Seal",
+          "access_rule": {
+            "rule": "Or",
+            "children": [
+              { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+              { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+              { "rule": "Has", "args": { "item_name": "Wand" } }
+            ]
+          }
+        }
+      ],
       "annotations": { "rules_source": "mixed" }
     },
     {
@@ -5608,6 +5654,51 @@
       }
     },
     {
+      "region_id": "level_69",
+      "name": "Level 069",
+      "bounds": { "x": 0, "y": 0, "w": 10, "h": 10 },
+      "map_ref": 69,
+      "substrate": "flash_seedling",
+      "exits": [
+        {
+          "exit_id": "in_pit_L70_3_7",
+          "kind": "teleporter",
+          "exit_tiles": [[3,7]],
+          "entrance_tile": [3,7]
+        },
+        {
+          "exit_id": "out_lightbosscontroller_72_72",
+          "kind": "teleporter",
+          "exit_tiles": [[4,4]],
+          "entrance_tile": [4,4],
+          "access_rule": {
+            "rule": "Or",
+            "children": [
+              { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+              { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+              { "rule": "Has", "args": { "item_name": "Wand" } }
+            ]
+          }
+        }
+      ],
+      "locations": [
+        {
+          "name": "Level 069 - Lights",
+          "tile": [4,4],
+          "vanilla_item": "Seal",
+          "access_rule": {
+            "rule": "Or",
+            "children": [
+              { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+              { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+              { "rule": "Has", "args": { "item_name": "Wand" } }
+            ]
+          }
+        }
+      ],
+      "annotations": { "rules_source": "mixed" }
+    },
+    {
       "region_id": "level_70",
       "name": "Level 070",
       "bounds": { "x": 0, "y": 0, "w": 5, "h": 5 },
@@ -5625,10 +5716,24 @@
           "kind": "teleporter",
           "exit_tiles": [[2,4]],
           "entrance_tile": [2,4]
+        },
+        {
+          "exit_id": "out_pit_3_7",
+          "kind": "teleporter",
+          "exit_tiles": [[2,2]],
+          "entrance_tile": [2,2],
+          "access_rule": {
+            "rule": "Or",
+            "children": [
+              { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+              { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+              { "rule": "Has", "args": { "item_name": "Wand" } }
+            ]
+          }
         }
       ],
       "locations": [],
-      "annotations": { "rules_source": "manual" }
+      "annotations": { "rules_source": "mixed" }
     },
     {
       "region_id": "level_71",
@@ -6250,7 +6355,20 @@
           "entrance_tile": [9,1]
         }
       ],
-      "locations": [],
+      "locations": [
+        {
+          "name": "Level 082 - King of Fire",
+          "tile": [7,3],
+          "vanilla_item": "Seal",
+          "access_rule": {
+            "rule": "Or",
+            "children": [
+              { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+              { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+            ]
+          }
+        }
+      ],
       "annotations": { "rules_source": "mixed" }
     },
     {
@@ -7990,7 +8108,20 @@
           "entrance_tile": [7,1]
         }
       ],
-      "locations": [],
+      "locations": [
+        {
+          "name": "Level 112 - Owl",
+          "tile": [4,6],
+          "vanilla_item": "Seal",
+          "access_rule": {
+            "rule": "Or",
+            "children": [
+              { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+              { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+            ]
+          }
+        }
+      ],
       "annotations": { "rules_source": "manual" }
     },
     {
@@ -9319,6 +9450,7 @@
         "to": ["level_66","in_L70_32_64"],
         "one_way": true
       },
+      { "from": ["level_70","out_pit_3_7"], "to": ["level_69","in_pit_L70_3_7"], "one_way": true },
       {
         "from": ["level_71","out_teleporter_16_304"],
         "to": ["level_85","in_L71_16_304"],
@@ -9833,6 +9965,11 @@
       {
         "from": ["level_57","out_tentaclebeast_80_48"],
         "to": ["level_58","in_tentacle_beast_mouth_L57_56_96"],
+        "one_way": true
+      },
+      {
+        "from": ["level_69","out_lightbosscontroller_72_72"],
+        "to": ["level_36","in_light_boss_exit_L69_112_96"],
         "one_way": true
       }
     ],

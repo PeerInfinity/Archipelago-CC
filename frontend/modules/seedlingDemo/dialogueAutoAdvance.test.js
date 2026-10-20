@@ -180,8 +180,12 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ fidelity L40BUTTON: +2 (277) — `l40button-l41-part0`, `l40button-l42-part0` (no dialogue), inert.
         // ⛓ fidelity SEALDOOR: +3 (280) — `sealdoor-l113-clear`, `sealdoor-l113-exit`, `sealdoor-l113-noseal-control` (no dialogue), inert.
         // ⛓ fidelity WATCHERTALK: +2 (282) — `watchertalk-l114-clear-16`, `watchertalk-l114-clear-32` (the Watcher's dialogue is paged, not auto-advanced), inert.
-        expect(rows).toHaveLength(282);
-        expect(rows.length - parted.length).toBe(281);
+        // ⛓ fidelity APFLIP D3/D6: −1 +8 (289) — `enc-l32-fire-return` retired (replaced by `apb-l32-both-reported`);
+        // `apb-l32-both-reported`, `apb-l32-fresh-fire-held`, `apb-l32-fresh-no-fire`, `apb-l32-killed-drop-held`,
+        // `apb-l12-witch-slot-held`, `apb-l12-witch-server-sword`, `apb-l12-witch-reported`, `apb-l43-totem-no-parts`,
+        // inert (the three Witch tapes' sword is no auto-advance arrival, as `enc-l12-witch`'s).
+        expect(rows).toHaveLength(289);
+        expect(rows.length - parted.length).toBe(288);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {

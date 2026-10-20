@@ -105,7 +105,7 @@ async function main() {
     takeBoxLockOrExit({ name: 'probe-seedling-static-sword-mobiles.mjs', kind: 'browser' });
     const { gameVisibleTape, parseTape } = await import(join(MODULE, 'tapeFormat.js'));
     const tape = parseTape(readFileSync(FILE, 'utf8'));
-    const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f';
+    const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4g';
     const PAGE_URL = `http://localhost:${process.env.SEEDLING_PORT || '8000'}`
         + `/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
     const browser = await chromium.launch({ args: HEADLESS_LOGIC_ONLY_ARGS });

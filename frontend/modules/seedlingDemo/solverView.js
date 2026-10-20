@@ -46,7 +46,7 @@ export {
 // arrowTrap.js — dangerMap, solverBot · seedling 6
 export { ARROW, arrowLaneForPlacement, arrowLaneRect, arrowRect, arrowTrapFires, stepArrow } from './arrowTrap.js';
 // bobBossFight.js — solverBot · seedling 1 (hammer-phase B2: the fight forbids a shield bump)
-export { shieldBumpTouches } from './bobBossFight.js';
+export { bobBossRockArms, shieldBumpTouches } from './bobBossFight.js';
 // breakableRocks.js — botDriverV2, solverBot · seedling 3
 export { assertWaitCovers, rockBreaksUnder, WAIT_AFTER_PRESS_TICKS } from './breakableRocks.js';
 // bridges.js — botDriverV2 · seedling 1
@@ -71,6 +71,8 @@ export { hasDropDeath, tileUnder } from './bulb.js';
 export { CONTACT_FIDELITY } from './contactFidelity.js';
 // ⛓ seedling-fidelity-bombpusher D3: the lobber's own stepping, for the danger map's WAIT arm.
 export { BOMB, stepBomb, stepBombPusher } from './bombPusher.js';
+// ⛓ fidelity APBOSSES D2: the R4 slots the Witch and Bob executors read (`CONTACT_FIDELITY.apReportBosses`, OFF).
+export { BOB_ARENA_LEVEL, BOB_KILLED_TAG, DARK_SWORD_WITCH_TAG, FIRE_BOSS_DROP_TAG, WITCH_LEVEL } from './apReportBosses.js';
 // chest.js — botDriverV2, solverBot · seedling 3
 export { CHEST, chestProbeLine, chestStanceBand } from './chest.js';
 // combat.js — dangerMap, encounters, solverBot, strikePolicy · seedling 9

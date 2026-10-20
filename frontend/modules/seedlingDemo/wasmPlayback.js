@@ -75,6 +75,8 @@ import { LEGACY_FADE_PER_LOAD } from './deadFrameBand.js';
 import { ENTITY_CLASSES } from './levelWorld.js';
 import { TALK_RANGE } from './endingChain.js';
 import { mergeSaveArray } from './saveArrayRules.js';
+import { R7_GOAL_LEDGER } from './r7Acceptance.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
 
 /** Thrown for a tape that must not ship — by name. */
 export class WasmPlaybackError extends Error {
@@ -830,6 +832,33 @@ export function locationGoalServed(goal, status) {
     const flag = goal.event ? goal.event.tag : { level: goal.level, tag: goal.tag };
     return Number.isInteger(flag?.level) && Number.isInteger(flag?.tag)
         && (status?.persistence_cleared ?? []).some((c) => c.level === flag.level && c.tag === flag.tag);
+}
+
+/**
+ * ⛓ R7 (the p4g rebuild, R4 AS3) — the REPORT addresses an ENCOUNTER goal produces itself: every `R7_GOAL_LEDGER`
+ * row in the goal's own level that carries a fixed report `address` (`kind: 'encounter'` or `'boss'`). L32's Bob Boss
+ * encounter → {32,3} (`times@L32`, the kill: `BobBoss.KILLED_TAG`) and {32,4} (`fire@L32`, the drop:
+ * `Fire.BOSS_DROP_TAG`); L12's Witch → {12,1} (`darksword@L12`). Empty for any other goal, and while
+ * `CONTACT_FIDELITY.apReportBosses` is OFF (byte-identical: nothing below changes).
+ */
+export function encounterReportAddresses(goal) {
+    if (CONTACT_FIDELITY.apReportBosses !== true || goal?.kind !== 'location' || !goal.encounter) return [];
+    return R7_GOAL_LEDGER.filter((r) => r.address && r.level === goal.level
+        && (r.kind === 'encounter' || r.kind === 'boss')).map((r) => ({ ...r.address }));
+}
+
+/**
+ * ⛓ R7 — whether a running ENCOUNTER leg's OWN report has landed (one of `encounterReportAddresses(goal)` is in the
+ * game's cleared set). The encounter exists to produce those checks, so an item their reports deliver mid-leg is the
+ * leg SUCCEEDING, not news: it must not freeze the room and re-plan (logical-links B @c297b7ecd8: the Times report
+ * {32,3} at the third form's death interrupted the leg at 818 t, and the re-plan staged on `BobBoss.death`'s hold
+ * frame and diverged). The gate treats it as a SERVED location: the tape plays on, the delivery lands at its end.
+ */
+export function encounterReportServed(goal, status) {
+    const own = encounterReportAddresses(goal);
+    if (!own.length) return false;
+    const cleared = status?.persistence_cleared ?? [];
+    return own.some((a) => cleared.some((c) => c.level === a.level && c.tag === a.tag));
 }
 
 /**

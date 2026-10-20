@@ -47,7 +47,7 @@ export const DAMAGE_SITES = Object.freeze({
     ],
     BossTotem: [
         { kind: 'move', file: 'Enemies/BossTotem.as', line: 284 },
-        { kind: 'hit', file: 'Enemies/BossTotem.as', line: 486 },
+        { kind: 'hit', file: 'Enemies/BossTotem.as', line: 490 },
     ],
     BossTotemShot: [
         { kind: 'hit', file: 'Projectiles/BossTotemShot.as', line: 56 },
@@ -65,7 +65,7 @@ export const DAMAGE_SITES = Object.freeze({
         { kind: 'move', file: 'Scenery/FallRock.as', line: 59 },
     ],
     FallRockLarge: [
-        { kind: 'move', file: 'Scenery/FallRockLarge.as', line: 67 },
+        { kind: 'move', file: 'Scenery/FallRockLarge.as', line: 68 },
     ],
     Flyer: [
         { kind: 'hit', file: 'Enemies/Flyer.as', line: 68 },

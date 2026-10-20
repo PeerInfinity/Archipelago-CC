@@ -1457,6 +1457,18 @@ export class FlashPanelUI {
     }
     this._loadReturnSpawns(adapter);
     this._loadSubRegions(adapter);
+    this._applySlotData(adapter);
+  }
+
+  /**
+   * ⛓ R4b part 2 — the loaded slot's `slot_data` (the rules' `world[<player>].slot_data`) for the adapter's
+   * threshold fills: Seedling Playthrough's `seals_required` decides when the seal log's door slot is written
+   * (`fillThreshold.js`). Rules without it leave the adapter's fills as they were.
+   */
+  _applySlotData(adapter) {
+    const raw = rulesOfRawPayload(getLastRawJsonData?.());
+    const player = playerOfRawPayload(getLastRawJsonData?.());
+    adapter?.setSlotData?.(raw?.world?.[player]?.slot_data ?? null);
   }
 
   /**

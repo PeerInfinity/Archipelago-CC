@@ -3,6 +3,62 @@
   "dir": "frontend/modules/seedlingDemo/fixtures/tapes",
   "tapes": [
     {
+      "file": "apb-l12-witch-reported.json",
+      "tickCount": 601,
+      "bootLevel": 12,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "apb-l12-witch-server-sword.json",
+      "tickCount": 583,
+      "bootLevel": 12,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "apb-l12-witch-slot-held.json",
+      "tickCount": 601,
+      "bootLevel": 12,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "apb-l32-both-reported.json",
+      "tickCount": 142,
+      "bootLevel": 32,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "apb-l32-fresh-fire-held.json",
+      "tickCount": 1056,
+      "bootLevel": 32,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "apb-l32-fresh-no-fire.json",
+      "tickCount": 869,
+      "bootLevel": 32,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "apb-l32-killed-drop-held.json",
+      "tickCount": 96,
+      "bootLevel": 32,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "apb-l43-totem-no-parts.json",
+      "tickCount": 400,
+      "bootLevel": 43,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "axe-l48-reach-l49.json",
       "tickCount": 330,
       "bootLevel": 48,
@@ -137,21 +193,14 @@
     },
     {
       "file": "enc-l32-fallen-door.json",
-      "tickCount": 1055,
-      "bootLevel": 32,
-      "tapeVersion": 8,
-      "noHazards": []
-    },
-    {
-      "file": "enc-l32-fire-return.json",
-      "tickCount": 142,
+      "tickCount": 868,
       "bootLevel": 32,
       "tapeVersion": 8,
       "noHazards": []
     },
     {
       "file": "enc-l32-live-arrival.json",
-      "tickCount": 1049,
+      "tickCount": 862,
       "bootLevel": 32,
       "tapeVersion": 11,
       "noHazards": []
@@ -870,7 +919,7 @@
     },
     {
       "file": "r3-walk-3-torch.json",
-      "tickCount": 1964,
+      "tickCount": 1947,
       "bootLevel": 12,
       "tapeVersion": 5,
       "noHazards": [
@@ -918,7 +967,7 @@
     },
     {
       "file": "r3-walk-full.json",
-      "tickCount": 12122,
+      "tickCount": 12105,
       "bootLevel": 0,
       "tapeVersion": 5,
       "noHazards": [
@@ -957,7 +1006,7 @@
     },
     {
       "file": "r4-walk-3-torch.json",
-      "tickCount": 1964,
+      "tickCount": 1947,
       "bootLevel": 12,
       "tapeVersion": 5,
       "noHazards": [
@@ -997,7 +1046,7 @@
     },
     {
       "file": "r4-walk-full.json",
-      "tickCount": 10052,
+      "tickCount": 10035,
       "bootLevel": 0,
       "tapeVersion": 5,
       "noHazards": [
@@ -1891,7 +1940,7 @@
     },
     {
       "file": "r9-solve-32.json",
-      "tickCount": 1056,
+      "tickCount": 839,
       "bootLevel": 32,
       "tapeVersion": 11,
       "noHazards": []
@@ -2052,7 +2101,7 @@
     },
     {
       "file": "swim-u5-bobboss-encounter.json",
-      "tickCount": 1056,
+      "tickCount": 870,
       "bootLevel": 32,
       "tapeVersion": 8,
       "noHazards": []

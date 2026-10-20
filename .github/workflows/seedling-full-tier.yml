@@ -58,7 +58,7 @@ on:
         default: 10
       page:
         description: >-
-          The wasm build to drive (SEEDLING_PAGE), e.g. seedling_bot_ap_p4f for the
+          The wasm build to drive (SEEDLING_PAGE), e.g. seedling_bot_ap_p4g for the
           candidate. Empty = the differential's own default (the lab's build).
         type: string
         default: ''

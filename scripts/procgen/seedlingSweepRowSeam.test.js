@@ -19,7 +19,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const readJson = (rel) => JSON.parse(readFileSync(join(HERE, rel), 'utf8'));
 const ROW = readJson('fixtures/sweep-row-seam-768.json');
 // a real arrival's staging, for the tape around the seam (the fields other than `seam` are not the row's to supply)
-const ARRIVAL = readJson('../../frontend/modules/seedlingDemo/fixtures/wasm-arrival-p4f.json').arrivals[0];
+const ARRIVAL = readJson('../../frontend/modules/seedlingDemo/fixtures/wasm-arrival-p4g.json').arrivals[0];
 const { staging: STAGING } = stagingFromWasmArrival({ seam: ARRIVAL.seam, status: ARRIVAL.status, state: ARRIVAL.state });
 const tapeWith = (seam) => buildStagedTape({ staging: { ...STAGING, seam }, perTick: [new Set()], name: 'sweep-row-seam' });
 

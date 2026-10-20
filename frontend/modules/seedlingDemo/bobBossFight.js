@@ -438,10 +438,20 @@ export function bobBossRockArms(playerY, { fallFromCeiling = false } = {}) {
     return !fallFromCeiling && playerY < ROCK.armY;
 }
 
-/** The arena rock's landed box, its ctor's `setHitbox(32, 32, 16, 16)`. */
-export function bobBossRockRect() {
+/**
+ * The arena rock's landed box, its ctor's `setHitbox(32, 32, 16, 16)` around `super(_x + Tile.w, _y + Tile.h)`, so
+ * `[oel.x, +32) x [oel.y, +32)`.
+ *
+ * ⛓ APFLIP D1 (`CONTACT_FIDELITY.apReportBosses`): `at` is the ENTITY'S OEL position (`world.fallRocks`' row), so a
+ * delivered set that moves the rock (⚖ 2026-10-19, "Level-data patch": beside L32's stairs) moves the Solid with
+ * it. Left out, the vanilla placement (`ROCK.sealsRect`, 64,128) — byte-identical for the OFF arm and for every
+ * set that does not move it.
+ */
+export function bobBossRockRect(at = null) {
     const r = ROCK.sealsRect;
-    return { x: r.x, y: r.y, w: r.w, h: r.h, right: r.x + r.w, bottom: r.y + r.h };
+    const x = at ? at.x : r.x;
+    const y = at ? at.y : r.y;
+    return { x, y, w: r.w, h: r.h, right: x + r.w, bottom: y + r.h };
 }
 
 /**

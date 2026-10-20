@@ -197,7 +197,7 @@ def test_generator_writes_the_slots_page_blocks_and_not_provenance(tmp_path):
 
 
 SAMPLE_SIDECARS = {"region_a": {"substrate": "flash_seedling", "payload": {"level": 10}}}
-SAMPLE_FLASH_PANEL = {"config": "seedling.json", "wasm": "seedling_bot_ap_p4f/game.html"}
+SAMPLE_FLASH_PANEL = {"config": "seedling.json", "wasm": "seedling_bot_ap_p4g/game.html"}
 SAMPLE_REGION_ATLAS = {"atlas_id": "seedling-db0a4f7f", "game": "seedling", "map_document": "seedling-map.json"}
 
 

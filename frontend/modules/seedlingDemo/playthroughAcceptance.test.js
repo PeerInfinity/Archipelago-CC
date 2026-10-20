@@ -934,9 +934,11 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
         //   and `r9-solve-20` the fourth, the shield in L20 (the route's end).
         // ⛓ Swim U15: `r9-solve-32` the Fire; ⛓ swim R5 D4: `r9-solve-29` the
         //   Green Key, a key's flip being its own placement witness now.
+        // ⛓ R7 (p4g + R4b): the boss kills are locations — `shieldspire@L19` ({19,0}, r9-solve-19) and
+        //   `times@L32` ({32,3}, r9-solve-32), measured EARNED by the full tier at de1c1f49c1.
         const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === 'r9-campaign');
-        expect(chain.earns).toEqual(['sword@L10', 'chest@L11', 'bosskey0@L19', 'shield@L20',
-            'bosskey1@L29', 'fire@L32']);
+        expect(chain.earns).toEqual(['sword@L10', 'chest@L11', 'bosskey0@L19', 'shieldspire@L19',
+            'shield@L20', 'bosskey1@L29', 'fire@L32', 'times@L32']);
     });
 
     /**
@@ -974,8 +976,9 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
         // TERMINAL `r9-solve-20` ends the route IN L20 (it crosses nothing); ⛓ swim
         // U13: `r9-solve-20` leaves by its stairs to L13, and the tail is
         // `r9-solve-13-v2`, arriving in L0; ⛓ swim U14: `r9-solve-22`, arriving in L29;
-        // ⛓ swim U15: the TERMINAL `r9-solve-32`, whose encounter falls L32's pit to L30.
-        expect(arrivalOf(chain.segments.at(-1))).toBe(30);
+        // ⛓ swim U15: the TERMINAL `r9-solve-32`, whose encounter falls L32's pit to L30; ⛓ fidelity APFLIP (R4): the
+        // Fire drop grants nothing, so it ends IN L32 after the collect.
+        expect(arrivalOf(chain.segments.at(-1))).toBe(32);
     });
 
     /**
@@ -992,8 +995,8 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
         expect(R7_GOAL_LEDGER.filter((r) => r.level === 15).map((r) => r.id))
             .toContain('chest@L15');
         expect(chain.earns).not.toContain('chest@L15');
-        expect(chain.earns).toEqual(['sword@L10', 'chest@L11', 'bosskey0@L19', 'shield@L20',
-            'bosskey1@L29', 'fire@L32']);
+        expect(chain.earns).toEqual(['sword@L10', 'chest@L11', 'bosskey0@L19', 'shieldspire@L19',
+            'shield@L20', 'bosskey1@L29', 'fire@L32', 'times@L32']);
     });
 });
 

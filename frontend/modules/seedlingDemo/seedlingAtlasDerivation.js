@@ -88,6 +88,14 @@ export const ITEM_FOR_TAG = Object.freeze({
     totempart: 'Totem Shard', chest: 'Seal',
 });
 export const ITEM_FOR_KEY = Object.freeze(['Red Key', 'Green Key', 'Purple Key', 'Blue Key', 'Yellow Key']);
+/**
+ * ⛓ R4b — the vanilla item at a BOSS location (⚖ the user 2026-10-19, "Both, default Seal/16"): a Seal, as
+ * upstream's `boss_locations` adds one per boss (23 in all). The world's `boss_location_items: filler` option
+ * swaps these for `BOSS_FILLER_ITEM` at generation; the committed presets are the default.
+ */
+export const BOSS_LOCATION_ITEM = ITEM_FOR_TAG.chest;
+/** Upstream Seedling's filler (`worlds/seedling` `get_filler_item_name`). */
+export const BOSS_FILLER_ITEM = 'Nothing';
 /** The ending. Not a Seedling pickup flag — the AP goal, so it needs its own item. */
 export const VICTORY_ITEM = 'The Seed';
 
@@ -143,7 +151,7 @@ export const labelFor = (row) => {
      * the label; every other arm reads a `kind` whose naming is a fact about
      * the vanilla game.
      */
-    if (row.kind === 'entity') return row.label;
+    if (row.kind === 'entity' || row.kind === 'boss') return row.label;
     if (row.kind === 'chest') return 'Chest';
     if (row.kind === 'key') return `Boss Key ${/bosskey(\d)@/.exec(row.id)[1]}`;
     if (row.kind === 'totempart') return `Totem Part ${/:(\d+),(\d+)$/.exec(row.id).slice(1).join(',')}`;
@@ -365,6 +373,13 @@ export function entityForLedgerRow(room, row) {
     } else if (row.kind === 'ending') {
         entity = room.entities.find((e) => e.type === 'seed');
         item = VICTORY_ITEM;
+    } else if (row.kind === 'boss') {
+        // ⛓ R4b — a boss kill stands on its body's tile (`row.entity`: the type, plus the attrs that tell
+        // L32's boss rock from any other). Its item is `BOSS_LOCATION_ITEM`, the option's default.
+        const want = row.entity ?? {};
+        entity = room.entities.find((e) => e.type === want.type
+            && Object.entries(want.attrs ?? {}).every(([k, v]) => e.attrs?.[k] === v));
+        item = BOSS_LOCATION_ITEM;
     } else if (row.kind === 'encounter') {
         // The two grants with no pickup entity of their own: Fire is a
         // BobBoss DROP (`BobBoss.as:194`) and the Dark Sword is the Witch's
