@@ -47,8 +47,8 @@ This is your primary tool for tracking items.
 This is your main hub for server interaction and automated checks.
 
 - **Connection Controls:** The server address input and Connect/Disconnect button are at the top.
-- **Timer & Progress Bar:** The "Begin" button starts a timer that automatically checks one of your accessible locations at random intervals. The progress bar shows the countdown to the next check. "Quick Check" immediately checks one location.
-- **Checks Sent:** This display gives you a summary of your progress (e.g., `Checked: 50/155`).
+- **Checks:** A summary of your progress (e.g., `Checked: 50/155, Reachable: 10, Unreachable: 95, Events: 2/4`).
+- **Automatic checks** are in the [Playback Bot](modules/playbackBot.md) panel: set **Check next** to **Any reachable location (timer)** and press **▶**.
 - **Console:** The text console works just like a standard Archipelago client. You can chat, use `/` commands for the web client (like `/set_delay`), and `!` commands for the server.
 
 ### Right Panel Stack

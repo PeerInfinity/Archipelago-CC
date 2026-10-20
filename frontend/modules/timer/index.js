@@ -1,6 +1,5 @@
 // frontend/modules/timer/index.js
 import { TimerLogic } from './timerLogic.js';
-import { TimerUI } from './timerUI.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js'; // For dependency injection
 
 
@@ -16,12 +15,11 @@ function log(level, message, ...data) {
 
 export const moduleInfo = {
   name: 'timer',
-  description: 'Manages the location check timer and related UI elements.',
+  description: 'The location check timer: checks reachable locations on a delay. Headless — the Playback Bot\'s "any reachable location" mode drives it.',
   requires: ['stateManager'],
 };
 
 let timerLogicInstance = null;
-let timerUIInstance = null;
 let dispatcher = null; // Stored from initializationApi
 let moduleEventBus = null; // Stored from initializationApi
 
@@ -31,46 +29,6 @@ let moduleEventBus = null; // Stored from initializationApi
  */
 export function register(registrationApi) {
   log('info', `[Timer Module] Registering module: ${moduleInfo.name}`);
-
-  // Register public functions for UI attachment
-  registrationApi.registerPublicFunction(
-    moduleInfo.name,
-    'attachTimerToHost',
-    (placeholderElement) => {
-      if (
-        timerUIInstance &&
-        typeof timerUIInstance.attachToHost === 'function'
-      ) {
-        log('info', 
-          `[Timer Module] attachTimerToHost called with placeholder:`,
-          placeholderElement
-        );
-        timerUIInstance.attachToHost(placeholderElement);
-      } else {
-        log('error', 
-          '[Timer Module] attachTimerToHost called but TimerUI instance or method not ready.'
-        );
-      }
-    }
-  );
-
-  registrationApi.registerPublicFunction(
-    moduleInfo.name,
-    'detachTimerFromHost',
-    () => {
-      if (
-        timerUIInstance &&
-        typeof timerUIInstance.detachFromHost === 'function'
-      ) {
-        log('info', `[Timer Module] detachTimerFromHost called.`);
-        timerUIInstance.detachFromHost();
-      } else {
-        log('error', 
-          '[Timer Module] detachTimerFromHost called but TimerUI instance or method not ready.'
-        );
-      }
-    }
-  );
 
   registrationApi.registerPublicFunction(
     moduleInfo.name,
@@ -101,12 +59,6 @@ export function register(registrationApi) {
     () => timerLogicInstance
   );
 
-  registrationApi.registerPublicFunction(
-    moduleInfo.name,
-    'getTimerUI',
-    () => timerUIInstance
-  );
-
   // Register events this module publishes
   registrationApi.registerEventBusPublisher('timer:started');
   registrationApi.registerEventBusPublisher('timer:stopped');
@@ -117,22 +69,6 @@ export function register(registrationApi) {
   registrationApi.registerEventBusSubscriberIntent(
     moduleInfo.name,
     'settings:changed'
-  );
-  registrationApi.registerEventBusSubscriberIntent(
-    moduleInfo.name,
-    'stateManager:snapshotUpdated'
-  );
-  registrationApi.registerEventBusSubscriberIntent(
-    moduleInfo.name,
-    'connection:open'
-  );
-  registrationApi.registerEventBusSubscriberIntent(
-    moduleInfo.name,
-    'connection:close'
-  );
-  registrationApi.registerEventBusSubscriberIntent(
-    moduleInfo.name,
-    'stateManager:rulesLoaded'
   );
 
   // ADDED: Declare that this module sends 'user:locationCheck' via the dispatcher
@@ -191,12 +127,6 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
       moduleName: moduleInfo.name, // Pass module name for logging
     });
 
-    timerUIInstance = new TimerUI({
-      timerLogic: timerLogicInstance,
-      eventBus: moduleEventBus,
-      moduleName: moduleInfo.name, // Pass module name for logging
-    });
-
     if (
       timerLogicInstance &&
       typeof timerLogicInstance.initialize === 'function'
@@ -207,21 +137,11 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
         `[${moduleInfo.name} Module] timerLogicInstance or its initialize method is problematic.`
       );
     }
-
-    if (timerUIInstance && typeof timerUIInstance.initialize === 'function') {
-      timerUIInstance.initialize(); // This should prepare the DOM element but not attach it.
-    } else {
-      log('error', 
-        `[${moduleInfo.name} Module] timerUIInstance or its initialize method is problematic.`
-      );
-    }
   } catch (error) {
     log('error', 
-      `[${moduleInfo.name} Module] Error during instantiation or initialization of TimerLogic/TimerUI:`,
+      `[${moduleInfo.name} Module] Error during instantiation or initialization of TimerLogic:`,
       error
     );
-    // Ensure timerUIInstance is null if its instantiation failed
-    timerUIInstance = null;
   }
 
   log('info', `[${moduleInfo.name} Module] Initialization complete.`);
@@ -229,22 +149,12 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
   return () => {
     log('info', `[${moduleInfo.name} Module] Cleaning up...`);
     if (
-      timerUIInstance &&
-      typeof timerUIInstance.detachFromHost === 'function'
-    ) {
-      timerUIInstance.detachFromHost(); // Ensure UI is detached on module cleanup
-    }
-    if (
       timerLogicInstance &&
       typeof timerLogicInstance.dispose === 'function'
     ) {
       timerLogicInstance.dispose();
     }
-    if (timerUIInstance && typeof timerUIInstance.dispose === 'function') {
-      timerUIInstance.dispose();
-    }
     timerLogicInstance = null;
-    timerUIInstance = null;
     dispatcher = null;
     moduleEventBus = null;
   };

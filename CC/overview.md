@@ -225,7 +225,7 @@ Each subdirectory in `frontend/modules/` represents a distinct, self-contained f
 -   **`testPlaythroughs/`**: A developer tool for replaying a game's progression event-by-event to validate the `StateManager`.
 -   **`spoilerTest/`**: A powerful validation tool that replays a game's logical progression against its spoiler log to confirm the accuracy of the exported rules.
 -   **`tests/`**: A comprehensive in-app framework for discovering, running, and debugging automated feature tests. It is the core of the project's Playwright-based end-to-end testing strategy.
--   **`timer/` & `timerPanel/`**: Manages the logic and UI for the automated location checking timer ("Begin" / "Quick Check").
+-   **`timer/`**: The headless location-check timer (check reachable locations on a delay); the Playback Bot's "any reachable location" mode is its UI.
 -   **Communication Adapters**:
     -   **`iframeAdapter/`**, **`iframePanel/`**, **`iframeManagerPanel/`**: A system to host external web content in an `<iframe>` and bridge communication with the main application's state and event bus.
     -   **`windowAdapter/`**, **`windowPanel/`**, **`windowManagerPanel/`**: A similar system for content running in a separate browser window.

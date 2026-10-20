@@ -32,10 +32,6 @@
       "path": "./modules/timer/index.js",
       "enabled": true
     },
-    "timerPanel": {
-      "path": "./modules/timerPanel/index.js",
-      "enabled": false
-    },
     "inventory": {
       "path": "./modules/inventory/index.js",
       "enabled": true
@@ -234,7 +230,6 @@
     "stateManager",
     "client",
     "timer",
-    "timerPanel",
     "inventory",
     "editorCore",
     "editor",

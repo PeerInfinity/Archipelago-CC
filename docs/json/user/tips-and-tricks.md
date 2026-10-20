@@ -2,20 +2,20 @@
 
 This guide provides a collection of useful tips, advanced interactions, and answers to frequently asked questions to help you get the most out of the JSON Web Client.
 
-## Automation Buttons (`Begin` & `Quick Check`)
+## Automatic checks (the Playback Bot's timer)
 
-In the center **"Console & Status"** panel, you will find two buttons for automating location checks. These buttons work whether you are connected to an Archipelago server or playing offline with a loaded `rules.json` file.
+In the [Playback Bot](modules/playbackBot.md) panel, set **Check next** to **Any reachable location (timer)**. Its buttons then automate location checks, whether you are connected to an Archipelago server or playing offline with a loaded `rules.json` file.
 
-- **`Quick Check` Button:** Immediately finds one accessible, unchecked location and checks it for you. This is useful for quickly clearing out a known check without having to find it in the list.
+- **⏯ (Step):** Immediately finds one accessible, unchecked location and checks it for you. This is useful for quickly clearing out a known check without having to find it in the list.
 
-- **`Begin` Button:** Starts a timer that automatically triggers the `Quick Check` functionality at random intervals. Clicking the button again (it will say "Stop") will halt the timer.
+- **▶ (Play):** Starts a timer that keeps checking accessible locations, with a random delay between checks. **⏹ (Stop)** halts it.
 
 ## Console Commands
 
 The console in the center panel accepts a few client-specific commands, even when you aren't connected to a server.
 
 - `/set_delay [min] [max]`
-  Sets the minimum and maximum delay (in seconds) for the `Begin` button's automatic timer. If you only provide one number (e.g., `/set_delay 10`), the delay will be fixed at that value.
+  Sets the minimum and maximum delay (in seconds) for the Playback Bot's timer (**Any reachable location**). If you only provide one number (e.g., `/set_delay 10`), the delay will be fixed at that value.
 
 - `/help`
   Displays a list of available local console commands.

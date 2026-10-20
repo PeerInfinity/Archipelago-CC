@@ -35,7 +35,6 @@ The sections below are the module categories of the [module index](../../modules
 ## Game Mode Panels
 
 -   **[Discovery Panel](./discoveryPanel.md):** Provides a UI for managing discovery mode settings and displaying discovered items.
--   **[Timer Panel](./timerPanel.md):** A dedicated panel that can host the Timer UI component.
 -   **[Meta Game Panel](./metaGamePanel.md):** A UI for loading and managing `MetaGame` configurations.
 
 ## Loop Mode Modules

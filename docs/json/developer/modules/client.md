@@ -37,7 +37,6 @@ While most of its actions result in calls to the `StateManager` (which then publ
 -   **`eventDispatcher`**:
     -   `user:locationCheck`: Acts as the highest-priority handler for location check requests when connected to a server. It gets the server ID for the location and sends the check command. If not connected, it propagates the event for local handling.
     -   `user:itemCheck`: Handles manual item checks by sending a `!getitem` command to the server when connected. If not connected, it propagates the event.
-    -   `system:rehomeTimerUI`: Participates in the "re-homing" process for the Timer UI, offering its panel as a potential host.
 -   **`eventBus`**:
     -   The internal `messageHandler` listens to `connection:open`, `connection:close`, and `connection:message` events from the `connection` object to process server data.
 
@@ -49,4 +48,4 @@ This module does not register any public functions for other modules to call. In
 
 -   **StateManager**: The `Client` module is a primary driver of state changes. It calls methods like `stateManagerProxySingleton.addItemToInventory()` when `ReceivedItems` packets arrive and `stateManagerProxySingleton.checkLocation()` for server-side location updates. It also reads static data from the `StateManager` to map location names to server IDs.
 -   **EventDispatcher**: It is a key participant in the `user:locationCheck` and `user:itemCheck` event chains, acting as the authoritative handler when an online session is active.
--   **Timer Module**: The `Client` module's `mainContentUI` acts as a host for the `TimerUI` component. It provides a DOM element where the timer's progress bar and buttons are rendered, a process managed by the `system:rehomeTimerUI` dispatched event.
+-   **Checks line**: `mainContentUI` shows the "Checked: …, Reachable: …" line by mounting `commonUI/checksLine.js` (`mountChecksLine`), which keeps it current from `stateManager:snapshotUpdated`. The timer's controls are in the Playback Bot panel (its "any reachable location" mode).
