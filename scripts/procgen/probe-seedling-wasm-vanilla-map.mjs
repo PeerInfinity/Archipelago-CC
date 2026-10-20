@@ -385,6 +385,9 @@ async function main() {
             out('J surface', surf);
             check('J: on the JS runtime the AP load TAKES the vanilla arm — the map bound, no refusal',
                 surf?.arm === 'vanilla' && surf.entries > 0 && surf.apRefusal === null, JSON.stringify(surf));
+            // ⛓ R4b part 2 — a REFUSED load (the build lacks a capability the rules need, e.g. `bossreport`) has no set to
+            // measure: the refusal above is J's one named answer, and nothing below is read off a load that never ran.
+            if (surf?.apRefusal) return;
             check('J: the page mounted the delivered set as REAL rooms (all of them), and the explicit start booted level 0',
                 surf?.levelSet?.kind === 'real' && surf.levelSet.rooms > 0 && surf.levelSet.rooms === surf.levelSet.table_levels
                     && surf.reset?.mode === 'explicit-start' && surf.reset?.landed === true && surf.level === 0,
@@ -516,10 +519,7 @@ async function main() {
                 await assertLogicOnlyChannel(rp.gameFrame());
                 await rp.waitFor("panel status 'ready'", async () => ((await page.evaluate(() =>
                     document.querySelector('.flash-panel-status')?.textContent ?? '')) === 'ready' ? 'ready' : null), 120000);
-                await rp.waitFor('the AP load finished', () => page.evaluate(async () => {
-                    const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
-                    return !!p?._apLoadResult;
-                }), 120000);
+                await rp.waitForApLoad(120000);
                 await rp.waitFor('dispatcher wrapped', wrapDispatcher, 20000);
                 await rp.gameFrame().evaluate(installSwapCounter);
                 const map = await page.evaluate(async () => {
