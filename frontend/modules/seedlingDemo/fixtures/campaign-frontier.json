@@ -64,7 +64,7 @@
     31,
     30,
     32,
-    30
+    32
   ],
   "sources": {
     "frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json": "0ca842a4ef6dc2da0b60ba24f863e1da",
@@ -73,7 +73,7 @@
   },
   "lastArrival": {
     "step": 30,
-    "level": 30,
+    "level": 32,
     "segment": "r9-solve-32"
   },
   "nextStep": null,
@@ -90,7 +90,7 @@
       "complete": true,
       "lastArrival": {
         "step": 30,
-        "level": 30,
+        "level": 32,
         "segment": "r9-solve-32"
       },
       "nextStep": null,
