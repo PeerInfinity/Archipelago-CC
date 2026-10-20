@@ -21,7 +21,7 @@
  * the run and the first that kills without a death is the one committed (`execLavaBoss`).
  */
 
-import { distanceRectPoint, slashRect } from './presses.js';
+import { distanceRectPoint, slashRect } from './solverView.js';
 
 /** The swing's reach (`slashingSprite.width * scaleX`, 16) and the rect's depth along it. */
 const REACH = 16;

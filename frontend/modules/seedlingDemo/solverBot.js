@@ -15848,12 +15848,12 @@ function resolveLavaBossStrategy(run, obstacle) {
         return refuse(`fight ${obstacle.id}`, 'the King of Fire\'s fight is not stepped with '
             + '`CONTACT_FIDELITY.kingOfFireFight` off — the body is a wall the model does not fight');
     }
-    const fight = run.lavaBossFight;
+    const fight = run.entities('lavaBossFight');
     if (!fight || fight.id !== obstacle.id) {
         return refuse(`fight ${obstacle.id}`, `the run holds no King of Fire fight for ${obstacle.id} in level ${run.level}`);
     }
     if (fight.boss.removed) return refuse(`fight ${obstacle.id}`, `${obstacle.id} has already been removed`);
-    const inv = run.inventory ?? {};
+    const inv = run.progress('inventory') ?? {};
     if (!inv.hasSword || !inv.hasDarkSuit) {
         return refuse(`fight ${obstacle.id}`, `the fight needs the sword (the reflect and the three hits) and the Dark `
             + `Suit (the lava under the body); this run holds sword ${!!inv.hasSword}, Dark Suit ${!!inv.hasDarkSuit}`);
@@ -15884,23 +15884,23 @@ function resolveLavaBossStrategy(run, obstacle) {
 const LAVA_BOSS_FIGHT_BOUND = 3000;
 function playLavaBossPolicy(r, perTick, params, ctx) {
     const mem = createLavaBossPolicy(params);
-    const deathsBefore = (r.playerHits ?? []).filter((h) => h.died).length;
+    const deathsBefore = (r.ledger('playerHits') ?? []).filter((h) => h.died).length;
     let removedAt = null;
     for (let spent = 0; spent <= LAVA_BOSS_FIGHT_BOUND; spent += 1) {
-        const view = r.lavaBossFight;
+        const view = r.entities('lavaBossFight');
         if (view === null) return { ok: false, why: `the room (level ${r.level}) holds no fight any more`, spent };
         if (view.boss.removed) {
             if (removedAt === null) removedAt = spent;
             if (spent > removedAt) return { ok: true, spent, report: view.report, log: mem.log };
         }
-        const held = lavaBossPolicyStep(mem, { view, p: r.state, slashing: r.slashInfo.state.slashing });
+        const held = lavaBossPolicyStep(mem, { view, p: r.state, slashing: r.progress('slashInfo').state.slashing });
         if (perTick) perTick.push(held);
         const { transition } = r.advance(held);
         if (transition) {
             fail(`${ctx.what}: the run crossed from level ${transition.from_level} to ${transition.to_level} during the `
                 + 'King of Fire\'s fight. The fight is per visit.');
         }
-        const deaths = (r.playerHits ?? []).filter((h) => h.died).length;
+        const deaths = (r.ledger('playerHits') ?? []).filter((h) => h.died).length;
         if (deaths > deathsBefore) return { ok: false, why: `the player died at spent ${spent}`, spent };
     }
     return { ok: false, why: `the body is still in the world after ${LAVA_BOSS_FIGHT_BOUND} ticks`, spent: LAVA_BOSS_FIGHT_BOUND };

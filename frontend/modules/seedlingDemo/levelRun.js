@@ -425,6 +425,8 @@ export const ENTITY_FAMILY_NAMES = Object.freeze([
     'darkTraps',
     'bombPushers',
     'bombs',
+    // ⛓ seedling-fidelity-bosskills D2: the King of Fire's fight (null OFF, or in a room without one).
+    'lavaBossFight',
 ]);
 
 /**
@@ -1949,6 +1951,14 @@ export function createLevelRun({
     };
     /** ⛓ bosskills D2: `{t, level, kind, …}` per fight event (`lavaBoss.js`'s own, plus the player-side ones). */
     const lavaBossLedger = [];
+    /** ⛓ bosskills D2: `run.entities('lavaBossFight')` — the fight's view (`lavaBoss.lavaBossView`) plus its runners. */
+    const lavaBossFightNow = () => {
+        const f = lavaBossFightFor(level);
+        if (f === null) return null;
+        return { ...lavaBossView(f), runners: [...chaserStateFor(level).values()].filter((c) => c.spawnedBy === 'lavaboss')
+            .map((c) => ({ id: c.id, x: c.x, y: c.y, hits: c.hits, dying: c.dying, removed: c.removed,
+                inAir: c.inAir === true })) };
+    };
     /** ⛓ bosskills D2: L82's arena rock (`lavaBoss.LAVA_ARENA_ROCK`) per visit — `{id, schedule, armed, landed}`. */
     const lavaArenaRocks = new Map();
     /**
@@ -16139,6 +16149,7 @@ export function createLevelRun({
         darkTraps: darkTrapsNow,
         bombPushers: bombPushersNow,
         bombs: bombsNow,
+        lavaBossFight: lavaBossFightNow,
     });
 
     /**
@@ -17861,13 +17872,7 @@ export function createLevelRun({
          * ⛓ seedling-fidelity-bosskills D2 — the King of Fire's fight in this room (`lavaBoss.lavaBossView`: the body,
          * the balls in flight, the report), or null: the switch is off, or the room holds no fight. A copy.
          */
-        get lavaBossFight() {
-            const f = lavaBossFightFor(level);
-            if (f === null) return null;
-            return { ...lavaBossView(f), runners: [...chaserStateFor(level).values()].filter((c) => c.spawnedBy === 'lavaboss')
-                .map((c) => ({ id: c.id, x: c.x, y: c.y, hits: c.hits, dying: c.dying, removed: c.removed,
-                    inAir: c.inAir === true })) };
-        },
+        get lavaBossFight() { return lavaBossFightNow(); },
         /** ⛓ bosskills D2: the King of Fire's event rows (`{t, level, kind, …}`), a copy. */
         get lavaBossEvents() { return lavaBossLedger.map((r) => ({ ...r })); },
         get shakeWritersHere() {

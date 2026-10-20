@@ -520,7 +520,8 @@ describe('who takes the box', () => {
             'probe-seedling-bomb-blast-body.mjs',
             'check-seedling-bot-differential.mjs',
             'probe-seedling-hold.mjs', 'probe-seedling-pushblock-weapon.mjs', 'probe-seedling-u15-turret-mobiles.mjs',
-            'probe-seedling-u7-puncher-mobiles.mjs', 'probe-seedling-u9-shield-mobiles.mjs'];
+            'probe-seedling-u7-puncher-mobiles.mjs', 'probe-seedling-u9-shield-mobiles.mjs',
+            'probe-seedling-bosskills.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

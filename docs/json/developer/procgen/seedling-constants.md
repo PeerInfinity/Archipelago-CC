@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**75 files, 6102 literals.** Class × position:
+**76 files, 6271 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
 | physics | 5 | 1572 | 447 | 2024 |
-| rule | 13 | 1067 | 497 | 1577 |
+| rule | 13 | 1068 | 497 | 1578 |
 | cosmetic | 0 | 62 | 14 | 76 |
-| structural | 13 | 377 | 2035 | 2425 |
-| unclassified | 0 | 0 | 0 | 0 |
-| total | 31 | 3078 | 2993 | 6102 |
+| structural | 13 | 377 | 2072 | 2462 |
+| unclassified | 0 | 66 | 65 | 131 |
+| total | 31 | 3145 | 3095 | 6271 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
 | physics | 1743 | 0 | 97 | 123 | 4 | 57 | 2024 |
-| rule | 506 | 139 | 240 | 22 | 578 | 92 | 1577 |
+| rule | 507 | 139 | 240 | 22 | 578 | 92 | 1578 |
 
 Rows whose note starts `REVIEW:`: **114**.
 
@@ -638,7 +638,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `MAGICAL_LOCK_CALLBACK_TICK_OFFSET` | seedlingDemo/magicalLock.js | 1 | 1 | rule | derivation |  |
 | `MAGICAL_LOCK_MATRIX` | seedlingDemo/magicalLock.js | 8 | 8 | rule | sentinel |  |
 | `INVENTORY_TERM` | seedlingDemo/camera.js | 2 | 2 | rule | derivation |  |
-| `SHAKE_WRITERS` | seedlingDemo/camera.js | 5 | 5 | rule | magnitude |  |
+| `SHAKE_WRITERS` | seedlingDemo/camera.js | 6 | 6 | rule | magnitude |  |
 | `RANDOM_RANGE` | seedlingDemo/camera.js | 2 | 2 | rule | bound |  |
 | `CAMERA_DEAD_ZONE_RESIDUE` | seedlingDemo/camera.js | 2 | 2 | rule | bound |  |
 | `PLAYER_DAMAGE` | seedlingDemo/playerDamage.js | 5 | 4 | rule | count/magnitude | Player.as:hitsTimerMax Player.as:hitsTimerInt |

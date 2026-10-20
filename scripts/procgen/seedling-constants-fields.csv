@@ -1528,7 +1528,7 @@ frontend/modules/seedlingDemo/levelRun.js|shieldBumpNow|h71955e33|0|1,structural
 frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|0,rule,bound,,U10 forecast punch: hitsTimer > 0 i-frame gate (attackPlayer)
 frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|1,rule,magnitude,,U10 forecast punch: the hitUpdate decrement this tick applies before the graphic half
 frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|2,rule,bound,,U10 forecast punch: attackPlayer returns if hitsTimer > 0
-frontend/modules/seedlingDemo/playerPhysicsV2.js|step|h8f93e98b|-1|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked (U11-swim D2: the facing a hit parks; sprites() pins direction to it while >= 0)
+frontend/modules/seedlingDemo/playerPhysicsV2.js|step|hbb265d21|-1|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked (U11-swim D2: the facing a hit parks; sprites() pins direction to it while >= 0)
 frontend/modules/seedlingDemo/levelRun.js|stepOptsFor|h14b15328|-1|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked (U11-swim D2: stepOptsFor's default; the drive passes damage.directionFace)
 frontend/modules/seedlingDemo/bobBossFight.js|bobBossShieldBump|h7d55bf85|0|0,rule,bound,Player.as:shieldBump,the dark arm fires only when o.hitsTimer <= 0 (R1-swim D3: BobBoss.hit there; inside the i-frame it is the plain shove)
 frontend/modules/seedlingDemo/levelRun.js|previewStepper|h2e35f0c8|0|0,structural,,,U12-swim D1: a room with no pull gets the same closure (empty test)

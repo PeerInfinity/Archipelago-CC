@@ -406,7 +406,8 @@ export function stepLavaBoss(fight, ctx) {
 export function renderLavaBoss(fight) {
     const b = fight.boss;
     if (b.removed || !b.destroy || b.spr.name !== 'dead' || b.removeRequested) return false;
-    b.alpha -= LAVA_BOSS.deadAlphaStep;
+    // `Image.alpha`'s setter clamps to [0, 1] (`net/flashpunk/graphics/Image.as`), so the last step reads 0.
+    b.alpha = Math.max(0, b.alpha - LAVA_BOSS.deadAlphaStep);
     if (b.alpha <= 0) {
         b.removeRequested = true;
         return true;
