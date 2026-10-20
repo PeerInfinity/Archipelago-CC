@@ -30,6 +30,7 @@ import { FLASH_SEEDLING_LOAD_REGION_EVENT } from './flashSeedlingLibrary.js';
 import { ENCOUNTER_EXECUTORS } from '../seedlingDemo/solverBot.js';
 import { solverGoalFor, createInPlaceSolveService } from '../seedlingDemo/jsRuntimeSolver.js';
 import { arrivalSolveRequest, arrivalSolverGoal } from '../seedlingDemo/wasmArrival.js';
+import { withContactFidelity } from '../seedlingDemo/contactFidelity.js';
 import { createRunForStaging, solveStaging, stagingFromTape } from '../seedlingDemo/tapeRunner.js';
 import { parseTape } from '../seedlingDemo/tapeFormat.js';
 import { atlasLevelSource } from '../seedlingDemo/levelSource.js';
@@ -128,10 +129,14 @@ describe('1 · BINDING — both encounters bound, each value read off the data',
 describe('2 · MAPPING — `solverGoalFor` / `arrivalSolverGoal` → the solver\'s encounter goal', () => {
     const goalOf = (name) => resolveSeedlingAtlasGoal({ kind: 'location', name }, MAP).goal;
 
-    it('L32 (a `fallthrough` room): then = reach-pit; L12: then = null — on the JS runtime\'s mapping', () => {
+    it('L32 (a `fallthrough` room): then = reach-pit with apReportBosses OFF, null with it ON; L12: then = null — on the JS runtime\'s mapping', () => {
         const l32 = createRunForStaging(tapeStaging('r5-bobboss-fire'), atlasLevelSource());
-        expect(solverGoalFor(goalOf(BOB), { run: l32, resolved: null })).toEqual({ goal: { kind: 'encounter',
-            at: { x: 80, y: 128 }, drop: { item: 'Fire' }, then: 'reach-pit' } });
+        expect(withContactFidelity({ apReportBosses: false }, () => solverGoalFor(goalOf(BOB), { run: l32, resolved: null })))
+            .toEqual({ goal: { kind: 'encounter', at: { x: 80, y: 128 }, drop: { item: 'Fire' }, then: 'reach-pit' } });
+        // ⛓ R7: ON, the Fire drop grants nothing and the moved rock frees the stairs — the encounter ends at the drop
+        // and its report, and the route's NEXT goal leaves the room.
+        expect(withContactFidelity({ apReportBosses: true }, () => solverGoalFor(goalOf(BOB), { run: l32, resolved: null })))
+            .toEqual({ goal: { kind: 'encounter', at: { x: 80, y: 128 }, drop: { item: 'Fire' }, then: null } });
         const l12 = createRunForStaging(tapeStaging('enc-l12-witch'), atlasLevelSource());
         expect(l12.level).toBe(12);
         expect(solverGoalFor(goalOf(WITCH), { run: l12, resolved: null })).toEqual({ goal: { kind: 'encounter',
@@ -144,8 +149,9 @@ describe('2 · MAPPING — `solverGoalFor` / `arrivalSolverGoal` → the solver\
         const arenas = [];
         for (const level of levels) {
             const run = createRunForStaging({ ...tapeStaging('r5-bobboss-fire'), boot: { ...tapeStaging('r5-bobboss-fire').boot, level } }, src);
-            const m = solverGoalFor({ kind: 'location', level, tag: null, encounter: { at: { x: 0, y: 0 }, drop: { item: 'Fire' } } },
-                { run, resolved: null });
+            // the ARENA reading is the OFF arm's (ON, no room asks for the pit — the row above)
+            const m = withContactFidelity({ apReportBosses: false }, () => solverGoalFor({ kind: 'location', level, tag: null,
+                encounter: { at: { x: 0, y: 0 }, drop: { item: 'Fire' } } }, { run, resolved: null }));
             if (m.goal.then === 'reach-pit') arenas.push(level);
         }
         expect(arenas).toEqual([32]);
@@ -155,8 +161,12 @@ describe('2 · MAPPING — `solverGoalFor` / `arrivalSolverGoal` → the solver\
     it('the wasm runtime\'s `arrivalSolverGoal` maps the same goals from a staging (no entity looked up)', () => {
         const src = atlasLevelSource();
         const s32 = tapeStaging('r5-bobboss-fire');
-        expect(arrivalSolverGoal(goalOf(BOB), { staging: s32, levelSource: src, record: src(32) }).goal)
+        expect(withContactFidelity({ apReportBosses: false },
+            () => arrivalSolverGoal(goalOf(BOB), { staging: s32, levelSource: src, record: src(32) }).goal))
             .toEqual({ kind: 'encounter', at: { x: 80, y: 128 }, drop: { item: 'Fire' }, then: 'reach-pit' });
+        expect(withContactFidelity({ apReportBosses: true },
+            () => arrivalSolverGoal(goalOf(BOB), { staging: s32, levelSource: src, record: src(32) }).goal))
+            .toEqual({ kind: 'encounter', at: { x: 80, y: 128 }, drop: { item: 'Fire' }, then: null });
         const s12 = tapeStaging('enc-l12-witch');
         expect(arrivalSolverGoal(goalOf(WITCH), { staging: s12, levelSource: src, record: src(12) }).goal)
             .toEqual({ kind: 'encounter', at: { x: 416, y: 384 }, drop: { item: 'Progressive Sword' }, then: null });
@@ -270,15 +280,11 @@ describe('4 · PERSISTENCE — a live arrival after a death in L32 ({32,1} clear
         const request = arrivalSolveRequest({ staging, solverGoal: mapped.goal, levelSource: src, records });
         const result = createInPlaceSolveService().start(request).result;
         // ⛓ fidelity APFLIP D6 (`apReportBosses` ON at the R7 merge): the staging and the fallen rock are as before,
-        // but R4's Fire drop grants NOTHING (the HOST grants it, APBOSSES H1, not built), so the mapped goal's
-        // `then: 'reach-pit'` is refused BY NAME at the burn — a `precondition`, after the fight and both reports.
-        // ⚠ The JS arc's to wire: `arrivalSolverGoal` should end an L32 encounter in the room until the host grant
-        // (H1) lands (the campaign's `r9-solve-32` and `enc-l32-*` tapes already do, `then: null`).
-        expect(mapped.goal.then).toBe('reach-pit');
-        expect(result.ok).toBe(false);
-        expect(result.kind).toBe('refusal');
-        expect(result.message).toMatch(/burns only with Fire, and under `apReportBosses` the Fire pickup grants nothing/);
-        expect(result.message).toMatch(/this run holds none\.$/);
+        // but R4's Fire drop grants NOTHING (the HOST grants it, APBOSSES H1). ⛓ R7: so `solverGoalFor` ends an
+        // arena encounter at the drop and its report under the switch (`then: null`, as the campaign's `r9-solve-32`
+        // and `enc-l32-*` tapes do) — it used to ask for `reach-pit` and was refused BY NAME at the burn.
+        expect(mapped.goal.then).toBe(null);
+        expect(result.ok, result.message).toBe(true);
     }, 180_000);
 });
 

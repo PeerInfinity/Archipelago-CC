@@ -500,15 +500,21 @@ export function solverGoalFor(goal, { run, resolved, placement = null }) {
     if (goal?.kind === 'location' && goal.encounter) {
         // ⛓ ENCOUNTERS — an encounter location (L32's Bob Boss, L12's Witch) has no pickup entity: it is the solver's
         // `encounter` goal (swim U5), anchored at the location's atlas tile, its `drop` the game's own grant.
-        // `then` is read off the room: an ARENA (a `fallthrough` room whose boss rock seals the door behind the
-        // player — `levelWorld.arenaRockOf`, the row's `thirdBoss`) is left only by its pit, so the fall is the
-        // encounter's own 'reach-pit' (L32: the burn, then the pit to L30). Any other room is left by the route's
-        // NEXT goal (null) — ⚠ a `fallthrough` alone is not enough: L12 has a control block too, and the Witch's
-        // room is left by a door (the survey's step 140 got null from its door crossing, not from the room).
+        // `then` is read off the room. With `apReportBosses` OFF, an ARENA (a `fallthrough` room whose boss rock
+        // seals the door behind the player — `levelWorld.arenaRockOf`, the row's `thirdBoss`) asks the encounter
+        // for its own 'reach-pit' (L32: the burn with the Fire the drop granted, then the pit to L30).
+        // ⛓ R7 (the p4g rebuild + the L32 rock move): with `apReportBosses` ON the Fire drop grants NOTHING (it
+        // REPORTS {32,4}; the HOST grants the item), and the moved rock no longer seals the stairs — the arena is
+        // NOT "left only by its pit" any more. So the encounter ends at the drop and its report (null), and the
+        // route's NEXT goal leaves the room: the stairs, or the pit once the host has granted Fire. (The same
+        // terminal rule as `survey-seedling-route.mjs`'s encounter, rules-l32-rock-move e068041a27.)
+        // Any other room is left by the route's NEXT goal (null) — ⚠ a `fallthrough` alone is not enough: L12 has
+        // a control block too, and the Witch's room is left by a door (the survey's step 140 got null from its
+        // door crossing, not from the room).
         const { at, drop } = goal.encounter;
         const arena = !!run?.world?.fallthrough && (run.world.fallRocks ?? []).some((r) => r.thirdBoss);
         return { goal: { kind: 'encounter', at: { x: at.x, y: at.y }, drop: { item: drop.item },
-            then: arena ? 'reach-pit' : null } };
+            then: arena && CONTACT_FIDELITY.apReportBosses !== true ? 'reach-pit' : null } };
     }
     if (goal?.kind === 'location' && goal.event) return eventSolverGoal(goal, run);
     if (goal?.kind === 'location') {
