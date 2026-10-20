@@ -74,11 +74,24 @@
  *
  * ── ⛔ WHAT IS **NOT** REWRITTEN ──────────────────────────────────────────
  *
- * The two `encounter` rows (`fire@L32`, `darksword@L12`). Their entities are a
- * `fallrocklarge` and a `witch` — not pickups, and not replaceable without
- * deleting the fight and the dialogue that grant them. ⚖ RULED: they are
- * REPORTED in the table's `encounters` list, by name, for M1's H6 to serve
- * through the existing property path. They are never silently dropped.
+ * The two `encounter` rows (`fire@L32`, `darksword@L12`) and the seven `boss`
+ * rows (R4b). Their entities are a `fallrocklarge`, a `witch` and the bosses —
+ * not pickups, and not replaceable without deleting the fight or the dialogue.
+ *
+ * ⛓⛓ R4b part 2 (rules-boss-host) — **THE NINE REPORT ROWS ARE TABLE ROWS.**
+ * A build declaring `bossreport` (p4g on; R4 AS3 `r4-boss-report`) REPORTS each
+ * at a FIXED address, the ledger row's own `address` — the same persistence
+ * clear an `APItem` makes, so `SeedlingCheckBinding` checks them like every
+ * other row — and grants nothing (no Fire, no dark sword): the host grants
+ * those from the server. Each is a table entry with `tagSource: 'fixed'` and
+ * `rewrite: false`: no `apitem`, no look written, no room byte moved. Their
+ * addresses are RESERVED against `placementTagId` in their level ((12,1),
+ * (32,3) and (32,4) are on no vanilla entity), so no allocation can take one.
+ * ⛔ A build WITHOUT `bossreport` grants Fire and the dark sword itself and
+ * clears no Times/Fire/sword address, so there the nine are REFUSED BY NAME
+ * (`refused`) and nothing is put in the table for them — never checked off a
+ * game flag, never silently dropped. The rows are still listed in
+ * `encounters` / `reports` (the bot map's descriptions; neither is a check).
  */
 
 import { placementTagId } from './procgenSeedling.js';
@@ -212,10 +225,20 @@ function recordsByLevel(rooms) {
  * @param {Array<object>} deps.ledger    the goal ledger (`R7_GOAL_LEDGER`, 41 rows)
  * @param {Array<object>} deps.rooms     level RECORDS (`{level, entities, …}`)
  * @param {number} deps.selfPlayer       the slot this panel plays
- * @returns {{table: Map<string, object>, entries: object[], encounters: object[],
- *            lookBook: Map<string, string[]>}}
+ * @param {boolean} deps.bossReport     ⛓ R4b part 2 — the build declares `bossreport` (REQUIRED: see the head)
+ * @returns {{table: Map<string, object>, entries: object[], fixed: object[], refused: object[],
+ *            encounters: object[], reports: object[], lookBook: Map<string, string[]>}}
+ *   `entries`: the rewritten rows; `fixed`: the nine fixed-address table rows (`rewrite: false`; empty without
+ *   `bossReport`); `refused`: those nine, by name, without it; `encounters` / `reports`: the two encounter and
+ *   seven boss rows described for the bot map (not checks)
  */
-export function buildPlacementTable({ locationItemOf, ledger, rooms, selfPlayer } = {}) {
+export function buildPlacementTable({ locationItemOf, ledger, rooms, selfPlayer, bossReport } = {}) {
+    if (typeof bossReport !== 'boolean') {
+        fail(`apPlacementRewriter: buildPlacementTable needs \`bossReport\` (got ${JSON.stringify(bossReport)}) — `
+            + 'whether the build declares `bossreport` (`seedlingRandomizerEligibility.BOSS_REPORT_CAPABILITY`) '
+            + 'decides whether the nine boss/encounter rows are table rows or refused by name, and a guess either '
+            + 'way loses a check');
+    }
     if (typeof locationItemOf !== 'function') {
         fail('apPlacementRewriter: buildPlacementTable needs `locationItemOf` — the AP placement '
             + 'is the host\'s and this module is inside the seedlingDemo fence, so it is passed '
@@ -233,6 +256,10 @@ export function buildPlacementTable({ locationItemOf, ledger, rooms, selfPlayer 
     // --- pass 1: resolve every row's entity, and build the look book ---------
     const resolved = [];
     const encounters = [];
+    const reports = [];
+    /** ⛓ R4b part 2 — the nine fixed-address rows, in ledger order (table rows on `bossReport`). */
+    const fixed = [];
+    const refused = [];
     const lookBook = new Map();
     for (const row of rows) {
         const found = byLevel.get(row.level);
@@ -252,14 +279,25 @@ export function buildPlacementTable({ locationItemOf, ledger, rooms, selfPlayer 
         }
         if (!item) fail(`apPlacementRewriter: ledger row ${row.id} names no vanilla AP item`);
         const location = `${levelName(row.level)} - ${labelFor(row)}`;
-        if (row.kind === 'encounter') {
-            // ⚖ NOT REWRITTEN, and REPORTED. Its entity is the thing that
-            // grants the item (a falling rock, a witch), not a pickup.
-            // ⛓ ENCOUNTERS — `flag` is the ledger's own game flag (`hasFire` /
-            // `hasDarkSword`): the check binding reads the location's CHECK
-            // off it, since no pickup report ever names the location.
-            encounters.push({ ledgerId: row.id, level: row.level, location,
-                entityType: entity.type, vanillaItem: item, flag: row.flag ?? null });
+        if (row.kind === 'encounter' || row.kind === 'boss') {
+            // ⛓ R4b part 2 — NOT REWRITTEN; a FIXED-ADDRESS table row on a `bossreport` build (see the head).
+            const address = row.address;
+            if (!Number.isInteger(address?.level) || !Number.isInteger(address?.tag) || address.tag < 0
+                || address.level !== row.level) {
+                fail(`apPlacementRewriter: ledger row ${row.id} (kind ${row.kind}) carries no fixed report `
+                    + `address {level: ${row.level}, tag >= 0} (got ${JSON.stringify(address ?? null)}) — the `
+                    + '`bossreport` build reports it there, and no other address would be its check');
+            }
+            const described = { ledgerId: row.id, level: row.level, location, address: { ...address },
+                entityType: entity.type, vanillaItem: item };
+            // The bot map's descriptions (`seedlingPlaybackController.vanillaArmPlaybackMap`); neither is a check.
+            if (row.kind === 'encounter') encounters.push({ ...described, flag: row.flag ?? null });
+            else reports.push(described);
+            if (!bossReport) {
+                refused.push({ ledgerId: row.id, location, why: NO_BOSS_REPORT_REFUSAL(described, row.kind) });
+                continue;
+            }
+            fixed.push({ row, entity, vanillaItem: item, location, address });
             continue;
         }
         const look = lookOfRow(row, entity, item);
@@ -272,14 +310,50 @@ export function buildPlacementTable({ locationItemOf, ledger, rooms, selfPlayer 
     const table = new Map();
     const entries = [];
     const allocated = new Map();  // level -> tags handed out in it
-    for (const r of resolved) {
-        const placed = locationItemOf(r.location);
+    const placedOf = (location, ledgerId) => {
+        const placed = locationItemOf(location);
         if (!placed || typeof placed.name !== 'string' || !Number.isInteger(placed.player)) {
-            fail(`apPlacementRewriter: no AP placement for location ${JSON.stringify(r.location)} `
-                + `(ledger row ${r.row.id}) — got ${JSON.stringify(placed)}. Every randomized `
+            fail(`apPlacementRewriter: no AP placement for location ${JSON.stringify(location)} `
+                + `(ledger row ${ledgerId}) — got ${JSON.stringify(placed)}. Every randomized `
                 + 'location must have one; rewriting the room without it would put a placeholder '
                 + 'on a tile whose contents nobody decided');
         }
+        return placed;
+    };
+    // ⛓ R4b part 2 — the fixed rows FIRST, so their addresses are reserved before any allocation in their level
+    // and a vanilla-tagged pickup on the same address collides by name below.
+    const fixedEntries = [];
+    for (const f of fixed) {
+        const placed = placedOf(f.location, f.row.id);
+        const key = placementKey(f.address.level, f.address.tag);
+        if (table.has(key)) {
+            fail(`apPlacementRewriter: two report rows share the address ${key} — ${table.get(key).ledgerId} `
+                + `and ${f.row.id}`);
+        }
+        allocated.set(f.address.level, [...(allocated.get(f.address.level) ?? []), f.address.tag]);
+        const entry = {
+            ledgerId: f.row.id,
+            kind: f.row.kind,
+            level: f.address.level,
+            tag: f.address.tag,
+            tagSource: 'fixed',
+            rewrite: false,
+            location: f.location,
+            vanillaItem: f.vanillaItem,
+            vanillaLook: null,
+            item: placed.name,
+            player: placed.player,
+            look: lookFor(placed, AP_LOOK, lookBook, selfPlayer),
+            entity: { type: f.entity.type, x: f.entity.x, y: f.entity.y },
+            // ⛓ an encounter's property-path game flag (`hasFire` / `hasDarkSword`) — stood down, never read as a
+            // check. (A boss row's `flag` is the ledger's prose for its clear, not a property.)
+            flag: f.row.kind === 'encounter' ? (f.row.flag ?? null) : null,
+        };
+        table.set(key, entry);
+        fixedEntries.push(entry);
+    }
+    for (const r of resolved) {
+        const placed = placedOf(r.location, r.row.id);
         const vanillaTag = r.entity.attrs?.tag;
         let tag;
         let tagSource;
@@ -321,8 +395,18 @@ export function buildPlacementTable({ locationItemOf, ledger, rooms, selfPlayer 
         table.set(key, entry);
         entries.push(entry);
     }
-    return { table, entries, encounters, lookBook };
+    return { table, entries, fixed: fixedEntries, refused, encounters, reports, lookBook };
 }
+
+/**
+ * ⛓ R4b part 2 — why a report row is not bound on a build without `bossreport`: that build grants the item
+ * itself and never clears the address, so the check would be missed. Refused by name, never read off a flag.
+ */
+export const NO_BOSS_REPORT_REFUSAL = (r, kind) => `"${r.location}" is a ${kind === 'boss' ? 'BOSS KILL' : 'ENCOUNTER'} `
+    + `(a ${r.entityType} in level ${r.level}) that only a build declaring \`bossreport\` reports, at `
+    + `{${r.address.level},${r.address.tag}}; this build does not declare it, so it ${kind === 'boss'
+        ? 'reports no such clear' : `grants the ${r.vanillaItem} itself and clears no such address`} and the check `
+    + 'would never fire — refused, never checked off a game flag';
 
 /**
  * ⛓ A KEY-ORDER-PRESERVING DEEP CLONE. `recordToOel` emits an entity's
@@ -369,7 +453,11 @@ export function rewriteRecordSet(vanillaSet, table) {
         fail('apPlacementRewriter: rewriteRecordSet needs a non-empty placement table');
     }
     const wanted = new Map();  // level -> entries
+    let rewritable = 0;
     for (const entry of table.values()) {
+        // ⛓ R4b part 2 — a fixed-address report row moves no room byte.
+        if (entry.rewrite === false) continue;
+        rewritable += 1;
         if (!wanted.has(entry.level)) wanted.set(entry.level, []);
         wanted.get(entry.level).push(entry);
     }
@@ -415,8 +503,8 @@ export function rewriteRecordSet(vanillaSet, table) {
             replaced += 1;
         }
     }
-    if (replaced !== table.size) {
-        fail(`apPlacementRewriter: the table names ${table.size} placements but only ${replaced} `
+    if (replaced !== rewritable) {
+        fail(`apPlacementRewriter: the table names ${rewritable} rewritten placements but only ${replaced} `
             + 'were substituted — a level the table addresses is missing from the set');
     }
     /**
@@ -518,6 +606,7 @@ export function retagRecordSet(vanillaSet, retags) {
 export function referenceImpactOf(table, { regionCoords = {}, locationCoords = {} } = {}) {
     const tiles = new Set();
     for (const entry of table.values()) {
+        if (entry.rewrite === false) continue;  // ⛓ R4b part 2 — no tile rewritten
         tiles.add(`${entry.level}|${entry.entity.x}|${entry.entity.y}`);
     }
     const falsified = [];

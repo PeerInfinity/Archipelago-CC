@@ -4,6 +4,7 @@
 import { describe, expect, it } from 'vitest';
 import {
     POSITIONAL_SAVE_ARRAYS, SAVE_ARRAY_RULES, addToSaveArray, liveSaveArray, mergeSaveArray, saveArrayDelta,
+    sealLogSlots,
 } from './saveArrayRules.js';
 import { SAVE_KEYS } from './tapeFormat.js';
 
@@ -48,5 +49,27 @@ describe('saveArrayRules — one rule per save array', () => {
         expect(liveSaveArray('keys', [false, true, false, false, true])).toEqual([1, 4]);
         expect(liveSaveArray('seal_parts', [7, 3, -1, -1])).toEqual([7, 3]);
         expect(liveSaveArray('seal_parts', undefined)).toBeNull();
+    });
+
+    // ⛓ R4b (rules-boss-locations) — 23 Seals can be pooled (`boss_location_items: seal`); the log has 16 slots.
+    it('the seal log never grows past its 16 slots: a 17th..23rd granted Seal writes nothing', () => {
+        const all = Array.from({ length: 23 }, (_, i) => i);
+        expect(mergeSaveArray('seal_parts', [], all)).toEqual(Array.from({ length: 16 }, (_, i) => i));
+        expect(mergeSaveArray('seal_parts', [9], all)).toHaveLength(16);
+        expect(mergeSaveArray('totem_parts', [], [0, 1, 2, 3, 4, 5, 6])).toEqual([0, 1, 2, 3, 4]);
+    });
+
+    it('sealLogSlots: the Nth Seal fills all 16 slots; below N one per Seal, the door slot held back', () => {
+        // default N = 16: exactly the old one-slot-per-Seal fill
+        for (let c = 0; c <= 23; c += 1) expect(sealLogSlots(c), `count ${c}`).toBe(Math.min(c, 16));
+        expect(sealLogSlots(7, 8)).toBe(7);
+        expect(sealLogSlots(8, 8)).toBe(16);
+        expect(sealLogSlots(15, 23)).toBe(15);
+        expect(sealLogSlots(22, 23)).toBe(15);
+        expect(sealLogSlots(23, 23)).toBe(16);
+        expect(sealLogSlots(1, 1)).toBe(16);
+        expect(sealLogSlots(0, 1)).toBe(0);
+        expect(() => sealLogSlots(-1)).toThrow(/non-negative integer/);
+        expect(() => sealLogSlots(3, 0)).toThrow(/seals_required must be a positive integer/);
     });
 });

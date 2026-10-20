@@ -183,6 +183,23 @@ export function createRoomPlay({ page, wasmPage, logs, name }) {
         }
     }
 
+    /**
+     * ⛓ R4b part 2 (rules-boss-host) — THE AP LOAD, ENDED BY EITHER ANSWER. The panel stashes a finished load in
+     * `_apLoadResult` and a REFUSED one in `_apLoadRefusal` (an ineligible build, e.g. no `bossreport`) and never
+     * sets the other, so a wait on the result alone timed out on every refusal and hid the reason. A refusal now
+     * fails at once, BY NAME, with the panel's own words.
+     */
+    async function waitForApLoad(timeoutMs = 180000) {
+        const got = await waitFor('the AP load finished (or was refused)', () => page.evaluate(async () => {
+            const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
+            if (p?._apLoadResult) return { ok: true };
+            if (p?._apLoadRefusal) return { ok: false, why: String(p._apLoadRefusal) };
+            return null;
+        }), timeoutMs);
+        if (!got.ok) throw new Error(`the AP load was REFUSED: ${got.why}`);
+        return got;
+    }
+
     function gameFrame() {
         const f = page.frames().find((fr) => fr.url().includes(wasmPage));
         if (!f) throw new Error('seedling wasm iframe not found');
@@ -581,7 +598,7 @@ export function createRoomPlay({ page, wasmPage, logs, name }) {
     });
 
     return {
-        check, failures: () => failures, waitFor, gameFrame, readGameState, livePlayer,
+        check, failures: () => failures, waitFor, waitForApLoad, gameFrame, readGameState, livePlayer,
         activeTabTypes, currentRegion, glueStats, glueMoves, activeSubstrates, arrival,
         installWatchers, jump, jumpSettled, focusGame, focusChain, gameHasKeys, keyMovesPlayer, holdUntil,
         invoked, parsePending, mazeRegionNow, mazeKeyPlan, pressKeys, mazePlayer, mazeHasKeys,

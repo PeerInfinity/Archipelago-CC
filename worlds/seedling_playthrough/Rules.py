@@ -8,6 +8,8 @@ from typing import TYPE_CHECKING
 
 
 from ._ext import True_, False_, And, Has, HasAll, HasAny, Or
+from rule_builder.field_resolvers import FromOption
+from .Options import SealsRequired
 
 if TYPE_CHECKING:
     from BaseClasses import CollectionState
@@ -577,7 +579,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_43__r8c7 -> level_43__r13c7", player),
-        And(Has('Totem Shard', 5), HasAny('Progressive Sword', 'Ghost Spear'))
+        And(Has('Totem Shard', 5), Has('Wand'))
     )
 
     world.set_rule(
@@ -587,7 +589,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_43__r13c7 -> level_43__r8c7", player),
-        And(Has('Totem Shard', 5), HasAny('Progressive Sword', 'Ghost Spear'))
+        And(Has('Totem Shard', 5), Has('Wand'))
     )
 
     world.set_rule(
@@ -1931,6 +1933,16 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_69 -> level_36", player),
+        HasAny('Progressive Sword', 'Ghost Spear', 'Wand')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_70 -> level_69", player),
+        HasAny('Progressive Sword', 'Ghost Spear', 'Wand')
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_71__r0c6 -> level_71__r14c12", player),
         Has('Dark Suit', 1)
     )
@@ -2432,12 +2444,12 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_113 -> level_115__r9c4", player),
-        And(Has('Seal', 16), HasAll('L114 flag 0: watcher@72,72 cleared', 'Progressive Swim'))
+        And(Has('Seal', FromOption(SealsRequired)), HasAll('L114 flag 0: watcher@72,72 cleared', 'Progressive Swim'))
     )
 
     world.set_rule(
         multiworld.get_entrance("level_113 -> level_115__r9c4 #2", player),
-        And(Has('Seal', 16), HasAll('L114 flag 0: watcher@72,72 cleared', 'Progressive Swim'))
+        And(Has('Seal', FromOption(SealsRequired)), HasAll('L114 flag 0: watcher@72,72 cleared', 'Progressive Swim'))
     )
 
     world.set_rule(
@@ -2706,6 +2718,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Level 019 - Shieldspire", player),
+        Has('Progressive Sword', 1)
+    )
+
+    world.set_rule(
         multiworld.get_location("L19 flag 1: bosslock@48,32 cleared", player),
         Has('Red Key', 1)
     )
@@ -2736,8 +2753,18 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Level 032 - Times", player),
+        HasAny('Progressive Sword', 'Ghost Spear')
+    )
+
+    world.set_rule(
         multiworld.get_location("L40 flag 8: bosslock@480,352 cleared", player),
         Has('Purple Key', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 043 - Totem of Lacste", player),
+        And(Has('Totem Shard', 5), Has('Wand'))
     )
 
     world.set_rule(
@@ -2751,8 +2778,18 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Level 057 - Tentacled Beast", player),
+        HasAny('Progressive Sword', 'Ghost Spear', 'Wand')
+    )
+
+    world.set_rule(
         multiworld.get_location("L68 flag 0: bosslock@16,32 cleared", player),
         And(Or(HasAll('Fire Wand Fusion', 'Wand', 'Fire'), Has('Wand')), Has('Yellow Key'))
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 069 - Lights", player),
+        HasAny('Progressive Sword', 'Ghost Spear', 'Wand')
     )
 
     world.set_rule(
@@ -2761,6 +2798,16 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("Level 082 - King of Fire", player),
+        HasAny('Progressive Sword', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_location("Level 112 - Owl", player),
+        HasAny('Progressive Sword', 'Ghost Spear')
+    )
+
+    world.set_rule(
         multiworld.get_location("L113 flag 0: finaldoor@112,0 cleared", player),
-        And(Has('Seal', 16), Has('L114 flag 0: watcher@72,72 cleared'))
+        And(Has('Seal', FromOption(SealsRequired)), Has('L114 flag 0: watcher@72,72 cleared'))
     )

@@ -14,6 +14,7 @@ import { fileURLToPath } from 'node:url';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { FlashBridgeAdapter, METHOD_RETRY_TICKS } from './flashBridgeAdapter.js';
+import { sealLogSlots } from '../seedlingDemo/saveArrayRules.js';
 import { SeedlingCheckBinding } from './seedlingCheckBinding.js';
 import { SeedlingRegionBinding } from './seedlingRegionBinding.js';
 import { substrateRegistryEntry as seedlingEntry } from './flashSeedlingLibrary.js';
@@ -489,6 +490,48 @@ describe('⛓ SEAL DELIVERY — a FILL item (Seal, Totem Shard): N copies = N sl
         const c = adapterWith({ [TOTEM]: 1 });
         totems(c, [3]);                                       // held count ≥ AP's: nothing (a union would have over-counted)
         expect(calls(c._buildQueue())).toEqual([]);
+    });
+
+    /**
+     * ⛓⛓ R4b part 2 — `seals_required` (the slot's `slot_data`): the `!seal` fill names it (`fill.required`), so
+     * the door's slot (the 16th) waits for the Nth Seal; nothing past slot 16 ever; absent = exactly as before.
+     */
+    it('⛓ R4b part 2: the seal log honours `slot_data.seals_required` — EQUAL to `saveArrayRules.sealLogSlots`, 0..23 × 1..23', () => {
+        expect(sealDef.fill.required).toBe('seals_required');
+        const a = adapterWith({});
+        const n = (k) => calls(a._itemWritesFor({ [SEAL]: k }, { quiet: true })).length;
+        for (let N = 1; N <= 23; N += 1) {
+            a.setSlotData({ seals_required: N, boss_location_items: 0 });
+            for (let c = 0; c <= 23; c += 1) expect(n(c), `count ${c}, N ${N}`).toBe(sealLogSlots(c, N));
+        }
+        // the two cases the brief names: N = 16 (the default) and a non-default N
+        a.setSlotData({ seals_required: 16 });
+        expect([15, 16, 23].map(n)).toEqual([15, 16, 16]);
+        a.setSlotData({ seals_required: 8 });
+        expect([7, 8, 23].map(n)).toEqual([7, 16, 16]);
+    });
+
+    it('⛓ R4b part 2: NO `seals_required` (an old preset, a world without the option) → exactly today\'s fill', () => {
+        const a = adapterWith({});
+        const n = (k) => calls(a._itemWritesFor({ [SEAL]: k }, { quiet: true })).length;
+        const before = [0, 1, 15, 16, 17, 23].map(n);
+        expect(before).toEqual([0, 1, 15, 16, 16, 16]);
+        for (const sd of [null, {}, { ending: 0, boss_locations: 0 }, { seals_required: 'x' }]) {
+            a.setSlotData(sd);
+            expect([0, 1, 15, 16, 17, 23].map(n)).toEqual(before);
+        }
+        // and the Totem Shard (no `required`) never reads it
+        a.setSlotData({ seals_required: 1 });
+        expect(calls(a._itemWritesFor({ [TOTEM]: 3 }, { quiet: true }))).toHaveLength(3);
+    });
+
+    it('⛓ R4b part 2: below N the game\'s door slot stays EMPTY under SET_IF_MISSING (15 seals held, N = 23)', () => {
+        const a = adapterWith({ [SEAL]: 20 });
+        a.setSlotData({ seals_required: 23 });
+        seals(a, []);
+        const w = calls(a._buildQueue());
+        expect(w).toHaveLength(15);
+        expect(w.map((x) => x.args[0])).not.toContain(15);
     });
 
     it('the delivery gate sees a seal: N and N-1 seals write different lists', () => {

@@ -483,6 +483,26 @@ describe('R7_GOAL_LEDGER — the census', () => {
         expect(by('ending')).toBe(1);
         expect(by('pickup')).toBe(12);
         expect(by('encounter')).toBe(2);
+        // ⛓ R4b (rules-boss-locations; ⚖ 2026-10-19 "All 7 bosses"): upstream's `boss_locations`, by its names
+        expect(R7_GOAL_LEDGER.filter((r) => r.kind === 'boss').map((r) => r.label).sort()).toEqual([
+            'King of Fire', 'Lights', 'Owl', 'Shieldspire', 'Tentacled Beast', 'Times', 'Totem of Lacste']);
+    });
+
+    it('every boss row and both encounters carry their REPORT address, distinct (R4b)', () => {
+        const fixed = R7_GOAL_LEDGER.filter((r) => r.address);
+        expect(fixed.map((r) => `${r.id} ${r.address.level},${r.address.tag}`).sort()).toEqual([
+            'darksword@L12 12,1', 'fire@L32 32,4', 'kingoffire@L82 82,0', 'lights@L69 69,0', 'owl@L112 112,0',
+            'shieldspire@L19 19,0', 'tentacledbeast@L57 57,0', 'times@L32 32,3', 'totem@L43 43,5']);
+        for (const r of fixed) expect(r.address.level, r.id).toBe(r.level);
+    });
+
+    it('a boss row is held once the save holds its address CLEARED (R4b)', () => {
+        const owl = R7_GOAL_LEDGER.find((r) => r.id === 'owl@L112');
+        expect(goalHeldBy(owl, {})).toBe(null);
+        expect(goalHeldBy(owl, { 'save.levelPersistence': [{ level: 112, tag: 1 }] })).toBe(0);
+        expect(goalHeldBy(owl, { 'save.levelPersistence': [{ level: 112, tag: 0 }] })).toBe(1);
+        expect(goalEarnedWitness(owl, { 'save.levelPersistence': [] },
+            { 'save.levelPersistence': [{ level: 112, tag: 0 }] })).toMatch(/0 -> 1, and levelPersistence gains \{112,0\}/);
     });
 
     it('every row has a gate and a citation — a row with neither is a comment', () => {

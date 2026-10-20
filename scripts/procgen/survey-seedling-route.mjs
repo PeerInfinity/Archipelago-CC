@@ -259,6 +259,8 @@ function apRulesPath() {
 }
 const apRules = JSON.parse(readFileSync(apRulesPath(), 'utf8'));
 const REGIONS = apRules.regions['1'];
+/** ⛓ R4b — the world's `seals_required` (the export's option; absent = the game's own 16): the seal log's N. */
+const SEALS_REQUIRED = apRules.world?.['1']?.options?.seals_required;
 
 const levelsByNo = new Map(atlas.levels.map((l) => [l.level, l]));
 
@@ -1212,7 +1214,7 @@ async function solveOneStep(step) {
     let stagedSave = null;
     if (saveGrant) {
         const held = stageGrantSave(staging.save, null);
-        const staged = stageGrantSave(staging.save, saveGrant, { keys: boot.kind === 'staged' });
+        const staged = stageGrantSave(staging.save, saveGrant, { keys: boot.kind === 'staged', sealsRequired: SEALS_REQUIRED });
         const moved = Object.keys(staged).filter((n) => JSON.stringify(staged[n]) !== JSON.stringify(held[n]));
         if (moved.length > 0) {
             staging.save = staged;

@@ -70,7 +70,7 @@ function canonicalPlacement() {
 }
 
 const tableFor = (locationItemOf) => buildPlacementTable({
-    locationItemOf, ledger: R7_GOAL_LEDGER, rooms: MAP.levels, selfPlayer: SELF,
+    locationItemOf, ledger: R7_GOAL_LEDGER, rooms: MAP.levels, selfPlayer: SELF, bossReport: true,
 });
 const canonicalTable = () => {
     const placed = canonicalPlacement();
@@ -81,25 +81,96 @@ const vanillaSet = () => vanillaRecordSet(fixture('seedling-vanilla-set.json'), 
 // The two numbers the whole slice is about, DERIVED from the ledger rather than
 // typed — a 42nd row or a third encounter moves both.
 const ENCOUNTER_ROWS = R7_GOAL_LEDGER.filter((r) => r.kind === 'encounter').length;
-const REWRITABLE = R7_GOAL_LEDGER.length - ENCOUNTER_ROWS;
+// ⛓ R4b (rules-boss-locations): the seven boss kills REPORT at a fixed address and are not rewritten either.
+const BOSS_ROWS = R7_GOAL_LEDGER.filter((r) => r.kind === 'boss').length;
+const REWRITABLE = R7_GOAL_LEDGER.length - ENCOUNTER_ROWS - BOSS_ROWS;
+/** ⛓ R4b part 2 — the table also holds the fixed report rows (`rewrite: false`); these are the rewritten ones. */
+const rewrittenOf = (table) => [...table.values()].filter((e) => e.rewrite !== false);
 
 describe('buildPlacementTable — the address, the placement and the look', () => {
-    it(`resolves ${REWRITABLE} rewritable locations and REPORTS the ${ENCOUNTER_ROWS} encounter row(s)`, () => {
-        const { table, entries, encounters } = canonicalTable();
-        expect(table.size).toBe(REWRITABLE);
+    it(`resolves ${REWRITABLE} rewritable locations and DESCRIBES the ${ENCOUNTER_ROWS} encounter row(s)`, () => {
+        const { table, entries, encounters, fixed } = canonicalTable();
+        // ⛓ R4b part 2 — the table holds the rewritten rows AND the fixed report rows
+        expect(table.size).toBe(REWRITABLE + ENCOUNTER_ROWS + BOSS_ROWS);
         expect(entries).toHaveLength(REWRITABLE);
+        expect(fixed).toHaveLength(ENCOUNTER_ROWS + BOSS_ROWS);
         expect(encounters).toHaveLength(ENCOUNTER_ROWS);
-        // ⛔ REPORTED, never dropped: M1's H6 serves these through the existing
-        // property path and needs to know which they are.
         expect(encounters.map((e) => e.ledgerId).sort())
             .toEqual(R7_GOAL_LEDGER.filter((r) => r.kind === 'encounter').map((r) => r.id).sort());
         expect(encounters.every((e) => typeof e.location === 'string')).toBe(true);
     });
 
+    it(`DESCRIBES the ${BOSS_ROWS} boss kill(s) at their fixed address, never rewritten (R4b)`, () => {
+        const { entries, reports } = canonicalTable();
+        expect(BOSS_ROWS).toBe(7);
+        expect(reports.map((r) => [r.location, `${r.address.level},${r.address.tag}`]).sort()).toEqual([
+            ['Level 019 - Shieldspire', '19,0'], ['Level 032 - Times', '32,3'], ['Level 043 - Totem of Lacste', '43,5'],
+            ['Level 057 - Tentacled Beast', '57,0'], ['Level 069 - Lights', '69,0'], ['Level 082 - King of Fire', '82,0'],
+            ['Level 112 - Owl', '112,0'],
+        ]);
+        expect(reports.every((r) => r.vanillaItem === 'Seal')).toBe(true);
+        const bossLocations = new Set(reports.map((r) => r.location));
+        expect(entries.filter((e) => bossLocations.has(e.location))).toEqual([]);
+    });
+
+    it('⛓ R4b part 2 — the 9 report rows are TABLE rows at their FIXED address: no rewrite, the property flag kept', () => {
+        const { table, fixed } = canonicalTable();
+        expect(fixed.map((e) => [e.ledgerId, placementKey(e.level, e.tag)])).toEqual(R7_GOAL_LEDGER
+            .filter((r) => r.kind === 'encounter' || r.kind === 'boss')
+            .map((r) => [r.id, placementKey(r.address.level, r.address.tag)]));
+        for (const e of fixed) {
+            expect(table.get(placementKey(e.level, e.tag))).toBe(e);
+            expect(e).toMatchObject({ tagSource: 'fixed', rewrite: false, vanillaLook: null });
+        }
+        expect(Object.fromEntries(fixed.filter((e) => e.kind === 'encounter').map((e) => [e.location, e.flag])))
+            .toEqual({ 'Level 032 - Bob Boss': 'hasFire', 'Level 012 - Witch': 'hasDarkSword' });
+        expect(fixed.filter((e) => e.kind === 'boss').every((e) => e.flag === null)).toBe(true);
+    });
+
+    it('⛓ R4b part 2 — the reserved addresses: no allocation can take (12,1), (32,3) or (32,4)', () => {
+        // Move every tagless row INTO L32 / L12 (their entities copied there): the allocator must step past the
+        // report addresses rather than hand one out. (L12's witch holds tag 0 and L32's tree/rock/watcher 0-2, so
+        // without the reservation the first allocation in each WOULD be (12,1) / (32,3).)
+        const room = (n) => MAP.levels.find((l) => l.level === n);
+        const keyRows = R7_GOAL_LEDGER.filter((r) => r.kind === 'key').slice(0, 5);
+        for (const level of [12, 32]) {
+            const rooms = MAP.levels.map((l) => (l.level !== level ? l : {
+                ...l, entities: [...l.entities, ...keyRows.map((r) => room(r.level).entities
+                    .find((e) => e.type === 'bosskey' && Number(e.attrs.keyType) === Number(/bosskey(\d)@/.exec(r.id)[1])))],
+            }));
+            const ledger = [...R7_GOAL_LEDGER.filter((r) => !keyRows.includes(r)), ...keyRows.map((r) => ({ ...r, level }))];
+            const { entries, fixed } = buildPlacementTable({
+                locationItemOf: () => ({ name: 'Seal', player: SELF }),
+                ledger, rooms, selfPlayer: SELF, bossReport: true,
+            });
+            const reserved = fixed.filter((e) => e.level === level).map((e) => e.tag);
+            const handed = entries.filter((e) => e.level === level && e.tagSource === 'allocated').map((e) => e.tag);
+            expect(handed).toHaveLength(5);
+            for (const t of reserved) expect(handed).not.toContain(t);
+        }
+    });
+
+    it('⛔ WITHOUT `bossReport` the 9 are REFUSED BY NAME and nothing is put in the table for them', () => {
+        const placed = canonicalPlacement();
+        const { table, entries, fixed, refused, encounters, reports } = buildPlacementTable({
+            locationItemOf: (n) => placed.get(n) ?? null, ledger: R7_GOAL_LEDGER, rooms: MAP.levels, selfPlayer: SELF,
+            bossReport: false,
+        });
+        expect(table.size).toBe(REWRITABLE);
+        expect(entries).toHaveLength(REWRITABLE);
+        expect(fixed).toEqual([]);
+        expect(refused.map((r) => r.location).sort()).toEqual([...encounters, ...reports].map((r) => r.location).sort());
+        expect(refused).toHaveLength(ENCOUNTER_ROWS + BOSS_ROWS);
+        const bob = refused.find((r) => r.location === 'Level 032 - Bob Boss');
+        expect(bob.why).toMatch(/only a build declaring `bossreport` reports, at \{32,4\}.*grants the Fire itself/);
+        expect(refused.find((r) => r.location === 'Level 112 - Owl').why).toMatch(/BOSS KILL.*\{112,0\}/);
+    });
+
     it('every location name it derives is a location the shipped preset actually has', () => {
         const placed = canonicalPlacement();
-        const { entries, encounters } = canonicalTable();
-        for (const row of [...entries, ...encounters]) expect(placed.has(row.location)).toBe(true);
+        const { entries, fixed } = canonicalTable();
+        for (const row of [...entries, ...fixed]) expect(placed.has(row.location)).toBe(true);
+        expect(entries.length + fixed.length).toBe(R7_GOAL_LEDGER.length);
         expect(placed.size).toBe(R7_GOAL_LEDGER.length);
     });
 
@@ -220,14 +291,14 @@ describe('buildPlacementTable — the address, the placement and the look', () =
         const { entries } = buildPlacementTable({
             locationItemOf: (n) => (n === 'Level 115 - Flugelhorn'
                 ? { name: 'Brass Instrument', player: SELF } : placed.get(n) ?? null),
-            ledger, rooms, selfPlayer: SELF,
+            ledger, rooms, selfPlayer: SELF, bossReport: true,
         });
         const row = entries.find((e) => e.ledgerId === 'flugelhorn@L115');
         expect(row.look).toBe('flugelhorn');
         // and the new item's graphic is now available to EVERY location
         const everywhere = buildPlacementTable({
             locationItemOf: () => ({ name: 'Brass Instrument', player: SELF }),
-            ledger, rooms, selfPlayer: SELF,
+            ledger, rooms, selfPlayer: SELF, bossReport: true,
         });
         expect(new Set(everywhere.entries.map((e) => e.look))).toEqual(new Set(['flugelhorn']));
     });
@@ -247,7 +318,7 @@ describe('buildPlacementTable — the address, the placement and the look', () =
         const placed = canonicalPlacement();
         expect(() => buildPlacementTable({
             locationItemOf: (n) => placed.get(n) ?? null,
-            ledger: R7_GOAL_LEDGER, rooms, selfPlayer: SELF,
+            ledger: R7_GOAL_LEDGER, rooms, selfPlayer: SELF, bossReport: true,
         })).toThrow(/sword@L10 \(kind pickup\) has NO entity in level 10/);
     });
 
@@ -256,14 +327,18 @@ describe('buildPlacementTable — the address, the placement and the look', () =
         const dup = [...MAP.levels, MAP.levels[10]];
         expect(() => buildPlacementTable({
             locationItemOf: (n) => placed.get(n) ?? null,
-            ledger: R7_GOAL_LEDGER, rooms: dup, selfPlayer: SELF,
+            ledger: R7_GOAL_LEDGER, rooms: dup, selfPlayer: SELF, bossReport: true,
         })).toThrow(/both claim level 10/);
         expect(() => buildPlacementTable({
-            ledger: R7_GOAL_LEDGER, rooms: MAP.levels, selfPlayer: SELF,
+            ledger: R7_GOAL_LEDGER, rooms: MAP.levels, selfPlayer: SELF, bossReport: true,
         })).toThrow(/needs `locationItemOf`/);
         expect(() => buildPlacementTable({
-            locationItemOf: () => null, ledger: R7_GOAL_LEDGER, rooms: MAP.levels,
+            locationItemOf: () => null, ledger: R7_GOAL_LEDGER, rooms: MAP.levels, bossReport: true,
         })).toThrow(/needs an integer `selfPlayer`/);
+        // ⛓ R4b part 2 — which build it is for is never guessed
+        expect(() => buildPlacementTable({
+            locationItemOf: () => null, ledger: R7_GOAL_LEDGER, rooms: MAP.levels, selfPlayer: SELF,
+        })).toThrow(/needs `bossReport`/);
     });
 });
 
@@ -297,13 +372,13 @@ describe('rewriteRecordSet — exactly the table, and not one byte more', () => 
         expect(changedRooms).toBeLessThan(REWRITABLE);   // level 40 holds three
         // every OTHER room is byte-identical
         expect(vanilla.rooms.length - changedRooms)
-            .toBe(vanilla.rooms.length - new Set([...table.values()].map((e) => e.level)).size);
+            .toBe(vanilla.rooms.length - new Set(rewrittenOf(table).map((e) => e.level)).size);
     });
 
     it('the vanilla @tag SURVIVES on every location that had one — it is M1\'s address', () => {
         const { table } = canonicalTable();
         const { set } = rewriteRecordSet(vanillaSet(), table);
-        for (const entry of table.values()) {
+        for (const entry of rewrittenOf(table)) {
             const e = set.rooms[entry.level].source.record.entities
                 .find((x) => x.type === AP_ITEM_TYPE && x.x === entry.entity.x
                     && x.y === entry.entity.y);
@@ -313,7 +388,7 @@ describe('rewriteRecordSet — exactly the table, and not one byte more', () => 
             expect(Object.keys(e.attrs)).toEqual(['tag', 'look']);
         }
         const vanilla = vanillaSet();
-        for (const entry of [...table.values()].filter((x) => x.tagSource === 'vanilla')) {
+        for (const entry of rewrittenOf(table).filter((x) => x.tagSource === 'vanilla')) {
             const old = vanilla.rooms[entry.level].source.record.entities
                 .find((x) => x.x === entry.entity.x && x.y === entry.entity.y
                     && x.type === entry.entity.type);

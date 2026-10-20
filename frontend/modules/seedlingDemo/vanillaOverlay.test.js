@@ -112,7 +112,8 @@ describe('⛓⛓ E5 — the lift, and what it put through the adapter', () => {
         expect(LIFT.rows.filter((r) => !r.tileAgrees)).toEqual([]);
 
         expect(AMBIGUOUS.map((r) => `${r.level}:${r.entity.type}`).sort()).toEqual([
-            '115:seed', '32:fallrocklarge', '38:chest', '40:chest', '67:bosskey',
+            // ⛓ R4b (rules-boss-locations): L32's boss rock carries TWO rows now, the Fire drop and the Times kill.
+            '115:seed', '32:fallrocklarge', '32:fallrocklarge', '38:chest', '40:chest', '67:bosskey',
         ].sort());
     });
 
@@ -280,19 +281,21 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         // ⛓ RULES kill-locks: 10,737 -> 11,173 B — L98's stairs under its kill-lock lift as a rule.
         // ⛓ RULES game-truth-gaps: 11,173 -> 12,077 B — the L57 arena's two expressible door rules lift (L56's pit
         //   in, the mouth out; L58's two doors in sit in a split level and cannot).
-        expect(Buffer.byteLength(committed, 'utf8')).toBe(12077);
-        expect(JSON.parse(committed).overlay_id).toBe('seedling-vanilla-overlay-c6a5f388');
+        // ⛓ R4b (rules-boss-locations): 12,077 -> 15,730 B — the seven boss locations (each with its kill guard)
+        //   and the L69 arena's two door rules (L70's pit in, the Lights' exit out) lift.
+        expect(Buffer.byteLength(committed, 'utf8')).toBe(15730);
+        expect(JSON.parse(committed).overlay_id).toBe('seedling-vanilla-overlay-66b277a9');
         // ⛔ AND THE SUFFIXES ARE GONE — the artifact, not the producer.
         expect(committed).not.toMatch(/Chest \(L\d/);
     });
 
-    it('carries the stamped id the build computes, and 41 locations over its rooms', () => {
+    it('carries the stamped id the build computes, and 48 locations over its rooms (41 + R4b\'s 7 bosses)', () => {
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         expect(committed.overlay_id).toBe(LIFT.overlay.overlay_id);
         expect(Object.values(committed.rooms)
-            .reduce((n, r) => n + (r.locations ?? []).length, 0)).toBe(41);
+            .reduce((n, r) => n + (r.locations ?? []).length, 0)).toBe(48);
         expect(Object.values(committed.rooms)
-            .reduce((n, r) => n + Object.keys(r.rules ?? {}).length, 0)).toBe(15); // ⛓ RULES (B): +2 arena doors; burnable-trees: +5 sealed doors; kill-locks: +1 (L98's stairs); game-truth-gaps: +2 L57 arena doors
+            .reduce((n, r) => n + Object.keys(r.rules ?? {}).length, 0)).toBe(24); // ⛓ RULES (B): +2 arena doors; burnable-trees: +5 sealed doors; kill-locks: +1 (L98's stairs); game-truth-gaps: +2 L57 arena doors; R4b: +2 L69 arena doors, +7 boss kills
         // ⛔ EVERY authored name is unique WITHIN ITS ROOM — `mark-location`'s
         //    own law since E6a, asserted on the artifact rather than only on the
         //    fold. ⛓ Across rooms it is NOT unique any more, and the row below
@@ -355,16 +358,19 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         //   exit rules widen (Wand | Dark Shield) and L98's stairs under the lock are charged; no location moves.
         // ⛓ RULES game-truth-gaps (5405098b… -> 404dd367): L57 lifted from never-enter — its region, L56's pit,
         //   L58's two doors and the mouth, each charged the arena's kill; no location moves.
+        // ⛓ R4b rules-boss-locations (404dd367… -> f3b3365a): seven boss locations (Owl, Shieldspire, Times,
+        //   Tentacled Beast, Totem of Lacste, Lights, King of Fire), L69 lifted from never-enter (its region, L70's
+        //   pit, the Lights' exit), and the BossTotem crossing priced on the Wand. The names gain the seven.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('404dd367e779ef1e9d1b5043901d91ba');
+            .toBe('f3b3365aa00aff1d5b946b23c19f83ec');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
         const derived = atlas.regions.flatMap((r) => (r.locations ?? []).map((l) => l.name));
         const playthrough = ATLAS_LOCATIONS.map((l) => l.name);
 
-        expect(derived).toHaveLength(41);
-        expect(new Set(derived).size).toBe(41);
+        expect(derived).toHaveLength(48);   // ⛓ R4b: 41 + the seven boss kills
+        expect(new Set(derived).size).toBe(48);
         expect([...new Set(derived)].sort()).toEqual([...new Set(playthrough)].sort());
         // ⛓ THE NUMBER §37 QUOTES: how many derived names the playthrough does
         //   not have. E5's answer was 16; E6a's is 0.
@@ -400,13 +406,15 @@ describe('⛓⛓ E5 — the REPORT over vanilla + the lifted overlay', () => {
     // ⛓ RULES burnable-trees: 330 -> 325 — five doors inside an item-gated solid lift as rules (L24 x2, L32 x2, L34).
     // ⛓ RULES kill-locks: 325 -> 324 — L98's stairs under its kill-lock lift as a rule.
     // ⛓ RULES game-truth-gaps: 324 -> 322 — the L57 arena's two expressible doors (L56's pit, the mouth).
-    it('moves 334 free exits + 0 locations to 322 + 38, and the export stays ALLOWED', () => {
+    // ⛓ R4b: 322 -> 320 — the L69 arena's two doors (L70's pit in, the Lights' exit out); the locations 38 -> 38:
+    //   seven more (the bosses), each guarded by its kill, so none of them is free.
+    it('moves 334 free exits + 0 locations to 320 + 38, and the export stays ALLOWED', () => {
         const before = freeEdgesOf(reportWith(emptyOverlay()).rules);
         const after = freeEdgesOf(reportWith(LIFT.overlay).rules);
 
         expect(before.filter((e) => e.kind === 'exit')).toHaveLength(334);
         expect(before.filter((e) => e.kind === 'location')).toHaveLength(0);
-        expect(after.filter((e) => e.kind === 'exit')).toHaveLength(322);
+        expect(after.filter((e) => e.kind === 'exit')).toHaveLength(320);
         expect(after.filter((e) => e.kind === 'location')).toHaveLength(38);
 
         /**
@@ -422,11 +430,11 @@ describe('⛓⛓ E5 — the REPORT over vanilla + the lifted overlay', () => {
          */
         const gone = before.filter((e) => e.kind === 'exit')
             .filter((e) => !after.some((a) => a.region === e.region && a.name === e.name));
-        expect(gone).toHaveLength(12); // ⛓ RULES kill-locks: + L98's stairs under its kill-lock; game-truth-gaps: + L56's pit, the mouth
+        expect(gone).toHaveLength(14); // ⛓ RULES kill-locks: + L98's stairs under its kill-lock; game-truth-gaps: + L56's pit, the mouth; R4b: + L70's pit, the Lights' exit
         expect(gone.map((e) => e.name).sort()).toEqual([
             'level_113 -> level_115', 'level_113 -> level_115 #2', 'level_24 -> level_12', 'level_24 -> level_12 #2',
             'level_32 -> level_30 #2', 'level_32 -> level_30 #3', 'level_34 -> level_12 #2',
-            'level_56 -> level_57', 'level_57 -> level_58',
+            'level_56 -> level_57', 'level_57 -> level_58', 'level_69 -> level_36', 'level_70 -> level_69',
             'level_82 -> level_96', 'level_96 -> level_82', 'level_98 -> level_99',
         ].sort());
         const ruled = reportWith(LIFT.overlay).atlas.regions
@@ -437,17 +445,18 @@ describe('⛓⛓ E5 — the REPORT over vanilla + the lifted overlay', () => {
                 'level_24 out_teleporter_32_144', 'level_24 out_teleporter_48_144',
                 'level_32 out_pit_14_5', 'level_32 out_pit_15_5', 'level_34 out_teleporter_128_0',
                 'level_56 out_pit_6_10', 'level_57 out_tentaclebeast_80_48',
+                'level_69 out_lightbosscontroller_72_72', 'level_70 out_pit_3_7',
                 'level_82 out_teleporter_144_0', 'level_96 out_teleporter_32_64', 'level_98 out_stairsup_112_112'].sort());
-        // …and the three locations that are NOT free are the three the
-        //   playthrough guards.
+        // …and the ten locations that are NOT free are the ten the
+        //   playthrough guards (⛓ R4b: the three, + the seven boss kills).
         const guarded = LIFT.rows.filter((r) => r.atlasLoc.access_rule);
-        expect(guarded).toHaveLength(3);
-        expect(after.filter((e) => e.kind === 'location')).toHaveLength(41 - guarded.length);
+        expect(guarded).toHaveLength(10);
+        expect(after.filter((e) => e.kind === 'location')).toHaveLength(48 - guarded.length);
     });
 
-    it('gives the vanilla set 41 locations and an ALLOWED rules.json export', () => {
+    it('gives the vanilla set 48 locations (R4b: 41 + 7 bosses) and an ALLOWED rules.json export', () => {
         const report = reportWith(LIFT.overlay);
-        expect(report.atlas.regions.reduce((n, r) => n + (r.locations ?? []).length, 0)).toBe(41);
+        expect(report.atlas.regions.reduce((n, r) => n + (r.locations ?? []).length, 0)).toBe(48);
         expect(report.download.rules.allowed).toBe(true);
         expect(report.download.rules.why).toBeNull();
     });

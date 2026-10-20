@@ -178,10 +178,7 @@ async function main() {
             await startWasmGame(() => rp.gameFrame(), { logs });
             await assertLogicOnlyChannel(rp.gameFrame());
         }
-        await rp.waitFor('the AP load finished', () => page.evaluate(async () => {
-            const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
-            return !!p?._apLoadResult;
-        }), 180000);
+        await rp.waitForApLoad(180000);
     }
 
     /** Every readout a row compares, in one page round trip (either runtime). */

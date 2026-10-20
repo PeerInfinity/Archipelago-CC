@@ -120,7 +120,8 @@ describe('the sixth fact — `atlas`, decided by (iii)\'s own count', () => {
         // ⛓ RULES re-closing locks: 251 -> 257, six levels split at a lock only a plain Button opens.
         // ⛓ RULES footprints: 257 -> 254, L94's five water pockets behind TreeLarge pruned, L43's r13c7 split off.
         // ⛓ RULES game-truth-gaps: 254 -> 255, L57 lifted from never-enter (⚖ 2026-10-06).
-        expect(atlasRoomRegions(rulesOf('seedling_playthrough'))).toHaveLength(255);
+        // ⛓ R4b (rules-boss-locations): 255 -> 256, L69 lifted from never-enter (⚖ 2026-10-19, "All 7 bosses").
+        expect(atlasRoomRegions(rulesOf('seedling_playthrough'))).toHaveLength(256);
         expect(atlasRoomRegions(rulesOf('seedling'))).toHaveLength(0);
         expect(atlasRoomRegions(rulesOf('seedling_generated_room'))).toHaveLength(0);
     });
@@ -270,7 +271,9 @@ describe('⛓ J3 — the atlas arm on the Seedling JS runtime (transport js, no 
         expect(r).toMatchObject({ verdict: 'eligible' });
         expect(r.eligibility.arm).toBe(RANDOMIZER_ARMS.VANILLA);
         expect(r.delivery).not.toBeNull();
-        expect(r.replaced).toBe(r.table.size);
+        // ⛓ R7 combine: the R4 report rows (`fixed`, bound by `bossreport` — LIVE on js with apReportBosses ON)
+        // sit in the table at their fixed report address and rewrite no record, so they are not `replaced`.
+        expect(r.replaced + (r.fixed ?? []).length).toBe(r.table.size);
     });
 
     it('⛔ the wasm answers do not move: the same atlas preset with the manifest, transport defaulted', async () => {

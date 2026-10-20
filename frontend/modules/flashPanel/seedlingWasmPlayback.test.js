@@ -228,7 +228,9 @@ describe('the engine serves a goal at an arrival (fake game over the recorded re
             expect(t.persistence.map(({ level, tag }) => ({ level, tag }))).toEqual([{ level: HOUSE, tag: 0 }]);
             expect(t.save.seal_parts).toEqual([C.status.save.seal_parts[0]]);
         }
-        expect(e.windows).toEqual([{ from: 0, to: 1 }, { from: 1, to: 2 }]);
+        // ⛓ R4b part 2 — each window carries the tape's own declarations (the reconcile's exclusion list)
+        expect(e.windows.map(({ from, to }) => ({ from, to }))).toEqual([{ from: 0, to: 1 }, { from: 1, to: 2 }]);
+        e.windows.forEach((w, i) => expect(w.declared).toEqual(e.game.tapes[i].persistence));
         expect(e.dones[0].expectedEnd.level).not.toBe(HOUSE);
     });
 
@@ -1296,7 +1298,8 @@ describe('§5.36 — a GENERATED room is a SOLVER room (the recorded p4e arrival
         e.timers.run();
         expect(e.failures).toEqual([]);
         for (const t of e.game.tapes) expect(t.persistence.map(({ level, tag }) => ({ level, tag }))).toEqual([{ level: 0, tag: 0 }]);
-        expect(e.windows).toEqual([{ from: 0, to: 1 }, { from: 1, to: 2 }]);
+        expect(e.windows.map(({ from, to }) => ({ from, to }))).toEqual([{ from: 0, to: 1 }, { from: 1, to: 2 }]);
+        e.windows.forEach((w, i) => expect(w.declared).toEqual(e.game.tapes[i].persistence));
         expect(e.service.seen[0].result.plan.verbs).toEqual(['walk']);
         expect(e.dones[0]).toMatchObject({ producer: 'solver', ticks: 7 });
         expect(e.dones[0].expectedEnd.level).toBe(1);

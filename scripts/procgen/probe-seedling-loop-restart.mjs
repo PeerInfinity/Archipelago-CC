@@ -231,10 +231,7 @@ async function main() {
             await rp.waitFor('rules loaded', () => page.evaluate(() => window.stateManagerProxy?.getStaticData?.()?.regions?.size > 0));
             await rp.installWatchers();
             if (S === 'J') await bootJs(); else await bootWasm();
-            await rp.waitFor('the AP load finished', () => page.evaluate(async () => {
-                const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
-                return !!p?._apLoadResult;
-            }), 180000);
+            await rp.waitForApLoad(180000);
             await rp.waitFor('checks + loads watched', () => page.evaluate(async () => {
                 window.__checks = window.__checks ?? [];
                 window.__loads = window.__loads ?? [];

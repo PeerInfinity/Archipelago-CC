@@ -56,11 +56,14 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
     // pocket opens through (one boundary exit rule); every count holds.
     // ⛓ RULES kill-locks — restamped (ae491163 -> 5c55890f): a decided kill-lock's rule is its room's bodies'
     // (L18/L26/L53/L60 widen to Wand | Dark Shield; L98's stairs under the lock are charged); every count holds.
-    it('54 regions carry a subgraph: 195 sub-regions, 286 internal exits, 200 of them need Progressive Swim', () => {
+    it('115 regions, 54 carry a subgraph: 195 sub-regions, 286 internal exits, 200 of them need Progressive Swim', () => {
         // ⛓ RULES game-truth-gaps — restamped (5c55890f -> db0a4f7f): L57 is lifted from never-enter (⚖ 2026-10-06),
         //   so 113 -> 114 regions (L57 is all water, no subgraph); every other count holds. The landing gates are rules-only.
-        expect(c.atlasId).toBe('seedling-db0a4f7f');
-        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([114, 54, 195, 286, 200]);
+        // ⛓ R4b (rules-boss-locations) — restamped (db0a4f7f -> db4c2681): L69 is lifted from never-enter (the Lights
+        //   kill is a location, ⚖ 2026-10-19 "All 7 bosses"), so 114 -> 115 regions (L69 has no subgraph); the seven
+        //   boss locations and the Wand-priced totem crossing move no other count.
+        expect(c.atlasId).toBe('seedling-db4c2681');
+        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 54, 195, 286, 200]);
         expect(c.swimLevels).toHaveLength(21);
         expect(c.byRule.slice(0, 2)).toEqual([
             { rule: 'Has(Progressive Swim)', count: 166 },

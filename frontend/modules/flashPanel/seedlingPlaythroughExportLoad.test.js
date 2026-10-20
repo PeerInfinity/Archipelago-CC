@@ -80,12 +80,14 @@ const AP1_LOAD = await pageLoad(AP1);
 const EXPORT_LOAD = await pageLoad(EXPORT);
 
 describe('the seedling_playthrough seed-1 export drives the wasm page as AP_1 does', () => {
-    it('the premise: AP_1 loads eligible, with a bot map and every location a goal', () => {
+    // ⛓ R4b (rules-boss-locations): every location a goal BUT the seven boss kills, which the vanilla arm refuses
+    //   by name until the bot has a fight executor (`BOSS_REPORT_REFUSAL`; R4b part 2 / fidelity).
+    it('the premise: AP_1 loads eligible, with a bot map and every location a goal but the seven boss kills', () => {
         expect(AP1_LOAD.verdict).toBe('eligible');
         expect(AP1_LOAD.mapRegions).toBeGreaterThan(0);
         expect(AP1_LOAD.mapLinks).toBeGreaterThan(0);
         const [goals, real] = AP1_LOAD.locationGoals.split('/');
-        expect(goals).toBe(real);
+        expect(Number(real) - Number(goals)).toBe(7);
     });
 
     it.each(PAGE_BLOCKS)('the export carries AP_1\'s `%s` for its slot, as a per-slot map', (key) => {

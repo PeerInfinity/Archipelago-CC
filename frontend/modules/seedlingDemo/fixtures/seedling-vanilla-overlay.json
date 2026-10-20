@@ -54,8 +54,14 @@
           "entity": { "type": "bosskey", "x": 96, "y": 64 },
           "name": "Boss Key 0",
           "vanilla_item": "Red Key"
+        },
+        {
+          "entity": { "type": "shieldboss", "x": 80, "y": 32 },
+          "name": "Shieldspire",
+          "vanilla_item": "Seal"
         }
-      ]
+      ],
+      "rules": { "loc:Shieldspire": { "rule": "Has", "args": { "item_name": "Progressive Sword" } } }
     },
     "20": {
       "locations": [
@@ -101,10 +107,22 @@
           "entity": { "type": "fallrocklarge", "x": 64, "y": 128 },
           "name": "Bob Boss",
           "vanilla_item": "Fire"
+        },
+        {
+          "entity": { "type": "fallrocklarge", "x": 64, "y": 128 },
+          "name": "Times",
+          "vanilla_item": "Seal"
         }
       ],
       "rules": {
         "loc:Bob Boss": {
+          "rule": "Or",
+          "children": [
+            { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+            { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+          ]
+        },
+        "loc:Times": {
           "rule": "Or",
           "children": [
             { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
@@ -200,7 +218,12 @@
     },
     "43": {
       "locations": [
-        { "entity": { "type": "wand", "x": 144, "y": 224 }, "name": "Wand", "vanilla_item": "Wand" }
+        { "entity": { "type": "wand", "x": 144, "y": 224 }, "name": "Wand", "vanilla_item": "Wand" },
+        {
+          "entity": { "type": "bosstotem", "x": 152, "y": 168 },
+          "name": "Totem of Lacste",
+          "vanilla_item": "Seal"
+        }
       ],
       "rules": {
         "loc:Wand": {
@@ -214,6 +237,13 @@
                 { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
               ]
             }
+          ]
+        },
+        "loc:Totem of Lacste": {
+          "rule": "And",
+          "children": [
+            { "rule": "Has", "args": { "item_name": "Totem Shard", "count": 5 } },
+            { "rule": "Has", "args": { "item_name": "Wand" } }
           ]
         }
       }
@@ -273,7 +303,22 @@
       }
     },
     "57": {
+      "locations": [
+        {
+          "entity": { "type": "tentaclebeast", "x": 80, "y": 48 },
+          "name": "Tentacled Beast",
+          "vanilla_item": "Seal"
+        }
+      ],
       "rules": {
+        "loc:Tentacled Beast": {
+          "rule": "Or",
+          "children": [
+            { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+            { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+            { "rule": "Has", "args": { "item_name": "Wand" } }
+          ]
+        },
         "exit:out_tentaclebeast_80_48": {
           "rule": "Or",
           "children": [
@@ -320,6 +365,45 @@
         }
       ]
     },
+    "69": {
+      "locations": [
+        {
+          "entity": { "type": "lightbosscontroller", "x": 72, "y": 72 },
+          "name": "Lights",
+          "vanilla_item": "Seal"
+        }
+      ],
+      "rules": {
+        "loc:Lights": {
+          "rule": "Or",
+          "children": [
+            { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+            { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+            { "rule": "Has", "args": { "item_name": "Wand" } }
+          ]
+        },
+        "exit:out_lightbosscontroller_72_72": {
+          "rule": "Or",
+          "children": [
+            { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+            { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+            { "rule": "Has", "args": { "item_name": "Wand" } }
+          ]
+        }
+      }
+    },
+    "70": {
+      "rules": {
+        "exit:out_pit_3_7": {
+          "rule": "Or",
+          "children": [
+            { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+            { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+            { "rule": "Has", "args": { "item_name": "Wand" } }
+          ]
+        }
+      }
+    },
     "71": {
       "locations": [
         {
@@ -357,7 +441,21 @@
       ]
     },
     "82": {
+      "locations": [
+        {
+          "entity": { "type": "lavaboss", "x": 112, "y": 48 },
+          "name": "King of Fire",
+          "vanilla_item": "Seal"
+        }
+      ],
       "rules": {
+        "loc:King of Fire": {
+          "rule": "Or",
+          "children": [
+            { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+            { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+          ]
+        },
         "exit:out_teleporter_144_0": {
           "rule": "And",
           "children": [
@@ -447,6 +545,24 @@
         }
       ]
     },
+    "112": {
+      "locations": [
+        {
+          "entity": { "type": "finalboss", "x": 64, "y": 96 },
+          "name": "Owl",
+          "vanilla_item": "Seal"
+        }
+      ],
+      "rules": {
+        "loc:Owl": {
+          "rule": "Or",
+          "children": [
+            { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+            { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+          ]
+        }
+      }
+    },
     "113": {
       "rules": {
         "exit:out_teleporter_112_0": { "rule": "Has", "args": { "item_name": "Seal", "count": 16 } },
@@ -463,6 +579,6 @@
       ]
     }
   },
-  "provenance": { "content_hash": "c6a5f388" },
-  "overlay_id": "seedling-vanilla-overlay-c6a5f388"
+  "provenance": { "content_hash": "66b277a9" },
+  "overlay_id": "seedling-vanilla-overlay-66b277a9"
 }

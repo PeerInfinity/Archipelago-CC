@@ -193,10 +193,7 @@ async function main() {
         await rp.gameFrame().evaluate(installInstrument);
         await rp.waitFor("panel status 'ready'", async () => ((await page.evaluate(() =>
             document.querySelector('.flash-panel-status')?.textContent ?? '')) === 'ready' ? 'ready' : null), 120000);
-        await rp.waitFor('the AP load finished', () => page.evaluate(async () => {
-            const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
-            return !!p?._apLoadResult;
-        }), 120000);
+        await rp.waitForApLoad(120000);
         await page.waitForTimeout(1500);
         const atlas = await page.evaluate(async () => {
             const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
