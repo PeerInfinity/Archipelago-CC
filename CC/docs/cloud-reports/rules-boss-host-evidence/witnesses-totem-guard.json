@@ -1,0 +1,429 @@
+{
+  "build_manifest": [
+    {
+      "name": "seedling_bot_ap_p4d",
+      "capabilities": [
+        "arm",
+        "apitem"
+      ]
+    },
+    {
+      "name": "seedling_bot_ap_p4g",
+      "capabilities": [
+        "arm",
+        "apitem",
+        "hold",
+        "tag",
+        "freeze",
+        "sincebegin",
+        "bossreport"
+      ]
+    },
+    {
+      "name": "seedling_original",
+      "capabilities": []
+    }
+  ],
+  "port": "8209",
+  "arms": [
+    {
+      "id": "totem-all-parts",
+      "build": "seedling_bot_ap_p4g",
+      "tape": "r6-totem-kill",
+      "ticks": 780,
+      "finished": true,
+      "error": "",
+      "level": 43,
+      "items": {
+        "hitsMax": 3,
+        "hasTorch": false,
+        "hasDarkSuit": false,
+        "hasSpear": false,
+        "hasFeather": false,
+        "canSwim": false,
+        "hasFireWand": false,
+        "hasWand": true,
+        "hasFire": false,
+        "hasDarkShield": false,
+        "hasShield": false,
+        "hasGhostSword": false,
+        "hasDarkSword": false,
+        "hasSword": false
+      },
+      "clears": [
+        "43|0",
+        "43|5"
+      ],
+      "cleared": [
+        "43|0",
+        "43|1",
+        "43|2",
+        "43|3",
+        "43|5"
+      ],
+      "checks": [
+        "Level 043 - Wand",
+        "Level 043 - Totem of Lacste (reconcile)"
+      ],
+      "hasFire": [
+        false
+      ],
+      "hasDarkSword": [
+        false
+      ],
+      "mobileClasses": [
+        "NPCs::Watcher",
+        "Player"
+      ],
+      "seals": null,
+      "reports": [
+        "4|43|0|0",
+        "5|43|5|0"
+      ],
+      "seqBefore": 0,
+      "declared": [],
+      "stats": {
+        "reports": 2,
+        "malformed": 0,
+        "restores": 0,
+        "unknown": 0,
+        "checks": 2,
+        "repeats": 1,
+        "armingWindow": 0,
+        "reconcile": 1,
+        "reconcileReads": 2
+      },
+      "bosses": [],
+      "player": {
+        "x": 131.49999999999994,
+        "y": 365.3499999999987
+      }
+    },
+    {
+      "id": "totem-four-parts",
+      "build": "seedling_bot_ap_p4g",
+      "tape": "r6-totem-kill-4parts",
+      "ticks": 780,
+      "finished": true,
+      "error": "",
+      "level": 43,
+      "items": {
+        "hitsMax": 3,
+        "hasTorch": false,
+        "hasDarkSuit": false,
+        "hasSpear": false,
+        "hasFeather": false,
+        "canSwim": false,
+        "hasFireWand": false,
+        "hasWand": false,
+        "hasFire": false,
+        "hasDarkShield": false,
+        "hasShield": false,
+        "hasGhostSword": false,
+        "hasDarkSword": false,
+        "hasSword": false
+      },
+      "clears": [],
+      "cleared": [],
+      "checks": [],
+      "hasFire": [
+        false
+      ],
+      "hasDarkSword": [
+        false
+      ],
+      "mobileClasses": [
+        "Enemies::BossTotem",
+        "NPCs::Watcher",
+        "Pickups::Wand",
+        "Player"
+      ],
+      "seals": null,
+      "reports": [],
+      "seqBefore": 0,
+      "declared": [],
+      "stats": {
+        "reports": 0,
+        "malformed": 0,
+        "restores": 0,
+        "unknown": 0,
+        "checks": 0,
+        "repeats": 0,
+        "armingWindow": 0,
+        "reconcile": 0,
+        "reconcileReads": 0
+      },
+      "bosses": [
+        {
+          "enemy": {
+            "activated": null,
+            "max_force": -1,
+            "only_hit_by": "Wand",
+            "active_off_screen": true,
+            "die_in_lava": true,
+            "die_in_water": true,
+            "hit_by_dark_stuff": false,
+            "hit_by_fire": false,
+            "fell": false,
+            "fall_in_pit": false,
+            "can_fall_in_pit": true,
+            "just_knock": false,
+            "can_hit": true,
+            "damage": 1,
+            "hits_timer": 0,
+            "hits_max": 5,
+            "hits": 0
+          },
+          "on_screen": false,
+          "angle": 0,
+          "alpha": 1,
+          "anim_complete": true,
+          "anim_index": 0,
+          "frame": 1,
+          "anim": "",
+          "origin_y": -12,
+          "origin_x": 40,
+          "height": 32,
+          "width": 80,
+          "collidable": true,
+          "visible": true,
+          "layer": 0,
+          "f": 0.25,
+          "destroy": false,
+          "type": "Solid",
+          "vy": 0,
+          "vx": 0,
+          "y": 168,
+          "x": 152,
+          "cls": "Enemies::BossTotem"
+        }
+      ],
+      "player": {
+        "x": 131.49999999999994,
+        "y": 348.9999999999989
+      }
+    },
+    {
+      "id": "totem-wand-gone-5-parts",
+      "build": "seedling_bot_ap_p4g",
+      "tape": "r6-totem-kill-wandgone-5",
+      "ticks": 780,
+      "finished": true,
+      "error": "",
+      "level": 43,
+      "items": {
+        "hitsMax": 3,
+        "hasTorch": false,
+        "hasDarkSuit": false,
+        "hasSpear": false,
+        "hasFeather": false,
+        "canSwim": false,
+        "hasFireWand": false,
+        "hasWand": true,
+        "hasFire": false,
+        "hasDarkShield": false,
+        "hasShield": false,
+        "hasGhostSword": false,
+        "hasDarkSword": false,
+        "hasSword": false
+      },
+      "clears": [
+        "43|0"
+      ],
+      "cleared": [
+        "43|0"
+      ],
+      "checks": [],
+      "hasFire": [
+        false
+      ],
+      "hasDarkSword": [
+        false
+      ],
+      "mobileClasses": [
+        "Enemies::BossTotem",
+        "NPCs::Watcher",
+        "Player"
+      ],
+      "seals": null,
+      "reports": [
+        "1|43|0|0"
+      ],
+      "seqBefore": 0,
+      "declared": [
+        "43|0"
+      ],
+      "stats": {
+        "reports": 1,
+        "malformed": 0,
+        "restores": 0,
+        "unknown": 0,
+        "checks": 0,
+        "repeats": 0,
+        "armingWindow": 1,
+        "reconcile": 0,
+        "reconcileReads": 0
+      },
+      "bosses": [
+        {
+          "enemy": {
+            "activated": null,
+            "max_force": -1,
+            "only_hit_by": "Wand",
+            "active_off_screen": true,
+            "die_in_lava": true,
+            "die_in_water": true,
+            "hit_by_dark_stuff": false,
+            "hit_by_fire": false,
+            "fell": false,
+            "fall_in_pit": false,
+            "can_fall_in_pit": true,
+            "just_knock": false,
+            "can_hit": true,
+            "damage": 1,
+            "hits_timer": 0,
+            "hits_max": 5,
+            "hits": 0
+          },
+          "on_screen": false,
+          "angle": 0,
+          "alpha": 1,
+          "anim_complete": true,
+          "anim_index": 0,
+          "frame": 0,
+          "anim": "",
+          "origin_y": -12,
+          "origin_x": 40,
+          "height": 32,
+          "width": 80,
+          "collidable": true,
+          "visible": true,
+          "layer": -212,
+          "f": 0.25,
+          "destroy": false,
+          "type": "Enemy",
+          "vy": 0,
+          "vx": 0,
+          "y": 168,
+          "x": 152,
+          "cls": "Enemies::BossTotem"
+        }
+      ],
+      "player": {
+        "x": 152,
+        "y": 360
+      }
+    },
+    {
+      "id": "totem-wand-gone-4-parts",
+      "build": "seedling_bot_ap_p4g",
+      "tape": "r6-totem-kill-wandgone-4",
+      "ticks": 780,
+      "finished": true,
+      "error": "",
+      "level": 43,
+      "items": {
+        "hitsMax": 3,
+        "hasTorch": false,
+        "hasDarkSuit": false,
+        "hasSpear": false,
+        "hasFeather": false,
+        "canSwim": false,
+        "hasFireWand": false,
+        "hasWand": true,
+        "hasFire": false,
+        "hasDarkShield": false,
+        "hasShield": false,
+        "hasGhostSword": false,
+        "hasDarkSword": false,
+        "hasSword": false
+      },
+      "clears": [
+        "43|0"
+      ],
+      "cleared": [
+        "43|0"
+      ],
+      "checks": [],
+      "hasFire": [
+        false
+      ],
+      "hasDarkSword": [
+        false
+      ],
+      "mobileClasses": [
+        "Enemies::BossTotem",
+        "NPCs::Watcher",
+        "Player"
+      ],
+      "seals": null,
+      "reports": [
+        "1|43|0|0"
+      ],
+      "seqBefore": 0,
+      "declared": [
+        "43|0"
+      ],
+      "stats": {
+        "reports": 1,
+        "malformed": 0,
+        "restores": 0,
+        "unknown": 0,
+        "checks": 0,
+        "repeats": 0,
+        "armingWindow": 1,
+        "reconcile": 0,
+        "reconcileReads": 0
+      },
+      "bosses": [
+        {
+          "enemy": {
+            "activated": null,
+            "max_force": -1,
+            "only_hit_by": "Wand",
+            "active_off_screen": true,
+            "die_in_lava": true,
+            "die_in_water": true,
+            "hit_by_dark_stuff": false,
+            "hit_by_fire": false,
+            "fell": false,
+            "fall_in_pit": false,
+            "can_fall_in_pit": true,
+            "just_knock": false,
+            "can_hit": true,
+            "damage": 1,
+            "hits_timer": 0,
+            "hits_max": 5,
+            "hits": 0
+          },
+          "on_screen": false,
+          "angle": 0,
+          "alpha": 1,
+          "anim_complete": true,
+          "anim_index": 0,
+          "frame": 1,
+          "anim": "",
+          "origin_y": -12,
+          "origin_x": 40,
+          "height": 32,
+          "width": 80,
+          "collidable": true,
+          "visible": true,
+          "layer": 0,
+          "f": 0.25,
+          "destroy": false,
+          "type": "Solid",
+          "vy": 0,
+          "vx": 0,
+          "y": 168,
+          "x": 152,
+          "cls": "Enemies::BossTotem"
+        }
+      ],
+      "player": {
+        "x": 131.49999999999994,
+        "y": 348.9999999999989
+      }
+    }
+  ]
+}
