@@ -870,7 +870,7 @@
     },
     {
       "file": "r3-walk-3-torch.json",
-      "tickCount": 1964,
+      "tickCount": 1947,
       "bootLevel": 12,
       "tapeVersion": 5,
       "noHazards": [
@@ -918,7 +918,7 @@
     },
     {
       "file": "r3-walk-full.json",
-      "tickCount": 12122,
+      "tickCount": 12105,
       "bootLevel": 0,
       "tapeVersion": 5,
       "noHazards": [
@@ -957,7 +957,7 @@
     },
     {
       "file": "r4-walk-3-torch.json",
-      "tickCount": 1964,
+      "tickCount": 1947,
       "bootLevel": 12,
       "tapeVersion": 5,
       "noHazards": [
@@ -997,7 +997,7 @@
     },
     {
       "file": "r4-walk-full.json",
-      "tickCount": 10052,
+      "tickCount": 10035,
       "bootLevel": 0,
       "tapeVersion": 5,
       "noHazards": [
