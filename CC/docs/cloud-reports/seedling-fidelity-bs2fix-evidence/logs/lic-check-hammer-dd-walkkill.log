@@ -1,0 +1,5 @@
+PASS: OFF: the dwell refuses at t174, already true, on `kill (bobsoldier@48,80) by press` — t174; solverBot(hammer-dd-l30-walkkill) reach-exit (224,160)->L32 -> keylock stance (bosslock@224,208) -> kill (bobsoldier@48,80) by press: the dwell's condition (bob
+PASS: ⛓ ON: the solve reaches L32 — 381 t; solved
+PASS: ⛓ ON: the chaser record says the walk killed it — {"pressedAt":169,"firedAt":170,"weapon":"sword","direction":0}
+PASS: ⛓⛓ ON: the plan takes no hit — []
+PASS: ⛓ the committed hammer-dd-l30-walkkill is what this script produces today — byte-identical

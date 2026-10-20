@@ -1,0 +1,39 @@
+diff --git a/frontend/modules/seedlingDemo/fidelityStrikeLapse.test.js b/frontend/modules/seedlingDemo/fidelityStrikeLapse.test.js
+index 408684fa..61a38bb5 100644
+--- a/frontend/modules/seedlingDemo/fidelityStrikeLapse.test.js
++++ b/frontend/modules/seedlingDemo/fidelityStrikeLapse.test.js
+@@ -14,12 +14,13 @@
+  */
+ 
+ import { describe, expect, it } from 'vitest';
++import { createHash } from 'node:crypto';
+ import { readFileSync } from 'node:fs';
+ import { dirname, join } from 'node:path';
+ import { fileURLToPath } from 'node:url';
+ 
+ import { atlasLevelSource } from './levelSource.js';
+-import { heldKeysAt, parseTape } from './tapeFormat.js';
++import { parseTape } from './tapeFormat.js';
+ import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
+ import { withContactFidelity } from './contactFidelity.js';
+ import { playerBoxAt } from './playerPhysicsV2.js';
+@@ -89,13 +90,13 @@ describe('STRIKELAPSE D1 — the collect stand and the ceremony arm', () => {
+         expect(st.removedAt).toBeLessThan(collect.from + collect.approach);
+     }, 120_000);
+ 
+-    it('OFF: the plan is the witness `bobsoldier2-l30-torch` (460 t), byte for byte', async () => {
++    // ⛓ BS2FIX: `bobsoldier2-l30-torch` was re-recorded at the defaults (395 t). The pre-lapse plan it was (460 t,
++    // game-recorded on p4f) is pinned by its keys' digest: md5 of each tick's held keys, sorted and '+'-joined, '\n'-joined.
++    it('OFF: the plan is the pre-lapse witness (the retired 460-t `bobsoldier2-l30-torch`), key for key', async () => {
+         const { solved } = await withContactFidelity({ strikeIframeLapse: false }, () => bobsoldier2Plan(true));
+-        expect(solved.out.perTick.length).toBe(tape('bobsoldier2-l30-torch').tick_count);
+-        const witness = tape('bobsoldier2-l30-torch');
+-        solved.out.perTick.forEach((held, t) => {
+-            expect([...held].sort()).toEqual([...heldKeysAt(witness, t)].sort());
+-        });
++        expect(solved.out.perTick.length).toBe(460);
++        const keys = solved.out.perTick.map((held) => [...held].sort().join('+')).join('\n');
++        expect(createHash('md5').update(keys).digest('hex')).toBe('a1022d66cec65d411527f5620fe2a7ad');
+     }, 120_000);
+ });
+ 

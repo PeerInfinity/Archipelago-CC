@@ -24110,3 +24110,36 @@ an honest refusal. Neither leg solves: the hammer wall (H1) is still the wall.
 **Pins moved:** the `contactFidelity.test` defaults; `fidelityL40Guard` "ships ON"; identity **carved pairs c4
 `b9d2185d` → `ebb9e743`** (`spinnerSwingLineOfSight` alone: `winding post-sword seed=7` threw the line-of-sight
 assertion OFF and runs to `SATURATED` ON). No producer names the switches; tapeRunner pairs unmoved.
+
+### Seedling fidelity BS2FIX — the bobsoldier2 INTERIM pin, retirement prepared (licence pending)
+
+⚖ The user (2026-10-19, on the interims report): bobsoldier2 *"Keep pin, queue fix"*; (2026-10-20) *"run it now"*.
+`plan-seedling-bobsoldier2.mjs` pins `strikeIframeLapse` OFF because both its tapes were game-recorded under the
+pre-lapse strike gate. Base main `934f99422b`; report `CC/docs/cloud-reports/seedling-fidelity-bs2fix.md`.
+
+**Measured at the defaults (lapse ON), survey step 50, switch by switch.** No setting of `KILL_STANCE_AS_FORECAST` /
+`SWORD_GATE_TIMED` reaches the kill arm's dwell. The walk's lapse-admitted presses leave the collect's corridor clean, so the
+collect runs FIRST (STRIKELAPSE D1's stand walk) with `bobsoldier@48,80` alive on 2 hits. What decides is the exit walk's gate
+at (72.65,66.46):
+- both ON: 395 t; the walk towards (72,88) kills the body with its own press (t169, `killedOnWalk`);
+- D2b alone: 404 t, the same kill;
+- both OFF and D2a alone: refused at 168 t, pad 16 against the LIVE body.
+The ON torch plan equals the CI survey's own step-50 walk (run 39496129402), key for key.
+
+**The game (p4g, the default build).** The ON torch tape: 396 obs, the model reproduces it, and the content equals the
+wave-19 p4f recording (p4g does not differ). `hasTorch` lands at game obs 169 (model OFF 168, `PICKUP_REMOVED_NEXT_FRAME`
+ON 169). The body probe: 181 of 182 samples exact; the one off (t168) is the sample straddling the ceremony's end.
+
+**What the BEFORE means with the lapse ON.** It is a pre-lapse executor/forecast mismatch, with no ON witness: the dwell is
+unreachable at all four switch settings. The tape is game-recorded keys whose replay does not read the switch (stream and
+body md5 equal under either setting). So it stays as a named, permanent CONTROL (`CONTROL_FIDELITY`, u10's shape) and
+stays byte-identical.
+
+**Shipped:** the retired arm behind `LAPSE_PIN_RETIRED` (OFF; pinned `--check` byte-identical, log md5 `2e94b9ef`);
+`--out=`; four ON rows in `fidelityBobSoldier2`. **Licence kit** (evidence `licence/`): the torch tape 460 → 395, its
+expectation, the `pickup-removal-witness` row (226 → 169, p4g), `r8Acceptance` ticks, the tape index, and the restated test
+rows. Licensed bounded run: one red outside the region, `fidelityStrikeLapse`'s "OFF … byte for byte" row. A proposed
+restatement (a key digest of the retired 460-t plan) is the second patch.
+
+**Trap candidate.** A test comment's measurement under a switch decays when another slice repairs the path. Here
+`fidelityBobSoldier2`'s "ON refuses at every switch setting" (FLIP14) had been false since STRIKELAPSE D1 + hammer DD.
