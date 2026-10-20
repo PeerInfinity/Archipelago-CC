@@ -3433,6 +3433,12 @@ export function createLevelRun({
      */
     let wandLeftTheWorld = false;
     /**
+     * ⛓ APFLIP D2: R4's totem gate, `Player.hasAllTotemParts()` read LIVE on the tick it is asked (`BossTotem.as:291`
+     * @ccdf189776), under `CONTACT_FIDELITY.apReportBosses`; undefined OFF, which `stepBossTotem` reads as the pre-R4
+     * edge.
+     */
+    const totemGateNow = () => (CONTACT_FIDELITY.apReportBosses === true ? hasAllTotemParts() : undefined);
+    /**
      * ⛓⛓ R5 SLICE 23: has the wand's approach FADE been spent this visit?
      *
      * ⛔⛔ THE FADE IS A FREEZE THAT FIRES ON APPROACH, NOT ON CONTACT, and
@@ -3567,6 +3573,8 @@ export function createLevelRun({
                 renderBossTotem(b);
                 stepBossTotem(b, {
                     wandGone: wandGoneNow,
+                    // ⛓ APFLIP D2: R4's `&& Player.hasAllTotemParts()`, read live (`totemGateNow`).
+                    allTotemParts: totemGateNow(),
                     // ⚠ TRUE FOR THE WHOLE SPAN, including the last frame.
                     // On the release frame the rock clears the flag BEFORE
                     // the boss updates (`addUpdate` prepends and the rocks
@@ -19998,8 +20006,17 @@ export function createLevelRun({
             // ticks spent here too, so that is a REFUSAL rather than an
             // approximation.
             if (!noclip && !droppedRocksThisTick) {
+                // ⛓ APFLIP D2 (`CONTACT_FIDELITY.apReportBosses`): `classCount(Wand) <= 0`, the game's own test — a room
+                // whose Wand is already gone (its slot cleared, or an `apitem` in its place) holds none from the build.
+                const wandGoneLive = wandLeftTheWorld || (CONTACT_FIDELITY.apReportBosses === true
+                    && !(world.pickups ?? []).some((p) => p.tag === 'wand'));
                 for (const b of bossStateFor(level).values()) {
-                    if (!b.activated) continue;
+                    // ⛓ APFLIP D2: under the switch the activation EDGE is taken on a live tick too (R4,
+                    // `BossTotem.as:291` @ccdf189776: no Wand AND all five parts, read every tick), not only inside the
+                    // Wand's rock drop. Never inside a ceremony: there the edge is unmodelled and the boss stays asleep
+                    // (named, see the report). OFF, a sleeping boss is skipped as before.
+                    if (!b.activated && !(CONTACT_FIDELITY.apReportBosses === true && ceremony === null
+                        && wandGoneLive && totemGateNow() === true)) continue;
                     if (ceremony !== null) {
                         throw new Error('levelRun: a BossTotem is awake while a '
                             + 'ceremony is running. Its rumble and activation ramp '
@@ -20011,7 +20028,8 @@ export function createLevelRun({
                     }
                     const bossOpts = normalizeLiveOpts(liveSolidOpts());
                     const r = stepBossTotem(b, {
-                        wandGone: wandLeftTheWorld,
+                        wandGone: CONTACT_FIDELITY.apReportBosses === true ? wandGoneLive : wandLeftTheWorld,
+                        allTotemParts: totemGateNow(),
                         freezeObjects: false,
                         playerY: state.y,
                         playerBox: playerBoxAt(state.x, state.y),
