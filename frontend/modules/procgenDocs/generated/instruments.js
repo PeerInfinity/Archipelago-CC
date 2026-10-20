@@ -7388,7 +7388,8 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
-                "check"
+                "check",
+                "out"
             ],
             "file": "plan-seedling-bobsoldier2.mjs",
             "flags": [
@@ -7397,6 +7398,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "out"
                 }
             ],
             "inheritedFlags": [
