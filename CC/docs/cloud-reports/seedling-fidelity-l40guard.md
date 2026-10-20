@@ -8,7 +8,7 @@ Slice `seedling-fidelity-l40guard` (Opus, cloud), planner `seedling-fidelity-pla
 | Start SHA | **`e686f0b6e6`** (= main: watcherTalkVerb ON) |
 | Head | the commit carrying this report. Before it: D1 `d22b2694`, D2 `6214a4f0`, D3 `4cb14a65`, D4 `60bb4050`, records `af853555`, gate fix `6d4bd88e` |
 | Branch | `claude/l40-guard-stance-3ob72q` (the harness's; the brief's `seedling-fidelity-l40guard`, local). Nothing went to `main` |
-| Dev servers | `serve-nocache.py 9697` (primary, PID 605) and `9698` (the base worktree, PID 2894), both killed by PID at the end |
+| Dev servers | `serve-nocache.py 9697` (primary, PID 605; ended by a container restart near the end) and `9698` (the base worktree, PID 2894, killed by PID) |
 | Verdicts | **W0 PASS · D1 PASS** (no model gap: three game witnesses, worst \|Δ\| 0) **· D2 PASS** (`guardApproachStance`, OFF; built, refuses by name, never asked on the live legs) **· D3 PASS** (`coveredGoalRefusal`, OFF) **· D4 PASS for #7, PASS for #6's moot class, STOP for 414's own #6 instance → hammer** **· D5 PASS** (no seam solves; the chooser is the wall) |
 
 ## The one thing to know first
@@ -347,7 +347,7 @@ BobSoldier. The CI survey (`39153361080`) holds the same seven verdicts.
 | tapeRunner pairs | 621 `fceca579` | 621 `fceca579` (ON too) |
 | surface / constants / entities / profile / roster | 314 / 6,041 / 566 / 138 / 282 | 314 (re-recorded) / 6,046 (+5) / 566 / 138 / 282 |
 | bounded vitest | 84 files, 2,274 / 2,274 (+ 6 files, 50 / 50) | 91 files, 2,337 / 2,337 (ON: 2,335 + 2 skipped, 0 red) |
-| CI `JavaScript Unit Tests` | — | at `6d4bd88e`: vitest unfiltered **21,267 / 21,267**, slow battery **254 / 254** (run `39337276266`); at the report's head: `node scripts/procgen/ci-vitest-summary.mjs <head> --wait` |
+| CI `JavaScript Unit Tests` | — | at `6d4bd88e`: vitest unfiltered **21,267 / 21,267**, slow battery **254 / 254** (run `39337276266`); the commits after it touch `CC/docs/…` only, which the workflow's path filter skips (`ci-vitest-summary.mjs 116fb117df`: no run), so `6d4bd88e` is the final code's run |
 
 ## Byte-inertia
 
