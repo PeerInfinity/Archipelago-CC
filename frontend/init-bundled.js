@@ -64,6 +64,8 @@ import { incrementFileCounter, addFileError } from './app/initialization/fileLoa
 // ============================================================================
 import * as modulesModule from './modules/modules/index.js';
 import * as quickLaunchModule from './modules/quickLaunch/index.js';
+import * as miniPanelsModule from './modules/miniPanels/index.js';
+import * as checksPanelModule from './modules/checksPanel/index.js';
 import * as tutorialsModule from './modules/tutorials/index.js';
 import * as jsonModule from './modules/json/index.js';
 import * as storagePanelModule from './modules/storagePanel/index.js';
@@ -198,6 +200,8 @@ window.__BUNDLED_TEST_CASES__ = true;
 const BUNDLED_MODULES = {
   modules: modulesModule,
   quickLaunch: quickLaunchModule,
+  miniPanels: miniPanelsModule,
+  checksPanel: checksPanelModule,
   tutorials: tutorialsModule,
   json: jsonModule,
   storagePanel: storagePanelModule,
