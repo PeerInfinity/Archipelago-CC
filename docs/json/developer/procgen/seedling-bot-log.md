@@ -23975,3 +23975,34 @@ inside the R7 landing merge. The report is `CC/docs/cloud-reports/seedling-fidel
   derivation error. The reader is the runtime spawner (the rock, the Witch), and the build has to be told so.
 - `playerPosition` rode on the boss's spawn arm all along. At `f8d9bc1` the arm always ran (the ctor guard was a
   no-op), so "the landing writes the respawn point" was true only by accident.
+
+### Seedling fidelity APFLIP — `apReportBosses` ON for the R7 merge, the R4 witnesses on p4g
+
+The flip of APBOSSES' switch inside js-7's one combined R7 landing (⚖ user 2026-10-19, "Launch now; ON in R7 merge"),
+on the integration base `fidelity-flip/apbosses` @ `a4b64aef9a` (wasm p4g `9968c7d`, vendor/seedling `ccdf189776`). The
+report is `CC/docs/cloud-reports/seedling-fidelity-apflip.md`.
+
+**What the switch now also covers** (each OFF-inert, measured: identity `738b7ab5`, pairs `fceca579` at the OFF arm):
+- The Totem gate (`BossTotem.as:291` @ccdf189776): `classCount(Wand) <= 0 && !activated && Player.hasAllTotemParts()`,
+  the parts read live, the edge taken on a live tick when the room holds no Wand (`{43,0}` cleared, or an `apitem`).
+- The four boss rooms with no persistence response (`AP_BOSS_PERSISTENCE_RESPONSE`): the Owl and the Totem despawn,
+  the Tentacled Beast is built dead and still Solid, the Lights build nothing of the fight. The totem's kill is banked.
+- The L32 arena rock's Solid at the ENTITY's placement, so a delivered-set move (ROCKMOVE's op) moves it in the model.
+- `jsRuntimeCapabilities()`: the JS runtime declares `bossreport` exactly while the switch is on.
+
+**The L32 rock move, on the game.** `fallrocklarge@64,128:1` moved 24 px (x 88 or x 40; x 96 also measured): every
+game stream equals vanilla's through the kill, and the player walks out by the stairs to L30 without Fire. The landed
+box at x 88 is [88,120)×[128,160). The rules arc owns the row; the model already reads it.
+
+**The witnesses.** Thirteen tapes recorded on p4g, the model reproducing each: APBOSSES' seven `apb-*` rows, the Totem
+gate's `apb-l43-totem-no-parts`, and the five movers (the four L32 burns now end in the arena; `enc-l32-fire-return` is
+retired for `apb-l32-both-reported`). Roster 282 → 289; exposure 90 → 91.
+
+**What ON moves.** The campaign's `r9-solve-32` ends in L32 (`endsAt` 10839 → 10622). Survey step 51 is REFUSED by
+name (`precondition`). Producer `r2-route`'s clear census reads 83 offered / 54 refused (was 81 / 58).
+
+**Trap candidates.**
+- A tape whose description quotes a declaration (`campaignChain`'s `why`) drifts on a doc-only edit of that declaration:
+  re-emit the tape after the last edit, or its producer's `--check` reds on bytes the game never sees.
+- A double gate hides a mutant: `levelRun` checks the totem gate before stepping a sleeping boss, so removing the clause
+  from `stepBossTotem` reds only its pure row (MD2 predicted 3, measured 1).

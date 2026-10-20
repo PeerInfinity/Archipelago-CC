@@ -1,0 +1,2 @@
+arm 0 rc=0
+arm 1 rc=0
