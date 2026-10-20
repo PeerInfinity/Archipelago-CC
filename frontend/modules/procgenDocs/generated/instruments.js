@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 81,
-            "count": 128,
+            "browser": 82,
+            "count": 129,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 432,
-        "browser": 146,
+        "blockStyle": 433,
+        "browser": 147,
         "cited": 226,
-        "files": 445,
+        "files": 446,
         "lineStyle": 13,
-        "withDocblock": 445,
-        "withFlags": 361
+        "withDocblock": 446,
+        "withFlags": 362
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -10403,6 +10403,55 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-boot-reset — **TWO WINDOWS ON ONE PAGE, AND WHAT THE SECOND ONE INHERITS.**",
             "path": "scripts/procgen/probe-seedling-boot-reset.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-bosskills.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "file"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "witness"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-bosskills — ⛓⛓⛓ seedling-fidelity-bosskills D1/D2: THE KING OF FIRE (`LavaBoss`, L82) AND THE TENTACLED BEAST (L57), ASKED OF THE GAME TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-bosskills.mjs"
         },
         {
             "argvHelpers": [

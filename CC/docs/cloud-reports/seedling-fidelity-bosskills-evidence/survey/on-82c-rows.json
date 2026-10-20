@@ -1,0 +1,78 @@
+[
+ {
+  "step": 203,
+  "level": 82,
+  "verdict": "SOLVED",
+  "ticks": 1363,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 144,
+     "y": 0
+    },
+    "why": "teleporter@144,0 \u2192 L96"
+   }
+  ],
+  "refusal": null,
+  "replay": {
+   "hits": 2,
+   "deaths": 0,
+   "endLevel": 96,
+   "transitions": [
+    "undefined->undefined@1363"
+   ],
+   "earnedClears": [
+    "{82,1}",
+    "{82,0}"
+   ]
+  }
+ },
+ {
+  "step": 224,
+  "level": 82,
+  "verdict": "SOLVED",
+  "ticks": 1363,
+  "goals": [
+   {
+    "kind": "clear-tag",
+    "tag": {
+     "level": 82,
+     "tag": 0
+    },
+    "at": {
+     "x": 112,
+     "y": 48
+    },
+    "obstacle": "lavaboss@112,48",
+    "report": {
+     "level": 82,
+     "tag": 0
+    },
+    "why": "Level 082 - King of Fire (sphere 10.3) \u2192 Seal \u2014 the kill's report {82,0} (`lavaboss`)",
+    "location": "Level 082 - King of Fire"
+   },
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 144,
+     "y": 0
+    },
+    "why": "teleporter@144,0 \u2192 L96"
+   }
+  ],
+  "refusal": null,
+  "replay": {
+   "hits": 2,
+   "deaths": 0,
+   "endLevel": 96,
+   "transitions": [
+    "undefined->undefined@1363"
+   ],
+   "earnedClears": [
+    "{82,1}",
+    "{82,0}"
+   ]
+  }
+ }
+]
