@@ -5,7 +5,7 @@
  * (content/); the user guides they replace are generated from the same data
  * (scripts/tutorials/generate-tutorial-docs.mjs).
  */
-import { COMPONENT_TYPE, DEFAULTS, MODULE_ID, PROGRESS_KEY, TutorialUI } from './tutorialUI.js';
+import { COMPONENT_TYPE, DEFAULTS, MODULE_ID, TutorialUI } from './tutorialUI.js';
 import { hasTutorialRequest } from './tutorialUrl.js';
 
 const REOPEN_AFTER_MS = 5000;
@@ -65,13 +65,6 @@ export function register(registrationApi) {
             label: 'Outline the next control',
             description: "Draw an outline around the next thing to press for the current step (a tab, the tab "
                 + "list's ▾ button, or a control). Desktop layout only.",
-        },
-        [PROGRESS_KEY]: {
-            type: 'object',
-            default: null,
-            label: 'Progress',
-            description: 'The tutorial in progress and its step ({ id, index }), so the list can offer Resume; '
-                + 'null when none is. Written by the panel.',
         },
     });
 
