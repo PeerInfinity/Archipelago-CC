@@ -64,7 +64,9 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         //   boss locations and the Wand-priced totem crossing move no other count.
         // ⛓ rules-l32-rock-move — restamped (db4c2681 -> 0c2152f7): the delivered set moves L32's Bob-arena rock
         //   (64,128) -> (88,128), and Bob's two locations stand on its tile ([4,8] -> [5,8]); no count moves.
-        expect(c.atlasId).toBe('seedling-0c2152f7');
+        // ⛓ rules-r4b-followup — restamped (0c2152f7 -> 832cd44f): a pit's landing is read off the pit tile's CENTRE
+        //   (`Tile.as:103`; witnessed on p4g), so L70's pit lands on L69 (3,8), not (3,7); no count moves.
+        expect(c.atlasId).toBe('seedling-832cd44f');
         expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 54, 195, 286, 200]);
         expect(c.swimLevels).toHaveLength(21);
         expect(c.byRule.slice(0, 2)).toEqual([
