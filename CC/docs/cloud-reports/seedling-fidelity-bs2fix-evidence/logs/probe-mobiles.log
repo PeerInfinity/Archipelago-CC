@@ -1,0 +1,7 @@
+# box lock: TAKEN by probe-seedling-bobsoldier-mobiles.mjs (browser, pid 3919) — head 934f99422, 2 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+FAIL: the sample clock is the model's — 396 sampled tick(s) inside the tape; shifts that fit every player x: [] (must be exactly [0])
+FAIL: the BobSoldier's position, velocity, hits and hits_timer are the model's at every sampled tick, and it exists exactly when the model's does — 182 comparison(s), worst |Δ| 0.6481021131837521
+      t 168: game (74.3693439282874, 74.26524462966566) v (0.32405105659188904, -0.7314307299544368) model (74.59212902969433, 73.76238600282198) v (-0.324051056591863, -0.7314307299544485)
+wrote /tmp/claude-0/-home-user-Archipelago-CC/a71aea9f-a27e-5ef2-967b-faaa761a4364/scratchpad/ev/probe-bobsoldier-mobiles-torch-on.json
+exit 1

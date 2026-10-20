@@ -1,0 +1,11 @@
+PASS: both switches OFF (the control: `strikeIframeLapse` OFF): the staging REFUSES on the kill arm's dwell (the survey's step-50 text) — solverBot(survey-step-50) collect (64,64) stance -> kill (bobsoldier@48,80) by press: the dwell's condition (bobsoldier@48,80 has left the world — bobsoldier@48,80 is a `modelled` press target (KILL_A
+PASS: bobsoldier2-l30-dash-stance: the model replays it — no hit, still in L30, bobsoldier@48,80 ALIVE on 2 hits at the end — hits 0, level 30, body (78.77,72.32) h2
+PASS: bobsoldier2-l30-dash-stance: the tape round-trips through the tape format
+PASS: the committed bobsoldier2-l30-dash-stance is what this script produces today — byte-identical
+PASS: both switches ON: the staging SOLVES
+PASS: the plan collects the Torchpickup FIRST, then kills the BobSoldier by the chaser arm ON THE WALK towards the stance (72,88): the walk's own press, no dwell — dwell 0/10 t, killedOnWalk {"pressedAt":169,"firedAt":170,"weapon":"sword","direction":3}
+PASS: bobsoldier2-l30-torch: the model replays it — zero hits, the body killed, the crossing into L32 — hits 0, ends {"level":32,"x":80,"y":128}
+PASS: bobsoldier2-l30-torch: the tape round-trips through the tape format
+PASS: the committed bobsoldier2-l30-torch is what this script produces today — byte-identical
+
+all checks green
