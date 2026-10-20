@@ -550,7 +550,9 @@ export function createWasmPlayback({
         const to = seqNow();
         ours = true;
         stats.hostStarts.push({ label, from, to });
-        if (to > from) getCheckBinding?.()?.ignoreHostStart?.({ from, to });
+        // ⛓ R4b part 2 — and the addresses the tape DECLARES: `botStart` writes them all in one call, so the single
+        // report slot carries only the last, and the binding's reconcile must not credit the rest off the table.
+        if (to > from) getCheckBinding?.()?.ignoreHostStart?.({ from, to, declared: tape?.persistence ?? [] });
         if (started !== 'ok') return `botStart refused the ${label} tape: ${started}`;
         return null;
     }

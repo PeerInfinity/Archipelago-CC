@@ -271,6 +271,24 @@ describe('⛓ R4b part 2 — THE RECONCILE: a clear the single report slot lost 
         expect(types(b.onStateReport('pendingCheck', report(e, { seq: 6 })))).toEqual(['locationCheck', 'apItemFound']);
     });
 
+    it('⛔ a host start\'s DECLARED addresses (coalesced: only the last reached `pendingCheck`) are never credited by a re-read', () => {
+        const b = bindingFor();
+        const [a, c, d] = entries;
+        // the tape declares a, c and d in one botStart: the window catches d's report; a and c never report
+        b.ignoreHostStart({ from: 4, to: 7, declared: [a, c, d].map((e) => ({ level: e.level, tag: e.tag, note: '' })) });
+        b.onStateReport('pendingCheck', report(d, { seq: 7 }));
+        // a live clear elsewhere (the Owl's (112,1), no table row) asks for the re-read, which sees all three cleared
+        b.onStateReport('pendingCheck', '8|112|1|0');
+        const cleared = [a, c, d].map((e) => ({ level: e.level, tag: e.tag }));
+        expect(b.onReconcile(cleared)).toEqual([]);
+        expect(b.stats.checks).toBe(0);
+        // ... and the same slot cleared LIVE later is a real collection
+        expect(types(b.onStateReport('pendingCheck', report(a, { seq: 9 })))).toEqual(['locationCheck', 'apItemFound']);
+        // an already-checked location re-declared stays checked, nothing new
+        b.ignoreHostStart({ from: 9, to: 10, declared: [{ level: a.level, tag: a.tag }] });
+        expect(b.unearned.has(placementKey(a.level, a.tag))).toBe(false);
+    });
+
     it('a RESTORE asks for no re-read', () => {
         const b = bindingFor();
         b.onStateReport('pendingCheck', report(entries[0], { cleared: false }));

@@ -62,8 +62,9 @@
  * for checks: after every live clear (`liveClears`) the glue re-reads the game's cleared table
  * (`botStatus().persistence_cleared`) and `onReconcile` checks every table address found cleared and not yet
  * checked. ⛔ The arming window still holds: a clear refused there (a tape's declaration the player never earned)
- * is remembered (`unearned`) and the reconcile does not credit it either — a later LIVE clear of the same slot
- * still checks it.
+ * — and every TABLE address the host's tape declared (`ignoreHostStart`'s `declared`; `botStart` writes them in
+ * one call, so the report slot carries only the last) — is remembered (`unearned`) and the reconcile does not
+ * credit it either. A later LIVE clear of the same slot still checks it.
  */
 
 import { parseSeqPayload } from './seqPayload.js';
@@ -150,10 +151,21 @@ export class SeedlingCheckBinding {
      * by that call and nothing else. (The seq is otherwise stripped and never
      * compared — `parsePendingCheck` — this is its one other use.)
      *
-     * @param {{from:number, to:number}} window  seqs read before / after `botStart`
+     * ⛓ R4b part 2 — `declared` (the tape's `persistence`, `[{level, tag}]`): `botStart` writes every declaration
+     * in ONE call, so `pendingCheck` reports only the last of them and the rest never reach the window test above.
+     * Every declared TABLE address not already checked is marked `unearned`, so the reconcile (which reads the
+     * game's whole cleared table) cannot credit a declaration either. A later live clear of it still checks.
+     *
+     * @param {{from:number, to:number, declared?: Array<{level:number, tag:number}>}} window  seqs read before /
+     *   after `botStart`, and the addresses the tape declared
      */
-    ignoreHostStart({ from, to } = {}) {
+    ignoreHostStart({ from, to, declared = [] } = {}) {
         if (!Number.isInteger(from) || !Number.isInteger(to) || to <= from) return false;
+        for (const d of Array.isArray(declared) ? declared : []) {
+            const key = this.placementKey(Number(d?.level), Number(d?.tag));
+            const entry = this.table.get(key);
+            if (entry && !this.checked.has(entry.location)) this.unearned.add(key);
+        }
         this.hostStarts.push({ from, to });
         if (this.hostStarts.length > 32) this.hostStarts.shift();
         return true;
