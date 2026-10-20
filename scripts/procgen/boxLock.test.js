@@ -482,6 +482,7 @@ describe('who takes the box', () => {
          * and fidelity WAND the wand-shot / MagicalLock witness, `probe-seedling-wand-mobiles.mjs`;
          * RULES l37-fallrock-patch the delivered set's open L37 ↔ L38 corridor, `probe-seedling-l37-fallrock.mjs`;
          * RULES rock-remove the delivered set's open L74 / L39 / L29 rock rooms, `probe-seedling-rock-remove.mjs`;
+         * RULES l32-rock-move the delivered set's moved L32 Bob-arena rock (walk-out without Fire, the pit with it), `probe-seedling-l32-rock-move.mjs`;
          * fidelity BOMBPUSHER the lobber/Bomb witness, `probe-seedling-bombpusher.mjs` (its `--reuse` arm runs no browser);
          * fidelity BOMBBLAST the blast-on-a-body witness, `probe-seedling-bomb-blast-body.mjs` (its `--reuse` arm, likewise);
          * ci-skip-rules RULE 3 the full-tier differential, `check-seedling-bot-differential.mjs`, whose
@@ -514,7 +515,7 @@ describe('who takes the box', () => {
             'probe-seedling-restart-route.mjs', 'probe-seedling-restart-held-items.mjs', 'probe-seedling-arrival-escape.mjs',
             'probe-seedling-obstacle-events.mjs', 'probe-seedling-lethal-landings.mjs', 'probe-seedling-tentacle-mouth.mjs', 'probe-seedling-loop-restart.mjs', 'probe-seedling-bosslock-latch.mjs', 'probe-seedling-persistence-rebuild.mjs', 'probe-seedling-killlock.mjs', 'probe-seedling-iceturret-spear.mjs', 'probe-seedling-cleartag.mjs', 'probe-seedling-ladder2-phase.mjs', 'probe-seedling-bobsoldier-mobiles.mjs', 'probe-seedling-wallflyer-mobiles.mjs', 'probe-seedling-darktrap-mobiles.mjs', 'probe-seedling-chaser-mobiles.mjs', 'probe-seedling-static-sword-mobiles.mjs', 'probe-seedling-cross-room-button.mjs',
             'probe-seedling-encounter-ticks.mjs',
-            'probe-seedling-wand-mobiles.mjs', 'probe-seedling-l37-fallrock.mjs', 'probe-seedling-rock-remove.mjs',
+            'probe-seedling-wand-mobiles.mjs', 'probe-seedling-l37-fallrock.mjs', 'probe-seedling-rock-remove.mjs', 'probe-seedling-l32-rock-move.mjs',
             'probe-seedling-bombpusher.mjs', 'probe-seedling-staged-hits.mjs', 'probe-seedling-seal-delivery.mjs',
             'probe-seedling-bomb-blast-body.mjs',
             'check-seedling-bot-differential.mjs',

@@ -1,0 +1,64 @@
+{
+ "tape": "fire-pit",
+ "arm": "delivered",
+ "set_id": "seedling-vanilla-record-f5bdb07d",
+ "mounted": "seedling-vanilla-record-f5bdb07d",
+ "observations": 1057,
+ "transitions": [
+  {
+   "t": 976,
+   "from": 32,
+   "to": 30,
+   "at": {
+    "x": 232,
+    "y": 5
+   }
+  }
+ ],
+ "out": {
+  "t": 976,
+  "from": 32,
+  "to": 30,
+  "at": {
+   "x": 232,
+   "y": 5
+  }
+ },
+ "byStairs": false,
+ "clears": [
+  "10,0",
+  "32,0",
+  "32,1",
+  "32,3",
+  "32,4",
+  "5,0",
+  "8,0",
+  "8,1"
+ ],
+ "final": {
+  "t": 1056,
+  "x": 232,
+  "y": 88,
+  "level": 30
+ },
+ "model": {
+  "refused": null,
+  "transitions": [
+   {
+    "t": 971,
+    "from": 32,
+    "to": 30,
+    "at": {
+     "x": 248,
+     "y": 5
+    }
+   }
+  ],
+  "final": {
+   "t": 1056,
+   "x": 248,
+   "y": 88,
+   "level": 30
+  }
+ }
+}

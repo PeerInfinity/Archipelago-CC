@@ -1,0 +1,35 @@
+{
+ "tape": "walkout",
+ "arm": "control",
+ "set_id": "seedling-vanilla-record-ce77a823",
+ "mounted": "seedling-vanilla-record-ce77a823",
+ "observations": 981,
+ "transitions": [],
+ "out": null,
+ "byStairs": false,
+ "clears": [
+  "10,0",
+  "32,1",
+  "32,3",
+  "32,4",
+  "5,0",
+  "8,0",
+  "8,1"
+ ],
+ "final": {
+  "t": 980,
+  "x": 80,
+  "y": 124.99999999999999,
+  "level": 32
+ },
+ "model": {
+  "refused": null,
+  "transitions": [],
+  "final": {
+   "t": 980,
+   "x": 80,
+   "y": 124.99999999999999,
+   "level": 32
+  }
+ }
+}
