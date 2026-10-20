@@ -1,6 +1,11 @@
 // frontend/modules/timer/timerUI.js
 import { Config } from '../client/core/config.js'; // For default timer interval
 import { stateManagerProxySingleton } from '../stateManager/index.js'; // ADDED
+import {
+  computeLocationProgress,
+  formatLocationProgress,
+  describeLocationProgress,
+} from '../commonUI/checksLine.js';
 
 
 // Helper function for logging with fallback
@@ -291,65 +296,9 @@ export class TimerUI {
       snapshot || stateManagerProxySingleton.getLatestStateSnapshot();
     const staticData = stateManagerProxySingleton.getStaticData();
 
-    if (
-      !currentSnapshot ||
-      !staticData ||
-      !staticData.locations
-    ) {
-      this.checksCounter.textContent = 'Checked: ?/?, Reachable: ?, Unreachable: ?, Events: ?/?';
-      this.checksCounter.title = 'Location or snapshot data not yet available.';
-      return;
-    }
-
-    const allLocationDefinitions = staticData.locations; // This is a Map 
-    const checkedLocations = new Set(currentSnapshot.checkedLocations || []);
-
-    // Initialize counters
-    let checkedCount = 0;
-    let reachableCount = 0;
-    let unreachableCount = 0;
-    let totalCount = 0;
-
-    // Event locations (locations with no ID)
-    let checkedEventCount = 0;
-    let totalEventCount = 0;
-
-    // Process each location
-    // allLocationDefinitions is always a Map after initialization
-    for (const [locName, loc] of allLocationDefinitions.entries()) {
-      // Determine if this is an event location (no ID)
-      const isEventLocation = loc.id === null || loc.id === undefined;
-
-      // Process event locations separately
-      if (isEventLocation) {
-        totalEventCount++;
-        if (checkedLocations.has(locName)) {
-          checkedEventCount++;
-        }
-      } else {
-        // Regular locations
-        totalCount++;
-
-        // Track checked locations
-        if (checkedLocations.has(locName)) {
-          checkedCount++;
-        } else {
-          // For unchecked locations, determine if they are reachable
-          const reachability = currentSnapshot.locationReachability && currentSnapshot.locationReachability[locName];
-          if (reachability === 'reachable') {
-            reachableCount++;
-          } else {
-            unreachableCount++;
-          }
-        }
-      }
-    }
-
-    // Format the display text like the old version
-    const displayText = `Checked: ${checkedCount}/${totalCount}, Reachable: ${reachableCount}, Unreachable: ${unreachableCount}, Events: ${checkedEventCount}/${totalEventCount}`;
-    
-    this.checksCounter.textContent = displayText;
-    this.checksCounter.title = `Checked ${checkedCount} of ${totalCount} locations (${reachableCount} reachable, ${unreachableCount} unreachable)\nEvents: ${checkedEventCount} of ${totalEventCount} event locations collected`;
+    const counts = computeLocationProgress(currentSnapshot, staticData);
+    this.checksCounter.textContent = formatLocationProgress(counts);
+    this.checksCounter.title = describeLocationProgress(counts);
   }
 
   setControlButtonState(isStarted) {
