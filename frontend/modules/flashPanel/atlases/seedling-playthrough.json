@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-0c2152f7",
+  "atlas_id": "seedling-832cd44f",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "0c2152f7" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "832cd44f" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -5661,10 +5661,10 @@
       "substrate": "flash_seedling",
       "exits": [
         {
-          "exit_id": "in_pit_L70_3_7",
+          "exit_id": "in_pit_L70_3_8",
           "kind": "teleporter",
-          "exit_tiles": [[3,7]],
-          "entrance_tile": [3,7]
+          "exit_tiles": [[3,8]],
+          "entrance_tile": [3,8]
         },
         {
           "exit_id": "out_lightbosscontroller_72_72",
@@ -5718,7 +5718,7 @@
           "entrance_tile": [2,4]
         },
         {
-          "exit_id": "out_pit_3_7",
+          "exit_id": "out_pit_3_8",
           "kind": "teleporter",
           "exit_tiles": [[2,2]],
           "entrance_tile": [2,2],
@@ -9450,7 +9450,7 @@
         "to": ["level_66","in_L70_32_64"],
         "one_way": true
       },
-      { "from": ["level_70","out_pit_3_7"], "to": ["level_69","in_pit_L70_3_7"], "one_way": true },
+      { "from": ["level_70","out_pit_3_8"], "to": ["level_69","in_pit_L70_3_8"], "one_way": true },
       {
         "from": ["level_71","out_teleporter_16_304"],
         "to": ["level_85","in_L71_16_304"],

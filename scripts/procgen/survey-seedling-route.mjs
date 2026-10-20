@@ -692,6 +692,7 @@ function throughPickupGoal(level, pickup, crossing) {
     if (row.kind === 'encounter') {
         return encounterGoal(level, pickup, crossing?.kind === 'pit' ? 'reach-pit' : null);
     }
+    if (row.kind === 'boss') return bossGoal(level, pickup, row, entity, crossing);
     return {
         kind: 'collect-placement',
         placement: { x: entity.x, y: entity.y },
@@ -719,6 +720,47 @@ function encounterGoal(level, pickup, then) {
         drop: { item: pickup.item },
         then,
         why: `${pickup.location} (sphere ${pickup.sphere}) → ${pickup.item}`,
+        location: pickup.location,
+    };
+}
+/**
+ * ⛓⛓ rules-r4b-followup — **A BOSS ROW'S GOAL IS ITS FIGHT'S REPORT** at the ledger row's `address` (R4b: every
+ * boss kill clears its `(level, tag)`, the one mechanism every check uses). Handed as a `collect-placement` of the
+ * body's tile it resolved to NOTHING (L19 Shieldspire, L32 Times, L57 Tentacled Beast in the 7.3 survey). The
+ * solver serves a kill in exactly two ways, and the goal is whichever the room has, read off the solver's own
+ * tables (never a per-boss list):
+ *   · the room holds an ENCOUNTER row (L32: Bob's fight is the encounter's) → that encounter's goal. Its executor
+ *     fights to the kill's report and finishes on the slots (`execBobBossEncounter` under `apReportBosses`), so a
+ *     kill the fight already reported in this visit is `already` there, not a second fight;
+ *   · the body is a SOLID whose strategy row names a registered verb (`OBSTACLE_STRATEGIES['solid:shieldboss']`
+ *     = `fight`) → `clear-tag` on the address, finished on the run's `earnedClears` like every obstacle's flag.
+ * ⛔ Anything else is a `skip` BY NAME: no executor fights it yet (fidelity owns the model). It is never handed to
+ * the solver as a `clear-tag`, whose `already-clear` arm reads a body missing from `world.solids` as cleared.
+ */
+const SOLVER = THROUGH !== null ? await import(join(MODULE, 'solverBot.js')) : null;
+function bossGoal(level, pickup, row, entity, crossing) {
+    const why = `${pickup.location} (sphere ${pickup.sphere}) → ${pickup.item}`;
+    if (LEDGER.R7_GOAL_LEDGER.some((r) => r.kind === 'encounter' && r.level === level)) {
+        return { ...encounterGoal(level, pickup, crossing?.kind === 'pit' ? 'reach-pit' : null), report: { ...row.address } };
+    }
+    const verb = SOLVER.OBSTACLE_STRATEGIES[`solid:${entity.type}`] ?? null;
+    if (verb && SOLVER.STRATEGY_EXECUTORS[verb]) {
+        return {
+            kind: 'clear-tag',
+            tag: { level: row.address.level, tag: row.address.tag },
+            at: { x: entity.x, y: entity.y },
+            obstacle: `${entity.type}@${entity.x},${entity.y}`,
+            report: { ...row.address },
+            why: `${why} — the kill's report {${row.address.level},${row.address.tag}} (\`${verb}\`)`,
+            location: pickup.location,
+        };
+    }
+    return {
+        kind: 'skip',
+        report: { ...row.address },
+        why: `${why} — no solver executor fights ${entity.type}@${entity.x},${entity.y} (no encounter row in L${level}, `
+            + `${verb ? `\`${verb}\` is not a registered verb` : `no strategy row for solid:${entity.type}`}); its report `
+            + `{${row.address.level},${row.address.tag}} is not walked`,
         location: pickup.location,
     };
 }
@@ -890,13 +932,16 @@ function buildSteps(visits, legs, id) {
         } else if (crossing) {
             edge = crossing.edge;
         }
+        // ⛓ rules-r4b-followup: the onward hop is the visit's LAST errand's. Handed to every pickup, L32's Bob
+        //   encounter took `then: 'reach-pit'` with Times still to report, fell, and asked for Times in L30.
+        const lastPickup = pickupsHere.at(-1);
         for (const pickupHere of pickupsHere) {
             if (pickupHere.event) {
                 // ⛓ RULES obstacle-events: BREAK the obstacle the next row's walk needs (its flag is the
                 //   game's; the solver owns HOW — a goal kind it does not have yet refuses by name).
                 goals.push(clearTagGoal(pickupHere.event));
             } else if (THROUGH) {
-                goals.push(throughPickupGoal(v.level, pickupHere, next ? edge : undefined));
+                goals.push(throughPickupGoal(v.level, pickupHere, next && pickupHere === lastPickup ? edge : undefined));
             } else {
                 goals.push({
                     kind: 'collect-placement',
@@ -1183,12 +1228,22 @@ async function solveOneStep(step) {
     // ⛓ S2 D5: a step the route reaches through a hop the atlas has no `to`
     //   entity for has no boot to stage, and a step whose only goal was such a
     //   hop has nothing to solve — each is its own verdict, quoted, not a solve.
-    if (step.arrival === null || (step.crossingRefusal && step.goals.length === 0)) {
+    // ⛓ rules-r4b-followup: a `skip` (a boss no executor fights) is never a solver goal; it rides on the row.
+    const skipped = step.goals.filter((g) => g.kind === 'skip').map((g) => ({ location: g.location, why: g.why }));
+    const solvable = step.goals.filter((g) => g.kind !== 'skip');
+    if (step.arrival === null || (step.crossingRefusal && solvable.length === 0)) {
         return {
             step: step.step, level: step.level, boot: bootFor(step), goals: step.goals, views: {},
             clock: null, verdict: step.arrival === null ? 'NO-ARRIVAL' : 'NO-EDGE',
             refusal: step.arrival === null ? step.arrivalRefusal : step.crossingRefusal,
-            ticks: null, ms: 0, knownAnswer: null,
+            ticks: null, ms: 0, knownAnswer: null, ...(skipped.length ? { skipped } : {}),
+        };
+    }
+    if (solvable.length === 0) {
+        return {
+            step: step.step, level: step.level, boot: bootFor(step), goals: step.goals, views: {},
+            clock: null, verdict: 'SKIPPED', refusal: skipped.map((k) => k.why).join('; '),
+            ticks: null, ms: 0, knownAnswer: null, skipped,
         };
     }
     const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
@@ -1320,7 +1375,7 @@ async function solveOneStep(step) {
     const known = KNOWN_ANSWERS.get(bootKey(step.level, step.arrival.x, step.arrival.y)) ?? null;
     // ⛓ SWIM T3 D3: a `reach-pit` goal is handed to the solver AS IS — it is
     // not a kind the solver owns, and its refusal saying so is the measurement.
-    const goals = step.goals.map((g) => (g.kind === 'reach-pit'
+    const goals = solvable.map((g) => (g.kind === 'reach-pit'
         ? { kind: 'reach-pit', pit: { ...g.pit } }
         : g.kind === 'encounter'
         ? { kind: 'encounter', at: { ...g.at }, drop: { ...g.drop }, then: g.then }
@@ -1494,6 +1549,7 @@ async function solveOneStep(step) {
         },
         withCommittedDeclarations: withCommitted,
         goals: step.goals,
+        ...(skipped.length ? { skipped } : {}),
         views,
         clock,
         verdict,

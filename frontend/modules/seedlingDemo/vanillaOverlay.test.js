@@ -290,7 +290,8 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         // ⛓ R4b (rules-boss-locations): 12,077 -> 15,730 B — the seven boss locations (each with its kill guard)
         //   and the L69 arena's two door rules (L70's pit in, the Lights' exit out) lift.
         expect(Buffer.byteLength(committed, 'utf8')).toBe(15730);
-        expect(JSON.parse(committed).overlay_id).toBe('seedling-vanilla-overlay-66b277a9');
+        // ⛓ rules-r4b-followup: the bytes hold (out_pit_3_7 -> out_pit_3_8, the same length); the id moves.
+        expect(JSON.parse(committed).overlay_id).toBe('seedling-vanilla-overlay-ce861fd8');
         // ⛔ AND THE SUFFIXES ARE GONE — the artifact, not the producer.
         expect(committed).not.toMatch(/Chest \(L\d/);
     });
@@ -369,8 +370,10 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         //   pit, the Lights' exit), and the BossTotem crossing priced on the Wand. The names gain the seven.
         // ⛓ rules-l32-rock-move (f3b3365a… -> 85e0ef9e): the delivered set moves Bob's rock (64,128) -> (88,128), and
         //   L32's two locations (Bob Boss, Times) stand on it: tile [4,8] -> [5,8]. No name, rule or exit moves.
+        // ⛓ rules-r4b-followup (85e0ef9e… -> bdcc2651): a pit lands from the pit tile's CENTRE (`Tile.as:103`), so
+        //   L70's pit exit is out_pit_3_8 -> in_pit_L70_3_8 (it was (3,7)). No name, rule or location moves.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('85e0ef9e81b54edfa2a355b9dcc0a7fd');
+            .toBe('bdcc265196e7d72b8dd3a828ff15f1f1');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
@@ -453,7 +456,7 @@ describe('⛓⛓ E5 — the REPORT over vanilla + the lifted overlay', () => {
                 'level_24 out_teleporter_32_144', 'level_24 out_teleporter_48_144',
                 'level_32 out_pit_14_5', 'level_32 out_pit_15_5', 'level_34 out_teleporter_128_0',
                 'level_56 out_pit_6_10', 'level_57 out_tentaclebeast_80_48',
-                'level_69 out_lightbosscontroller_72_72', 'level_70 out_pit_3_7',
+                'level_69 out_lightbosscontroller_72_72', 'level_70 out_pit_3_8',
                 'level_82 out_teleporter_144_0', 'level_96 out_teleporter_32_64', 'level_98 out_stairsup_112_112'].sort());
         // …and the ten locations that are NOT free are the ten the
         //   playthrough guards (⛓ R4b: the three, + the seven boss kills).
