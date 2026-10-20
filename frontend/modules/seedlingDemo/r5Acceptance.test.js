@@ -301,7 +301,7 @@ describe('the BobBoss pair — the sword finishes the fight, and the game REPORT
 
     it('⛔ goes red when the GAME granted Fire — a pre-R4 build, whose reports the host cannot bind', () => {
         expect(failing(bobBossFindings(bossPair({ hasFire: true }))))
-            .toContain('R5 BobBoss: the game GRANTED nothing — `hasFire` is the host\'s');
+            .toContain('R5 BobBoss: the game GRANTED nothing — Fire is an ordinary received item');
     });
 
     it('goes red when the SWORDLESS arm somehow killed the boss', () => {

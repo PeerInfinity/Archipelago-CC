@@ -418,8 +418,9 @@ export function keyLegFindings(replayed) {
  *
  * ⛓ R7 (the p4g rebuild, R4 AS3 `r4-boss-report`): THAT WAS f8d9bc1. The
  * kill now REPORTS `Times` ({32,3}), the drop is `Fire(…, BOSS_DROP_TAG = 4)`
- * whose collect reports `Fire` ({32,4}), and the game grants NOTHING — the
- * host grants Fire. So the fire arm's ledger is {32,1} {32,3} {32,4}, no
+ * whose collect reports `Fire` ({32,4}): plain location reports, and the
+ * game grants NOTHING (Fire is an ordinary received item, ⚖ the user
+ * 2026-10-20). So the fire arm's ledger is {32,1} {32,3} {32,4}, no
  * {31,29}, and `hasFire` stays false. The pair is the same; what it proves
  * is now "the sword finished the fight and the reports landed".
  *
@@ -485,13 +486,13 @@ export function bobBossFindings(replayed) {
                 + 'so a partial fight respawns form 0 on the next entry.',
     });
     found.push({
-        name: 'R5 BobBoss: the game GRANTED nothing — `hasFire` is the host\'s',
+        name: 'R5 BobBoss: the game GRANTED nothing — Fire is an ordinary received item',
         ok: fire.status?.items?.hasFire === false,
         detail: fire.status?.items?.hasFire === false
             ? 'hasFire=false after the collect: `Fire.removed()` is `setPersistence(tag, false)` alone on '
-                + 'the R4 AS3, and no host grant is driven here'
+                + 'the R4 AS3; {32,3}/{32,4} are plain location reports, and no item is received here'
             : 'hasFire is TRUE — the build still grants Fire itself (a pre-R4 build?), so its reports '
-                + 'are not the location checks the host binds',
+                + 'are not plain location checks',
     });
     found.push({
         name: 'R5 BobBoss: the CONTROL arm did not',

@@ -326,7 +326,8 @@ describe('4 · PERSISTENCE — a live arrival after a death in L32 ({32,1} clear
         const request = arrivalSolveRequest({ staging, solverGoal: mapped.goal, levelSource: src, records });
         const result = createInPlaceSolveService().start(request).result;
         // ⛓ fidelity APFLIP D6 (`apReportBosses` ON at the R7 merge): the staging and the fallen rock are as before,
-        // but R4's Fire drop grants NOTHING (the HOST grants it, APBOSSES H1). ⛓ R7: so `solverGoalFor` ends an
+        // but R4's Fire drop grants NOTHING ({32,4} is a plain location report; Fire is an ordinary received item).
+        // ⛓ R7: so `solverGoalFor` ends an
         // arena encounter at the drop and its report under the switch (`then: null`, as the campaign's `r9-solve-32`
         // and `enc-l32-*` tapes do) — it used to ask for `reach-pit` and was refused BY NAME at the burn.
         expect(mapped.goal.then).toBe(null);

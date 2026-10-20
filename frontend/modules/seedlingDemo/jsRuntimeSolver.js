@@ -503,10 +503,11 @@ export function solverGoalFor(goal, { run, resolved, placement = null }) {
         // `then` is read off the room. With `apReportBosses` OFF, an ARENA (a `fallthrough` room whose boss rock
         // seals the door behind the player — `levelWorld.arenaRockOf`, the row's `thirdBoss`) asks the encounter
         // for its own 'reach-pit' (L32: the burn with the Fire the drop granted, then the pit to L30).
-        // ⛓ R7 (the p4g rebuild + the L32 rock move): with `apReportBosses` ON the Fire drop grants NOTHING (it
-        // REPORTS {32,4}; the HOST grants the item), and the moved rock no longer seals the stairs — the arena is
-        // NOT "left only by its pit" any more. So the encounter ends at the drop and its report (null), and the
-        // route's NEXT goal leaves the room: the stairs, or the pit once the host has granted Fire. (The same
+        // ⛓ R7 (the p4g rebuild + the L32 rock move): with `apReportBosses` ON the kill {32,3} and the Fire drop
+        // {32,4} are plain location REPORTS (the drop grants nothing; Fire is an ordinary received item), and the
+        // moved rock no longer seals the stairs — the arena is NOT "left only by its pit" any more. So the encounter
+        // ends at the drop and its report (null), and the route's NEXT goal leaves the room: the stairs, or the pit
+        // when the run already holds Fire. (⚖ the user 2026-10-20: no special case for granting Fire.) (The same
         // terminal rule as `survey-seedling-route.mjs`'s encounter, rules-l32-rock-move e068041a27.)
         // Any other room is left by the route's NEXT goal (null) — ⚠ a `fallthrough` alone is not enough: L12 has
         // a control block too, and the Witch's room is left by a door (the survey's step 140 got null from its
