@@ -98,7 +98,10 @@ export function deriveStagedGrant({ earlier, pickups, game, latchItems, unpresen
     };
     for (const s of earlier) {
         for (const g of s.goals) {
-            const drop = g.kind === 'encounter' && g.location;
+            // ⛓ rules-r4b-followup: a BOSS row's goal (`report`: its address) is a check like any other, whichever
+            //   kind serves it (`encounter`, `clear-tag`, or a `skip` no executor fights) — the same credit as before,
+            //   when it was a `collect-placement`. An event's `clear-tag` carries no `report` and grants nothing.
+            const drop = (g.kind === 'encounter' || g.report) && g.location;
             if (g.kind !== 'collect-placement' && !drop) continue;
             const pick = g.location
                 ? pickups.find((p) => p.location === g.location)
