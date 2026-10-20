@@ -26,6 +26,8 @@ import { registerTest } from '../testRegistry.js';
 import settingsManager from '../../../app/core/settingsManager.js';
 import { getActivePanelInstance, getSeedlingPlayClock, getSeedlingRegionGlue } from '../../flashPanel/index.js';
 import { PLAY_CLOCK_EVENT } from '../../flashPanel/seedlingPlayClock.js';
+import { cachesText, churnText } from '../../flashPanel/seedlingSolveProgress.js';
+import { DANGER_COLOUR } from '../../flashPanel/seedlingSolveProgressView.js';
 import { getGameStateSingleton } from '../../gameState/singleton.js';
 import { getActivePanel as getBotPanel } from '../../playbackBot/index.js';
 import { getSphereStateSingleton } from '../../sphereState/singleton.js';
@@ -1025,6 +1027,24 @@ export async function seedlingJsRuntimeSolveProgressView(tc) {
             + `marked one, ${view.stats.marksDrawn} marks redraw(s)`);
         tc.assertEqual('the final frame is null: no marks, an empty frame line (frame view)', true,
             final.frame === null && view.marks === null && (view.frameLine?.textContent ?? '') === '');
+        // ⛓ CACHES VIEW — hammer-phase PR's `caches` and `churn` on the real solve, drawn at the end of the meter: each
+        // line is the model's text of the final snapshot (the counts are pinned per level in solveProgress.test.js),
+        // and a closed segment closed every frame it opened (`open 0`)
+        tc.log(`caches view: ${view.cachesText?.textContent ?? '(no line)'} | ${view.churnText?.textContent ?? '(no line)'}`);
+        tc.assertEqual('the final snapshot carries `caches` and `churn` (hammer-phase PR)', true,
+            !!final.caches && !!final.churn);
+        tc.assertEqual('the caches line is drawn, last in the meter (caches view)', true,
+            view.meter.lastElementChild === view.cachesBox && view.cachesText.textContent === cachesText(final));
+        tc.assertEqual('the churn line is drawn, the solved segment with no frame left open (caches view)', true,
+            view.churnText.textContent === churnText(final) && / · open 0 · climb moves \d+$/.test(view.churnText.textContent));
+        // a soft-lock refusal in the solve is in the danger colour wherever it is drawn (L6 may have none: logged)
+        const softChips = [...view.tree.querySelectorAll('span')].filter((c) => /^soft-lock \d+$/.test(c.textContent));
+        tc.log(`caches view: ${softChips.length} soft-lock chip(s) on the listed rows`);
+        // the browser normalises a colour it is given, so compare against the danger colour as it normalised it
+        const probe = document.createElement('span');
+        probe.style.color = DANGER_COLOUR;
+        tc.assertEqual('every soft-lock chip is in the danger colour (caches view)', true,
+            softChips.every((c) => c.style.color === probe.style.color));
         if (st.snapshot?.tiles) {
             tc.assertEqual('the tile map is ONE canvas sized to the room', `${st.snapshot.tiles.cols}x${st.snapshot.tiles.rows}`,
                 `${Math.round(view.canvas.width / view._px)}x${Math.round(view.canvas.height / view._px)}`);
@@ -1056,7 +1076,8 @@ registerTest({
     description: 'With flashPanel.runtime = js, the solver mode on and flashPanel.seedlingSolveProgressView = always, on '
         + 'seedling_atlas: the view subscribes to the page\'s worker service before the solve, the L6 enemy-room solve '
         + 'streams its progress, and the view holds the FINAL snapshot (solved), draws its tree, its tile canvas and '
-        + 'its work meter, and its "last update N s ago" advances; `always` does not auto-hide; setting it off unsubscribes.',
+        + 'its work meter and its caches/churn lines, and its "last update N s ago" advances; `always` does not '
+        + 'auto-hide; setting it off unsubscribes.',
     testFunction: seedlingJsRuntimeSolveProgressView,
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
