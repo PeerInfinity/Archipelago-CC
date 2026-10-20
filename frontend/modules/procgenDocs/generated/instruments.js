@@ -5314,7 +5314,8 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
-                "arg"
+                "arg",
+                "porcelain"
             ],
             "browser": false,
             "category": "ci",
@@ -8784,10 +8785,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "write"
             ],
             "file": "plan-seedling-r5-conch.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8811,10 +8819,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "write"
             ],
             "file": "plan-seedling-r5-feather.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9229,9 +9244,18 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check",
+                "write"
+            ],
             "file": "plan-seedling-r6-shieldboss.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"

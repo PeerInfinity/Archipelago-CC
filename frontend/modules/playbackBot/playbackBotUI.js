@@ -953,6 +953,11 @@ export class PlaybackBotUI {
     }
 
     /** The 'reachable' source, and the panel wired a timer. */
+    /** The panel wired a timer: the 'reachable' source is available. */
+    hasTimer() {
+        return !!this._timer;
+    }
+
     _usesTimer() {
         return this._targetSource === TARGET_SOURCES.reachable && !!this._timer;
     }
@@ -1996,6 +2001,7 @@ export class PlaybackBotUI {
                     ? `Sphere log loaded: ${total} entries.`
                     : 'No sphere log loaded.';
             }
+            this._statusEl.title = this._statusEl.textContent;   // the mini view cuts the line short
         }
 
         // Phase 2 — current target line.

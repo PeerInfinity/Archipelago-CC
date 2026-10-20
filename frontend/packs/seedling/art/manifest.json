@@ -443,6 +443,56 @@
       "w": 8,
       "h": 3
     },
+    "WallFlyer": {
+      "file": "sheets/WallFlyer.png",
+      "w": 180,
+      "h": 16
+    },
+    "Drill": {
+      "file": "sheets/Drill.png",
+      "w": 176,
+      "h": 16
+    },
+    "IceTurret": {
+      "file": "sheets/IceTurret.png",
+      "w": 224,
+      "h": 32
+    },
+    "IceBlast": {
+      "file": "sheets/IceBlast.png",
+      "w": 96,
+      "h": 7
+    },
+    "Turret": {
+      "file": "sheets/Turret.png",
+      "w": 144,
+      "h": 16
+    },
+    "TurretSpit": {
+      "file": "sheets/TurretSpit.png",
+      "w": 24,
+      "h": 8
+    },
+    "BobBoss1": {
+      "file": "sheets/BobBoss1.png",
+      "w": 60,
+      "h": 20
+    },
+    "BobBoss2": {
+      "file": "sheets/BobBoss2.png",
+      "w": 60,
+      "h": 20
+    },
+    "BobBoss3": {
+      "file": "sheets/BobBoss3.png",
+      "w": 60,
+      "h": 20
+    },
+    "BobBossWeapons": {
+      "file": "sheets/BobBossWeapons.png",
+      "w": 72,
+      "h": 5
+    },
     "Sword": {
       "file": "sheets/Sword.png",
       "w": 48,
@@ -2104,6 +2154,278 @@
         1.5
       ],
       "as3": "Projectiles/Arrow.as:15-16 Image; :24 centerOO; :32,41 angle = atan2(-v.y, v.x)"
+    },
+    "seedling:enemy/wallflyer": {
+      "sheet": "WallFlyer",
+      "fw": 20,
+      "fh": 16,
+      "frames": 9,
+      "origin": [
+        12,
+        8
+      ],
+      "anims": {
+        "jump": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 15
+        },
+        "jumping": {
+          "clock": "fps",
+          "frames": [
+            3,
+            4
+          ],
+          "fps": 7
+        },
+        "die": {
+          "clock": "fps",
+          "frames": [
+            5,
+            6,
+            7,
+            8
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Enemies/WallFlyer.as:17 Spritemap(20, 16); :29-31 centerOO, x = -12, originX = 12; :32-34 jump fps 15, jumping [3,4] fps 7, die [5..8] fps 10"
+    },
+    "seedling:enemy/drill": {
+      "sheet": "Drill",
+      "fw": 16,
+      "fh": 16,
+      "frames": 11,
+      "origin": [
+        8,
+        8
+      ],
+      "anims": {
+        "drill": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "fps": 20,
+          "loop": false
+        },
+        "undrill": {
+          "clock": "fps",
+          "frames": [
+            3,
+            2,
+            1,
+            0
+          ],
+          "fps": 20,
+          "loop": false
+        },
+        "die": {
+          "clock": "fps",
+          "frames": [
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "fps": 10,
+          "loop": false
+        },
+        "hit": {
+          "clock": "fps",
+          "frames": [
+            3,
+            4
+          ],
+          "fps": 20
+        }
+      },
+      "as3": "Enemies/Drill.as:16 Spritemap(16, 16); :25 centerOO; :26-30 sit [0], drill [0..4] / undrill [3,2,1,0] fps 20 one-shot, die [5..10] fps 10 one-shot, hit [3,4] fps 20"
+    },
+    "seedling:enemy/iceturret": {
+      "sheet": "IceTurret",
+      "fw": 32,
+      "fh": 32,
+      "frames": 7,
+      "origin": [
+        12,
+        16
+      ],
+      "anims": {
+        "startshot": {
+          "clock": "fps",
+          "frames": [
+            0
+          ],
+          "fps": 10
+        },
+        "finishshot": {
+          "clock": "fps",
+          "frames": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Enemies/IceTurret.as:16 Spritemap(32, 32); :34-37 originX 12, originY 16; :39-42 startshot [0] / finishshot [1..5] fps 10, hit [1], dead [6]"
+    },
+    "seedling:projectile/iceblast": {
+      "sheet": "IceBlast",
+      "fw": 16,
+      "fh": 7,
+      "frames": 6,
+      "origin": [
+        8,
+        4
+      ],
+      "as3": "Projectiles/IceTurretBlast.as:15 Spritemap(16, 7); :23-26 x = -8, y = -4, origin (8, 4); :34,44 angle = atan2(-v.y, v.x)"
+    },
+    "seedling:enemy/turret": {
+      "sheet": "Turret",
+      "fw": 16,
+      "fh": 16,
+      "frames": 9,
+      "origin": [
+        8,
+        8
+      ],
+      "anims": {
+        "startshot": {
+          "clock": "fps",
+          "frames": [
+            1,
+            2
+          ],
+          "fps": 10
+        },
+        "finishshot": {
+          "clock": "fps",
+          "frames": [
+            2,
+            1
+          ],
+          "fps": 10
+        },
+        "die": {
+          "clock": "fps",
+          "frames": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Enemies/Turret.as:15 Spritemap(16, 16); :28 centerOO; :30-33 startshot [1,2] / finishshot [2,1] fps 10, hit [0], die [3..8] fps 10"
+    },
+    "seedling:projectile/turretspit": {
+      "sheet": "TurretSpit",
+      "fw": 12,
+      "fh": 8,
+      "frames": 2,
+      "origin": [
+        8,
+        4
+      ],
+      "as3": "Projectiles/TurretSpit.as:17 Spritemap(12, 8); :23-26 x = -8, y = -4, origin (8, 4); :35 angle = atan2(-v.y, v.x)"
+    },
+    "seedling:enemy/bobboss0": {
+      "sheet": "BobBoss1",
+      "fw": 20,
+      "fh": 20,
+      "frames": 3,
+      "origin": [
+        10,
+        10
+      ],
+      "anims": {
+        "walk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Enemies/BobBoss.as:17 imgBobBoss1; :46 Spritemap(20, 20); BobSoldier.as:58-59 centerOO, walk [0,1,2,1] fps 10 (× the form's rate, BobBoss.as:66,72)"
+    },
+    "seedling:enemy/bobboss1": {
+      "sheet": "BobBoss2",
+      "fw": 20,
+      "fh": 20,
+      "frames": 3,
+      "origin": [
+        10,
+        10
+      ],
+      "anims": {
+        "walk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Enemies/BobBoss.as:18 imgBobBoss2; :46 Spritemap(20, 20); BobSoldier.as:58-59 centerOO, walk [0,1,2,1] fps 10 (× the form's rate, BobBoss.as:66,72)"
+    },
+    "seedling:enemy/bobboss2": {
+      "sheet": "BobBoss3",
+      "fw": 20,
+      "fh": 20,
+      "frames": 3,
+      "origin": [
+        10,
+        10
+      ],
+      "anims": {
+        "walk": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Enemies/BobBoss.as:19 imgBobBoss3; :46 Spritemap(20, 20); BobSoldier.as:58-59 centerOO, walk [0,1,2,1] fps 10 (× the form's rate, BobBoss.as:66,72)"
+    },
+    "seedling:enemy/bobbossWeapons": {
+      "sheet": "BobBossWeapons",
+      "fw": 24,
+      "fh": 5,
+      "frames": 3,
+      "origin": [
+        0,
+        3
+      ],
+      "as3": "Enemies/BobBoss.as:22-23 Spritemap(24, 5); :53-55 y = -3, originY = 3, frame = the form; BobSoldier.as:187-198 angle = swordSpin deg"
     },
     "seedling:pickup/sword": {
       "sheet": "Sword",

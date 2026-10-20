@@ -9,7 +9,7 @@ The bot needs a world with a sphere log. Either:
 - generate one in the [Procgen Pipeline](procgenPipeline.md) and press **Load into frontend**, or
 - load a preset that has a sphere log in the [Presets](presets.md) panel.
 
-Until then the panel says **No sphere log loaded.** Once one is loaded, the status line reads *Sphere log loaded: N entries.*
+Until then the panel says **No sphere log loaded.** Once one is loaded, the status line reads *Sphere log loaded: N entries.* Without one, **Check next: Any reachable location** still works (see below), so the bot stays usable under the note.
 
 ## A first run
 
@@ -81,6 +81,10 @@ With **Check next** set to the sphere log, **Walk order** chooses which of its l
 - **Cheapest reachable location** — the cheapest route among every location reachable now, from any sphere.
 
 Both cheapest orders keep the location that holds the goal for last. In a Seedling playthrough, the in-order route returns to the menu five times; **Cheapest reachable location** returns once and changes region about a quarter less often. The line under the target shows the run's counts: restarts, region transitions and legs. Loop mode always follows the sphere order. Changing the walk order stops a running walk, and the panel remembers your choice.
+
+## The mini view
+
+From the [Quick Launch](quickLaunch.md) panel's **Mini panels** section, the bot can shrink into a **mini row** above the middle column: its five buttons and its status line (cut short — hover it for all of it), on one row when the column is wide enough, and **⤢**, which expands it back into the full panel. The run carries on untouched either way. With **Checks** on too, the "Checked: …" line rides in the same row.
 
 ## Without a generated world
 

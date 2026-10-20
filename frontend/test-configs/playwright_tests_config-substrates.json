@@ -519,6 +519,12 @@
             "_comment": "GRAPHICS G3. jsRuntime.html?graphics=seedling&camera=follow mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 14 (six Bobs): each Bob is drawn as seedling:enemy/bob from the seedling pack, every sheet decodes, the Bobs' frames advance (the per-tick reducer is live), zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
         },
         {
+            "id": "seedling-js-runtime-graphics-room-bodies",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "GRAPHICS G3b. jsRuntime.html?graphics=seedling&camera=follow mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 22 (four wallflyers, r2-wallflyer-contact's boot): each is drawn as seedling:enemy/wallflyer from the seedling pack, every sheet decodes, a frame changes (the per-tick reducer is live), zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+        },
+        {
             "id": "seedling-js-runtime-solver-opens-kill-lock",
             "enabled": true,
             "category": "Seedling JS runtime",
@@ -1941,6 +1947,24 @@
             "enabled": true,
             "category": "Playback Bot",
             "_comment": "jta-loop-mode (2026-10-12): a three-zone JtA-only world starting in a JtA zone (the procgen-loop-mode-jta tutorial's shape)."
+        },
+        {
+            "id": "mini-panels-checks-then-bot-then-expand",
+            "enabled": true,
+            "category": "Mini Panels",
+            "_comment": "Mini panels (2026-10-20): the mini row above the middle column (modules/miniPanels) and its Quick Launch section. Here, not the regression roster: test-regression loads modules-nograph.json, which has no Playback Bot or Tutorial. Category Mini Panels is claimed by no batch, so it runs in fast (on push). Each row sets its own state (all wishes off, locked) and puts it back."
+        },
+        {
+            "id": "mini-panels-locked-and-draggable",
+            "enabled": true,
+            "category": "Mini Panels",
+            "_comment": "Mini panels (2026-10-20): the mini row above the middle column (modules/miniPanels) and its Quick Launch section. Here, not the regression roster: test-regression loads modules-nograph.json, which has no Playback Bot or Tutorial. Category Mini Panels is claimed by no batch, so it runs in fast (on push). Each row sets its own state (all wishes off, locked) and puts it back."
+        },
+        {
+            "id": "mini-panels-quick-launch-section",
+            "enabled": true,
+            "category": "Mini Panels",
+            "_comment": "Mini panels (2026-10-20): the mini row above the middle column (modules/miniPanels) and its Quick Launch section. Here, not the regression roster: test-regression loads modules-nograph.json, which has no Playback Bot or Tutorial. Category Mini Panels is claimed by no batch, so it runs in fast (on push). Each row sets its own state (all wishes off, locked) and puts it back."
         }
     ]
 }

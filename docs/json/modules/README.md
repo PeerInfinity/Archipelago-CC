@@ -23,6 +23,7 @@ Modules marked *(disabled)* are present in the codebase but not enabled in the d
 - [Helpers](./helpers.md)
 - [Game State Panel](./gameStatePanel.md)
 - [Spoiler Checklist](./spoilerChecklist.md)
+- [Checks](../user/modules/checksPanel.md) (`checksPanel`) *(disabled)* — the "Checked: …, Reachable: …, Events: …" line as a panel of its own, for the mini row; the line is `commonUI/checksLine.js`, which the Console shows too. Code: `frontend/modules/checksPanel/`.
 
 ## Game Mode Panels
 
@@ -52,7 +53,8 @@ Modules marked *(disabled)* are present in the codebase but not enabled in the d
 - [Settings](./settings.md)
 - **Options Panel** (`optionsPanel`) — general application settings and preferences, including the auto-generated All Settings view.
 - [Modules](./modules.md)
-- [Quick Launch](../user/modules/quickLaunch.md) (`quickLaunch`) — a button per registered panel (opens it, or brings it forward) and a link per user guide; its catalog is read off the live registry and each module's own `moduleInfo` (`docs` = its guide). Code: `frontend/modules/quickLaunch/`.
+- [Quick Launch](../user/modules/quickLaunch.md) (`quickLaunch`) — a button per registered panel (opens it, or brings it forward) and a link per user guide; its catalog is read off the live registry and each module's own `moduleInfo` (`docs` = its guide). Its first section switches the mini panels. Code: `frontend/modules/quickLaunch/`.
+- **Mini Panels** (`miniPanels`, no panel) — the mini row above the middle column: moves a panel (the same instance) into a stack of its own there and shows its mini view, fits each mini stack to its content, locked (headerless) or draggable, and remembers the choices. Its switches are the Quick Launch panel's Mini panels section. Code: `frontend/modules/miniPanels/` (`miniRow.js` = the layout moves).
 - [Tutorial](../user/modules/tutorials.md) (`tutorials`) — step-by-step tutorials shown one step at a time and performed on request (Do it / Play), with an animated cursor and an outline on the next control; starting one splits the panel's column, Merge restores it. The tutorials are data (`content/`), and the user guides they replace are generated from it (`scripts/tutorials/generate-tutorial-docs.mjs`). Code: `frontend/modules/tutorials/`.
 - [Editor CodeMirror6](./editorCodeMirror6.md)
 - [Editor](./editor.md) *(disabled)*
