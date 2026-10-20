@@ -69,7 +69,7 @@ export class EventBus {
       
       // 3. Check against known core module names that might not have components
       const knownModuleNames = [
-        'stateManager', 'modules', 'events', 'client', 'timer', 'timerPanel', 'inventory', 'editor', 'settings',
+        'stateManager', 'modules', 'events', 'client', 'timer', 'inventory', 'editor', 'settings',
         'commonUI', 'locations', 'exits', 'regions', 'loops', 'tests', 'json', 'pathAnalyzer',
         'pathAnalyzerPanel', 'discovery', 'presets', 'testCases', 'dungeons', 'helpers',
         'iframePanel', 'panelManager', 'messageHandler',

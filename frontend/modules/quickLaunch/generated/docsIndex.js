@@ -327,13 +327,7 @@ export const DOCS_INDEX = Object.freeze([
         "path": "docs/json/developer/modules/timer.md",
         "title": "timer",
         "section": "developer/modules",
-        "summary": "- ID: timer - Purpose: Manages the logic and UI for the automated location checking timer. This module encapsulates the \"Begin\" / \"Stop\" functionality, the progress bar, and the \"Quick Check\"…"
-    },
-    {
-        "path": "docs/json/developer/modules/timerPanel.md",
-        "title": "timerPanel",
-        "section": "developer/modules",
-        "summary": "- ID: timerPanel - Purpose: A simple, dedicated Golden Layout panel whose sole purpose is to act as a potential \"host\" for the Timer module's UI. It allows the user to place the timer and its…"
+        "summary": "- ID: timer - Purpose: The location-check timer: on a (random, configurable) delay it checks the locations that are reachable now, until nothing new is. It is headless — it has no UI of its own. The…"
     },
     {
         "path": "docs/json/developer/modules/vibeCodingSim.md",
@@ -984,12 +978,6 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The Text Adventure panel provides a classic text-based interface for navigating the game world. Type commands or click interactive links to move between regions, search locations, and manage your…"
     },
     {
-        "path": "docs/json/user/modules/timerPanel.md",
-        "title": "Timer Panel",
-        "section": "user/modules",
-        "summary": "The Timer panel is a dedicated space for the automated location-checking timer. It acts as a host container — the timer UI itself is created by the Timer service module and attached here."
-    },
-    {
         "path": "docs/json/user/modules/tutorials.md",
         "title": "Tutorial Panel",
         "section": "user/modules",
@@ -1206,7 +1194,6 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/modules/substrateRegistry.md",
             "docs/json/user/modules/swfRecompilerPanel.md",
             "docs/json/user/modules/textAdventure.md",
-            "docs/json/user/modules/timerPanel.md",
             "docs/json/user/modules/tutorials.md",
             "docs/json/user/modules/windowManagerPanel.md",
             "docs/json/user/modules/windowPanel.md"
@@ -1489,7 +1476,6 @@ export const HELP_SECTIONS = Object.freeze([
                 "heading": true,
                 "docs": [
                     "docs/json/developer/modules/discoveryPanel.md",
-                    "docs/json/developer/modules/timerPanel.md",
                     "docs/json/developer/modules/metaGamePanel.md"
                 ],
                 "single": false

@@ -21,7 +21,7 @@
  *                                    report), then `if (checkPersistence(Fire.BOSS_DROP_TAG)) add(new Fire(72, 72,
  *                                    BOSS_DROP_TAG))`. (f8d9bc1 :194 was `add(new Fire(…, -1))`, unconditional.)
  *   `Pickups/Fire.as:21, 49-55`      BOSS_DROP_TAG = 4; `removed()` is `setPersistence(tag, false)` alone — no
- *                                    `Player.hasFire = true` (f8d9bc1 :46). The HOST grants the item.
+ *                                    `Player.hasFire = true` (f8d9bc1 :46). The slot's item is an ordinary AP item.
  *   `Scenery/FallRockLarge.as:116-127` the `cameraTimer == 0` arm: the boss (and the `playerPosition` write) only while
  *                                    KILLED_TAG holds; else the Fire drop while BOSS_DROP_TAG holds; else NOTHING.
  *   `NPCs/Witch.as:46-55`            `doneTalking`: `if (Main.hasWand && checkPersistence(DarkSword.WITCH_TAG))` —
@@ -124,7 +124,7 @@ export function witchGrantsReport(inventory, { slotHeld }) {
 }
 
 /**
- * The `removed()` of the two R4 pickups @0eda15f785: NO item (the host grants it, as for `APItem`) and the pickup's
+ * The `removed()` of the two R4 pickups @0eda15f785: NO item (the slot's item is received from the server, as for `APItem`) and the pickup's
  * own slot cleared — `Fire` unconditionally (`Fire.as:49-55`), `DarkSword` behind `checkPersistence(tag)`
  * (`DarkSword.as:49-57`), which the caller's `held` answers.
  *

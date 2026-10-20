@@ -82,8 +82,8 @@
  * A build declaring `bossreport` (p4g on; R4 AS3 `r4-boss-report`) REPORTS each
  * at a FIXED address, the ledger row's own `address` — the same persistence
  * clear an `APItem` makes, so `SeedlingCheckBinding` checks them like every
- * other row — and grants nothing (no Fire, no dark sword): the host grants
- * those from the server. Each is a table entry with `tagSource: 'fixed'` and
+ * other row — and grants nothing (no Fire, no dark sword): their items are
+ * ordinary AP items, received from the server. Each is a table entry with `tagSource: 'fixed'` and
  * `rewrite: false`: no `apitem`, no look written, no room byte moved. Their
  * addresses are RESERVED against `placementTagId` in their level ((12,1),
  * (32,3) and (32,4) are on no vanilla entity), so no allocation can take one.

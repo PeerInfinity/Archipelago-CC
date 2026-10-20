@@ -523,19 +523,6 @@ export async function initializeApplication(dependencies) {
     hideLoadingScreen(logger);
   }
 
-  // Dispatch initial timer rehoming event
-  setTimeout(() => {
-    if (dispatcher) {
-      logger.debug('init', 'Dispatching initial system:rehomeTimerUI event.');
-      dispatcher.publish(
-        'core',
-        'system:rehomeTimerUI',
-        {},
-        { initialTarget: 'top' }
-      );
-    }
-  }, 0);
-
   // --- Phase 13: Set Global References ---
   window.G_currentActiveMode = validatedMode;
   window.G_modesConfig = modesConfig;
@@ -1093,22 +1080,6 @@ function createModuleManagerApi(options) {
     }
 
     eventBus.publish('module:stateChanged', { moduleId, enabled: true }, 'core');
-
-    // Dispatch rehome event after enabling (if dispatcher is available)
-    if (dispatcher) {
-      logger.debug(
-        'init',
-        `Module ${moduleId} enabled, dispatching system:rehomeTimerUI.`
-      );
-      setTimeout(() => {
-        dispatcher.publish(
-          'core',
-          'system:rehomeTimerUI',
-          {},
-          { initialTarget: 'top' }
-        );
-      }, 0);
-    }
   };
 
   /**
@@ -1118,7 +1089,6 @@ function createModuleManagerApi(options) {
    * 1. Set the module state to disabled
    * 2. Close/destroy the module's panel
    * 3. Publish state change events
-   * 4. Dispatch rehome events
    *
    * Note: Does NOT uninitialize the module or remove it from memory
    */
@@ -1136,7 +1106,6 @@ function createModuleManagerApi(options) {
       const componentType = centralRegistry.getComponentTypeForModule(moduleId);
       const moduleInstance = importedModules.get(moduleId);
       const allowsMultiple = moduleInstance?.moduleInfo?.allowMultipleInstances;
-      let panelActionTaken = false;
       if (skipPanelDestroy) {
         // Panel already closed by the user — no need to destroy it programmatically.
       } else if (componentType) {
@@ -1154,7 +1123,6 @@ function createModuleManagerApi(options) {
           } else {
             panelManagerInstance.destroyPanelByComponentType(componentType);
           }
-          panelActionTaken = true;
         } else {
           logger.error(
             'init',
@@ -1166,22 +1134,6 @@ function createModuleManagerApi(options) {
           'init',
           `Module ${moduleId} has no registered panel component type. Cannot close panel.`
         );
-      }
-
-      // Dispatch rehome event after disabling
-      if (dispatcher) {
-        logger.debug(
-          'init',
-          `Module ${moduleId} disabled (panel action taken: ${panelActionTaken}), dispatching system:rehomeTimerUI.`
-        );
-        setTimeout(() => {
-          dispatcher.publish(
-            'core',
-            'system:rehomeTimerUI',
-            {},
-            { initialTarget: 'top' }
-          );
-        }, 0);
       }
     }
   };

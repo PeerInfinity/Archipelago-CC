@@ -19659,7 +19659,7 @@ export function createLevelRun({
                         pickup: { tag: 'fire', x: fire.x, y: fire.y, runtime: true, bobFire: true,
                             ...(fire.tag !== undefined ? { reportTag: fire.tag } : {}) },
                         level,
-                        // ⛓ fidelity APBOSSES D2: ON, `Fire.removed()` grants nothing (the host does).
+                        // ⛓ fidelity APBOSSES D2: ON, `Fire.removed()` grants nothing (the slot's item is an ordinary AP item).
                         item: fire.tag !== undefined ? null : 'fire',
                         keyType: null,
                         totemPart: null,
@@ -19906,7 +19906,7 @@ export function createLevelRun({
                     }
                     if (ceremony.pickup.bobFire && ceremony.pickup.reportTag !== undefined) {
                         // ⛓ fidelity APBOSSES D2: `Fire.as:49-55` @0eda15f785 — `setPersistence(tag, false)`, IN
-                        // BAND ({32,4}); no item (the host grants it), no {31,29}.
+                        // BAND ({32,4}); no item (an ordinary AP item), no {31,29}.
                         bobArena.fireCollected = true;
                         const at = level;
                         removedWrite(() => {

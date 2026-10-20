@@ -350,6 +350,6 @@
         }
     ],
     "name": "apb-l32-fresh-no-fire",
-    "description": "⛓⛓ fidelity APFLIP D3 (APBOSSES §D3) — L32 FRESH without Fire: `swim-u5-bobboss-encounter`'s staging, unchanged. The fight, the kill reports {32,3}, the Fire drop is collected and reports {32,4}; R4 grants nothing (`Fire.as:49-55` @ccdf189776, the host grants it), so `hasFire` stays false and the tape ends in the arena 30 idle ticks after the Fire's ceremony (869 ticks). Authored by scripts/procgen/plan-seedling-encounters.mjs.",
+    "description": "⛓⛓ fidelity APFLIP D3 (APBOSSES §D3) — L32 FRESH without Fire: `swim-u5-bobboss-encounter`'s staging, unchanged. The fight, the kill reports {32,3}, the Fire drop is collected and reports {32,4}; R4 grants nothing (`Fire.as:49-55` @ccdf189776; Fire is an ordinary AP item), so `hasFire` stays false and the tape ends in the arena 30 idle ticks after the Fire's ceremony (869 ticks). Authored by scripts/procgen/plan-seedling-encounters.mjs.",
     "note": ""
 }

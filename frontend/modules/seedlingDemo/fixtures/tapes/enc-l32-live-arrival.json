@@ -508,6 +508,6 @@
         }
     ],
     "name": "enc-l32-live-arrival",
-    "description": "⛓⛓ seedling-fidelity-encounters2 D1/D2 — L32's Bob Boss from the LIVE page's arrival (the JS arc's logical-links B session: the walk's own inventory, the shield and the torch held, 35 cleared flags, the arrival's rng), solved by the worker's shipping pass (dashless): 832 ticks, the arm, seven landings, the Fire. ⛓ fidelity APFLIP (R4, p4g): the kill reports {32,3}, the collect {32,4}, and NO Fire is granted (the host does), so the plan stops at the collect and the tape ends 30 idle ticks later in the arena (it was the 1,049-tick plan to the pit before R4). Authored by scripts/procgen/plan-seedling-encounters.mjs.",
+    "description": "⛓⛓ seedling-fidelity-encounters2 D1/D2 — L32's Bob Boss from the LIVE page's arrival (the JS arc's logical-links B session: the walk's own inventory, the shield and the torch held, 35 cleared flags, the arrival's rng), solved by the worker's shipping pass (dashless): 832 ticks, the arm, seven landings, the Fire. ⛓ fidelity APFLIP (R4, p4g): the kill reports {32,3}, the collect {32,4}, and NO Fire is granted (Fire is an ordinary AP item), so the plan stops at the collect and the tape ends 30 idle ticks later in the arena (it was the 1,049-tick plan to the pit before R4). Authored by scripts/procgen/plan-seedling-encounters.mjs.",
     "note": ""
 }

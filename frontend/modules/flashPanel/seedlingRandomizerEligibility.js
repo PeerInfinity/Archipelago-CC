@@ -156,7 +156,7 @@ export const SINCE_BEGIN_CAPABILITY = 'sincebegin';
  * `bossreport` reports all seven boss kills as locations, and the Witch's dark
  * sword (L12, `DarkSword.WITCH_TAG`) and the Bob Boss's Fire drop (L32,
  * `Fire.BOSS_DROP_TAG`; the kill is `BobBoss.KILLED_TAG`) as locations whose
- * items the HOST grants — the game no longer grants Fire or the dark sword. A
+ * items are ordinary AP items — the game no longer grants Fire or the dark sword. A
  * build without it grants them itself, so the host refuses the report rows by
  * name there. Measured by `strings`: the three tag constants.
  */
