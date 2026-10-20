@@ -116,7 +116,20 @@ for (const [v, n] of Object.entries(byV).sort()) console.log(`   v${v}: ${n}`);
 
 if (check) {
     const got = valueChanges.map((r) => r.name).sort();
-    const want = [...R7_BATCH.predictedValueChanges].sort();
+    // ⛓ THE RECORD IS SLICE 0's, AND ITS DOMAIN IS v<=3. f2baacde0a (the
+    // dead-frame LOCKSTEP re-pin) raised every recorded tape to v5 by text,
+    // and `predictedAttribution` only moves a v<=3 tape's value — so a
+    // recorded name whose tape is now v>=4 has LEFT the derivation's domain,
+    // which is a re-versioning, not a drift. Named, not dropped silently; a
+    // recorded name that is missing from the roster, or still v<=3 and not
+    // derived, stays a drift.
+    const versionOf = new Map(tapes.map((t) => [t.name, t.tape_version]));
+    const left = R7_BATCH.predictedValueChanges.filter((n) => (versionOf.get(n) ?? 0) > 3);
+    for (const n of left) {
+        console.log(`--check: ${n} left the v<=3 domain (now v${versionOf.get(n)}) — `
+            + 'its predicted value change no longer applies');
+    }
+    const want = R7_BATCH.predictedValueChanges.filter((n) => !left.includes(n)).sort();
     const same = got.length === want.length && got.every((n, i) => n === want[i]);
     const zero = rows.every((r) => r.stream === 'IDENTICAL')
         && R7_BATCH.predictedReRecords === 0 && !expectationsCarryReadouts;

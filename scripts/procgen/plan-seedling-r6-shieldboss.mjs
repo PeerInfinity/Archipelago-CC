@@ -309,15 +309,23 @@ check(a.run.shieldBossStabs.length === 3
     '⛓ THREE stand-under stabs and no retaliation at all',
     a.run.shieldBossStabs.map((s) => `t${s.t} window [${s.windowFrom},${s.windowTo}]`)
         .join(', '));
+// ⛓ FOUR instants, not three. `removeRequested` is the schedule's own third
+// instant (`FP.world.remove` is CALLED, the body still a wall for that tick)
+// and the run has logged it since before this producer was written
+// (1830453441); `solverBot` reads that row. The "BY 11" in the name is
+// destroy -> removeRequested, and the cell opens ONE tick later. Asserted,
+// not filtered, so a lost or moved request row reddens this.
 const kills = a.run.shieldBossKills;
-check(kills.length === 3
+check(kills.length === 4
     && kills[0].what === 'tag' && kills[0].t === KILL_TICK
     && kills[1].what === 'destroy' && kills[1].t === DEATH.destroyTick
-    && kills[2].what === 'removed' && kills[2].t === DEATH.removedTick,
+    && kills[2].what === 'removeRequested' && kills[2].t === DEATH.removeRequestedTick
+    && kills[3].what === 'removed' && kills[3].t === DEATH.removedTick
+    && kills[3].t === kills[2].t + 1,
     '⛔⛔ THE TAG PRECEDES THE CORPSE BY 23 AND THE CORPSE THE REMOVAL BY 11',
     kills.map((k) => `${k.what}@${k.t}`).join(' -> ')
-    + ` (derived: tag ${DEATH.tagTick}, destroy ${DEATH.destroyTick}, removed `
-    + `${DEATH.removedTick})`);
+    + ` (derived: tag ${DEATH.tagTick}, destroy ${DEATH.destroyTick}, removeRequested `
+    + `${DEATH.removeRequestedTick}, removed ${DEATH.removedTick})`);
 check(a.run.shieldBossFlags.length === 1 && a.run.shieldBossFlags[0].level === 19
     && a.run.shieldBossFlags[0].tag === 0,
     '⛓⛓⛓ `{19,0}` — the kill witness, written by `startDeath`',
