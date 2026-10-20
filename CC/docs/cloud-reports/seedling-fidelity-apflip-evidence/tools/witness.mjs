@@ -52,6 +52,8 @@ if (spec.tapePatch) {
     tapeRaw.inputs = tapeRaw.inputs.filter((i) => i.from < tp.inputsUntil).map((i) => ({ ...i, to: Math.min(i.to, tp.inputsUntil) }))
         .concat(tp.append ?? []);
     tapeRaw.tick_count = tp.tick_count;
+    if (tp.equips !== undefined) tapeRaw.equips = tp.equips;
+    if (tp.persistence !== undefined) tapeRaw.persistence = tp.persistence;
     tapeRaw.name = spec.name;
 }
 const tape = parseTape(tapeRaw);

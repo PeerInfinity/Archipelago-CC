@@ -2621,8 +2621,8 @@ export function createLevelRun({
         // `fallRockStateFor` holds it as a 16x16 `createFallRock` that nothing
         // ever drops; the arena owns its landing (`stepBobBossArenaNow`).
         if (bobArena && !bobArena.none && bobArena.level === level && bobArena.landed) {
-            out.set(bobArena.rockId, { id: bobArena.rockId, tag: 'fallrocklarge',
-                rect: bobBossRockRect(), x: bobBossRockRect().x, y: bobBossRockRect().y });
+            const rr = bobArenaRockRect();
+            out.set(bobArena.rockId, { id: bobArena.rockId, tag: 'fallrocklarge', rect: rr, x: rr.x, y: rr.y });
         }
         // ⛓ U14-swim D1: a SET `Moonrock`, a 48x48 Solid from its landing (or
         // from its ctor, once `Game.moonrockSet`). `noclip` builds none.
@@ -14864,6 +14864,16 @@ export function createLevelRun({
      * (`REFUSED_CLEAR_RESPONSES.arm`), and a death mid-fight is refused by
      * `stepBobBossArenaNow` before it can reboot.
      */
+    /**
+     * ⛓ APFLIP D1 (`CONTACT_FIDELITY.apReportBosses`): the arena rock's landed box at the ENTITY'S placement (the
+     * `thirdboss` rock's `world.fallRocks` row, the delivered set's x,y), not the vanilla constant. Read off the world
+     * each ask, so no new run state (the digest is untouched). OFF: `bobBossRockRect()`, the constant.
+     */
+    const bobArenaRockRect = () => {
+        if (CONTACT_FIDELITY.apReportBosses !== true) return bobBossRockRect();
+        const rock = (world.fallRocks ?? []).find((r) => r.thirdBoss === true);
+        return bobBossRockRect(rock ? { x: rock.x, y: rock.y } : null);
+    };
     const bobArenaNow = () => {
         if (bobArena && bobArena.level === level) return bobArena;
         const rock = (world.fallRocks ?? []).find((r) => r.thirdBoss === true);
@@ -15042,7 +15052,7 @@ export function createLevelRun({
          */
         if (a.landed) {
             const pb = playerBoxAt(state.x, state.y);
-            const rr = bobBossRockRect();
+            const rr = bobArenaRockRect();
             if (pb.right > rr.x && pb.x < rr.right && pb.bottom > rr.y && pb.y < rr.bottom) {
                 const y = rr.y + (state.y - pb.y) - (pb.bottom - pb.y);
                 bobLedger({ what: 'rock-snap', from: state.y, to: y });
@@ -15435,7 +15445,7 @@ export function createLevelRun({
         // player's box (the snap is due on the next frame), so every other row is
         // byte-identical.
         const pb = a.landed ? playerBoxAt(state.x, state.y) : null;
-        const rr = a.landed ? bobBossRockRect() : null;
+        const rr = a.landed ? bobArenaRockRect() : null;
         const holds = a.landed && pb.right > rr.x && pb.x < rr.right && pb.bottom > rr.y && pb.y < rr.bottom;
         out.set('rock', { id: a.rockId, armed: a.armed, landed: a.landed, ...(holds ? { holdsPlayer: true } : {}) });
         if (b) {
