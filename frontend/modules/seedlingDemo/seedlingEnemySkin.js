@@ -75,8 +75,9 @@
  * (`inAir`, not on the run), the 0.25-alpha `nightBmp` copies (G5), the
  * explosion / slash-hit / coin effects (G4), `Game.freezeObjects` (a dialogue
  * freezes the clocks; the run steps no body then, so the picture holds), and
- * every modelled class without a family here (WallFlyer, Drill, the turrets,
- * the bosses, the crushers and axes, the totems).
+ * every modelled class without a family here (the crushers and axes, the
+ * totems, the lava chains). WallFlyer, Drill, the turrets and the Bob Boss
+ * are G3b's (`seedlingRoomBodySkin.js`).
  */
 import { FP_ELAPSED_PER_TICK } from '../artLibrary/artLibrary.js';
 import { CHASERS, chaserBoxAt } from './chasers.js';
@@ -101,11 +102,12 @@ const TIME_PER_FRAME = 45;
 export const worldFrame = (time, n, loops = 1) => Math.floor((((time % (TIME_PER_FRAME * loops)) + TIME_PER_FRAME * loops) % (TIME_PER_FRAME * loops))
     / (TIME_PER_FRAME * loops / Math.max(n, 1)));
 
-const ANIMS = Object.fromEntries(ENEMY_ART.filter((r) => r.anims).map((r) => [r.key, r.anims]));
+/** Each art row's anims, by key (`ENEMY_ART`). */
+export const ANIMS = Object.fromEntries(ENEMY_ART.filter((r) => r.anims).map((r) => [r.key, r.anims]));
 
 // ── the Spritemap, transcribed ──────────────────────────────────────────
 
-const freshSprite = () => ({ anim: '', index: 0, timer: 0, complete: true, frame: 0 });
+export const freshSprite = () => ({ anim: '', index: 0, timer: 0, complete: true, frame: 0 });
 
 /** `Spritemap.play` (:124-139). */
 export function play(sp, anims, name, reset = false) {
@@ -126,13 +128,13 @@ export function play(sp, anims, name, reset = false) {
 }
 
 /** `set frame` — stops the animation. A negative frame is FlashPunk's wrap (`-1` = the sheet's last frame). */
-const setFrame = (sp, f) => { sp.anim = ''; sp.frame = f; };
+export const setFrame = (sp, f) => { sp.anim = ''; sp.frame = f; };
 
-/** `Spritemap.update` (:70-99), `rate` 1 and `FP.elapsed` the sim's clamped 0.0333. */
-export function updateSprite(sp, anims, onEnd) {
+/** `Spritemap.update` (:70-99): `_timer += _frameRate * FP.elapsed * rate`, `FP.elapsed` the sim's clamped 0.0333. */
+export function updateSprite(sp, anims, onEnd, rate = 1) {
     const a = anims[sp.anim];
     if (!a || sp.complete) return;
-    sp.timer += a.fps * FP_ELAPSED_PER_TICK;
+    sp.timer += a.fps * FP_ELAPSED_PER_TICK * rate;
     if (sp.timer < 1) return;
     while (sp.timer >= 1) {
         sp.timer -= 1;
@@ -352,8 +354,10 @@ export const familyOf = (tag) => ENEMY_FAMILIES[CHASERS[tag]?.as3] ?? null;
  */
 export const ENEMY_COVERAGE = Object.freeze({
     drawn: Object.freeze(['Bob', 'LavaRunner', 'Jellyfish', 'Bulb', 'Flyer', 'Puncher', 'BobSoldier', 'Spinner', 'Arrow', 'APItem']),
-    modelled: Object.freeze(['WallFlyer', 'Drill', 'IceTurret', 'BossTotem', 'BobBoss', 'Crusher', 'SpinningAxe', 'IceTurretBlast', 'LavaChain']),
-    remaining: Object.freeze(['Turret', 'TurretSpit', 'Cactus', 'Squishle', 'Tentacle', 'TentacleBeast', 'LavaBoss', 'LightBoss', 'ShieldBoss',
+    // ⛓ G3b drew WallFlyer, Drill, IceTurret (+ IceTurretBlast), Turret (+ TurretSpit) and BobBoss:
+    //    `seedlingRoomBodySkin.ROOM_BODY_COVERAGE`.
+    modelled: Object.freeze(['BossTotem', 'Crusher', 'SpinningAxe', 'LavaChain']),
+    remaining: Object.freeze(['Cactus', 'Squishle', 'Tentacle', 'TentacleBeast', 'LavaBoss', 'LightBoss', 'ShieldBoss',
         'FinalBoss', 'Grenade', 'BombPusher', 'traps (Lava/Ice/Dark/Sand)', 'Coin', 'HealthPickup', 'Explosion', 'WandShot', 'LavaBall', 'RayShot']),
 });
 
@@ -405,7 +409,7 @@ const sameVisit = (a, b) => !!a && !!b && a.run === b.run && a.key === b.key;
 // ── the reducer ─────────────────────────────────────────────────────────
 
 /** The tint after this tick's `hitUpdate` (Enemy.as:223-245), `h` = the timer at the top of the update. */
-function hitTint(tint, h, colour) {
+export function hitTint(tint, h, colour) {
     if (h <= 0) return tint;
     let next = tint;
     if (h % HITS_TIMER_INT === 0) next = next === null ? colour : null;
@@ -470,7 +474,7 @@ export function stepEnemySkin(prev, view, tick, { rules = ENEMY_RULES, families 
 // ── the ops ─────────────────────────────────────────────────────────────
 
 /** A sprite op in `seedlingSkinRenderer`'s shape (G2's, with its pivot). */
-function spriteOp(art, key, frame, at, { rot = 0, flipX = false, scaleX = 1, scaleY = 1, alpha = 1, tint = null, layer, fallback = null }) {
+export function spriteOp(art, key, frame, at, { rot = 0, flipX = false, scaleX = 1, scaleY = 1, alpha = 1, tint = null, layer, fallback = null }) {
     const fr = art.frameRect(key, frame);
     if (!fr) return null;
     const { ox, oy } = fr;
@@ -485,7 +489,7 @@ function spriteOp(art, key, frame, at, { rot = 0, flipX = false, scaleX = 1, sca
 }
 
 
-const rectOp = (rect, colour, alpha, layer) => ({ rect, colour, alpha, layer });
+export const rectOp = (rect, colour, alpha, layer) => ({ rect, colour, alpha, layer });
 
 /**
  * THE BODIES' DRAW OPS at the tick `skin` was stepped to. Every op carries the
@@ -535,7 +539,7 @@ export function enemyOps(view, art, { skin, families = ENEMY_FAMILIES } = {}) {
     return ops.filter(Boolean);
 }
 
-const hashId = (id) => {
+export const hashId = (id) => {
     let h = 0;
     for (const ch of String(id)) h = (Math.imul(h, 31) + ch.charCodeAt(0)) | 0;
     return h;
