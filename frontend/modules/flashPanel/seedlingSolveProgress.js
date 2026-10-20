@@ -40,6 +40,12 @@
  *    as written — never recomputed), `requestText` (the request identity, which `applyProgress` KEEPS from the solve's
  *    first post for the rest of that solve, and drops on a new solve) and `bestText` (the plan in hand). A snapshot
  *    without the stamps reads as "nothing to draw" for each.
+ *  - ⛓ CACHES VIEW (slice `seedling-js-caches-view`, draws hammer-phase PR's `caches` and `churn`; the snapshot, the
+ *    tap and the worker are unchanged): `cachesText` (the string-pull memo's and the cross-pass escape cache's hits
+ *    and misses with their hit rate — the emitter posts counts only, the arithmetic is here) and `churnText` (the
+ *    frames the active path opened and closed, and the climb cursor's moves). Each reads its fields by name; a
+ *    snapshot without the object reads as "nothing to draw", a `null` member draws `—`, a field that is not a
+ *    finite count is left out.
  */
 
 import { REFUSAL_KINDS } from '../seedlingDemo/solveProgress.js';
@@ -170,6 +176,64 @@ export function workCounters(snapshot) {
     const other = Object.keys(work).filter((k) => k !== 'shouldStop' && !(k in WORK_COUNTER_LABELS)
         && Number.isFinite(work[k])).sort().map((k) => [k, work[k]]);
     return [...known, ...other];
+}
+
+const isCount = (n) => Number.isFinite(n) && n >= 0;
+
+/** ⛓ CACHES VIEW — `hits` of `hits + misses` as a whole percent, or '' with no lookups. */
+const hitRate = (hits, misses) => (hits + misses > 0 ? ` (${Math.round((100 * hits) / (hits + misses))}% hit)` : '');
+
+/**
+ * ⛓ CACHES VIEW — the cross-pass escape cache's miss outcomes `cachesText` names, `snapshot key → label`, in this
+ * order (`misses = stored + tripped + digestMoved + cap`); a zero is left out.
+ */
+export const ESCAPE_MISS_LABELS = Object.freeze({ stored: 'stored', tripped: 'tripped', digestMoved: 'digest moved',
+    cap: 'cap' });
+
+/**
+ * ⛓ CACHES VIEW — the segment's `caches` as one line, or `null` when the snapshot has none (v1, and v2 before
+ * hammer-phase PR). Each member is `—` when it is `null` (its switch OFF, or no data in this segment) or carries no
+ * `hits`/`misses` counts.
+ */
+export function cachesText(snapshot) {
+    const c = snapshot?.caches;
+    if (!c || typeof c !== 'object') return null;
+    const sp = c.stringPull;
+    const pull = sp && isCount(sp.hits) && isCount(sp.misses)
+        ? `${sp.hits} hit / ${sp.misses} miss${hitRate(sp.hits, sp.misses)}` : '—';
+    const e = c.escapeCrossPass;
+    let escape = '—';
+    if (e && isCount(e.hits) && isCount(e.misses)) {
+        const cross = isCount(e.crossPassHits) && e.crossPassHits > 0 ? ` (${e.crossPassHits} cross-pass)` : '';
+        const outcomes = Object.entries(ESCAPE_MISS_LABELS).filter(([k]) => isCount(e[k]) && e[k] > 0)
+            .map(([k, label]) => `${label} ${e[k]}`);
+        escape = `${e.hits} hit${cross} / ${e.misses} miss${hitRate(e.hits, e.misses)}`
+            + (outcomes.length ? ` [${outcomes.join(', ')}]` : '')
+            + (isCount(e.bypassed) && e.bypassed > 0 ? ` · bypassed ${e.bypassed}` : '');
+    }
+    return `caches (this segment): string-pull ${pull} · escape cross-pass ${escape}`;
+}
+
+/**
+ * ⛓ CACHES VIEW — the segment's `churn` as one line, or `null` when the snapshot has none. `open` (frames opened and
+ * not yet closed) and the rejected share are derived here; a field that is not a count is left out, and so is
+ * anything derived from it.
+ */
+export function churnText(snapshot) {
+    const c = snapshot?.churn;
+    if (!c || typeof c !== 'object') return null;
+    const parts = [];
+    if (isCount(c.opened)) parts.push(`opened ${c.opened}`);
+    if (isCount(c.succeeded)) parts.push(`succeeded ${c.succeeded}`);
+    if (isCount(c.rejected)) {
+        parts.push(`rejected ${c.rejected}`
+            + (isCount(c.opened) && c.opened > 0 ? ` (${Math.round((100 * c.rejected) / c.opened)}% of opened)` : ''));
+    }
+    if (isCount(c.opened) && isCount(c.succeeded) && isCount(c.rejected)) {
+        parts.push(`open ${c.opened - c.succeeded - c.rejected}`);
+    }
+    if (isCount(c.moved)) parts.push(`climb moves ${c.moved}`);
+    return `churn (this segment): ${parts.length ? parts.join(' · ') : 'none'}`;
 }
 
 /**

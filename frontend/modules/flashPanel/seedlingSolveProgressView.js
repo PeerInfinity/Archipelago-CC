@@ -46,6 +46,15 @@
  * the line are inserted on the first snapshot that carries a frame, so a frame-less stream draws the stamps view's
  * bytes (pinned), and the marks are redrawn only when what they show changes (`stats.marksDrawn`).
  *
+ * ⛓ CACHES VIEW (slice `seedling-js-caches-view`, draws hammer-phase PR's `caches`, `churn` and `soft-lock`; the
+ * snapshot, the tap and the worker are unchanged — the solver hands the escape counters in itself, so nothing here
+ * calls `progressCaches`): at the end of the meter, the segment's CACHES (`cachesText`: each cache's hits and misses
+ * and its hit rate) and its CHURN (`churnText`: frames opened, succeeded, rejected and still open, and the climb
+ * cursor's moves). Both lines are made and inserted on the first snapshot that carries either object, so a
+ * snapshot without them draws the frame view's bytes (pinned). A kind in `DANGER_KINDS` (`soft-lock`: the action would wedge the
+ * GAME) is drawn in the frame view's danger colour wherever a kind is drawn — its tree chip, its entry in the
+ * refusals by kind (a span; a line without it stays one text write) and the last why when it is that kind.
+ *
  * ⛓ INCREMENTAL (slice S1, ⚖ the user 2026-10-17 — the rate setting `flashPanel.seedlingSolveProgressIntervalMs`
  * depends on it): a note updates the STATE (and the show/hide lifecycle) at once, but the DOM at most once per
  * animation frame (the `frame` option, kept here as `scheduleRender`; default `requestAnimationFrame`) — the notes of one frame coalesce into one render of the
@@ -68,7 +77,7 @@
 
 import {
     activePath, applyProgress, asksBySite, autoVisibility, bestText, clampText, createSolveProgressFeed, emptyProgress,
-    etaText, formatMs, kindChips, kindTotals, lastWhyText, meterOf, reasonsText, requestText, SOLVE_PROGRESS_TREE_CAP,
+    cachesText, churnText, etaText, formatMs, kindChips, kindTotals, lastWhyText, meterOf, reasonsText, requestText, SOLVE_PROGRESS_TREE_CAP,
     tileIndex, tileShade, treeRows, wallBySiteRows, workCounters,
 } from './seedlingSolveProgress.js';
 import { progressIntervalMs, SOLVE_PROGRESS_INTERVAL_MS } from '../seedlingDemo/solveProgressTap.js';
@@ -104,10 +113,21 @@ export const WALL_SITES_SHOWN = 6;
 export const DANGER_GLYPHS = Object.freeze({ forecast: '»', volume: '■', phase: '◐' });
 const STANCE_COLOUR = '#4fc3f7';
 const TARGET_COLOUR = '#ffffff';
-const DANGER_COLOUR = '#ff8c1a';
+/** The danger colour: the frame view's danger mark, and ⛓ CACHES VIEW's `DANGER_KINDS`. */
+export const DANGER_COLOUR = '#ff8c1a';
 /** ⛓ FRAME VIEW — the outline on the tree row the frame belongs to. */
 const FRAME_ROW_CSS = `outline:1px solid ${STANCE_COLOUR};outline-offset:-1px;`;
 const MARKS_CSS = 'position:absolute;left:1px;top:1px;pointer-events:none;';
+
+/**
+ * ⛓ CACHES VIEW — the refusal kinds drawn in the danger colour (`DANGER_COLOUR`, the frame view's danger mark): a
+ * `soft-lock` refusal says the action would wedge the game, not that the search failed.
+ */
+export const DANGER_KINDS = Object.freeze(['soft-lock']);
+const DANGER_CHIP_CSS = `${CHIP_CSS}border-color:${DANGER_COLOUR};color:${DANGER_COLOUR};`;
+const DANGER_TEXT_CSS = `color:${DANGER_COLOUR};`;
+/** ⛓ CACHES VIEW — the last why's style: open or closed, in the danger colour when its kind is one. */
+const whyCss = (open, danger) => (open ? WHY_OPEN_CSS : WHY_CLOSED_CSS) + (danger ? DANGER_TEXT_CSS : '');
 
 /**
  * ⛓ FRAME VIEW — the tile a `frame.target` id names: `tile:col,row` and `pit:col,row` are tiles already; any other id
@@ -289,6 +309,14 @@ export class SolveProgressView {
         this.rkBox = el('div');
         this.rkBox.append(this.kindsText, this.whyText);
         this._rkShown = false;
+        /** ⛓ CACHES VIEW — the danger entry the kinds line shows as a span (`null`: the line is one text). */
+        this._kindsDanger = null;
+        // ⛓ CACHES VIEW — the caches and the churn, at the end of the meter: made and inserted on the first snapshot
+        // that carries either (until then `null`, so a stream without them makes no node)
+        this.cachesBox = null;
+        this.cachesText = null;
+        this.churnText = null;
+        this._cachesShown = false;
         this.whyText.addEventListener('click', () => {
             this._whyOpen = !this._whyOpen;
             this._renderRK();
@@ -435,6 +463,7 @@ export class SolveProgressView {
         this._renderMeter();
         this._renderTierA();
         this._renderStamps();
+        this._renderCaches();
         this._renderRK();
         this._renderTiles();
         this._renderFrame();
@@ -518,15 +547,62 @@ export class SolveProgressView {
             this.element.append(this.rkBox, this.body);
             this._rkShown = true;
         }
-        this._line(this.kindsText, totals === null ? ''
+        this._kindsLine(totals === null ? ''
             : `refusals by kind (this segment, each once): ${totals.rows.length
-                ? `${totals.rows.map(([k, n]) => `${k} ${n}`).join(' · ')} · Σ ${totals.total}` : 'none yet'}`);
+                ? `${totals.rows.map(([k, n]) => `${k} ${n}`).join(' · ')} · Σ ${totals.total}` : 'none yet'}`,
+        totals?.rows.find(([k]) => DANGER_KINDS.includes(k)) ?? null);
         const text = why === null ? '' : `last why: ${this._whyOpen ? why : clampText(why, LAST_WHY_CHARS)}`;
         this._line(this.whyText, text);
         const title = why ?? '';
         if (this.whyText.title !== title) this.whyText.title = title;
-        const css = this._whyOpen ? WHY_OPEN_CSS : WHY_CLOSED_CSS;
+        const css = whyCss(this._whyOpen, why !== null && DANGER_KINDS.includes(snap.lastWhy.kind));
         if (this.whyText.style.cssText !== css) this.whyText.style.cssText = css;
+    }
+
+    /**
+     * ⛓ CACHES VIEW — the kinds line: one text write while no danger kind is listed (the RK view's bytes); with one,
+     * [the text before it, a span in the danger colour, the text after it], rebuilt only when the line changes.
+     */
+    _kindsLine(text, danger) {
+        const node = this.kindsText;
+        if (danger === null) {
+            if (this._kindsDanger !== null) { node.textContent = ''; this._kindsDanger = null; }
+            this._line(node, text);
+            return;
+        }
+        const entry = `${danger[0]} ${danger[1]}`;
+        if (this._kindsDanger === entry && node.textContent === text) return;
+        // the entry is `kind n` between ': ' or ' · ' and ' · ': no kind name contains another's, nor the prefix
+        const at = text.indexOf(entry);
+        node.textContent = '';
+        node.append(document.createTextNode(text.slice(0, at)), el('span', DANGER_TEXT_CSS, entry),
+            document.createTextNode(text.slice(at + entry.length)));
+        this._kindsDanger = entry;
+        this.stats.linesWritten += 1;
+    }
+
+    /**
+     * ⛓ CACHES VIEW — the segment's caches and churn (hammer-phase PR). Nothing is made or inserted until a snapshot
+     * carries `caches` or `churn`; then both lines go at the end of the meter (append and remove only), each one
+     * `_line` write when its text changes. A later snapshot without them empties the lines.
+     */
+    _renderCaches() {
+        const snap = this.state.snapshot;
+        const caches = snap ? cachesText(snap) : null;
+        const churn = snap ? churnText(snap) : null;
+        if (!this._cachesShown) {
+            if (caches === null && churn === null) return;
+            this.cachesText = el('div', 'color:#888;white-space:pre-wrap;');
+            this.cachesText.className = 'flash-panel-solve-progress-caches';
+            this.churnText = el('div', 'color:#888;white-space:pre-wrap;');
+            this.churnText.className = 'flash-panel-solve-progress-churn';
+            this.cachesBox = el('div');
+            this.cachesBox.append(this.cachesText, this.churnText);
+            this.meter.append(this.cachesBox);
+            this._cachesShown = true;
+        }
+        this._line(this.cachesText, caches ?? '');
+        this._line(this.churnText, churn ?? '');
     }
 
     /**
@@ -545,7 +621,9 @@ export class SolveProgressView {
             this.element.append(this.stampsHead, ...after);
             this.asksText.remove();
             this.workText.remove();
-            this.meter.append(this.etaText, this.wallText, this.asksText, this.workText);
+            if (this._cachesShown) this.cachesBox.remove();
+            this.meter.append(this.etaText, this.wallText, this.asksText, this.workText,
+                ...(this._cachesShown ? [this.cachesBox] : []));
             this._stampsShown = true;
         }
         this._line(this.requestText, requestText(s.request) ?? '');
@@ -841,7 +919,9 @@ export class SolveProgressView {
                     line.append(line._chips, line._tail);
                 }
                 line._chips.textContent = '';
-                for (const [k, v] of chips) line._chips.append(el('span', CHIP_CSS, `${k} ${v}`));
+                for (const [k, v] of chips) {
+                    line._chips.append(el('span', DANGER_KINDS.includes(k) ? DANGER_CHIP_CSS : CHIP_CSS, `${k} ${v}`));
+                }
             }
             if ((shown.tail ?? '') !== want.tail) line._tail.data = want.tail;
             if (shown.css !== want.css) line.style.cssText = want.css;
