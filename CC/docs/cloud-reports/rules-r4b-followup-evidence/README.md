@@ -21,3 +21,13 @@ A local `survey-seedling-route.mjs --through=7.3 --route=full --only=28,51,125,1
 28 SOLVED (568 t), 51 REFUSED (the accepted refusal: the Times encounter's tree burn has no Fire in the run), 125
 NO-EDGE (the L57 mouth exit, a pre-existing family; the Tentacled Beast is a skip by name), 162 SOLVED (105 t), 163
 SKIPPED (Lights, by name). The CI dispatches on the branch are the record.
+
+## The centre fix's reach (`census-pit-centre.mjs`, `census-pit-centre.log`)
+
+`pitOf` is shared, so every pit landing it derives was compared, corner vs centre, over the vanilla map AND the
+delivered set: 38 pit tiles over 12 rooms each, and ONE landing moves in both (L70 pit (2,2) → L69, (3,7) → (3,8)).
+Outside the dated reports under `CC/docs/cloud-reports`, the only committed artifacts naming a pit exit are the
+playthrough family (atlas, AP_1, the seed-1 rules, the package sidecars) and the vanilla overlay, all regenerated. The
+starter atlas, spiral room and sphere order regenerate byte-identical. The divergence leg list (863 legs) re-keys exactly
+three: `level_70 <- in_L66_72_64 -> exit:out_pit_3_7`, and `level_69 <- in_pit_L70_3_7 -> exit:out_lightbosscontroller_72_72`
+and `-> location:Level 069 - Lights` become `…3_8`. The two L69 legs now arrive at (48,128), not (48,112). No other leg moves.
