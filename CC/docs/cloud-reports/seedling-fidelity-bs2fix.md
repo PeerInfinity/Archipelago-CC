@@ -224,4 +224,5 @@ on the licensed branch, to re-witness the moved tape in CI's own browser.
   proposed).
 - `r9-campaign --check` red at the base: `c6fc1297`.
 
-CI (`JavaScript Unit Tests`) at the last head: see the closing note in the session's final message.
+**CI** (`JavaScript Unit Tests`, run 39509014193, at code head `7297414e`): **21,429 / 21,429** passed (3 shards),
+slow battery **259 / 259**. The report commits after it touch only `CC/docs/` and do not trigger the workflow.
