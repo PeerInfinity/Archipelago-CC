@@ -1,0 +1,8 @@
+== step 28 — L19 ... SOLVED 568 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1011 ms
+== step 51 — L32 ... REFUSED — solverBot(survey-step-51) encounter (80,128)->Seal: the arena's exit (burnabletree@64,0) burns only with Fire, and under `apReportBosses` the Fire pickup grants
+== step 125 — L57 ... NO-EDGE — the AP exit 'level_57 -> level_58__r4c1' is out_tentaclebeast_80_48, and the atlas has no such entity with `to` 58 in L57 — the two sources disagree.
+== step 162 — L70 ... SOLVED 105 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 112 ms
+== step 163 — L69 ... SKIPPED — Level 069 - Lights (sphere 7.3) → Seal — no solver executor fights lightbosscontroller@72,72 (no encounter row in L69, no strategy row for solid:lightbosscontro
+  step 51 L32: REFUSED — unclassified — see the refusal text
+  step 125 L57: NO-EDGE — unclassified — see the refusal text
+  step 163 L69: SKIPPED — unclassified — see the refusal text

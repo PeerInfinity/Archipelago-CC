@@ -917,7 +917,7 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
             .flatMap((e) => Object.keys(e))));
         expect([...derivedExitKeys].sort()).toEqual(
             ['entrance_tile', 'exit_id', 'exit_tiles', 'kind']);
-        expect(committed.atlas_id).toBe('seedling-0c2152f7');   // ⛓ RULES (A)+(B) + logical-links + burnable-trees + patched-set + re-closing-locks + footprints + obstacle-events + kill-locks + game-truth-gaps (L57) + R4b boss locations (L69) + L32 rock move (Bob's location tile [4,8] -> [5,8]) restamps
+        expect(committed.atlas_id).toBe('seedling-832cd44f');   // ⛓ RULES (A)+(B) + logical-links + burnable-trees + patched-set + re-closing-locks + footprints + obstacle-events + kill-locks + game-truth-gaps (L57) + R4b boss locations (L69) + L32 rock move (Bob's location tile [4,8] -> [5,8]) restamps
         expect(fromXml.atlas.atlas_id).toBe('seedling');   // D1 §20.6: DELIBERATELY unstamped
     }, 60000);
 

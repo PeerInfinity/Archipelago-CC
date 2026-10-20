@@ -207,10 +207,15 @@ export function pitOf(room, { roomById, tileSize, tileTypeForPlacement }) {
             if (tileTypeForPlacement(p) !== PIT_TILE_TYPE) continue;
             // The game's own arithmetic, then the clamp `Player.as:581-582`
             // applies to every arrival anyway (the level rect is hard).
+            // ⛓ `fallInPitPos` is the pit Tile's own position, and a Tile is
+            // built at its CENTRE (`Tile.as:103`, `super(_x + w/2, _y + h/2)`):
+            // the corner gives a tile too high/left whenever the control offset
+            // is not a tile multiple (L70 → L69: (3,7), the game lands on (3,8)).
+            const centre = tileSize / 2;
             const ax = Math.min(dest.width - 1,
-                Math.floor(Math.max(p[0] * tileSize - offX, 0) / tileSize));
+                Math.floor(Math.max(p[0] * tileSize + centre - offX, 0) / tileSize));
             const ay = Math.min(dest.height - 1,
-                Math.floor(Math.max(p[1] * tileSize - offY, 0) / tileSize));
+                Math.floor(Math.max(p[1] * tileSize + centre - offY, 0) / tileSize));
             const key = `${ax},${ay}`;
             if (!byArrival.has(key)) byArrival.set(key, { arrival: [ax, ay], tiles: [] });
             byArrival.get(key).tiles.push([p[0], p[1]]);
