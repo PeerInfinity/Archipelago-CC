@@ -4501,6 +4501,7 @@ export function createLevelRun({
         // ⛓ fidelity LIGHTS D2: a new `Game` builds the controller again (`check()`: intro + totem, or `endState()`).
         lightsFights.delete(n);
         lightsExits.delete(n);
+        lightsSpearRepeats.length = 0;
         // ⛓ U14-swim D1: a new `Game` constructs the moonrock again, from `rockSet`.
         moonrockStates.delete(n);
         // ⛓ U15-swim D1: and every turret (angle 0, `shootTimer` 0) and no spit.
@@ -7241,7 +7242,7 @@ export function createLevelRun({
         // ⛓⛓ Swim U5: the BobBoss, a runtime `Enemy` no census holds.
         bobBossSlashNow({ rect, reachLimit, weapon, pressTick, hits });
         // ⛓ fidelity LIGHTS D2: the six LightBoss fliers — runtime `Enemy`s no census holds, as the BobBoss is.
-        lightsSlashNow({ rect, reachLimit, weapon, pressTick, hits, ghost });
+        lightsSlashNow({ rect, reachLimit, weapon, pressTick, hits, ghost, direction, repeat: thrust.repeat ?? null });
         presses.push({
             t: pressTick, fired: ticksCompleted, level, weapon, direction, rect, hits,
             // ⛓ GHOSTSWORD: what the 24 x 48 rect collected and the 24 px reach dropped (absent for every other weapon).
@@ -15470,6 +15471,26 @@ export function createLevelRun({
     const lightsExits = new Map();
     /** `{t, level, what, …}` — the fight's ledger: intro, spawn, shots, contacts, hits, deaths, removals, the end. */
     const lightsEvents = [];
+    /**
+     * ⛓ fidelity LIGHTS D2 — THE SPEAR'S OTHER TWO TESTS, against the fliers only. `spearDelayMax` is 1, so
+     * `Player.spear()` tests its 32x5 rect on T+1, T+3 and T+5 (`presses.SPEAR_HIT_TICKS_UNMODELLED`); the package's
+     * press window carries T+1 alone, because every arm it reached is idempotent inside five ticks. Two DIFFERENT fliers
+     * are not, so the two repeats run here — from the live position, in the latched direction — and nowhere else.
+     */
+    const lightsSpearRepeats = [];
+    const LIGHTS_SPEAR_REPEATS = Object.freeze([2, 4]);
+    function lightsSpearRepeatsNow() {
+        if (lightsSpearRepeats.length === 0) return;
+        const due = lightsSpearRepeats.filter((r) => r.at === ticksCompleted);
+        if (due.length === 0) return;
+        for (let i = lightsSpearRepeats.length - 1; i >= 0; i -= 1) {
+            if (lightsSpearRepeats[i].at <= ticksCompleted) lightsSpearRepeats.splice(i, 1);
+        }
+        for (const r of due) {
+            lightsSlashNow({ rect: spearRect(state.x, state.y, r.direction), reachLimit: Infinity, weapon: 'spear',
+                pressTick: r.pressTick, hits: [], ghost: false, direction: r.direction, repeat: 'lights' });
+        }
+    }
 
     function lightsFightFor(n) {
         if (!CONTACT_FIDELITY.lightsBossFight || noclip) return null;
@@ -15498,10 +15519,14 @@ export function createLevelRun({
         return new Map([[fight.id, { gone: fight.totemGone }]]);
     }
 
-    /** `run.entities('lightsFight')` — a copy of this room's fight (`lightBoss.lightsFightView`), or null. */
+    /**
+     * `run.entities('lightsFight')` — this room's fights as a LIST (one per live controller; L69 places one), each a copy
+     * (`lightBoss.lightsFightView`); `null` in a room with none and while the switch is OFF.
+     */
     function lightsFightNow() {
-        const fight = CONTACT_FIDELITY.lightsBossFight ? (lightsFights.get(level) ?? null) : null;
-        return fight ? lightsFightView(fight, { events: lightsEvents.filter((e) => e.level === level) }) : null;
+        // Built on the first ask, as `stepLightsNow` builds it on the first tick (`check()` ran at the room's build).
+        const fight = CONTACT_FIDELITY.lightsBossFight ? lightsFightFor(level) : null;
+        return fight ? [lightsFightView(fight, { events: lightsEvents.filter((e) => e.level === level) })] : null;
     }
 
     /**
@@ -15673,9 +15698,13 @@ export function createLevelRun({
      * totem is a Solid; a ghost swing waives it), the spear's none (`Player.as:960-990` tests only the rect). Then
      * `Enemy.hit(force, Point(x, y), d, t)` — `swordForce` 5 or `spearForce` 7.
      */
-    function lightsSlashNow({ rect: r, reachLimit, weapon, pressTick, hits, ghost }) {
+    function lightsSlashNow({ rect: r, reachLimit, weapon, pressTick, hits, ghost, direction = null, repeat = null }) {
         const fight = CONTACT_FIDELITY.lightsBossFight ? (lightsFights.get(level) ?? null) : null;
         if (!fight) return;
+        // The spear's first test schedules its two repeats (`lightsSpearRepeatsNow`): T+3 and T+5.
+        if (weapon === 'spear' && repeat === null) {
+            for (const k of LIGHTS_SPEAR_REPEATS) lightsSpearRepeats.push({ at: ticksCompleted + k, direction, pressTick });
+        }
         for (const f of fight.bodies) {
             if (f.removed) continue;
             const box = lightBossRect(f);
@@ -20622,6 +20651,8 @@ export function createLevelRun({
                 const fired = swordWindowStep(swordWindow, ticksCompleted);
                 swordWindow = fired.window;
                 for (const thrust of fired.fires) applyThrust(thrust);
+                // ⛓ fidelity LIGHTS D2: a spear thrust's T+3 / T+5 tests against the L69 fliers (`lightsSpearRepeatsNow`).
+                lightsSpearRepeatsNow();
             }
             // ── ⛓ THE FIRE WINDOW'S HIT TICKS ────────────────────────
             // `Player.update` calls `fire()` in the same place it calls

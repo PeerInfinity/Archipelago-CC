@@ -475,7 +475,20 @@ export const KILL_ARM_POLICY = Object.freeze({
     BossTotem: Object.freeze({ policy: 'refused', why: 'R6 — `hitsMax` 5 and `onlyHitBy = "Wand"`; the room opens on its death' }),
     Tentacle: Object.freeze({ policy: 'refused', why: 'D8; off this rung' }),
     TentacleBeast: Object.freeze({ policy: 'refused', why: 'D8; off this rung' }),
-    LightBoss: Object.freeze({ policy: 'refused', why: 'boss damage — R6' }),
+    /**
+     * ⛓ fidelity LIGHTS D2 — `modelled` while `CONTACT_FIDELITY.lightsBossFight` is ON: the six L69 fliers are stepped
+     * by `lightBoss.js` (`Enemy.hit`, `hitsMax` 3, `startDeath` plays "die" with no `destroy`, `animEnd` removes the
+     * body; the controller's `endState()` writes {69,0} once the last one is gone). OFF: the refusal, verbatim.
+     */
+    LightBoss: Object.freeze({
+        get policy() { return CONTACT_FIDELITY.lightsBossFight ? 'modelled' : 'refused'; },
+        get why() {
+            return CONTACT_FIDELITY.lightsBossFight
+                ? '⛓ fidelity LIGHTS: the L69 fliers (`lightBoss.js`: `hitsMax` 3, a 9-frame "die" at rate 20, removed by '
+                    + '`animEnd`), stepped and struck by `levelRun.stepLightsNow` / `lightsSlashNow`'
+                : 'boss damage — R6';
+        },
+    }),
     /** ⛓ SEEDLING FIDELITY KILLLOCK K2 — `modelled` while `KILLLOCK_BODIES.lavaRunnerLive` is ON (see Jellyfish). */
     LavaRunner: Object.freeze({
         get policy() { return KILLLOCK_BODIES.lavaRunnerLive ? 'modelled' : 'refused'; },
@@ -674,6 +687,14 @@ export const CORPSE_COUNTING = Object.freeze({
             + 'running on the corpse (no `destroy` gate): it chases and its sword still hits until the removal.',
         src: 'Enemies/BobSoldier.as:72-82 (update), Enemies/Enemy.as:182-186 (startDeath)',
     }),
+    // ⛓ fidelity LIGHTS D2: `LightBoss.startDeath` plays "die" and does NOT set `destroy`; `animEnd` removes the body
+    // itself (no `Mobile.death` fade) — nine frames at rate 20 (`lightBoss.LIGHT_BOSS.flier.die`).
+    LightBoss: Object.freeze({
+        shape: 'anim', removesBody: true, chaserTag: null,
+        why: '`startDeath` plays "die" and calls `parent.removeFlier(id)`; `animEnd`\'s die arm sets `destroy` and '
+            + '`FP.world.remove(this)` in the same call, so there is no fade.',
+        src: 'Enemies/LightBoss.as:84-108',
+    }),
     // ⛓ fidelity LAPSECOST D2: `Flyer extends Bob` and inherits `startDeath` / `endAnim` — four frames at rate 10.
     Flyer: Object.freeze({
         shape: 'anim+fade', removesBody: true, chaserTag: 'flyer',
@@ -843,6 +864,12 @@ export function removalTicksAfterHit(as3, deathAnimTicks = null) {
  * vacuity and is named as one.
  */
 export const KILL_SIDE_WRITES = Object.freeze({
+    // ⛓ fidelity LIGHTS D2: a flier writes nothing; the CONTROLLER writes {69,0} in `endState()` once `totalEnemies()`
+    // reads 0 (`LightBossController.as:69-74,102-107`), which `levelRun.stepLightsNow` banks.
+    LightBoss: Object.freeze({
+        writes: 'none',
+        why: '`LightBoss.as` has no `removed()`, no `check()` and no tag; the report is the controller\'s `endState()`.',
+    }),
     IceTurret: Object.freeze({
         writes: 'none',
         why: 'there is no `removed()`, no `check()`, no `setPersistence` and no tag '

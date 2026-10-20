@@ -313,7 +313,7 @@ export const FAMILY_BLOCKS = deepFreeze([
         solverReads: ['dangerMap', 'solverBot'], strategies: [],
         why: 'the `Bomb`s in flight, newest first (fidelity BOMBPUSHER: `levelRun.bombsNow`): position, velocity and the 30-update count to the `Explosion` (r 15) the 31st update adds.' },
     { family: 'lightsFight', kind: RUN_ENTITIES, blocks: ['hp', 'emitter', 'contact'],
-        solverReads: ['solverBot'], strategies: [],
+        solverReads: ['lightsVerb'], strategies: [],
         why: 'L69\'s fight (fidelity LIGHTS: `levelRun.lightsFightNow`, `lightBoss.js`): the intro, the controller\'s `worldFrame` pattern (spin, radius, state), the six `LightBoss` fliers (contact, `hits`, the die anim) and their `LightBossShot`s; the `lights` verb forecasts a clone of it. `null` while `CONTACT_FIDELITY.lightsBossFight` is off.' },
 
     /* ── the hazard volumes (`hazards.hazardVolume`, avoid volumes, unions over phase) ── */

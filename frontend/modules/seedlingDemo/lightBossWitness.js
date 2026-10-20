@@ -22,7 +22,7 @@ export function modelLightsTrack(tape, { levelSource, cameraWitness = null } = {
     let r = st.next();
     while (!r.done) {
         const o = r.value.observation;
-        const fight = run ? run.entities('lightsFight') : null;
+        const fight = run ? (run.entities('lightsFight')?.[0] ?? null) : null;
         track[o.t] = {
             t: o.t,
             level: o.level,

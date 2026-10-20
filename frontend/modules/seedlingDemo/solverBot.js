@@ -192,6 +192,23 @@ import { AXE_PRICED_CROSSING, AXE_PRICED_TRACE, admitAxeCrossing } from './axePr
 // ⛓ seedling-fidelity-arrowlane D2 — the armed-lane crossing arm (`ARROW_LANE_CROSSING`, OFF).
 import { ARROW_LANE_CROSSING, ARROW_LANE_TRACE, LaneCrossingExcept, admitLaneCrossing, laneCrossingExcept,
     laneCrossingFor } from './arrowLaneCrossing.js';
+// ⛓⛓⛓ SEEDLING FIDELITY LIGHTS D3: the L69 fight's verb (`lights`, behind `CONTACT_FIDELITY.lightsBossFight`).
+import { execLights } from './lightsVerb.js';
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY LIGHTS D3 — **A ROW THAT EXISTS ONLY WHILE ITS SWITCH IS ON.** `obj[key]` reads `get()`'s
+ * answer (`undefined` while the switch is off, which is what an absent row reads), and the row is NON-ENUMERABLE, so
+ * every reader that ENUMERATES the table — the catalogue invariants, `R8_STRATEGY_EXECUTORS`' derivation rows, the
+ * pending list, the entity blocks' strategy columns — reads it byte for byte as it was. `frontierExecutor`'s and
+ * `clearTagExecutor`'s own rule ("the frozen table every other reader enumerates"), applied to a table row so that
+ * rules-2's `bossGoal` (`OBSTACLE_STRATEGIES['solid:<type>']` + `STRATEGY_EXECUTORS[verb]`) picks the fight up with
+ * the switch and never without it. ⚠ At a default flip the row becomes a plain one (and owes the derivation row, the
+ * catalogue's pending list and `KNOWN_STRATEGY_VERBS`).
+ */
+function switchGatedRow(table, key, get) {
+    Object.defineProperty(table, key, { get, enumerable: false });
+    return table;
+}
 
 /**
  * ⛓⛓⛓ THE TRANSIT PROBE'S OWN NON-VACUITY, AS A FUNCTION.
@@ -467,7 +484,7 @@ const fail = (m, opts) => { throw new SolverBotError(m, opts); };
  *   rather than guessed. Registering an executor is one row here; that is
  *   the "adds policies rather than restructuring" contract.
  */
-export const OBSTACLE_STRATEGIES = Object.freeze({
+export const OBSTACLE_STRATEGIES = Object.freeze(switchGatedRow({
     'solid:pushableblock': 'shove',
     'solid:pushableblockfire': 'shove',
     /**
@@ -650,7 +667,7 @@ export const OBSTACLE_STRATEGIES = Object.freeze({
      */
     'proximity-hazard:iceturret': 'brave',
     'pickup': 'collect',
-});
+}, 'solid:lightbosscontroller', () => (CONTACT_FIDELITY.lightsBossFight ? 'lights' : undefined)));
 
 /**
  * ⛓⛓⛓ PROCGEN PoC SLICE 3b — **THE SECOND SELECTION PATH, AS DATA.**
@@ -715,7 +732,7 @@ export const STRATEGY_REFINEMENTS = Object.freeze([
  * row that had to DERIVE its own parameters rather than bind a placement: a
  * leg spec carried `{presser, ticks}` and a live policy has to work out both.
  */
-export const STRATEGY_EXECUTORS = Object.freeze({
+export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow({
     collect: execCollect,
     chest: execChest,
     hold: execHold,
@@ -803,7 +820,11 @@ export const STRATEGY_EXECUTORS = Object.freeze({
      * `resolveBraveStrategy`.
      */
     brave: execBrave,
-});
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY LIGHTS D3 — `lights` (registered below, switch-gated): the L69 fight as SORTIES and DODGES,
+     * each forecast on a clone of the run's own fight (`lightsVerb.js`), finished on {69,0} in `earnedClears`.
+     */
+}, 'lights', () => (CONTACT_FIDELITY.lightsBossFight ? execLights : undefined)));
 
 /**
  * ⛓⛓⛓ SEEDLING FIDELITY CRUSHER — **THE FRONTIER'S EXECUTOR LOOKUP**, and the
@@ -23974,6 +23995,37 @@ function solveSegmentUnder({
                 refuseCT('cannot-act', `${id} is SILENT — ${silent.why} — so it never runs \`doneTalking()\`, the `
                     + `only writer of its tag: no walk clears {${flag.level},${flag.tag}}`);
             }
+        }
+        /**
+         * ⛓⛓⛓ fidelity LIGHTS D3 (behind `CONTACT_FIDELITY.lightsBossFight`) — **THE LIGHTS CONTROLLER IS NO SOLID.**
+         * `LightBossController` is a bare `Entity` (the model's `notSolid`), so `world.solids` never holds it and the
+         * arm below would call {69,0} `already-clear` with the fight never fought. ON the world's own roster binds it
+         * (`lightsControllers`, a CLEARED row is the game's `check()` → `endState()`: really `already-clear`), and the
+         * verb is the table's (`lights`, `lightsVerb.execLights`), finished on the same ledger as every clear-tag.
+         */
+        const lightsRow = CONTACT_FIDELITY.lightsBossFight && cls === 'lightbosscontroller' && !solid
+            ? (run.world.lightsControllers ?? []).find((c) => c.id === id) ?? null : null;
+        if (lightsRow && lightsRow.cleared) {
+            done('already-clear', { why: `${id}'s tag is cleared at the build: \`check()\` ran \`endState()\` (the exit `
+                + 'Teleporter, no intro, no totem, no fliers) — the boot\'s persistence holds the report' });
+            return;
+        }
+        if (lightsRow) {
+            const verb = OBSTACLE_STRATEGIES[`solid:${cls}`];
+            seeRow({
+                tick: perTick.length,
+                saw: saw(),
+                goal: { kind: goal.kind, tag: { ...flag }, at: { x: goal.at.x, y: goal.at.y } },
+                obstacle: { kind: 'solid', id },
+                strategy: { verb },
+                rejected: [],
+                keys: [],
+            });
+            const record = STRATEGY_EXECUTORS[verb](run, perTick, { strategy: verb, obstacle: { kind: 'solid', tag: cls, id } },
+                { walkTo, goal, what: `${whatCT} -> ${verb}`, refuse: (reason, why) => refuseCT(reason, why) });
+            const waited = waitForWrite(`'${verb}' ran (${JSON.stringify(record).slice(0, 160)})`);
+            done('verb', { strategy: verb, waited, ...record });
+            return;
         }
         if (!solid && !watcher) {
             done('already-clear', { why: `no ${cls ?? 'solid'} stands at (${goal.at.x},${goal.at.y}) in level `

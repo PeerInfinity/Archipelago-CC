@@ -157,6 +157,8 @@ export function createLightsFight({ x, y, flierNum, tag }) {
         shots: [],
         shotSeq: 0,
         totemDie: false,
+        /** `Game.time` at the last unfrozen update (null before the first). */
+        time: null,
         /** `endState()` has run: the tick, or null. */
         endedAt: null,
         updates: 0,
@@ -206,6 +208,8 @@ export function stepLightsController(fight, { frozen = false, time = null } = {}
         fail(`stepLightsController: ${fight.id} steps its pattern on \`Game.worldFrame\` and this tick has no \`Game.time\` `
             + '— the radius, the spin and the shot frames are not derivable. Refused by name, never guessed.');
     }
+    /** The `Game.time` of this update — a forecast steps the next from `time + 1`. */
+    fight.time = time;
     flyPattern(fight, time, out);
     return out;
 }
