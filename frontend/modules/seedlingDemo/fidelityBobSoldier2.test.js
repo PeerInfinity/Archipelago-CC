@@ -84,9 +84,9 @@ describe('BOBSOLDIER2 D1 — the game witnesses', () => {
 });
 
 // ⛓ fidelity FLIP14: these four are BOBSOLDIER2's switch-by-switch CONTROLS, measured (and the both-ON plan
-// game-witnessed) under the pre-flip strike gate, so they run `strikeIframeLapse` OFF, solve and replay alike. ON (⚖ the
-// wave-14 flip, user 2026-10-12) step 50 REFUSES at every switch setting: the walk gate forbids (71.04,67.07) for
-// `bobsoldier@48,80` (FLIP14 report, D1 — a survey-row mover).
+// game-witnessed) under the pre-flip strike gate, so they run `strikeIframeLapse` OFF, solve and replay alike. (FLIP14
+// measured step 50 REFUSING at every switch setting with the lapse ON; STRIKELAPSE D1 and hammer DD repaired that —
+// the ON answers are the BS2FIX rows below.)
 describe('BOBSOLDIER2 D2 — the solver, switch by switch, on survey step 50\'s staging', () => {
     it('both ON: the solver\'s own plan IS the witness `bobsoldier2-l30-torch`', () => withContactFidelity({ strikeIframeLapse: false }, async () => {
         const { solved } = await bobsoldier2Plan(true);
@@ -111,6 +111,42 @@ describe('BOBSOLDIER2 D2 — the solver, switch by switch, on survey step 50\'s 
         const { refusal } = await bobsoldier2Plan(true, { killStance: false });
         expect(refusal.message).toMatch(/the dwell's condition .* never became true inside its 53-tick bound/);
     }), 120_000);
+});
+
+/**
+ * ⛓ BS2FIX (wave 20) — step 50 AT THE DEFAULTS (`strikeIframeLapse` ON), switch by switch. No setting of the two
+ * switches reaches the kill arm's dwell: the walk's lapse-admitted presses leave the collect's corridor clean, so the
+ * collect runs first (STRIKELAPSE D1's stand walk) with the body ALIVE on 2 hits. What decides is the exit walk's gate
+ * at (72.65,66.46): with `SWORD_GATE_TIMED` it prices the live body's blade by its tick and the walk's own press kills
+ * the body (`killedOnWalk`, hammer DD). Without it, pad 16 refuses. `KILL_STANCE_AS_FORECAST` moves only the length
+ * (395 vs 404 t). The both-ON plan is the retired producer's AFTER, recorded on the game (p4g, 396 obs, 0 px; the
+ * BS2FIX report's evidence).
+ */
+describe('BS2FIX — step 50 at the defaults: the gate decides, the dwell is never reached', () => {
+    const killOnWalk = (solved) => solved.out.records.find((r) => r.strategy === 'kill' && r.arm === 'chaser');
+    it('both ON: 395 t; the collect first, then the walk towards the stance (72,88) kills the body with its own press', async () => {
+        const { solved } = await bobsoldier2Plan(true);
+        expect(solved.out.perTick.length).toBe(395);
+        expect(solved.out.records.map((r) => r.strategy).filter(Boolean).slice(0, 2)).toEqual(['collect', 'kill']);
+        expect(killOnWalk(solved)).toMatchObject({ target: BODY, stance: { x: 72, y: 88 }, ticks: 0,
+            killedOnWalk: { pressedAt: 169, firedAt: 170, weapon: 'sword' } });
+    }, 120_000);
+
+    it('D2b alone: 404 t, the same kill on the walk (the stance walk dashed)', async () => {
+        const { solved } = await bobsoldier2Plan(true, { killStance: false });
+        expect(solved.out.perTick.length).toBe(404);
+        expect(killOnWalk(solved)).toMatchObject({ stance: { x: 72, y: 88 }, ticks: 0, killedOnWalk: { pressedAt: 168 } });
+    }, 120_000);
+
+    for (const [name, opts, on] of [['both OFF', {}, false], ['D2a alone', { swordGate: false }, true]]) {
+        it(`${name}: the exit walk's gate refuses the LIVE body by its pad at 168 t, after the collect`, async () => {
+            const { solved, refusal, driven } = await bobsoldier2Plan(on, opts);
+            expect(solved).toBeNull();
+            expect(driven).toHaveLength(168);
+            expect(refusal.message).toMatch(/reach-exit \(224,160\)->L32: the danger map forbids \(72\.65\d*,66\.46\d*\) — chaser:bobsoldier@48,80 \(inside leash 80 \(d=7\.1\), box grown 0\.8 px\/tick x 0 \+ pad 16\)/);
+            expect(refusal.message).not.toMatch(/the dwell's condition/);
+        }, 120_000);
+    }
 });
 
 describe('BOBSOLDIER2 D2b — the walk gate prices the corpse\'s blade by its clock', () => {
