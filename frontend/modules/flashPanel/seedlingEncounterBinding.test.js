@@ -31,6 +31,7 @@ import { ENCOUNTER_EXECUTORS } from '../seedlingDemo/solverBot.js';
 import { solverGoalFor, createInPlaceSolveService } from '../seedlingDemo/jsRuntimeSolver.js';
 import { arrivalSolveRequest, arrivalSolverGoal } from '../seedlingDemo/wasmArrival.js';
 import { withContactFidelity } from '../seedlingDemo/contactFidelity.js';
+import { encounterReportAddresses, encounterReportServed, locationGoalServed } from '../seedlingDemo/wasmPlayback.js';
 import { createRunForStaging, solveStaging, stagingFromTape } from '../seedlingDemo/tapeRunner.js';
 import { parseTape } from '../seedlingDemo/tapeFormat.js';
 import { atlasLevelSource } from '../seedlingDemo/levelSource.js';
@@ -262,6 +263,51 @@ describe('3 · CHECK — ⛓ R4b part 2: the fixed-address CLEAR, never the game
         // ⛓ R4b part 2 — the encounter locations are TABLE rows now
         expect(owned.has(BOB)).toBe(true);
         expect(owned.size).toBe(LOADED.table.size + 2);
+    });
+});
+
+/**
+ * ⛓ R7 — an ENCOUNTER leg is not interrupted by its OWN reports. The wasm playback's delivery gate freezes the room
+ * and re-plans when an item arrives mid-leg, unless the goal is SERVED; an encounter goal has no tag, so the kill's
+ * report ({32,3}, Times) delivered its item mid-fight, froze the Bob Boss leg at 818 t and re-staged it on
+ * `BobBoss.death`'s hold frame (logical-links B @c297b7ecd8: 1 divergence). The gate now also asks
+ * `encounterReportServed`: the reports the encounter itself produces (`R7_GOAL_LEDGER`'s fixed addresses in its level).
+ */
+describe('3b · the encounter\'s OWN reports serve it (the delivery gate does not re-plan on them)', () => {
+    const bob = () => resolveSeedlingAtlasGoal({ kind: 'location', name: BOB }, MAP).goal;
+    const witch = () => resolveSeedlingAtlasGoal({ kind: 'location', name: WITCH }, MAP).goal;
+    const cleared = (...a) => ({ persistence_cleared: a.map(([level, tag]) => ({ level, tag })) });
+
+    it('ON: Bob Boss reports the kill {32,3} and the drop {32,4}; the Witch {12,1} — read off R7_GOAL_LEDGER', () => {
+        withContactFidelity({ apReportBosses: true }, () => {
+            expect(encounterReportAddresses(bob()).map((a) => `${a.level},${a.tag}`).sort()).toEqual(['32,3', '32,4']);
+            expect(encounterReportAddresses(witch()).map((a) => `${a.level},${a.tag}`)).toEqual(['12,1']);
+        });
+    });
+
+    it('ON: an encounter leg that received its OWN {32,3} keeps running (served); {32,4} too', () => {
+        withContactFidelity({ apReportBosses: true }, () => {
+            expect(locationGoalServed(bob(), cleared([32, 1], [32, 3]))).toBe(false);   // the tagless goal alone never was
+            expect(encounterReportServed(bob(), cleared([32, 1], [32, 3]))).toBe(true);
+            expect(encounterReportServed(bob(), cleared([32, 1], [32, 3], [32, 4]))).toBe(true);
+        });
+    });
+
+    it('ON: a FOREIGN check still interrupts — the rock {32,1}, another room\'s clear, an empty set', () => {
+        withContactFidelity({ apReportBosses: true }, () => {
+            expect(encounterReportServed(bob(), cleared([32, 1]))).toBe(false);
+            expect(encounterReportServed(bob(), cleared([30, 2], [12, 1]))).toBe(false);
+            expect(encounterReportServed(bob(), cleared())).toBe(false);
+            // a non-encounter location goal is untouched (its own `locationGoalServed` is the only exemption)
+            expect(encounterReportServed({ kind: 'location', level: 32, tag: 0, name: 'x' }, cleared([32, 3]))).toBe(false);
+        });
+    });
+
+    it('OFF: byte-identical — no encounter report serves anything', () => {
+        withContactFidelity({ apReportBosses: false }, () => {
+            expect(encounterReportAddresses(bob())).toEqual([]);
+            expect(encounterReportServed(bob(), cleared([32, 3], [32, 4]))).toBe(false);
+        });
     });
 });
 
