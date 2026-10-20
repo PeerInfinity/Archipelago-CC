@@ -285,6 +285,14 @@ export const SHAKE_WRITERS = Object.freeze({
         op: '=', value: 15, src: 'Puzzlements/BeamTower.as:89-94',
         who: 'every update a BeamTower\'s beam touches the player',
     }),
+    /**
+     * ⛓ seedling-fidelity-bosskills D2 — the King of Fire's sweep (`lavaBoss.js`, under
+     * `CONTACT_FIDELITY.kingOfFireFight`): `Game.shake = 15` as the five-ball fan leaves, once a 99-update cycle.
+     */
+    lavaBossSweep: Object.freeze({
+        op: '=', value: 15, src: 'Enemies/LavaBoss.as:246',
+        who: 'every sweep of the King of Fire (L82), once a cycle',
+    }),
 });
 
 /**

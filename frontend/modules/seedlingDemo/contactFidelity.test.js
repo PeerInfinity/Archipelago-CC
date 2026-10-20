@@ -97,7 +97,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_STATUE_TALK_RANGE
         || !!process.env.SEEDLING_AXE_PRICED_CROSSING
         || !!process.env.SEEDLING_GUARD_APPROACH_STANCE || !!process.env.SEEDLING_COVERED_GOAL_REFUSAL
-        || !!process.env.SEEDLING_SHAKE_BAND_MOOT || !!process.env.SEEDLING_SPINNER_SWING_LOS)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_SHAKE_BAND_MOOT || !!process.env.SEEDLING_SPINNER_SWING_LOS
+        || !!process.env.SEEDLING_KING_OF_FIRE_FIGHT || !!process.env.SEEDLING_TENTACLE_BEAST_FIGHT)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -187,7 +188,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             apReportBosses: true,
             // ⛓ fidelity L40GUARD: `guardApproachStance` (D2), `coveredGoalRefusal` (D3), `shakeBandMoot` and
             // `spinnerSwingLineOfSight` (D4) shipped OFF; ⛓ planning-9's flip (⚖ user "Flip all four", 2026-10-19) turns them ON.
-            guardApproachStance: true, coveredGoalRefusal: true, shakeBandMoot: true, spinnerSwingLineOfSight: true });
+            guardApproachStance: true, coveredGoalRefusal: true, shakeBandMoot: true, spinnerSwingLineOfSight: true,
+            // ⛓ seedling-fidelity-bosskills: the King of Fire's and the Tentacled Beast's fights ship OFF.
+            kingOfFireFight: false, tentacleBeastFight: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

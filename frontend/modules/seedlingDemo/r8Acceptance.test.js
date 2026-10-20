@@ -114,7 +114,8 @@ describe('R8_NORMALIZE_LIVE_BATCH — the prediction, stated first', () => {
         expect(r.total).toBe(LIVE_GEOMETRY_KEYS.length);
         expect(r.forwarded).toBe(8);
         // ⛓ fidelity BEAMTOWER D1: 6 → 7, `beamTowers` (the planner reads a tower's placement; the run's sweep the drift).
-        expect(r.dropped).toBe(7);
+        // ⛓ seedling-fidelity-bosskills D2: 7 → 8, `lavaBosses` (the planner reads the King of Fire's placement).
+        expect(r.dropped).toBe(8);
     });
 
     /**

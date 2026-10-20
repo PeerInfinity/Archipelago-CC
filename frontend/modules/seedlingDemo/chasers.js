@@ -652,7 +652,8 @@ export function chaseImpulse(tag, enemy, player) {
     // ⛓ KILLLOCK K2: a body whose speed its own update re-chooses (`speedByTerrain`) carries it; every other reads
     // the census row.
     const ms = enemy.moveSpeed ?? row.speed;
-    const range = row.aggro.range;
+    // ⛓ bosskills D2: a body that writes its own `runRange` (the King of Fire's runners, 1000) carries it.
+    const range = enemy.runRange ?? row.aggro.range;
     const tx = player.x + c.targetOffset.x;
     const ty = player.y + c.targetOffset.y;
     const d = vlen(tx - enemy.x, ty - enemy.y);
@@ -738,7 +739,7 @@ export function chaserStep(tag, enemy, player, {
     // ⛓ fidelity-bobsoldier: a class with no `destroy`/"die" return (`chasesWhileDying`) chases on.
     const blocked = (dying && c.chasesWhileDying !== true) || (c.freezesOnGameFreeze && frozen)
         || (enemy.attack !== null && enemy.attack !== undefined);
-    if (!blocked) v = chaseImpulse(tag, { x, y, v, moveSpeed: enemy.moveSpeed }, player);
+    if (!blocked) v = chaseImpulse(tag, { x, y, v, moveSpeed: enemy.moveSpeed, runRange: enemy.runRange }, player);
 
     return { x, y, v, iframesTicked };
 }
