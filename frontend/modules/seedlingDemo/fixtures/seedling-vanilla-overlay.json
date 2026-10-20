@@ -394,7 +394,7 @@
     },
     "70": {
       "rules": {
-        "exit:out_pit_3_7": {
+        "exit:out_pit_3_8": {
           "rule": "Or",
           "children": [
             { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
@@ -579,6 +579,6 @@
       ]
     }
   },
-  "provenance": { "content_hash": "66b277a9" },
-  "overlay_id": "seedling-vanilla-overlay-66b277a9"
+  "provenance": { "content_hash": "ce861fd8" },
+  "overlay_id": "seedling-vanilla-overlay-ce861fd8"
 }

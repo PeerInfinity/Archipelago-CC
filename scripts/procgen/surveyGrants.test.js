@@ -86,6 +86,19 @@ describe('deriveStagedGrant — the route\'s own pickups', () => {
         ]);
     });
 
+    // ⛓ rules-r4b-followup: a BOSS row's goal carries its `report` address, whichever kind serves it — it is
+    //   credited like any check; an event's clear-tag (no `report`) grants nothing.
+    it('a boss goal with a `report` is credited whatever its kind; an event clear-tag is not', () => {
+        const boss = (step, kind) => ({ step, level: 40, goals: [{ kind, location: 'Level 040 - Chest',
+            report: { level: 40, tag: 0 } }] });
+        for (const kind of ['clear-tag', 'skip', 'encounter']) {
+            const g = deriveStagedGrant({ earlier: [boss(1, kind)], pickups: ROWS, game: GAME, latchItems: {} });
+            expect(g.saveCounts).toEqual({ seal_parts: 1 });
+        }
+        const event = { step: 1, level: 40, goals: [{ kind: 'clear-tag', location: 'flag:L40:3' }] };
+        expect(deriveStagedGrant({ earlier: [event], pickups: ROWS, game: GAME, latchItems: {} })).toBeNull();
+    });
+
     it('unpresentable: \'report\' NAMES what a boot cannot present instead of throwing', () => {
         const earlier = [at(1, 40, 'Level 040 - Chest'), at(2, 68, 'Level 068 - Health'),
             at(3, 40, 'Level 040 - Boss Key 2')];
