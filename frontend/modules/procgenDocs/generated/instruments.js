@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 80,
-            "count": 127,
+            "browser": 81,
+            "count": 128,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 430,
-        "browser": 145,
+        "blockStyle": 431,
+        "browser": 146,
         "cited": 225,
-        "files": 443,
+        "files": 444,
         "lineStyle": 13,
-        "withDocblock": 443,
-        "withFlags": 359
+        "withDocblock": 444,
+        "withFlags": 360
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -11764,6 +11764,47 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-l14-swordless — ⛓ SEEDLING FIDELITY L14 D1: IS A 0-HIT SWORDLESS CROSSING OF L14 POSSIBLE AT ALL?",
             "path": "scripts/procgen/probe-seedling-l14-swordless.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "out",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-l32-rock-move.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L32 Bob-arena rock, MOVED, ON THE GAME (rules `rules-l32-rock-move`).",
+            "path": "scripts/procgen/probe-seedling-l32-rock-move.mjs"
         },
         {
             "argvHelpers": [
