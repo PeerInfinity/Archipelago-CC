@@ -82,6 +82,8 @@
  * default and register as a pin in the four-way law the pin gate enforces.
  */
 
+import { CONTACT_FIDELITY } from '../seedlingDemo/contactFidelity.js';
+
 /** The one capability this arc defines: the build carries `Pickups/APItem.as`
  *  and its `<apitem>` element in `Game.as`'s XML loop. */
 export const AP_ITEM_CAPABILITY = 'apitem';
@@ -185,7 +187,22 @@ export const WASM_BUILD_CAPABILITIES = Object.freeze(
  * tag ALLOCATED (P4E) is refused by name, as on a wasm build without it.
  */
 export const JS_TRANSPORT = 'js';
+/**
+ * ⛓ The JS runtime's list as it stood before R4, `[apitem]`. ⚠ KEPT because it is imported from outside this file:
+ * `seedlingDemo/jsRuntimeCore.js:151` re-exports it (pinned by identity at `jsRuntimeCore.test.js:139`), and
+ * `seedlingRandomizerWiring.js` imported it. The live answer is `jsRuntimeCapabilities()` below.
+ */
 export const JS_RUNTIME_CAPABILITIES = Object.freeze([AP_ITEM_CAPABILITY]);
+/**
+ * ⛓ fidelity APFLIP D5 — THE JS RUNTIME'S CAPABILITIES, READ LIVE. The JS model reports the boss kills, the Witch's
+ * sword and Bob's Fire drop exactly when its R4 mirror is on (`CONTACT_FIDELITY.apReportBosses`, `apReportBosses.js`),
+ * so `bossreport` is declared then and only then. Read on every call (a toggled switch answers at once), never
+ * cached at import.
+ */
+export function jsRuntimeCapabilities() {
+    return CONTACT_FIDELITY.apReportBosses === true
+        ? [AP_ITEM_CAPABILITY, BOSS_REPORT_CAPABILITY] : [AP_ITEM_CAPABILITY];
+}
 /**
  * ⛓ J3 — the arms the JS runtime plays, by the arm an eligible verdict names
  * (`RANDOMIZER_ARMS`: a diverting check's id, or `vanilla` when none diverts).
@@ -286,7 +303,7 @@ function checkTransport({ flashPanel, transport }) {
 /** ── (ii) THE BUILD'S OWN DECLARATION ──────────────────────────────────── */
 function checkCapability({ flashPanel, manifest, transport }) {
     if (transport === JS_TRANSPORT) {
-        return JS_RUNTIME_CAPABILITIES.includes(AP_ITEM_CAPABILITY)
+        return jsRuntimeCapabilities().includes(AP_ITEM_CAPABILITY)
             ? pass(`the JS runtime declares ${AP_ITEM_CAPABILITY}`)
             : fail(`the JS runtime does not declare ${JSON.stringify(AP_ITEM_CAPABILITY)}`);
     }
