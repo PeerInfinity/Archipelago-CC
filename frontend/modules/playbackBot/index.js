@@ -31,12 +31,13 @@ export const moduleInfo = {
     icon: '🤖',
     column: 3,
     category: 'Procgen Infrastructure Panels',
-    description: 'Replays a sphere log\'s playthrough by driving the current region\'s game, with play, step, speed and walk-to.',
+    description: 'Replays a sphere log\'s playthrough by driving the current region\'s game, with play, step, speed and walk-to; or checks any reachable location on a timer.',
     requires: [],
     storage: [
         { key: 'playbackBot_intercept', kind: STORAGE_KINDS.state, label: 'Playback Bot: intercept toggle' },
         { key: 'playbackBot_mazeCollect', kind: STORAGE_KINDS.state, label: 'Playback Bot: maze collect policy' },
         { key: 'playbackBot_manaStrategy', kind: STORAGE_KINDS.state, label: 'Playback Bot: loop-mode mana strategy' },
+        { key: 'playbackBot_targetSource', kind: STORAGE_KINDS.state, label: 'Playback Bot: check next (sphere log / any reachable)' },
     ],
 };
 

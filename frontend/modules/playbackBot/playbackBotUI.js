@@ -42,6 +42,14 @@ const LS_INTERCEPT_KEY = 'playbackBot_intercept';
 const LS_MAZE_COLLECT_KEY = 'playbackBot_mazeCollect';
 // ⛓ LOOP MODE — what a loop does when its task is not affordable yet (⚖ the user: a setting). loopDriver.js.
 const LS_MANA_STRATEGY_KEY = 'playbackBot_manaStrategy';
+// ⛓ TARGET SOURCE — what the bot checks next: the sphere log's order (default), or ANY reachable location, the
+// old Timer panel's behaviour (the `timer` module's TimerLogic does the picking and pacing; see `timer` below).
+const LS_TARGET_SOURCE_KEY = 'playbackBot_targetSource';
+export const TARGET_SOURCES = Object.freeze({ sphere: 'sphere', reachable: 'reachable' });
+const TARGET_SOURCE_LABELS = Object.freeze({
+    sphere: 'Sphere log, in order',
+    reachable: 'Any reachable location (timer)',
+});
 const COLLECT_NEVER = 'never';
 const COLLECT_ALWAYS = 'always';
 // Cap on how many dispatcher events to keep in the event log so the
@@ -176,7 +184,16 @@ export class PlaybackBotUI {
         getCurrentRegion = null,
         isLoopModeActive = null,
         loopRunnerDeps = null,
+        timer = null,
     } = {}) {
+        // ⛓ TARGET SOURCE 'reachable' — the bot drives the timer module's TimerLogic instead of the sphere queue:
+        // `timer` is `{ begin, stop, quickCheck, isRunning, onRunningChanged(fn) → unsubscribe }` (the panel builds it
+        // from the timer module's public functions). Play = Begin, Step = Quick Check, Instant = Play (the timer has
+        // its own pacing: its check delay, the Console's /delay), Stop = Stop. Its checks carry `fromBot`, so the
+        // click intercept never swallows them.
+        this._timer = timer;
+        this._targetSource = loadTargetSourceFromLS();
+        this._offTimerRunning = timer?.onRunningChanged?.((running) => this._onTimerRunningChanged(running)) ?? null;
         // ⛓ LOOP MODE (loop-mode-bot S3) — in loop mode the bot plays by AUTHORING THE LOOPS QUEUE, one loop at a
         // time (LoopModeRunner over loopDriver.js); `loopRunnerDeps` is what the runner reads from the live game.
         this._loopRunnerDeps = loopRunnerDeps;
@@ -308,6 +325,8 @@ export class PlaybackBotUI {
 
     destroy() {
         this._loopRunner?.stop();
+        if (typeof this._offTimerRunning === 'function') this._offTimerRunning();
+        this._offTimerRunning = null;
         if (this._controlBar) this._controlBar.destroy();
         if (this._element?.parentNode) {
             this._element.parentNode.removeChild(this._element);
@@ -326,6 +345,7 @@ export class PlaybackBotUI {
 
     async play(rateHz = this._rate) {
         this._rate = rateHz;
+        if (this._usesTimer()) return this._timerBegin();
         if (this._inLoopMode()) return this._playLoops();
         this._instantMode = false;
         this._syncCurrentRegion();
@@ -357,11 +377,13 @@ export class PlaybackBotUI {
         this._cancelDirectTimer();
         this._directOnce = false;
         this._loopRunner?.stop();
+        if (this._timer?.isRunning?.()) this._timer.stop();
         this._dispatch('stop');
         this._syncControlBar();
     }
 
     async step() {
+        if (this._usesTimer()) return this._timerQuickCheck();
         if (this._inLoopMode()) return this._playLoops({ once: true });
         this._syncCurrentRegion();
         this._ensureQueueBuilt();
@@ -382,6 +404,8 @@ export class PlaybackBotUI {
     }
 
     async instant() {
+        // The timer keeps its own check delay: Instant there is Play.
+        if (this._usesTimer()) return this._timerBegin();
         // Loop mode keeps the user's Loops speed settings (⚖): Instant there is Play.
         if (this._inLoopMode()) return this._playLoops();
         this._instantMode = true;
@@ -422,6 +446,7 @@ export class PlaybackBotUI {
         this._instantMode = false;
         this._loopRunner?.stop();
         this._loopRunner = null;
+        if (this._timer?.isRunning?.()) this._timer.stop();
         this._dispatch('reset');
         this._render();
     }
@@ -453,9 +478,9 @@ export class PlaybackBotUI {
         this._syncControlBar();
     }
 
-    /** True while the sphere queue walks or a Loops run (a stepped loop included) is in flight. */
+    /** True while the sphere queue walks, a Loops run (a stepped loop included) is in flight, or the timer runs. */
     _syncControlBar() {
-        this._controlBar?.setRunning(this._active || !!this._loopRunner?.isActive());
+        this._controlBar?.setRunning(this._active || !!this._loopRunner?.isActive() || this._timerRunning());
     }
     getLog() { return this._log.slice(); }
     isInterceptEnabled() { return this._interceptEnabled; }
@@ -818,6 +843,50 @@ export class PlaybackBotUI {
     /** Loop mode, and the panel gave the bot what the Loop runner needs. */
     _inLoopMode() {
         return !!this._loopRunnerDeps && !!this._isLoopModeActive?.();
+    }
+
+    getTargetSource() { return this._targetSource; }
+
+    /**
+     * Switch what the bot checks next. A running walk or timer stops first: the two never run together.
+     * 'reachable' is refused without a timer (the timer module is not loaded).
+     */
+    setTargetSource(source) {
+        if (!Object.values(TARGET_SOURCES).includes(source) || source === this._targetSource) return;
+        if (source === TARGET_SOURCES.reachable && !this._timer) return;     // no timer module loaded
+        if (this._isActive || this._loopRunner?.isActive() || this._timerRunning()) this.stop();
+        this._targetSource = source;
+        saveTargetSourceToLS(source);
+        if (this._targetSourceSelect) this._targetSourceSelect.value = source;
+        this._status = 'idle';
+        this._render();
+    }
+
+    /** The 'reachable' source, and the panel wired a timer. */
+    _usesTimer() {
+        return this._targetSource === TARGET_SOURCES.reachable && !!this._timer;
+    }
+
+    _timerRunning() {
+        return !!this._timer?.isRunning?.();
+    }
+
+    _timerBegin() {
+        if (!this._timerRunning()) this._timer.begin();
+        this._syncControlBar();
+    }
+
+    async _timerQuickCheck() {
+        const sent = await this._timer.quickCheck();
+        this._setStatus(sent ? 'checked one reachable location' : 'no unchecked location is reachable');
+        this._render();
+    }
+
+    _onTimerRunningChanged(running) {
+        if (this._targetSource !== TARGET_SOURCES.reachable) return;
+        this._setStatus(running ? 'checking reachable locations…' : 'stopped');
+        this._syncControlBar();
+        this._render();
     }
 
     getManaStrategy() { return this._manaStrategy; }
@@ -1563,6 +1632,7 @@ export class PlaybackBotUI {
         // pathfinder instead of being applied immediately. Setting
         // is consulted by the dispatcher receivers in
         // playbackBot/index.js via isInterceptEnabled().
+        root.appendChild(this._mountTargetSource());
         root.appendChild(this._mountInterceptToggle());
         root.appendChild(this._mountManaStrategy());
 
@@ -1617,6 +1687,27 @@ export class PlaybackBotUI {
 
         this._element = root;
         this._render();
+    }
+
+    _mountTargetSource() {
+        const wrap = document.createElement('label');
+        wrap.className = 'playback-bot-target-source';
+        const text = document.createElement('span');
+        text.textContent = 'Check next: ';
+        wrap.appendChild(text);
+        const select = document.createElement('select');
+        for (const value of Object.values(TARGET_SOURCES)) {
+            const opt = document.createElement('option');
+            opt.value = value;
+            opt.textContent = TARGET_SOURCE_LABELS[value];
+            select.appendChild(opt);
+        }
+        select.value = this._targetSource;
+        select.disabled = !this._timer;
+        select.addEventListener('change', () => this.setTargetSource(select.value));
+        wrap.appendChild(select);
+        this._targetSourceSelect = select;
+        return wrap;
     }
 
     _mountManaStrategy() {
@@ -1762,6 +1853,8 @@ export class PlaybackBotUI {
             if (this._status && this._status !== 'idle') {
                 // ⛓ S2 — a live walk's note ("solving…") rides after the status.
                 this._statusEl.textContent = this._walkNote ? `${this._status} — ${this._walkNote}` : this._status;
+            } else if (this._usesTimer()) {
+                this._statusEl.textContent = 'Any reachable location: Play checks them on the timer, Step checks one now.';
             } else {
                 const data = this._getSphereData?.() ?? [];
                 const total = Array.isArray(data) ? data.length : 0;
@@ -1881,6 +1974,21 @@ function loadManaStrategyFromLS() {
 function saveManaStrategyToLS(strategy) {
     try {
         if (typeof localStorage !== 'undefined') localStorage.setItem(LS_MANA_STRATEGY_KEY, strategy);
+    } catch (_e) { /* storage unavailable */ }
+}
+
+function loadTargetSourceFromLS() {
+    try {
+        const v = typeof localStorage === 'undefined' ? null : localStorage.getItem(LS_TARGET_SOURCE_KEY);
+        return Object.values(TARGET_SOURCES).includes(v) ? v : TARGET_SOURCES.sphere;
+    } catch (_e) {
+        return TARGET_SOURCES.sphere;
+    }
+}
+
+function saveTargetSourceToLS(source) {
+    try {
+        if (typeof localStorage !== 'undefined') localStorage.setItem(LS_TARGET_SOURCE_KEY, source);
     } catch (_e) { /* storage unavailable */ }
 }
 
