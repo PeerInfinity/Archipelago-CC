@@ -168,6 +168,7 @@ const synth = synthesizeLegs(D5_WALK.legs.map((l) => ({
         noHazards: [...D5_WALK.noHazards],
         grants: D5_WALK.grants.map((g) => ({ level: g.level, items: [...g.items] })),
         persistence: [],
+        equips: [],
         pins: [...D5_WALK.pins],
     },
 });

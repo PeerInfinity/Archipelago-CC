@@ -59,7 +59,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 3,
+            "count": 4,
             "id": "ci"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 430,
+        "blockStyle": 431,
         "browser": 145,
-        "cited": 225,
-        "files": 443,
+        "cited": 226,
+        "files": 444,
         "lineStyle": 13,
-        "withDocblock": 443,
-        "withFlags": 359
+        "withDocblock": 444,
+        "withFlags": 360
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -5314,6 +5314,63 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "ci",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "jobs",
+                "only",
+                "timeout-s"
+            ],
+            "file": "ci-producer-checks.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "jobs"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "timeout-s"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "write"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "ci-producer-checks — **EVERY PRODUCER'S OWN `--check`, AND A NON-ZERO rc FAILS THE RUN** (Seedling hammer-phase slice RR, ⚖ user 2026-10-19).",
+            "path": "scripts/procgen/ci-producer-checks.mjs"
+        },
+        {
+            "argvHelpers": [
                 "arg",
                 "flag"
             ],
@@ -8230,9 +8287,7 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/plan-seedling-proximity-witness.mjs"
         },
         {
-            "argvHelpers": [
-                "xAt"
-            ],
+            "argvHelpers": [],
             "browser": false,
             "category": "plan",
             "citedBy": [],

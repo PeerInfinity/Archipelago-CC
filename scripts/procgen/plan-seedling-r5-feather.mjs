@@ -36,7 +36,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
 
-const { buildLevelWorld, ROLES, TILE_SIZE } = await import(join(MODULE, 'levelWorld.js'));
+const { buildLevelWorld, ROLES, TILE_SIZE, PICKUP_CLEARS_OWN_TAG } = await import(join(MODULE, 'levelWorld.js'));
 const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
 const { playerBoxAt } = await import(join(MODULE, 'playerPhysicsV2.js'));
 const { synthesizeLegs } = await import(join(MODULE, 'botDriverV2.js'));
@@ -143,6 +143,7 @@ const synth = synthesizeLegs(FEATHER_WALK.legs.map((l) => ({
         noHazards: [...FEATHER_WALK.noHazards],
         grants: FEATHER_WALK.grants.map((g) => ({ level: g.level, items: [...g.items] })),
         persistence: [],
+        equips: [],
         pins: [...FEATHER_WALK.pins],
     },
 });
@@ -216,12 +217,22 @@ if (run.inventory[FEATHER.property] !== true) {
 // ⚠ TWO LEDGERS. A pickup's clear comes through `collected`, an opener's
 // through `earnedClears`, and the game reports their UNION. Both are
 // checked as exact sets so neither can quietly absorb the other's entry.
+// ⛓ SINCE bb156222b6 (R7 slice 6, "a pickup's own tag reaches earnedClears")
+// a pickup whose `removed()` writes its own tag ALSO lands in `earnedClears`,
+// as its own family — `Feather.as:45` is `setPersistence(tag, false)`, so
+// {89,0} is a flag this walk turned off itself, and the model is right to
+// say so. The opener set is therefore the declared openers PLUS every
+// declared pickup whose class is in `PICKUP_CLEARS_OWN_TAG` — derived from
+// the model's own table, not listed here, so a pickup that writes no tag
+// (`bosskey`, …) still cannot appear on that side.
 const openers = (run.earnedClears ?? []).map((c) => `${c.level}:${c.tag}`).sort();
 const picked = (run.collected ?? []).map((c) => {
     const decl = FEATHER_EARNED.find((d) => d.level === c.level);
     return `${c.level}:${decl ? decl.tag : '?'}`;
 }).sort();
-const wantOpeners = FEATHER_EARNED.filter((c) => c.from === 'earnedClears')
+const wantOpeners = FEATHER_EARNED.filter((c) => c.from === 'earnedClears'
+    || (c.from === 'collected' && c.level === FEATHER.level
+        && PICKUP_CLEARS_OWN_TAG[FEATHER.item] !== undefined))
     .map((c) => `${c.level}:${c.tag}`).sort();
 const wantPicked = FEATHER_EARNED.filter((c) => c.from === 'collected')
     .map((c) => `${c.level}:${c.tag}`).sort();

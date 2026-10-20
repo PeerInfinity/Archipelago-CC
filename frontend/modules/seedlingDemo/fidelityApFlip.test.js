@@ -19,6 +19,8 @@ import { AP_BOSS_PERSISTENCE_RESPONSE, ROLES, buildLevelWorld, persistenceRespon
 import { PIN_NAMES, parseTape } from './tapeFormat.js';
 import { createRunForStaging, runTape, solveStaging, stagingFromTape } from './tapeRunner.js';
 import { withContactFidelity } from './contactFidelity.js';
+import { liveClears } from './jsRuntimeCore.js';
+import { loadTape } from './fixtures/index.js';
 import { createBossTotem, stepBossTotem } from './bossTotem.js';
 
 const ON = { apReportBosses: true };
@@ -173,5 +175,25 @@ describe('APFLIP D4 — H2: the four boss rooms rebuilt after their kill (AS3 @c
         });
         // the earned clear is in both arms; only ON is it a PENDING clear (the persist part of the digest moves)
         expect(persistAfter(ON)).not.toBe(persistAfter(OFF));
+    });
+});
+
+describe('APFLIP harvest — the Owl\'s report reaches the page\'s `persistence_cleared` on its write tick', () => {
+    // ⛓ R4 makes {112,0} the Owl's REPORT. `FinalBoss.endAnim`'s "dead" arm writes {112,0} and {112,1} in one frame,
+    // and `earnedClearsNow` has no `finalBossFlags` loop, so the readout comes through `bankedClears` (the kill's
+    // `pendingEarnedClears`), the ledger `jsRuntimeCore.liveClears` folds. Measured both arms on `r6-owl-kill`: the
+    // write is t814, the readout carries both flags from the next observation (815). This pins that path, so a change
+    // that drops the bank cannot lose the Owl's report silently.
+    const firstSeen = (arm) => withContactFidelity(arm, () => {
+        let first = null;
+        runTape(loadTape('r6-owl-kill'), { levelSource: atlasLevelSource(), onTick: (t, s, h, run) => {
+            if (first === null && [0, 1].every((tag) => liveClears(run).some((c) => c.level === 112 && c.tag === tag))) {
+                first = { t, written: run.finalBossKills.find((k) => k.what === 'tagsWritten')?.t };
+            }
+        } });
+        return first;
+    });
+    it.each([['ON', ON], ['OFF', OFF]])('%s: {112,0} and {112,1} are in the readout on the tick after the write', (_, arm) => {
+        expect(firstSeen(arm)).toEqual({ t: 815, written: 814 });
     });
 });
