@@ -862,27 +862,6 @@ export function encounterReportServed(goal, status) {
 }
 
 /**
- * ⛓ R7 (planner-ruled, inside the R7 landing) — whether a delivery the model refused for `slot-use` in a HELD room is
- * this room's ENCOUNTER DROP coming back from the host: (a) the clause is `slot-use`; (b) an encounter row of
- * `R7_GOAL_LEDGER` in this level has its report address CLEARED in the live game (the room's encounter reported its
- * own drop: L32's Fire {32,4}, L12's dark sword {12,1}); (c) the delivered slot items are EXACTLY that row's item
- * (`row.flag`: `hasFire` / `hasDarkSword`). The engine then takes deliverHeld's AT-ARRIVAL branch (write it, then the
- * forced re-arrival, which re-stages from the LIVE game) instead of waiting out the room: the R4 drop grants nothing,
- * so the item that opens the arena's pit arrives from the host INTO the room it is needed in. Returns the row, or
- * null. Always null while `CONTACT_FIDELITY.apReportBosses` is OFF (byte-identical).
- *
- * @param {{level:number, status:object, refusal:{clause:string}|null, slotItems:string[]}} o
- */
-export function encounterDropDelivery({ level, status, refusal, slotItems }) {
-    if (CONTACT_FIDELITY.apReportBosses !== true || refusal?.clause !== 'slot-use') return null;
-    const cleared = status?.persistence_cleared ?? [];
-    const items = [...new Set(slotItems ?? [])];
-    return R7_GOAL_LEDGER.find((r) => r.kind === 'encounter' && r.address && r.level === level
-        && cleared.some((c) => c.level === r.address.level && c.tag === r.address.tag)
-        && items.length === 1 && items[0] === r.flag) ?? null;
-}
-
-/**
  * ⚖ W-Q3 (W3): how many FORCED RE-ARRIVALS one goal may spend on divergences
  * before it fails by name. The divergence after the last one is the failure —
  * so a goal plays at most `MAX_RECOVERIES + 1` plan tapes.

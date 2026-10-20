@@ -31,7 +31,7 @@ import { ENCOUNTER_EXECUTORS } from '../seedlingDemo/solverBot.js';
 import { solverGoalFor, createInPlaceSolveService } from '../seedlingDemo/jsRuntimeSolver.js';
 import { arrivalSolveRequest, arrivalSolverGoal } from '../seedlingDemo/wasmArrival.js';
 import { withContactFidelity } from '../seedlingDemo/contactFidelity.js';
-import { encounterDropDelivery, encounterReportAddresses, encounterReportServed, locationGoalServed } from '../seedlingDemo/wasmPlayback.js';
+import { encounterReportAddresses, encounterReportServed, locationGoalServed } from '../seedlingDemo/wasmPlayback.js';
 import { createRunForStaging, solveStaging, stagingFromTape } from '../seedlingDemo/tapeRunner.js';
 import { parseTape } from '../seedlingDemo/tapeFormat.js';
 import { atlasLevelSource } from '../seedlingDemo/levelSource.js';
@@ -307,48 +307,6 @@ describe('3b · the encounter\'s OWN reports serve it (the delivery gate does no
         withContactFidelity({ apReportBosses: false }, () => {
             expect(encounterReportAddresses(bob())).toEqual([]);
             expect(encounterReportServed(bob(), cleared([32, 3], [32, 4]))).toBe(false);
-        });
-    });
-});
-
-/**
- * ⛓ R7 (planner-ruled) — the host's copy of the room's ENCOUNTER DROP is written in the held room and the room is
- * re-entered from the live game (deliverHeld's at-arrival branch), not waited out to the room's end: on the R4 AS3
- * the drop grants nothing, and in L32 the Fire it delivers is what burns the arena's own exit. ONLY (a) `slot-use`,
- * (b) this level's encounter report cleared, (c) exactly that encounter's item; everything else defers as before.
- */
-describe('3c · the encounter DROP delivered in its own held room (not waited out to the room\'s end)', () => {
-    const slotUse = { clause: 'slot-use', why: 'x' };
-    const st = (...a) => ({ persistence_cleared: a.map(([level, tag]) => ({ level, tag })) });
-    const on = (fn) => withContactFidelity({ apReportBosses: true }, fn);
-
-    it('ON: L32\'s Fire under slot-use, {32,4} reported → the fire@L32 row (the forced branch)', () => on(() => {
-        expect(encounterDropDelivery({ level: 32, status: st([32, 1], [32, 3], [32, 4]), refusal: slotUse, slotItems: ['hasFire'] })?.id)
-            .toBe('fire@L32');
-        expect(encounterDropDelivery({ level: 12, status: st([12, 1]), refusal: slotUse, slotItems: ['hasDarkSword'] })?.id)
-            .toBe('darksword@L12');
-    }));
-
-    it('ON: a FOREIGN slot item under slot-use is still deferred (null) — another item, or Fire plus another', () => on(() => {
-        expect(encounterDropDelivery({ level: 32, status: st([32, 4]), refusal: slotUse, slotItems: ['hasWand'] })).toBe(null);
-        expect(encounterDropDelivery({ level: 32, status: st([32, 4]), refusal: slotUse, slotItems: ['hasFire', 'hasSpear'] })).toBe(null);
-        expect(encounterDropDelivery({ level: 30, status: st([32, 4]), refusal: slotUse, slotItems: ['hasFire'] })).toBe(null);
-    }));
-
-    it('ON: the drop NOT yet reported (no {32,4}) → deferred (null): the room\'s own drop has not happened', () => on(() => {
-        expect(encounterDropDelivery({ level: 32, status: st([32, 1], [32, 3]), refusal: slotUse, slotItems: ['hasFire'] })).toBe(null);
-    }));
-
-    it('ON: any other refusal clause is unchanged (null) — build, prefix, slot-index, none', () => on(() => {
-        for (const clause of ['build', 'prefix', 'slot-index']) {
-            expect(encounterDropDelivery({ level: 32, status: st([32, 4]), refusal: { clause, why: 'x' }, slotItems: ['hasFire'] })).toBe(null);
-        }
-        expect(encounterDropDelivery({ level: 32, status: st([32, 4]), refusal: null, slotItems: ['hasFire'] })).toBe(null);
-    }));
-
-    it('OFF: byte-identical — never the forced branch', () => {
-        withContactFidelity({ apReportBosses: false }, () => {
-            expect(encounterDropDelivery({ level: 32, status: st([32, 4]), refusal: slotUse, slotItems: ['hasFire'] })).toBe(null);
         });
     });
 });
