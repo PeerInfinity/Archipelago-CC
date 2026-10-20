@@ -1,0 +1,156 @@
+{
+ "tape_version": 8,
+ "game": "seedling",
+ "boot": {
+  "level": 76,
+  "x": 16,
+  "y": 80
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [],
+ "despawn": [],
+ "equips": [],
+ "pins": [
+  "sound",
+  "dead_frames"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 418414780,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 1763053598
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasFire": true,
+   "hasWand": true,
+   "hasFireWand": false,
+   "canSwim": true,
+   "hasSpear": true,
+   "hasDarkShield": true,
+   "hasDarkSuit": false,
+   "hasDarkSword": true,
+   "hasFeather": true,
+   "hasTorch": true
+  },
+  "beam": false,
+  "rock_set": false,
+  "hits_max": 4,
+  "first_use": false,
+  "extended": false,
+  "time": 5790,
+  "primary": 0,
+  "secondary": 0,
+  "grass_cut": 0,
+  "cutscene": [
+   false,
+   false,
+   false,
+   false
+  ],
+  "menu_state": 0,
+  "music": {
+   "set": "Room",
+   "index": 1
+  }
+ },
+ "tick0": null,
+ "hold": false,
+ "tick_count": 90,
+ "inputs": [
+  {
+   "key": "primary",
+   "from": 0,
+   "to": 1
+  },
+  {
+   "key": "right",
+   "from": 0,
+   "to": 3
+  },
+  {
+   "key": "primary",
+   "from": 2,
+   "to": 3
+  },
+  {
+   "key": "left",
+   "from": 3,
+   "to": 4
+  },
+  {
+   "key": "right",
+   "from": 4,
+   "to": 9
+  },
+  {
+   "key": "primary",
+   "from": 8,
+   "to": 9
+  },
+  {
+   "key": "left",
+   "from": 10,
+   "to": 15
+  },
+  {
+   "key": "primary",
+   "from": 14,
+   "to": 15
+  },
+  {
+   "key": "right",
+   "from": 15,
+   "to": 17
+  },
+  {
+   "key": "right",
+   "from": 19,
+   "to": 21
+  },
+  {
+   "key": "primary",
+   "from": 21,
+   "to": 22
+  },
+  {
+   "key": "primary",
+   "from": 23,
+   "to": 24
+  },
+  {
+   "key": "left",
+   "from": 24,
+   "to": 28
+  },
+  {
+   "key": "right",
+   "from": 28,
+   "to": 29
+  },
+  {
+   "key": "left",
+   "from": 29,
+   "to": 30
+  },
+  {
+   "key": "up",
+   "from": 34,
+   "to": 50
+  }
+ ],
+ "name": "igneous-l76-leg649",
+ "description": "\u26d3 fidelity IGNEOUS D1 \u2014 sweep leg 649 `level_76 <- in_L71_304_256 -> exit:out_teleporter_304_112` as a tape (planning-9's finding): first in-range render t3, break t11, lava at the t38 render, the lava death on the t39 update, respawn (24,88) t69. Recorded on p4g headless (probe-seedling-encounter-ticks.mjs --tape-file --out).",
+ "note": ""
+}
