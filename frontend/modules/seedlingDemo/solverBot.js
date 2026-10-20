@@ -155,6 +155,8 @@ import {
     CONTACT_FIDELITY,
     // ⛓ fidelity APBOSSES D2: the R4 slots the Witch and Bob executors read (`apReportBosses`, OFF).
     BOB_ARENA_LEVEL, BOB_KILLED_TAG, DARK_SWORD_WITCH_TAG, FIRE_BOSS_DROP_TAG, WITCH_LEVEL,
+    // ⛓ fidelity L32 arena prefix: the rock's arm line (`arenaPrefixFor`).
+    bobBossRockArms,
     // ⛓⛓⛓ seedling-fidelity-wand D2: the `wand` verb (behind `WAND_VERB`).
     WAND_VERB, WAND_WINDOW, wandShotSpawn, wandShotVelocity, withWandVerb,
     createWandShot, stepWandShot, wandShotRect, MAGICAL_LOCK_OPEN_TICK_OFFSET,
@@ -1144,7 +1146,7 @@ function searchEncounterReposition(run) {
     return scored[0];
 }
 
-function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, refuse, equip }) {
+function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, refuse, equip, untilKill = false }) {
     const records = [];
     const start = perTick.length;
     const tick = (keys) => {
@@ -1216,7 +1218,9 @@ function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, r
     let inDialogue = false;
     const fightGoesOn = () => (report
         // ⛓ fidelity APBOSSES D2: until the kill's report; then, while the drop's slot holds, until the Fire is down.
-        ? (apKilledHeld(run) || (apDropHeld(run) && !bobArena(run).has('fire') && !bobArena(run).has('fireCollected')))
+        // `untilKill` (an arena PREFIX, `arenaPrefixFor`): the kill's report alone; the drop is not this goal's.
+        ? (apKilledHeld(run) || (!untilKill && apDropHeld(run) && !bobArena(run).has('fire')
+            && !bobArena(run).has('fireCollected')))
         : (!bobArena(run).has('fire') && !bobArena(run).has('fireCollected')));
     while (!already && fightGoesOn()) {
         const arena = bobArena(run);
@@ -1276,6 +1280,13 @@ function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, r
             refuse(`${what}: the player was hit during an admitted strike plan — the forecast `
                 + 'and the run disagree.', { goal });
         }
+    }
+
+    if (untilKill) {
+        // ⛓ fidelity L32 arena prefix: the kill is reported; `BobBoss.death`'s hold and the drop are left to the run.
+        if (apKilledHeld(run)) refuse(`${what}: the fight ended with {32,3} still held.`, { goal });
+        records.push({ goal: 'encounter', leg: 'kill', prefix: true, landings, pages, t: perTick.length });
+        return { records, landings, pages };
     }
 
     // ── (c) the drop ──────────────────────────────────────────────────
@@ -2475,6 +2486,28 @@ export const ENCOUNTER_EXECUTORS = Object.freeze({
  * the ROOM decides first: an arena (`run.entities('bobBoss')` holds a rock) is Bob's, a speaking Witch is the Witch's;
  * any other room falls back to the drop's row.
  */
+/**
+ * ⛓ fidelity L32 arena prefix (R7, sweep legs 349 / 350) — A PIT PAST THE ARENA ROCK'S ARM LINE, WHILE BOB LIVES, IS
+ * REACHED THROUGH THE FIGHT. With `apReportBosses` ON, `FallRockLarge.as` (R4, vendor/seedling ccdf189) adds the boss
+ * while `checkPersistence(BobBoss.KILLED_TAG)` holds — no `hasFire` guard — so a walk to L32's pit arms the rock
+ * (`bobBossRockArms`, y only), lands it, and opens the boss's dialogue: the walk's `up` never pages it and the player
+ * stands frozen (measured: 400 ticks at (72,116.75), and the dash pass's planned press on the arm frame,
+ * `FROZEN_TICK_PRESS`). The encounter's own executor runs first, to the kill's report (`untilKill`), then the pit.
+ * OFF, an unarmed arena, a dead Bob, or a pit short of the arm line: null, byte-identical.
+ *
+ * @returns {?{kind: 'encounter', at: {x: number, y: number}, drop: {item: string}, then: null}}
+ */
+function arenaPrefixFor(run, goal) {
+    if (CONTACT_FIDELITY.apReportBosses !== true) return null;
+    const rock = bobArena(run)?.get('rock');
+    if (!rock || rock.armed || !apKilledHeld(run)) return null;
+    const pit = (run.world.pitTiles ?? []).find((p) => p.tx === goal.pit.tx && p.ty === goal.pit.ty);
+    if (!pit || !bobBossRockArms(pit.rect.y + pit.rect.h / 2)) return null;
+    // `at` names the encounter in its refusals: the pit it is the prefix of (the arena entity carries no position).
+    return { kind: 'encounter', at: { x: pit.rect.x + pit.rect.w / 2, y: pit.rect.y + pit.rect.h / 2 },
+        drop: { item: 'Fire' }, then: null };
+}
+
 function encounterExecutorFor(run, goal) {
     if (CONTACT_FIDELITY.apReportBosses) {
         if (run.entities('bobBoss')?.has('rock')) return execBobBossEncounter;
@@ -24115,6 +24148,14 @@ function solveSegmentUnder({
             });
         };
         if (goal.kind === 'reach-pit') {
+            const prefix = arenaPrefixFor(run, goal);
+            if (prefix) {
+                const enc = execBobBossEncounter(run, perTick, prefix, {
+                    what: `solverBot(${name}) reach-pit (${goal.pit.tx},${goal.pit.ty}) -> arena (${prefix.at.x},${prefix.at.y})`,
+                    walkTo, seeRow, saw, refuse, equip, untilKill: true,
+                });
+                records.push(...enc.records);
+            }
             execReachPit(goal, goal);
             continue;
         }
