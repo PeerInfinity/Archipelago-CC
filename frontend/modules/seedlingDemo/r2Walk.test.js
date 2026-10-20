@@ -275,9 +275,12 @@ describe('the planner knobs are the rung, and they are declared', () => {
         }
     });
 
-    it('the emitted tapes are version 3 and say noclip false', () => {
+    it('the emitted tapes are version 5, carry the dead-frame pin, and say noclip false', () => {
+        // ⛓ v3 until the dead-frame LOCKSTEP re-pin (2026-10-19): v5 is the
+        // first version that can carry `pins: ["dead_frames"]`.
         for (const name of [...R2_SEGMENT_NAMES, R2_FULL_WALK_NAME]) {
-            expect(tapes[name].tape_version, name).toBe(3);
+            expect(tapes[name].tape_version, name).toBe(5);
+            expect(tapes[name].pins, name).toEqual(['dead_frames']);
             expect(tapes[name].noclip, name).toBe(false);
             expect(tapes[name].persistence.length, name).toBe(route.persistence.length);
         }

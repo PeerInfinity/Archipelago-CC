@@ -1,5 +1,5 @@
 {
-  "tape_version": 4,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r4-walk-5-spear",
   "description": "R4 walk SEGMENT 5 of 6, synthesized by botDriverV2 from legs 27-33 of the committed route (fixtures/r4-route.json). It boots where segment 4 ended and inherits sword, feather, torch in a single grant entry at the boot level, which fires on tick 0. 7 legs across 5 level(s), 6 crossings. COLLECTS spear (ghostspear@72,24, 4 release(s) over 29 ticks). Ends holding [hasSword, hasFeather, hasSpear, hasTorch] with hitsMax 3.",
@@ -71,6 +71,9 @@
       "t": 783,
       "slot": 1
     }
+  ],
+  "pins": [
+    "dead_frames"
   ],
   "tick_count": 1571,
   "inputs": [

@@ -27,7 +27,7 @@
   },
   "grants": [],
   "equips": [],
-  "pins": [],
+  "pins": ["dead_frames"],
   "noDamage": false,
   "tick_count": 490,
   "inputs": [

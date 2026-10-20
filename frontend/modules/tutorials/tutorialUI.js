@@ -24,8 +24,11 @@
  *     ready tutorials in a section per track; Needs a terminal and In
  *     progress each hold a subsection per track (even a track of one); the
  *     developer track; then the FEATURE CHECKS (content/checks/index.js).
- *     Saved progress shows Resume in the toolbar, and leaving
- *     a tutorial opens the sections that hold it (sectionPath).
+ *     Leaving a tutorial opens the sections that hold it (sectionPath).
+ *     (⚖ 2026-10-19) there is no Resume across a reload: a step's premise is
+ *     app state the reload does not keep (the world, a pipeline run, open
+ *     panels), so a tutorial starts from step 1; `?tutorial=…&tutorialStep=`
+ *     still links to a step on purpose.
  *   - an OUTSIDE step (a terminal command, e.g. a local MultiServer) shows its
  *     command with a Copy button; Do it is off for it, and Play waits for its
  *     done check (or stops, when it has none).
@@ -50,7 +53,8 @@ import { componentItems, isDesktopLayout, isSplit, mergeBack, splitOut } from '.
 
 export const MODULE_ID = 'tutorials';
 export const COMPONENT_TYPE = 'tutorialPanel';
-export const PROGRESS_KEY = 'progress';
+/** The retired Resume record (⚖ 2026-10-19); _init deletes a stored one. */
+const RETIRED_PROGRESS_KEY = 'progress';
 export const SETTING = (key) => `moduleSettings.${MODULE_ID}.${key}`;
 export const DEFAULTS = Object.freeze({
     autoAdvance: true,
@@ -87,7 +91,6 @@ export const CONTROLS = Object.freeze({
     copy: 'tut-copy',
     blocked: 'tut-blocked',
     banner: 'tut-banner',
-    resume: 'tut-resume',
     checks: 'tut-checks',
 });
 export const TEXT = Object.freeze({
@@ -101,7 +104,6 @@ export const TEXT = Object.freeze({
     quickLaunch: 'Quick Launch',
     exit: 'All tutorials',
     start: 'Start',
-    resume: 'Resume',
     inProgress: 'In progress',
     drafts: 'In progress',
     terminal: 'Needs a terminal',
@@ -238,10 +240,15 @@ export class TutorialUI {
 
     async _init() {
         await this._loadSettings();
-        const saved = await settingsManager.getSetting(SETTING(PROGRESS_KEY), null);
-        this.saved = saved && findTutorial(saved.id) ? saved : null;
+        await this._deleteRetiredProgress();
         this.render();
         await this._startFromUrl();
+    }
+
+    /** A Resume record stored before ⚖ 2026-10-19, deleted (undefined deletes the stored path: settingsManager copyPath). */
+    async _deleteRetiredProgress() {
+        if (await settingsManager.getSetting(SETTING(RETIRED_PROGRESS_KEY), undefined) === undefined) return;
+        await settingsManager.updateModuleSetting(MODULE_ID, RETIRED_PROGRESS_KEY, undefined)?.catch?.(() => {});
     }
 
     /** `?tutorial=<id>[&tutorialStep=<n>]` (tutorialUrl.js), once per page load. */
@@ -291,7 +298,7 @@ export class TutorialUI {
 
     // ── the tutorial's lifecycle ───────────────────────────────────────
 
-    /** Start (or resume at `index`) a tutorial by id; splits the layout. */
+    /** Start a tutorial by id, at step `index` (a `?tutorialStep=` link); splits the layout. */
     start(id, index = 0) {
         const tutorial = findTutorial(id);
         if (!tutorial) throw new Error(`no tutorial ${id}`);
@@ -315,7 +322,6 @@ export class TutorialUI {
         setOutline(null);
         hideCursor();
         mergeBack(this.item());
-        this._saveProgress(null);
         this.render();
     }
 
@@ -344,15 +350,9 @@ export class TutorialUI {
     _enterStep() {
         this.status = '';
         this.ctx.markStep();
-        this._saveProgress({ id: this.tutorial.id, index: this.index });
         this.render();
         this._watchDone();
         this._updateOutline();
-    }
-
-    _saveProgress(value) {
-        this.saved = value;
-        settingsManager.updateModuleSetting(MODULE_ID, PROGRESS_KEY, value)?.catch?.(() => {});
     }
 
     // ── done-polling and auto-advance ──────────────────────────────────
@@ -567,12 +567,6 @@ export class TutorialUI {
         const ql = button(CONTROLS.quickLaunch, TEXT.quickLaunch, 'Open the Quick Launch panel', () => this.openQuickLaunch());
         const bar = el('div', 'tut-toolbar');
         bar.append(ql);
-        // ⚖ 2026-10-15: every section starts collapsed, so Resume sits up here, not in its card.
-        const saved = this.saved && findTutorial(this.saved.id);
-        if (saved) {
-            bar.append(button(CONTROLS.resume, `${TEXT.resume}: ${saved.title} (step ${this.saved.index + 1})`,
-                'Carry on where you left off', () => this.start(saved.id, this.saved.index)));
-        }
         wrap.append(bar);
         const all = TUTORIALS.map((e) => e.tutorial);
         const tracks = Object.entries(TRACKS);
@@ -662,10 +656,9 @@ export class TutorialUI {
         }
         const stop = tutorial.status === 'terminal' ? terminalStep(tutorial, steps) : null;
         if (stop) card.append(el('div', 'tut-card-terminal', terminalText(stop, steps.length)));
-        const resume = this.saved?.id === tutorial.id;
         const row = el('div', 'tut-card-row');
         row.append(el('span', 'tut-card-count', `${steps.length} steps`));
-        row.append(button(CONTROLS.start, resume ? 'Restart' : TEXT.start, 'Start this tutorial', () => this.start(tutorial.id)));
+        row.append(button(CONTROLS.start, TEXT.start, 'Start this tutorial', () => this.start(tutorial.id)));
         card.append(row);
         return card;
     }

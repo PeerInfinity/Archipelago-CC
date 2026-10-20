@@ -1,5 +1,5 @@
 {
-  "tape_version": 4,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r5-l40-part5-control",
   "description": "⛓⛓ THE SHUT-BEFORE CONTROL for `r5-l40-part5`: the same target list with the KILL removed and nothing else changed — the same walk, the same two `fire.bumps` presses, the same 140-tick wait. In this arm the presses land on a LIVE turret, where `bump` is gated on the \"dead\" anim and `Enemy.hit`'s `if (hitByFire || t != \"Fire\")` sends a fire hit to `IceTurret`'s empty `knockback` — true no-ops in both directions. ⛔⛔ IT IS SYNTHESISED RATHER THAN DELETED because a live turret keeps FIRING: its 45-tick volley clock freezes the player on ticks the drive arm never sees, and a press inside a freeze span is LOST. A byte-identical-walk pair is impossible in a room with a live shooter. No corpse, nothing on `button@480,384`, and the t2 group never opens.",
@@ -44,6 +44,7 @@
       "slot": 1
     }
   ],
+  "pins": ["dead_frames"],
   "tick_count": 1937,
   "inputs": [
     {

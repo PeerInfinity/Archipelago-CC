@@ -1,5 +1,5 @@
 {
-  "tape_version": 3,
+  "tape_version": 5,
   "game": "seedling",
   "name": "direction-flip",
   "description": "Hold RIGHT for 15 ticks, then LEFT for 20 with no coasting gap. Exercises the signed threshold guards (v.x > -moveSpeed on the left branch) and a velocity reversal through zero, where FP.sign returns 0 and the mover loop runs no iterations.",
@@ -9,6 +9,8 @@
   "noHazards": [],
   "grants": [],
   "persistence": [],
+  "equips": [],
+  "pins": ["dead_frames"],
   "tick_count": 45,
   "inputs": [
     { "key": "right", "from": 0, "to": 15 },

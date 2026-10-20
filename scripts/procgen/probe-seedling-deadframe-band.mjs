@@ -115,9 +115,9 @@ function findPayloadDir() {
  * never learned R6's death, same-level reboot and ceremony-start terms, so it
  * rejected 8 residues the gate admits on the R4 harvest's full tier.
  */
-function modelledFrames(name, tape, transitions) {
+function modelledFrames(name, tape, transitions, armedAt) {
     const expected = runTape(tape, { levelSource: atlasLevelSource() });
-    return deadFrameBudget({ tape, expected, transitions, exempt: MODEL_EXEMPT[name] ?? null });
+    return deadFrameBudget({ tape, expected, transitions, exempt: MODEL_EXEMPT[name] ?? null, armedAt });
 }
 
 const payloadDir = findPayloadDir();
@@ -137,7 +137,8 @@ for (const file of readdirSync(payloadDir).filter((f) => f.endsWith('.json')).so
     if (typeof status?.dead_frames !== 'number') continue;
     let budget;
     try {
-        budget = modelledFrames(name, loadTape(name), stream.transitions.length);
+        budget = modelledFrames(name, loadTape(name), stream.transitions.length,
+            status.arm?.armed_at ?? null);
     } catch (e) {
         console.log(`SKIP ${name}: the model does not run this tape — ${e.message}`);
         continue;
@@ -269,7 +270,11 @@ if (flake) {
         + `${LEGACY_FADE_PER_LOAD.max * flake.loads}] → 50 `
         + `${50 < LEGACY_FADE_PER_LOAD.min * flake.loads ? 'REJECTED (the flake)' : 'admitted'}`);
     console.log(`  new    [${b.lo.toFixed(1)},${b.hi.toFixed(1)}] → 50 `
-        + `${50 >= b.lo && 50 <= b.hi ? 'ADMITTED (the flake stops flaking)' : 'REJECTED ⛔'}`);
+        + `${50 >= b.lo && 50 <= b.hi ? 'ADMITTED (the flake stops flaking)'
+            // ⛓ R6 lockstep: the tape boots at the page's spawn, so the flake was
+            // the boot fade the page spent before the arm — now owed back by name.
+            : 'REJECTED as a raw residue — it was the skip-path boot fade spent before '
+            + 'the arm, which `bootFadeSpent` now owes back from `armed_at`'}`);
 }
 
 if (BANK) {

@@ -4214,6 +4214,16 @@ export function main() {
                     // ⛓ `openSetRoomAt` printed its own reason (a room already
                     //   open with unwritten edits, or one that would not open).
                     render();
+                } else {
+                    /**
+                     * ⛔ MEASURED 2026-10-19 (region-editor-launch): a room a HOST
+                     * opened (`?room=` over `procgenLab:navigate`, the Edit ▸
+                     * door) left `#editRoomClose` DISABLED — the strip's own press
+                     * re-renders the MOUNT after `openSetRoomAt`, this path did
+                     * not, and the mount is what enables CLOSE. So the reader
+                     * could not close the room, and the host's Save never came.
+                     */
+                    setUi?.render();
                 }
             }
         }

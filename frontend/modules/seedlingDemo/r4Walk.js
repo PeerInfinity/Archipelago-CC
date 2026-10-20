@@ -924,6 +924,9 @@ export function r4TapeSpecs(route) {
                 grants: inherited.length > 0
                     ? [{ level: boot.level, items: [...inherited] }] : [],
                 persistence: clears(),
+                // ⛓ The dead-frame LOCKSTEP (`Bot.pinDeadFrames`): a load costs exactly
+                // LOAD_FADE_FRAMES, whatever the page's render pacing. Re-pinned 2026-10-19.
+                pins: ['dead_frames'],
                 equips: inheritsEquip ? [{ t: 0, slot: R4_EQUIP_SLOT }] : [],
             },
         });
@@ -945,6 +948,9 @@ export function r4TapeSpecs(route) {
             // ⛔ EMPTY. Carried from R3, and still the whole rung.
             grants: [],
             persistence: clears(),
+            // ⛓ The dead-frame LOCKSTEP (`Bot.pinDeadFrames`): a load costs exactly
+            // LOAD_FADE_FRAMES, whatever the page's render pacing. Re-pinned 2026-10-19.
+            pins: ['dead_frames'],
             // ⚠ `[]` here is not "no equip" — it is "a version 4 tape whose
             // equips are a MEASUREMENT". `synthesizeLegs` replaces it with
             // what the `equip` leg verb actually fired, at the tick it fired.

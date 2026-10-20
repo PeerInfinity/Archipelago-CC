@@ -175,7 +175,7 @@ import { dropKillVetoFor, setDropKillNeeds } from './bulbPlacement.js';
 import { HOLD_FIRST_KEY_SETS, SPACE_TIME_CHECK_EVERY, SPACE_TIME_KEY_SETS, bestFirstQueue, coarseKey,
     spaceTimeReach } from './spaceTimeReach.js';
 // ⛓ hammer-phase D1 — the progress emitter: every count point below is `activeProgress !== null` first.
-import { activeProgress, progressAsked, progressEnter, progressFrame, progressGoal, progressHeartbeat, progressLeave,
+import { activeProgress, progressAsked, progressCaches, progressEnter, progressFrame, progressGoal, progressHeartbeat, progressLeave,
     progressPreview, progressReaders, progressRow, progressRun, progressRung, progressSearch, progressSegment,
     progressSite, progressStatesFor, progressTick, withSolveProgress } from './solveProgress.js';
 // ⛓ hammer-phase LB (HX) — the press kill's shake-band and reboot guards (`PRESS_KILL_SHAKE_GUARD`, `PRESS_KILL_REBOOT_GUARD`, OFF).
@@ -11597,8 +11597,9 @@ export function pressEscape(run, opts) {
 export const HAMMER_ESCAPE_TRACE = { sink: null };
 
 /**
- * ⛓⛓⛓ SEEDLING HAMMER-PHASE XC — **THE CROSS-PASS ESCAPE CACHE** (`ESCAPE_CROSS_PASS_CACHE`, OFF;
- * `SEEDLING_ESCAPE_CROSS_PASS_CACHE=1` opts a process in). EX measured that two thirds of L18's escape calls repeat
+ * ⛓⛓⛓ SEEDLING HAMMER-PHASE XC — **THE CROSS-PASS ESCAPE CACHE** (`ESCAPE_CROSS_PASS_CACHE`, ON since the XC flip;
+ * `SEEDLING_ESCAPE_CROSS_PASS_CACHE=0` opts a process out — answer-identical either way, only the wall clock moves;
+ * `CC/docs/cloud-reports/seedling-hammer-xc-flip-prep.md`). EX measured that two thirds of L18's escape calls repeat
  * ACROSS `twoPassSolve`'s passes with equal answers and work (passes 2 and 3 replay pass 1 below the declared tick),
  * and that no key the solver could build alone was exact. Fidelity's `run.stateDigest()` is that key's missing half.
  *
@@ -11641,7 +11642,7 @@ export const HAMMER_ESCAPE_TRACE = { sink: null };
  * returned, so a verify run is OFF's run plus the comparisons.
  */
 export const ESCAPE_CROSS_PASS_CACHE = {
-    enabled: globalThis.process?.env?.SEEDLING_ESCAPE_CROSS_PASS_CACHE === '1',
+    enabled: globalThis.process?.env?.SEEDLING_ESCAPE_CROSS_PASS_CACHE !== '0',
     verify: globalThis.process?.env?.SEEDLING_ESCAPE_CROSS_PASS_CACHE_VERIFY === '1',
     maxEntries: 4096,
     maxNodes: 2_000_000,
@@ -19398,6 +19399,7 @@ function solveSegmentUnder({
     if (activeProgress !== null) {
         progressReaders({ waypointsPlanned: () => waypointsPlanned, replans: () => replans,
             dashesPressed: () => dashesPressed });
+        progressCaches(ESCAPE_CROSS_PASS_CACHE.enabled && activeEscapeScope !== null ? ESCAPE_CROSS_PASS_CACHE_COUNTS : null); // ⛓ PR: emit-only
     }
     /**
      * ⛓⛓⛓ WHICH CLIMB — and it is a counter rather than a flag because the

@@ -108,6 +108,23 @@ function carryLocationIdentity(fresh, original) {
     }
 }
 
+/**
+ * ⛓ region-editor-launch S2 — **AN EXIT KEEPS THE FIELDS ITS SERIALIZER DOES NOT
+ * EMIT.** A grown exit carries instance annotations the payload never writes —
+ * MEASURED: a generated Seedling room's `isBackExit: true`, from which Compile
+ * composes the back exit's gate; without it an UNEDITED save turned that exit's
+ * `Has key_red` into `True_`. Matched by the exits Map's key (the AP exit name);
+ * only fields the re-read exit LACKS are copied, so geometry stays the edit's.
+ */
+function carryExitFields(fresh, original) {
+    if (!(fresh instanceof Map) || !(original instanceof Map)) return;
+    for (const [k, ex] of fresh) {
+        const was = original.get(k);
+        if (!was) continue;
+        for (const [f, v] of Object.entries(was)) if (!(f in ex)) ex[f] = v;
+    }
+}
+
 function stamp(loc, was) {
     loc.id = was.id;
     if (was.global_name) loc.global_name = was.global_name;
@@ -134,6 +151,13 @@ export async function regionFromPipelineSave(opened, saved) {
     });
     if (read.refusal) return { error: read.refusal };
     const world = read.world;
+    carryExitFields(world?.exits, original.playable_payload?.exits);
+    // ⛓ region-editor-launch S2 — a world keeps the id the LIVE one had. A
+    //   deserialized generated Seedling room carries none, and Compile reads its
+    //   level ordinal off `region_id` (measured: `level` 0 → null without this).
+    if (world && world.region_id == null && original.playable_payload?.region_id != null) {
+        world.region_id = original.playable_payload.region_id;
+    }
     const extracted_rules = adapter.extractPathsAndObstacles(world, { regionId: ctx.regionId });
     carryLocationIdentity(extracted_rules.locations, original.extracted_rules?.locations);
     return {

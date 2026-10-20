@@ -62,10 +62,12 @@ describe('the STAMP', () => {
     it('the probe emits EVERY row through the stamp (the one door: run, skipped, boot-failed, hang rows)', () => {
         // ⛓ DASH-ONLY WINDOW — the solver knobs' stamp wraps the same door (`seedlingDivergenceWindow.test.js`)
         expect(SRC).toMatch(/const line = JSON\.stringify\(stampSolverKnobs\(stampBudget\(row, LEG_BUDGET\), KNOBS\)\);/);
-        // emit's one write: no row reaches the file another way (the other write is the REQUEST CAPTURE's own file)
+        // emit's one write: no row reaches the file another way (the other writes are the REQUEST CAPTURE's and the
+        // MEMORY PROBE's own files)
         expect(SRC.match(/appendFileSync\(OUT,/g)).toHaveLength(1);
-        expect(SRC.match(/appendFileSync\(/g)).toHaveLength(2);
+        expect(SRC.match(/appendFileSync\(/g)).toHaveLength(3);
         expect(SRC).toMatch(/if \(CAPTURE\) appendFileSync\(CAPTURE, /);
+        expect(SRC).toMatch(/if \(MEM_OUT\) appendFileSync\(MEM_OUT, /);
     });
 
     it('the serve gets the budget (no literal 90000 left at the call) and names a cut only off the default', () => {
@@ -129,7 +131,9 @@ describe('the MERGE refuses a mixed-budget merge by name', () => {
     it('the default merge prints exactly today\'s lines (no budget line)', () => {
         const v = mergeVerdict({ rows: [r(1, 90000), r(2, 90000)], plan: planOf() });
         expect(v.failed).toBe(false);
-        expect(v.lines).toEqual(['MERGE: 2 rows, 2 distinct legs of 2; ends {"timeout":2}']);
+        // ⛓ the runner stamp (slice `seedling-js-runner-stamp`) adds one TIMEOUT line per timeout row, nothing else here
+        expect(v.lines.filter((l) => !l.startsWith('TIMEOUT: '))).toEqual(['MERGE: 2 rows, 2 distinct legs of 2; ends {"timeout":2}']);
+        expect(v.lines.filter((l) => l.startsWith('TIMEOUT: '))).toHaveLength(2);
     });
 
     it('an off-default merge, every row stamped: green, and the budget named', () => {

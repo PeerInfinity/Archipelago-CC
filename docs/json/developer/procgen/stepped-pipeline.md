@@ -154,13 +154,16 @@ Tests: `layoutEdits.test.js`, the recorded-edit blocks in `sphereSteps.test.js` 
 
 The panel's per-region Edit ▸ button is substrate-agnostic. `frontend/modules/procgenPipeline/regionEditors.js` looks up the substrate registry: any substrate whose entry declares `roomEditor` has an editor, and one that declares none shows a "no editor for this substrate" message. See [Substrate Registry](./substrate-registry.md) (*Entry contract*, *Editing*).
 
-The editor contract is `open({ region | record, base?, contract?, onSave })`. `contract` carries what the realiser used (side portals, exit and location specs, physics profile, braid layout, and so on). In pipeline mode, `onSave` splices the edited region back into the grid and invalidates ④.
+The editor contract is `open({ region | record, base?, contract?, onSave })`. `contract` carries what the realiser used (side portals, exit and location specs, physics profile, braid layout, and so on). In pipeline mode, `onSave` splices the edited region back into the grid and invalidates ④; re-running ④ Compile is what re-checks the sphere oracle.
+
+Both the pipeline and the APWorld Editor open an editor through one call, `openRoomEditor(substrate, session)` in `regionEditors.js`. It first makes sure the editor's panel is on screen: for a `lab` editor it uses a mounted `procgenLabPanel` for that page, or creates one with `moduleManagerApi.createPanelInstance('procgenLabPanel', {substrate: page})` (enabling the module first if its last tab was closed) and waits for it to register; for a `panel` editor it enables the entry's declared `module`, which creates the panel when the layout has none. A host it cannot make comes back as a refusal sentence, which both callers print. The lab door itself (`labRoomEditor.js`) still opens no panel.
 
 | Substrate | Kind | Editor |
 |---|---|---|
 | `bounce` | `panel` | `frontend/modules/bounceRegionEditor/` (panel 🪀), opened from Edit ▸ or standalone with a fixture |
-| `maze` | `lab` | `mazeRoom/lab.html`, SET arm |
-| `flash_seedling`, `flash_seedling_gen` | `lab` | `seedlingDemo/watch.html`, EDIT arm (the same editor) |
+| `maze` | `lab` | `mazeRoom/lab.html`, SET arm, opened with a one-entry region library built by the substrate's `regionRoundTrip` (`procgenPipeline/pipelineRoomEdit.js`) |
+| `flash_seedling_gen` | `lab` | `seedlingDemo/watch.html`, EDIT arm, opened with a one-room level set built by `seedlingDemo/seedlingGenRegionRoundTrip.js` (see `seedling-editor.md` § "A generated room from a world") |
+| `flash_seedling` | `lab` | declared (`seedlingDemo/watch.html`, EDIT arm), but a real-game room does not open from a world: it is read-only by ruling and its `regionRoundTrip` refuses with the reason |
 
 Lab editors open inside `procgenLabPanel` through `frontend/modules/procgenLabPanel/labRoomEditor.js`: the document goes in over `load`, one room is opened over `navigate` with `?source=<arm>&room=<n>`, and the edited document comes back over `levelChanged`. `registerRegionEditor` remains as a deprecated runtime override; nothing in the repository calls it.
 

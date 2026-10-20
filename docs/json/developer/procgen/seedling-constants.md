@@ -295,16 +295,16 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**74 files, 6046 literals.** Class × position:
+**74 files, 6047 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
 | physics | 5 | 1572 | 447 | 2024 |
 | rule | 8 | 1022 | 496 | 1526 |
 | cosmetic | 0 | 62 | 14 | 76 |
-| structural | 14 | 377 | 2029 | 2420 |
+| structural | 13 | 377 | 2031 | 2421 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 27 | 3033 | 2986 | 6046 |
+| total | 26 | 3033 | 2988 | 6047 |
 
 Class × kind (physics and rule rows only):
 
@@ -464,7 +464,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `levelCount` | 116 | rule | count |  | tapeFormat.js `LEVEL_COUNT` |
 | `wandSpeed` | 3 | physics | magnitude | Player.as:wandSpeed | wandVerb.js `WAND_SPEED` |
 
-### The 41 derived or aliased top-level constants
+### The 42 derived or aliased top-level constants
 
 | name | file | initialiser |
 |---|---|---|
@@ -500,6 +500,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `INVENTORY_TERM` | seedlingDemo/camera.js | `INVENTORY_WIDTH / 2 + INVENTORY_OFFSET_X / 2` |
 | `KILL_CADENCE_FLOOR` | seedlingDemo/combat.js | `SLASH_TIMER_MAX + 1` |
 | `MAX_HALF_WIDTH` | seedlingDemo/deadFrameBand.js | `CEREMONY_DEAD_FRAMES.pickup / 2` |
+| `MIN_FLOOR_HALF_WIDTH` | seedlingDemo/deadFrameBand.js | `SPREAD_PER_SQRT_LOAD` |
 | `TILE` | seedlingDemo/wallFlyer.js | `TILE_SIZE` |
 | `KILL_PRESS_CADENCE` | seedlingDemo/combatVerbs.js | `ENEMY_IFRAMES + 1` |
 | `DASH_CHAIN_MAX` | seedlingDemo/combatVerbs.js | `DASH_CHAIN.max` |

@@ -1,5 +1,5 @@
 {
-  "tape_version": 3,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r3-walk-4-spear",
   "description": "R3 walk SEGMENT 4 of 6, synthesized by botDriverV2 from legs 23-35 of the committed route (fixtures/r3-route.json). It boots where segment 3 ended and inherits sword, feather, torch in a single grant entry at the boot level, which fires on tick 0. 13 legs across 7 level(s), 12 crossings of which 0 are pit falls. COLLECTS spear (ghostspear@72,24, 4 release(s) over 29 ticks). 10 persistence clear(s) applied before the first live tick. Ends holding hasSword, hasFeather, hasSpear, hasTorch, hitsMax 3. Regenerate with fixtures/regenerate-r3-tapes.mjs; the route is the artifact and this tape is derived from it.",
@@ -77,6 +77,10 @@
       "tag": 0,
       "note": "lock@112,192"
     }
+  ],
+  "equips": [],
+  "pins": [
+    "dead_frames"
   ],
   "tick_count": 3707,
   "inputs": [

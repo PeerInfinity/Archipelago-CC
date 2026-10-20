@@ -1,123 +1,522 @@
 {
   "_comment": "Derived by scripts/procgen/probe-seedling-deadframe-band.mjs from the differential sweep's banked payloads. The per-load fade is the GAME's number minus the model's own freezes; this file is the committed copy because the payload directory is gitignored and was, at slice 12, the only copy of the numbers §24.85 quoted.",
-  "totalTapes": 196,
-  "totalLoads": 589,
-  "min": 17,
-  "max": 20,
-  "mean": 19.263157894736842,
-  "sigma": 0.5734008193560027,
+  "totalTapes": 282,
+  "totalLoads": 731,
+  "min": 19,
+  "max": 21,
+  "mean": 20.002735978112174,
+  "sigma": 0.08549639209483541,
   "observations": [
+    {
+      "name": "axe-l48-reach-l49",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "axe-l61-reach-l62",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "axe-l61-reach-l63",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "axe-l71-reach-l76",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "bobsoldier-corpse",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "bobsoldier-kill",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "bobsoldier-sword",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "bobsoldier2-l30-dash-stance",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "bobsoldier2-l30-torch",
+      "loads": 2,
+      "dead": 190,
+      "modelled": 150,
+      "residue": 40
+    },
+    {
+      "name": "burn-l24-reach-exit",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "burn-l44-reach-exit",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "cancross-l16-sword-none",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
     {
       "name": "collide-up-rock",
       "loads": 1,
       "dead": 17,
-      "modelled": 0,
-      "residue": 17
+      "modelled": -3,
+      "residue": 20
     },
     {
       "name": "cross-level-leg",
       "loads": 3,
-      "dead": 55,
+      "dead": 57,
+      "modelled": -3,
+      "residue": 60
+    },
+    {
+      "name": "crusher-l42-round-trip",
+      "loads": 2,
+      "dead": 190,
+      "modelled": 150,
+      "residue": 40
+    },
+    {
+      "name": "dash-l16-sword-all",
+      "loads": 2,
+      "dead": 40,
       "modelled": 0,
-      "residue": 55
+      "residue": 40
     },
     {
       "name": "diagonal-run",
       "loads": 1,
       "dead": 17,
-      "modelled": 0,
-      "residue": 17
+      "modelled": -3,
+      "residue": 20
     },
     {
       "name": "direction-flip",
       "loads": 1,
       "dead": 17,
+      "modelled": -3,
+      "residue": 20
+    },
+    {
+      "name": "enc-l12-witch",
+      "loads": 2,
+      "dead": 190,
+      "modelled": 150,
+      "residue": 40
+    },
+    {
+      "name": "enc-l32-fallen-door",
+      "loads": 2,
+      "dead": 190,
+      "modelled": 150,
+      "residue": 40
+    },
+    {
+      "name": "enc-l32-fire-return",
+      "loads": 2,
+      "dead": 40,
       "modelled": 0,
-      "residue": 17
+      "residue": 40
+    },
+    {
+      "name": "enc-l32-live-arrival",
+      "loads": 2,
+      "dead": 364,
+      "modelled": 324,
+      "residue": 40
+    },
+    {
+      "name": "f1-l5-lock-removal",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "f1-l5-open-lock-bait",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "f1c-l18-lock-removal",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "f1c-l18-phase42",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "f4-l8-sandtraps",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "f6-l17-reentry",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "f6-l2-reentry",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "f6-l20-reentry",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "f7-l16-reentry",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "f7-l16-walkin",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
     },
     {
       "name": "friction-stop",
       "loads": 1,
       "dead": 17,
+      "modelled": -3,
+      "residue": 20
+    },
+    {
+      "name": "frontier3-l62-door-niche",
+      "loads": 2,
+      "dead": 40,
       "modelled": 0,
-      "residue": 17
+      "residue": 40
+    },
+    {
+      "name": "frontier3-l87-pocket",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "ghostmotion-l102-axis",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "ghostmotion-l102-diag",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "ghostsword-l3-rock",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "ghostsword-l3-rockghost",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "ghostsword-l30-bobsoldier",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
     },
     {
       "name": "grant-sword-room",
       "loads": 5,
-      "dead": 93,
+      "dead": 97,
+      "modelled": -3,
+      "residue": 100
+    },
+    {
+      "name": "hammer-a-l18-escape15",
+      "loads": 2,
+      "dead": 40,
       "modelled": 0,
-      "residue": 93
+      "residue": 40
+    },
+    {
+      "name": "hammer-a-l18-escape21",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "hammer-b1-l18-approach40",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "hammer-b2-l18-fight40",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "hammer-c2-l18-ghostspinner",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
     },
     {
       "name": "hazard-boot-pit",
       "loads": 1,
-      "dead": 19,
+      "dead": 20,
       "modelled": 0,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "hazard-walk-water",
       "loads": 1,
       "dead": 17,
+      "modelled": -3,
+      "residue": 20
+    },
+    {
+      "name": "l12keyline-134-round",
+      "loads": 2,
+      "dead": 40,
       "modelled": 0,
-      "residue": 17
+      "residue": 40
+    },
+    {
+      "name": "l14-swordless-detour",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "l30keylock-pit224-before",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "l30keylock-pit224",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "l30keylock-pit240",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "l40button-l41-part0",
+      "loads": 1,
+      "dead": 170,
+      "modelled": 150,
+      "residue": 20
+    },
+    {
+      "name": "l40button-l42-part0",
+      "loads": 1,
+      "dead": 170,
+      "modelled": 150,
+      "residue": 20
     },
     {
       "name": "l71-button-lock",
       "loads": 1,
-      "dead": 19,
+      "dead": 20,
       "modelled": 0,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "l71-hold-101-shut",
       "loads": 1,
-      "dead": 19,
+      "dead": 20,
       "modelled": 0,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "l71-hold-102-open",
       "loads": 1,
-      "dead": 19,
+      "dead": 20,
       "modelled": 0,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "l71-lock-shut",
       "loads": 1,
-      "dead": 19,
+      "dead": 20,
       "modelled": 0,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "l71-shieldlock-open",
       "loads": 2,
-      "dead": 38,
+      "dead": 40,
       "modelled": 0,
-      "residue": 38
+      "residue": 40
     },
     {
       "name": "l71-shieldlock-shut",
       "loads": 1,
-      "dead": 19,
+      "dead": 20,
       "modelled": 0,
-      "residue": 19
+      "residue": 20
+    },
+    {
+      "name": "ladder2-l104-beam",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "ladder2-l59-grenade",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
     },
     {
       "name": "pit-fall-83",
       "loads": 2,
-      "dead": 38,
+      "dead": 40,
       "modelled": 0,
-      "residue": 38
+      "residue": 40
     },
     {
       "name": "pit-fall-chain-85",
       "loads": 3,
-      "dead": 57,
+      "dead": 60,
       "modelled": 0,
-      "residue": 57
+      "residue": 60
+    },
+    {
+      "name": "prox-l29-key-return",
+      "loads": 2,
+      "dead": 190,
+      "modelled": 150,
+      "residue": 40
+    },
+    {
+      "name": "prox-l38-chest",
+      "loads": 2,
+      "dead": 371,
+      "modelled": 331,
+      "residue": 40
+    },
+    {
+      "name": "prox-l38-reach-l39",
+      "loads": 2,
+      "dead": 371,
+      "modelled": 331,
+      "residue": 40
+    },
+    {
+      "name": "prox-l40-turret-contact",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "prox-l40-turret-volley",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "pushblock-l65-reach-l63",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "pushblock-l65-reach-l68",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "pushblock-l65-sword-press",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
     },
     {
       "name": "r1-dark-shield-bobboss",
@@ -178,51 +577,51 @@
     {
       "name": "r2-walk-1-sword-shield",
       "loads": 13,
-      "dead": 245,
-      "modelled": 0,
-      "residue": 245
+      "dead": 257,
+      "modelled": -3,
+      "residue": 260
     },
     {
       "name": "r2-walk-2-feather",
       "loads": 3,
-      "dead": 57,
+      "dead": 60,
       "modelled": 0,
-      "residue": 57
+      "residue": 60
     },
     {
       "name": "r2-walk-3-darksword-torch",
       "loads": 12,
-      "dead": 228,
+      "dead": 240,
       "modelled": 0,
-      "residue": 228
+      "residue": 240
     },
     {
       "name": "r2-walk-4-spear",
       "loads": 13,
-      "dead": 247,
+      "dead": 260,
       "modelled": 0,
-      "residue": 247
+      "residue": 260
     },
     {
       "name": "r2-walk-5-darkshield",
       "loads": 9,
-      "dead": 171,
+      "dead": 180,
       "modelled": 0,
-      "residue": 171
+      "residue": 180
     },
     {
       "name": "r2-walk-6-darksuit",
       "loads": 10,
-      "dead": 190,
+      "dead": 200,
       "modelled": 0,
-      "residue": 190
+      "residue": 200
     },
     {
       "name": "r2-walk-full",
       "loads": 55,
-      "dead": 1043,
-      "modelled": 0,
-      "residue": 1043
+      "dead": 1097,
+      "modelled": -3,
+      "residue": 1100
     },
     {
       "name": "r2-wallflyer-contact",
@@ -248,51 +647,51 @@
     {
       "name": "r3-collect-darkshield",
       "loads": 1,
-      "dead": 169,
+      "dead": 170,
       "modelled": 150,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r3-collect-darksuit",
-      "loads": 1,
-      "dead": 169,
-      "modelled": 150,
-      "residue": 19
-    },
-    {
-      "name": "r3-collect-feather",
-      "loads": 1,
-      "dead": 169,
-      "modelled": 150,
-      "residue": 19
-    },
-    {
-      "name": "r3-collect-shield",
-      "loads": 1,
-      "dead": 169,
-      "modelled": 150,
-      "residue": 19
-    },
-    {
-      "name": "r3-collect-spear",
-      "loads": 1,
-      "dead": 169,
-      "modelled": 150,
-      "residue": 19
-    },
-    {
-      "name": "r3-collect-sword",
       "loads": 1,
       "dead": 170,
       "modelled": 150,
       "residue": 20
     },
     {
+      "name": "r3-collect-feather",
+      "loads": 1,
+      "dead": 170,
+      "modelled": 150,
+      "residue": 20
+    },
+    {
+      "name": "r3-collect-shield",
+      "loads": 1,
+      "dead": 170,
+      "modelled": 150,
+      "residue": 20
+    },
+    {
+      "name": "r3-collect-spear",
+      "loads": 1,
+      "dead": 170,
+      "modelled": 150,
+      "residue": 20
+    },
+    {
+      "name": "r3-collect-sword",
+      "loads": 1,
+      "dead": 171,
+      "modelled": 150,
+      "residue": 21
+    },
+    {
       "name": "r3-collect-torch",
       "loads": 1,
-      "dead": 169,
+      "dead": 170,
       "modelled": 150,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r3-drown",
@@ -318,51 +717,51 @@
     {
       "name": "r3-walk-1-sword",
       "loads": 9,
-      "dead": 320,
-      "modelled": 150,
-      "residue": 170
+      "dead": 325,
+      "modelled": 144,
+      "residue": 181
     },
     {
       "name": "r3-walk-2-feather",
       "loads": 6,
-      "dead": 264,
+      "dead": 270,
       "modelled": 150,
-      "residue": 114
+      "residue": 120
     },
     {
       "name": "r3-walk-3-torch",
       "loads": 11,
-      "dead": 359,
+      "dead": 370,
       "modelled": 150,
-      "residue": 209
+      "residue": 220
     },
     {
       "name": "r3-walk-4-spear",
       "loads": 13,
-      "dead": 397,
+      "dead": 410,
       "modelled": 150,
-      "residue": 247
+      "residue": 260
     },
     {
       "name": "r3-walk-5-darkshield",
       "loads": 9,
-      "dead": 321,
+      "dead": 330,
       "modelled": 150,
-      "residue": 171
+      "residue": 180
     },
     {
       "name": "r3-walk-6-darksuit",
       "loads": 10,
-      "dead": 340,
+      "dead": 350,
       "modelled": 150,
-      "residue": 190
+      "residue": 200
     },
     {
       "name": "r3-walk-full",
       "loads": 53,
-      "dead": 1906,
-      "modelled": 900,
-      "residue": 1006
+      "dead": 1958,
+      "modelled": 897,
+      "residue": 1061
     },
     {
       "name": "r4-iceturret-bobs",
@@ -374,51 +773,51 @@
     {
       "name": "r4-walk-1-sword",
       "loads": 9,
-      "dead": 320,
-      "modelled": 150,
-      "residue": 170
+      "dead": 328,
+      "modelled": 147,
+      "residue": 181
     },
     {
       "name": "r4-walk-2-feather",
       "loads": 6,
-      "dead": 264,
+      "dead": 270,
       "modelled": 150,
-      "residue": 114
+      "residue": 120
     },
     {
       "name": "r4-walk-3-torch",
       "loads": 11,
-      "dead": 359,
+      "dead": 370,
       "modelled": 150,
-      "residue": 209
+      "residue": 220
     },
     {
       "name": "r4-walk-4-approach",
       "loads": 5,
-      "dead": 95,
+      "dead": 100,
       "modelled": 0,
-      "residue": 95
+      "residue": 100
     },
     {
       "name": "r4-walk-5-spear",
       "loads": 7,
-      "dead": 283,
+      "dead": 290,
       "modelled": 150,
-      "residue": 133
+      "residue": 140
     },
     {
       "name": "r4-walk-6-health",
       "loads": 8,
-      "dead": 452,
+      "dead": 460,
       "modelled": 300,
-      "residue": 152
+      "residue": 160
     },
     {
       "name": "r4-walk-full",
       "loads": 41,
-      "dead": 1678,
-      "modelled": 900,
-      "residue": 778
+      "dead": 1718,
+      "modelled": 897,
+      "residue": 821
     },
     {
       "name": "r5-bobboss-arm",
@@ -458,16 +857,16 @@
     {
       "name": "r5-contact-control-off",
       "loads": 1,
-      "dead": 19,
+      "dead": 20,
       "modelled": 0,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r5-contact-control-on",
       "loads": 1,
-      "dead": 19,
+      "dead": 20,
       "modelled": 0,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r5-d5-conch",
@@ -500,16 +899,16 @@
     {
       "name": "r5-l37-burn-control",
       "loads": 1,
-      "dead": 19,
+      "dead": 20,
       "modelled": 0,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r5-l37-burn",
       "loads": 1,
-      "dead": 19,
+      "dead": 20,
       "modelled": 0,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r5-l38-fade-boot",
@@ -528,51 +927,51 @@
     {
       "name": "r5-l40-join-control",
       "loads": 1,
-      "dead": 350,
+      "dead": 351,
       "modelled": 331,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r5-l40-join",
       "loads": 1,
-      "dead": 350,
+      "dead": 351,
       "modelled": 331,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r5-l40-part0-control",
       "loads": 1,
-      "dead": 19,
+      "dead": 20,
       "modelled": 0,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r5-l40-part0",
       "loads": 1,
-      "dead": 169,
+      "dead": 170,
       "modelled": 150,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r5-l40-part1",
       "loads": 1,
-      "dead": 169,
+      "dead": 170,
       "modelled": 150,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r5-l40-part5-control",
       "loads": 1,
-      "dead": 19,
+      "dead": 20,
       "modelled": 0,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r5-l40-part5",
       "loads": 1,
-      "dead": 19,
+      "dead": 20,
       "modelled": 0,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r5-l41-part3-control",
@@ -619,58 +1018,58 @@
     {
       "name": "r5-l60-kill-control",
       "loads": 1,
-      "dead": 19,
+      "dead": 20,
       "modelled": 0,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r5-l60-kill",
       "loads": 1,
-      "dead": 19,
+      "dead": 20,
       "modelled": 0,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r5-press-delay-control",
       "loads": 1,
-      "dead": 19,
+      "dead": 20,
       "modelled": 0,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r5-press-delay",
       "loads": 1,
-      "dead": 19,
+      "dead": 20,
       "modelled": 0,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r5-press-glide",
       "loads": 1,
-      "dead": 19,
+      "dead": 20,
       "modelled": 0,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r5-press-repeat",
       "loads": 1,
-      "dead": 19,
+      "dead": 20,
       "modelled": 0,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r5-shaft-control",
       "loads": 1,
-      "dead": 216,
+      "dead": 217,
       "modelled": 197,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r5-shaft",
       "loads": 1,
-      "dead": 366,
+      "dead": 367,
       "modelled": 347,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r5-swim-cross",
@@ -696,16 +1095,16 @@
     {
       "name": "r5-totem-entrance-control",
       "loads": 2,
-      "dead": 369,
+      "dead": 371,
       "modelled": 331,
-      "residue": 38
+      "residue": 40
     },
     {
       "name": "r5-totem-entrance",
       "loads": 2,
-      "dead": 369,
+      "dead": 371,
       "modelled": 331,
-      "residue": 38
+      "residue": 40
     },
     {
       "name": "r5-waterfall-climb",
@@ -724,30 +1123,30 @@
     {
       "name": "r6-contact-pair-control",
       "loads": 1,
-      "dead": 19,
+      "dead": 20,
       "modelled": 0,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r6-contact-pair-heart",
       "loads": 2,
-      "dead": 38,
+      "dead": 40,
       "modelled": 0,
-      "residue": 38
+      "residue": 40
     },
     {
       "name": "r6-contact-pair-live",
       "loads": 2,
-      "dead": 38,
+      "dead": 40,
       "modelled": 0,
-      "residue": 38
+      "residue": 40
     },
     {
       "name": "r6-contact-pair-standing",
       "loads": 1,
-      "dead": 19,
+      "dead": 20,
       "modelled": 0,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r6-final-door-control",
@@ -808,16 +1207,16 @@
     {
       "name": "r6-totem-control",
       "loads": 1,
-      "dead": 454,
+      "dead": 455,
       "modelled": 435,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r6-totem-kill",
       "loads": 1,
-      "dead": 454,
+      "dead": 455,
       "modelled": 435,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r6-watcher-blood-control",
@@ -865,15 +1264,15 @@
       "name": "r7-act2-full",
       "loads": 12,
       "dead": 719,
-      "modelled": 481,
-      "residue": 238
+      "modelled": 478,
+      "residue": 241
     },
     {
       "name": "r7-ends-meet-1",
       "loads": 2,
       "dead": 37,
-      "modelled": 0,
-      "residue": 37
+      "modelled": -3,
+      "residue": 40
     },
     {
       "name": "r7-ends-meet-2",
@@ -886,8 +1285,8 @@
       "name": "r7-ends-meet-full",
       "loads": 3,
       "dead": 57,
-      "modelled": 0,
-      "residue": 57
+      "modelled": -3,
+      "residue": 60
     },
     {
       "name": "r8-d2-19",
@@ -934,16 +1333,16 @@
     {
       "name": "r8-l6-bob-contact",
       "loads": 1,
-      "dead": 19,
+      "dead": 20,
       "modelled": 0,
-      "residue": 19
+      "residue": 20
     },
     {
       "name": "r8-solve-1",
       "loads": 2,
       "dead": 37,
-      "modelled": 0,
-      "residue": 37
+      "modelled": -3,
+      "residue": 40
     },
     {
       "name": "r8-solve-10",
@@ -1212,25 +1611,158 @@
       "residue": 40
     },
     {
+      "name": "return-l15-conch",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "return-l15-reentry-unclear",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "return-l15-reentry",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "return-l15-walkin",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "robust-l16-l18-sword-conch",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "robust-l16-sword-idle1",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "sealdoor-l113-clear",
+      "loads": 1,
+      "dead": 201,
+      "modelled": 181,
+      "residue": 20
+    },
+    {
+      "name": "sealdoor-l113-exit",
+      "loads": 2,
+      "dead": 221,
+      "modelled": 181,
+      "residue": 40
+    },
+    {
+      "name": "sealdoor-l113-noseal-control",
+      "loads": 1,
+      "dead": 201,
+      "modelled": 181,
+      "residue": 20
+    },
+    {
       "name": "shuffle-stop",
       "loads": 1,
       "dead": 17,
+      "modelled": -3,
+      "residue": 20
+    },
+    {
+      "name": "slots-l24-burn-cut-110",
+      "loads": 2,
+      "dead": 40,
       "modelled": 0,
-      "residue": 17
+      "residue": 40
+    },
+    {
+      "name": "slots-l24-burn-cut-80",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "slots-l24-burn-fencepost",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "slots-l24-burn-fire-first",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "slots-l24-fire-first",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "stance-l46-chest",
+      "loads": 1,
+      "dead": 351,
+      "modelled": 331,
+      "residue": 20
+    },
+    {
+      "name": "stance-l48-chest",
+      "loads": 1,
+      "dead": 351,
+      "modelled": 331,
+      "residue": 20
+    },
+    {
+      "name": "stance-l48-keylock-north",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "stance-l48-keylock-open",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "stance-l48-keylock-south",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
     },
     {
       "name": "statue-press",
       "loads": 1,
       "dead": 17,
-      "modelled": 0,
-      "residue": 17
+      "modelled": -3,
+      "residue": 20
     },
     {
       "name": "straight-run",
       "loads": 1,
       "dead": 17,
-      "modelled": 0,
-      "residue": 17
+      "modelled": -3,
+      "residue": 20
     },
     {
       "name": "swim-u5-bobboss-encounter",
@@ -1242,16 +1774,16 @@
     {
       "name": "thread-the-gap",
       "loads": 1,
-      "dead": 17,
-      "modelled": 0,
-      "residue": 17
+      "dead": 15,
+      "modelled": -5,
+      "residue": 20
     },
     {
       "name": "transition-west-return",
       "loads": 3,
-      "dead": 55,
-      "modelled": 0,
-      "residue": 55
+      "dead": 57,
+      "modelled": -3,
+      "residue": 60
     },
     {
       "name": "u10-puncher-dwell-refused",
@@ -1376,8 +1908,78 @@
       "name": "wall-slide",
       "loads": 1,
       "dead": 17,
+      "modelled": -3,
+      "residue": 20
+    },
+    {
+      "name": "wallflyer-kill-flight",
+      "loads": 1,
+      "dead": 20,
       "modelled": 0,
-      "residue": 17
+      "residue": 20
+    },
+    {
+      "name": "wallflyer-kill",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "wallflyer-shield-bump",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "watcher-l114-silent",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "watcher-l114-talk",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "watcher-l37-reach-l38",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "watcher-l37-reach-l44",
+      "loads": 2,
+      "dead": 40,
+      "modelled": 0,
+      "residue": 40
+    },
+    {
+      "name": "watcher-l37-silent-lean",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "watchertalk-l114-clear-16",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
+    },
+    {
+      "name": "watchertalk-l114-clear-32",
+      "loads": 1,
+      "dead": 20,
+      "modelled": 0,
+      "residue": 20
     }
   ]
 }

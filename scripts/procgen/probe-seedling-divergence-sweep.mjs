@@ -59,6 +59,21 @@
  *                        a `timeout` row carries `cut` (the bound that ended it, the engine's phase, the solver's own
  *                        backstop), and the `leg` hang bound and the shard timeout grow with it. ⛔ The solver's work-unit
  *                        budgets and its 300 s backstop are not this: a budget above the backstop lets that NAME surface.
+ *   --memory-probe-ms=<ms> [--memory-out=<jsonl>]  ⛓ MEMORY PROBE (slice `seedling-js-wasm-oom`, default OFF — no sample, no
+ *                        wrapped call, no row field): every <ms> (≥ 250) across each leg, from just before its jump to its
+ *                        end, sample the GAME's o1heap arena (allocated / peak / oom, read out of linear memory, no call
+ *                        into the game), the runtime's frame counter, the game's clock + level (one `botStatus`), the
+ *                        engine's phase, the bridge calls (an opt-in counter in the lab) and the parent page's JS heap (CDP).
+ *                        Each sample prints a `MEMPROBE leg <id>` line; the row gets `memory` (`summarizeMemory`: the
+ *                        whole leg and its `solving` span) and `memoryProbeMs`; `--memory-out` gets the whole curve,
+ *                        one line per leg. The sampler is `seedlingMemoryProbe.js` (bounded: it halves past 1200).
+ *                        `--memory-probe-ms=<ms>,hit-sample-ms=<n>` = the SPLIT ARM: the lab's 25 ms `botStatus` hit
+ *                        sampler runs every <n> ms instead (rows stamped `hitSampleMs`; `roomHits` is coarser there).
+ *                        More arms (`seedlingMemoryProbe.parseMemoryProbe`, each stamped on the row): `hold-l0=<s>` (the
+ *                        boot room frozen by `botHold` before the grants), `quiet-l0=<s>` (then frozen again with the panel's
+ *                        item-only `queueItems` pushes dropped), `run-arrival=<s>` / `hold-arrival=<s>` (the
+ *                        arrival room run unheld, then frozen, before the serve), `live-objects` (the runtime's per-frame
+ *                        live AVM2 counts, kept by a one-token rewrite of the served glue JS; the wasm is untouched).
  *   --capture-requests=<jsonl>  ⛓ REQUEST CAPTURE (default OFF): append every solve request each leg made, in order, AS THE
  *                        WORKER RECEIVED IT (`seedlingSolveRequestCodec.captureRequest`: no `levelSource`; Map/Set tagged), with
  *                        its pass rows and work units — one line per leg `{id, key, requests}`. The rows are unchanged
@@ -100,7 +115,7 @@
  *
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build.
  *
- * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--no-stage-events] [--stage-flags=…] [--contact-fidelity=<keys>|all|none] [--axe-dodge=on|off] [--upgrade-window-work=<units>] [--dash-only-window=on|off] [--dash-shape=<spec>] [--leg-budget-ms=<ms>] [--capture-requests=<jsonl>] [--out=…] [--wait-for-box=<sec>]
+ * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…|--keys=…] [--no-stage-events] [--stage-flags=…] [--contact-fidelity=<keys>|all|none] [--axe-dodge=on|off] [--upgrade-window-work=<units>] [--dash-only-window=on|off] [--dash-shape=<spec>] [--leg-budget-ms=<ms>] [--capture-requests=<jsonl>] [--memory-probe-ms=<ms> [--memory-out=<jsonl>]] [--out=…] [--wait-for-box=<sec>]
  */
 import { chromium } from 'playwright';
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -112,6 +127,8 @@ import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { FLASH_PANEL, clickPanelTab, createRoomPlay, slotBlockOf, withSlotBlock } from './seedlingRoomPlay.js';
 import { legSelectors, pickLegs } from './seedling-divergence-legs.mjs';
+import { callDelta, createMemorySampler, formatMemorySample, memoryArmStamp, parseMemoryProbe, readGameMemoryInPage, summarizeMemory,
+    withLiveObjects } from './seedlingMemoryProbe.js';
 
 argvHelp(import.meta.url);
 
@@ -430,6 +447,10 @@ async function main() {
     const OUT = arg('out', '');
     // ⛓ REQUEST CAPTURE — empty = off (today's run: no request is serialized)
     const CAPTURE = arg('capture-requests', '');
+    // ⛓ MEMORY PROBE — 0 = off (today's run: nothing sampled, nothing wrapped, no row field); parsed before a browser
+    const MEM = parseMemoryProbe(arg('memory-probe-ms', ''));
+    const { ms: MEM_PROBE, hitSampleMs: HIT_SAMPLE } = MEM;
+    const MEM_OUT = arg('memory-out', '');
     const FROM = Number(arg('from', '0'));
     const LIMIT = Number(arg('limit', '100000'));
     const PAGE_LEGS = Number(arg('page-legs', '60'));
@@ -504,6 +525,8 @@ async function main() {
         // ⛓ THE LEG BUDGET'S STAMP — every row, whatever its end (byte-identical at the default)
         // ⛓ FREEZE LATCH (§5.89) — a throttled (measurement-only) run says so on every row
         if (CPU_THROTTLE) row = { ...row, cpuThrottle: CPU_THROTTLE };
+        // ⛓ MEMORY PROBE — a probed (measurement-only) run says so on every row
+        if (MEM_PROBE) row = { ...row, memoryProbeMs: MEM_PROBE, ...memoryArmStamp(MEM) };
         const line = JSON.stringify(stampSolverKnobs(stampBudget(row, LEG_BUDGET), KNOBS));
         console.log(`ROW ${line.length > 600 ? `${line.slice(0, 600)}…` : line}`);
         if (OUT) appendFileSync(OUT, `${line}\n`);
@@ -574,6 +597,16 @@ async function main() {
                 try { doc = r.ok() ? JSON.parse(await r.text()) : null; } catch { doc = null; }
                 if (!doc) { await route.fulfill({ response: r }); return; }
                 await route.fulfill({ response: r, json: withSlotBlock(doc, 'flash_panel', { wasm: WASM_PAGE }) });
+            });
+        }
+        // ⛓ MEMORY PROBE `live-objects` arm — the served glue JS keeps `swf_perf_report`'s live counts (measurement only)
+        if (MEM.liveObjects) {
+            await page.route(`**/flashPanel/wasm/${WASM_PAGE.split('/')[0]}/*.js`, async (route) => {
+                const r = await route.fetch();
+                if (/swf_bridge_avm2\.js$/.test(route.request().url())) { await route.fulfill({ response: r }); return; }
+                const js = withLiveObjects(await r.text());
+                console.log(`MEMPROBE: live-objects ${js ? 'kept' : 'NOT kept (the token moved)'} in ${route.request().url().split('/').pop()}`);
+                if (js) await route.fulfill({ response: r, body: js }); else await route.fulfill({ response: r });
             });
         }
         const tb = Date.now();
@@ -702,6 +735,14 @@ async function main() {
             await (await page.context().newCDPSession(page)).send('Emulation.setCPUThrottlingRate', { rate: CPU_THROTTLE });
             console.log(`CPU-THROTTLE: page ${pageNo}: ${CPU_THROTTLE}x from here (measurement only; every row stamped cpuThrottle)`);
         }
+        // ⛓ MEMORY PROBE — the call counter (once per page) and the parent's JS heap channel; off = neither exists
+        const memCdp = MEM_PROBE ? await page.context().newCDPSession(page) : null;
+        if (MEM_PROBE) {
+            await memCdp.send('Performance.enable');
+            const counted = await page.evaluate(() => window.__div.installCallCounter());
+            console.log(`MEMPROBE: page ${pageNo}: every ${MEM_PROBE} ms (measurement only; rows stamped memoryProbeMs); call counter ${counted ? 'on' : 'NOT installed'}`
+                + `${HIT_SAMPLE ? `; SPLIT ARM: the lab's hit sampler every ${HIT_SAMPLE} ms (not 25; rows stamped hitSampleMs)` : ''}`);
+        }
         const granted = [];
         let swaps = 0;
         for (const [i, leg] of legs.entries()) {
@@ -717,6 +758,20 @@ async function main() {
             // ⛓ L74 SILENT STALL — the page's uncaught errors DURING this leg go on its row (CI sweep 38185510484: three
             // pageerrors, a throw that killed the engine's timer chain, and a row that said only `timeout`).
             const logMark = logs.length;
+            // ⛓ MEMORY PROBE — sampled from before the grants/jump (the room build) to the leg's end
+            let arm = null;
+            const mem = createMemorySampler({ intervalMs: MEM_PROBE, read: async () => ({ ...(await memoryRead(page, memCdp, rp)), ...(arm ? { arm } : {}) }),
+                onSample: (x) => console.log(formatMemorySample(leg.id, x)) });
+            const calls0 = MEM_PROBE ? await page.evaluate(() => window.__div.callCounts()).catch(() => null) : null;
+            mem.start();
+            /** ⛓ MEMORY PROBE — stop the leg's sampler; its summary on the row, its curve in --memory-out (off: nothing). */
+            const finishMemory = async () => {
+                if (!MEM_PROBE) return;
+                const { samples, stats } = await mem.stop();
+                const calls1 = await page.evaluate(() => window.__div.callCounts()).catch(() => null);
+                row.memory = { ...summarizeMemory(samples), sampler: stats, callsBy: callDelta(calls0, calls1) };
+                if (MEM_OUT) appendFileSync(MEM_OUT, `${JSON.stringify({ id: leg.id, key: leg.key ?? null, intervalMs: MEM_PROBE, samples })}\n`);
+            };
             // eslint-disable-next-line no-await-in-loop
             try { await step('leg', async () => {
                 // ⛔ THE CLEAN START (planner-3's trace, 2026-10-05): the game's `Inventory.items` is STATIC and
@@ -731,6 +786,14 @@ async function main() {
                     row.end = 'dirty-start';
                     row.error = `the game already holds ${JSON.stringify(before)} before this leg's grants — not a clean start`;
                     throw Object.assign(new Error(row.error), { byName: true });
+                }
+                // ⛓ MEMORY PROBE arm `hold-l0` — the boot room frozen, sampled, released (measurement only)
+                if (MEM.holdL0Sec) { arm = 'hold-l0'; await holdFor(MEM.holdL0Sec); arm = null; }
+                if (MEM.quietL0Sec) {
+                    arm = 'quiet-l0';
+                    await page.evaluate(() => window.__div.setDropItems(true));
+                    try { await holdFor(MEM.quietL0Sec); } finally { await page.evaluate(() => window.__div.setDropItems(false)); }
+                    arm = null;
                 }
                 if (MODE === 'inv') {
                     const want = leg.sphere?.inventory ?? null;
@@ -776,10 +839,13 @@ async function main() {
                 // the Rng split at the arrival: the botStatus ECHO vs the live LATCH (the arrival staging reads the echo)
                 // eslint-disable-next-line no-await-in-loop
                 row.rngSplitAtArrival = await page.evaluate(() => window.__div.rngSplit());
+                // ⛓ MEMORY PROBE arms `run-arrival` / `hold-arrival` — the arrival room run unheld, then frozen (measurement only)
+                if (MEM.runArrivalSec) { arm = 'run-arrival'; await page.waitForTimeout(MEM.runArrivalSec * 1000); arm = null; }
+                if (MEM.holdArrivalSec) { arm = 'hold-arrival'; await holdFor(MEM.holdArrivalSec); arm = null; }
                 // eslint-disable-next-line no-await-in-loop
                 const r = await page.evaluate((a) => window.__div.serveLeg(a).then((x) => JSON.parse(JSON.stringify(x))),
                     { leg, budgetMs: LEG_BUDGET, producer: PRODUCER, nameCut: LEG_BUDGET !== LEG_BUDGET_MS_DEFAULT,
-                        ...(CAPTURE ? { captureRequests: true } : {}) });
+                        ...(CAPTURE ? { captureRequests: true } : {}), ...(HIT_SAMPLE ? { hitSampleMs: HIT_SAMPLE } : {}) });
                 // ⛓ REQUEST CAPTURE — off the row, into their own file
                 const { requests, ...served } = r;
                 if (CAPTURE) appendFileSync(CAPTURE, `${JSON.stringify({ id: leg.id, key: leg.key ?? null, requests: requests ?? [] })}\n`);
@@ -787,11 +853,13 @@ async function main() {
                 swaps += (r.history ?? []).length;
             }); } catch (e) {
                 if (e instanceof SweepHang) throw e;
-                if (e.byName) { emit(row); current = null; continue; }
+                if (e.byName) { await finishMemory(); emit(row); current = null; continue; }
                 row.end = 'probe-error';
                 row.error = e.message.split('\n')[0].slice(0, 400);
                 row.consoleTail = logs.slice(-12);
             }
+            // eslint-disable-next-line no-await-in-loop
+            await finishMemory();
             const pageErrors = logs.slice(logMark).filter((l) => l.startsWith('[pageerror]'));
             if (pageErrors.length) row.pageErrors = pageErrors.slice(0, 5).map((l) => l.slice(0, 400));
             const exits = logs.filter((l) => /heap_alloc|ExitStatus|out of memory/.test(l));
@@ -803,6 +871,24 @@ async function main() {
         }
         console.log(`INFO: page ${pageNo}: ${logs.filter((l) => l.startsWith('[pageerror]')).length} page error(s), ~${swaps} swaps`);
         await step('pageClose', () => page.close());
+
+        /** ⛓ MEMORY PROBE arms — freeze the game with its own `botHold("on")` for `sec` s, then release it. */
+        async function holdFor(sec) {
+            const on = await page.evaluate(() => window.__div.surface().wasm.getGame().botHold('on'));
+            await page.waitForTimeout(sec * 1000);
+            const off = await page.evaluate(() => window.__div.surface().wasm.getGame().botHold('off'));
+            console.log(`MEMPROBE: held ${sec} s (botHold on → ${on}, off → ${off})`);
+        }
+
+        /** ⛓ MEMORY PROBE — one sample: the game frame's heap (no call into the game), the lab's read, the parent JS heap. */
+        async function memoryRead(pg, cdp, roomPlay) {
+            const [game, lab, metrics] = await Promise.all([
+                roomPlay.gameFrame().evaluate(readGameMemoryInPage).catch((e) => ({ found: false, error: String(e?.message ?? e).slice(0, 80) })),
+                pg.evaluate(() => window.__div.memoryRead()).catch((e) => ({ labError: String(e?.message ?? e).slice(0, 80) })),
+                cdp.send('Performance.getMetrics').catch(() => null)]);
+            const jsHeap = metrics?.metrics?.find((m) => m.name === 'JSHeapUsedSize')?.value ?? null;
+            return { game, ...lab, jsHeap };
+        }
 
         /** Write each flag through the game's own `Game.setPersistence(tag, false, level)`; poll the table for them. */
         async function stageEvents(flags) {

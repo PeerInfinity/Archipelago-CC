@@ -175,7 +175,9 @@ export async function createLab() {
         return diff;
     }
 
-    async function serveLeg({ leg, budgetMs = 90000, producer = 'solver', nameCut = false, captureRequests = false }) {
+    async function serveLeg({ leg, budgetMs = 90000, producer = 'solver', nameCut = false, captureRequests = false,
+        // ⛓ MEMORY PROBE's split arm (measurement only; off-default rows are stamped `hitSampleMs` by the probe)
+        hitSampleMs = 25 }) {
         const eng = producer === 'walker' ? walkerEngine() : engine;
         st.failed = null;
         st.notes = [];
@@ -208,7 +210,7 @@ export async function createLab() {
             roomHits.samples += 1;
             roomHits.max = Math.max(roomHits.max ?? 0, s.hits);
             hitRec.observe(s, { tape: tapeOf() });
-        }, 25);
+        }, hitSampleMs);
         const answer = eng.walkTo(goal);
         const t0 = performance.now();
         let end = 'timeout';
@@ -350,12 +352,69 @@ export async function createLab() {
             begin: sm?.beginEntry?.['static.Rng.split'] ?? null };
     }
 
+    /**
+     * ⛓ MEMORY PROBE (`--memory-probe-ms`, OFF by default: nothing calls this, nothing is wrapped) — counts every call
+     * the page makes through the game's callback table (and the characters each returned) and every `queueItems`
+     * push, by wrapping them ONCE in place. Idempotent; a pass-through (the answers are the game's).
+     */
+    const calls = { installed: false, total: 0, replyChars: 0, queueItems: 0, queuedItems: 0, by: {}, lastQueue: null,
+        // ⛓ the `quiet` arm (measurement only): item-only pushes are DROPPED while set (a push carrying an invocation
+        // still goes — a teleport is never lost); `dropped` counts them
+        dropItems: false, dropped: 0 };
+    function installCallCounter() {
+        if (calls.installed) return calls.installed;
+        const g = game();
+        const bridge = win()?.__swfBridge;
+        if (!g || !bridge) return false;
+        for (const name of Object.keys(g)) {
+            const f = g[name];
+            if (typeof f !== 'function' || name.startsWith('__')) continue;
+            g[name] = (...a) => {
+                const r = f.apply(g, a);
+                calls.total += 1;
+                const b = (calls.by[name] ??= { n: 0, chars: 0 });
+                b.n += 1;
+                if (typeof r === 'string') { b.chars += r.length; calls.replyChars += r.length; }
+                return r;
+            };
+        }
+        const q = bridge.queueItems.bind(bridge);
+        bridge.queueItems = (items) => {
+            calls.queueItems += 1;
+            calls.queuedItems += items?.length ?? 0;
+            try { calls.lastQueue = JSON.stringify(items).slice(0, 1500); } catch { calls.lastQueue = null; }
+            if (calls.dropItems && !(items ?? []).some((i) => i?.invocation === 'new_instance')) { calls.dropped += 1; return undefined; }
+            return q(items);
+        };
+        calls.installed = true;
+        return true;
+    }
+    /** One MEMORY PROBE read of the parent side: the engine's phase, the game's clock + level (one `botStatus`), the calls. */
+    function memoryRead() {
+        let gameTime = null;
+        let level = null;
+        let frozen = null;
+        try {
+            const s = status();
+            gameTime = s?.game_time ?? null;
+            level = s?.level ?? null;
+            frozen = s?.frozen_timer ?? null;
+        } catch (e) { gameTime = null; level = `throws: ${String(e?.message ?? e).slice(0, 60)}`; }
+        const es = engine.status();
+        return { phase: es.phase, held: !!es.room, gameTime, level, frozenTimer: frozen,
+            calls: { total: calls.total, replyChars: calls.replyChars, queueItems: calls.queueItems, queuedItems: calls.queuedItems, dropped: calls.dropped } };
+    }
+    /** The per-callback counts so far (the leg's row reads its delta). */
+    function callCounts() { return JSON.parse(JSON.stringify({ ...calls, installed: undefined })); }
+    /** ⛓ the `quiet` arm: drop (true) or pass (false) the item-only pushes. */
+    function setDropItems(on) { calls.dropItems = !!on; return calls.dropped; }
+
     /** One status read of the shapes (for the report's field list). */
     function peek() {
         return { status: status(), mobiles: J(game().botMobiles()), seam: seam(), state: readState(),
             lastRows: tap.rows.slice(-2), surfaceKeys: Object.keys(surface()), delivered: !!surface().wasm.deliveredSet };
     }
 
-    return { serveLeg, peek, heldItems, rngSplit, surface, engine, status, readState, tap, splitPlays, firstField, isArrival, stagingFromWasmArrival,
+    return { serveLeg, peek, heldItems, installCallCounter, memoryRead, callCounts, setDropItems, rngSplit, surface, engine, status, readState, tap, splitPlays, firstField, isArrival, stagingFromWasmArrival,
         shippedTape, exactDeclarationRefusal, liveDeclarations, TAPE_KEY_RELEASES, firstDivergence, parsePendingCheck, win };
 }

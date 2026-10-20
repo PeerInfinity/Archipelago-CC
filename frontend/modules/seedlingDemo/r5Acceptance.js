@@ -1302,9 +1302,20 @@ export function featherFindings(replayed) {
 export const TOTEM_ENTRANCE_WALK = Object.freeze({
     press: 'r5-totem-entrance',
     control: 'r5-totem-entrance-control',
-    /** Both arms, from the game. */
-    deadFrames: 369,
-    /** …attributed, by the two fade probes rather than by another tape's constants. */
+    /**
+     * Both arms, from the game. ⛓ 371 since both arms took `pins: ["dead_frames"]`
+     * (the dead-frame lockstep, 2026-10-19; 369 unpinned): a pinned load costs
+     * exactly `gameClock.LOAD_FADE_FRAMES`, so 371 = 2 × 20 + 331, and the
+     * ceremony's share did not move by a frame.
+     */
+    deadFrames: 371,
+    /** The arms' two loads under the pin — a boot and a door, at 20 each. */
+    pinnedLoadTotal: 40,
+    /**
+     * …attributed, by the two fade probes rather than by another tape's constants.
+     * ⚠ The probes stay UNPINNED on purpose (they measure the vanilla clock), so
+     * this is the vanilla cost, not the arms' any more.
+     */
     load: Object.freeze({ boot: 19, door: 19, get total() { return this.boot + this.door; } }),
     ceremony: 331,
     pinnedTile: Object.freeze({ tx: 9, ty: 38 }),
@@ -1396,13 +1407,13 @@ export function totemEntranceFindings(replayed) {
     const door = replayed?.get('r5-l38-fade-door');
     for (const [label, arm] of [['press', press], ['control', control]]) {
         const armTotal = TOTEM_ENTRANCE_WALK.deadFrames;
-        const armLoad = TOTEM_ENTRANCE_WALK.load.total;
+        const armLoad = TOTEM_ENTRANCE_WALK.pinnedLoadTotal;
         found.push({
             name: `R5 totem entrance: the ${label} arm reports ${armTotal} dead frames`,
             ok: arm.status?.dead_frames === armTotal,
             detail: arm.status?.dead_frames === armTotal
                 ? `${armTotal} = ${armLoad} `
-                    + `(a boot and a door, MEASURED) + ${TOTEM_ENTRANCE_WALK.ceremony} `
+                    + `(a boot and a door, PINNED at 20 each) + ${TOTEM_ENTRANCE_WALK.ceremony} `
                     + '(the ceremony) — and the ceremony is 150 of `Pickup.specialTimer` '
                     + 'plus 181 of a `SealController`, which was derived from its own '
                     + 'update loop before any tape drove one'
@@ -1425,7 +1436,7 @@ export function totemEntranceFindings(replayed) {
                     + "so a load's dead-frame cost is NOT a "
                     + 'constant — `blackCover` and the frame `Bot.update` samples it on are '
                     + `two clocks. Without these two probes the ceremony would have looked `
-                    + `like ${TOTEM_ENTRANCE_WALK.deadFrames - FEATHER_DEAD_FRAMES.boot - FEATHER_DEAD_FRAMES.perDoor} and `
+                    + `like ${TOTEM_ENTRANCE_WALK.load.total + TOTEM_ENTRANCE_WALK.ceremony - FEATHER_DEAD_FRAMES.boot - FEATHER_DEAD_FRAMES.perDoor} and `
                     + '`sealControllerTicks()` would have been "corrected" from 181 to 179.'
                 : `boot ${b} (expected ${wantBoot}), boot+door ${d} `
                     + `(expected ${wantTotal})`,
@@ -1567,8 +1578,11 @@ export const SHAFT_WALK = Object.freeze({
      * OBSERVED"; this number is the game's own accounting saying otherwise,
      * and it is a stronger witness than the run's `collected` record because
      * it comes from the other side.
+     *
+     * ⛓ 367 since the tape took `pins: ["dead_frames"]` (2026-10-19): its one
+     * load is exactly `gameClock.LOAD_FADE_FRAMES` (20) instead of L38's vanilla 19.
      */
-    deadFrames: 366,
+    deadFrames: 367,
     modelledDeadFrames: 347,
     ceremonyFrames: 150,
     /**

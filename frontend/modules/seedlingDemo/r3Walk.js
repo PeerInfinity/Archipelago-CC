@@ -506,6 +506,10 @@ export function r3TapeSpecs(route) {
                 grants: inherited.length > 0
                     ? [{ level: boot.level, items: [...inherited] }] : [],
                 persistence: clears(),
+                equips: [],
+                // ⛓ The dead-frame LOCKSTEP (`Bot.pinDeadFrames`): a load costs exactly
+                // LOAD_FADE_FRAMES, whatever the page's render pacing. Re-pinned 2026-10-19.
+                pins: ['dead_frames'],
             },
         });
     }
@@ -525,6 +529,10 @@ export function r3TapeSpecs(route) {
             // ⛔ EMPTY. The whole rung is this line.
             grants: [],
             persistence: clears(),
+            equips: [],
+            // ⛓ The dead-frame LOCKSTEP (`Bot.pinDeadFrames`): a load costs exactly
+            // LOAD_FADE_FRAMES, whatever the page's render pacing. Re-pinned 2026-10-19.
+            pins: ['dead_frames'],
         },
     });
     return specs;

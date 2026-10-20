@@ -1,5 +1,5 @@
 {
-  "tape_version": 4,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r5-l37-burn-control",
   "description": "⛓⛓ THE SHUT-BEFORE CONTROL for `r5-l37-burn`: the identical tape with the ONE fire press deleted and every walk span byte-identical. The tree stands, so the 24-tile room the walk starts in stays closed and the proof tile is never entered. ⚠ The equip is kept — it is not an input span, and a control holding no weapon would be testing the equip rather than the press.",
@@ -29,6 +29,7 @@
       "slot": 1
     }
   ],
+  "pins": ["dead_frames"],
   "tick_count": 226,
   "inputs": [
     {

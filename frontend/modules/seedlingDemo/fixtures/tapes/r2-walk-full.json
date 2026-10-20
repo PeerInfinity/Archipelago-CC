@@ -1,5 +1,5 @@
 {
-  "tape_version": 3,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r2-walk-full",
   "description": "THE HEADLINE R2 WALK, synthesized by botDriverV2 from the committed route (fixtures/r2-route.json), with COLLISION ON. 55 legs across 31 level(s), 54 crossings of which 3 are pit falls. Holds button@112,176 for 101 ticks to open lock@112,160. 25 persistence clear(s) applied before the first live tick. Ends holding hasSword, hasDarkSword, hasShield, hasDarkShield, hasFeather, hasSpear, hasDarkSuit, hasTorch, hitsMax 3. Regenerate with fixtures/regenerate-r2-tapes.mjs; the route is the artifact and this tape is derived from it.",
@@ -192,6 +192,10 @@
       "tag": 0,
       "note": "lock@32,32"
     }
+  ],
+  "equips": [],
+  "pins": [
+    "dead_frames"
   ],
   "tick_count": 10136,
   "inputs": [

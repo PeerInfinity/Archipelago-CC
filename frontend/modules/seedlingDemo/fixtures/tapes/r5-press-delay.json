@@ -1,5 +1,5 @@
 {
-  "tape_version": 4,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r5-press-delay",
   "description": "⛓⛓ `r5-press-glide`, 120 TICKS LATER. Identical inputs and an identical player path, with idle ticks inserted before press 5 so the press lands at a different absolute time. A STATIC solid in (12,6) stops the block in the same place; a MOVING one does not. This is the discriminator, and it is one field apart from the tape it is compared with.",
@@ -35,6 +35,7 @@
       "slot": 1
     }
   ],
+  "pins": ["dead_frames"],
   "tick_count": 530,
   "inputs": [
     {

@@ -124,6 +124,15 @@ export async function createLabBridge({ substrate, client, iframeId, page, log =
         if (!mine(data)) return;
         assertLoad(data);
         await page.load(data.payload);
+        /**
+         * ⚠ FORCED, for `requestState`'s reason (MEASURED 2026-10-19,
+         * region-editor-launch): a host that loads the SAME document again — a
+         * second Edit ▸ on a room saved unedited — changed no level, so the
+         * page's own announce stayed silent and `labRoomEditor`'s door waited
+         * forever for the "holding, no room open" it navigates on. A load is a
+         * request, and it is answered.
+         */
+        announce({ force: true });
     });
 
     client.subscribeEventBus(LAB_EVENTS.navigate, async (data) => {

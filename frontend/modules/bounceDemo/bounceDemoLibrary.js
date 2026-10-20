@@ -977,9 +977,15 @@ export function createBounceSubstrateEntry({
          * ⚠ `open` returns a PROMISE where the maze/Seedling `lab` kind
          * returns synchronously; no caller reads the return value (the ONE
          * return path is `onSave`), and `_editRegion` ignores it.
+         *
+         * ⛓ `module` is the app module whose panel `open` hands the session
+         * to: `regionEditors.openRoomEditor` enables it first (⚖
+         * region-editor-launch Q1), which creates the panel when the layout
+         * has none — `ui:activatePanel` alone only raises an existing tab.
          */
         roomEditor: Object.freeze({
             kind: 'panel',
+            module: 'bounceRegionEditor',
             open: (session) => import('../bounceRegionEditor/index.js')
                 .then((m) => m.openBounceRegionEditor(session)),
         }),

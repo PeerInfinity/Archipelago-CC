@@ -63,6 +63,8 @@ const checkId = (id) => `feature-check-${id}`;
 const MOUNT_TIMEOUT_MS = 10000;
 const POLL_MS = 100;
 const TOUR_ID = 'guided-tour';
+/** The retired Resume record (⚖ 2026-10-19). */
+const PROGRESS_SETTING = `moduleSettings.${MODULE_ID}.progress`;
 
 /** The live panel, opened if it is closed, back on its list and merged, its settings at `settings`. */
 async function freshPanel(tc, settings) {
@@ -90,7 +92,7 @@ async function freshPanel(tc, settings) {
 /** The module's settings as they are now, to put back in `finally`. */
 async function savedSettings() {
     const out = {};
-    for (const k of [...Object.keys(DEFAULTS), 'progress']) {
+    for (const k of Object.keys(DEFAULTS)) {
         out[k] = await settingsManager.getSetting(`moduleSettings.${MODULE_ID}.${k}`, DEFAULTS[k] ?? null);
     }
     return out;
@@ -122,7 +124,7 @@ function restoreActiveTabs(saved) {
 
 async function tutorialPanelListsEveryTutorial(tc) {
     const settings = await savedSettings();
-    const ui = await freshPanel(tc, { progress: null });
+    const ui = await freshPanel(tc, {});
     if (!ui) return tc.getOverallResult();
     try {
         for (const { tutorial } of TUTORIALS) {
@@ -175,12 +177,13 @@ async function tutorialPanelListsEveryTutorial(tc) {
 /**
  * ⚖ 2026-10-15: every section is collapsible and starts collapsed; one opened
  * stays open across re-renders; leaving a tutorial opens the sections that
- * hold it; saved progress shows Resume in the toolbar.
+ * hold it. ⚖ 2026-10-19: no Resume across a reload — nothing is recorded,
+ * and a record stored before is deleted.
  */
 async function tutorialSectionsCollapse(tc) {
     const settings = await savedSettings();
     const tabs = activeTabs();
-    const ui = await freshPanel(tc, { autoAdvance: false, showOutline: false, progress: null });
+    const ui = await freshPanel(tc, { autoAdvance: false, showOutline: false });
     if (!ui) return tc.getOverallResult();
     try {
         ui.collapseAll();
@@ -223,13 +226,13 @@ async function tutorialSectionsCollapse(tc) {
         tc.reportCondition(`leaving ${TOUR_ID} opens ${path.join(' › ')}, and only that`, sections()
             .every((d) => d.open === path.includes(d.dataset.section)));
         ui.collapseAll();
-        ui.saved = { id: TOUR_ID, index: 2 };
-        ui.render();
-        const resume = ui.root.querySelector(`.tut-toolbar .${CONTROLS.resume}`);
-        tc.reportCondition(`saved progress shows Resume in the toolbar ("${resume?.textContent}")`,
-            Boolean(resume?.textContent.includes(tour.title) && resume.textContent.includes('step 3')));
-        resume?.click();
-        tc.reportCondition('Resume starts the tutorial at its saved step', ui.tutorial?.id === TOUR_ID && ui.index === 2);
+        const stored = () => settingsManager.getSetting(PROGRESS_SETTING, undefined);
+        tc.reportCondition('starting and leaving a tutorial records no progress', await stored() === undefined);
+        tc.reportCondition('the toolbar holds only Quick Launch',
+            ui.root.querySelectorAll('.tut-toolbar button').length === 1);
+        await settingsManager.updateModuleSetting(MODULE_ID, 'progress', { id: TOUR_ID, index: 2 });
+        await ui._deleteRetiredProgress();
+        tc.reportCondition('a progress record stored before is deleted', await stored() === undefined);
     } finally {
         await restore(ui, settings);
         ui?.collapseAll();
@@ -511,8 +514,8 @@ const TESTS = [
         tutorialPanelListsEveryTutorial],
     ['tutorial-sections-collapse', 'Tutorial: every list section is collapsible and starts collapsed',
         'Every section and subsection is closed; a heading click opens one and it stays open across a redraw (a track '
-        + 'subsection too); leaving a tutorial opens just the sections that hold it; saved progress shows Resume in the '
-        + 'toolbar, and it resumes at the saved step.',
+        + 'subsection too); leaving a tutorial opens just the sections that hold it; no progress is recorded (no '
+        + 'Resume across a reload), and a record stored before is deleted.',
         tutorialSectionsCollapse],
     ['tutorial-start-splits-and-merge-restores', 'Tutorial: Start splits the column, Merge restores it',
         'The panel shares its stack until a tutorial starts; Start moves it into tutorial-stack under the stack it came '

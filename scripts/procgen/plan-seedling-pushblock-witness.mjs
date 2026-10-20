@@ -193,7 +193,10 @@ async function main() {
     {
         const name = 'pushblock-l65-sword-press';
         const authored = {
-            tape_version: 4,
+            // ⛓ v5 + `pins: ["dead_frames"]` since f2baacde0a (the dead-frame
+            // LOCKSTEP re-pin, applied to the fixture by text): the authored tape
+            // asks for the same pin, so the byte check below measures the route.
+            tape_version: 5,
             game: 'seedling',
             name,
             description: '⛓⛓⛓ SEEDLING FIDELITY PUSHBLOCK D1 — R4\'s L65 probe stance one cell east of '
@@ -208,6 +211,7 @@ async function main() {
             grants: [{ level: 65, items: ['sword', 'spear'] }],
             persistence: [],
             equips: [{ t: 0, slot: 0 }],
+            pins: ['dead_frames'],
             tick_count: 80,
             inputs: [
                 { key: 'left', from: 5, to: 25 },
@@ -220,7 +224,9 @@ async function main() {
         const xAt = (t) => out.ticks.find((o) => o.t === t)?.x;
         check(`${name}: the model's sword slash leaves the block where it is`,
             Math.abs(xAt(28) - xAt(78)) < 1, `stop x ${xAt(28)} before, ${xAt(78)} after`);
-        const json = `${JSON.stringify(authored, null, 4)}\n`;
+        // The re-pin wrote `pins` on ONE line; emit it the same way.
+        const json = `${JSON.stringify(authored, null, 4)}\n`
+            .replace(/"pins": \[\s*"dead_frames"\s*\]/, '"pins": ["dead_frames"]');
         const path = join(TAPES, `${name}.json`);
         if (CHECK) {
             const same = existsSync(path) && readFileSync(path, 'utf8') === json;

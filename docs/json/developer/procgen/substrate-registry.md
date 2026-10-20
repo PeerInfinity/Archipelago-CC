@@ -106,8 +106,9 @@ The optional `sharing` field declares which resource-channel categories a substr
 
 | Field | Type | Meaning |
 |-------|------|---------|
-| `roomEditor` | object | The room editor: open room i of a document and get one saved room back. `kind: 'panel'` carries `open({region \| record, base?, contract?, onSave})`, a panel launcher loaded by dynamic import. `kind: 'lab'` carries `page` (the `procgenLabPanel` page, `maze` or `seedling`) and `arm` (its `?source=` for a set document). Resolved by `getRegionEditor(id)` in `procgenPipeline/regionEditors.js`. |
+| `roomEditor` | object | The room editor: open room i of a document and get one saved room back. `kind: 'panel'` carries `open({region \| record, base?, contract?, onSave})`, a panel launcher loaded by dynamic import, and `module`, the app module whose panel it opens (`regionEditors.openRoomEditor` enables it first, so a closed panel is re-created). `kind: 'lab'` carries `page` (the `procgenLabPanel` page, `maze` or `seedling`) and `arm` (its `?source=` for a set document). Resolved by `getRegionEditor(id)` in `procgenPipeline/regionEditors.js`. |
 | `regionRoundTrip` | object | How a document region goes into that editor and back. `open({regionId, payload, region, itemPool, expectedItems})` returns `{session, unedited}`; `save(saved, ctx)` returns `{payload, exits, locations}`; either may be async. `{refused: '<why>'}` declares there is none. Optional `rules` (`procgenCore/roundTripRules.js`): `'authored'` when the payload's rules must equal the document's, `'derived'` (default) when rebuilt from geometry. Resolved by `apworldEditor/regionRoundTrip.js`. |
+| `regionEditStatus` | function (optional) | `regionEditStatus(payload)` → `null` for a region nobody edited, else `{flagged, text}`: what an edited region's flag says. The pipeline shows it on the region row, after Save and under ④ Compile, and the APWorld Editor after Save, without naming the substrate. `flash_seedling_gen` declares it (an edited room the generator's oracle no longer certifies is `flagged`). |
 | `exitSides` | object (optional) | What else in the payload is keyed by an exit's `side`: `{keys, relabel}`. `relabel(payload, moves)` is pure and applies `moves = [{exitId, from, to}]` together; the editor writes `payload.exits` itself. If absent, exit-side moves are refused. Read through `exitSidesOf` in `procgenCore/exitSides.js` by the APWorld editor and the pipeline's `moveSphereExitSide` / `swapSphereExitSides`. |
 
 `unedited` is the baseline: if saving an untouched region would already change the document, the APWorld editor disables Edit and says why. A `lab` editor exchanges the document with its page over `load`, `navigate` (`?source=<arm>&room=<n>`) and `levelChanged` (a `procgenCore/labRoomEnvelope`); `onSave` fires when the open-room index returns to `null`. See [The Stepped Pipeline](./stepped-pipeline.md).
@@ -231,7 +232,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**9 registered entries · 92 fields · 15 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**9 registered entries · 93 fields · 15 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: `getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them.
 
@@ -313,8 +314,9 @@ Groups are this document's own § headings, matched to a field by the section th
 | Field | `bounce` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `runner` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|
 | `exitSides` | {keys, relabel} | {keys, relabel} | {keys, relabel} | {keys, relabel} | — | {keys, relabel} | {keys, relabel} | {keys, relabel} | {keys, relabel} |
-| `regionRoundTrip` | {open, save} | {refused} | — | — | {open, save} | — | — | — | {open, rules, save} |
-| `roomEditor` | {kind, open} | {arm, kind, page} | {arm, kind, page} | — | {arm, kind, page} | — | — | — | — |
+| `regionEditStatus` | — | — | fn | — | — | — | — | — | — |
+| `regionRoundTrip` | {open, save} | {refused} | {open, save} | — | {open, save} | — | — | — | {open, rules, save} |
+| `roomEditor` | {kind, module, open} | {arm, kind, page} | {arm, kind, page} | — | {arm, kind, page} | — | — | — | — |
 
 **Build-time — procedural substrates**
 

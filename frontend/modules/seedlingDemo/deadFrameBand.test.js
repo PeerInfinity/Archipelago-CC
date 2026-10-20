@@ -28,8 +28,9 @@ import { describe, expect, it } from 'vitest';
 
 import {
     FADE_STATS, LEGACY_FADE_PER_LOAD, MAX_HALF_WIDTH, MIN_FLOOR_HALF_WIDTH, SPREAD_PER_SQRT_LOAD,
-    describeFadeBand, fadeBand, legacyFadeBand,
+    deadFrameBudget, describeFadeBand, fadeBand, legacyFadeBand, skipPathBoot,
 } from './deadFrameBand.js';
+import { LOAD_FADE_FRAMES, PAGE_BOOT_TIME } from './gameClock.js';
 import { CEREMONY_DEAD_FRAMES } from './sealCeremony.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -74,12 +75,20 @@ describe('ADMITS — every recorded residue is inside the band', () => {
         expect(outside.map((o) => o.name)).toEqual([]);
     });
 
-    it('⛓ and the old floor\'s flake is admitted — 50 at three loads', () => {
+    it('⛓ and the old floor\'s flake is the BOOT FADE\'s — any k at three loads is owed back', () => {
         // `transition-west-return` reported 50 once and 56 on four solo
-        // re-runs. The old floor was 51: zero margin, so the STARVED run
-        // went red. This is the observation the half-width is SET from.
-        const b = fadeBand(3);
-        expect(50).toBeGreaterThanOrEqual(b.lo);
+        // re-runs; the old floor was 51 and the starved run went red. ⛓ R6
+        // lockstep: it boots at the page's spawn, so it pays `60 − k` where k
+        // is the page's pre-arm share of its own boot fade — and the budget
+        // now owes k back, so every k the clamp allows lands on the centre.
+        const tape = { tick_count: 40, boot: { level: 0, x: 80, y: 128 } };
+        for (let k = 0; k < LOAD_FADE_FRAMES; k++) {
+            const { modelled } = deadFrameBudget({ tape, expected: {}, transitions: 2,
+                armedAt: PAGE_BOOT_TIME + k });
+            const residue = (3 * LOAD_FADE_FRAMES - k) - modelled;
+            expect(residue).toBeGreaterThanOrEqual(fadeBand(3).lo);
+            expect(residue).toBeLessThanOrEqual(fadeBand(3).hi);
+        }
         expect(legacyFadeBand(3).lo).toBeGreaterThan(50);
     });
 });
@@ -108,6 +117,7 @@ describe('CATCHES — a ±150-frame ceremony error is rejected on every tape', (
             .sort();
         // Four at the first derivation; `r1-walk-full` (79 loads) RETIRED
         // under ⚖ ruling 26 (`c828cee1a5`), so the re-derived bank has three.
+        // ⛓ At 20/load the ceiling's slack is 4/load: blind from 38 loads.
         expect(legacyBlind).toEqual([
             'r2-walk-full', 'r3-walk-full', 'r4-walk-full',
         ]);
@@ -127,9 +137,12 @@ describe('CATCHES — a ±150-frame ceremony error is rejected on every tape', (
         expect(o.residue).toBeGreaterThanOrEqual(b.lo);
         expect(o.residue).toBeLessThanOrEqual(b.hi);
         expect(o.residue).toBeGreaterThanOrEqual(l.lo);
-        // the spurious ceremony is caught by BOTH — this is the case
-        // §24.85 said a naive widening would lose
-        expect(o.residue - DEFECT).toBeLessThan(l.lo);
+        // the spurious ceremony is caught by the √N band — the case §24.85
+        // said a naive widening would lose. ⛓ R6 lockstep: and the LEGACY
+        // floor no longer catches it. At 20/load its 17/load floor has 3/load
+        // of slack, 159 frames at 53 loads: the linear band is now blind on
+        // BOTH sides of the roster's longest walks.
+        expect(o.residue - DEFECT).toBeGreaterThanOrEqual(l.lo);
         expect(o.residue - DEFECT).toBeLessThan(b.lo);
     });
 });
@@ -164,28 +177,26 @@ describe('the shape, and the cap that keeps detection unconditional', () => {
         expect(fadeBand(1000).capped).toBe(true);
     });
 
-    it('the flake margin — 4.26 needed on the first derivation, 4.497 on the re-derived mean, 4.5 shipped', () => {
-        // The number `SPREAD_PER_SQRT_LOAD` is derived from, restated as a
-        // test so a future edit has to argue with it: admitting 50 at
-        // three loads needs (mean*3 − 50)/√3 — 4.26 at 19.1275, and 4.497
-        // at the 2026-10-02 re-derivation (19.2632). ⚠ That margin is now
-        // 0.003, but it no longer governs: below four loads the floor is
-        // `MIN_FLOOR_HALF_WIDTH` (the next row), and the flake's run, moved
-        // to the headless channel's one-lower-per-tape count (56 → 55, so
-        // 50 → 49), is still inside it.
-        const needed = (FADE_STATS.mean * 3 - 50) / Math.sqrt(3);
-        expect(needed).toBeCloseTo(4.497, 3);
-        expect(SPREAD_PER_SQRT_LOAD).toBeGreaterThan(needed);
-        expect(SPREAD_PER_SQRT_LOAD).toBeLessThan(needed * 1.5);
-        expect(49).toBeGreaterThanOrEqual(fadeBand(3).lo);
+    it('⛓ 4.5·√N is HEADROOM now: the worst all-pinned residual is far inside it', () => {
+        // Replaces the flake-margin row: 4.5 was set from a 6-frame STARVED
+        // run, and that starvation was the skip-path boot fade, owed back by
+        // name since the R6 lockstep. What is left is fenceposts.
+        const worst = Math.max(...BANKED.observations.map(
+            (o) => Math.abs(o.residue - FADE_STATS.mean * o.loads) / Math.sqrt(o.loads)));
+        expect(worst).toBeLessThan(SPREAD_PER_SQRT_LOAD / 2);
     });
 
-    it('⛓⛓ trap 1484: a STARVED single-load tape (14 dead, twice on CI) is admitted by the floor', () => {
+    it('⛓⛓ trap 1484: a single-load tape reading 14 (k = 6) is owed back by name, not by a floor', () => {
         const b = fadeBand(1);
-        expect(14).toBeGreaterThanOrEqual(b.lo);
-        expect(b.halfLow).toBe(MIN_FLOOR_HALF_WIDTH);
-        // the minimum is the measured worst plus margin, not a guess
-        expect(MIN_FLOOR_HALF_WIDTH).toBeGreaterThan(FADE_STATS.mean - 14);
+        // the band alone no longer admits it…
+        expect(14).toBeLessThan(b.lo);
+        // …the budget does, because the page spent 6 of the boot fade before the arm
+        const { modelled } = deadFrameBudget({
+            tape: { tick_count: 40, boot: { level: 0, x: 80, y: 128 } },
+            expected: {}, transitions: 0, armedAt: PAGE_BOOT_TIME + 6,
+        });
+        expect(14 - modelled).toBeGreaterThanOrEqual(b.lo);
+        expect(14 - modelled).toBeLessThanOrEqual(b.hi);
     });
 
     it('⛔ the wider floor still CATCHES a load the model invented, below four loads', () => {
@@ -197,13 +208,9 @@ describe('the shape, and the cap that keeps detection unconditional', () => {
         }
     });
 
-    it('⛓ the floor minimum is ONE-SIDED and bites only below four loads', () => {
-        for (const n of [1, 2, 3]) {
-            const b = fadeBand(n);
-            expect(b.hi - b.centre).toBeCloseTo(SPREAD_PER_SQRT_LOAD * Math.sqrt(n), 6);
-            expect(b.centre - b.lo).toBe(MIN_FLOOR_HALF_WIDTH);
-        }
-        for (const n of [4, 9, 53, 79]) {
+    it('⛓ the floor minimum is RETIRED: the band is symmetric at every load count', () => {
+        expect(MIN_FLOOR_HALF_WIDTH).toBe(SPREAD_PER_SQRT_LOAD);
+        for (const n of [1, 2, 3, 4, 9, 53, 79]) {
             const b = fadeBand(n);
             expect(b.centre - b.lo).toBeCloseTo(b.hi - b.centre, 6);
         }
@@ -219,5 +226,35 @@ describe('the shape, and the cap that keeps detection unconditional', () => {
         expect(describeFadeBand(4)).toContain('4.5·√4');
         expect(describeFadeBand(4)).toContain('4 load(s)');
         expect(LEGACY_FADE_PER_LOAD.min).toBe(17);
+    });
+});
+
+describe('⛓⛓ R6 lockstep: the boot fade the page spent before botStart (`bootFadeSpent`)', () => {
+    const SPAWN = { level: 0, x: 80, y: 128 };
+    const budget = (tape, armedAt) => deadFrameBudget({
+        tape: { tick_count: 40, ...tape }, expected: {}, transitions: 0, armedAt,
+    });
+
+    it('a tape at the page\'s spawn takes the skip path; anywhere else, or with a declared clock, does not', () => {
+        expect(skipPathBoot({ boot: SPAWN })).toBe(true);
+        expect(skipPathBoot({ boot: { ...SPAWN, x: 81 } })).toBe(false);
+        expect(skipPathBoot({ boot: { level: 38, x: 80, y: 128 } })).toBe(false);
+        // `seam.time` writes Main.time before the arm, so armed_at stops counting the page's frames.
+        expect(skipPathBoot({ boot: SPAWN, seam: { time: 9000 } })).toBe(false);
+    });
+
+    it('is k = armed_at − PAGE_BOOT_TIME, and it is taken OFF the modelled side (the residue owes it back)', () => {
+        // The first all-pinned full tier: straight-run armed at 4806 and read 14 = 20 − 6.
+        const b = budget({ boot: SPAWN }, PAGE_BOOT_TIME + 6);
+        expect(b.bootFadeSpent).toBe(6);
+        expect(b.modelled).toBe(-6);
+        expect(14 - b.modelled).toBe(LOAD_FADE_FRAMES);
+    });
+
+    it('is clamped to one fade, and is zero without an arm time or off the skip path', () => {
+        expect(budget({ boot: SPAWN }, PAGE_BOOT_TIME + 99).bootFadeSpent).toBe(LOAD_FADE_FRAMES);
+        expect(budget({ boot: SPAWN }, PAGE_BOOT_TIME - 3).bootFadeSpent).toBe(0);
+        expect(budget({ boot: SPAWN }, null).bootFadeSpent).toBe(0);
+        expect(budget({ boot: { level: 38, x: 144, y: 300 } }, PAGE_BOOT_TIME + 6).bootFadeSpent).toBe(0);
     });
 });

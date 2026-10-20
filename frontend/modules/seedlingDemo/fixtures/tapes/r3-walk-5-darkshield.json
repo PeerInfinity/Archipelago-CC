@@ -1,5 +1,5 @@
 {
-  "tape_version": 3,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r3-walk-5-darkshield",
   "description": "R3 walk SEGMENT 5 of 6, synthesized by botDriverV2 from legs 35-43 of the committed route (fixtures/r3-route.json). It boots where segment 4 ended and inherits sword, feather, torch, spear in a single grant entry at the boot level, which fires on tick 0. 9 legs across 7 level(s), 8 crossings of which 2 are pit falls. COLLECTS darkshield (darkshield@48,32, 4 release(s) over 29 ticks). Holds button@112,176 for 101 ticks to open lock@112,160. 10 persistence clear(s) applied before the first live tick. Ends holding hasSword, hasDarkShield, hasFeather, hasSpear, hasTorch, hitsMax 3. Regenerate with fixtures/regenerate-r3-tapes.mjs; the route is the artifact and this tape is derived from it.",
@@ -78,6 +78,10 @@
       "tag": 0,
       "note": "lock@112,192"
     }
+  ],
+  "equips": [],
+  "pins": [
+    "dead_frames"
   ],
   "tick_count": 2162,
   "inputs": [

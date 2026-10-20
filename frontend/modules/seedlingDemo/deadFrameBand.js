@@ -54,6 +54,8 @@
  */
 
 import { CEREMONY_DEAD_FRAMES } from './sealCeremony.js';
+import { LOAD_FADE_FRAMES, PAGE_BOOT_TIME } from './gameClock.js';
+import { BUILD_SPAWN } from './tapeFormat.js';
 
 /**
  * The per-load fade, re-derived (fidelity planner, 2026-10-02) from the
@@ -85,15 +87,29 @@ import { CEREMONY_DEAD_FRAMES } from './sealCeremony.js';
  * again here across the whole roster. Which is why `sigma` is small and
  * why `c` below is NOT derived from it.
  */
+/*
+ * ⛓⛓⛓ RE-DERIVED AGAIN (R6 dead-frame lockstep, 2026-10-19) — and the spread
+ * is GONE. Two changes, one run (`39311970465` at `f2baacde0a`, 280 tapes):
+ * every tape but the two vanilla fade probes now declares `pins:
+ * ["dead_frames"]` (the decay per UPDATE), and the budget owes back the boot
+ * fade a skip-path tape's page spent before `botStart` (`bootFadeSpent`,
+ * below). 273/282 tapes read EXACTLY 20 a load. The other nine: +1 on six:
+ * the five that collect the sword (`r3-collect-sword`, `r3/r4-walk-1`,
+ * `r3/r4-walk-full`) and `r7-act2-full` — a fencepost for fidelity, not noise; −1 on `r6-seed-control`, −1/−2 on
+ * `r5-l38-fade-boot`/`-door` (unpinned on purpose). The 17..20 "per-level
+ * constants" above were never per level: every 17 was a level-0 spawn tape
+ * whose page had spent 3 fade frames before the arm.
+ */
 export const FADE_STATS = Object.freeze({
-    tapes: 196,
-    loads: 589,
-    min: 17.0,
-    max: 20.0,
-    mean: 19.2632,
-    sigma: 0.5734,
-    source: 'seedling-full-tier run 37059822524 (5e3def7397, headless), tier-merged payloads; '
-        + 're-derived by probe-seedling-deadframe-band',
+    tapes: 282,
+    loads: 731,
+    min: 19.0,
+    max: 21.0,
+    mean: 20.0027,
+    sigma: 0.0855,
+    source: 'seedling-full-tier run 39317708180 (301e20b91f, headless, all-pinned, 282/282 '
+        + 'green), tier-merged payloads; re-derived by probe-seedling-deadframe-band with '
+        + 'bootFadeSpent',
 });
 
 /**
@@ -163,8 +179,17 @@ export const MAX_HALF_WIDTH = CEREMONY_DEAD_FRAMES.pickup / 2;
  * below the centre — still ~10 frames under this floor. A missed ceremony
  * (150) is caught at every N as before. It bites only below N = 4 (`4.5·√4
  * = 9`); at every longer tape the band is byte-for-byte what it was.
+ *
+ * ⛓⛓⛓ RETIRED (R6 dead-frame lockstep, 2026-10-19): back to `4.5·√N`. The
+ * "starved render loop" this term absorbed was the SKIP-PATH BOOT — the fresh
+ * page's own boot fade, partly spent before `botStart` landed (k = 3..6 on
+ * `ubuntu-latest`). Every 14 trap 1484 saw was a level-0 spawn tape; the budget
+ * now owes k back by name (`deadFrameBudget`'s `bootFadeSpent`), and on the
+ * all-pinned tier the worst residual left is 2 frames at 2 loads. Kept as an
+ * export, equal to the one-load half-width, so the floor is the symmetric band
+ * at every N and the arithmetic below needs no special case.
  */
-export const MIN_FLOOR_HALF_WIDTH = 9;
+export const MIN_FLOOR_HALF_WIDTH = SPREAD_PER_SQRT_LOAD;
 
 /**
  * The band a run's fade residue must land in.
@@ -222,13 +247,31 @@ export function describeFadeBand(loads) {
  * that invents a death, a reboot or a ceremony blows the band from the
  * other side.
  *
+ * ⛓⛓ R6 DEAD-FRAME LOCKSTEP (2026-10-19): AND THE BOOT FADE THE PAGE SPENT
+ * BEFORE `botStart` LANDED — `bootFadeSpent`, the one HARNESS term.
+ *
+ * Every replay gets a fresh page, whose own boot world (`new Game(0, 80, 128)`)
+ * starts its room fade on its first `Game.update()`. A tape that boots at that
+ * spawn takes `botStart`'s SKIP path (`Bot.as:1843`, no `new Game`) and arms
+ * at once, INSIDE that fade — so it never sees the `k = armed_at −
+ * PAGE_BOOT_TIME` fade frames that ran before the harness got the call in.
+ * `k` is host timing (3..6 on `ubuntu-latest`), and it was the whole of the
+ * "starved render loop" the floor was widened for: on the first all-pinned
+ * full tier every level-0 spawn tape read exactly `20·loads − k` (`straight-run`
+ * 14 at k 6, 17 at k 3) and every other pinned tape exactly `20·loads`. The
+ * term is `gameClock.trueStartWindowDeadFrames`'s `k`, read off the game's
+ * own `status.arm.armed_at`, clamped to one fade (an arm after the fade ended
+ * spent all of it). ⚠ A tape that declares `seam.time` writes `Main.time`
+ * before it arms, so `armed_at` no longer counts the page's frames: no term.
+ *
  * @param {object} args
  * @param {object} args.tape        the fixture (its `tick_count` fences the terminal reboot)
  * @param {object} args.expected    `runTape`'s result for it
  * @param {number} args.transitions the stream's transition count
  * @param {object|null} [args.exempt] `MODEL_EXEMPT[name]`, or null
+ * @param {number|null} [args.armedAt] the game's `status.arm.armed_at`, or null
  */
-export function deadFrameBudget({ tape, expected, transitions, exempt = null }) {
+export function deadFrameBudget({ tape, expected, transitions, exempt = null, armedAt = null }) {
     // ⛔ A terminal reboot (on the tape's last observation) starts its fade
     // after `Bot.update` has disarmed, so it costs the ledger nothing.
     const sameLevelReboots = (expected.endingReboots ?? [])
@@ -246,8 +289,18 @@ export function deadFrameBudget({ tape, expected, transitions, exempt = null }) 
     const declaredFreeze = exempt?.freezeFrames ?? 0;
     const runFreeze = expected.frozenFramesOwed ?? 0;
     const ceremonyFrames = sealFrames + pickupFrames + spawnedFrames + declaredFreeze;
+    const bootFadeSpent = skipPathBoot(tape) && Number.isFinite(armedAt)
+        ? Math.min(Math.max(armedAt - PAGE_BOOT_TIME, 0), LOAD_FADE_FRAMES) : 0;
     return {
         loads, deaths, sameLevelReboots, runFreeze, sealFrames, pickupFrames, spawnedFrames,
-        declaredFreeze, ceremonyFrames, modelled: runFreeze + ceremonyFrames,
+        declaredFreeze, ceremonyFrames, bootFadeSpent,
+        modelled: runFreeze + ceremonyFrames - bootFadeSpent,
     };
+}
+
+/** Does `botStart` arm this tape on the fresh page's own boot world? */
+export function skipPathBoot(tape) {
+    const b = tape?.boot;
+    return !!b && b.level === BUILD_SPAWN.level && b.x === BUILD_SPAWN.x && b.y === BUILD_SPAWN.y
+        && !tape.seam?.time;
 }

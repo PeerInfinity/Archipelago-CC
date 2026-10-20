@@ -23962,3 +23962,58 @@ tapeRunner pair (621 `fceca579`) or L39–L41 survey step moves, OFF or ON.
   and is 3 ticks for a BobSoldier.
 - A body "that never approaches" can be a body a wall holds: ask its velocity, not only its position.
 - An uncertain shake band is not always a question: a body at rest steps identically on and off screen.
+
+### Seedling hammer-phase XC flip — `ESCAPE_CROSS_PASS_CACHE` ON by default (flip-ready branch)
+
+⚖ The user (2026-10-18) picked "XC flip, then the floor flip". The flip is the user's call. This entry rides the
+flip-ready branch `seedling-hammer-xc-flip` (slice XF, `CC/docs/cloud-reports/seedling-hammer-xc-flip-prep.md`) and lands
+only if the user merges it. `solverBot.ESCAPE_CROSS_PASS_CACHE.enabled` now defaults ON. `SEEDLING_ESCAPE_CROSS_PASS_CACHE=0`
+turns it OFF for a node measurement, the way SP's flip did with `=0`.
+- The cache is answer-identical: XC's gate rows, its 94,280-hit shadow gate (0 mismatches) and XF's local verify
+  campaign on this branch. Only the wall clock moves: L18's sweep 0.71× (XF, 3 interleaved rounds).
+- fidelity-9's gap is closed by XF's D2: a drifting beam tower inside a cached SEARCH (L18 with one tower added), at
+  two seam times a hammer period apart and as a visit-only pair. A key without the digest's `visit` part turns the
+  visit-only row red.
+- Before merging: the full-sweep A/B named in the report (this branch against its parent, capture on).
+- **Landed (2026-10-19, ⚖ the user approved).** js-7's A/B GO stands: no answer moved, and the sweep ran 11% faster.
+  The landing harvest also folds in PR's held escape-member line: `solveSegmentUnder` hands
+  `ESCAPE_CROSS_PASS_CACHE_COUNTS` to `progressCaches` beside `progressReaders` (or `null` when the switch is OFF or no
+  scope is in hand). XF's stream rows now compare each snapshot without `caches`, and `solveProgress.test.js`'s rows pin
+  the line and its block: counted ON with no installer, `null` OFF, and an installer's `null` at site `segment` wins (the first call does). The bounded-shape rows accept the member's counts
+  now that the default is ON.
+
+### Seedling hammer-phase RR — the orphaned R-ladder producer reds, and the CI row
+
+⚖ The user approved the slice on 2026-10-19. At `d8fa8e0b19`, 7 of the 93 producer `--check`s were red
+(90 `plan-seedling-*` and the 3 `regenerate-r{2,3,4}-tapes`), and nothing ran them. The report is
+`CC/docs/cloud-reports/seedling-hammer-rladder-reds.md`.
+
+**Fixed in the producer or its check. No tape changed.**
+
+| producer | first bad | cause | fix |
+|---|---|---|---|
+| `r5-conch` | `84ebe05dcb` | `buildTape` v5 (`pins`) needs v4 (`equips`) | `equips: []` in the relax; `--write` byte-identical |
+| `r5-feather` | `84ebe05dcb`, then `bb156222b6` | the same; then a pickup's own tag reaches `earnedClears` | `equips: []`; the opener set adds the declared pickups in `PICKUP_CLEARS_OWN_TAG`. The route is unchanged |
+| `r6-shieldboss` | `3b37466df7` (its own) | the run logs `removeRequested`, which the check never expected | assert all four instants, with `removed` one tick after `removeRequested` |
+| `pushblock-witness` | `f2baacde0a` | the dead-frame re-pin edited the authored fixture by text | author v5 + `pins: ["dead_frames"]`, on one line as the re-pin wrote it |
+| `r7-attribution` | `f2baacde0a` | the re-pin moved R7's three recorded v≤3 tapes to v5 | a recorded tape now ≥ v4 has left the domain, and the check names it |
+
+**STOP (the honest fix is a re-record): `regenerate-r3/r4-tapes`.** First bad is `0670ca91e6` (WATCHERFLIP D1: a
+silent watcher is no planner volume). Through the torch segment the synthesizer now finds a route 17 ticks shorter
+(1964 → 1947 on `*-walk-3-torch`).
+
+**The CI row.** The `Producer --checks` job in `unittests_frontend.yml` runs `ci-producer-checks.mjs`. It is a merge
+gate: no `continue-on-error` and no submodules.
+- The roster is a glob.
+- `plan-seedling-r7-ends-meet` is EXCLUDED because it needs a browser and the wasm build. It already runs as a browser
+  arm.
+- r3/r4 are KNOWN_RED with an exact DIFFERS set, so any other drift, or the debt being paid, turns the row red.
+
+**Hand-overs.**
+- Re-record `r3/r4-walk-3-torch` and `r3/r4-walk-full`, and fix their one-line `pins` formatting.
+- `r5-feather --write` no longer emits its fixture (1735 → 1534 t). First bad is `5ec1edb6bd` (WATER_STEP_COST).
+- `r6-shield-kill` has never been what its producer emits: the talk starts one tick earlier in the fixture. This dates
+  from the introducing commit.
+
+**Trap candidate.** A `--check` that never compares bytes can go green while `--write` would move the fixture (feather,
+shieldboss). Green here means the producer's asserts hold, not that the tape is its output.

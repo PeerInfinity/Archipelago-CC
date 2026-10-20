@@ -1,5 +1,5 @@
 {
-  "tape_version": 3,
+  "tape_version": 5,
   "game": "seedling",
   "name": "r3-walk-full",
   "description": "THE HEADLINE R3 WALK, synthesized by botDriverV2 from the committed route (fixtures/r3-route.json), with the CRUTCHES OFF: grants EMPTY, every item walked onto and talked through, one blocker opened by hand. 53 legs across 32 level(s), 52 crossings of which 3 are pit falls. COLLECTS sword (sword@48,48, 4 release(s) over 29 ticks); feather (feather@160,96, 4 release(s) over 29 ticks); torch (torchpickup@64,64, 4 release(s) over 29 ticks); spear (ghostspear@72,24, 4 release(s) over 29 ticks); darkshield (darkshield@48,32, 4 release(s) over 29 ticks); darksuit (darksuit@40,152, 4 release(s) over 29 ticks). TOUCHES shieldlock@288,256 with Player.hasDarkShield, snapping to y 263 and refusing input for 100 ticks, which writes setPersistence(2, false). Holds button@112,176 for 101 ticks to open lock@112,160. 10 persistence clear(s) applied before the first live tick. Ends holding hasSword, hasDarkShield, hasFeather, hasSpear, hasDarkSuit, hasTorch, hitsMax 3. Regenerate with fixtures/regenerate-r3-tapes.mjs; the route is the artifact and this tape is derived from it.",
@@ -69,6 +69,8 @@
       "note": "lock@112,192"
     }
   ],
+  "equips": [],
+  "pins": ["dead_frames"],
   "tick_count": 12122,
   "inputs": [
     {
