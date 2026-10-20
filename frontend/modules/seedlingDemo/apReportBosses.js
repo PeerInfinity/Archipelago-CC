@@ -7,6 +7,11 @@
  *
  * The AS3 is PeerInfinity/Seedling branch `r4-boss-report` @ `0eda15f785` (on the pin `f8d9bc1`): `c87e4f4` (BobBoss,
  * FallRockLarge, Fire) and `0eda15f` (Witch, DarkSword). Every line below cites that SHA unless it says `f8d9bc1`.
+ * ⛓ APFLIP (re-cited at the vendor/seedling pin `ccdf189776`, the p4g wasm): `ccdf189` is ONE commit past
+ * `0eda15f785` and touches `Enemies/BossTotem.as` only (+5 −1: the totem gate, `:291`, mirrored in
+ * `bossTotem.stepBossTotem`). Every BobBoss / FallRockLarge / Fire / Witch / DarkSword line below is the same at
+ * `ccdf189776` (`git diff 0eda15f785 ccdf189776` names no other file; FallRockLarge is 153 lines at both); the
+ * BossTotem lines from `:287` down moved +4 (the Totem row's writer, below).
  *
  * ── WHAT CHANGED, AND WHAT THIS MODULE ANSWERS ─────────────────────────────────────────────────────────────────
  *
@@ -64,7 +69,7 @@ export const AP_REPORT_ROWS = Object.freeze([
     Object.freeze({ location: 'Tentacled Beast', level: 57, tag: 0, upstream: 20000023, changed: false,
         writer: 'Enemies/TentacleBeast.as:99-102 @f8d9bc1 — if (checkPersistence(tag)) setPersistence(tag, false)' }),
     Object.freeze({ location: 'Totem of Lacste', level: 43, tag: 5, upstream: 20000033, changed: false,
-        writer: 'Enemies/BossTotem.as:478 @f8d9bc1 — removed(): setPersistence(tag, false)' }),
+        writer: 'Enemies/BossTotem.as:482 @ccdf189776 (:478 @f8d9bc1) — removed(): setPersistence(tag, false)' }),
     Object.freeze({ location: 'Lights', level: 69, tag: 0, upstream: 20000038, changed: false,
         writer: 'Enemies/LightBossController.as:106 @f8d9bc1 — setPersistence(tag, false)' }),
     Object.freeze({ location: 'King of Fire', level: 82, tag: 0, upstream: 20000043, changed: false,

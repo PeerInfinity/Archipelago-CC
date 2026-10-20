@@ -9475,6 +9475,15 @@ export function createLevelRun({
             const flag = outOfBandFlagFor(level, w.tag);
             bossFlags.set(ledgerKey(flag),
                 { ...flag, id: b.id ?? 'bosstotem', level, t: ticksCompleted });
+            // ⛓ APFLIP D4 (H2, `CONTACT_FIDELITY.apReportBosses`): the write is IN BAND (`BossTotem.as:482`
+            // @ccdf189776, the Totem of Lacste location), so it is banked like ShieldBoss's: a same-run re-entry of
+            // L43 builds the room with {43,5} cleared, and `check()` (`:462-468`) despawns the boss
+            // (`AP_BOSS_PERSISTENCE_RESPONSE.bosstotem`). OFF it reached `earnedClears` alone and a re-entry rebuilt
+            // the boss.
+            if (CONTACT_FIDELITY.apReportBosses === true) {
+                if (!pendingEarnedClears.has(flag.level)) pendingEarnedClears.set(flag.level, new Set());
+                pendingEarnedClears.get(flag.level).add(flag.tag);
+            }
             const kill = bossKills.find((k) => k.level === level && k.tagTick === null);
             if (kill) {
                 kill.tagTick = ticksCompleted;

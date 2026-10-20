@@ -3018,6 +3018,36 @@ export const PERSISTENCE_RESPONSE = Object.freeze({
 });
 
 /**
+ * ⛓ APFLIP D4 (H2, `CONTACT_FIDELITY.apReportBosses`): the four boss rooms that had NO response, so a build handed
+ * their cleared slot threw. Under R4 every one of those slots is a location a server can stage (`AP_REPORT_ROWS`),
+ * so the rows are read from the AS3 @ccdf189776, three different answers:
+ *   finalboss            `Enemies/FinalBoss.as:68-74` `check()`: `if (tag >= 0 && !checkPersistence(tag))
+ *                        FP.world.remove(this)` — GONE (and with it the fight and its tset-0 publish)
+ *   bosstotem            `Enemies/BossTotem.as:462-468` `check()`: `doActions = false; FP.world.remove(this)` — GONE,
+ *                        and `removed()` writes nothing (`doActions`)
+ *   tentaclebeast        `Enemies/TentacleBeast.as:52-60` ctor: `dead = true`, no tentacles or whirlpools,
+ *                        `createMouthEntrance()` — built DEAD and STILL a `pixelmask` Solid (the model's whole
+ *                        beast); ⚠ the mouth `Teleporter` it adds (`:211-214`, `tentacle_beast_mouth`) is NOT built
+ *   lightbosscontroller  `Enemies/LightBossController.as:48-63` `check()`: no text, no totem, no fliers — `endState()`
+ *                        instead; the controller is `notSolid` in the model, so nothing changes; ⚠ the exit
+ *                        `Teleporter` `endState()` adds (`:102-107`, `light_boss_exit`) is NOT built (L69 is a room
+ *                        the rules never enter)
+ * OFF, `persistenceResponseOf` is the table above, verbatim.
+ */
+export const AP_BOSS_PERSISTENCE_RESPONSE = Object.freeze({
+    finalboss: 'despawn',
+    bosstotem: 'despawn',
+    tentaclebeast: 'built-dead',
+    lightbosscontroller: 'end-state',
+});
+
+/** `PERSISTENCE_RESPONSE`, plus `AP_BOSS_PERSISTENCE_RESPONSE` under `CONTACT_FIDELITY.apReportBosses`. */
+export function persistenceResponseOf(type) {
+    return PERSISTENCE_RESPONSE[type]
+        ?? (CONTACT_FIDELITY.apReportBosses === true ? AP_BOSS_PERSISTENCE_RESPONSE[type] : undefined);
+}
+
+/**
  * ⛔⛔⛔ R7 SLICE 6f — ONE BODY, ONE ANSWER: does a CLEARED tag take this
  * entity out of the world?
  *
@@ -3067,7 +3097,7 @@ export function clearedAwayByTag(e, clearedTags) {
     if (!clearedTags) return false;
     const entityTag = tagOf(e.type, e.attrs);
     if (!(entityTag >= 0) || !clearedTags.has(entityTag)) return false;
-    const response = PERSISTENCE_RESPONSE[e.type];
+    const response = persistenceResponseOf(e.type);
     if (response === 'despawn') return true;
     if (response === 'lock-despawn') return tSetOf(e.type, e.attrs) < 0;
     return false;
@@ -3336,7 +3366,7 @@ export function persistenceClearsFor(levelRecord) {
             refused.push({ level, tag, why: untouchable.why });
             continue;
         }
-        const unclassified = entities.filter((e) => !PERSISTENCE_RESPONSE[e.type]);
+        const unclassified = entities.filter((e) => !persistenceResponseOf(e.type));
         if (unclassified.length > 0) {
             refused.push({
                 level,
@@ -3347,7 +3377,7 @@ export function persistenceClearsFor(levelRecord) {
             continue;
         }
         const blocked = entities
-            .map((e) => ({ e, response: PERSISTENCE_RESPONSE[e.type] }))
+            .map((e) => ({ e, response: persistenceResponseOf(e.type) }))
             .find(({ response }) => REFUSED_CLEAR_RESPONSES[response]);
         if (blocked) {
             refused.push({
@@ -3376,7 +3406,7 @@ export function persistenceClearsFor(levelRecord) {
         // way. A `lock` only counts when its `tSet` is negative, which is
         // the same test `buildLevelWorld` applies.
         const removes = entities.filter((e) => {
-            const response = PERSISTENCE_RESPONSE[e.type];
+            const response = persistenceResponseOf(e.type);
             if (response === 'lock-despawn') return tSetOf(e.type, e.attrs) < 0;
             if (response === 'shrink') return true;
             if (response !== 'despawn') return false;
@@ -4719,7 +4749,7 @@ export function buildLevelWorld(levelRecord, {
             continue;
         }
         if (clearedTags && entityTag >= 0 && clearedTags.has(entityTag)) {
-            const response = PERSISTENCE_RESPONSE[e.type];
+            const response = persistenceResponseOf(e.type);
             // ⚠ AN UNDECLARED RESPONSE IS A THROW, and it is the guard that
             // makes this table's completeness checkable rather than hoped
             // for. A clear is a flag, not an entity: it reaches EVERYTHING
