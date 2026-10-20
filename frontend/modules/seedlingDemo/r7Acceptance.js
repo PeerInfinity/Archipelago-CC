@@ -1496,6 +1496,15 @@ export function goalHeldBy(row, fields) {
             ? (typeof fields['save.hitsMax'] === 'number' ? fields['save.hitsMax'] : null)
             : bool(fields[`save.${row.flag}`]);
     case 'encounter':
+        // ⛓ R7 (the p4g rebuild, R4 AS3 `r4-boss-report`): an encounter with a fixed report `address` is
+        // held once that address is CLEARED, exactly like a boss. The game now REPORTS the location (the Fire
+        // drop clears {32,4}, the Witch's sword {12,1}) and grants NOTHING — `hasFire` / `hasDarkSword` arrive
+        // from the host. That is unconditional on the game, whatever `apReportBosses` says about the model.
+        if (row.address) {
+            const clears = fields['save.levelPersistence'];
+            return Array.isArray(clears)
+                ? bool(clears.some((c) => c.level === row.address.level && c.tag === row.address.tag)) : null;
+        }
         return bool(fields[`save.${row.flag}`]);
     case 'boss': {
         // ⛓ R4b — a boss kill is held once its report address is CLEARED; the save's own readout.
@@ -1591,7 +1600,10 @@ export function goalEarnedWitness(row, boot, latch) {
     const gained = [...clearsOf(latch)]
         .filter((k) => !had.has(k) && Number(k.split(',')[0]) === row.level);
     if (GOAL_PLACEMENT_WITNESS[row.kind] && gained.length === 0) return null;
-    return `${row.flag} ${before} -> ${after}`
+    // ⛓ R7: a reported encounter's held reading is its address, not its flag (`goalHeldBy`), so the sentence says so.
+    const what = row.kind === 'encounter' && row.address
+        ? `levelPersistence {${row.address.level},${row.address.tag}} cleared (the ${row.flag} report)` : row.flag;
+    return `${what} ${before} -> ${after}`
         + (gained.length ? `, and levelPersistence gains ${gained.map((k) => `{${k}}`)
             .join(' ')} in level ${row.level}` : '');
 }

@@ -31,6 +31,7 @@
  */
 
 import { outOfBandFlagForWriter } from './outOfBandLedger.js';
+import { BOB_ARENA_LEVEL, BOB_KILLED_TAG, FIRE_BOSS_DROP_TAG } from './apReportBosses.js';
 // ⛓ R5 slice 13: the shaft's PAIR. The control's pin, the cell it must never
 // enter and the ledger it may earn all live beside the plan they are a
 // control for, so the two cannot drift apart.
@@ -415,6 +416,13 @@ export function keyLegFindings(replayed) {
  * and an exact-set assertion has to name it or the walk reports a clear
  * nobody can attribute.
  *
+ * ⛓ R7 (the p4g rebuild, R4 AS3 `r4-boss-report`): THAT WAS f8d9bc1. The
+ * kill now REPORTS `Times` ({32,3}), the drop is `Fire(…, BOSS_DROP_TAG = 4)`
+ * whose collect reports `Fire` ({32,4}), and the game grants NOTHING — the
+ * host grants Fire. So the fire arm's ledger is {32,1} {32,3} {32,4}, no
+ * {31,29}, and `hasFire` stays false. The pair is the same; what it proves
+ * is now "the sword finished the fight and the reports landed".
+ *
  * ⚠ `hits` IS ASSERTED FROM THE GAME'S OWN READOUT ON BOTH ARMS, which is
  * what the R5 batch added it for. Contact-freedom used to be inferred from
  * exactness; here it is two-sided — and it matters more than usual, because
@@ -455,50 +463,63 @@ export function bobBossFindings(replayed) {
     const found = [];
     const rock = `${ROCK_FLAG.level}:${ROCK_FLAG.tag}`;
     const oob = `${FIRE_OUT_OF_BAND_FLAG.level}:${FIRE_OUT_OF_BAND_FLAG.tag}`;
+    const killed = `${BOB_ARENA_LEVEL}:${BOB_KILLED_TAG}`;
+    const drop = `${BOB_ARENA_LEVEL}:${FIRE_BOSS_DROP_TAG}`;
     const fireCleared = clearedSet(fire.status);
     const controlCleared = clearedSet(control.status);
 
-    // 1. THE ITEM. `fire` is the first boolean on this arc that no pickup
-    //    on any map grants — `BobBoss.death` spawns it at runtime — so
-    //    `hasFire` true is the boss having died three times over.
+    // 1. THE REPORTS. ⛓ R7 (p4g, the R4 AS3 `r4-boss-report`, unconditional on the game): the third form's
+    //    death clears `BobBoss.KILLED_TAG` {32,3} (the `Times` location) and spawns `Fire(…, BOSS_DROP_TAG)`,
+    //    whose collect clears {32,4} (the `Fire` location) and grants NOTHING — the host does. So the
+    //    combat-earned fact is the pair of reports, and `hasFire` stays false on a game no host drives.
+    //    (Before R7, f8d9bc1: `hasFire` true and the out-of-band {31,29} from `Fire(…, -1)`.)
+    const reported = fireCleared.has(killed) && fireCleared.has(drop);
     found.push({
-        name: 'R5 BobBoss: the fire arm EARNED `hasFire`',
-        ok: fire.status?.items?.hasFire === true,
-        detail: fire.status?.items?.hasFire === true
-            ? 'hasFire=true, and the tape granted only `sword` — `Fire` is spawned by '
-                + '`BobBoss.death`, so it is in no level\'s pickup list and nothing but '
-                + 'the third form dying puts it in the room'
-            : 'hasFire is false — the fight did not finish. `BobBoss` is '
-                + 'ONE-VISIT-OR-RESTART (`if (Player.hasFire) remove(this)` in the ctor '
-                + 'and nowhere else), so a partial fight leaves nothing behind.',
+        name: 'R5 BobBoss: the fire arm REPORTED the kill and the Fire drop',
+        ok: reported,
+        detail: reported
+            ? `{${killed}} from \`BobBoss.death\` (the third form) and {${drop}} from the Fire drop's collect — `
+                + 'nothing but the fight finishing puts either in the ledger'
+            : `missing ${JSON.stringify([killed, drop].filter((k) => !fireCleared.has(k)))} — the fight did not `
+                + 'finish, or the drop was never collected. The R4 BobBoss has no `hasFire` self-remove guard, '
+                + 'so a partial fight respawns form 0 on the next entry.',
+    });
+    found.push({
+        name: 'R5 BobBoss: the game GRANTED nothing — `hasFire` is the host\'s',
+        ok: fire.status?.items?.hasFire === false,
+        detail: fire.status?.items?.hasFire === false
+            ? 'hasFire=false after the collect: `Fire.removed()` is `setPersistence(tag, false)` alone on '
+                + 'the R4 AS3, and no host grant is driven here'
+            : 'hasFire is TRUE — the build still grants Fire itself (a pre-R4 build?), so its reports '
+                + 'are not the location checks the host binds',
     });
     found.push({
         name: 'R5 BobBoss: the CONTROL arm did not',
-        ok: control.status?.items?.hasFire === false,
+        ok: control.status?.items?.hasFire === false
+            && !controlCleared.has(killed) && !controlCleared.has(drop),
         detail: control.status?.items?.hasFire === false
-            ? 'hasFire=false with the identical press train — so the presses are not '
-                + 'what earned it, the SWORD is'
-            : 'hasFire is TRUE in the arm with no sword. Something other than a sword '
+            && !controlCleared.has(killed) && !controlCleared.has(drop)
+            ? 'no report and no Fire with the identical press train — so the presses are not what '
+                + 'killed the boss, the SWORD is'
+            : 'the arm with no sword reported the kill or holds Fire. Something other than a sword '
                 + 'killed the boss, and this pair proves nothing about combat.',
     });
 
-    // 2. THE LEDGER, EXACT IN BOTH DIRECTIONS, and the out-of-band entry
-    //    asserted BY NAME rather than absorbed into a count.
-    const wantFire = [rock, oob];
+    // 2. THE LEDGER, EXACT IN BOTH DIRECTIONS: the rock and the two reports, and the old out-of-band
+    //    {31,29} named as ABSENT (the R4 drop carries tag 4, never -1).
+    const wantFire = [rock, killed, drop];
     const fireMissing = wantFire.filter((k) => !fireCleared.has(k));
     const fireExtra = [...fireCleared].filter((k) => !wantFire.includes(k));
     found.push({
-        name: 'R5 BobBoss: the fire arm\'s ledger is EXACTLY the rock and the '
-            + 'out-of-band write',
+        name: 'R5 BobBoss: the fire arm\'s ledger is EXACTLY the rock and the two reports',
         ok: fireMissing.length === 0 && fireExtra.length === 0,
         detail: fireMissing.length === 0 && fireExtra.length === 0
-            ? `{${rock}} from \`FallRockLarge.fall()\` and {${oob}} from `
-                + '`Fire.removed()` calling `setPersistence(-1, false)` in L32 — '
-                + '`i * 30 + j` puts a tag of -1 in L31\'s LAST slot, and the tape '
-                + 'declares no clears at all'
-            : `missing ${JSON.stringify(fireMissing)}, unexpected `
-                + `${JSON.stringify(fireExtra)}. {${oob}} missing means the reward was `
-                + `never taken; {${rock}} missing means the rock never armed.`,
+            ? `{${rock}} from \`FallRockLarge.fall()\`, {${killed}} and {${drop}} the reports — and no `
+                + `{${oob}}: the R4 Fire carries BOSS_DROP_TAG, so its clear lands in L32, not L31's last slot`
+            : `missing ${JSON.stringify(fireMissing)}, unexpected ${JSON.stringify(fireExtra)}.`
+                + (fireExtra.includes(oob)
+                    ? ` {${oob}} is the pre-R4 \`Fire(…, -1)\` write: this is not the R4 build.` : '')
+                + ` {${rock}} missing means the rock never armed.`,
     });
     found.push({
         name: 'R5 BobBoss: the control arm cleared ONLY the rock',
@@ -507,7 +528,7 @@ export function bobBossFindings(replayed) {
             ? `{${rock}} and nothing else — the walk armed the rock with its feet, which `
                 + 'both arms do, and never got past form 0'
             : `${controlCleared.size} flag(s) off (${[...controlCleared].join(' ')}). `
-                + `A {${oob}} here would mean fire was earned without a sword.`,
+                + `A {${killed}} here would mean the boss died without a sword.`,
     });
 
     // 3. THE TAKE-OVER, as a POSITIVE on one arm and its ABSENCE on the
@@ -520,7 +541,7 @@ export function bobBossFindings(replayed) {
         detail: fire.status?.saw_input_refused === true
             ? 'receiveInput went false mid-tape — `BobBoss.death` holds it for 120 frames '
                 + 'per transition and teleports the player to (80,120) for the last 40'
-            : 'the game never refused input, so no form ever died and `hasFire` came '
+            : 'the game never refused input, so no form ever died and the reports came '
                 + 'from somewhere this pair does not account for',
     });
     found.push({

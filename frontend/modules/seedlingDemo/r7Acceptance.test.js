@@ -505,6 +505,23 @@ describe('R7_GOAL_LEDGER — the census', () => {
             { 'save.levelPersistence': [{ level: 112, tag: 0 }] })).toMatch(/0 -> 1, and levelPersistence gains \{112,0\}/);
     });
 
+    it('⛓ R7 (p4g, R4 AS3): an encounter is held by its REPORT, never by the item the host grants', () => {
+        const fire = R7_GOAL_LEDGER.find((r) => r.id === 'fire@L32');
+        const boot = { 'save.hasFire': false, 'save.levelPersistence': [{ level: 32, tag: 1 }] };
+        // the game reports {32,4} and grants nothing: EARNED, with `hasFire` still false
+        const reported = { 'save.hasFire': false,
+            'save.levelPersistence': [{ level: 32, tag: 1 }, { level: 32, tag: 3 }, { level: 32, tag: 4 }] };
+        expect(goalHeldBy(fire, reported)).toBe(1);
+        expect(goalEarnedWitness(fire, boot, reported)).toMatch(/\{32,4\} cleared \(the hasFire report\) 0 -> 1/);
+        // the item alone (a host grant, or a boot declaration) is NOT the location
+        expect(goalEarnedWitness(fire, boot, { ...boot, 'save.hasFire': true })).toBe(null);
+        // the kill's report {32,3} is the Times row's, not the Fire's
+        expect(goalHeldBy(fire, { 'save.levelPersistence': [{ level: 32, tag: 3 }] })).toBe(0);
+        const sword = R7_GOAL_LEDGER.find((r) => r.id === 'darksword@L12');
+        expect(goalHeldBy(sword, { 'save.hasDarkSword': true, 'save.levelPersistence': [] })).toBe(0);
+        expect(goalHeldBy(sword, { 'save.levelPersistence': [{ level: 12, tag: 1 }] })).toBe(1);
+    });
+
     it('every row has a gate and a citation — a row with neither is a comment', () => {
         for (const r of R7_GOAL_LEDGER) {
             expect(r.gate, r.id).toBeTruthy();

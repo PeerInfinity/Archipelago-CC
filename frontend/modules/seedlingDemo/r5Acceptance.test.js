@@ -248,9 +248,12 @@ describe('the key leg and its shut-before control', () => {
 
 const ROCK = { level: 32, tag: 1 };
 const OOB = { level: 31, tag: 29 };
+// ⛓ R7 (p4g, R4 AS3): the kill's report (`BobBoss.KILLED_TAG`) and the Fire drop's (`Fire.BOSS_DROP_TAG`).
+const KILLED = { level: 32, tag: 3 };
+const DROP = { level: 32, tag: 4 };
 
 const bossArm = ({
-    cleared = [ROCK, OOB], hasFire = true, refused = true, hits = 0, level = 32,
+    cleared = [ROCK, KILLED, DROP], hasFire = false, refused = true, hits = 0, level = 32,
 } = {}) => ({
     stream: { ticks: [{ t: 0, x: 80, y: 128, level }, { t: 1, x: 80, y: 80.7, level }] },
     status: {
@@ -274,7 +277,7 @@ const bossPair = (fireOver = {}, controlOver = {}) => new Map([
     [BOBBOSS_CONTROL, bossControl(controlOver)],
 ]);
 
-describe('the BobBoss pair — `fire` as the first combat-earned boolean', () => {
+describe('the BobBoss pair — the sword finishes the fight, and the game REPORTS (R7: p4g, R4 AS3)', () => {
     it('holds for the pair the game recorded', () => {
         expect(failing(bobBossFindings(bossPair()))).toEqual([]);
     });
@@ -286,43 +289,48 @@ describe('the BobBoss pair — `fire` as the first combat-earned boolean', () =>
     });
 
     it('goes red when the fight did not finish', () => {
-        // ⚠ The failure mode that matters most: `BobBoss` is
-        // ONE-VISIT-OR-RESTART, so a partial fight leaves NOTHING behind and
-        // the next entry respawns form 0.
-        const f = bobBossFindings(bossPair({ hasFire: false, cleared: [ROCK] }));
-        expect(failing(f)).toContain('R5 BobBoss: the fire arm EARNED `hasFire`');
-        expect(f.find((x) => x.name.includes('EARNED')).detail)
-            .toMatch(/ONE-VISIT-OR-RESTART/);
+        // ⚠ The failure mode that matters most: a partial fight leaves NOTHING behind and the next entry
+        // respawns form 0 — no {32,3}, no drop, so no {32,4}.
+        const f = bobBossFindings(bossPair({ cleared: [ROCK] }));
+        expect(failing(f)).toContain('R5 BobBoss: the fire arm REPORTED the kill and the Fire drop');
+        expect(f.find((x) => x.name.includes('REPORTED')).detail).toMatch(/respawns form 0/);
+        // the kill reported but the drop never collected is red too
+        expect(failing(bobBossFindings(bossPair({ cleared: [ROCK, KILLED] }))))
+            .toContain('R5 BobBoss: the fire arm REPORTED the kill and the Fire drop');
     });
 
-    it('goes red when the SWORDLESS arm somehow earned fire', () => {
-        expect(failing(bobBossFindings(bossPair({}, { hasFire: true, cleared: [ROCK, OOB] }))))
+    it('⛔ goes red when the GAME granted Fire — a pre-R4 build, whose reports the host cannot bind', () => {
+        expect(failing(bobBossFindings(bossPair({ hasFire: true }))))
+            .toContain('R5 BobBoss: the game GRANTED nothing — `hasFire` is the host\'s');
+    });
+
+    it('goes red when the SWORDLESS arm somehow killed the boss', () => {
+        expect(failing(bobBossFindings(bossPair({}, { cleared: [ROCK, KILLED, DROP] }))))
+            .toContain('R5 BobBoss: the CONTROL arm did not');
+        expect(failing(bobBossFindings(bossPair({}, { hasFire: true }))))
             .toContain('R5 BobBoss: the CONTROL arm did not');
     });
 
-    it('⛔ goes red when the OUT-OF-BAND write is missing', () => {
-        // {31,29} is `Fire.removed()` calling `setPersistence(-1, false)` in
-        // L32. A claim that only counted flags, or only checked L32, would
-        // pass here — which is the whole reason it is named.
-        expect(failing(bobBossFindings(bossPair({ cleared: [ROCK] }))))
-            .toContain('R5 BobBoss: the fire arm\'s ledger is EXACTLY the rock and the '
-                + 'out-of-band write');
+    it('⛔ goes red when the pre-R4 OUT-OF-BAND write appears, and names it', () => {
+        // {31,29} was `Fire(…, -1).removed()` from L32 on f8d9bc1; the R4 drop carries tag 4.
+        const f = bobBossFindings(bossPair({ cleared: [ROCK, KILLED, DROP, OOB] }));
+        const name = 'R5 BobBoss: the fire arm\'s ledger is EXACTLY the rock and the two reports';
+        expect(failing(f)).toContain(name);
+        expect(f.find((x) => x.name === name).detail).toMatch(/pre-R4/);
     });
 
-    it('goes red when the rock flag is missing, or a third flag appeared', () => {
-        expect(failing(bobBossFindings(bossPair({ cleared: [OOB] }))))
-            .toContain('R5 BobBoss: the fire arm\'s ledger is EXACTLY the rock and the '
-                + 'out-of-band write');
+    it('goes red when the rock flag is missing, or a fourth flag appeared', () => {
+        const name = 'R5 BobBoss: the fire arm\'s ledger is EXACTLY the rock and the two reports';
+        expect(failing(bobBossFindings(bossPair({ cleared: [KILLED, DROP] })))).toContain(name);
         expect(failing(bobBossFindings(bossPair({
-            cleared: [ROCK, OOB, { level: 32, tag: 0 }],
-        })))).toContain('R5 BobBoss: the fire arm\'s ledger is EXACTLY the rock and the '
-            + 'out-of-band write');
+            cleared: [ROCK, KILLED, DROP, { level: 32, tag: 0 }],
+        })))).toContain(name);
     });
 
     it('goes red when the control arm cleared anything but the rock', () => {
         expect(failing(bobBossFindings(bossPair({}, { cleared: [] }))))
             .toContain('R5 BobBoss: the control arm cleared ONLY the rock');
-        expect(failing(bobBossFindings(bossPair({}, { cleared: [ROCK, OOB] }))))
+        expect(failing(bobBossFindings(bossPair({}, { cleared: [ROCK, KILLED] }))))
             .toContain('R5 BobBoss: the control arm cleared ONLY the rock');
     });
 
