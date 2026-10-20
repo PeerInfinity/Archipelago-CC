@@ -28,7 +28,6 @@ Modules marked *(disabled)* are present in the codebase but not enabled in the d
 
 - [Menu Panel](./menuPanel.md) (`menuPanel`) — the start region's substrate: one button per exit, a Restart that works outside loop mode, and the *skip the menu* setting.
 - [Discovery Panel](./discoveryPanel.md)
-- [Timer Panel](./timerPanel.md) *(disabled)*
 
 ## Loop Mode Modules
 

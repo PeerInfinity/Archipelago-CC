@@ -7,11 +7,11 @@ import connection from '../core/apClient.js';
 import storage from '../core/storage.js';
 import {
   setMainContentUIInstance,
-  getClientModuleDispatcher,
   getClientModuleEventBus,
 } from '../index.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js'; // RE-ADD import
 import { docsBase } from '../../../app/config/docsBase.js';
+import { mountChecksLine } from '../../commonUI/checksLine.js';
 
 
 // Helper function for logging with fallback
@@ -24,8 +24,6 @@ function log(level, message, ...data) {
   }
 }
 
-// const TIMER_UI_COMPONENT_TYPE = 'TimerProgressUI'; // May not be needed, or keep for logging
-const CLIENT_MODULE_ID = 'client'; // This module's ID for logging or other purposes
 
 class MainContentUI {
   constructor(container, componentState) {
@@ -41,7 +39,7 @@ class MainContentUI {
     }
 
     this.componentState = componentState;
-    this.timerHostPlaceholder = null;
+    this.checksLine = null;
 
     setMainContentUIInstance(this); // ADDED - Register instance with module's index.js
 
@@ -174,42 +172,6 @@ class MainContentUI {
       // ADDED: Ensure cleanup
       this.dispose();
     });
-
-    this.container.on('open', () => {
-      // When the panel (re)opens, ensure it is set as an active host if it has a placeholder
-      // OLD LOGIC - REMOVED
-      // if (this.timerHostPlaceholder) {
-      //   centralRegistry.setUIHostActive(
-      //     TIMER_UI_COMPONENT_TYPE,
-      //     CLIENT_MODULE_ID,
-      //     true
-      //   );
-      // }
-      // New logic: if a rehome is needed when a panel opens, system:rehomeTimerUI should be dispatched.
-      // This panel will respond if it's the highest priority viable host.
-      // Perhaps dispatch a rehome event here? Or rely on a general rehome event.
-      // For now, per plan, this panel just becomes ready. If Timer is not homed, a general rehome event is needed.
-      // log('info', '[MainContentUI] Panel opened. Ready to host TimerUI if system:rehomeTimerUI is dispatched.');
-    });
-
-    this.container.on('hide', () => {
-      // When the panel is hidden (e.g. tab closed but not destroyed), mark as inactive host
-      // OLD LOGIC - REMOVED
-      // centralRegistry.setUIHostActive(
-      //   TIMER_UI_COMPONENT_TYPE,
-      //   CLIENT_MODULE_ID,
-      //   false
-      // );
-      // New logic: If this panel was hosting and is now hidden, the TimerUI might need rehoming.
-      // This panel should not proactively detach. The Timer's attachToHost should handle moving.
-      // If this panel becomes non-viable, the next system:rehomeTimerUI event will find another host.
-      // If it was hosting, it might need to signal that its viability changed.
-      // The Timer UI should ideally be detached if this panel is no longer a good host.
-      // This might require a call to Timer's detach or a new rehome dispatch.
-      // For now, we focus on this panel's reaction to rehome requests.
-      // If it was hosting, and then hidden, and TimerUI needs to move,
-      // another dispatch of 'system:rehomeTimerUI' would be needed.
-    });
   }
 
   getRootElement() {
@@ -242,8 +204,7 @@ class MainContentUI {
             </div>
           </div>
           
-          <!-- Timer UI Placeholder -->
-          <div id="timer-ui-placeholder" style="margin-bottom: 10px;"></div>
+          <div id="console-checks-line" style="font-size: 0.9em;"></div>
         </div>
         
         <div id="main-console" class="main-console" style="flex-grow: 1; overflow-y: auto; background-color: #222; border: 1px solid #444; padding: 10px;">
@@ -293,20 +254,12 @@ class MainContentUI {
     // state but has nothing to draw on until now).
     this.updateConnectionStatus(this._connectionState, this._connectionDetail);
 
-    // Inject Timer UI
-    const timerPlaceholder = this.rootElement.querySelector(
-      '#timer-ui-placeholder'
-    );
-    if (timerPlaceholder) {
-      this.timerHostPlaceholder = timerPlaceholder; // Store reference
-      log('info', 
-        '[MainContentUI] Timer host placeholder identified. Ready for TimerUI via event.'
-      );
-    } else {
-      log('error', 
-        '[MainContentUI] Placeholder div for Timer UI (#timer-ui-placeholder) not found.'
-      );
-    }
+    this.checksLine?.dispose();
+    this.checksLine = mountChecksLine(root.querySelector('#console-checks-line'), {
+      bus: this.eventBus,
+      stateManager: this.stateManager,
+      moduleName: 'client',
+    });
 
     log('info', '[MainContentUI] Elements initialized and references stored');
   }
@@ -1218,166 +1171,16 @@ class MainContentUI {
     log('info', '[MainContentUI] Disposing...');
     setMainContentUIInstance(null); // Clear instance on dispose
 
-    // Unsubscribe from eventBus events to prevent memory leaks
-    // (Assuming eventBus.unsubscribe requires the original handler reference,
-    // which might need to be stored if not using anonymous functions)
-    // For simplicity, if subscriptions were like eventBus.subscribe('event', this.handler.bind(this)),
-    // then unsubscription is more complex. If they are module-level or with anonymous functions
-    // as shown in constructor, they might auto-clean or need specific handling.
-    // The provided code uses anonymous functions for eventBus.subscribe, so unsubscription
-    // would require storing those handler functions. Let's assume this is handled or not critical for this refactor.
-
-    // OLD LOGIC - REMOVED. No explicit unregister needed for the new system from here.
-    // if (this.timerHostPlaceholder) {
-    //   centralRegistry.unregisterUIHost(TIMER_UI_COMPONENT_TYPE, CLIENT_MODULE_ID);
-    // }
+    this.checksLine?.dispose();
+    this.checksLine = null;
 
     // Detach any DOM elements this UI created if necessary
     if (this.rootElement && this.rootElement.parentNode) {
       this.rootElement.parentNode.removeChild(this.rootElement);
     }
     this.rootElement = null;
-    this.timerHostPlaceholder = null; // Clear reference
 
-    // Other cleanup
     log('info', '[MainContentUI] Disposed.');
-
-    // ADDED: Dispatch rehome event when panel is disposed (destroyed)
-    const dispatcher = getClientModuleDispatcher();
-    if (dispatcher && typeof dispatcher.publish === 'function') {
-      log('info', 
-        '[MainContentUI] Panel disposed, dispatching system:rehomeTimerUI.'
-      );
-      // Use setTimeout to ensure this dispatch happens after current call stack (including GL destroy) unwinds
-      setTimeout(() => {
-        dispatcher.publish(
-          'client', // Origin module ID
-          'system:rehomeTimerUI', // Event name
-          {}, // Event data
-          { initialTarget: 'top' } // Dispatch options
-        );
-      }, 0);
-    } else {
-      log('warn', 
-        '[MainContentUI] Could not get dispatcher or publish function to rehome TimerUI on panel dispose.'
-      );
-    }
-  }
-
-  // --- New Timer Hosting Logic --- //
-  handleRehomeTimerUI(eventData, propagationOptions, dispatcher) {
-    const panelIdForLog =
-      this.container?.config?.id || this.container?.id || CLIENT_MODULE_ID;
-    log('info', 
-      `[MainContentUI - ${panelIdForLog}] handleRehomeTimerUI called.`
-    );
-    let isViableHost = false;
-
-    if (
-      this.container &&
-      this.container.element &&
-      this.timerHostPlaceholder &&
-      document.body.contains(this.timerHostPlaceholder)
-    ) {
-      isViableHost = true;
-      // A more robust check for visibility:
-      // GoldenLayout's isVisible is on the item container, not the component directly.
-      // The component's container (this.container) is the item container.
-      if (
-        typeof this.container.isVisible === 'boolean' &&
-        !this.container.isVisible
-      ) {
-        isViableHost = false;
-        log('info', 
-          `[MainContentUI - ${panelIdForLog}] Panel container reports not visible.`
-        );
-      }
-      // Additional check: if the tab itself is not active, it might not be truly "visible" for hosting.
-      // However, GoldenLayout's isVisible should ideally cover this.
-      // If the panel is in a stack, only the active tab's content is usually fully visible.
-      // Let's rely on this.container.isVisible for now.
-    } else {
-      if (!this.container || !this.container.element)
-        log('info', 
-          `[MainContentUI - ${panelIdForLog}] Container or container.element missing.`
-        );
-      if (!this.timerHostPlaceholder)
-        log('info', 
-          `[MainContentUI - ${panelIdForLog}] Timer host placeholder not found.`
-        );
-      else if (
-        this.timerHostPlaceholder &&
-        !document.body.contains(this.timerHostPlaceholder)
-      ) {
-        log('info', 
-          `[MainContentUI - ${panelIdForLog}] Timer host placeholder found but not in document body.`
-        );
-      }
-    }
-
-    if (isViableHost) {
-      log('info', 
-        `[MainContentUI - ${panelIdForLog}] Is a viable host. Attempting to attach TimerUI.`
-      );
-      if (
-        centralRegistry &&
-        typeof centralRegistry.getPublicFunction === 'function'
-      ) {
-        const attachFn = centralRegistry.getPublicFunction(
-          'timer', // Module name used by Timer module in moduleInfo.name
-          'attachTimerToHost'
-        );
-        if (attachFn && typeof attachFn === 'function') {
-          // Ensure attachFn is a function
-          try {
-            attachFn(this.timerHostPlaceholder);
-            log('info', 
-              `[MainContentUI - ${panelIdForLog}] TimerUI attach function called. Propagation stopped.`
-            );
-          } catch (e) {
-            log('error', 
-              `[MainContentUI - ${panelIdForLog}] Error calling attachFn for TimerUI:`,
-              e
-            );
-            isViableHost = false; // Mark as not successful if attachFn throws
-          }
-        } else {
-          log('error', 
-            `[MainContentUI - ${panelIdForLog}] Could not get 'attachTimerToHost' function from Timer module, or it's not a function. Function received:`,
-            attachFn
-          );
-          isViableHost = false; // Mark as not successful
-        }
-      } else {
-        log('error', 
-          `[MainContentUI - ${panelIdForLog}] centralRegistry or centralRegistry.getPublicFunction not available.`
-        );
-        isViableHost = false; // Mark as not successful
-      }
-    }
-
-    if (!isViableHost) {
-      // If not viable OR became not viable due to errors above
-      log('info', 
-        `[MainContentUI - ${panelIdForLog}] Not a viable host or attach failed. Attempting to propagate event.`
-      );
-      // Explicitly propagate if this panel isn't hosting
-      if (dispatcher && typeof dispatcher.publishToNextModule === 'function') {
-        dispatcher.publishToNextModule(
-          CLIENT_MODULE_ID,
-          'system:rehomeTimerUI',
-          eventData, // Original event data
-          { direction: 'up' } // CORRECTED: 'up' to go to lower index (higher actual priority)
-        );
-        log('info', 
-          `[MainContentUI - ${panelIdForLog}] Called publishToNextModule for system:rehomeTimerUI (direction: up).`
-        );
-      } else {
-        log('warn', 
-          `[MainContentUI - ${panelIdForLog}] Could not propagate system:rehomeTimerUI: dispatcher or publishToNextModule missing.`
-        );
-      }
-    }
   }
 }
 

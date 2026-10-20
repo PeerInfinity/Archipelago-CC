@@ -25,7 +25,6 @@ User-friendly guides still to be written. See the corresponding technical refere
 - [Spoiler Checklist](./spoilerChecklist.md) — Sphere log progression checklist
 - [Spoiler Test](./spoilerTest.md) — Game logic validation against spoiler log
 - [Text Adventure](./textAdventure.md) — Text-based game world interface
-- [Timer Panel](./timerPanel.md) — Automated location checking timer
 - [Iframe Panel](./iframePanel.md) — Generic iframe host panel
 - [Iframe Manager Panel](./iframeManagerPanel.md) — Loading content into iframe panels
 - [Window Panel](./windowPanel.md) — Status display for a connected browser window

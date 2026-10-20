@@ -213,7 +213,34 @@ export class PlaybackBotPanel {
             getCurrentRegion: () => centralRegistry.getPublicFunction?.('gameState', 'getCurrentRegion')?.() ?? null,
             isLoopModeActive: () => !!centralRegistry.getPublicFunction?.('loops', 'isLoopModeActive')?.(),
             loopRunnerDeps: this._loopRunnerDeps(),
+            timer: this._timerDeps(),
         });
+    }
+
+    /**
+     * ⛓ TARGET SOURCE 'reachable' — the timer module's TimerLogic, as the bot drives it (Play = Begin, Step = Quick
+     * Check). Null when the timer module is not loaded: the bot then offers the sphere log only.
+     */
+    _timerDeps() {
+        const getLogic = centralRegistry.getPublicFunction?.('timer', 'getTimerLogic');
+        if (typeof getLogic !== 'function') return null;
+        const logic = () => getLogic() ?? null;
+        return {
+            begin: () => logic()?.begin(),
+            stop: () => logic()?.stop(),
+            quickCheck: async () => !!(await logic()?.determineAndDispatchQuickCheck()),
+            isRunning: () => !!logic()?.isRunning(),
+            onRunningChanged: (fn) => {
+                const onStarted = () => fn(true);
+                const onStopped = () => fn(false);
+                eventBus.subscribe('timer:started', onStarted, 'playbackBot');
+                eventBus.subscribe('timer:stopped', onStopped, 'playbackBot');
+                return () => {
+                    eventBus.unsubscribe?.('timer:started', onStarted, 'playbackBot');
+                    eventBus.unsubscribe?.('timer:stopped', onStopped, 'playbackBot');
+                };
+            },
+        };
     }
 
     /**

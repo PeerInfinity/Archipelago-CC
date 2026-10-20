@@ -2039,3 +2039,87 @@ describe('PlaybackBotUI — direct play behind a refusing controller', () => {
         expect(world.checked).toEqual(['Loc A']);
     });
 });
+
+describe('PlaybackBotUI — target source "any reachable location" drives the timer', () => {
+    function makeFakeTimer({ quickCheckResult = true } = {}) {
+        const timer = {
+            running: false,
+            calls: [],
+            listener: null,
+            begin() { timer.calls.push('begin'); timer.running = true; timer.listener?.(true); },
+            stop() { timer.calls.push('stop'); timer.running = false; timer.listener?.(false); },
+            quickCheck: async () => { timer.calls.push('quickCheck'); return quickCheckResult; },
+            isRunning: () => timer.running,
+            onRunningChanged(fn) { timer.listener = fn; return () => { timer.listener = null; }; },
+        };
+        return timer;
+    }
+    const statusOf = (bot) => bot.getElement().queryAll((el) => el.className === 'playback-bot-status')[0].textContent;
+
+    it('defaults to the sphere log; Play there never touches the timer', async () => {
+        const timer = makeFakeTimer();
+        const controller = makeFakeController();
+        const bot = new PlaybackBotUI({ getSphereData: () => [], getActiveController: () => controller, timer });
+        expect(bot.getTargetSource()).toBe('sphere');
+        await bot.play();
+        expect(timer.calls).toEqual([]);
+        expect(controller.calls.map((c) => c.method)).toContain('play');
+    });
+
+    it('Play begins the timer, Stop stops it, and the status follows the timer', async () => {
+        const timer = makeFakeTimer();
+        const controller = makeFakeController();
+        const bot = new PlaybackBotUI({ getSphereData: () => SAMPLE_SPHERE_DATA, getActiveController: () => controller, timer });
+        bot.setTargetSource('reachable');
+        expect(statusOf(bot)).toMatch(/^Any reachable location/);
+
+        await bot.play();
+        expect(timer.calls).toEqual(['begin']);
+        expect(statusOf(bot)).toBe('checking reachable locations…');
+        expect(controller.calls).toEqual([]);   // the sphere walk never started
+
+        bot.stop();
+        expect(timer.calls).toEqual(['begin', 'stop']);
+        expect(bot.getStatus()).toBe('stopped');
+    });
+
+    it('Instant is Play (the timer keeps its own delay); a second Play does not restart it', async () => {
+        const timer = makeFakeTimer();
+        const bot = new PlaybackBotUI({ getSphereData: () => [], getActiveController: () => makeFakeController(), timer });
+        bot.setTargetSource('reachable');
+        await bot.instant();
+        await bot.play();
+        expect(timer.calls).toEqual(['begin']);
+    });
+
+    it('Step is Quick Check, and says whether a location was sent', async () => {
+        const timer = makeFakeTimer({ quickCheckResult: false });
+        const bot = new PlaybackBotUI({ getSphereData: () => [], getActiveController: () => makeFakeController(), timer });
+        bot.setTargetSource('reachable');
+        await bot.step();
+        expect(timer.calls).toEqual(['quickCheck']);
+        expect(bot.getStatus()).toBe('no unchecked location is reachable');
+    });
+
+    it('switching source stops a running timer; without a timer the switch is refused', async () => {
+        const timer = makeFakeTimer();
+        const bot = new PlaybackBotUI({ getSphereData: () => [], getActiveController: () => makeFakeController(), timer });
+        bot.setTargetSource('reachable');
+        await bot.play();
+        bot.setTargetSource('sphere');
+        expect(timer.running).toBe(false);
+        expect(bot.getTargetSource()).toBe('sphere');
+
+        const plain = new PlaybackBotUI({ getSphereData: () => [], getActiveController: () => makeFakeController() });
+        plain.setTargetSource('reachable');
+        expect(plain.getTargetSource()).toBe('sphere');
+    });
+
+    it('destroy drops the timer subscription', () => {
+        const timer = makeFakeTimer();
+        const bot = new PlaybackBotUI({ getSphereData: () => [], getActiveController: () => makeFakeController(), timer });
+        expect(timer.listener).toBeTypeOf('function');
+        bot.destroy();
+        expect(timer.listener).toBeNull();
+    });
+});

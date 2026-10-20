@@ -310,30 +310,13 @@ class PanelManager {
         'info',
         `--- WrapperComponent constructor executing for: ${componentTypeName} ---`
       );
-      if (componentTypeName === 'timerPanel') {
-        log('info', '[timerPanel Wrapper DEBUG] GL Container:', container);
-        log(
-          'info',
-          '[timerPanel Wrapper DEBUG] GL container.element BEFORE append:',
-          container.element.cloneNode(true)
-        ); // Clone to see its state
-      }
-
       try {
         this.unsubscribeHandles = []; // For eventBus subscriptions specific to this panel instance
 
-        const uiProvider = uiInstanceGetter(container, componentState); // Calls new TimerPanelUI(...)
+        const uiProvider = uiInstanceGetter(container, componentState);
         if (!uiProvider) throw new Error('Could not get UI instance/provider');
 
-        if (componentTypeName === 'timerPanel') {
-          log(
-            'info',
-            '[timerPanel Wrapper DEBUG] uiProvider (TimerPanelUI instance):'
-            //, uiProvider // This might be too verbose or circular for console
-          );
-        }
-
-        const rootElement = uiProvider.getRootElement(); // This calls TimerPanelUI's getRootElement
+        const rootElement = uiProvider.getRootElement();
         if (!rootElement || !(rootElement instanceof HTMLElement)) {
           log(
             'error',
@@ -343,43 +326,11 @@ class PanelManager {
           throw new Error('UI did not return a valid root DOM element.');
         }
 
-        if (componentTypeName === 'timerPanel') {
-          log(
-            'info',
-            '[timerPanel Wrapper DEBUG] rootElement from uiProvider.getRootElement():',
-            rootElement.cloneNode(true)
-          );
-          log(
-            'info',
-            '[timerPanel Wrapper DEBUG] Is rootElement already in DOM?',
-            document.body.contains(rootElement)
-          );
-          if (rootElement.parentNode) {
-            log(
-              'warn',
-              '[timerPanel Wrapper DEBUG] rootElement ALREADY HAS A PARENT before append:',
-              rootElement.parentNode
-            );
-          }
-        }
-
         // THE CRITICAL LINE:
         container.element.append(rootElement);
         // GoldenLayout expects `container.element` to be the direct child it manages for its layout.
         // The UI's content should go *inside* `container.element`.
 
-        if (componentTypeName === 'timerPanel') {
-          log(
-            'info',
-            '[timerPanel Wrapper DEBUG] GL container.element AFTER append:',
-            container.element.cloneNode(true)
-          );
-          log(
-            'info',
-            '[timerPanel Wrapper DEBUG] Is rootElement now child of container.element?',
-            rootElement.parentNode === container.element
-          );
-        }
         log(
           'info',
           `   [${componentTypeName}] Root element appended to container.element.`

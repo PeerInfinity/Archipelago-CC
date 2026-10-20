@@ -116,47 +116,6 @@ export function register(registrationApi) {
 
   registrationApi.registerPanelComponent('clientPanel', MainContentUI); // Ensure componentType matches GoldenLayout config
 
-  // Register dispatcher receiver for system:rehomeTimerUI
-  registrationApi.registerDispatcherReceiver(
-    moduleInfo.name,
-    'system:rehomeTimerUI',
-    (eventData, propagationOptions) => {
-      if (
-        mainContentUIInstance &&
-        typeof mainContentUIInstance.handleRehomeTimerUI === 'function'
-      ) {
-        mainContentUIInstance.handleRehomeTimerUI(
-          eventData,
-          propagationOptions,
-          moduleDispatcher
-        );
-      } else {
-        log('warn', 
-          `[Client Module] MainContentUI instance not available or handleRehomeTimerUI method missing for event system:rehomeTimerUI. Attempting to propagate.`
-        );
-        // Explicitly propagate if this module's UI cannot handle the event
-        if (
-          moduleDispatcher &&
-          typeof moduleDispatcher.publishToNextModule === 'function'
-        ) {
-          moduleDispatcher.publishToNextModule(
-            moduleInfo.name, // This module's ID
-            'system:rehomeTimerUI',
-            eventData,
-            { direction: 'up' } // CORRECTED: 'up' to go to lower index (higher actual priority)
-          );
-          log('info', 
-            `[Client Module] Called publishToNextModule for system:rehomeTimerUI (direction: up) because instance was unavailable.`
-          );
-        } else {
-          log('error', 
-            `[Client Module] Could not propagate system:rehomeTimerUI: moduleDispatcher or publishToNextModule missing.`
-          );
-        }
-      }
-    }
-  );
-
   // Only register dispatcher listener for disconnect
   registrationApi.registerDispatcherReceiver(
     moduleInfo.name,

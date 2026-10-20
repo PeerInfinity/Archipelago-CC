@@ -14,7 +14,6 @@ const GRAPH = { panel: 'regionGraphPanel' };
 const DUNGEONS = { panel: 'dungeonsPanel' };
 const HELPERS = { panel: 'helpersPanel' };
 const CHECKLIST = { panel: 'spoilerChecklistPanel' };
-const TIMER = { panel: 'timerPanel' };
 const MODULES = { panel: 'modulesPanel' };
 const CM6 = { panel: 'editorCodeMirror6Panel' };
 const EDITOR = { panel: 'editorPanel' };
@@ -270,60 +269,56 @@ export const TRACKER_SPOILER_CHECKLIST = tracker({
     }],
 });
 
-// ── Timer ────────────────────────────────────────────────────────────────
+// ── Checking reachable locations automatically (the Playback Bot) ────────
 
-const timerButton = { ...CLIENT, selector: '#timer-control-button' };
-const checksSent = { ...CLIENT, selector: '#timer-checks-sent' };
-const TIMER_MODULE = 'timerPanel';
+const BOT = { panel: 'playbackBotPanel' };
+const botSource = { ...BOT, selector: '.playback-bot .playback-bot-target-source select' };
+const botPlay = { ...BOT, selector: '.playback-bot .playback-control-bar-button-play' };
+const botStop = { ...BOT, selector: '.playback-bot .playback-control-bar-button-stop' };
+const botStatus = { ...BOT, selector: '.playback-bot .playback-bot-status' };
+const checksLine = { ...CLIENT, selector: '#console-checks-line' };
 
 export const TRACKER_TIMER = tracker({
     id: 'tracker-timer',
-    covers: ['timerPanel'],
-    title: 'Tracking: the timer',
-    summary: 'Let the timer check reachable locations by itself, in the Console or in a tab of its own.',
-    intro: 'The **timer** checks a reachable location every few seconds by itself — a game that plays itself, for testing or for watching the logic unfold. It sits in the **Console**, or in a **Timer** tab of its own when the Console is closed.',
+    title: 'Tracking: check reachable locations automatically',
+    summary: 'Let the Playback Bot check every reachable location by itself, on a timer.',
+    intro: 'The **Playback Bot** can check reachable locations by itself — a game that plays itself, for testing or for watching the logic unfold. Set it to **any reachable location** and it works as a timer: each tick it checks what is reachable now. The **Console** counts the checks.',
     sections: [
         {
-            id: 'console',
-            title: 'In the Console',
+            id: 'bot',
+            title: 'Any reachable location',
             blocks: [
                 {
                     step: {
-                        id: 'begin',
-                        text: 'Open the **Console** tab and press **Begin**: the bar fills, and each time it does a reachable location is checked. *Checked* counts them.',
-                        actions: [{ click: { ...timerButton, text: 'Begin' } }],
-                        done: (ctx) => /^Checked: [1-9]/.test(ctx.text(checksSent)),
+                        id: 'source',
+                        text: 'Open the **Playback Bot** tab and set **Check next** to **Any reachable location (timer)**.',
+                        actions: [{ select: { ...botSource, value: 'reachable' } }],
+                        done: (ctx) => ctx.query(botSource)?.value === 'reachable',
+                    },
+                },
+                {
+                    step: {
+                        id: 'play',
+                        text: 'Press **▶** (Play): each tick checks the reachable locations. The **Console**\'s *Checked* count goes up; **⏯** (Step) checks one location at once instead.',
+                        actions: [{ click: botPlay }],
+                        done: (ctx) => /^Checked: [1-9]/.test(ctx.text(checksLine)),
                         doneTimeoutMs: 60000,
                     },
                 },
                 {
                     step: {
                         id: 'stop',
-                        text: 'Press **Stop**. **Quick Check** checks one location at once, without waiting.',
-                        actions: [{ click: { ...timerButton, text: 'Stop' } }],
-                        done: (ctx) => ctx.text(timerButton) === 'Begin',
-                    },
-                },
-            ],
-        },
-        {
-            id: 'own-tab',
-            title: 'In a tab of its own',
-            blocks: [
-                {
-                    step: {
-                        id: 'enable-panel',
-                        text: 'Open the **Modules** tab and tick **Timer Panel**: a **Timer** tab opens. The timer itself has ONE home: while the **Console** tab is open it stays there (by design), and it moves into the Timer tab when the Console is closed.',
-                        actions: [moduleBox(TIMER_MODULE, true)],
-                        done: (ctx) => ctx.exists(TIMER),
+                        text: 'Press **⏹** (Stop). (The bot also stops by itself once nothing new is reachable.)',
+                        actions: [{ click: botStop }],
+                        done: (ctx) => ctx.text(botStatus) === 'stopped',
                     },
                 },
                 {
                     step: {
-                        id: 'disable-panel',
-                        text: 'Untick **Timer Panel** to close the Timer tab again.',
-                        actions: [moduleBox(TIMER_MODULE, false)],
-                        done: (ctx) => !ctx.query(TIMER) && ctx.exists(timerButton),
+                        id: 'back',
+                        text: 'Set **Check next** back to **Sphere log, in order**, the bot\'s usual way of playing.',
+                        actions: [{ select: { ...botSource, value: 'sphere' } }],
+                        done: (ctx) => ctx.query(botSource)?.value === 'sphere',
                     },
                 },
             ],

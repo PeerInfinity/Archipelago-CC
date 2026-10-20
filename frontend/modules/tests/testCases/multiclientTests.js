@@ -153,22 +153,18 @@ export async function timerSendTest(testController) {
     // Clean up the playerJoined subscription we no longer need
     unsubSecondClient();
 
-    // Get timer logic and UI references from central registry
+    // Get the timer logic from central registry (the timer is headless: the
+    // Playback Bot's "any reachable location" mode is its UI)
     const getTimerLogic = window.centralRegistry.getPublicFunction('timer', 'getTimerLogic');
-    const getTimerUI = window.centralRegistry.getPublicFunction('timer', 'getTimerUI');
 
-    if (!getTimerLogic || !getTimerUI) {
+    if (!getTimerLogic) {
       throw new Error('Timer functions not found in central registry');
     }
 
     const timerLogic = getTimerLogic();
-    const timerUI = getTimerUI();
 
     if (!timerLogic) {
       throw new Error('Timer logic not available');
-    }
-    if (!timerUI) {
-      throw new Error('Timer UI not available');
     }
 
     testController.reportCondition('Timer components available', true);
@@ -181,14 +177,8 @@ export async function timerSendTest(testController) {
     testController.log('Timer delay set to 0.1 seconds');
     testController.reportCondition('Timer delay configured', true);
 
-    // Get the control button and click it to begin
-    const controlButton = timerUI.controlButton;
-    if (!controlButton) {
-      throw new Error('Timer control button not found');
-    }
-
-    testController.log('Clicking "Begin" button to start timer...');
-    controlButton.click();
+    testController.log('Starting timer (Begin)...');
+    timerLogic.begin();
 
     // Wait for timer to start
     await testController.waitForEvent('timer:started', 2000);

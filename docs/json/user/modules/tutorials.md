@@ -95,7 +95,7 @@ Written, but not working all the way through yet. The panel lists these in a col
 - **Tracking: dungeons** — See a dungeon's regions and boss in the Dungeons panel. `?tutorial=tracker-dungeons`
 - **Tracking: helpers** — Watch a game's helper rules — "can lift rocks" and the like — turn true as you collect items. `?tutorial=tracker-helpers`
 - **Tracking: the Spoiler Checklist** — Follow a seed's spoiler sphere by sphere, and see which item each location holds. `?tutorial=tracker-spoiler-checklist`
-- **Tracking: the timer** — Let the timer check reachable locations by itself, in the Console or in a tab of its own. `?tutorial=tracker-timer`
+- **Tracking: check reachable locations automatically** — Let the Playback Bot check every reachable location by itself, on a timer. `?tutorial=tracker-timer`
 - **Tracking: the rules in the Editor** — Read the loaded game's rules JSON — and other data — in the Editor. `?tutorial=tracker-editor`
 - **Adventure in Loop Mode** — Turn a world into an incremental game: queue moves, explores and checks, spend mana, and start again when it runs out. `?tutorial=loops-adventure`
 - **Embedding pages and windows** — Load a page into an Iframe panel, or open it in a window of its own, and watch it connect to the app. `?tutorial=other-embedding`

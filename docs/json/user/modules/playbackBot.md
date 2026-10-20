@@ -63,6 +63,15 @@ In a world built with **Enable loop mode** (see the [Loops](../../features/loops
 
 The bot keeps going loop after loop until the world is finished or you press **⏹**.
 
+## Any reachable location (the timer)
+
+**Check next** chooses what the bot checks:
+
+- **Sphere log, in order** (the default) — the solution path, as described above.
+- **Any reachable location (timer)** — no sphere log needed, so it works in any game, online or offline. **▶** checks the locations that are reachable now, then keeps checking as more become reachable, until nothing new is; **⏯** checks one reachable location at once; **⏹** stops. **⏭** is the same as **▶**: the timer has its own delay between checks instead of the bot's **Speed** (none by default; set one with the Console's `/set_delay` command). Whether one tick checks one location or all the reachable ones is the **Batch location checks** setting of the Timer module, in the Settings panel.
+
+Switching **Check next** stops whatever is running. The panel remembers your choice.
+
 ## Without a generated world
 
 In an ordinary game's preset (one that is not procgen, such as Adventure), the bot has no rooms to walk: it checks each location and moves between regions directly, one action per tick at the chosen speed.
