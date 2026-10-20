@@ -236,8 +236,16 @@ bounded 113 / 3,306 green.
    - ⚠ A row is one sample. Replay any flip with `replay-seedling-solve-request.mjs --seam-time-sweep`.
 3. **`seedling-probe.yml`**, `probes=probe-seedling-l37-fallrock.mjs`, once the rules arc carries the L32 `move` row
    (a delivered-set regression check).
-4. CI vitest at the head: `node scripts/procgen/ci-vitest-summary.mjs <head>`. The head's run is quoted in the final
-   chat message.
+4. **`seedling-full-tier.yml`** on this branch: `tier=mechanic` (or `full`), `page=seedling_bot_ap_p4g`. Then, box-side,
+   `record-standing-value.mjs --category=mechanic --quote=<v> …` (I may not run `standing-values --write`).
+   **This is the one CI red at the flip** (below). `scripts/procgen/standing-values.json`'s `roster: --tier=full` row
+   pins `mechanic` at **222** tapes (`4870/0/0`, measured at `edbbae54`), and the disk now holds **229** (+8 `apb-*`,
+   −1 `enc-l32-fire-return`). `rosterCategories.test.js` › *"the LIVE row carries one part per derived category"* reds
+   until the row is re-measured on the new roster.
+5. CI vitest at the head: `node scripts/procgen/ci-vitest-summary.mjs <head>`.
+   - At D5 `005a488b` (run 39345245834): green.
+   - At D6 `af8ca729` (run 39349001526): **21,366 / 21,367**, slow 254 / 254. The 1 red is that standing row (item 4).
+   - The head's run is quoted in the final chat message.
 
 ## The JS arc's pins that move, and what it must wire
 
@@ -274,6 +282,8 @@ The totem's banked clear rides `pendingEarnedClears`, which is already digested 
 
 ## Residue
 
+- **CI's one red:** the `roster: --tier=full` standing row's `mechanic` part (222 → 229 tapes) needs the planner's
+  full-tier dispatch and `record-standing-value.mjs` (above). It is a measured value I may not write.
 - H1 (the host grant mid-visit) is still the one thing that stops a no-Fire run leaving L32 by the pit.
 - The Tentacled Beast's mouth Teleporter and the Lights' exit Teleporter are not built on a cleared slot (D4, named).
 - The totem's activation edge inside a ceremony is unmodelled (it stays asleep; named in the code).
