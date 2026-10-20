@@ -170,7 +170,69 @@ armed arrow lane), so D3 does not fire on them.
 
 ### The seam census (`replay-seedling-solve-request.mjs --seam-time-sweep=-10..10`, one process per seam; ON = all four switches)
 
-CENSUS_TABLES
+168 rows: 2 legs × 2 arms (defaults; walls+blast = `chaserSpinnerWalls` + `bombBlastBody`) × OFF / ON × 21 seam times. The class is read off the answer's own words by LB's `tools/cls.py` (`evidence/d5/census/table.py`). Both OFF columns reproduce LB's census at their base row for row. ⚠ 397 walls+blast ON seams 5138–5139 were re-run alone after a container restart cut that sweep at 19/21.
+
+**Leg 414** (seam; class, work units):
+
+| seam | defaults, OFF | defaults, ON | walls+blast, OFF | walls+blast, ON |
+|---|---|---|---|---|
+| 5121 | deadline, 643 | refused: exhausted, 154 | deadline, 643 | refused: exhausted, 166 |
+| 5122 | deadline, 643 | refused: exhausted, 128 | deadline, 643 | refused: exhausted, 168 |
+| 5123 | shake-throw(live run), 130 | shake-throw(live run), 130 | shake-throw(forecast), 140 | shake-throw(forecast), 140 |
+| 5124 | deadline, 643 | refused: exhausted, 144 | refused: HAMMER_SAFETY, 160 | refused: HAMMER_SAFETY, 160 |
+| 5125 | deadline, 643 | refused: exhausted, 178 | refused: HAMMER_SAFETY, 134 | refused: HAMMER_SAFETY, 134 |
+| 5126 | deadline, 643 | refused: exhausted, 322 | deadline, 643 | refused: exhausted, 168 |
+| 5127 | shake-throw(forecast), 142 | shake-throw(forecast), 142 | deadline, 643 | refused: exhausted, 160 |
+| 5128 | strike bound, 641 | strike bound, 641 | deadline, 643 | refused: exhausted, 144 |
+| 5129 | refused: HAMMER_SAFETY, 158 | refused: HAMMER_SAFETY, 158 | deadline, 643 | refused: exhausted, 144 |
+| 5130 | shake-throw(forecast), 254 | shake-throw(forecast), 254 | deadline, 643 | refused: exhausted, 144 |
+| 5131 | deadline, 643 | refused: exhausted, 196 | deadline, 643 | refused: exhausted, 144 |
+| 5132 | swing-throw, 308 | shake-throw(live run), 162 | deadline, 643 | refused: exhausted, 144 |
+| 5133 | deadline, 643 | refused: exhausted, 340 | deadline, 643 | refused: exhausted, 204 |
+| 5134 | swing-throw, 308 | refused: HAMMER_SAFETY, 158 | refused: HAMMER_SAFETY, 158 | refused: HAMMER_SAFETY, 158 |
+| 5135 | shake-throw(forecast), 154 | shake-throw(forecast), 154 | shake-throw(forecast), 152 | shake-throw(forecast), 152 |
+| 5136 | deadline, 643 | refused: exhausted, 372 | deadline, 643 | refused: exhausted, 372 |
+| 5137 | deadline, 643 | refused: exhausted, 260 | deadline, 643 | refused: exhausted, 260 |
+| 5138 | refused: HAMMER_SAFETY, 72 | refused: HAMMER_SAFETY, 72 | refused: HAMMER_SAFETY, 72 | refused: HAMMER_SAFETY, 72 |
+| 5139 | shake-throw(forecast), 200 | shake-throw(forecast), 200 | refused: HAMMER_SAFETY, 130 | refused: HAMMER_SAFETY, 130 |
+| 5140 | refused: HAMMER_SAFETY, 72 | refused: HAMMER_SAFETY, 72 | refused: HAMMER_SAFETY, 72 | refused: HAMMER_SAFETY, 72 |
+| 5141 | deadline, 643 | refused: exhausted, 250 | deadline, 643 | refused: exhausted, 244 |
+
+- defaults, OFF (21): deadline 10, shake-throw(forecast) 4, refused: HAMMER_SAFETY 3, swing-throw 2, shake-throw(live run) 1, strike bound 1; median 82 s a seam (loaded box)
+- defaults, ON (21): refused: exhausted 10, shake-throw(forecast) 4, refused: HAMMER_SAFETY 4, shake-throw(live run) 2, strike bound 1; median 114 s a seam (loaded box)
+- walls+blast, OFF (21): deadline 13, refused: HAMMER_SAFETY 6, shake-throw(forecast) 2; median 83 s a seam (loaded box)
+- walls+blast, ON (21): refused: exhausted 13, refused: HAMMER_SAFETY 6, shake-throw(forecast) 2; median 123 s a seam (loaded box)
+
+**Leg 397** (seam; class, work units):
+
+| seam | defaults, OFF | defaults, ON | walls+blast, OFF | walls+blast, ON |
+|---|---|---|---|---|
+| 5119 | shake-throw(forecast), 162 | shake-throw(forecast), 162 | shake-throw(forecast), 162 | shake-throw(forecast), 162 |
+| 5120 | deadline, 643 | refused: exhausted, 294 | deadline, 643 | refused: exhausted, 356 |
+| 5121 | deadline, 643 | refused: exhausted, 294 | deadline, 643 | refused: exhausted, 354 |
+| 5122 | deadline, 643 | refused: exhausted, 266 | deadline, 643 | refused: exhausted, 262 |
+| 5123 | refused: HAMMER_SAFETY, 190 | refused: HAMMER_SAFETY, 190 | refused: HAMMER_SAFETY, 170 | refused: HAMMER_SAFETY, 170 |
+| 5124 | refused: HAMMER_SAFETY, 236 | refused: HAMMER_SAFETY, 236 | deadline, 643 | refused: exhausted, 368 |
+| 5125 | refused: HAMMER_SAFETY, 308 | refused: HAMMER_SAFETY, 308 | refused: HAMMER_SAFETY, 308 | refused: HAMMER_SAFETY, 308 |
+| 5126 | deadline, 643 | refused: exhausted, 204 | deadline, 643 | refused: exhausted, 202 |
+| 5127 | refused: HAMMER_SAFETY, 156 | refused: HAMMER_SAFETY, 156 | refused: HAMMER_SAFETY, 156 | refused: HAMMER_SAFETY, 156 |
+| 5128 | refused: HAMMER_SAFETY, 236 | refused: HAMMER_SAFETY, 236 | deadline, 643 | refused: exhausted, 284 |
+| 5129 | refused: HAMMER_SAFETY, 156 | refused: HAMMER_SAFETY, 156 | refused: HAMMER_SAFETY, 156 | refused: HAMMER_SAFETY, 156 |
+| 5130 | refused: HAMMER_SAFETY, 156 | refused: HAMMER_SAFETY, 156 | refused: HAMMER_SAFETY, 156 | refused: HAMMER_SAFETY, 156 |
+| 5131 | deadline, 643 | refused: exhausted, 642 | shake-throw(live run), 380 | shake-throw(live run), 380 |
+| 5132 | shake-throw(forecast), 216 | shake-throw(forecast), 216 | refused: HAMMER_SAFETY, 294 | refused: HAMMER_SAFETY, 294 |
+| 5133 | shake-throw(live run), 242 | shake-throw(live run), 242 | shake-throw(live run), 242 | refused: exhausted, 340 |
+| 5134 | refused: HAMMER_SAFETY, 358 | refused: HAMMER_SAFETY, 358 | refused: HAMMER_SAFETY, 358 | refused: HAMMER_SAFETY, 358 |
+| 5135 | deadline, 643 | refused: exhausted, 641 | deadline, 643 | refused: exhausted, 310 |
+| 5136 | shake-throw(live run), 242 | shake-throw(live run), 242 | shake-throw(live run), 242 | shake-throw(live run), 242 |
+| 5137 | deadline, 643 | refused: exhausted, 204 | deadline, 643 | refused: exhausted, 204 |
+| 5138 | deadline, 643 | refused: exhausted, 372 | deadline, 643 | refused: exhausted, 222 |
+| 5139 | refused: HAMMER_SAFETY, 72 | refused: HAMMER_SAFETY, 72 | refused: HAMMER_SAFETY, 72 | refused: HAMMER_SAFETY, 72 |
+
+- defaults, OFF (21): refused: HAMMER_SAFETY 9, deadline 8, shake-throw(forecast) 2, shake-throw(live run) 2; median 138 s a seam (loaded box)
+- defaults, ON (21): refused: HAMMER_SAFETY 9, refused: exhausted 8, shake-throw(forecast) 2, shake-throw(live run) 2; median 171 s a seam (loaded box)
+- walls+blast, OFF (21): deadline 9, refused: HAMMER_SAFETY 8, shake-throw(live run) 3, shake-throw(forecast) 1; median 176 s a seam (loaded box)
+- walls+blast, ON (21): refused: exhausted 10, refused: HAMMER_SAFETY 8, shake-throw(live run) 2, shake-throw(forecast) 1; median 316 s a seam (loaded box)
 
 ### The survey (L39 / L40 / L41, local, `--through=end --route=full --only=77,78,107,108,109,110,112`)
 
@@ -209,6 +271,15 @@ BobSoldier. The CI survey (`39153361080`) holds the same seven verdicts.
   shaft bob (`bob@736,800` or `bob@736,752`). That is CW's three-body set: {bobsoldier, `bob@736,752`, `bob@736,800`}.
 - **397** stops on the press kill's HAMMER_SAFETY corner at its captured seam (156 units, `5a55f5b8`) ON and OFF: the
   press kill comes before the guard.
+- **Every class change OFF → ON, all 168 rows:**
+  - every `deadline` row (414: 10 defaults + 13 walls+blast; 397: 8 + 9) becomes a named EXHAUSTED refusal, at 128–642
+    units (D3);
+  - 414 at the defaults, 5132 and 5134: the swing throws → a live band throw (t2082, not moot) and HAMMER_SAFETY (D4 #7);
+  - **397 walls+blast 5133: a live band throw (242) → EXHAUSTED (340)**, `shakeBandMoot`'s one mover on these legs;
+  - nothing else moves: every HAMMER_SAFETY, forecast band throw and strike-bound row is byte-equal in class and units.
+- 397 at the defaults ON, seams 5131 and 5135, refuse EXHAUSTED at 642 / 641 units, one or two inside the 640+3
+  budget. Where those units go was not profiled (the census row keeps 200 characters of the message); `lb-prof.mjs
+  --rebuild397 --seam=5131` with the four switches ON is the instrument.
 
 ## The CI dispatches the planner should run
 
@@ -325,7 +396,8 @@ The OFF code paths read nothing new:
      measured here;
    - `spinnerSwingLineOfSight`: identity c4 (one pair, THREW → SATURATED) and 414 5132 / 5134 (throws → a band throw /
      HAMMER_SAFETY);
-   - `shakeBandMoot`: nothing on the legs (414's instances are not moot) and nothing in the bounded set.
+   - `shakeBandMoot`: 397 walls+blast seam 5133 (a live band throw → EXHAUSTED); 414's own instances are not moot;
+     nothing in the bounded set.
 
    Before any flip: the dispatches above. Then re-record c4 (its value is a hash of the dump).
 2. **D3's risk** (above): a covering chaser that walks off the goal. The sweep A/B answers it; nothing in this slice's
