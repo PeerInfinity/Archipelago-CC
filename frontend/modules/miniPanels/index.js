@@ -34,8 +34,9 @@ export const moduleInfo = {
     title: 'Mini Panels',
     description: 'Shows panels in a mini view, in a row above the middle column (the Quick Launch panel\'s Mini panels section).',
     requires: [],
+    // ⛓ A literal key, not STATE_KEY: storageDeclarationPins reads these entries as text.
     storage: [
-        { key: STATE_KEY, kind: STORAGE_KINDS.state, label: 'Mini panels: which are mini, Checks on, row locked' },
+        { key: 'miniPanels_state', kind: STORAGE_KINDS.state, label: 'Mini panels: which are mini, Checks on, row locked' },
     ],
 };
 
