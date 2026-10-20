@@ -679,12 +679,18 @@ function encounterCoords(level, pickup) {
  * `crossing` is the step's onward edge (`undefined` when the route ends here):
  * an encounter whose room is left by a pit takes the fall as its own `then`,
  * a door leaves `then` null and the crossing follows as its own goal.
+ * ⛓ rules-l32-rock-move: a TERMINAL encounter (the route ends in its room) is
+ * `then: null` too — the step ends at the drop/report. It used to fall back to
+ * the room's control block (`fallthrough` ⇒ `'reach-pit'`), which asked a
+ * through-3.1 survey's last step to burn L32's tree and fall: a crossing the
+ * route never makes, and under `apReportBosses` (Fire granted by the host, not
+ * the drop) one the run cannot make. The fall now happens only when the next
+ * hop really is the pit.
  */
 function throughPickupGoal(level, pickup, crossing) {
     const { row, entity } = ledgerRowFor(pickup);
     if (row.kind === 'encounter') {
-        return encounterGoal(level, pickup, crossing === undefined ? undefined
-            : (crossing?.kind === 'pit' ? 'reach-pit' : null));
+        return encounterGoal(level, pickup, crossing?.kind === 'pit' ? 'reach-pit' : null);
     }
     return {
         kind: 'collect-placement',
@@ -699,20 +705,19 @@ function throughPickupGoal(level, pickup, crossing) {
  * its tile. U2–U4 handed L32 `collect-placement (64,128)`, and the solver
  * refused it as an absent thing. The location is a DROP, so the goal says so:
  * `at` is the atlas tile (`encounterCoords`), `drop.item` is the AP item the
- * sphere row grants, and `then` comes from the level's own CONTROL BLOCK. If
- * `fallthrough` names a level, the room is left by a pit, so `'reach-pit'`;
- * otherwise `null`. For L32 that is `fallthrough 30`, pits (4,0) (5,0) under
- * `burnabletree@64,0`. The solver resolves which pit tile; the survey does not
- * pick one, because `pitEdgeFor` is keyed on a route hop and this route ends in
- * L32.
+ * sphere row grants, and `then` is the step's onward hop (`throughPickupGoal`):
+ * `'reach-pit'` when the route leaves the room by its pit (L32: `fallthrough 30`,
+ * pits (4,0) (5,0) under `burnabletree@64,0`), otherwise `null`. The solver
+ * resolves which pit tile. (Until rules-l32-rock-move a route ENDING in the room
+ * read `then` off the control block instead — see `throughPickupGoal`.)
  */
 function encounterGoal(level, pickup, then) {
-    const world = worldOf(level);
+    if (then !== 'reach-pit' && then !== null) throw new Error(`encounterGoal: then must be 'reach-pit' | null, got ${then}`);
     return {
         kind: 'encounter',
         at: encounterCoords(level, pickup),
         drop: { item: pickup.item },
-        then: then !== undefined ? then : (world.fallthrough ? 'reach-pit' : null),
+        then,
         why: `${pickup.location} (sphere ${pickup.sphere}) → ${pickup.item}`,
         location: pickup.location,
     };
