@@ -22,7 +22,7 @@
  */
 
 import { readFileSync } from 'node:fs';
-import { describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { PIN_NAMES, parseTape } from './tapeFormat.js';
 import { createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner.js';
@@ -34,6 +34,18 @@ import { PLACED_NPC_TALK } from './dialogue.js';
 import {
     WITCH_TEXT_EXTRA, WITCH_TEXT_EXTRA1, darkSwordBox, darkSwordSpawnAt, witchGrants, witchText,
 } from './witch.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
+
+/**
+ * ⛓ APFLIP D6 — THE VANILLA ARM, NAMED. These rows pin the vanilla AS3 (`f8d9bc1`: the pickup GRANTS Fire / the dark
+ * sword, `hasFire` removes Bob), which since the R7 flip is `CONTACT_FIDELITY.apReportBosses` OFF; the ON arm's rows
+ * are `fidelityApBosses.test.js` and the `apb-*` game witnesses. Set per describe, read live by the run.
+ */
+function vanillaArm() {
+    let was;
+    beforeAll(() => { was = CONTACT_FIDELITY.apReportBosses; CONTACT_FIDELITY.apReportBosses = false; });
+    afterAll(() => { CONTACT_FIDELITY.apReportBosses = was; });
+}
 
 const TAPE = JSON.parse(readFileSync(
     new URL('./fixtures/tapes/r5-bobboss-fire.json', import.meta.url), 'utf8'));
@@ -68,6 +80,7 @@ describe('levelWorld — the arena rock is the one `arm` rock a build may fell',
 });
 
 describe('the Bob Boss encounter from every arena state (D2)', () => {
+    vanillaArm();
     it('fresh (the survey\'s state): arm, seven landings, drop, burn, pit — 1042 t', () => {
         const { run, out, legs } = solveFrom({});
         expect(out.perTick.length).toBe(1042);
@@ -150,6 +163,7 @@ describe('witch.js — `Witch.update` / `doneTalking` / `DarkSword`, transcribed
 });
 
 describe('the Witch encounter executor (D3)', () => {
+    vanillaArm();
     it('SOLVES from the survey\'s step-140 arrival: talk, close, the sword at the feet next frame, hasDarkSword', () => {
         const run = l12Run({ hasSword: true, hasWand: true });
         const out = solveSegment({ run, goals: [{ ...WITCH_GOAL }], name: 'witch', boot: { level: 12, x: 16, y: 352 } });

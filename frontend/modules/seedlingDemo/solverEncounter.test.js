@@ -12,13 +12,25 @@
  */
 
 import { readFileSync } from 'node:fs';
-import { describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, runTape, solveStaging, stagingFromTape } from './tapeRunner.js';
 import { atlasLevelSource } from './levelSource.js';
 import { ENCOUNTER_EXECUTORS, assertGoal, solveSegment } from './solverBot.js';
 import { ARENA } from './bobBoss.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
+
+/**
+ * ⛓ APFLIP D6 — THE VANILLA ARM, NAMED. These rows pin the vanilla AS3 (`f8d9bc1`: the pickup GRANTS Fire / the dark
+ * sword, `hasFire` removes Bob), which since the R7 flip is `CONTACT_FIDELITY.apReportBosses` OFF; the ON arm's rows
+ * are `fidelityApBosses.test.js` and the `apb-*` game witnesses. Set per describe, read live by the run.
+ */
+function vanillaArm() {
+    let was;
+    beforeAll(() => { was = CONTACT_FIDELITY.apReportBosses; CONTACT_FIDELITY.apReportBosses = false; });
+    afterAll(() => { CONTACT_FIDELITY.apReportBosses = was; });
+}
 
 const TAPE = JSON.parse(readFileSync(
     new URL('./fixtures/tapes/r5-bobboss-fire.json', import.meta.url), 'utf8'));
@@ -54,6 +66,7 @@ describe('assertGoal — encounter', () => {
 });
 
 describe('solveSegment — encounter L32 from r5-bobboss-fire\'s boot, honest, sword granted', () => {
+    vanillaArm();
     const l32Run = () => {
         const staging = solveStaging(stagingFromTape(parseTape(TAPE)));
         expect(staging.boot).toEqual({ level: ARENA.level, ...ARENA.boot });
@@ -101,6 +114,7 @@ describe('solveSegment — encounter L32 from r5-bobboss-fire\'s boot, honest, s
 });
 
 describe('⛓ the model plays r5-bobboss-fire (the BobBoss simulation family, swim U5)', () => {
+    vanillaArm();
     const replay = () => {
         let hasFireAt = null;
         let last = null;

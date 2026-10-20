@@ -57,8 +57,9 @@ const l12Run = (items, persistence = []) => createLevelRun({
 const solveWitch = (run) => solveSegment({ run, goals: [{ ...WITCH_GOAL }], name: 'witch', boot: { ...WITCH_BOOT } });
 
 describe('apReportBosses.js — the R4 AS3, transcribed', () => {
-    it('the switch ships OFF (it flips inside the R7 landing merge)', () => {
-        expect(CONTACT_FIDELITY.apReportBosses).toBe(false);
+    // ⛓ APFLIP D6: re-pinned — the switch flipped ON inside the R7 merge (⚖ user 2026-10-19, "ON in R7 merge").
+    it('the switch ships ON (APFLIP flipped it inside the R7 landing merge)', () => {
+        expect(CONTACT_FIDELITY.apReportBosses).toBe(true);
     });
     it('nine report rows, one per (level, tag), with their upstream ids; three writers changed', () => {
         expect(AP_REPORT_ROWS.map((r) => [r.location, r.level, r.tag, r.upstream])).toEqual([
@@ -101,9 +102,12 @@ describe('apReportBosses.js — the R4 AS3, transcribed', () => {
 describe('levelWorld — a staged R4 slot is READ under the switch, an orphan without it', () => {
     it('OFF: {32,3} / {32,4} / {12,1} are orphan clears (no placed entity carries them)', () => {
         const src = atlasLevelSource();
-        expect(() => buildLevelWorld(src(32), { cleared: [3] })).toThrow(/no entity in this level reads/);
-        expect(() => buildLevelWorld(src(32), { cleared: [4] })).toThrow(/no entity in this level reads/);
-        expect(() => buildLevelWorld(src(12), { cleared: [1] })).toThrow(/no entity in this level reads/);
+        // ⛓ APFLIP D6: the OFF arm, now named (the default is ON).
+        withContactFidelity({ apReportBosses: false }, () => {
+            expect(() => buildLevelWorld(src(32), { cleared: [3] })).toThrow(/no entity in this level reads/);
+            expect(() => buildLevelWorld(src(32), { cleared: [4] })).toThrow(/no entity in this level reads/);
+            expect(() => buildLevelWorld(src(12), { cleared: [1] })).toThrow(/no entity in this level reads/);
+        });
     });
     it('ON: the build accepts them (the arena rock and the Witch read them); other slots stay orphans', () => {
         const src = atlasLevelSource();
@@ -148,8 +152,11 @@ describe('the run knows which state each R4 room is in (`run.apReportSlotHeld`)'
         });
     });
     it('OFF, the same staging is refused at the build (the vanilla model has no reader for {32,3})', () => {
-        expect(() => createRunForStaging({ ...BASE, persistence: clears([32, 1], [32, 3]) }, atlasLevelSource())
-            .advance(new Set())).toThrow(/no entity in this level reads/);
+        // ⛓ APFLIP D6: the OFF arm, now named (the default is ON).
+        withContactFidelity({ apReportBosses: false }, () => {
+            expect(() => createRunForStaging({ ...BASE, persistence: clears([32, 1], [32, 3]) }, atlasLevelSource())
+                .advance(new Set())).toThrow(/no entity in this level reads/);
+        });
     });
 });
 
@@ -201,8 +208,11 @@ describe('the Bob Boss encounter ON (Q2: always fought; the reports, never the i
     }, 120_000);
     it('the executor is the ROOM\'s: any AP item at L32 is Bob\'s encounter ON; OFF it is refused by the drop', () => {
         const other = { ...GOAL, drop: { item: 'Bomb' } };
-        expect(() => solveL32({ ...FIRE_HELD, persistence: clears([32, 0], [32, 1]) }, other))
-            .toThrow(/no encounter executor is registered for a 'Bomb' drop/);
+        // ⛓ APFLIP D6: the OFF arm, now named (the default is ON).
+        withContactFidelity({ apReportBosses: false }, () => {
+            expect(() => solveL32({ ...FIRE_HELD, persistence: clears([32, 0], [32, 1]) }, other))
+                .toThrow(/no encounter executor is registered for a 'Bomb' drop/);
+        });
         withContactFidelity(ON, () => {
             const { run } = solveL32({ ...FIRE_HELD, persistence: clears([32, 0], [32, 1], [32, 3], [32, 4]) }, other);
             expect(run.level).toBe(30);

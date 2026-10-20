@@ -101,7 +101,8 @@ describe('readEnvelope over the committed Seedling roster', () => {
         // ⛓ fidelity L40BUTTON: +2 (277) — `l40button-l41-part0`, `l40button-l42-part0`.
         // ⛓ fidelity SEALDOOR: +3 (280) — `sealdoor-l113-clear`, `sealdoor-l113-exit`, `sealdoor-l113-noseal-control`.
         // ⛓ fidelity WATCHERTALK: +2 (282) — `watchertalk-l114-clear-16`, `watchertalk-l114-clear-32`.
-        expect(names.length).toBe(282);
+        // ⛓ fidelity APFLIP: −1 +8 (289) — `enc-l32-fire-return` retired; the eight `apb-*` witnesses (p4g).
+        expect(names.length).toBe(289);
         for (const name of names) {
             const env = readEnvelope(rawTape(name));
             expect(Object.keys(env), name).toEqual(ENVELOPE_FIELDS);

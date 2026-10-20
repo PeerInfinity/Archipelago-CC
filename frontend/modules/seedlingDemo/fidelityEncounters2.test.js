@@ -19,13 +19,25 @@
  */
 
 import { readFileSync } from 'node:fs';
-import { describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, createTapeStepper, solveStaging, stagingFromTape } from './tapeRunner.js';
 import { atlasLevelSource } from './levelSource.js';
 import { solveSegment } from './solverBot.js';
 import { PICKUP_REMOVED_NEXT_FRAME_DEFAULT, withPickupRemovedNextFrame } from './pickupRemoval.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
+
+/**
+ * ⛓ APFLIP D6 — THE VANILLA ARM, NAMED. These rows pin the vanilla AS3 (`f8d9bc1`: the pickup GRANTS Fire / the dark
+ * sword, `hasFire` removes Bob), which since the R7 flip is `CONTACT_FIDELITY.apReportBosses` OFF; the ON arm's rows
+ * are `fidelityApBosses.test.js` and the `apb-*` game witnesses. Set per describe, read live by the run.
+ */
+function vanillaArm() {
+    let was;
+    beforeAll(() => { was = CONTACT_FIDELITY.apReportBosses; CONTACT_FIDELITY.apReportBosses = false; });
+    afterAll(() => { CONTACT_FIDELITY.apReportBosses = was; });
+}
 
 const WITNESS = JSON.parse(readFileSync(
     new URL('./fixtures/pickup-removal-witness.json', import.meta.url), 'utf8'));
@@ -53,6 +65,7 @@ describe('the switch', () => {
 });
 
 describe('⛓⛓ the game\'s frame: a special pickup\'s flag lands one frame after its ceremony closes', () => {
+    vanillaArm();
     it('the witness names four tapes, a runtime add and placed pickups among them, each read at both ticks', () => {
         expect(WITNESS.rows.map((r) => `${r.tape}:${r.property}`)).toEqual([
             'enc-l12-witch:hasDarkSword', 'enc-l32-live-arrival:hasFire', 'bobsoldier2-l30-torch:hasTorch',
@@ -81,6 +94,7 @@ describe('⛓⛓ the game\'s frame: a special pickup\'s flag lands one frame aft
 });
 
 describe('the encounter ledger rows land on the removal frame', () => {
+    vanillaArm();
     it('enc-l12-witch: `darksword-removed` at t378 ON (the game\'s), t377 OFF; the close and the contact unmoved', () => {
         const tape = tapeOf('enc-l12-witch');
         const rows = (on) => withPickupRemovedNextFrame(on, () => replay(tape, 'hasDarkSword')).run
@@ -100,6 +114,7 @@ describe('the encounter ledger rows land on the removal frame', () => {
 });
 
 describe('the Witch executor plans the same ticks under either switch', () => {
+    vanillaArm();
     it('enc-l12-witch\'s staging: the encounter goal alone ends on the close frame + 1 (OFF: the flag; ON: the collect)', () => {
         const W = tapeOf('enc-l12-witch');
         const solve = (on) => withPickupRemovedNextFrame(on, () => {

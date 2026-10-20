@@ -716,10 +716,16 @@ export const CONTACT_FIDELITY = {
      * ON: the run reads {32,3} {32,4} {12,1} off its persistence (`run.persistenceHeld`), writes them in band, grants
      * neither item, writes no tag −1 slot ({31,29} {11,29}), and the build accepts the three slots as read; the
      * solver's Witch and Bob executors finish on the REPORT, never on the item. The six other bosses are unchanged
-     * (their kills already clear their OEL tag). ⛔ OFF by default: the AS3 is in no wasm until R7, where it flips
-     * inside the landing merge. OFF: byte-identical. `SEEDLING_AP_REPORT_BOSSES=0|1` for a node measurement.
+     * (their kills already clear their OEL tag). `SEEDLING_AP_REPORT_BOSSES=0|1` for a node measurement.
+     *
+     * ⛓ fidelity APFLIP (vendor/seedling `ccdf189776`, the p4g wasm) adds, all behind this one switch: the Totem gate
+     * (`BossTotem.as:291`, `bossTotem.stepBossTotem`'s `allTotemParts`), the four boss rooms' persistence responses
+     * (`levelWorld.AP_BOSS_PERSISTENCE_RESPONSE`, H2), the totem's kill banked, the L32 arena rock's Solid at the
+     * entity's own placement (a delivered-set move), and the JS runtime's `bossreport` capability.
+     * ⚖ ON (user 2026-10-19, "Launch now; ON in R7 merge"): flipped by APFLIP inside js-7's one combined landing with
+     * the p4g gitlink, vendor/seedling `ccdf189776` and the rules arc's R4b; there is no OFF interim on main.
      */
-    apReportBosses: false,
+    apReportBosses: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
