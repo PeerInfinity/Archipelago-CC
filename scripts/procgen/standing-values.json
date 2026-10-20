@@ -61,13 +61,13 @@
       "measuredAt": "969aaa60dd0985fd9d267b2e36fc7a0a9e02b59b"
     },
     "identity: carved pairs c4": {
-      "value": "b9d2185d33c68dc2d3efcd8feb089272",
+      "value": "ebb9e743e7ebeb45849e51be510155c1",
       "command": null,
       "kind": "identity",
       "cheap": false,
       "quoted": true,
-      "why": "CI-read @ 969aaa60dd (run 37999998370): HAMMER_ESCAPE on (⚖ user 2026-10-07 'I approve'); was 4aa74add; A2 measured the same on the box; A3/A4 byte-identical",
-      "measuredAt": "969aaa60dd0985fd9d267b2e36fc7a0a9e02b59b"
+      "why": "measured @ f21ddd966d (dump-seedling-kind-pairs, local): L40GUARD flip ON (⚖ user 'Flip all four', 2026-10-19), spinnerSwingLineOfSight moves winding post-sword seed=7 THREW → SATURATED; = the L40GUARD report's ON value; was b9d2185d",
+      "measuredAt": "f21ddd966deefc8e14ee29a5ce3aa0503096ecf6"
     },
     "identity: ENEMY census default": {
       "value": "f0bec57641e1fd541ddad6f1aa24e883",
