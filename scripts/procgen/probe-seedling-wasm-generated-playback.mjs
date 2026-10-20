@@ -27,7 +27,7 @@
  *
  * `--record=<path>` writes the engine's recorded arrival reads (`{seam, status, state}` per
  * arrival, `engine.arrivalReads`) of the R session — the vitest fixture
- * `frontend/modules/seedlingDemo/fixtures/wasm-arrival-gen-p4f.json`.
+ * `frontend/modules/seedlingDemo/fixtures/wasm-arrival-gen-p4g.json`.
  *
  * Prints `PASS:`/`FAIL:` rows and `ALL CHECKS PASSED` / `N CHECK(S) FAILED` (exit 1 on a fail).
  *

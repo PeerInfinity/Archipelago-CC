@@ -27,7 +27,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '../../..');
 const readJson = (rel) => JSON.parse(readFileSync(join(ROOT, rel), 'utf8'));
 const MAP = readJson('frontend/modules/flashPanel/atlases/seedling-map.json');
 const SRC = levelSourceFromAtlas(indexLevels(MAP));
-const HOUSE = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-p4f.json').arrivals.find((a) => a.status.level === 86);
+const HOUSE = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-p4g.json').arrivals.find((a) => a.status.level === 86);
 const KIT = ['hasSword', 'hasShield', 'hasFire', 'hasWand', 'canSwim', 'hasSpear', 'hasFeather', 'hasTorch', 'hasDarkSuit'];
 
 const houseStaging = () => stagingFromWasmArrival(HOUSE).staging;

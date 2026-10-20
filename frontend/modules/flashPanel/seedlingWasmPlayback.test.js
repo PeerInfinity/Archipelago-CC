@@ -3,7 +3,7 @@
  * wasm branch.
  *
  * The game is a FAKE whose reads are W1's RECORDED arrivals
- * (`seedlingDemo/fixtures/wasm-arrival-p4f.json`): `botSeam` answers the
+ * (`seedlingDemo/fixtures/wasm-arrival-p4g.json`): `botSeam` answers the
  * baseline until the forced re-arrival's teleport "lands", then the recorded
  * arrival's `beginEntry`; `botStatus`/`readState` are the recorded reads with
  * the tape flags (`held`, `armed`, `finished`) the verbs set. The SOLVE is
@@ -34,7 +34,7 @@ import { replayTape } from '../seedlingDemo/jsRuntimeSolver.js';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '../../..');
 const readJson = (rel) => JSON.parse(readFileSync(join(ROOT, rel), 'utf8'));
-const RECORDED = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-p4f.json').arrivals;
+const RECORDED = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-p4g.json').arrivals;
 const RECORDS = indexLevels(readJson('frontend/modules/flashPanel/atlases/seedling-map.json'));
 const HOUSE = 86;
 const byLabel = (prefix, level) => RECORDED.find((a) => a.label.startsWith(prefix) && a.status.level === level);
@@ -1243,7 +1243,7 @@ describe('W7 — the arrival HOLD after an exit plan, and the glue query\'s thre
 
 // ── ⛓ WG → §5.36 — GENERATED rooms: the mounted set is the level source, the SOLVER the producer ──────
 
-const GEN_RECORDED = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-gen-p4f.json').arrivals;
+const GEN_RECORDED = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-gen-p4g.json').arrivals;
 const GEN_SET = assembleGeneratedSeedlingSet(readJson('frontend/presets/seedling_generated_room/AP_1/AP_1_rules.json'),
     { selfPlayer: 1 }).set;
 const GEN_RECORDS = mountedRecordsOf(GEN_SET);

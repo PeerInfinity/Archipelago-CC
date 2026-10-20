@@ -3,7 +3,7 @@
  * declaration rule it ships under, the mid-room policy, the moonrock / level-0 (⛓ W5: staged, no longer refused)
  * refusal, and the trajectory compare (solver-walk W2). The engine that drives them (`flashPanel/seedlingWasmPlayback.js`)
  * has its own file; both read W1's RECORDED arrivals
- * (`fixtures/wasm-arrival-p4f.json`), never a hand-written latch.
+ * (`fixtures/wasm-arrival-p4g.json`), never a hand-written latch.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -26,7 +26,7 @@ import { indexLevels } from './atlasSource.js';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '../../..');
 const readJson = (rel) => JSON.parse(readFileSync(join(ROOT, rel), 'utf8'));
-const RECORDED = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-p4f.json').arrivals;
+const RECORDED = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-p4g.json').arrivals;
 const RECORDS = indexLevels(readJson('frontend/modules/flashPanel/atlases/seedling-map.json'));
 const HOUSE = 86;
 const byLabel = (prefix, level) => RECORDED.find((a) => a.label.startsWith(prefix) && a.status.level === level);

@@ -237,7 +237,7 @@ describe('the committed playthrough\'s leg list', () => {
 
     it('⛓ the MUTANT, in the model: every staged arrival lands CLEAR with its flags, and INSIDE its obstacle (named) without', () => {
         const SRC = levelSourceFromAtlas(indexLevels(JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'))));
-        const fix = JSON.parse(readFileSync(join(REPO, 'frontend/modules/seedlingDemo/fixtures/wasm-arrival-p4f.json'), 'utf8'))
+        const fix = JSON.parse(readFileSync(join(REPO, 'frontend/modules/seedlingDemo/fixtures/wasm-arrival-p4g.json'), 'utf8'))
             .arrivals.find((a) => a.status.level === 0);
         const staging = (cleared) => stagingFromWasmArrival({ seam: fix.seam, status: { ...fix.status, persistence_cleared: cleared },
             state: fix.state }).staging;

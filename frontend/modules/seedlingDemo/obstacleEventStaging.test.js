@@ -2,8 +2,8 @@
  * ⛓ OBSTACLE EVENTS — **STAGED BOOTS CARRY THE CLEARED FLAGS**, on every wasm staging path.
  *
  * A saved obstacle's flag (`flag:L0:1`, `breakablerock@288,176`) is game state; the model only knows it was broken
- * when the staging says so. Each path is driven from the recorded p4f arrival in level 0
- * (`fixtures/wasm-arrival-p4f.json`), with the game's readout carrying the flag the way the game reports it
+ * when the staging says so. Each path is driven from the recorded p4g arrival in level 0
+ * (`fixtures/wasm-arrival-p4g.json`), with the game's readout carrying the flag the way the game reports it
  * (`botStatus.persistence_cleared`):
  *
  *   arrival      `stagingFromWasmArrival` stages `persistence_cleared` — and the route survey's step 33 (L12 → L0,
@@ -31,7 +31,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '../../..');
 const readJson = (rel) => JSON.parse(readFileSync(join(ROOT, rel), 'utf8'));
 const RECORDS = indexLevels(readJson('frontend/modules/flashPanel/atlases/seedling-map.json'));
 const SRC = levelSourceFromAtlas(RECORDS);
-const L0 = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-p4f.json').arrivals.find((a) => a.status.level === 0);
+const L0 = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-p4g.json').arrivals.find((a) => a.status.level === 0);
 /** The rules' event for the rock (the playthrough's `flag:L0:1`): its flag, and the landing the rock gates. */
 const ROCK_FLAG = { level: 0, tag: 1 };
 const STEP_33_LANDING = { level: 0, x: 288, y: 176 };   // L12 → L0's teleporter arrival (the ctor args)
