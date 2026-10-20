@@ -4,6 +4,23 @@ The Quick Launch panel is the first tab of the left column in the default layout
 
 The bar at the top has two rows. The first holds the header line, which counts what the panel lists — *N panels · M docs*, where *M* is the number of documents the Help group shows — and the filter box. The second holds the buttons: **Cards** (the two views), **Collapse all** / **Expand all** (folding), **Edit** (your own groups) and **Modules ⇄**, which opens the [Modules panel](modules.md). In a narrow column (a small window, or the column dragged narrower) the rows wrap: the filter box moves under the header, and the buttons continue on another line.
 
+## Mini panels
+
+The first section, above *All panels*: a row for each panel that has a **mini view** — the panel shrunk to a row or two, with most of its content hidden — in a **mini row** above the middle column, each just tall enough for its content. Each row says how the panel shows now, and its button switches it:
+
+| Row | States | The button |
+|---|---|---|
+| **Checks** | off · mini · in the bot's row | **Turn on** / **Turn off** the [Checks](checksPanel.md) line in the mini row |
+| **Playback Bot** | closed · full · mini | **Make mini** (or **Open mini**) / **Expand**. Mini, the [Playback Bot](playbackBot.md) is its five buttons and its status line (hover it for the whole line), and **⤢**, which expands it again |
+| **Tutorial** | closed · merged · split | **Split** / **Merge** — the [Tutorial](tutorials.md) panel's own Split / Merge; it keeps its place in the left column |
+| **Mini row** | locked · draggable | **Make draggable** / **Lock** |
+
+With Checks and the Playback Bot both mini, the checks line rides in the bot's mini row and the Checks panel is taken out; expanding the bot gives Checks its own row back.
+
+**Locked** (the default) makes the mini row a fixed strip: no tabs, nothing to drag or close. **Draggable** gives each mini panel an ordinary tab: drag it anywhere, and it stays mini until you expand it. Locking again brings it back into the mini row.
+
+The mini row is part of the desktop layout; the mobile layout shows a note instead. Your choices are remembered (local storage `miniPanels_state`) and the mini row comes back when the page is reloaded.
+
 ## All panels
 
 One button per panel, sorted into one sub-group per category. The categories are the module sections of the [Frontend Module Reference](../../modules/README.md) (*Tracker Panels*, *Game Mode Panels*, *Procgen Substrate Panels*, *Procgen Infrastructure Panels*, and so on), in the order that page lists them; each panel declares its own. A panel that declares none, or a category that page does not list, appears under **Other**, last. A category with no panel in the current mode is not shown (the default mode has no *Non-procgen Games*, for example). Inside each category the panels keep the app's standard (load-priority) order. Each button shows the panel's icon and title, and a dot:

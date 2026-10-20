@@ -9,7 +9,7 @@ The bot needs a world with a sphere log. Either:
 - generate one in the [Procgen Pipeline](procgenPipeline.md) and press **Load into frontend**, or
 - load a preset that has a sphere log in the [Presets](presets.md) panel.
 
-Until then the panel says **No sphere log loaded.** Once one is loaded, the status line reads *Sphere log loaded: N entries.*
+Until then the panel says **No sphere log loaded.** Once one is loaded, the status line reads *Sphere log loaded: N entries.* Without one, **Check next: Any reachable location** still works (see below), so the bot stays usable under the note.
 
 ## A first run
 
@@ -71,6 +71,10 @@ The bot keeps going loop after loop until the world is finished or you press **�
 - **Any reachable location (timer)** — no sphere log needed, so it works in any game, online or offline. **▶** checks the locations that are reachable now, then keeps checking as more become reachable, until nothing new is; **⏯** checks one reachable location at once; **⏹** stops. **⏭** is the same as **▶**: the timer has its own delay between checks instead of the bot's **Speed** (none by default; set one with the Console's `/set_delay` command). Whether one tick checks one location or all the reachable ones is the **Batch location checks** setting of the Timer module, in the Settings panel.
 
 Switching **Check next** stops whatever is running. The panel remembers your choice.
+
+## The mini view
+
+From the [Quick Launch](quickLaunch.md) panel's **Mini panels** section, the bot can shrink into a **mini row** above the middle column: its five buttons and its status line (cut short — hover it for all of it), on one row when the column is wide enough, and **⤢**, which expands it back into the full panel. The run carries on untouched either way. With **Checks** on too, the "Checked: …" line rides in the same row.
 
 ## Without a generated world
 

@@ -190,6 +190,7 @@ import './modules/tests/testCases/apworldEditorTests.js';
 import './modules/tests/testCases/substrateRegistryPanelTests.js';
 import './modules/tests/testCases/procgenPipelineTests.js';
 import './modules/tests/testCases/quickLaunchTests.js';
+import './modules/tests/testCases/miniPanelsTests.js';
 import './modules/tests/testCases/tutorialTests.js';
 import './modules/tests/testCases/storagePanelTests.js';
 
