@@ -1,0 +1,3 @@
+files 91 tests 2337 passed 2335 failed 0 skipped 2
+frontend/modules/seedlingDemo/contactFidelity.test.js the shipped defaults: all three ON
+frontend/modules/seedlingDemo/fidelityL40Guard.test.js ships OFF

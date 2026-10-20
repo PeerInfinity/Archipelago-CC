@@ -23922,6 +23922,47 @@ witness rows (2195 → 1216, 1629 → 778: refusals whose kill crosses a death).
 - A work unit is a deadline ask, and the press kill asks almost none. A leg can spend its whole wall budget inside
   one rung while its work budget is untouched, so "ran out of units" and "ran out of time" name different rungs.
 - Refusing a strike candidate IS waiting: a strikeless press-kill tick takes a refuge and derives again.
+
+### Seedling fidelity L40GUARD — the chest's guard on the game, and four OFF switches
+
+⚖ The user (2026-10-19): *"L40 guard stance"* — hammer LB's hand-over #1, with #3, #6 and #7 folded in. Base
+`e686f0b6e6`. The report is `CC/docs/cloud-reports/seedling-fidelity-l40guard.md`.
+
+**The guard is modelled exactly; the brief's premise was not.** `bobsoldier@880,832` stands in the 16-px pocket under
+the chest, which is the chest stance's tile. On the game (p4f headless, `probe-seedling-bobsoldier-mobiles`, three
+witnesses, worst |Δ| 0) it DOES chase once the player is inside 80 px (`BobSoldier.as:92`), but the pocket's west wall
+holds it and it leaves only as its `vy` allows. It spins at d < 33 (`:114`, the `int` truncation), has no return-to-post
+(out of leash it stops where friction leaves it), and a sword press lands from d 20.5, outside its 8–16 px blade
+(`:165-166` against `Player.as:929-950`'s 16 × 32 rect). So "a guard that never approaches" is a guard that cannot
+reach the stance inside the arm's ceiling. Two reasons: the ceiling's travel term is the straight line, and its kill term is `3 ×
+killWindowTicks` — three DEATH windows, 3 ticks for a class with no die animation (78 for a Bob).
+
+**Four switches, all OFF and byte-identical OFF** (`contactFidelity.js`):
+- `guardApproachStance` (D2): `deriveGuardApproach`, asked only when `deriveKillByChaser`'s two scans priced nothing —
+  the cells within `SLASH_REACH` of the body plus the reachable leash cells, the arm's own preview, a ceiling of travel
+  + `hits` × `KILL_PRESS_CADENCE` + the death window + `HOLD_SLACK`; the refusal names REACH / TIMING / LEASH. On L40 it
+  refuses LEASH everywhere the corridor's spinners live and TIMING beside the guard. The live legs never ask it: the
+  chooser (hammer's #2) offers no target first.
+- `coveredGoalRefusal` (D3): `coveredGoalOf`, the planner's own goal-tile test under AVOID's volumes; a live chaser on
+  the goal tile refuses DETOUR and the forced-hit rung by name (kind `danger`). Leg 414: `deadline` 643 → EXHAUSTED 196,
+  at 640 and unbounded alike — LB's predicted ~98 a pass.
+- `shakeBandMoot` (D4, #6): an uncertain shake band over a body both branches step alike (at rest, no i-frames, no
+  overlap, no terrain arm, alive) is stepped, not thrown (`run.shakeBandMoots`). Witnessed: `l40guard-band-moot`, Bob
+  11,988 comparisons, worst 0 (OFF throws at t878). 414 seam 5123's own t1569 instance is NOT moot: `bob@736,800` at home
+  with a stale `v` built off screen, so the jiggle decides; that throw is inside the press kill (hammer's).
+- `spinnerSwingLineOfSight` (D4, #7): a sword test at a spinner through a Solid is a `landed: false` row
+  (`Player.as:917`), as the drill's and wallflyer's arms already are. Witnessed: `l40guard-spinner-los`, Spinner 10,995
+  comparisons, worst 1.1e-13 (the blocked test misses, the next lands).
+
+Gate `fidelityL40Guard.test.js` (9 rows; 6 mutants, each red on its predicted row). No identity row, producer `--check`,
+tapeRunner pair (621 `fceca579`) or L39–L41 survey step moves, OFF or ON.
+
+**Trap candidates.**
+- `killWindowTicks` is a DEATH window, not a kill's duration: `3 × killWindowTicks` reads as three hits for a Bob (78)
+  and is 3 ticks for a BobSoldier.
+- A body "that never approaches" can be a body a wall holds: ask its velocity, not only its position.
+- An uncertain shake band is not always a question: a body at rest steps identically on and off screen.
+
 ### Seedling hammer-phase XC flip — `ESCAPE_CROSS_PASS_CACHE` ON by default (flip-ready branch)
 
 ⚖ The user (2026-10-18) picked "XC flip, then the floor flip". The flip is the user's call. This entry rides the

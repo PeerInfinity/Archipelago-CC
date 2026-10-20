@@ -1,0 +1,13 @@
+{
+ "tape": "l40guard-spinner-los",
+ "class": "Spinner",
+ "page": "seedling_bot_ap_p4f",
+ "calibrated": true,
+ "fits": [
+  0
+ ],
+ "compared": 10995,
+ "worst": 1.1368683772161603e-13,
+ "disagreements": [],
+ "rowsKept": "omitted (size); re-run the probe"
+}

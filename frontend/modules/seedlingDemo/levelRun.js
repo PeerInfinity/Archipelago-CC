@@ -3052,6 +3052,8 @@ export function createLevelRun({
      * and without this list the only symptom is a position that drifts.
      */
     const contactsSuppressed = [];
+    /** ⛓ fidelity L40GUARD D4: `{t, level, id}` per body an uncertain shake band left moot (`shakeBandMootNow`). */
+    const shakeBandMoots = [];
     /**
      * ⛔⛔⛔ One per DEATH — `{t, level, respawn, hits}` — and a death is a
      * GAME-INITIATED WORLD REBOOT (§8.8), not an end of run.
@@ -6690,6 +6692,15 @@ export function createLevelRun({
                         killed: false, reach, hits: sp.hits, hitsTimer: sp.hitsTimer,
                         why: `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit} — `
                             + 'the rect reached it and `slash()`\'s own gate did not',
+                    });
+                    hits.push({ as3: 'Spinner', id: sp.id, landed: false, killed: false });
+                } else if (!ghost && spinnerSwingBlockedNow(sp)) {
+                    // ⛓ fidelity L40GUARD D4 (`spinnerSwingLineOfSight`, OFF): the gate's refusal, as the game runs it.
+                    const blocker = spinnerSwingBlockedNow(sp);
+                    spinnerPressHits.push({
+                        t: ticksCompleted, level, id: sp.id, weapon, landed: false,
+                        killed: false, reach, hits: sp.hits, hitsTimer: sp.hitsTimer,
+                        why: `collideLine("Solid") meets ${blocker.tag ?? 'a Solid'} at (${blocker.at.x}, ${blocker.at.y})`,
                     });
                     hits.push({ as3: 'Spinner', id: sp.id, landed: false, killed: false });
                 } else {
@@ -10365,6 +10376,26 @@ export function createLevelRun({
         };
     }
 
+    /**
+     * ⛓⛓ SEEDLING FIDELITY L40GUARD D4 (hammer LB hand-over #7) — **A SWORD SWING AT A SPINNER THROUGH A SOLID MISSES**
+     * (`CONTACT_FIDELITY.spinnerSwingLineOfSight`, OFF).
+     *
+     *     Player.as:917   if (!FP.world.collideLine("Solid", x, y, v[i].x, v[i].y) || hasGhostSword || v[i].type == "Solid"
+     *                         || v[i].type == "Rope" || v[i] is Flyer)  genericHit(v[i])
+     *
+     * `assertSpinnerLineOfSight` refuses such a swing by name; the game simply does not call `genericHit` — the drill's
+     * and the wallflyer's arms already model exactly that (a `landed: false` row, `why: collideLine("Solid") meets …`).
+     * MEASURED: L40, the player at (728, 685) against the shaft's corner tile, `spinner@816,848` one tile into the shaft:
+     * the press at t2166 threw at the first test; witnessed on the game, the spinner's `hits` stay 0. ON: the blocked
+     * test is that miss row. OFF: `null`, and the assertion throws as before.
+     *
+     * @returns {null | {tag?: string, at: {x: number, y: number}}} the Solid on the line, ON only
+     */
+    function spinnerSwingBlockedNow(sp) {
+        if (!CONTACT_FIDELITY.spinnerSwingLineOfSight) return null;
+        return collideLineSolid(state.x, state.y, sp.x, sp.y);
+    }
+
     function assertSpinnerLineOfSight(sp) {
         const blocker = collideLineSolid(state.x, state.y, sp.x, sp.y);
         if (blocker) {
@@ -12262,7 +12293,8 @@ export function createLevelRun({
                 }
                 return null;
             }
-            const onScreen = onScreenNow(box, `${c.tag} ${c.id}`);
+            // ⛓ fidelity L40GUARD D4 (`shakeBandMoot`, OFF): an uncertain band over a body both branches step alike.
+            const onScreen = shakeBandMootNow(c, box) ? false : onScreenNow(box, `${c.tag} ${c.id}`);
             /**
              * ⛓ KILLLOCK K1/K2 — the switch's three arms are the CLASS's flags (`dieInWater`, `dieInLava`,
              * `canFallInPit`), read from `combat.ENEMY_CLASSES[tag].terrain` for a class a KILLLOCK switch
@@ -12548,6 +12580,36 @@ export function createLevelRun({
             }
             return contact;
         }
+    }
+
+    /**
+     * ⛓⛓ SEEDLING FIDELITY L40GUARD D4 (hammer LB hand-over #6) — **A SHAKE BAND OVER A BODY THAT STEPS THE SAME
+     * EITHER WAY IS NOT A QUESTION** (`CONTACT_FIDELITY.shakeBandMoot`, OFF).
+     *
+     *     Enemy.as      update(): if (!activeOffScreen && !onScreen()) return;   — then the terrain switch,
+     *                   super.update() (Mobile.mobileUpdate: friction, the move), hitUpdate(), hitPlayer()
+     *     Bob.as        the chase block runs BELOW super.update(), whichever way it returned
+     *
+     * `onScreenNow` refuses an 'uncertain' band (⚖ never model the cosmetic RNG). But the off-screen return skips only
+     * friction + the move, the terrain switch, the i-frame tick and the contact — and for a body at REST (`v` exactly
+     * 0, so friction and the move are both nothing), with no i-frames to tick, not overlapping the player (the contact
+     * hook bills nothing either way), on a tile with no terrain arm (not water, lava or pit), alive and not falling,
+     * every one of those is the identity on both branches; the chase below writes the same `v` from the same position.
+     * MEASURED on the page request (414 seam 5123): the live run threw *"whether bob bob@736,800 is on screen at tick
+     * 1569"* on exactly such a body. ON, such a body is stepped (as off screen — the branches are equal, so either
+     * label is the game's) and nothing is thrown; any other body under an uncertain band still throws by name.
+     * OFF: never asked, byte-identical.
+     */
+    function shakeBandMootNow(c, box) {
+        if (!CONTACT_FIDELITY.shakeBandMoot || camBand === null) return false;
+        if (onScreenUnderShake(box, camBand) !== 'uncertain') return false;
+        if (c.destroy || c.dying || c.removed || c.fallInPit) return false;
+        if (c.v.x !== 0 || c.v.y !== 0 || c.hitsTimer > 0) return false;
+        if (rectsOverlap(chaserBoxAt(c.tag, c.x, c.y), playerBoxAt(state.x, state.y))) return false;
+        const t = world.nearestWalkableTile(c.x, c.y)?.t ?? 0;
+        if (t === ENEMY_TERRAIN_DESTROYS.water || t === ENEMY_TERRAIN_DESTROYS.lava || t === ENEMY_PIT_TILE) return false;
+        shakeBandMoots.push({ t: ticksCompleted + 1, level, id: c.id });
+        return true;
     }
 
     /**
@@ -17380,6 +17442,8 @@ export function createLevelRun({
         get playerHits() { return playerHitsNow(); },
         get playerDeaths() { return playerDeathsNow(); },
         get contactsSuppressed() { return contactsSuppressed.map((c) => ({ ...c })); },
+        /** ⛓ fidelity L40GUARD D4: the bodies a moot shake band stepped (`CONTACT_FIDELITY.shakeBandMoot`; `[]` OFF). */
+        get shakeBandMoots() { return shakeBandMoots.map((c) => ({ ...c })); },
         /** `{hits, hitsTimer, directionFace}` right now. */
         get damage() { return { ...damage }; },
         /** ⛓ STAGEDHITS: the boot's staged `{hits, hitsTimer, directionFace}`, or null (a fresh `Player`). */

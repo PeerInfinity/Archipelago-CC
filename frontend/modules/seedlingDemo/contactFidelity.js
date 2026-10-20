@@ -726,6 +726,49 @@ export const CONTACT_FIDELITY = {
      * the p4g gitlink, vendor/seedling `ccdf189776` and the rules arc's R4b; there is no OFF interim on main.
      */
     apReportBosses: true,
+    /**
+     * fidelity L40GUARD D2 — THE CHASER ARM'S APPROACH STANCE, FOR A BODY THE ROOM HOLDS AWAY FROM THE PLAYER
+     * (`solverBot.deriveGuardApproach`, asked only after `deriveKillByChaser`'s two scans priced NOTHING).
+     *
+     *     BobSoldier.as:30,33   moveSpeed 0.8, runRange 80 — it chases only inside 80 px; no return-to-post
+     *     BobSoldier.as:34,114  attackRange 32 — the spin begins at d < 33; the blade is 8..16 px out (:165-166)
+     *     Player.as:929-950     getSlashRect — 16 px along the swing, 32 across: a strike lands from a cell the
+     *                           blade does not reach (witnessed on the game at d 20.5, `l40guard-diag-strike`)
+     *
+     * L40's `bobsoldier@880,832` stands in the 16-px pocket under the chest. MEASURED on the game (three witnesses,
+     * worst |Δ| 0): it DOES chase once the player is inside 80 px, but the pocket's west wall holds it and it leaves
+     * only as `vy` allows, so it never arrives inside the arm's straight-line ceiling — and that ceiling's kill term is
+     * `3 × killWindowTicks`, 3 ticks for a class with no die animation, not three landed hits through its i-frames.
+     * ON, a scan that priced nothing asks a second question: the cells within the sword's reach of the body (the
+     * player walks in, on the body's timing) plus the reachable leash cells, each previewed by the arm's own
+     * instrument with a ceiling of the body's travel plus `hits` landed hits at `KILL_PRESS_CADENCE` plus the slack.
+     * Its refusal names which of REACH / TIMING / LEASH failed. OFF: never asked, byte-identical.
+     * `SEEDLING_GUARD_APPROACH_STANCE=0|1` for a node measurement.
+     */
+    guardApproachStance: false,
+    /**
+     * fidelity L40GUARD D3 — A GOAL TILE INSIDE A LIVE BODY'S DANGER IS REFUSED BY NAME AT DETOUR AND THE FORCED-HIT
+     * RUNG (`solverBot.coveredGoalRefusal`), instead of spending a via set whose every candidate ends on that tile
+     * (MEASURED by hammer LB on L40 leg 414: DETOUR 3,480 units a pass, `crusher-fork` 2,376, ~98 left if both refuse).
+     * OFF: never asked, byte-identical. `SEEDLING_COVERED_GOAL_REFUSAL=0|1` for a node measurement.
+     */
+    coveredGoalRefusal: false,
+    /**
+     * fidelity L40GUARD D4 (hammer LB hand-over #6) — AN UNCERTAIN SHAKE BAND OVER A BODY THAT STEPS THE SAME ON AND OFF
+     * SCREEN IS STEPPED, NOT THROWN (`levelRun.shakeBandMootNow`): at rest (`v` 0), no i-frames, no player overlap, no
+     * terrain arm under it, alive and not falling. The jiggle is still not modelled (⚖ 2026-10-10); the band's answer is
+     * simply not needed. Any other body under an uncertain band still throws by name. OFF: never asked, byte-identical.
+     * `SEEDLING_SHAKE_BAND_MOOT=0|1` for a node measurement.
+     */
+    shakeBandMoot: false,
+    /**
+     * fidelity L40GUARD D4 (hammer LB hand-over #7) — A SWORD SWING AT A SPINNER THROUGH A SOLID MISSES
+     * (`levelRun.spinnerSwingBlockedNow`), as `Player.slash`'s `collideLine("Solid")` gate runs it (`Player.as:917`; the
+     * drill's and the wallflyer's arms already model it): a `landed: false` press row instead of the LOS assertion's
+     * throw. Witnessed on the game (`l40guard-spinner-los`). OFF: the assertion, byte-identical.
+     * `SEEDLING_SPINNER_SWING_LOS=0|1` for a node measurement.
+     */
+    spinnerSwingLineOfSight: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -872,6 +915,15 @@ if (globalThis.process?.env?.SEEDLING_BOMB_BLAST_BODY === '0') CONTACT_FIDELITY.
 // ⛓ fidelity APBOSSES D2: `SEEDLING_AP_REPORT_BOSSES=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_AP_REPORT_BOSSES === '1') CONTACT_FIDELITY.apReportBosses = true;
 if (globalThis.process?.env?.SEEDLING_AP_REPORT_BOSSES === '0') CONTACT_FIDELITY.apReportBosses = false;
+// ⛓ fidelity L40GUARD D2/D3: `SEEDLING_GUARD_APPROACH_STANCE=0|1`, `SEEDLING_COVERED_GOAL_REFUSAL=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_GUARD_APPROACH_STANCE === '1') CONTACT_FIDELITY.guardApproachStance = true;
+if (globalThis.process?.env?.SEEDLING_GUARD_APPROACH_STANCE === '0') CONTACT_FIDELITY.guardApproachStance = false;
+if (globalThis.process?.env?.SEEDLING_COVERED_GOAL_REFUSAL === '1') CONTACT_FIDELITY.coveredGoalRefusal = true;
+if (globalThis.process?.env?.SEEDLING_COVERED_GOAL_REFUSAL === '0') CONTACT_FIDELITY.coveredGoalRefusal = false;
+if (globalThis.process?.env?.SEEDLING_SHAKE_BAND_MOOT === '1') CONTACT_FIDELITY.shakeBandMoot = true;
+if (globalThis.process?.env?.SEEDLING_SHAKE_BAND_MOOT === '0') CONTACT_FIDELITY.shakeBandMoot = false;
+if (globalThis.process?.env?.SEEDLING_SPINNER_SWING_LOS === '1') CONTACT_FIDELITY.spinnerSwingLineOfSight = true;
+if (globalThis.process?.env?.SEEDLING_SPINNER_SWING_LOS === '0') CONTACT_FIDELITY.spinnerSwingLineOfSight = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
