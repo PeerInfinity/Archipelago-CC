@@ -934,9 +934,11 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
         //   and `r9-solve-20` the fourth, the shield in L20 (the route's end).
         // ⛓ Swim U15: `r9-solve-32` the Fire; ⛓ swim R5 D4: `r9-solve-29` the
         //   Green Key, a key's flip being its own placement witness now.
+        // ⛓ R7 (p4g + R4b): the boss kills are locations — `shieldspire@L19` ({19,0}, r9-solve-19) and
+        //   `times@L32` ({32,3}, r9-solve-32), measured EARNED by the full tier at de1c1f49c1.
         const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === 'r9-campaign');
-        expect(chain.earns).toEqual(['sword@L10', 'chest@L11', 'bosskey0@L19', 'shield@L20',
-            'bosskey1@L29', 'fire@L32']);
+        expect(chain.earns).toEqual(['sword@L10', 'chest@L11', 'bosskey0@L19', 'shieldspire@L19',
+            'shield@L20', 'bosskey1@L29', 'fire@L32', 'times@L32']);
     });
 
     /**
@@ -993,8 +995,8 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
         expect(R7_GOAL_LEDGER.filter((r) => r.level === 15).map((r) => r.id))
             .toContain('chest@L15');
         expect(chain.earns).not.toContain('chest@L15');
-        expect(chain.earns).toEqual(['sword@L10', 'chest@L11', 'bosskey0@L19', 'shield@L20',
-            'bosskey1@L29', 'fire@L32']);
+        expect(chain.earns).toEqual(['sword@L10', 'chest@L11', 'bosskey0@L19', 'shieldspire@L19',
+            'shield@L20', 'bosskey1@L29', 'fire@L32', 'times@L32']);
     });
 });
 
