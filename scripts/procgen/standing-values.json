@@ -1400,30 +1400,30 @@
       "channel": "headless"
     },
     "roster: --tier=full": {
-      "value": "282 tapes 6224/0/0",
+      "value": "289 tapes 6382/0/0",
       "command": null,
       "kind": "identity",
       "cheap": false,
       "quoted": true,
-      "why": "DERIVED from the parts (⚖ 70 (c)) — campaign 39 tape(s) 905/0/0 MEASURED @edbbae545b26bf99c5e7c7571ac741240d38ad50 [channel: headless] · map-walk 21 tape(s) 449/0/0 MEASURED @edbbae545b26bf99c5e7c7571ac741240d38ad50 [channel: headless] · mechanic 222 tape(s) 4870/0/0 MEASURED @edbbae545b26bf99c5e7c7571ac741240d38ad50 [channel: headless]. Each part carries its OWN head: a category is owed a drive when the tree moved under IT, not when the tree moved at all.",
-      "measuredAt": "edbbae545b26bf99c5e7c7571ac741240d38ad50",
+      "why": "DERIVED from the parts (⚖ 70 (c)) — campaign 39 tape(s) 905/0/0 MEASURED @5954a0b07c4a66387e52c4a7427679cddc934c2a [channel: headless] · map-walk 21 tape(s) 449/0/0 MEASURED @5954a0b07c4a66387e52c4a7427679cddc934c2a [channel: headless] · mechanic 229 tape(s) 5028/0/0 MEASURED @5954a0b07c4a66387e52c4a7427679cddc934c2a [channel: headless]. Each part carries its OWN head: a category is owed a drive when the tree moved under IT, not when the tree moved at all.",
+      "measuredAt": "5954a0b07c4a66387e52c4a7427679cddc934c2a",
       "categories": {
         "campaign": {
           "tapes": 39,
           "value": "905/0/0",
-          "measuredAt": "edbbae545b26bf99c5e7c7571ac741240d38ad50",
+          "measuredAt": "5954a0b07c4a66387e52c4a7427679cddc934c2a",
           "channel": "headless"
         },
         "map-walk": {
           "tapes": 21,
           "value": "449/0/0",
-          "measuredAt": "edbbae545b26bf99c5e7c7571ac741240d38ad50",
+          "measuredAt": "5954a0b07c4a66387e52c4a7427679cddc934c2a",
           "channel": "headless"
         },
         "mechanic": {
-          "tapes": 222,
-          "value": "4870/0/0",
-          "measuredAt": "edbbae545b26bf99c5e7c7571ac741240d38ad50",
+          "tapes": 229,
+          "value": "5028/0/0",
+          "measuredAt": "5954a0b07c4a66387e52c4a7427679cddc934c2a",
           "channel": "headless"
         }
       }
