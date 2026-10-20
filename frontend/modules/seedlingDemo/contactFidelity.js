@@ -719,32 +719,34 @@ export const CONTACT_FIDELITY = {
      * player walks in, on the body's timing) plus the reachable leash cells, each previewed by the arm's own
      * instrument with a ceiling of the body's travel plus `hits` landed hits at `KILL_PRESS_CADENCE` plus the slack.
      * Its refusal names which of REACH / TIMING / LEASH failed. OFF: never asked, byte-identical.
-     * `SEEDLING_GUARD_APPROACH_STANCE=0|1` for a node measurement.
+     * ✅ ON by default since the user's flip (⚖ "Flip all four", 2026-10-19); `SEEDLING_GUARD_APPROACH_STANCE=0|1`
+     * for a node measurement.
      */
-    guardApproachStance: false,
+    guardApproachStance: true,
     /**
      * fidelity L40GUARD D3 — A GOAL TILE INSIDE A LIVE BODY'S DANGER IS REFUSED BY NAME AT DETOUR AND THE FORCED-HIT
      * RUNG (`solverBot.coveredGoalRefusal`), instead of spending a via set whose every candidate ends on that tile
      * (MEASURED by hammer LB on L40 leg 414: DETOUR 3,480 units a pass, `crusher-fork` 2,376, ~98 left if both refuse).
-     * OFF: never asked, byte-identical. `SEEDLING_COVERED_GOAL_REFUSAL=0|1` for a node measurement.
+     * OFF: never asked, byte-identical. ✅ ON by default since the user's flip (⚖ "Flip all four", 2026-10-19); 
+     * `SEEDLING_COVERED_GOAL_REFUSAL=0|1` for a node measurement.
      */
-    coveredGoalRefusal: false,
+    coveredGoalRefusal: true,
     /**
      * fidelity L40GUARD D4 (hammer LB hand-over #6) — AN UNCERTAIN SHAKE BAND OVER A BODY THAT STEPS THE SAME ON AND OFF
      * SCREEN IS STEPPED, NOT THROWN (`levelRun.shakeBandMootNow`): at rest (`v` 0), no i-frames, no player overlap, no
      * terrain arm under it, alive and not falling. The jiggle is still not modelled (⚖ 2026-10-10); the band's answer is
      * simply not needed. Any other body under an uncertain band still throws by name. OFF: never asked, byte-identical.
-     * `SEEDLING_SHAKE_BAND_MOOT=0|1` for a node measurement.
+     * ✅ ON by default since the user's flip (⚖ "Flip all four", 2026-10-19); `SEEDLING_SHAKE_BAND_MOOT=0|1` for a node measurement.
      */
-    shakeBandMoot: false,
+    shakeBandMoot: true,
     /**
      * fidelity L40GUARD D4 (hammer LB hand-over #7) — A SWORD SWING AT A SPINNER THROUGH A SOLID MISSES
      * (`levelRun.spinnerSwingBlockedNow`), as `Player.slash`'s `collideLine("Solid")` gate runs it (`Player.as:917`; the
      * drill's and the wallflyer's arms already model it): a `landed: false` press row instead of the LOS assertion's
      * throw. Witnessed on the game (`l40guard-spinner-los`). OFF: the assertion, byte-identical.
-     * `SEEDLING_SPINNER_SWING_LOS=0|1` for a node measurement.
+     * ✅ ON by default since the user's flip (⚖ "Flip all four", 2026-10-19); `SEEDLING_SPINNER_SWING_LOS=0|1` for a node measurement.
      */
-    spinnerSwingLineOfSight: false,
+    spinnerSwingLineOfSight: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

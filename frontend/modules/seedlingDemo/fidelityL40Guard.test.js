@@ -48,10 +48,11 @@ const ENV = ['SEEDLING_CONTACT_FIDELITY', 'SEEDLING_GUARD_APPROACH_STANCE', 'SEE
     'SEEDLING_SHAKE_BAND_MOOT', 'SEEDLING_SPINNER_SWING_LOS'];
 
 describe('L40GUARD — the guard on the game, and the four switches', () => {
-    it.skipIf(ENV.some((k) => process.env[k]))('ships OFF', () => {
+    // ⛓ planning-9's flip (⚖ user "Flip all four", 2026-10-19): the four shipped OFF and ship ON now.
+    it.skipIf(ENV.some((k) => process.env[k]))('ships ON', () => {
         for (const k of SWITCHES) {
-            expect(CONTACT_FIDELITY_DEFAULTS[k], k).toBe(false);
-            expect(CONTACT_FIDELITY[k], k).toBe(false);
+            expect(CONTACT_FIDELITY_DEFAULTS[k], k).toBe(true);
+            expect(CONTACT_FIDELITY[k], k).toBe(true);
         }
     });
 
