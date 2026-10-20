@@ -72,7 +72,14 @@ jobs:
       - name: Run ModuleUpdate
         run: |
           source .venv/bin/activate
-          python ModuleUpdate.py --yes
+          # ModuleUpdate installs every world's requirements with `--upgrade`, so an upstream world's loose
+          # floor (worlds/tloz: `bsdiff4>=1.2.2`) pulls a new release past the root pin (`bsdiff4==1.2.6`);
+          # the next step's `Launcher.py --update_settings` then meets a VersionConflict, asks "press enter
+          # to install it" and dies on EOF. Hold every exact root pin as a pip constraint (derived from
+          # requirements.txt, so it never duplicates a version) for the world installs and for later steps.
+          grep -E '^[A-Za-z0-9_.-]+==[^ #]+' requirements.txt | sed 's/[[:space:]]*#.*//' > "$RUNNER_TEMP/root-pins.txt"
+          echo "PIP_CONSTRAINT=$RUNNER_TEMP/root-pins.txt" >> "$GITHUB_ENV"
+          PIP_CONSTRAINT="$RUNNER_TEMP/root-pins.txt" python ModuleUpdate.py --yes
 
       - name: Generate template files
         run: |
