@@ -186,8 +186,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // inside the R7 merge (⚖ user 2026-10-19, "ON in R7 merge").
             apReportBosses: true,
             // ⛓ fidelity L40GUARD: `guardApproachStance` (D2), `coveredGoalRefusal` (D3), `shakeBandMoot` and
-            // `spinnerSwingLineOfSight` (D4) ship OFF.
-            guardApproachStance: false, coveredGoalRefusal: false, shakeBandMoot: false, spinnerSwingLineOfSight: false });
+            // `spinnerSwingLineOfSight` (D4) shipped OFF; ⛓ planning-9's flip (⚖ user "Flip all four", 2026-10-19) turns them ON.
+            guardApproachStance: true, coveredGoalRefusal: true, shakeBandMoot: true, spinnerSwingLineOfSight: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

@@ -24083,3 +24083,30 @@ gate: no `continue-on-error` and no submodules.
 
 **Trap candidate.** A `--check` that never compares bytes can go green while `--write` would move the fixture (feather,
 shieldboss). Green here means the producer's asserts hold, not that the tape is its output.
+
+### Seedling fidelity L40GUARD flip — the four L40 guards ON by default
+
+⚖ The user (2026-10-19): *"Flip all four"*. L40GUARD's four switches (`CONTACT_FIDELITY.guardApproachStance`,
+`coveredGoalRefusal`, `shakeBandMoot`, `spinnerSwingLineOfSight`, section above) now ship ON.
+
+**Why.** OFF, L40's two Chest legs (397, 414) spend their budget on answers the game would not honour: a sword swing at
+`spinner@880,848` through a Blue Wall (`Player.slash`'s line-of-sight gate refuses it, so `levelRun` throws), shake
+bands over bodies at rest, and via sets that end on a covered goal tile. ON, those refuse by name and the solve ends in
+an honest refusal. Neither leg solves: the hammer wall (H1) is still the wall.
+
+**Measured** (main `0023de839c`; B = the 31 default keys + the four):
+- route survey 39366043466: 165 / 45 / 1 / 1 of 212, = 39153361080;
+- keyed sweep over the 40 L40 legs, captures on (A 39366034138, B 39366036499): **0 movers** (29 done / 9 failed /
+  2 timeout both);
+- full sweep (A 39366039046, B 39366041175): only 397 and 414 move (OFF: the walled-swing refusal; ON: the hammer rung,
+  or a timeout). The other 47 differences are `crossed`↔`done` noise in both directions on L0 / L12 / L13. B's merge red
+  is two boot hangs (306, 614), a harness failure;
+- ×2 seam census −3..3 on 397 / 414 (OFF 39371642681 / 39371649424, ON 39371657773 / 39371665661): OFF mixes shake
+  band, `deadline`, hammer and walled-swing answers. **ON never hits the deadline and never plans the walled swing**; the
+  deadline seams refuse as "the combat ladder is EXHAUSTED" (chaser `bob`);
+- 625 (L72) and 639 (L75) changed only their refusal text; the OFF repeats disagree with each other and every census
+  seam is `deadline`, so this is noise. D3's risk (a covering chaser that walks off its goal) did not appear.
+
+**Pins moved:** the `contactFidelity.test` defaults; `fidelityL40Guard` "ships ON"; identity **carved pairs c4
+`b9d2185d` → `ebb9e743`** (`spinnerSwingLineOfSight` alone: `winding post-sword seed=7` threw the line-of-sight
+assertion OFF and runs to `SATURATED` ON). No producer names the switches; tapeRunner pairs unmoved.
