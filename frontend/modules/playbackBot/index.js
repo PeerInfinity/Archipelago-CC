@@ -29,7 +29,7 @@ export const moduleInfo = {
     componentType: 'playbackBotPanel',
     docs: 'docs/json/user/modules/playbackBot.md',
     icon: '🤖',
-    column: 3,
+    column: 2,
     category: 'Procgen Infrastructure Panels',
     description: 'Replays a sphere log\'s playthrough by driving the current region\'s game, with play, step, speed and walk-to; or checks any reachable location on a timer.',
     requires: [],

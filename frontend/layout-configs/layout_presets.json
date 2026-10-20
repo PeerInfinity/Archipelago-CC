@@ -81,6 +81,11 @@
             },
             {
               "type": "component",
+              "componentType": "playbackBotPanel",
+              "title": "Playback Bot"
+            },
+            {
+              "type": "component",
               "componentType": "presetsPanel",
               "title": "Presets"
             },
@@ -297,11 +302,6 @@
               "type": "component",
               "componentType": "bounceRegionEditorPanel",
               "title": "Bounce Region Editor"
-            },
-            {
-              "type": "component",
-              "componentType": "playbackBotPanel",
-              "title": "Playback Bot"
             }
           ]
         }
