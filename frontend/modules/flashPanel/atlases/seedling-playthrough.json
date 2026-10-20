@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-db4c2681",
+  "atlas_id": "seedling-0c2152f7",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "db4c2681" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "0c2152f7" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -2331,7 +2331,7 @@
       "locations": [
         {
           "name": "Level 032 - Bob Boss",
-          "tile": [4,8],
+          "tile": [5,8],
           "vanilla_item": "Fire",
           "access_rule": {
             "rule": "Or",
@@ -2343,7 +2343,7 @@
         },
         {
           "name": "Level 032 - Times",
-          "tile": [4,8],
+          "tile": [5,8],
           "vanilla_item": "Seal",
           "access_rule": {
             "rule": "Or",

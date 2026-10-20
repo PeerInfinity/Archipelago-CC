@@ -1,0 +1,20 @@
+# box lock: TAKEN by probe-seedling-descent.mjs (browser, pid 1083750) — head 01a2634cf, 14 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW fall/builtin {"tape":"fall","world":"builtin","mounted":null,"observations":151,"transitions":[{"t":27,"from":110,"to":0,"at":{"x":264,"y":197}},{"t":66,"from":0,"to":2,"at":{"x":56,"y":40}}],"final":{"t":150,"x":56,"y":40,"level":2},"dead_frames":60,"error":"","model":{"refused":null,"worst":0,"first_diff":null,"transitions":[{"t":27,"from":110,"to":0,"at":{"x":264,"y":197}},{"t":66,"from":0,"to":2,"at":{"x":56,"y":40}}]}}
+PASS: fall/builtin: the game ran the tape to its end — 151 obs, error ""
+ROW fall/delivered {"tape":"fall","world":"delivered","mounted":{"active":"seedling-vanilla-record-f5bdb07d","table_levels":116},"observations":151,"transitions":[{"t":27,"from":110,"to":0,"at":{"x":264,"y":197}},{"t":66,"from":0,"to":2,"at":{"x":56,"y":40}}],"final":{"t":150,"x":56,"y":40,"level":2},"dead_frames":60,"error":"","model":{"refused":null,"worst":0,"first_diff":null,"transitions":[{"t":27,"from":110,"to":0,"at":{"x":264,"y":197}},{"t":66,"from":0,"to":2,"at":{"x":56,"y":40}}]}}
+PASS: fall/delivered: the game ran the tape to its end — 151 obs, error ""
+PASS: fall/delivered: the set asked for is the one mounted — {"active":"seedling-vanilla-record-f5bdb07d","table_levels":116}
+ROW fallAct/builtin {"tape":"fallAct","world":"builtin","mounted":null,"observations":151,"transitions":[{"t":27,"from":110,"to":0,"at":{"x":264,"y":197}},{"t":66,"from":0,"to":2,"at":{"x":56,"y":40}}],"final":{"t":150,"x":34.050000000000004,"y":40,"level":2},"dead_frames":60,"error":"","model":{"refused":null,"worst":0,"first_diff":null,"transitions":[{"t":27,"from":110,"to":0,"at":{"x":264,"y":197}},{"t":66,"from":0,"to":2,"at":{"x":56,"y":40}}]}}
+PASS: fallAct/builtin: the game ran the tape to its end — 151 obs, error ""
+ROW fall/delivered:approved {"tape":"fall","world":"delivered:approved","mounted":{"active":"seedling-vanilla-record-13a2f29e","table_levels":116},"observations":151,"transitions":[{"t":27,"from":110,"to":2,"at":{"x":56,"y":-43}},{"t":61,"from":2,"to":0,"at":{"x":264,"y":264}}],"final":{"t":150,"x":264,"y":264,"level":0},"dead_frames":60,"error":"","model":{"refused":null,"worst":0,"first_diff":null,"transitions":[{"t":27,"from":110,"to":2,"at":{"x":56,"y":-43}},{"t":61,"from":2,"to":0,"at":{"x":264,"y":264}}]}}
+PASS: fall/delivered:approved: the game ran the tape to its end — 151 obs, error ""
+PASS: fall/delivered:approved: the set asked for is the one mounted — {"active":"seedling-vanilla-record-13a2f29e","table_levels":116}
+ROW fall/delivered:latch-probe {"tape":"fall","world":"delivered:latch-probe","mounted":{"active":"seedling-vanilla-record-0ea37280","table_levels":116},"observations":151,"transitions":[{"t":27,"from":110,"to":2,"at":{"x":56,"y":21}},{"t":28,"from":2,"to":0,"at":{"x":264,"y":264}}],"final":{"t":150,"x":264,"y":264,"level":0},"dead_frames":60,"error":"","model":{"refused":null,"worst":0,"first_diff":null,"transitions":[{"t":27,"from":110,"to":2,"at":{"x":56,"y":21}},{"t":28,"from":2,"to":0,"at":{"x":264,"y":264}}]}}
+PASS: fall/delivered:latch-probe: the game ran the tape to its end — 151 obs, error ""
+PASS: fall/delivered:latch-probe: the set asked for is the one mounted — {"active":"seedling-vanilla-record-0ea37280","table_levels":116}
+ROW solver/builtin {"tape":"solver","world":"builtin","mounted":null,"observations":234,"transitions":[{"t":194,"from":110,"to":0,"at":{"x":264,"y":197}},{"t":233,"from":0,"to":2,"at":{"x":56,"y":40}}],"final":{"t":233,"x":56,"y":40,"level":2},"dead_frames":60,"error":"","model":{"refused":null,"worst":0,"first_diff":null,"transitions":[{"t":194,"from":110,"to":0,"at":{"x":264,"y":197}},{"t":233,"from":0,"to":2,"at":{"x":56,"y":40}}]}}
+PASS: solver/builtin: the game ran the tape to its end — 234 obs, error ""
+RECORDED: frontend/modules/seedlingDemo/fixtures/descent-oracle.json
+ALL CHECKS PASSED
+descent rc=0

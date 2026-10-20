@@ -87,6 +87,25 @@
  * census, D2 game witnesses, D3 solver legs, D5 table) and its evidence dir.
  * Game witness: `probe-seedling-rock-remove.mjs`.
  *
+ * ⚖ The user (2026-10-19, relayed by fidelity: "Level-data patch") — the first
+ * `move` row:
+ *
+ *   9. `l32-bossrock-moved` — L32 (Bob's arena) has its `fallrocklarge@64,128`
+ *      (tset 0, tag 1, `bossrock 1`, `thirdboss 1`) moved to (88,128). Under R4
+ *      Bob is always fought and Fire comes from the server, not the kill; after
+ *      the fight the rock falls onto `stairsdown@72,136` → L30, and the room's
+ *      other way out (the `burnabletree@64,0` over the `control` pit) needs
+ *      Fire. So a player without Fire was stuck in L32, while the rules price
+ *      the stairs free. At (88,128) the landed rock spans [88,120)×[128,160),
+ *      clear of the stairs' [72,88)×[136,152) — the smallest move (24 px) that
+ *      clears them. The arm test (`p.y < fallTo − 16 − 8`) reads y alone, so
+ *      the trigger, the fight and the kill are vanilla's. ⚠ THE MODEL
+ *      FOLLOWS ONLY WITH fidelity APFLIP: here `bobBossFight.bobBossRockRect()`
+ *      is still the constant (64,128), and APFLIP's switched
+ *      `levelRun.bobArenaRockRect()` is what reads the rock's own world row.
+ *      Measured: fidelity APFLIP D1 (`seedling-fidelity-apflip.md`, the cloud
+ *      reports); game witness `probe-seedling-l32-rock-move.mjs`.
+ *
  * ── ⛔ WHERE THIS APPLIES, AND WHERE IT DOES NOT ─────────────────────────────
  *
  * ONE caller: `levelSetExporter.vanillaRecordSet`, the single source of the
@@ -133,6 +152,7 @@ export const SET_PATCH_IDS = Object.freeze({
     l39FallrockRemoved: 'l39-fallrock-removed',
     l29FallrockRemoved: 'l29-fallrock-removed',
     l29ButtonRemoved: 'l29-button-removed',
+    l32BossrockMoved: 'l32-bossrock-moved',
 });
 
 /**
@@ -141,7 +161,9 @@ export const SET_PATCH_IDS = Object.freeze({
  *
  * `op: 'remove'` deletes the one entity `match` names; `op: 'set-attrs'` rewrites
  * the named attrs of the one entity `match` names (the BEFORE is `match.attrs`,
- * the AFTER is `match.attrs` overlaid with `attrs`).
+ * the AFTER is `match.attrs` overlaid with `attrs`); `op: 'move'` re-places the
+ * one entity `match` names at `to: {x, y}`, its attrs untouched (the BEFORE is
+ * `match` at its placement, the AFTER is `match`'s type and attrs at `to`).
  */
 export const PATCH_MOONROCK_REMOVED = Object.freeze({
     id: SET_PATCH_IDS.moonrockRemoved,
@@ -204,6 +226,23 @@ export const ROCKMOVE_REMOVE_BUNDLE = Object.freeze([
     PATCH_L29_BUTTON_REMOVED,
 ]);
 
+/**
+ * ⚖ 2026-10-19 "Level-data patch": Bob's arena rock moves 24 px right, off L32's stairs (header, edit 9).
+ * The landed box at (88,128) is [88,120)×[128,160); the stairs are [72,88)×[136,152).
+ */
+export const PATCH_L32_BOSSROCK_MOVED = Object.freeze({
+    id: SET_PATCH_IDS.l32BossrockMoved,
+    level: 32,
+    op: 'move',
+    match: Object.freeze({ type: 'fallrocklarge', x: 64, y: 128,
+        attrs: Object.freeze({ tset: '0', tag: '1', bossrock: '1', thirdboss: '1' }) }),
+    to: Object.freeze({ x: 88, y: 128 }),
+    why: 'after Bob\'s fight this rock fell onto `stairsdown@72,136` → L30, and the only other way out '
+        + '(the burnable tree over the pit) needs Fire, which under R4 comes from the server, not the kill; '
+        + 'landed at (88,128) it clears the stairs, so a player without Fire leaves L32 by them, as the rules '
+        + 'price it. The trigger, the fight and the kill are unchanged (the arm test reads y alone)',
+});
+
 /** L110's control, repointed so its pit's fall arrives at L2 (`x`, `y`) — `xOff`/`yOff` solved from (64,64). */
 const l110RepointTo = (id, x, y, why) => Object.freeze({
     id,
@@ -225,7 +264,7 @@ export const PATCH_L110_FALL_OFF_STAIRS = l110RepointTo(SET_PATCH_IDS.l110FallOf
     + 'fall-from-ceiling descent does not cross L2\'s `stairsup@48,16`');
 
 /**
- * ⚖ THE TABLE THE DELIVERY CARRIES. Edits 1, 3 and 4–8: edit 2 is STOPPED (the
+ * ⚖ THE TABLE THE DELIVERY CARRIES. Edits 1, 3, 4–8 and 9: edit 2 is STOPPED (the
  * header above) — `PATCH_L110_FALL_TO_L2` and `PATCH_L110_FALL_OFF_STAIRS` stand
  * ready for the user's choice.
  */
@@ -233,6 +272,7 @@ export const SEEDLING_SET_PATCHES = Object.freeze([
     PATCH_MOONROCK_REMOVED,
     PATCH_L37_FALLROCK_REMOVED,
     ...ROCKMOVE_REMOVE_BUNDLE,
+    PATCH_L32_BOSSROCK_MOVED,
 ]);
 
 const sameAttrs = (have, want) => Object.entries(want)
@@ -284,6 +324,29 @@ function applyOne(patch, record) {
                 entities: entities.map((e) => (e === before[0]
                     ? { ...e, attrs: { ...e.attrs, ...patch.attrs } } : e)),
             },
+            applied: true,
+        };
+    }
+    if (patch.op === 'move') {
+        const to = patch.to ?? fail(`seedlingSetPatches: ${patch.id} — a \`move\` names no \`to\``);
+        const dest = { ...patch.match, x: to.x, y: to.y };
+        const done = entities.filter((e) => at(e, dest) && sameAttrs(e.attrs, patch.match.attrs));
+        if (before.length === 0) {
+            // ALREADY APPLIED iff exactly one matching entity stands at `to` and none of the type at the source.
+            if (done.length === 1 && !entities.some((e) => at(e, patch.match))) return { record, applied: false };
+            fail(`seedlingSetPatches: ${patch.id} — level ${patch.level} holds no ${describe(patch.match)} `
+                + `(the BEFORE) and ${done.length} ${describe(dest)} (the AFTER); the extract moved under the patch`);
+        }
+        if (before.length > 1) {
+            fail(`seedlingSetPatches: ${patch.id} — level ${patch.level} holds ${before.length} `
+                + `${describe(patch.match)}; the patch names exactly one`);
+        }
+        if (entities.some((e) => at(e, dest))) {
+            fail(`seedlingSetPatches: ${patch.id} — level ${patch.level} already holds a `
+                + `${dest.type}@${dest.x},${dest.y}; a move onto it would stack two`);
+        }
+        return {
+            record: { ...record, entities: entities.map((e) => (e === before[0] ? { ...e, x: to.x, y: to.y } : e)) },
             applied: true,
         };
     }

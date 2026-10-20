@@ -1,10 +1,10 @@
 {
   "source": "probe-seedling-descent.mjs --record (seedling fidelity DESCENT)",
-  "build": "seedling_bot_ap_p4f",
+  "build": "seedling_bot_ap_p4g",
   "variant_set_ids": {
-    "delivered": "seedling-vanilla-record-ce77a823",
-    "delivered:approved": "seedling-vanilla-record-4e8eb4f4",
-    "delivered:latch-probe": "seedling-vanilla-record-d47158a2"
+    "delivered": "seedling-vanilla-record-f5bdb07d",
+    "delivered:approved": "seedling-vanilla-record-13a2f29e",
+    "delivered:latch-probe": "seedling-vanilla-record-0ea37280"
   },
   "arms": [
     {
@@ -71,7 +71,7 @@
       "tape": "fall",
       "world": "delivered",
       "mounted": {
-        "active": "seedling-vanilla-record-ce77a823",
+        "active": "seedling-vanilla-record-f5bdb07d",
         "table_levels": 116
       },
       "observations": 151,
@@ -194,7 +194,7 @@
       "tape": "fall",
       "world": "delivered:approved",
       "mounted": {
-        "active": "seedling-vanilla-record-4e8eb4f4",
+        "active": "seedling-vanilla-record-13a2f29e",
         "table_levels": 116
       },
       "observations": 151,
@@ -257,7 +257,7 @@
       "tape": "fall",
       "world": "delivered:latch-probe",
       "mounted": {
-        "active": "seedling-vanilla-record-d47158a2",
+        "active": "seedling-vanilla-record-0ea37280",
         "table_levels": 116
       },
       "observations": 151,

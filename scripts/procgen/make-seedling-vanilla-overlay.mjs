@@ -189,6 +189,14 @@ export function liftVanillaOverlay() {
     // ⚖ MOONROCK: the set editor's vanilla 116 (`{patches: []}`, as `#editLoadVanilla`).
     const { set } = vanillaRecordSet(VANILLA, MAP, { patches: [] });
     const rooms = set.rooms.map((room, level) => ({ ...room.source.record, level }));
+    /**
+     * ⛓ rules-l32-rock-move — THE ATLAS IS THE DELIVERED SET'S (RULES patched-set), the marks are vanilla's.
+     * A set patch that MOVES a location's entity (`l32-bossrock-moved`: Bob's rock, which both L32 rows stand
+     * on) leaves the vanilla mark where vanilla has it and the atlas tile where the delivery has it. So the
+     * tile is checked against the same row resolved on the DELIVERED rooms, and a row the patch moved says so
+     * (`deliveredEntity`) rather than reading as a disagreement.
+     */
+    const delivered = vanillaRecordSet(VANILLA, MAP).set.rooms.map((room, level) => ({ ...room.source.record, level }));
 
     // ── the locations ────────────────────────────────────────────────────
     //
@@ -208,14 +216,17 @@ export function liftVanillaOverlay() {
             unjoined.push({ id: row.id, why: !atlasLoc ? 'no atlas location by that name' : 'no entity' });
             continue;
         }
+        const moved = entityForLedgerRow(delivered[row.level], row).entity;
+        const movedByPatch = moved && (moved.x !== entity.x || moved.y !== entity.y);
         rows.push({
             id: row.id,
             level: row.level,
             label: labelFor(row),
             entity: { type: entity.type, x: entity.x, y: entity.y },
+            ...(movedByPatch ? { deliveredEntity: { type: moved.type, x: moved.x, y: moved.y } } : {}),
             item,
             atlasLoc,
-            tileAgrees: String(tileOf(entity, TILE_SIZE)) === String(atlasLoc.tile),
+            tileAgrees: !!moved && String(tileOf(moved, TILE_SIZE)) === String(atlasLoc.tile),
         });
     }
     const { names, disambiguated } = authoredNames(rows);
@@ -397,6 +408,10 @@ function main() {
         + 'through `createSeedlingSetAdapter` and accepted');
     for (const r of built.rows.filter((x) => !x.tileAgrees)) {
         console.log(`TILE DISAGREES: ${r.id} — the derivation's entity is not on the atlas's tile`);
+    }
+    for (const r of built.rows.filter((x) => x.deliveredEntity)) {
+        console.log(`MOVED BY A SET PATCH: ${r.id} — vanilla ${r.entity.type}@${r.entity.x},${r.entity.y}, `
+            + `delivered @${r.deliveredEntity.x},${r.deliveredEntity.y} (the atlas tile follows the delivery)`);
     }
     for (const u of built.unjoined) console.log(`UNJOINED: ${u.id} — ${u.why}`);
     for (const r of built.refused) {

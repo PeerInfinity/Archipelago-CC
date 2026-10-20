@@ -70,8 +70,8 @@ describe('1 · BINDING — both encounters bound, each value read off the data',
             [WITCH, 'Progressive Sword', 'hasDarkSword'], [BOB, 'Fire', 'hasFire']].sort());
     });
 
-    it('L32 Bob Boss → {kind: encounter, at (64,128), drop Fire}; L12 Witch → at (416,384), drop Progressive Sword', () => {
-        expect(entryOf(BOB)).toEqual({ location: BOB, level: 32, kind: 'encounter', at: { x: 64, y: 128 },
+    it('L32 Bob Boss → {kind: encounter, at (80,128) — the delivered rock tile, rules-l32-rock-move — drop Fire}; L12 Witch → at (416,384), drop Progressive Sword', () => {
+        expect(entryOf(BOB)).toEqual({ location: BOB, level: 32, kind: 'encounter', at: { x: 80, y: 128 },
             drop: { item: 'Fire' }, flag: 'hasFire', entityType: 'fallrocklarge' });
         expect(entryOf(WITCH)).toEqual({ location: WITCH, level: 12, kind: 'encounter', at: { x: 416, y: 384 },
             drop: { item: 'Progressive Sword' }, flag: 'hasDarkSword', entityType: 'witch' });
@@ -116,7 +116,7 @@ describe('1 · BINDING — both encounters bound, each value read off the data',
     it('resolve → a `location` goal with no tag and an `encounter` block (one spelling: `atlasLocationGoal`)', () => {
         const r = resolveSeedlingAtlasGoal({ kind: 'location', name: BOB }, MAP);
         expect(r.goal).toEqual({ kind: 'location', level: 32, tag: null, entityType: 'fallrocklarge', name: BOB,
-            encounter: { at: { x: 64, y: 128 }, drop: { item: 'Fire' } } });
+            encounter: { at: { x: 80, y: 128 }, drop: { item: 'Fire' } } });
         expect(atlasLocationGoal(entryOf(BOB), BOB)).toEqual(r.goal);
         // a non-encounter entry's goal is unchanged
         const e = LOADED.entries[0];
@@ -131,7 +131,7 @@ describe('2 · MAPPING — `solverGoalFor` / `arrivalSolverGoal` → the solver\
     it('L32 (a `fallthrough` room): then = reach-pit; L12: then = null — on the JS runtime\'s mapping', () => {
         const l32 = createRunForStaging(tapeStaging('r5-bobboss-fire'), atlasLevelSource());
         expect(solverGoalFor(goalOf(BOB), { run: l32, resolved: null })).toEqual({ goal: { kind: 'encounter',
-            at: { x: 64, y: 128 }, drop: { item: 'Fire' }, then: 'reach-pit' } });
+            at: { x: 80, y: 128 }, drop: { item: 'Fire' }, then: 'reach-pit' } });
         const l12 = createRunForStaging(tapeStaging('enc-l12-witch'), atlasLevelSource());
         expect(l12.level).toBe(12);
         expect(solverGoalFor(goalOf(WITCH), { run: l12, resolved: null })).toEqual({ goal: { kind: 'encounter',
@@ -156,7 +156,7 @@ describe('2 · MAPPING — `solverGoalFor` / `arrivalSolverGoal` → the solver\
         const src = atlasLevelSource();
         const s32 = tapeStaging('r5-bobboss-fire');
         expect(arrivalSolverGoal(goalOf(BOB), { staging: s32, levelSource: src, record: src(32) }).goal)
-            .toEqual({ kind: 'encounter', at: { x: 64, y: 128 }, drop: { item: 'Fire' }, then: 'reach-pit' });
+            .toEqual({ kind: 'encounter', at: { x: 80, y: 128 }, drop: { item: 'Fire' }, then: 'reach-pit' });
         const s12 = tapeStaging('enc-l12-witch');
         expect(arrivalSolverGoal(goalOf(WITCH), { staging: s12, levelSource: src, record: src(12) }).goal)
             .toEqual({ kind: 'encounter', at: { x: 416, y: 384 }, drop: { item: 'Progressive Sword' }, then: null });

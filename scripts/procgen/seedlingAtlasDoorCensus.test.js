@@ -62,7 +62,9 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         // ⛓ R4b (rules-boss-locations) — restamped (db0a4f7f -> db4c2681): L69 is lifted from never-enter (the Lights
         //   kill is a location, ⚖ 2026-10-19 "All 7 bosses"), so 114 -> 115 regions (L69 has no subgraph); the seven
         //   boss locations and the Wand-priced totem crossing move no other count.
-        expect(c.atlasId).toBe('seedling-db4c2681');
+        // ⛓ rules-l32-rock-move — restamped (db4c2681 -> 0c2152f7): the delivered set moves L32's Bob-arena rock
+        //   (64,128) -> (88,128), and Bob's two locations stand on its tile ([4,8] -> [5,8]); no count moves.
+        expect(c.atlasId).toBe('seedling-0c2152f7');
         expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 54, 195, 286, 200]);
         expect(c.swimLevels).toHaveLength(21);
         expect(c.byRule.slice(0, 2)).toEqual([

@@ -113,8 +113,14 @@ describe('⛓⛓ E5 — the lift, and what it put through the adapter', () => {
 
         expect(AMBIGUOUS.map((r) => `${r.level}:${r.entity.type}`).sort()).toEqual([
             // ⛓ R4b (rules-boss-locations): L32's boss rock carries TWO rows now, the Fire drop and the Times kill.
-            '115:seed', '32:fallrocklarge', '32:fallrocklarge', '38:chest', '40:chest', '67:bosskey',
+            // ⛓ rules-l32-rock-move: and neither is ambiguous any more — the delivered rock (88,128) is off the
+            //   stairs' tile, so its atlas tile [5,8] holds the rock alone. Both rows say the patch moved them:
+            '115:seed', '38:chest', '40:chest', '67:bosskey',
         ].sort());
+        expect(LIFT.rows.filter((r) => r.deliveredEntity).map((r) => [r.id, r.entity, r.deliveredEntity])).toEqual([
+            ['fire@L32', { type: 'fallrocklarge', x: 64, y: 128 }, { type: 'fallrocklarge', x: 88, y: 128 }],
+            ['times@L32', { type: 'fallrocklarge', x: 64, y: 128 }, { type: 'fallrocklarge', x: 88, y: 128 }],
+        ]);
     });
 
     /**
@@ -361,8 +367,10 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         // ⛓ R4b rules-boss-locations (404dd367… -> f3b3365a): seven boss locations (Owl, Shieldspire, Times,
         //   Tentacled Beast, Totem of Lacste, Lights, King of Fire), L69 lifted from never-enter (its region, L70's
         //   pit, the Lights' exit), and the BossTotem crossing priced on the Wand. The names gain the seven.
+        // ⛓ rules-l32-rock-move (f3b3365a… -> 85e0ef9e): the delivered set moves Bob's rock (64,128) -> (88,128), and
+        //   L32's two locations (Bob Boss, Times) stand on it: tile [4,8] -> [5,8]. No name, rule or exit moves.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('f3b3365aa00aff1d5b946b23c19f83ec');
+            .toBe('85e0ef9e81b54edfa2a355b9dcc0a7fd');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
