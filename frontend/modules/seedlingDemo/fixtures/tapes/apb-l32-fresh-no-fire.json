@@ -1,0 +1,355 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 32,
+        "x": 72,
+        "y": 120
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0,
+            1
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 869,
+    "inputs": [
+        {
+            "key": "up",
+            "from": 0,
+            "to": 9
+        },
+        {
+            "key": "primary",
+            "from": 10,
+            "to": 11
+        },
+        {
+            "key": "primary",
+            "from": 19,
+            "to": 20
+        },
+        {
+            "key": "primary",
+            "from": 28,
+            "to": 29
+        },
+        {
+            "key": "primary",
+            "from": 37,
+            "to": 38
+        },
+        {
+            "key": "primary",
+            "from": 46,
+            "to": 47
+        },
+        {
+            "key": "primary",
+            "from": 55,
+            "to": 56
+        },
+        {
+            "key": "up",
+            "from": 57,
+            "to": 69
+        },
+        {
+            "key": "primary",
+            "from": 63,
+            "to": 64
+        },
+        {
+            "key": "right",
+            "from": 64,
+            "to": 69
+        },
+        {
+            "key": "primary",
+            "from": 93,
+            "to": 94
+        },
+        {
+            "key": "primary",
+            "from": 221,
+            "to": 222
+        },
+        {
+            "key": "primary",
+            "from": 230,
+            "to": 231
+        },
+        {
+            "key": "primary",
+            "from": 239,
+            "to": 240
+        },
+        {
+            "key": "primary",
+            "from": 248,
+            "to": 249
+        },
+        {
+            "key": "primary",
+            "from": 257,
+            "to": 258
+        },
+        {
+            "key": "primary",
+            "from": 266,
+            "to": 267
+        },
+        {
+            "key": "primary",
+            "from": 275,
+            "to": 276
+        },
+        {
+            "key": "primary",
+            "from": 284,
+            "to": 285
+        },
+        {
+            "key": "primary",
+            "from": 293,
+            "to": 294
+        },
+        {
+            "key": "primary",
+            "from": 302,
+            "to": 303
+        },
+        {
+            "key": "primary",
+            "from": 311,
+            "to": 312
+        },
+        {
+            "key": "primary",
+            "from": 320,
+            "to": 321
+        },
+        {
+            "key": "primary",
+            "from": 329,
+            "to": 330
+        },
+        {
+            "key": "primary",
+            "from": 338,
+            "to": 339
+        },
+        {
+            "key": "up",
+            "from": 340,
+            "to": 352
+        },
+        {
+            "key": "primary",
+            "from": 348,
+            "to": 349
+        },
+        {
+            "key": "left",
+            "from": 349,
+            "to": 352
+        },
+        {
+            "key": "primary",
+            "from": 376,
+            "to": 377
+        },
+        {
+            "key": "right",
+            "from": 377,
+            "to": 382
+        },
+        {
+            "key": "up",
+            "from": 377,
+            "to": 382
+        },
+        {
+            "key": "primary",
+            "from": 420,
+            "to": 421
+        },
+        {
+            "key": "right",
+            "from": 421,
+            "to": 426
+        },
+        {
+            "key": "up",
+            "from": 421,
+            "to": 426
+        },
+        {
+            "key": "primary",
+            "from": 548,
+            "to": 549
+        },
+        {
+            "key": "primary",
+            "from": 557,
+            "to": 558
+        },
+        {
+            "key": "primary",
+            "from": 566,
+            "to": 567
+        },
+        {
+            "key": "primary",
+            "from": 575,
+            "to": 576
+        },
+        {
+            "key": "primary",
+            "from": 584,
+            "to": 585
+        },
+        {
+            "key": "primary",
+            "from": 593,
+            "to": 594
+        },
+        {
+            "key": "primary",
+            "from": 602,
+            "to": 603
+        },
+        {
+            "key": "primary",
+            "from": 611,
+            "to": 612
+        },
+        {
+            "key": "up",
+            "from": 613,
+            "to": 627
+        },
+        {
+            "key": "primary",
+            "from": 621,
+            "to": 622
+        },
+        {
+            "key": "right",
+            "from": 622,
+            "to": 627
+        },
+        {
+            "key": "primary",
+            "from": 651,
+            "to": 652
+        },
+        {
+            "key": "up",
+            "from": 779,
+            "to": 810
+        },
+        {
+            "key": "primary",
+            "from": 810,
+            "to": 811
+        },
+        {
+            "key": "primary",
+            "from": 819,
+            "to": 820
+        },
+        {
+            "key": "primary",
+            "from": 828,
+            "to": 829
+        },
+        {
+            "key": "primary",
+            "from": 837,
+            "to": 838
+        }
+    ],
+    "name": "apb-l32-fresh-no-fire",
+    "description": "⛓⛓ fidelity APFLIP D3 (APBOSSES §D3) — L32 FRESH without Fire: `swim-u5-bobboss-encounter`'s staging, unchanged. The fight, the kill reports {32,3}, the Fire drop is collected and reports {32,4}; R4 grants nothing (`Fire.as:49-55` @ccdf189776, the host grants it), so `hasFire` stays false and the tape ends in the arena 30 idle ticks after the Fire's ceremony (869 ticks). Authored by scripts/procgen/plan-seedling-encounters.mjs.",
+    "note": ""
+}

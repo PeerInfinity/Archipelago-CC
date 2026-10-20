@@ -205,6 +205,7 @@ const {
 /** ⛓ ONE spelling of "what does this tape hold at tick k" — the format's own. */
 const heldAt = (tape, k) => heldKeysAt(tape, k);
 const { createLevelRun } = await import(join(MODULE, 'levelRun.js'));
+const { CONTACT_FIDELITY } = await import(join(MODULE, 'contactFidelity.js'));
 const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
 const { solveSegment } = await import(join(MODULE, 'solverBot.js'));
 const { buildTape } = await import(join(MODULE, 'botDriverV1.js'));
@@ -409,11 +410,17 @@ const encounter = (level, item) => {
         .find((l) => l.name === rows[0].location);
     if (!loc) throw new Error(`L${level}: the playthrough atlas has no location '${rows[0].location}'`);
     const world = buildLevelWorld(levelSource(level));
+    /**
+     * ⛓ fidelity APFLIP D6 (`CONTACT_FIDELITY.apReportBosses`, ON at the R7 merge): R4's drop REPORTS its location and
+     * grants nothing (`Fire.as:49-55` @ccdf189776; the HOST grants the item, APBOSSES H1, not built). So an encounter
+     * whose drop IS the Fire cannot burn the arena's exit with it: the segment ends in the room after the collect.
+     */
+    const burnsWithItsOwnDrop = CONTACT_FIDELITY.apReportBosses === true && item === 'Fire';
     return {
         kind: 'encounter',
         at: { x: loc.tile[0] * pt.tile_space.tile_size, y: loc.tile[1] * pt.tile_space.tile_size },
         drop: { item },
-        then: world.fallthrough ? 'reach-pit' : null,
+        then: world.fallthrough && !burnsWithItsOwnDrop ? 'reach-pit' : null,
     };
 };
 /**

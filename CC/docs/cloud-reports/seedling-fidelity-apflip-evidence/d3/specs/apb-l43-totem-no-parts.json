@@ -1,0 +1,1 @@
+{"name": "apb-l43-totem-no-parts", "levels": [11, 12, 30, 31, 32, 40, 43], "tapeFile": "frontend/modules/seedlingDemo/fixtures/tapes/apb-l43-totem-no-parts.json", "tapePatch": {"inputsUntil": 1000000000, "tick_count": 400}, "arms": [{"name": "game"}]}

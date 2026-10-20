@@ -17634,7 +17634,7 @@ its byte-frozen free oracle is compared against.
 
 <!-- GENERATED:campaign-chain BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-`r9-campaign` — **30 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L32** end of the route, **10839 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
+`r9-campaign` — **30 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L32** end of the route, **10622 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
 
 | # | tape | rooms | ticks | earns |
 |---|---|---|---|---|
@@ -17667,7 +17667,7 @@ its byte-frozen free oracle is compared against.
 | 27 | `r9-solve-29` | L29 → L31 | 379 | `bosskey@L29` |
 | 28 | `r9-solve-31` | L31 → L30 | 336 | — |
 | 29 | `r9-solve-30` | L30 → L32 | 210 | — |
-| 30 | `r9-solve-32` | L32 → END | 1056 | — |
+| 30 | `r9-solve-32` | L32 → END | 839 | — |
 
 **ROUTE COMPLETE** — the chain walks all 30 route steps, from the true start to route step 30 in L32 (Level 032 - Bob Boss (sphere 3.1) → Fire); there is no next room on this route.
 

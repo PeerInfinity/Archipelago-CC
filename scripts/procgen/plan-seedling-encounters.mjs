@@ -17,6 +17,14 @@
  *   enc-l12-witch         L12's Witch, holding the wand (D3, `witch.js`): the talk, the three pages, the `DarkSword`
  *                         spawned at the player's feet, its ceremony, `hasDarkSword`.
  *
+ * ⛓⛓ fidelity APFLIP (D3/D6, `CONTACT_FIDELITY.apReportBosses` ON, the p4g wasm = vendor/seedling `ccdf189776`): the
+ * R4 AS3 REPORTS Bob's kill {32,3}, his Fire drop {32,4} and the Witch's sword {12,1}, and grants neither item (the
+ * HOST does, and the probe has no host). So a tape that fights Bob WITHOUT Fire ends in the arena after the Fire's
+ * ceremony and `IDLE_AFTER` idle ticks (`L32_ROOM_GOAL`): the burn would need the host's grant (APBOSSES H1). The
+ * return visit `enc-l32-fire-return` is replaced by `apb-l32-both-reported` (Fire held AND both slots reported: the
+ * boss is no longer removed by `hasFire`, it is the SLOT that keeps him out). The `apb-*` blocks are APBOSSES §D3's
+ * witnesses, plus the Totem gate's `apb-l43-totem-no-parts` (`BossTotem.as:291` @ccdf189776).
+ *
  * Run:
  *   node scripts/procgen/plan-seedling-encounters.mjs            # write the tapes
  *   node scripts/procgen/plan-seedling-encounters.mjs --check    # exit 1 on drift
@@ -84,14 +92,24 @@ async function main() {
         const out = solveSegment({ run, goals, name, boot: staging.boot });
         return { run, out };
     }
+    /** ⛓ APFLIP: `enc-l12-witch`'s header and plan, for the `apb-l12-witch-*` rows. */
+    let WITCH = null;
     const persistence = (extra) => [...U5.persistence, ...extra.map(([level, tag]) => ({ level, tag, note: '' }))];
     const L32_GOAL = Object.freeze({ kind: 'encounter', at: { x: 64, y: 128 }, drop: { item: 'Fire' }, then: 'reach-pit' });
+    /** ⛓ APFLIP: the same encounter, ending in the arena (no Fire is granted without the host, so no burn). */
+    const L32_ROOM_GOAL = Object.freeze({ ...L32_GOAL, then: null });
+    /** ⛓ APFLIP: idle ticks after the last goal, so the stream carries the room's quiet frames past the ceremony. */
+    const IDLE_AFTER = 30;
+    const idled = (perTick) => [...perTick, ...Array.from({ length: IDLE_AFTER }, () => new Set())];
+    const slotReported = (run, level, tag) => run.apReportSlotHeld(level, tag) === false;
+    const bobFlags = (run) => run.ledger('bobBossEvents').filter((r) => r.flag)
+        .map((r) => `${r.what} ${r.flag.level},${r.flag.tag}`);
 
     // ── enc-l32-fallen-door ──────────────────────────────────────────────
     {
         const NAME = 'enc-l32-fallen-door';
         const over = { persistence: persistence([[32, 1]]) };
-        const { run, out } = solve(NAME, { ...U5, ...over }, [{ ...L32_GOAL }]);
+        const { run, out } = solve(NAME, { ...U5, ...over }, [{ ...L32_ROOM_GOAL }]);
         const ev = run.ledger('bobBossEvents');
         const snap = ev.find((r) => r.what === 'rock-snap');
         check('⛓⛓ the door arrival is INSIDE the fallen rock and is snapped onto its top on the first frame',
@@ -99,41 +117,105 @@ async function main() {
         check('⛓ the boss is re-added at build (`rock-fallen-at-build`), with no arm leg',
             ev.some((r) => r.what === 'rock-fallen-at-build' && r.boss === true)
             && !out.records.some((r) => r.leg === 'arm'), out.records.map((r) => r.leg ?? r.goal).join(','));
-        check('⛓ seven landings, three kills, untouched, then the pit to L30',
-            ev.filter((r) => r.what === 'boss-hit' && r.landed).length === 7 && run.level === 30
-            && run.ledger('playerHits').length === 0, `level ${run.level}, ${out.perTick.length} t`);
+        check('⛓ seven landings, three kills, untouched; {32,3} and {32,4} REPORTED, no Fire granted, still in L32',
+            ev.filter((r) => r.what === 'boss-hit' && r.landed).length === 7 && run.level === 32
+            && slotReported(run, 32, 3) && slotReported(run, 32, 4) && run.progress('inventory').hasFire !== true
+            && run.ledger('playerHits').length === 0, `level ${run.level}, ${out.perTick.length} t, ${bobFlags(run)}`);
         const description = '⛓⛓ seedling-fidelity-encounters D2 — L32\'s encounter from a ROCK-FALLEN arrival. '
             + '`swim-u5-bobboss-encounter`\'s staging with {32,1} cleared (the state after a death mid-fight), entered '
             + 'through the L30 door: the rock is built fallen on the door\'s stairs, the arrival (80,128) is inside it, '
             + '`FallRockLarge.update` snaps the player to y 125 and re-adds the boss at once (`cameraTimer == 0`). '
             + `Solved by \`solveSegment\` (the encounter goal, no arm leg): ${out.perTick.length} ticks, seven landings, `
-            + 'the Fire, the burn, the pit to L30. Authored by scripts/procgen/plan-seedling-encounters.mjs.';
-        emit(NAME, tapeJson(NAME, U5, over, out.perTick, out.equips, description));
+            + 'the Fire. ⛓ fidelity APFLIP (R4, p4g): the kill reports {32,3} and the collect {32,4}, and NO Fire is '
+            + `granted (the host grants it), so the tape ends in the arena, ${IDLE_AFTER} idle ticks after the Fire's `
+            + 'ceremony. Authored by scripts/procgen/plan-seedling-encounters.mjs.';
+        emit(NAME, tapeJson(NAME, U5, over, idled(out.perTick), out.equips, description));
         console.log(`## ${NAME}: ${out.perTick.length} ticks, equips ${JSON.stringify(out.equips)}`);
     }
 
-    // ── enc-l32-fire-return ──────────────────────────────────────────────
+    // ── apb-l32-both-reported (⛓ APFLIP: replaces enc-l32-fire-return) ─────────────────────────────────
     {
-        const NAME = 'enc-l32-fire-return';
+        const NAME = 'apb-l32-both-reported';
         const over = {
-            persistence: persistence([[32, 0], [32, 1]]),
+            persistence: persistence([[32, 0], [32, 1], [32, 3], [32, 4]]),
             seam: { ...U5.seam, items: { ...U5.seam.items, hasFire: true } },
         };
         const { run, out } = solve(NAME, { ...U5, ...over }, [{ ...L32_GOAL }]);
         const ev = run.ledger('bobBossEvents');
-        check('⛓ the Fire held: the ctor removes the boss (no `boss-added`), the drop record says `already`',
-            ev.some((r) => r.what === 'rock-fallen-at-build' && r.boss === false)
-            && !ev.some((r) => r.what === 'boss-added')
+        check('⛓ both reported: the fallen rock adds NOTHING (no boss, no Fire), the drop record says `already`',
+            ev.some((r) => r.what === 'rock-fallen-at-build' && r.boss === false && r.fire === false)
+            && !ev.some((r) => r.what === 'boss-added' || r.what === 'fire-added')
             && out.records.some((r) => r.leg === 'drop' && r.already === true), JSON.stringify(ev.slice(0, 3)));
         check('⛓ the snap, then the burned pit to L30', ev.some((r) => r.what === 'rock-snap') && run.level === 30,
             `level ${run.level}, ${out.perTick.length} t`);
-        const description = '⛓⛓ seedling-fidelity-encounters D2 — L32 on the RETURN visit: the Fire held, the rock '
-            + '{32,1} fallen and the tree {32,0} burned. The door arrival is snapped onto the rock; `BobBoss`\'s ctor '
-            + 'removes itself (`Player.hasFire`), so the encounter goal has no fight and no drop to collect '
-            + `(\`already\`); the walk takes the burned pit to L30 in ${out.perTick.length} ticks. Authored by `
-            + 'scripts/procgen/plan-seedling-encounters.mjs.';
+        const description = '⛓⛓ fidelity APFLIP D3 (APBOSSES §D3) — L32 with BOTH R4 slots reported ({32,3} the kill, '
+            + '{32,4} the Fire drop), the Fire held, the rock {32,1} fallen and the tree {32,0} burned: the R7 '
+            + 'replacement for `enc-l32-fire-return`. `FallRockLarge.as:118-126` @ccdf189776 adds neither the boss nor '
+            + 'the Fire; the door arrival is snapped onto the rock, the encounter is `already`, and the walk takes the '
+            + `burned pit to L30 in ${out.perTick.length} ticks. Authored by scripts/procgen/plan-seedling-encounters.mjs.`;
         emit(NAME, tapeJson(NAME, U5, over, out.perTick, out.equips, description));
         console.log(`## ${NAME}: ${out.perTick.length} ticks`);
+    }
+
+    // ── apb-l32-fresh-fire-held ──────────────────────────────────────────
+    {
+        const NAME = 'apb-l32-fresh-fire-held';
+        const over = { equips: [], seam: { ...U5.seam, items: { ...U5.seam.items, hasFire: true } } };
+        const { run, out } = solve(NAME, { ...U5, ...over }, [{ ...L32_GOAL }]);
+        const ev = run.ledger('bobBossEvents');
+        check('⛓⛓ Q2: the Fire from the server does NOT remove the boss — the rock arms, seven landings',
+            ev.some((r) => r.what === 'rock-armed') && ev.filter((r) => r.what === 'boss-hit' && r.landed).length === 7,
+            bobFlags(run).join(', '));
+        check('⛓ the kill reports {32,3}, the drop is collected and reports {32,4} (in band), no {31,29}; the burn, the pit',
+            slotReported(run, 32, 3) && slotReported(run, 32, 4) && !bobFlags(run).includes('fire-removed 31,29')
+            && run.level === 30, `level ${run.level}, ${out.perTick.length} t, ${bobFlags(run)}`);
+        const description = '⛓⛓ fidelity APFLIP D3 (APBOSSES §D3) — L32 FRESH with the Fire already held (from the '
+            + 'server): `swim-u5-bobboss-encounter`\'s staging + `hasFire`. R4 (`BobBoss.as` @ccdf189776) removed the '
+            + 'three `hasFire` guards, so the boss is fought anyway (Q2): the arm, seven landings, the final death '
+            + 'reports {32,3} and adds the Fire (tag 4), collecting it reports {32,4} (no {31,29}); then the burn and the '
+            + `pit to L30. Solved by \`solveSegment\` in ${out.perTick.length} ticks. Authored by `
+            + 'scripts/procgen/plan-seedling-encounters.mjs.';
+        emit(NAME, tapeJson(NAME, U5, over, out.perTick, out.equips, description));
+        console.log(`## ${NAME}: ${out.perTick.length} ticks, equips ${JSON.stringify(out.equips)}`);
+    }
+
+    // ── apb-l32-fresh-no-fire ────────────────────────────────────────────
+    {
+        const NAME = 'apb-l32-fresh-no-fire';
+        const { run, out } = solve(NAME, { ...U5, equips: [] }, [{ ...L32_ROOM_GOAL }]);
+        check('⛓⛓ no Fire, fresh: the fight, both reports, and `hasFire` stays FALSE (the probe has no host)',
+            slotReported(run, 32, 3) && slotReported(run, 32, 4) && run.progress('inventory').hasFire !== true
+            && run.level === 32 && run.ledger('playerHits').length === 0,
+            `level ${run.level}, ${out.perTick.length} t, ${bobFlags(run)}`);
+        const description = '⛓⛓ fidelity APFLIP D3 (APBOSSES §D3) — L32 FRESH without Fire: '
+            + '`swim-u5-bobboss-encounter`\'s staging, unchanged. The fight, the kill reports {32,3}, the Fire drop is '
+            + 'collected and reports {32,4}; R4 grants nothing (`Fire.as:49-55` @ccdf189776, the host grants it), so '
+            + `\`hasFire\` stays false and the tape ends in the arena ${IDLE_AFTER} idle ticks after the Fire's ceremony `
+            + `(${out.perTick.length + IDLE_AFTER} ticks). Authored by scripts/procgen/plan-seedling-encounters.mjs.`;
+        emit(NAME, tapeJson(NAME, U5, {}, idled(out.perTick), out.equips, description));
+        console.log(`## ${NAME}: ${out.perTick.length} + ${IDLE_AFTER} ticks`);
+    }
+
+    // ── apb-l32-killed-drop-held ─────────────────────────────────────────
+    {
+        const NAME = 'apb-l32-killed-drop-held';
+        const over = { equips: [], persistence: persistence([[32, 1], [32, 3]]) };
+        const { run, out } = solve(NAME, { ...U5, ...over }, [{ ...L32_ROOM_GOAL }]);
+        const ev = run.ledger('bobBossEvents');
+        check('⛓⛓ killed, drop unreported: the fallen rock\'s first frame adds the FIRE, no boss, no `playerPosition`',
+            ev.some((r) => r.what === 'rock-fallen-at-build' && r.boss === false && r.fire === true)
+            && !ev.some((r) => r.what === 'boss-added'), JSON.stringify(ev.slice(0, 3)));
+        check('⛓ collected: {32,4} reported, no Fire granted, still in L32',
+            slotReported(run, 32, 4) && run.progress('inventory').hasFire !== true && run.level === 32,
+            `level ${run.level}, ${out.perTick.length} t, ${bobFlags(run)}`);
+        const description = '⛓⛓ fidelity APFLIP D3 (APBOSSES §D3) — L32 after the kill, the drop unreported: '
+            + '`swim-u5-bobboss-encounter`\'s staging + {32,1} {32,3}. The rock is built fallen and its first frame '
+            + 'takes `FallRockLarge.as:123-126` @ccdf189776: the Fire (tag 4), no boss, no BobBossNPC, and '
+            + '`playerPosition` is not rewritten. The door arrival is snapped onto the rock, the Fire is collected and '
+            + `reports {32,4}; no item. Ends ${IDLE_AFTER} idle ticks after its ceremony. Authored by `
+            + 'scripts/procgen/plan-seedling-encounters.mjs.';
+        emit(NAME, tapeJson(NAME, U5, over, idled(out.perTick), out.equips, description));
+        console.log(`## ${NAME}: ${out.perTick.length} + ${IDLE_AFTER} ticks`);
     }
 
     // ── enc-l12-witch ────────────────────────────────────────────────────
@@ -163,16 +245,103 @@ async function main() {
             ev.find((r) => r.what === 'witch-open')?.extra === true, JSON.stringify(ev[0]));
         check('⛓⛓ the dialogue closes on its last page and `doneTalking` ADDS the sword at the player\'s feet',
             close?.cause === 'done' && close.grants === true && added?.t === close.t, JSON.stringify(added));
-        check('⛓ collected by overlap on the NEXT frame, `hasDarkSword` after its ceremony, untouched',
-            contact?.t === close.t + 1 && run.progress('inventory').hasDarkSword === true
+        check('⛓ collected by overlap on the NEXT frame; ⛓ APFLIP (R4): it REPORTS {12,1} and grants nothing, untouched',
+            contact?.t === close.t + 1 && slotReported(run, 12, 1) && run.progress('inventory').hasDarkSword !== true
             && run.ledger('playerHits').length === 0, `contact t ${contact?.t}, ${out.perTick.length} t`);
         check('⛓ then the walk out by the L95 door', run.level === 95, `level ${run.level}`);
         const description = '⛓⛓ seedling-fidelity-encounters D3 — L12\'s WITCH, holding the wand. From the survey\'s '
             + 'step-140 arrival (16,352) with the sword and the wand, the encounter goal walks into the Witch\'s talk '
             + `circle, opens her dialogue on an X release (t ${ev.find((r) => r.what === 'witch-open')?.t}), pages `
             + `\`textExtra\` to its end (t ${close?.t}); \`Witch.doneTalking\` adds a \`DarkSword\` at the player's feet `
-            + `(${added?.x},${added?.y}), collected by overlap on the next frame; its ceremony is paged and the run `
-            + `holds \`hasDarkSword\`; then the walk out by the L95 door (t ${out.perTick.length}). Authored by `
+            + `(${added?.x},${added?.y}), collected by overlap on the next frame; its ceremony is paged; ⛓ APFLIP (R4, `
+            + '`DarkSword.as:49-58` @ccdf189776): the collect reports {12,1} and grants nothing (the host does); then '
+            + `the walk out by the L95 door (t ${out.perTick.length}). Authored by `
+            + 'scripts/procgen/plan-seedling-encounters.mjs.';
+        emit(NAME, tapeJson(NAME, header, {}, out.perTick, out.equips, description));
+        console.log(`## ${NAME}: ${out.perTick.length} ticks`);
+        WITCH = { header, perTick: out.perTick, equips: out.equips };
+    }
+
+    // ── apb-l12-witch-slot-held / -server-sword / -reported ──────────────
+    // ⛓ APFLIP D3 (APBOSSES §D3): the Witch's three R4 states. `slot-held` is `enc-l12-witch`'s staging and goal
+    // under its R4 name; `server-sword` adds the sword from the server (`Witch.update`'s text swap still reads it, so
+    // she speaks `textExtra1`, and R4's `doneTalking` adds the sword anyway); `reported` stages {12,1} and REPLAYS
+    // `slot-held`'s inputs — the solver would not talk to a Witch whose slot is reported (`already`), and the witness
+    // is that the same talk now closes with NOTHING added.
+    const WITCH_GOALS = [{ kind: 'encounter', at: { x: 416, y: 384 }, drop: { item: 'Progressive Sword' }, then: null },
+        { kind: 'reach-exit', exit: { x: 0, y: 352 } }];
+    for (const [NAME, over, why] of [
+        ['apb-l12-witch-slot-held', {}, '{12,1} held, the wand, no dark sword: the talk, the sword at the feet, its '
+            + 'ceremony; the collect reports {12,1}, `hasDarkSword` stays FALSE, no {11,29}'],
+        ['apb-l12-witch-server-sword', { seam: { items: { hasSword: true, hasWand: true, hasDarkSword: true } } },
+            '{12,1} held and the dark sword already held (from the server): `textExtra1` is spoken (`Witch.update` is '
+            + 'unchanged) AND the sword is still added and collected (`Witch.as:50-53` reads the slot); {12,1} reported'],
+    ]) {
+        const header = { ...WITCH.header, ...over };
+        const { run, out } = solve(NAME, header, WITCH_GOALS);
+        const ev = run.ledger('witchEvents');
+        check(`⛓⛓ ${NAME}: the sword is ADDED and collected, {12,1} reported, then out by the L95 door`,
+            ev.some((r) => r.what === 'darksword-added') && ev.some((r) => r.what === 'darksword-contact')
+            && slotReported(run, 12, 1) && run.level === 95, `${out.perTick.length} t, ${JSON.stringify(ev.map((r) => r.what))}`);
+        const description = `⛓⛓ fidelity APFLIP D3 (APBOSSES §D3) — L12's Witch, ${why}. From the survey's step-140 `
+            + `arrival (16,352), solved by \`solveSegment\` (the encounter goal, then out by the L95 door, ${out.perTick.length} `
+            + 'ticks). AS3 @ccdf189776. Authored by scripts/procgen/plan-seedling-encounters.mjs.';
+        emit(NAME, tapeJson(NAME, header, {}, out.perTick, out.equips, description));
+        console.log(`## ${NAME}: ${out.perTick.length} ticks`);
+    }
+    {
+        const NAME = 'apb-l12-witch-reported';
+        const header = { ...WITCH.header, persistence: [{ level: 12, tag: 1, note: '' }] };
+        const staging = solveStaging(stagingFromTape(parseTape({ ...header, name: NAME, tick_count: 0, inputs: [] })));
+        const run = createRunForStaging(staging, levelSource);
+        for (const held of WITCH.perTick) run.advance(held);
+        const ev = run.ledger('witchEvents');
+        check('⛓⛓ {12,1} reported: the same talk opens and closes, and NOTHING is added (`Witch.as:50` reads the slot)',
+            ev.some((r) => r.what === 'witch-open') && ev.some((r) => r.what === 'witch-close')
+            && !ev.some((r) => r.what === 'darksword-added') && run.progress('inventory').hasDarkSword !== true,
+            `${JSON.stringify(ev.map((r) => r.what))}, level ${run.level}`);
+        const description = '⛓⛓ fidelity APFLIP D3 (APBOSSES §D3) — L12\'s Witch with {12,1} REPORTED: '
+            + '`apb-l12-witch-slot-held`\'s inputs replayed on its staging + `persistence` {12,1} (the solver would not '
+            + 'talk to her: `already`). The talk opens and closes, `doneTalking`\'s `checkPersistence(WITCH_TAG)` is '
+            + 'false (`Witch.as:50-53` @ccdf189776), so nothing is added. Authored by '
+            + 'scripts/procgen/plan-seedling-encounters.mjs.';
+        emit(NAME, tapeJson(NAME, header, {}, WITCH.perTick, WITCH.equips, description));
+        console.log(`## ${NAME}: ${WITCH.perTick.length} ticks (replayed)`);
+    }
+
+    // ── apb-l43-totem-no-parts ───────────────────────────────────────────
+    {
+        const NAME = 'apb-l43-totem-no-parts';
+        // ⛓ APFLIP D2/D3: the Wand GONE ({43,0} cleared — what an `apitem` in its place also leaves) and NO totem
+        // parts. `BossTotem.as:291` @ccdf189776 holds the fight back; the seal rocks fall only on `Wand.removed`.
+        const header = {
+            ...U5,
+            boot: Object.freeze({ level: 43, x: 144, y: 240 }),
+            persistence: [{ level: 43, tag: 0, note: '' }],
+            equips: [],
+            save: { totem_parts: [], keys: [], seal_parts: [] },
+            rng: { seed: 1, split: false },
+            seam: { items: { hasSword: true } },
+        };
+        // ⚠ AUTHORED, NOT SOLVED: the solver's walk from this boot throws by name (a sword press reaching
+        // `watcher@200,280`, a walker gap this witness does not need). The keys are ROCKMOVE's witnessed walk from the
+        // Wand to the stairs (`l43-wand-stairs`, right then down the neck) without the Wand's ceremony.
+        const out = { perTick: Array.from({ length: 400 }, (_, t) => new Set(t < 29 ? ['right'] : t >= 35 ? ['down'] : [])),
+            equips: [] };
+        const staging = solveStaging(stagingFromTape(parseTape({ ...header, name: NAME, tick_count: 0, inputs: [] })));
+        const run = createRunForStaging(staging, levelSource);
+        let woke = false;
+        for (const held of out.perTick) {
+            run.advance(held);
+            if ([...(run.bosses?.values() ?? [])].some((b) => b.activated)) woke = true;
+        }
+        check('⛓⛓ no parts: the boss never wakes, no rock falls, and the stairs to L40 stay open',
+            !woke && run.rockFalls.length === 0 && run.level === 40, `level ${run.level}, ${out.perTick.length} t`);
+        const description = '⛓⛓ fidelity APFLIP D2/D3 — the Totem gate (`BossTotem.as:291` @ccdf189776: '
+            + '`classCount(Wand) <= 0 && !activated && Player.hasAllTotemParts()`). L43 with the Wand gone ({43,0} '
+            + 'cleared, as an `apitem` in its place leaves it) and NO totem parts: the boss stays asleep, the three seal '
+            + 'rocks (tags 1/2/3, dropped only by `Wand.removed`) never fall, and an authored walk (right, then down '
+            + `the neck) takes the stairs to L40 inside ${out.perTick.length} ticks. Authored by `
             + 'scripts/procgen/plan-seedling-encounters.mjs.';
         emit(NAME, tapeJson(NAME, header, {}, out.perTick, out.equips, description));
         console.log(`## ${NAME}: ${out.perTick.length} ticks`);
@@ -213,25 +382,27 @@ async function main() {
         };
         const staging = solveStaging(stagingFromTape(parseTape({ ...header, name: NAME, tick_count: 0, inputs: [] })));
         const run = createRunForStaging(staging, levelSource);
-        const out = solveSegment({ run, goals: [{ ...L32_GOAL }], name: NAME, boot: staging.boot, dashMode: 'none' });
+        const out = solveSegment({ run, goals: [{ ...L32_ROOM_GOAL }], name: NAME, boot: staging.boot, dashMode: 'none' });
         const ev = run.ledger('bobBossEvents');
-        check('⛓⛓ the live arrival is the fresh arena: the rock arms, three forms, the Fire, the burn, the pit to L30',
-            ev.some((r) => r.what === 'rock-armed') && run.progress('inventory').hasFire === true && run.level === 30
+        check('⛓⛓ the live arrival is the fresh arena: the rock arms, three forms, the Fire; ⛓ APFLIP: both reported, '
+            + 'no Fire granted, still in L32',
+            ev.some((r) => r.what === 'rock-armed') && slotReported(run, 32, 3) && slotReported(run, 32, 4)
+            && run.progress('inventory').hasFire !== true && run.level === 32
             && run.ledger('playerHits').length === 0, `level ${run.level}, ${out.perTick.length} t`);
-        check('⛓ the page\'s shipped plan, to the tick: 1,049 ticks, the Fire slot selected at t833',
-            out.perTick.length === 1049 && JSON.stringify(out.equips) === JSON.stringify([{ t: 833, slot: 1 }]),
+        check('⛓ the page\'s shipped plan to the collect, to the tick: 832 ticks (the Fire slot WAS selected at t833, one after)',
+            out.perTick.length === 832 && out.equips.length === 0,
             `${out.perTick.length} t, equips ${JSON.stringify(out.equips)}`);
-        const folded = buildTape(out.perTick, header.boot, NAME,
+        const folded = buildTape(idled(out.perTick), header.boot, NAME,
             { noclip: false, noDamage: false, noHazards: [], grants: [] });
         const description = '⛓⛓ seedling-fidelity-encounters2 D1/D2 — L32\'s Bob Boss from the LIVE page\'s arrival '
             + '(the JS arc\'s logical-links B session: the walk\'s own inventory, the shield and the torch held, 35 '
             + 'cleared flags, the arrival\'s rng), solved by the worker\'s shipping pass (dashless): '
-            + `${out.perTick.length} ticks, the arm, seven landings, the Fire, the burn, the pit to L30. It is the plan `
-            + 'CI saw leave at t932 (y 33.85 → 34.25): on the game it plays to its end at 0 px; that divergence is the '
-            + 'panel\'s clearing write `hasFire = false` while its delivery gate holds the Fire. Authored by '
-            + 'scripts/procgen/plan-seedling-encounters.mjs.';
+            + `${out.perTick.length} ticks, the arm, seven landings, the Fire. ⛓ fidelity APFLIP (R4, p4g): the kill `
+            + 'reports {32,3}, the collect {32,4}, and NO Fire is granted (the host does), so the plan stops at the '
+            + `collect and the tape ends ${IDLE_AFTER} idle ticks later in the arena (it was the 1,049-tick plan to the pit `
+            + 'before R4). Authored by scripts/procgen/plan-seedling-encounters.mjs.';
         const tape = {
-            ...header, name: NAME, tick_count: out.perTick.length, inputs: folded.inputs, equips: out.equips,
+            ...header, name: NAME, tick_count: out.perTick.length + IDLE_AFTER, inputs: folded.inputs, equips: out.equips,
         };
         const parsed = parseTape({ ...tape, description });
         emit(NAME, `${JSON.stringify({ ...parsed, description, note: '' }, null, 4)}\n`);

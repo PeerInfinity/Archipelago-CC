@@ -33,12 +33,12 @@
         },
         {
             "level": 32,
-            "tag": 0,
+            "tag": 1,
             "note": ""
         },
         {
             "level": 32,
-            "tag": 1,
+            "tag": 3,
             "note": ""
         }
     ],
@@ -67,7 +67,7 @@
             "hasSword": true,
             "hasGhostSword": false,
             "hasShield": true,
-            "hasFire": true,
+            "hasFire": false,
             "hasWand": false,
             "hasFireWand": false,
             "canSwim": false,
@@ -101,100 +101,35 @@
     },
     "tick0": null,
     "hold": false,
-    "tick_count": 142,
+    "tick_count": 96,
     "inputs": [
         {
-            "key": "primary",
-            "from": 1,
-            "to": 2
-        },
-        {
-            "key": "left",
-            "from": 1,
-            "to": 4
-        },
-        {
             "key": "up",
-            "from": 1,
-            "to": 36
+            "from": 2,
+            "to": 37
         },
         {
             "key": "primary",
-            "from": 3,
-            "to": 4
-        },
-        {
-            "key": "right",
-            "from": 4,
-            "to": 6
+            "from": 37,
+            "to": 38
         },
         {
             "key": "primary",
-            "from": 9,
-            "to": 10
-        },
-        {
-            "key": "right",
-            "from": 9,
-            "to": 10
+            "from": 46,
+            "to": 47
         },
         {
             "key": "primary",
-            "from": 15,
-            "to": 16
-        },
-        {
-            "key": "left",
-            "from": 17,
-            "to": 18
+            "from": 55,
+            "to": 56
         },
         {
             "key": "primary",
-            "from": 21,
-            "to": 22
-        },
-        {
-            "key": "right",
-            "from": 21,
-            "to": 22
-        },
-        {
-            "key": "primary",
-            "from": 23,
-            "to": 24
-        },
-        {
-            "key": "primary",
-            "from": 29,
-            "to": 30
-        },
-        {
-            "key": "left",
-            "from": 30,
-            "to": 31
-        },
-        {
-            "key": "right",
-            "from": 34,
-            "to": 35
-        },
-        {
-            "key": "primary",
-            "from": 35,
-            "to": 36
-        },
-        {
-            "key": "down",
-            "from": 36,
-            "to": 39
-        },
-        {
-            "key": "up",
-            "from": 39,
-            "to": 43
+            "from": 64,
+            "to": 65
         }
     ],
-    "name": "enc-l32-fire-return",
-    "description": "⛓⛓ seedling-fidelity-encounters D2 — L32 on the RETURN visit: the Fire held, the rock {32,1} fallen and the tree {32,0} burned. The door arrival is snapped onto the rock; `BobBoss`'s ctor removes itself (`Player.hasFire`), so the encounter goal has no fight and no drop to collect (`already`); the walk takes the burned pit to L30 in 142 ticks. Authored by scripts/procgen/plan-seedling-encounters.mjs.",
+    "name": "apb-l32-killed-drop-held",
+    "description": "⛓⛓ fidelity APFLIP D3 (APBOSSES §D3) — L32 after the kill, the drop unreported: `swim-u5-bobboss-encounter`'s staging + {32,1} {32,3}. The rock is built fallen and its first frame takes `FallRockLarge.as:123-126` @ccdf189776: the Fire (tag 4), no boss, no BobBossNPC, and `playerPosition` is not rewritten. The door arrival is snapped onto the rock, the Fire is collected and reports {32,4}; no item. Ends 30 idle ticks after its ceremony. Authored by scripts/procgen/plan-seedling-encounters.mjs.",
     "note": ""
 }
