@@ -29,7 +29,9 @@
       "slot": 1
     }
   ],
-  "pins": ["dead_frames"],
+  "pins": [
+    "dead_frames"
+  ],
   "tick_count": 895,
   "inputs": [
     {

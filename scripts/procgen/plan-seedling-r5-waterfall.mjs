@@ -31,14 +31,15 @@
  * Usage:
  *   node scripts/procgen/plan-seedling-r5-waterfall.mjs            # plan
  *   node scripts/procgen/plan-seedling-r5-waterfall.mjs --write    # emit
+ *   node scripts/procgen/plan-seedling-r5-waterfall.mjs --check    # the committed fixtures are byte-identical
  */
 
-import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { emitFixtures } from './producerFixtureBytes.js';
 
 argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -54,6 +55,7 @@ const { climbsArmedWaterfall } = await import(join(MODULE, 'botDriverV2.js'));
 const { WATERFALL_PAIR } = await import(join(MODULE, 'r5Swim.js'));
 
 const WRITE = process.argv.includes('--write');
+const CHECK = process.argv.includes('--check');
 const source = atlasLevelSource();
 
 // ── 1. the tile, and the water around it ──────────────────────────────
@@ -186,12 +188,8 @@ for (const [label, r] of [['shut', s], ['climb', c]]) {
     }
 }
 
-if (WRITE) {
-    const dir = join(MODULE, 'fixtures', 'tapes');
-    for (const t of [shut, climb]) {
-        writeFileSync(join(dir, `${t.name}.json`), serializeTape(t));
-        console.log(`   wrote ${join(dir, `${t.name}.json`)}`);
-    }
-} else {
+const dir = join(MODULE, 'fixtures', 'tapes');
+const outputs = [shut, climb].map((t) => ({ path: join(dir, `${t.name}.json`), text: serializeTape(t) }));
+if (!emitFixtures(outputs, { write: WRITE, check: CHECK })) {
     console.log('\n(dry run — pass --write to emit the two tapes)');
 }

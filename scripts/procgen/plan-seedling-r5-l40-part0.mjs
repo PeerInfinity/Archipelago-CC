@@ -49,14 +49,15 @@
  *
  * Usage:
  *   node scripts/procgen/plan-seedling-r5-l40-part0.mjs [--write]
+ *   node scripts/procgen/plan-seedling-r5-l40-part0.mjs --check   # the committed fixtures are byte-identical
  */
 
-import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { emitFixtures } from './producerFixtureBytes.js';
 
 argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -72,6 +73,7 @@ const { rockBreaksUnder } = await import(join(MODULE, 'breakableRocks.js'));
 const { L40_NW } = await import(join(MODULE, 'r5Totem.js'));
 
 const WRITE = process.argv.includes('--write');
+const CHECK = process.argv.includes('--check');
 const levelSource = atlasLevelSource();
 const HELD = Object.freeze(['sword', 'fire', 'conch', 'feather']);
 const held = { hasSword: true, hasFire: true, canSwim: true, hasFeather: true };
@@ -200,6 +202,9 @@ try {
             grants: [{ level: 40, items: [...HELD] }],
             persistence: [],
             equips: [],
+            // The dead-frame LOCKSTEP (`Bot.pinDeadFrames`, tape v5): declared here so the
+            // drive verifies the pinned execution and the tape asks the game for it.
+            pins: ['dead_frames'],
             roles: [...ROLES],
         },
         name: 'r5-l40-part0',
@@ -321,12 +326,10 @@ for (const c of checks) {
 }
 if (bad > 0) throw new Error(`${bad} of ${checks.length} claims FAILED`);
 
-if (WRITE) {
-    for (const t of [tape, controlTape]) {
-        const path = join(MODULE, 'fixtures', 'tapes', `${t.name}.json`);
-        writeFileSync(path, serializeTape(t));
-        console.log(`\n   wrote ${path}`);
-    }
-} else {
+const outputs = [tape, controlTape].map((t) => {
+    const path = join(MODULE, 'fixtures', 'tapes', `${t.name}.json`);
+    return { path, text: serializeTape(t) };
+});
+if (!emitFixtures(outputs, { write: WRITE, check: CHECK })) {
     console.log('\n(dry run — pass --write to emit the tape)');
 }
