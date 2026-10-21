@@ -13318,6 +13318,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "only",
                 "record",
                 "win",
@@ -13325,6 +13326,12 @@ export const INSTRUMENTS = frz({
             ],
             "file": "probe-seedling-r5-spinner.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
