@@ -1243,7 +1243,9 @@ export function createLevelRun({
      * `tileWritesByLevel` (the Bulb's overlay), which every reader of `t` already sees. `dead` is `clock.deadFrames` at
      * the last render, so a dead span the run did not step is caught by name. Only `CONTACT_FIDELITY.igneousLava` ever
      * writes here.
-     * ⚠ NOT IN `stateDigestParts` (that function is the hammer arc's): see the slice report's hand-over.
+     * ⛓ IN `stateDigestParts`' `visit` part (the hammer arc's function; the fidelity follow-up to IGNEOUS's hand-over,
+     * with its review): an unturned clock is run state the escape replays, and the turned tile alone was covered (the
+     * written world's `worldToken`). `levelRunStateDigest.test.js` pins that a clock difference moves `visit`.
      */
     const igneousStates = new Map();
     /** ⛓ fidelity IGNEOUS: every crumble event — `{t, level, tile: "tx,ty", event: 'break' | 'frame' | 'lava'}`. */
@@ -16661,12 +16663,13 @@ export function createLevelRun({
             /**
              * the per-visit runtime state: every `…States` map the reach reads, and the windows (the rest are
              * `DIGEST_EXEMPT`'s, each with its reason); `lightsFights` is the L69 fight, whose `totemGone` opens the
-             * totem's solid in `liveSolidOpts` (DA)
+             * totem's solid in `liveSolidOpts` (DA); `igneousStates` is fidelity's (`dfaa06e240`), which DA measured
+             * UNREAD by the escape: a superset key, so it only costs misses
              */
             visit: part({ activatorStates, bridgeStates, pushableStates, rockStates, burnStates, ropeStates,
                 fallRockStates, moonrockStates, crusherStates, bossStates, shieldBossStates, finalDoorStates,
                 turretStates, beamTowerStates, magicalLockStates, chestStates, pulserStates, spinnerStates,
-                pullsByLevel, wandWindows, fireWindows, lightsFights }),
+                pullsByLevel, wandWindows, fireWindows, igneousStates, lightsFights }),
             /**
              * the module switches this file's import closure consults — a separate component because a reader of
              * them reads no run: the caller keys on solverBot's own (see the report's hand-over)

@@ -164,6 +164,28 @@ describe('each component moves with its own state', () => {
         expect(moved).not.toContain('staging');
         expect(moved).not.toContain('globals');
     });
+    // ⛓ fidelity IGNEOUS follow-up (the hammer arc's review row): a type-31 tile's unturned clock is run state the escape
+    // replays, so it must move `visit`. `igneous-l76-k4-stand` puts the player in range for 4 renders (t5..t8: the counter
+    // 8 → 4, no break) and dies only at t79, so at t30 a run walked ON and one walked OFF stand on one tick, one body and
+    // one world; only the tile's clock differs. Both are digested under ON, so `globals` (the switch) agrees too.
+    it('a type-31 tile\'s unturned clock (`igneousStates`) moves `visit` alone', () => {
+        const here = dirname(fileURLToPath(import.meta.url));
+        const t = parseTape(readFileSync(join(here, 'fixtures', 'igneous-witness', 'igneous-l76-k4-stand.tape.json'), 'utf8'));
+        const walk = (on) => withContactFidelity({ igneousLava: on }, () => {
+            const run = createRunForStaging(stagingFromTape(t), atlasLevelSource());
+            for (let i = 0; i < 30; i += 1) run.advance(new Set(heldKeysAt(t, i)));
+            return run;
+        });
+        const on = walk(true);
+        const off = walk(false);
+        const counted = withContactFidelity({ igneousLava: true }, () => on.entities('igneousTiles'))
+            .filter((x) => x.counter < 8 && !x.breaking && !x.lava);
+        expect(counted.length).toBeGreaterThan(0);
+        expect(off.state).toEqual(on.state);
+        const [a, b] = withContactFidelity({ igneousLava: true },
+            () => [on.stateDigest({ parts: true }), off.stateDigest({ parts: true })]);
+        expect(Object.keys(a.parts).filter((k) => a.parts[k] !== b.parts[k])).toEqual(['visit']);
+    });
 });
 
 /**
@@ -190,10 +212,6 @@ export const DIGEST_EXEMPT = Object.freeze({
     darkTrapStates: 'UNREAD: read via advance, darkTraps, entities',
     drillStates: 'UNREAD: read via advance, corridorBodyForecast, drills',
     finalBossStates: 'UNREAD: read via advance, finalBosses, owlPods, shakeWritersHere',
-    // ⚠ fidelity's `dfaa06e240` puts it IN (harmless: a superset key only costs misses, and OFF it is empty); when that
-    // lands this row must go — the guard reds a map that is both digested and exempt
-    igneousStates: 'UNREAD: read via advance (renderIgneousNow), entities / igneousTiles (igneousTilesNow); a turned '
-        + 'tile reaches the escape only as the written `world` (place)',
     lavaChainStates: 'UNREAD: read via advance only (stepLavaChainsNow)',
     placedGrenadeStates: 'UNREAD: read via advance, grenadeForecast, placedGrenades',
     podStates: 'UNREAD: read via advance, finalBosses, owlPods, shakeWritersHere',
@@ -263,8 +281,9 @@ describe('hammer-phase DA — every per-visit map is in the digest, or exempt wi
         expect(c.bothDigestedAndExempt).toEqual([]);
         expect(c.staleExempt).toEqual([]);
         expect(c.badReason).toEqual([]);
-        // the reader sees what it should: at DA, 25 per-visit names are digested (22 in `visit`, the clears in
-        // `persist`, `grantsByLevel` in `player`) and 30 are exempt
+        // the reader sees what it should: at DA's landing, 26 per-visit names are digested (23 in `visit`, the clears in
+        // `persist`, `grantsByLevel` in `player`) and 29 are exempt (`igneousStates` joined `visit` with fidelity's
+        // `dfaa06e240`: DA measured it UNREAD, so it is a superset key that only costs misses)
         expect(c.perVisit.length).toBe(c.perVisit.filter((n) => c.digested.has(n)).length
             + Object.keys(DIGEST_EXEMPT).length);
         expect(c.digested.get('spinnerStates')).toBe('visit');
