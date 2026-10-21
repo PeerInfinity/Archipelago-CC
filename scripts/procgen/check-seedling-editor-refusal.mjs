@@ -168,6 +168,8 @@ async function solveInPage(level, goals, extra = '', boot = BOOT) {
  * body a later kill rung might clear — then the smaller level.
  */
 const ROW1_CANDIDATES = Object.freeze([
+    { boot: 'r8-l6-bob-contact', level: 6, goal: 'exit:224,32',
+        why: 'static enemy:sandtrap@64,16 on the way to L5 — EXHAUSTED, 17 queries, 0 dangerous' },
     { boot: 'frontier3-l62-door-niche', level: 62, goal: 'exit:48,304',
         why: 'static enemy:darktrap@112,208 on the climb to L61 — EXHAUSTED, 6 queries, 0 dangerous' },
     { boot: 'pushblock-l65-sword-press', level: 65, goal: 'exit:128,0',
