@@ -9,7 +9,7 @@ The bot needs a world with a sphere log. Either:
 - generate one in the [Procgen Pipeline](procgenPipeline.md) and press **Load into frontend**, or
 - load a preset that has a sphere log in the [Presets](presets.md) panel.
 
-Until then the panel says **No sphere log loaded.** Once one is loaded, the status line reads *Sphere log loaded: N entries.*
+Until then the panel says **No sphere log loaded.** Once one is loaded, the status line reads *Sphere log loaded: N entries.* Without one, **Check next: Any reachable location** still works (see below), so the bot stays usable under the note.
 
 ## A first run
 
@@ -71,6 +71,20 @@ The bot keeps going loop after loop until the world is finished or you press **�
 - **Any reachable location (timer)** — no sphere log needed, so it works in any game, online or offline. **▶** checks the locations that are reachable now, then keeps checking as more become reachable, until nothing new is; **⏯** checks one reachable location at once; **⏹** stops. **⏭** is the same as **▶**: the timer has its own delay between checks instead of the bot's **Speed** (none by default; set one with the Console's `/set_delay` command). Whether one tick checks one location or all the reachable ones is the **Batch location checks** setting of the Timer module, in the Settings panel.
 
 Switching **Check next** stops whatever is running. The panel remembers your choice.
+
+## Walk order
+
+With **Check next** set to the sphere log, **Walk order** chooses which of its locations the bot walks to next:
+
+- **Sphere log, in order** (the default) — exactly as listed.
+- **Cheapest in the current sphere** — any location of the lowest sphere not yet finished, the one with the cheapest route first: the fewest returns to the menu, then the fewest region changes. Inside one sphere every location was reachable before any of them was collected, so any order there is still a valid playthrough. Before returning to the menu from a place it cannot walk out of, the bot first collects anything else it can walk to from there.
+- **Cheapest reachable location** — the cheapest route among every location reachable now, from any sphere.
+
+Both cheapest orders keep the location that holds the goal for last. In a Seedling playthrough, the in-order route returns to the menu five times; **Cheapest reachable location** returns once and changes region about a quarter less often. The line under the target shows the run's counts: restarts, region transitions and legs. Loop mode always follows the sphere order. Changing the walk order stops a running walk, and the panel remembers your choice.
+
+## The mini view
+
+From the [Quick Launch](quickLaunch.md) panel's **Mini panels** section, the bot can shrink into a **mini row** above the middle column: its five buttons and its status line (cut short — hover it for all of it), on one row when the column is wide enough, and **⤢**, which expands it back into the full panel. The run carries on untouched either way. With **Checks** on too, the "Checked: …" line rides in the same row.
 
 ## Without a generated world
 

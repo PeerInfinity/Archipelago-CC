@@ -26,6 +26,8 @@ import { registerTest } from '../testRegistry.js';
 import settingsManager from '../../../app/core/settingsManager.js';
 import { getActivePanelInstance, getSeedlingPlayClock, getSeedlingRegionGlue } from '../../flashPanel/index.js';
 import { PLAY_CLOCK_EVENT } from '../../flashPanel/seedlingPlayClock.js';
+import { cachesText, churnText } from '../../flashPanel/seedlingSolveProgress.js';
+import { DANGER_COLOUR } from '../../flashPanel/seedlingSolveProgressView.js';
 import { getGameStateSingleton } from '../../gameState/singleton.js';
 import { getActivePanel as getBotPanel } from '../../playbackBot/index.js';
 import { getSphereStateSingleton } from '../../sphereState/singleton.js';
@@ -700,6 +702,74 @@ registerTest({
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
+/**
+ * ⛓ GRAPHICS G3b — the room bodies' sibling row, G3's shape one family over: the JS page mounted STANDALONE in this
+ * row's own iframe and driven through its own `__swfBridge` to `Game(22, 80, 112)` — `r2-wallflyer-contact`'s boot,
+ * the player on the row two of L22's four wallflyers look down. No panel, preset or AP state is touched; the iframe
+ * is removed however the row ends.
+ *
+ * It asserts what node cannot: the wallflyer sheet DECODES in a browser and the page's tick loop folds the room
+ * bodies into their skin, so `__seedlingJsGraphics.roomBodies` reports the four wallflyers drawn as
+ * `seedling:enemy/wallflyer` from the seedling pack, and a frame CHANGES (the launch's "jump", or the resting
+ * world-clock pair) — the reducer is live.
+ */
+export async function seedlingJsRuntimeGraphicsRoomBodies(tc) {
+    const frame = document.createElement('iframe');
+    // Visible (a display:none frame gets no animation frames, and the page paints only in rAF), but out of the way.
+    Object.assign(frame.style, { position: 'fixed', right: '0', bottom: '0', width: '160px', height: '160px',
+        opacity: '0.01', pointerEvents: 'none', border: '0' });
+    const errors = [];
+    try {
+        frame.src = './modules/seedlingDemo/jsRuntime.html?graphics=seedling&camera=follow';
+        document.body.appendChild(frame);
+        const win = await tc.pollForValue(() => {
+            const w = frame.contentWindow;
+            return w?.__runtimeReady && w.__seedlingJsRuntime?.vanilla && w.__seedlingJsGraphics?.status === 'ready' ? w : null;
+        }, 'the standalone JS page loaded the vanilla map and the seedling pack stack', 20000, 200);
+        tc.reportCondition('the standalone page is up with its pack', !!win);
+        if (!win) return tc.getOverallResult();
+        const origError = win.console.error.bind(win.console);
+        win.console.error = (...a) => { errors.push(a.map(String).join(' ')); origError(...a); };
+        win.addEventListener('error', (e) => errors.push(`uncaught: ${e.message}`));
+        const game = await (await fetch('./modules/flashPanel/games/seedling.json')).json();
+        win.__swfBridge.game.configure(JSON.stringify({ classes: game.classes, state_properties: game.state_properties }));
+        win.__swfBridge.queueItems([{ class: 'game', property: 'menu', value: false },
+            { invocation: 'new_instance', className: 'Game', args: [22, 80, 112] }]);
+        const g = win.__seedlingJsGraphics;
+        const flyersOf = (e) => (e?.ops ?? []).filter((o) => o.key === 'seedling:enemy/wallflyer');
+        const first = await tc.pollForValue(() => (flyersOf(g.roomBodies).length >= 4 ? g.roomBodies : null),
+            'the page drew the four wallflyers of level 22 from the pack', 15000, 100);
+        tc.log(`roomBodies: ${JSON.stringify(g.roomBodies)}`);
+        tc.assertEqual('level 22\'s four wallflyers resolved to seedling:enemy/wallflyer from the seedling pack', '4/seedling',
+            `${flyersOf(first).length}/${[...new Set(flyersOf(first).map((o) => o.pack))].join(',')}`);
+        tc.assertEqual('every sheet decoded (none fell back to rectangles)', '[]', JSON.stringify(g.failedSheets));
+        const frames0 = flyersOf(first).map((o) => o.frame).join(',');
+        const moved = await tc.pollForValue(() => {
+            const now = flyersOf(g.roomBodies).map((o) => o.frame).join(',');
+            return now !== frames0 ? now : null;
+        }, 'a wallflyer\'s frame changed (the reducer runs in the tick loop)', 10000, 50);
+        tc.assertEqual('the wallflyers animate (their frames moved off the first paint\'s)', true, !!moved);
+        tc.assertEqual('no console error on the page', '[]', JSON.stringify(errors));
+        const rt = win.__seedlingJsRuntime;
+        tc.assertEqual('the run is in level 22 and did not halt', '22/null', `${rt.run?.level}/${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        frame.remove();
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-graphics-room-bodies',
+    name: 'Seedling JS runtime: the room bodies in the original graphics (G3b)',
+    description: 'Mounts jsRuntime.html?graphics=seedling&camera=follow standalone in its own iframe, drives it to level 22 '
+        + '(four wallflyers) through its own __swfBridge, and asserts the page draws each as seedling:enemy/wallflyer from '
+        + 'the seedling pack, every sheet decodes, a frame changes, and no console error. Touches no panel, preset or AP '
+        + 'state; the iframe is removed however it ends.',
+    testFunction: seedlingJsRuntimeGraphicsRoomBodies,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
 export async function seedlingJsRuntimeBotCompletesAtlasLocation(tc) {
     let previous = 'auto';
     try { previous = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
@@ -1025,6 +1095,24 @@ export async function seedlingJsRuntimeSolveProgressView(tc) {
             + `marked one, ${view.stats.marksDrawn} marks redraw(s)`);
         tc.assertEqual('the final frame is null: no marks, an empty frame line (frame view)', true,
             final.frame === null && view.marks === null && (view.frameLine?.textContent ?? '') === '');
+        // ⛓ CACHES VIEW — hammer-phase PR's `caches` and `churn` on the real solve, drawn at the end of the meter: each
+        // line is the model's text of the final snapshot (the counts are pinned per level in solveProgress.test.js),
+        // and a closed segment closed every frame it opened (`open 0`)
+        tc.log(`caches view: ${view.cachesText?.textContent ?? '(no line)'} | ${view.churnText?.textContent ?? '(no line)'}`);
+        tc.assertEqual('the final snapshot carries `caches` and `churn` (hammer-phase PR)', true,
+            !!final.caches && !!final.churn);
+        tc.assertEqual('the caches line is drawn, last in the meter (caches view)', true,
+            view.meter.lastElementChild === view.cachesBox && view.cachesText.textContent === cachesText(final));
+        tc.assertEqual('the churn line is drawn, the solved segment with no frame left open (caches view)', true,
+            view.churnText.textContent === churnText(final) && / · open 0 · climb moves \d+$/.test(view.churnText.textContent));
+        // a soft-lock refusal in the solve is in the danger colour wherever it is drawn (L6 may have none: logged)
+        const softChips = [...view.tree.querySelectorAll('span')].filter((c) => /^soft-lock \d+$/.test(c.textContent));
+        tc.log(`caches view: ${softChips.length} soft-lock chip(s) on the listed rows`);
+        // the browser normalises a colour it is given, so compare against the danger colour as it normalised it
+        const probe = document.createElement('span');
+        probe.style.color = DANGER_COLOUR;
+        tc.assertEqual('every soft-lock chip is in the danger colour (caches view)', true,
+            softChips.every((c) => c.style.color === probe.style.color));
         if (st.snapshot?.tiles) {
             tc.assertEqual('the tile map is ONE canvas sized to the room', `${st.snapshot.tiles.cols}x${st.snapshot.tiles.rows}`,
                 `${Math.round(view.canvas.width / view._px)}x${Math.round(view.canvas.height / view._px)}`);
@@ -1056,7 +1144,8 @@ registerTest({
     description: 'With flashPanel.runtime = js, the solver mode on and flashPanel.seedlingSolveProgressView = always, on '
         + 'seedling_atlas: the view subscribes to the page\'s worker service before the solve, the L6 enemy-room solve '
         + 'streams its progress, and the view holds the FINAL snapshot (solved), draws its tree, its tile canvas and '
-        + 'its work meter, and its "last update N s ago" advances; `always` does not auto-hide; setting it off unsubscribes.',
+        + 'its work meter and its caches/churn lines, and its "last update N s ago" advances; `always` does not '
+        + 'auto-hide; setting it off unsubscribes.',
     testFunction: seedlingJsRuntimeSolveProgressView,
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode

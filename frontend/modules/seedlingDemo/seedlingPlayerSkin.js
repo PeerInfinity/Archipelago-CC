@@ -105,9 +105,12 @@ export const SWORD_KEYS = Object.freeze({
 
 /**
  * THE ADAPTER. Everything the player's picture reads, from the run, as a plain
- * object (null when there is no run). `epoch` is the room's world OBJECT — an
- * identity only, compared by `stepPlayerSkin`: a new world is a new `Player`,
- * whose Spritemap starts afresh.
+ * object (null when there is no run). `epoch` is the VISIT — the run, the
+ * level and how many crossings and deaths it has made (G3's identity) — an
+ * identity only, compared by `stepPlayerSkin`: a new visit is a new `Player`,
+ * whose Spritemap starts afresh. ⛔ Not `run.world`: that is the level's
+ * MEMOISED build, the same object after a death's restart in the same level,
+ * and re-wrapped by a tile write mid-visit (G3's finding).
  */
 export function skinView(run) {
     if (!run?.state) return null;
@@ -120,7 +123,7 @@ export function skinView(run) {
         ? { kind: 'pit', alpha: s.fall.alpha, target: { ...s.fall.target } }
         : (s.fall?.phase === 'descent' ? { kind: 'ceiling', yStart: s.fall.yStart } : null);
     return {
-        epoch: run.world ?? null,
+        epoch: { run, key: `${run.level}|${run.transitions?.length ?? 0}|${run.playerDeaths?.length ?? 0}` },
         level: run.level,
         x: s.x,
         y: s.y,
@@ -154,6 +157,8 @@ export function playerAnimName(view, swimStates = SWIM_STATES) {
 }
 
 /** A fresh `Player`'s picture (`Player.as:388`: "down-stand", unmirrored, white). */
+/** One visit or another: the adapter's `{run, key}`, or (a synthetic view) the same object. */
+const sameEpoch = (a, b) => a === b || (!!a && !!b && a.run !== undefined && a.run === b.run && a.key === b.key);
 const freshSkin = (epoch, tick) => ({
     epoch, born: tick, anim: 'down-stand', since: tick, mirrored: false, tint: null,
     slash: null, prevHits: 0, prevFrozen: 0,
@@ -225,7 +230,7 @@ export const PLAYER_RULES = Object.freeze({ animName: playerAnimName, played, mi
 export function stepPlayerSkin(prev, view, tick, { rules = PLAYER_RULES } = {}) {
     if (!view) return prev;
     const R = rules === PLAYER_RULES ? rules : { ...PLAYER_RULES, ...rules };
-    const skin = prev && prev.epoch === view.epoch ? { ...prev } : freshSkin(view.epoch, tick);
+    const skin = prev && sameEpoch(prev.epoch, view.epoch) ? { ...prev } : freshSkin(view.epoch, tick);
     skin.tint = R.tintStep(skin, view);
     skin.prevHits = view.hitsTimer;
     skin.prevFrozen = view.frozenTimer;

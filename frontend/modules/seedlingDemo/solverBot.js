@@ -166,6 +166,8 @@ import {
 import {
     bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
     AXE_UPDATE_OFFSET, axeVisitClock, phaseHazardCanReach, phaseHazardHit,
+    // ⛓ fidelity IGNEOUS D3: the type-31 tiles' clocks along a previewed walk.
+    igneousWalkDanger,
 } from './dangerMap.js';
 import { axeCanReach, axeHitsPlayer, SPINNING_AXE } from './hazards.js';
 import { planDash } from './mover.js';
@@ -20168,6 +20170,12 @@ function solveSegmentUnder({
                 const c = withoutSources(ceremonyBesideLiveBody(run, s, corpses.at(s.tick)), except);
                 if (c.danger) return { x: s.x, y: s.y, tick: s.tick, ...c };
             }
+        }
+        // ⛓ fidelity IGNEOUS D3: the type-31 tiles' clocks along THIS walk (the dwell breaks a tile; OFF: null).
+        const igneous = igneousWalkDanger(run, samples);
+        if (igneous) {
+            const ig = withoutSources(igneous, except);
+            if (ig.danger) return { ...igneous, ...ig };
         }
         return null;
     };

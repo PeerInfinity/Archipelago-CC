@@ -1140,7 +1140,7 @@
     },
     {
       "file": "r5-feather.json",
-      "tickCount": 1735,
+      "tickCount": 1534,
       "bootLevel": 87,
       "tapeVersion": 5,
       "noHazards": [
@@ -1519,7 +1519,7 @@
     },
     {
       "file": "r6-shield-kill.json",
-      "tickCount": 653,
+      "tickCount": 654,
       "bootLevel": 19,
       "tapeVersion": 6,
       "noHazards": [

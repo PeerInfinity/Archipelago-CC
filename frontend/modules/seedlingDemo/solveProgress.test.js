@@ -992,13 +992,14 @@ describe('hammer-phase TC2 — the active frame (`frame`, additive within v: 2)'
         expect(dangerKindOf({ kind: 'hazard', id: 'lavachain@1,2', phase: { tag: 'lavachain' } })).toBe('phase');
         expect(dangerKindOf({ kind: 'hazard', id: 'spinningaxe@1,2', axe: { cx: 1 } })).toBe('phase');
         for (const k of ['arrow', 'chaser', 'spinner', 'spit', 'bomb']) expect(dangerKindOf({ kind: k })).toBe('forecast');
-        for (const k of ['hazard', 'enemy', 'crusher', 'terrain', 'pit', 'danger']) expect(dangerKindOf({ kind: k })).toBe('volume');
+        // ⛓ fidelity IGNEOUS D3: `igneous` (a type-31 tile's clock) is a tile rect — a volume.
+        for (const k of ['hazard', 'enemy', 'crusher', 'terrain', 'pit', 'danger', 'igneous']) expect(dangerKindOf({ kind: k })).toBe('volume');
         expect(dangerKindOf(null)).toBe(null);
         // ⛓ every source kind `dangerMap.js` writes is one of those
         const dm = readFileSync(join(HERE, 'dangerMap.js'), 'utf8');
         const kinds = new Set([...dm.matchAll(/\bkind: '([a-z-]+)'/g)].map((m) => m[1]));
-        expect([...kinds].sort()).toEqual(['arrow', 'bomb', 'chaser', 'crusher', 'danger', 'enemy', 'hazard', 'pit',
-            'spinner', 'spit', 'terrain']);
+        expect([...kinds].sort()).toEqual(['arrow', 'bomb', 'chaser', 'crusher', 'danger', 'enemy', 'hazard', 'igneous',
+            'pit', 'spinner', 'spit', 'terrain']);
     });
 
     it('⛓⛓ only an install reaches a frame: every solverBot site is one guarded line, and the setter reads no deadline', () => {

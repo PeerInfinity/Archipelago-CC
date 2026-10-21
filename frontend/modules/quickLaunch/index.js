@@ -84,6 +84,8 @@ export function register(registrationApi) {
     registrationApi.registerEventBusSubscriberIntent('module:stateChanged');
     registrationApi.registerEventBusSubscriberIntent('app:readyForUiDataLoad');
     registrationApi.registerEventBusSubscriberIntent('settings:changed');
+    // The Mini panels section (quickLaunchMini.js) redraws when the miniPanels module changes the mini row.
+    registrationApi.registerEventBusSubscriberIntent('miniPanels:changed');
     // The mobile layout's activation path (see `activate` in quickLaunchUI.js).
     registrationApi.registerEventBusPublisher('ui:activatePanel');
 }
