@@ -621,7 +621,6 @@
    "unknown_capability"
   ],
   "js.rb": [
-   "ASTRule",
    "AST_enemy_requirement",
    "AST_error",
    "AST_formatted_value",
@@ -631,11 +630,7 @@
    "AST_setting_in",
    "AST_starred",
    "AST_unknown",
-   "AST_unknown_capability",
-   "EntranceAccessRuleCall",
-   "NestedRule",
-   "WrapperRule",
-   "bool"
+   "AST_unknown_capability"
   ],
   "world_generator.rb": [
    "ASTRule",
@@ -799,5 +794,5 @@
    "weighted_sum"
   ]
  },
- "gap_ceiling": 177
+ "gap_ceiling": 172
 }
