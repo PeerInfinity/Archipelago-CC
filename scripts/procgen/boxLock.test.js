@@ -477,6 +477,10 @@ describe('who takes the box', () => {
          * class-parametric chaser witness (K2's lavarunner), `probe-seedling-chaser-mobiles.mjs`;
          * fidelity LIGHTS the L69 Lights fight's witness (the intro, the fliers, the shots, the report),
          * `probe-seedling-lights.mjs`;
+         * fidelity L1516 L15's chest probe line (the edge column the game keeps Solid, the inner control),
+         * `probe-seedling-l15-chest-line.mjs`;
+         * fidelity L1516 L16's enclosed pit entered across a corner (and the solver's leg-206 solve),
+         * `probe-seedling-l16-corner-pit.mjs`;
          * hammer-phase C1 the static sword-kill witness, `probe-seedling-static-sword-mobiles.mjs`;
          * RULES l38-button-event the cross-room ButtonRoom write witness, `probe-seedling-cross-room-button.mjs`;
          * fidelity ENCOUNTERS2 the encounter per-tick witness, `probe-seedling-encounter-ticks.mjs`;
@@ -522,6 +526,7 @@ describe('who takes the box', () => {
             'probe-seedling-bombpusher.mjs', 'probe-seedling-staged-hits.mjs', 'probe-seedling-seal-delivery.mjs',
             'probe-seedling-bomb-blast-body.mjs',
             'probe-seedling-lights.mjs',
+            'probe-seedling-l15-chest-line.mjs', 'probe-seedling-l16-corner-pit.mjs',
             'check-seedling-bot-differential.mjs',
             'probe-seedling-hold.mjs', 'probe-seedling-pushblock-weapon.mjs', 'probe-seedling-u15-turret-mobiles.mjs',
             'probe-seedling-u7-puncher-mobiles.mjs', 'probe-seedling-u9-shield-mobiles.mjs'];

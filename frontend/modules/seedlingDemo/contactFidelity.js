@@ -796,6 +796,28 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_LIGHTS_BOSS_FIGHT=0|1` for a node measurement.
      */
     lightsBossFight: false,
+    /**
+     * fidelity L1516 D2 — A CHEST'S PROBE LINE STOPS ONE PIXEL SHORT OF `toX` (`chest.chestProbeLine`).
+     *
+     *     Chest.as:63      collideLine("Player", x-originX+m, …, x-originX+width-2*m, …)   (m = 2)
+     *     World.as:442     while (x < toX) collidePoint(…)       World.as:514  the end point: `precision > 1` only
+     *
+     * So the integer probes are px+2 .. px+11, not px+12. Witnessed on the game (p4g, `l15-chest-line-edge`): the
+     * player climbing column 9 under L15 `chest@144,96` at x 157.98 (box left 155.98) touched no probe and STOPPED at
+     * y 114.24 under the Solid; the model's px+12 probe opened the chest and walked through it. ON: the line ends at
+     * px+11 (the keyLock's transcription). OFF: px+12, byte-identical. `SEEDLING_CHEST_PROBE_LINE_END=0|1` for a node
+     * measurement.
+     */
+    chestProbeLineEnd: false,
+    /**
+     * fidelity L1516 D3 — AN ENCLOSED PIT IS ENTERED ACROSS A CORNER (`solverBot.enclosedPitCorners`, the reach-pit
+     * executor). `Player.getState` reads one point a tick (`Player.as:679`), so a diagonal step jumps it across the
+     * corner a floor cell shares with a pit whose four neighbours are pits (L16's (13,4), sweep leg 206). Witnessed on
+     * the game (p4g, `l16-corner-pit-corner` / `-control`, 0 px). ON: the executor walks to a stance in a diagonal floor
+     * cell and takes the corner step its preview found. OFF: the plan exemption alone, which cannot reach such a pit
+     * (refused by name), byte-identical. `SEEDLING_ENCLOSED_PIT_CORNER=0|1` for a node measurement.
+     */
+    enclosedPitCorner: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -957,6 +979,12 @@ if (globalThis.process?.env?.SEEDLING_IGNEOUS_LAVA === '0') CONTACT_FIDELITY.ign
 // ⛓ fidelity LIGHTS: `SEEDLING_LIGHTS_BOSS_FIGHT=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_LIGHTS_BOSS_FIGHT === '1') CONTACT_FIDELITY.lightsBossFight = true;
 if (globalThis.process?.env?.SEEDLING_LIGHTS_BOSS_FIGHT === '0') CONTACT_FIDELITY.lightsBossFight = false;
+// ⛓ fidelity L1516 D2: `SEEDLING_CHEST_PROBE_LINE_END=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_CHEST_PROBE_LINE_END === '1') CONTACT_FIDELITY.chestProbeLineEnd = true;
+if (globalThis.process?.env?.SEEDLING_CHEST_PROBE_LINE_END === '0') CONTACT_FIDELITY.chestProbeLineEnd = false;
+// ⛓ fidelity L1516 D3: `SEEDLING_ENCLOSED_PIT_CORNER=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_ENCLOSED_PIT_CORNER === '1') CONTACT_FIDELITY.enclosedPitCorner = true;
+if (globalThis.process?.env?.SEEDLING_ENCLOSED_PIT_CORNER === '0') CONTACT_FIDELITY.enclosedPitCorner = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
