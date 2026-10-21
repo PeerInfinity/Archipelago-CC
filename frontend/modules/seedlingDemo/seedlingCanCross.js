@@ -89,6 +89,7 @@ import {
 import { ITEM_PROPERTIES, PIN_NAMES, parseTape } from './tapeFormat.js';
 import { createRunForStaging, runTape } from './tapeRunner.js';
 import { arrivalSolverGoal } from './wasmArrival.js';
+import { solverGoalsOf } from './jsRuntimeSolver.js';
 
 /** A request this oracle cannot ask — by name, never rounded to a verdict. */
 export class CanCrossError extends Error {
@@ -466,7 +467,8 @@ export function canCross(o) {
     let out;
     try {
         // ⛓⛓ CRUSHER — `forkRun`: a fresh run built exactly as `run` was (the solver replays the idle prefix onto it).
-        out = solveSegment({ run, goals: [{ ...goal }], name, boot: staging.boot, prefix, dashMode,
+        // ⛓ LIGHTS WIRING — a mapped `sequence` (a fight that opens the exit) is its goals, in order.
+        out = solveSegment({ run, goals: solverGoalsOf(goal).map((g) => ({ ...g })), name, boot: staging.boot, prefix, dashMode,
             forkRun: () => createRunForStaging(staging, levelSource, { scratchPersistence }),
             ...(shouldStop ? { shouldStop } : {}) });
     } catch (e) {
