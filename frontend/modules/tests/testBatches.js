@@ -67,6 +67,19 @@ export const TEST_BATCHES = Object.freeze({
             'The apworld editor rows. Over half of the substrate roster, so '
             + 'they get a budget of their own; on push, as its own matrix job.',
         categories: Object.freeze(['apworldEditor']),
+        // ⛓ ci-manual-moves (⚖ user, 2026-10-21; 0/61 red on main): on push
+        // ONLY when a pushed path hits these trees or the derived import
+        // closure of the test files that register this batch's categories and
+        // of the runner's own entries (`list-test-batches.js --on-push
+        // --changed=`). Dispatch it any time: test-substrates-manual.yml with
+        // batch=apworld.
+        pushPaths: Object.freeze([
+            'frontend/modules/apworldEditor/**',
+            'frontend/modules/apworldBuild/**',
+            'exporter/**',
+            'world_generator/**',
+            '.github/workflows/test-templates.yml',
+        ]),
     }),
     'bot-walks': Object.freeze({
         description:
@@ -303,6 +316,12 @@ export function listBatchNames() {
 /** The batches CI runs on push — every batch not marked `manual`. */
 export function listOnPushBatches() {
     return listBatchNames().filter((name) => !TEST_BATCHES[name].manual);
+}
+
+/** The on-push batches that run on a push only when its paths hit their
+ *  `pushPaths` (ci-manual-moves) — also dispatchable by name. */
+export function listPathFilteredBatches() {
+    return listOnPushBatches().filter((name) => TEST_BATCHES[name].pushPaths);
 }
 
 /** The batches that run only on demand (test-substrates-manual.yml). */
