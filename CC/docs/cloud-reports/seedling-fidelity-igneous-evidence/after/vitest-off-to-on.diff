@@ -1,0 +1,16 @@
+0a1,2
+> failed	frontend/modules/seedlingDemo/contactFidelity.test.js > contact witnesses (fixtures/contact-witness) the shipped defaults: all three ON
+> failed	frontend/modules/seedlingDemo/dashShape.test.js > the request: byte-identical at the defaults, stamped only off-default (in `stampHooks`, the one door) the defaults add no field (today's request key list exactly)
+2633d2634
+< passed	frontend/modules/seedlingDemo/contactFidelity.test.js > contact witnesses (fixtures/contact-witness) the shipped defaults: all three ON
+2781d2781
+< passed	frontend/modules/seedlingDemo/dashShape.test.js > the request: byte-identical at the defaults, stamped only off-default (in `stampHooks`, the one door) the defaults add no field (today's request key list exactly)
+3620d3619
+< passed	frontend/modules/seedlingDemo/fidelityIgneous.test.js > IGNEOUS — the tile on the game (D1) and in the model (D2) ships OFF
+8122c8121,8122
+< passed	scripts/test/inAppSummary.test.js > the handler-error gate (plan §48: zero tolerance for a subscriber that threw) the phrase is the bus's: a subscriber that throws logs a line carrying it, and the bus counts it
+\ No newline at end of file
+---
+> passed	scripts/test/inAppSummary.test.js > the handler-error gate (plan §48: zero tolerance for a subscriber that threw) the phrase is the bus's: a subscriber that throws logs a line carrying it, and the bus counts it
+> skipped	frontend/modules/seedlingDemo/fidelityIgneous.test.js > IGNEOUS — the tile on the game (D1) and in the model (D2) ships OFF
+\ No newline at end of file

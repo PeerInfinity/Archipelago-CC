@@ -2699,7 +2699,7 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
             'brokenRocks', 'crushersParked', 'pushesSettled', 'openBridges', 'arrowsInFlight',
             'burnedTrees', 'latchedGroups', 'pulledRopes', 'turretDamage', 'turretsSettled',
             'arrowFlights', 'bosses', 'talkCircles', 'bobBoss', 'pulls', 'shooters', 'staticBodies',
-            'darkTraps', 'bombPushers', 'bombs',
+            'darkTraps', 'bombPushers', 'bombs', 'igneousTiles',
         ]);
         expect(Object.isFrozen(ENTITY_FAMILY_NAMES)).toBe(true);
         for (const f of ENTITY_FAMILY_NAMES) {
@@ -2785,6 +2785,17 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
             expect(bad).toEqual([]);
             expect(seen.has('bombPushers')).toBe(true);
             expect(seen.has('bombs')).toBe(true);
+            for (const f of seen) witnessed.add(f);
+        });
+    });
+
+    it('L76\'s Igneous-to-Lava tiles (IGNEOUS D2, the switch ON, the player walking onto (2,5)): igneousTiles, through the query', () => {
+        withContactFidelity({ igneousLava: true }, () => {
+            const run = createLevelRun({ levelSource, boot: { level: 76, x: 16, y: 80 }, roles: ROLES });
+            const { bad, seen } = compareEveryTick(run, 30, (t) => new Set(t < 12 ? ['right'] : []));
+            expect(bad).toEqual([]);
+            expect(seen.has('igneousTiles')).toBe(true);
+            expect(run.entities('igneousTiles').filter((x) => x.breaking).map((x) => [x.tx, x.ty])).toEqual([[2, 5]]);
             for (const f of seen) witnessed.add(f);
         });
     });

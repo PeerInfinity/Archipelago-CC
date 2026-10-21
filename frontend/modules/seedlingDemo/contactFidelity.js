@@ -771,6 +771,21 @@ export const CONTACT_FIDELITY = {
      * ✅ ON by default since the user's flip (⚖ "Flip all four", 2026-10-19); `SEEDLING_SPINNER_SWING_LOS=0|1` for a node measurement.
      */
     spinnerSwingLineOfSight: true,
+    /**
+     * fidelity IGNEOUS D2/D3 — THE IGNEOUS-TO-LAVA TILE (type 31) CRUMBLES (`igneousLava.js`, `levelRun.renderIgneousNow`).
+     *
+     *     Tile.as:390-433    inside render(), on screen only: the nearest Player within sqrt(512)/2 of the tile's
+     *                        centre counts igneousCounter 8 → 0 and breaks on the 9th in-range frame; a breaking tile
+     *                        steps igneousFrame every 9 frames and is `t = 17` (LAVA) at the 3rd — player or not
+     *     Player.as:713-737  31 → 17 under a standing player is a state CHANGE: `inLava`, the lava death
+     *
+     * Witnessed on the game (p4g, the five `igneous-*` D1 tapes, sweep leg 649's among them: lava at the t38 render,
+     * death t39). ON: the run steps every type-31 tile at the frame's render point and writes lava through the per-visit
+     * tile overlay (`withTileWrites`); a dead span or an arrival the run does not step refuses by name; the solver
+     * prices the tiles' clocks. OFF: no tile is stepped, byte-identical. `SEEDLING_IGNEOUS_LAVA=0|1` for a node
+     * measurement.
+     */
+    igneousLava: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -926,6 +941,9 @@ if (globalThis.process?.env?.SEEDLING_SHAKE_BAND_MOOT === '1') CONTACT_FIDELITY.
 if (globalThis.process?.env?.SEEDLING_SHAKE_BAND_MOOT === '0') CONTACT_FIDELITY.shakeBandMoot = false;
 if (globalThis.process?.env?.SEEDLING_SPINNER_SWING_LOS === '1') CONTACT_FIDELITY.spinnerSwingLineOfSight = true;
 if (globalThis.process?.env?.SEEDLING_SPINNER_SWING_LOS === '0') CONTACT_FIDELITY.spinnerSwingLineOfSight = false;
+// ⛓ fidelity IGNEOUS D2: `SEEDLING_IGNEOUS_LAVA=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_IGNEOUS_LAVA === '1') CONTACT_FIDELITY.igneousLava = true;
+if (globalThis.process?.env?.SEEDLING_IGNEOUS_LAVA === '0') CONTACT_FIDELITY.igneousLava = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
