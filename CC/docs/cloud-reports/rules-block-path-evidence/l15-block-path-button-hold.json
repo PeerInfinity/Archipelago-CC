@@ -1,0 +1,35 @@
+{
+ "tape": "button-hold",
+ "set_id": "seedling-vanilla-record-f5bdb07d",
+ "mounted": "seedling-vanilla-record-f5bdb07d",
+ "observations": 261,
+ "transitions": [],
+ "out": null,
+ "maxX": 125.96634679075365,
+ "clears": [
+  "10,0",
+  "11,0",
+  "3,0",
+  "5,0",
+  "8,0",
+  "8,1"
+ ],
+ "final": {
+  "t": 260,
+  "x": 125.96634679075365,
+  "y": 60.95316561961455,
+  "level": 15
+ },
+ "model": {
+  "refused": null,
+  "transitions": [],
+  "maxX": 125.96634679075365,
+  "final": {
+   "t": 260,
+   "x": 125.96634679075365,
+   "y": 60.95316561961455,
+   "level": 15
+  },
+  "agrees": true
+ }
+}
