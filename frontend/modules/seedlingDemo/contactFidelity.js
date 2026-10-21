@@ -784,8 +784,11 @@ export const CONTACT_FIDELITY = {
      * tile overlay (`withTileWrites`); a dead span or an arrival the run does not step refuses by name; the solver
      * prices the tiles' clocks. OFF: no tile is stepped, byte-identical. `SEEDLING_IGNEOUS_LAVA=0|1` for a node
      * measurement.
+     * ⛓ planning-9's flip (⚖ user, 2026-10-21, "Flip igneousLava ON") turns it ON. Measured movers (CI, wave-20 A/B): route
+     * survey step 195 (L76) SOLVED 519 → 496 (the OFF walk dies on the game; the ON walk is witnessed at 0 px) and sweep
+     * leg 649 failed → done (×2); every other survey step and the other 48 type-31 legs unchanged.
      */
-    igneousLava: false,
+    igneousLava: true,
     /**
      * fidelity LIGHTS (wave 20) — THE L69 LIGHTS FIGHT IS STEPPED (`lightBoss.js`, `levelRun.stepLightsNow`): the intro
      * NPC (an X release within 24 px opens it, the pages freeze the room, its removal spawns the six fliers), the

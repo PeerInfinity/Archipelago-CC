@@ -465,6 +465,16 @@ class HelperExpressionMixin:
 
         return f'state.has({item_expr}, player, {count_expr})'
 
+    def _expr_weighted_count_true(self, expr: Dict[str, Any]) -> str:
+        """Generate the weights of the true conditions summed, compared with count."""
+        count = expr.get('count', 0)
+        count_expr = self._generate_expression(count) if isinstance(count, dict) else str(count)
+        terms = []
+        for condition, weight in expr.get('weighted_conditions', []):
+            weight_expr = self._generate_expression(weight) if isinstance(weight, dict) else str(weight)
+            terms.append(f'({weight_expr} if ({self._generate_expression(condition)}) else 0)')
+        return f'(({" + ".join(terms) or "0"}) >= {count_expr})'
+
     def _expr_group_check(self, expr: Dict[str, Any]) -> str:
         """Generate state.has_group() call."""
         group_raw = expr.get('group', '')

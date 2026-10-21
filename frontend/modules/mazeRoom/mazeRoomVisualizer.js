@@ -26,9 +26,10 @@ import {
     getExitAt,
     isFloor,
     createState,
+    hasItemActions,
 } from './mazeRoomEngine.js';
 import { PlaybackClock } from '../shared/playbackClock.js';
-import { findPath, stepsToInputs } from './mazeAutopather.js';
+import { findPath, stepsToInputs, planItemActions } from './mazeAutopather.js';
 
 const STEP_DELTAS = {
     [INPUT_N]: { dx: 0,  dy: -1 },
@@ -399,6 +400,10 @@ export class MazeRoomVisualizer {
             // queue icon and ticked no hazard. Exposing it arms the reader
             // that was already written for it.
             turn: this._state ? this._state.turn : null,
+            // ⛓ ITEM ACTIONS: present only when the state carries them (an
+            // item-action world), so every other getState() bag is unchanged.
+            ...(this._state?.facing !== undefined ? { facing: this._state.facing } : {}),
+            ...(this._state?.broken !== undefined ? { broken: this._state.broken.slice() } : {}),
             inventory: new Map(this._inventory),
             checkedLocations: new Set(this._checkedLocations),
             target: this._target ? { ...this._target } : null,
@@ -710,6 +715,19 @@ export class MazeRoomVisualizer {
     }
 
     _planTilePath(target) {
+        // ⛓ ITEM ACTIONS (⚖ "Plan strikes"): on an item-action world without
+        // hazards the plan is made over the ENGINE's own states, so it may
+        // turn and strike a rock on the way; every other world keeps the
+        // tile planner below, unchanged.
+        if (hasItemActions(this._world) && !(this._world.hazards?.length > 0)) {
+            const planned = planItemActions(this._world, this._state,
+                { kind: 'tile', x: target.x, y: target.y }, {
+                    inventory: this._inventory,
+                    clearanceOpts: this._clearanceOpts ?? undefined,
+                    excludeOtherExits: true,
+                });
+            return planned ? planned.inputs : null;
+        }
         // Delegates to the shared autopather. Inventory + obstacleLib
         // give it the same locked-door-aware behavior as the previous
         // inline BFS. excludeOtherExits matches the prior heuristic of

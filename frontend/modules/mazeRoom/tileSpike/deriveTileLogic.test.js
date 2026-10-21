@@ -13,7 +13,7 @@
  * requirement replayable on the engine). Each witness plan is replayed through `step` too.
  */
 import { describe, it, expect } from 'vitest';
-import { createState, step, getExitAt, mazeVisitedKey, setObstacle, extractPathsAndObstacles, INPUTS } from '../mazeRoomEngine.js';
+import { createState, step, getExitAt, mazeVisitedKey, setObstacle, extractPathsAndObstacles, worldInputs } from '../mazeRoomEngine.js';
 import { generateMazeLevel, MAZE_PALETTE } from '../procgenMaze.js';
 import { parseAreaSpec } from '../../procgenCore/areaSpec.js';
 import { parseElementSpec } from '../../procgenCore/elementSpec.js';
@@ -22,6 +22,8 @@ import { compileRegion } from '../../shared/procgen/pathsAndObstaclesCompiler.js
 import { evaluateRuleAgainstInventory } from '../../shared/procgen/library.js';
 import { deriveRegionLogic, regionItems, ruleFromMinimalSets } from './deriveTileLogic.js';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
+import { setTile, TILE_WALL, useInput } from '../mazeRoomEngine.js';
+import { itemActionPicture, SWORD } from '../mazeItemActions.fixtures.js';
 
 const has = (item) => ({ rule: 'Has', args: { item_name: item } });
 const WEAPON_OR_SWIM = { rule: 'Or', children: [has('Progressive Swim'), has('Progressive Sword')] };
@@ -57,7 +59,7 @@ function engineCells(world, inventory, pickups) {
     for (let head = 0; head < queue.length; head++) {
         const s = queue[head];
         if (head > 0 && getExitAt(w, s.player_pos.x, s.player_pos.y) !== null) continue;
-        for (const input of INPUTS) {
+        for (const input of worldInputs(w)) {
             const n = step(w, s, input);
             if (n === null || seen.has(mazeVisitedKey(n))) continue;
             seen.add(mazeVisitedKey(n));
@@ -192,5 +194,72 @@ describe('Q3 search — refusals are BY NAME', () => {
     it('a region whose item axis exceeds the lattice cap', () => {
         expect(() => deriveRegionLogic(guardRoom({ rock: 'lane' }), HELPERS, { maxItems: 3 }))
             .toThrow(/4 region items exceed the lattice cap 3/);
+    });
+});
+
+/* ── ITEM ACTIONS (slice tile-primitives-item-actions): a STRIKE-gated location ─────────────── */
+
+describe('Q3 search — a strike-gated location', () => {
+    // Two rocks of one row: `rock` only a strike opens (clear_set []); `rock_swim` a strike OR Swim
+    // opens — the L15 rock's shape with the sword as an ACTION rather than a passive clearance.
+    const ROW = ['########', '#P..rLX#', '#..S...#', '########'];
+    const world = (rockId) => {
+        const w = itemActionPicture(ROW);
+        w.obstacleLib.rock_swim = { kind: 'rock', clear_set: [['Progressive Swim']], struck_by: ['sword'] };
+        // seal the lower row's way round to the location and the exit
+        setTile(w, 5, 2, TILE_WALL);
+        setTile(w, 6, 2, TILE_WALL);
+        if (rockId !== 'rock') setObstacle(w, 4, 1, rockId);
+        return w;
+    };
+
+    it('the search\'s item axis names the sword (its action strikes a region obstacle)', () => {
+        expect(regionItems(world('rock'))).toEqual(['Progressive Sword']);
+        expect(regionItems(world('rock_swim'))).toEqual(['Progressive Swim', 'Progressive Sword']);
+    });
+
+    for (const [rockId, expected] of [
+        ['rock', has(SWORD)],
+        ['rock_swim', { rule: 'Or', children: [has('Progressive Swim'), has(SWORD)] }],
+    ]) {
+        for (const pickups of ['ap', 'in-room']) {
+            it(`${rockId} (${pickups}): derived = ${JSON.stringify(expected)}; the engine agrees at every subset; `
+                + 'every witness replays on the engine', () => {
+                const w = world(rockId);
+                const derived = deriveRegionLogic(w, HELPERS, { pickups });
+                const rules = rulesById(derived);
+                if (pickups === 'ap') {
+                    expect(rules['flag_B@5,1']).toEqual(expected);
+                    expect(rules['exit:exit']).toEqual(expected);
+                } else {
+                    // the sword lies in the room: in-room play fetches it, so only the swim half matters
+                    expect(rules['flag_B@5,1']).toEqual({ rule: 'True_' });
+                }
+                expect(engineDisagreements(w, derived, pickups)).toEqual([]);
+                const replayWorld = pickups === 'ap' ? { ...w, items: new Map() } : w;
+                for (const t of derived.targets) {
+                    for (const { inventory, plan } of t.witnesses) {
+                        let s = createState(replayWorld);
+                        s.inventory = new Set(inventory);
+                        for (const input of plan) {
+                            s = step(replayWorld, s, input);
+                            expect(s).not.toBeNull();
+                        }
+                        expect(s.player_pos).toEqual({ x: t.x, y: t.y });
+                    }
+                }
+                if (pickups === 'ap' && rockId === 'rock') {
+                    const witness = derived.targets.find((t) => t.id === 'flag_B@5,1').witnesses[0];
+                    expect(witness.plan).toContain(useInput('sword'));
+                }
+            });
+        }
+    }
+
+    it('a world WITHOUT item actions prices the strike-only rock False_ (nothing opens it)', () => {
+        const w = world('rock');
+        w.actionLib = {};
+        const rules = rulesById(deriveRegionLogic(w, HELPERS, { pickups: 'ap' }));
+        expect(rules['flag_B@5,1']).toEqual({ rule: 'False_' });
     });
 });

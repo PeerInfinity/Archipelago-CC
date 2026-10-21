@@ -19,6 +19,7 @@
     "_template_regions.py",
     "_template_rules.py",
     "_template_utils.py",
+    "_unknown_kind.py",
     "apworld.py",
     "cli.py",
     "constants.py",
