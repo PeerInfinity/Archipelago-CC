@@ -193,6 +193,7 @@ import './modules/tests/testCases/quickLaunchTests.js';
 import './modules/tests/testCases/miniPanelsTests.js';
 import './modules/tests/testCases/tutorialTests.js';
 import './modules/tests/testCases/storagePanelTests.js';
+import './modules/tests/testCases/ruleConverterTests.js';
 
 // Signal that test cases have been pre-imported
 window.__BUNDLED_TEST_CASES__ = true;

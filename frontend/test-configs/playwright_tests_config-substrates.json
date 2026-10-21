@@ -1971,6 +1971,12 @@
             "enabled": true,
             "category": "Mini Panels",
             "_comment": "Mini panels (2026-10-20): the mini row above the middle column (modules/miniPanels) and its Quick Launch section. Here, not the regression roster: test-regression loads modules-nograph.json, which has no Playback Bot or Tutorial. Category Mini Panels is claimed by no batch, so it runs in fast (on push). Each row sets its own state (all wishes off, locked) and puts it back."
+        },
+        {
+            "id": "rule-converter-exact-mode-round-trips",
+            "enabled": true,
+            "category": "Rule Converter",
+            "_comment": "helper-script P4: the Rule Converter's Exact engine — real exporter analyzer + world_generator under Pyodide (CDN, booted on the first Convert). A helper script both ways through the Convert buttons, and the loaded alttp_worldgen preset's 36 helpers round-trip with its options. Category unclaimed by testBatches.js, so batch fast (on push)."
         }
     ]
 }
