@@ -10211,8 +10211,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
-                "arg",
-                "sameTape"
+                "arg"
             ],
             "browser": false,
             "category": "plan",
