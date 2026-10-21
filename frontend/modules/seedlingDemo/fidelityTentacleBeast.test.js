@@ -201,13 +201,15 @@ describe('bosskills D3 — the solver (`solid:tentaclebeast` → `tentaclebeast`
         });
     }, 120000);
 
-    it('OFF: the clear-tag refuses, and the refusal names the switch', () => {
+    // ⛓ BOSSKILLS harvest: the `solid:tentaclebeast` row is switch-gated (as Lights' is), so OFF the catalogue has no row
+    // at all — the survey's `bossGoal` reads `skip` as it did before the slice, and a clear-tag handed it refuses on the row.
+    it('OFF: the clear-tag refuses, and the refusal names the missing strategy row', () => {
         const staging = stagingFromTape(tapeOf({}));
         const run = createRunForStaging(staging, SRC);
         let e = null;
         try { solveSegment({ run, goals: goals.slice(0, 1), name: 'tb-off', boot: staging.boot }); } catch (x) { e = x; }
         expect(e).toBeInstanceOf(SolverRefusal);
-        expect(e.message).toMatch(/tentacleBeastFight/);
+        expect(e.message).toMatch(/no strategy row exists for solid:tentaclebeast/);
     }, 120000);
 
     it('ON, unsplit: the clear-tag refuses, and the refusal names the stream\'s premise', () => {

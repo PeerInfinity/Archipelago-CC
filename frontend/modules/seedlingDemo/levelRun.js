@@ -17245,7 +17245,7 @@ export function createLevelRun({
             visit: part({ activatorStates, bridgeStates, pushableStates, rockStates, burnStates, ropeStates,
                 fallRockStates, moonrockStates, crusherStates, bossStates, shieldBossStates, finalDoorStates,
                 turretStates, beamTowerStates, magicalLockStates, chestStates, pulserStates, spinnerStates,
-                pullsByLevel, wandWindows, fireWindows, igneousStates }),
+                pullsByLevel, wandWindows, fireWindows, igneousStates, lavaBossFights, lavaArenaRocks }),
             /**
              * the module switches this file's import closure consults — a separate component because a reader of
              * them reads no run: the caller keys on solverBot's own (see the report's hand-over)

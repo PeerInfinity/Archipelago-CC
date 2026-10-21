@@ -4159,10 +4159,10 @@
         "axePricedCrossing.js": 4,
         "botDriverV2.js": 3,
         "forcedHit.js": 4,
-        "solverBot.js": 42,
+        "solverBot.js": 46,
         "strikePolicy.js": 2
       },
-      "sites": 59,
+      "sites": 63,
       "seen": "static",
       "via": [
         "import"

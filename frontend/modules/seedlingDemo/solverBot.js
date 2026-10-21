@@ -490,7 +490,7 @@ const fail = (m, opts) => { throw new SolverBotError(m, opts); };
  *   rather than guessed. Registering an executor is one row here; that is
  *   the "adds policies rather than restructuring" contract.
  */
-export const OBSTACLE_STRATEGIES = Object.freeze(switchGatedRow({
+export const OBSTACLE_STRATEGIES = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow({
     'solid:pushableblock': 'shove',
     'solid:pushableblockfire': 'shove',
     /**
@@ -680,7 +680,7 @@ export const OBSTACLE_STRATEGIES = Object.freeze(switchGatedRow({
      * own stepped fight (`lavaBoss.js`); with `CONTACT_FIDELITY.kingOfFireFight` off it resolves `held: false` and
      * refuses by name.
      */
-    'solid:lavaboss': 'lavaboss',
+    // (`solid:lavaboss` → `lavaboss` is registered below, switch-gated on `kingOfFireFight`, as Lights' row is.)
     /**
      * ⛓⛓⛓ seedling-fidelity-bosskills D3 — **THE TENTACLED BEAST IS FOUGHT.** L57's only way on is its mouth
      * (`createMouthEntrance`, a Teleporter to `tentacle_beast_mouth` once eight tentacles are gone); the route survey's
@@ -689,8 +689,10 @@ export const OBSTACLE_STRATEGIES = Object.freeze(switchGatedRow({
      * own draw stream; with `CONTACT_FIDELITY.tentacleBeastFight` off, or the stream's premises unmet, it resolves
      * `held: false` and refuses by name.
      */
-    'solid:tentaclebeast': 'tentaclebeast',
-}, 'solid:lightbosscontroller', () => (CONTACT_FIDELITY.lightsBossFight ? 'lights' : undefined)));
+    // (`solid:tentaclebeast` → `tentaclebeast` is registered below, switch-gated on `tentacleBeastFight`.)
+}, 'solid:lightbosscontroller', () => (CONTACT_FIDELITY.lightsBossFight ? 'lights' : undefined)),
+'solid:lavaboss', () => (CONTACT_FIDELITY.kingOfFireFight ? 'lavaboss' : undefined)),
+'solid:tentaclebeast', () => (CONTACT_FIDELITY.tentacleBeastFight ? 'tentaclebeast' : undefined)));
 
 /**
  * ⛓⛓⛓ PROCGEN PoC SLICE 3b — **THE SECOND SELECTION PATH, AS DATA.**
@@ -755,7 +757,7 @@ export const STRATEGY_REFINEMENTS = Object.freeze([
  * row that had to DERIVE its own parameters rather than bind a placement: a
  * leg spec carried `{presser, ticks}` and a live policy has to work out both.
  */
-export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow({
+export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow({
     collect: execCollect,
     chest: execChest,
     hold: execHold,
@@ -848,14 +850,16 @@ export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow({
      * variants before committing one: the King of Fire's fight is deterministic, so a variant that kills without a
      * death on the fork kills on the run. See `execLavaBoss`.
      */
-    lavaboss: execLavaBoss,
+    // (`lavaboss` is registered below, switch-gated on `kingOfFireFight`.)
     /** ⛓ bosskills D3 — the Tentacled Beast, the King of Fire's pattern (variants on forks). See `execTentacleBeast`. */
-    tentaclebeast: execTentacleBeast,
+    // (`tentaclebeast` is registered below, switch-gated on `tentacleBeastFight`.)
     /**
      * ⛓⛓⛓ SEEDLING FIDELITY LIGHTS D3 — `lights` (registered below, switch-gated): the L69 fight as SORTIES and DODGES,
      * each forecast on a clone of the run's own fight (`lightsVerb.js`), finished on {69,0} in `earnedClears`.
      */
-}, 'lights', () => (CONTACT_FIDELITY.lightsBossFight ? execLights : undefined)));
+}, 'lights', () => (CONTACT_FIDELITY.lightsBossFight ? execLights : undefined)),
+'lavaboss', () => (CONTACT_FIDELITY.kingOfFireFight ? execLavaBoss : undefined)),
+'tentaclebeast', () => (CONTACT_FIDELITY.tentacleBeastFight ? execTentacleBeast : undefined)));
 
 /**
  * ⛓⛓⛓ SEEDLING FIDELITY CRUSHER — **THE FRONTIER'S EXECUTOR LOOKUP**, and the

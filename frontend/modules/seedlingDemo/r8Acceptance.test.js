@@ -1596,7 +1596,9 @@ describe('R8_STRATEGY_EXECUTORS — ⚖ §11.8a as data, and the checks that kee
         // land, and the as-built quotes it.
         expect([...out.pending].sort()).toEqual(
             Object.keys(R8_STRATEGY_EXECUTORS.executorDerivations)
-                .filter((k) => !(k in STRATEGY_EXECUTORS)).sort());
+                // ⛓ a SWITCH-GATED executor (Lights, the two BOSSKILLS fights) is a non-enumerable own row: `in` sees it, the
+                // registry's enumeration does not, so until its flip it is PENDING — read the running set as enumerated.
+                .filter((k) => !Object.keys(STRATEGY_EXECUTORS).includes(k)).sort());
     });
 
     it('an executor registered with no derivation row is a NAMED failure', () => {

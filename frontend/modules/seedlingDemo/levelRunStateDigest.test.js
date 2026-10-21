@@ -186,4 +186,23 @@ describe('each component moves with its own state', () => {
             () => [on.stateDigest({ parts: true }), off.stateDigest({ parts: true })]);
         expect(Object.keys(a.parts).filter((k) => a.parts[k] !== b.parts[k])).toEqual(['visit']);
     });
+    // ⛓ BOSSKILLS harvest (the hammer arc's review row, its STOP): the King of Fire's body and L82's arena rock are run state
+    // the escape reads (`liveSolidOpts.lavaBosses`, `fallenRocksNow`), so they must move `visit`. From the L82 pit arrival,
+    // standing still, a run walked ON and one walked OFF stand on one body for these 20 ticks (no ball or runner reaches
+    // the player yet); only the fight's state differs. Both are digested under ON, so `globals` agrees too.
+    it('the King of Fire\'s fight (`lavaBossFights`, `lavaArenaRocks`) moves `visit` alone', () => {
+        const walk = (on) => withContactFidelity({ kingOfFireFight: on }, () => {
+            const run = createRunForStaging({ ...stagingFromTape(TAPE), boot: { level: 82, x: 160, y: 272 },
+                persistence: [] }, atlasLevelSource());
+            for (let i = 0; i < 20; i += 1) run.advance(new Set());
+            return run;
+        });
+        const on = walk(true);
+        const off = walk(false);
+        expect(withContactFidelity({ kingOfFireFight: true }, () => on.entities('lavaBossFight'))).not.toBeNull();
+        expect(off.state).toEqual(on.state);
+        const [a, b] = withContactFidelity({ kingOfFireFight: true },
+            () => [on.stateDigest({ parts: true }), off.stateDigest({ parts: true })]);
+        expect(Object.keys(a.parts).filter((k) => a.parts[k] !== b.parts[k])).toEqual(['visit']);
+    });
 });
