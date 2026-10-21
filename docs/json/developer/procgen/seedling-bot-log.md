@@ -24245,3 +24245,68 @@ walk the gadget) or a candidate list the gate walks, not a wider range.
 
 **Trap candidate.** `continue-on-error` hides a red at the job level, and printing the red in a line is not the same as
 someone reading it. Five arms were red for 2–3 weeks. A line-reader that fails the job is what makes the red visible.
+
+### Seedling hammer-phase DA — the digest's visit audit
+
+⚖ The user approved the slice on 2026-10-21. `ESCAPE_CROSS_PASS_CACHE` (XC) keys each escape on `run.stateDigest()`,
+whose `visit` part listed its maps by hand with nothing checking the list. The report is
+`CC/docs/cloud-reports/seedling-hammer-digest-audit.md`.
+
+**The audit is the census, re-run.** Fidelity DIGEST's AST tools at `bf259ff199`: the escape still reads the same eight
+run members; the closure they reach reads 75 bindings (74 with the shadow filter). One is new and undigested:
+**`lightsFights`** (`liveSolidOpts` → `lightTotemsNow`: the L69 totem's solid, `lightsBossFight` ON only). It is now in
+`visit`. The other 30 per-visit maps are read only through run members outside the escape's eight (`advance`,
+`entities`, the other forecasts), named per map.
+
+**Measured, not argued.** A scratch hook (`__eval` in a scratch copy of `levelRun.js`) perturbs one map in place
+between two probes of the digest and the escape's run surface. `lightsFights`: the surface moved in 123 of 125
+samples while the base digest stood still — a false equal, latent (no committed workload calls the escape in L69).
+The exempt maps never moved the surface. The first run of the tool said `lavaChainStates` did: its entries hold the
+world's own hazard row (`h`), so the perturbation edited the world in place, which the world memo deliberately cannot
+see. The tool now skips every object the world holds.
+
+**The guard** (`levelRunStateDigest.test.js`). `DIGEST_EXEMPT` (30 rows, each `UNREAD` / `DERIVED` / `LAZY` with
+its fact) and `digestCoverage(src)`: every `const …States = new Map()`, `…ByLevel` map, `…Windows` array and
+`freshVisitState` reset is digested or exempt, never both, and no exempt row is stale. A new `fooStates` reds the row
+by name.
+
+**Hand-overs.** `igneousStates` is exempt by code (read by `renderIgneousNow` and `igneousTilesNow` only), but
+fidelity's `dfaa06e240` puts it IN. That is harmless, and when it lands, its `DIGEST_EXEMPT` row must go: the guard
+reds a map that is both. Any new lava or lights map a fidelity branch adds meets the guard and must choose.
+
+**Trap candidate.** *A perturbation that reaches a shared object measures the sharer.* A per-visit entry that holds a
+world row is the world's state as much as the map's; editing it in place measured the world memo, not the map.
+### Seedling fidelity BOSSKILLS — the King of Fire and the Tentacled Beast, modelled and fought (two switches, OFF)
+
+Planner `seedling-fidelity-planning-9`, wave 20. Two new switches ship OFF: `CONTACT_FIDELITY.kingOfFireFight` (L82,
+`lavaBoss.js` + `lavaBossPolicy.js`, verb `lavaboss`) and `CONTACT_FIDELITY.tentacleBeastFight` (L57,
+`tentacleBeast.js` + `tentacleBeastPolicy.js`, verb `tentaclebeast`). The report is
+`CC/docs/cloud-reports/seedling-fidelity-bosskills.md`.
+
+**The King of Fire (L82).** The fight is deterministic: a 99-update cycle (sit 19, 20 on the wake; smash 16; smashback
+16; armsup 22; sweep 10; sweepback 16), two LavaRunners at the end of the smash, and a five-ball fan at the end of the
+sweep. Reflecting the middle ball opens a 120-update window, and the first sword hit inside it counts; three counts kill
+him. `hitByDarkStuff` cannot reach him: nothing in the game delivers a Shield or Suit hit to a LavaBoss. Five game
+witnesses (`fixtures/lavaboss-witness/`) hold at 0 px on every tick, including the arena rock's 180 dead frames (which
+age `slashTimer` and the i-frames), the respawn at the ctor's `playerPosition` (152,176), an airborne runner reached by a
+swing, and the suit-on-lava "undead" runner. Route survey steps 203 and 224 SOLVE ON (1363 t, {82,1} and {82,0} earned).
+
+**The Tentacled Beast (L57).** The placements are gameplay `Math.random()` draws, and the model now steps them on the
+runtime LFSR (`TentacleDrawStream`). That needs a declared seed, `split: true`, and this room as the only one built since
+the reseed; a death's rebuild carries the stream on and pays the ctor's `coins` draw again. Otherwise the fight refuses
+by name. Measured on p4g: the tentacle facing is `xpos < FP.width / 2` with the LEVEL's width (`Game.as:2065`), not the
+screen's 160. `play("cut")` while "cut" plays keeps the timer's fraction. The whirlpool loop's `cont` is never reset,
+so one rejected try burns all 101. Four game witnesses (`fixtures/tentaclebeast-witness/`) hold at 0 px, including the
+generator's state on every tick, a swipe hit, a death and rebuild, and the solver's walk through the mouth into L58.
+A clear-tag on {57,0} binds the beast in `world.pixelmasks`.
+
+**Trap candidates.**
+- `botMobiles` lists `Mobile`s, and a `Whirlpool` is a plain `Entity`, so the game's whirlpools never appear in a probe.
+  The generator's state is the only witness of their draws.
+- A comparison script that prints PASS when the model threw on tick 1 compares nothing (D3's first `levelWidth` slip:
+  "PASS … model ticks 1"). Gate on the model's tick count.
+
+**Hand-overs.** `stateDigestParts` does not cover `lavaBossFights` / `lavaArenaRocks` (the body and the rock reach the
+escape through `liveSolidOpts`), so the King of Fire switch must not flip until the digest covers them (hammer arc).
+The survey stages L57 unsplit (`r8-solve-11`'s block), so step 125 refuses on the stream premise (staging, JS arc). The
+atlas has no `out_tentaclebeast_80_48` edge, so steps 94/95/125/126 stay NO-EDGE (rules/survey).

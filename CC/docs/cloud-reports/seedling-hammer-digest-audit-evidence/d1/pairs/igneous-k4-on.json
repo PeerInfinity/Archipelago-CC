@@ -1,0 +1,574 @@
+{
+ "spec": "igneous-k4-on",
+ "rows": [
+  {
+   "t": 0,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 5,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 10,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 15,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 20,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 25,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 30,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 35,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 40,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 45,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 50,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 55,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 60,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 65,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 70,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 75,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 80,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 85,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 90,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 95,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 100,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 105,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 110,
+   "level": 76,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  }
+ ],
+ "summary": {
+  "apReportFlags": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "tileWritesByLevel": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "igneousStates": {
+   "samples": 23,
+   "perturbed": 22,
+   "leaves": 106,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 22
+  },
+  "moonrockFlags": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "finalBossStates": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "podStates": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "placedGrenadeStates": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "lavaChainStates": {
+   "samples": 23,
+   "perturbed": 22,
+   "leaves": 132,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 22
+  },
+  "spinningAxeStates": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "watcherStates": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "blastStates": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "blastReachCache": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "shooterStates": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "spitStates": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "bombPusherStates": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "bombStates": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "wandShotStates": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "bossFlags": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "shieldBossFlags": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "finalBossFlags": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "watcherFlags": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "finalDoorFlags": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "bossShotStates": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "arrowTrapStates": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "arrowsInFlight": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "wallFlyerStates": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "drillStates": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "staticBodyStates": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "darkTrapStates": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "chaserStates": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "poleFlags": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "rockFlags": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "pickupFlags": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "apItemFlags": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "poleStates": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "talkerStates": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "lightsFights": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "lightsExits": {
+   "samples": 23,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "spinnerStates": {
+   "samples": 23,
+   "perturbed": 23,
+   "leaves": 23,
+   "partsMoved": {
+    "visit": 23
+   },
+   "surfaceMoved": 0,
+   "undoExact": 23
+  }
+ }
+}

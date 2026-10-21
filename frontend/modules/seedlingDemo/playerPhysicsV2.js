@@ -997,6 +997,8 @@ export function step(state, held, opts = {}) {
         // then not in the bag at all — byte-identical). ⚠ Not yet a `LIVE_GEOMETRY_KEYS` member: at the default flip it
         // joins that list (and `normalizeLiveOpts` fills it), so the assertion below covers it.
         lightTotems = null,
+        // ⛓ seedling-fidelity-bosskills D2: the King of Fire's body (`CONTACT_FIDELITY.kingOfFireFight`; null OFF).
+        lavaBosses = null,
         pulledRopes = null,
         // ⛔⛔ R5 slice 9: the SIXTH. `Chest.open()` writes `type = ""` and
         // the entity then fades for 60 more ticks, so the SOLIDITY goes
@@ -1457,6 +1459,7 @@ export function step(state, held, opts = {}) {
         openChests,
         beamTowers,
         ...(lightTotems ? { lightTotems } : {}),
+        lavaBosses,
     };
     if (!noclip) {
         for (const k of LIVE_GEOMETRY_KEYS) {
