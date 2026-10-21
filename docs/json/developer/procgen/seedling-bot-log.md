@@ -24246,6 +24246,36 @@ walk the gadget) or a candidate list the gate walks, not a wider range.
 **Trap candidate.** `continue-on-error` hides a red at the job level, and printing the red in a line is not the same as
 someone reading it. Five arms were red for 2–3 weeks. A line-reader that fails the job is what makes the red visible.
 
+### Seedling hammer-phase DA — the digest's visit audit
+
+⚖ The user approved the slice on 2026-10-21. `ESCAPE_CROSS_PASS_CACHE` (XC) keys each escape on `run.stateDigest()`,
+whose `visit` part listed its maps by hand with nothing checking the list. The report is
+`CC/docs/cloud-reports/seedling-hammer-digest-audit.md`.
+
+**The audit is the census, re-run.** Fidelity DIGEST's AST tools at `bf259ff199`: the escape still reads the same eight
+run members; the closure they reach reads 75 bindings (74 with the shadow filter). One is new and undigested:
+**`lightsFights`** (`liveSolidOpts` → `lightTotemsNow`: the L69 totem's solid, `lightsBossFight` ON only). It is now in
+`visit`. The other 30 per-visit maps are read only through run members outside the escape's eight (`advance`,
+`entities`, the other forecasts), named per map.
+
+**Measured, not argued.** A scratch hook (`__eval` in a scratch copy of `levelRun.js`) perturbs one map in place
+between two probes of the digest and the escape's run surface. `lightsFights`: the surface moved in 123 of 125
+samples while the base digest stood still — a false equal, latent (no committed workload calls the escape in L69).
+The exempt maps never moved the surface. The first run of the tool said `lavaChainStates` did: its entries hold the
+world's own hazard row (`h`), so the perturbation edited the world in place, which the world memo deliberately cannot
+see. The tool now skips every object the world holds.
+
+**The guard** (`levelRunStateDigest.test.js`). `DIGEST_EXEMPT` (30 rows, each `UNREAD` / `DERIVED` / `LAZY` with
+its fact) and `digestCoverage(src)`: every `const …States = new Map()`, `…ByLevel` map, `…Windows` array and
+`freshVisitState` reset is digested or exempt, never both, and no exempt row is stale. A new `fooStates` reds the row
+by name.
+
+**Hand-overs.** `igneousStates` is exempt by code (read by `renderIgneousNow` and `igneousTilesNow` only), but
+fidelity's `dfaa06e240` puts it IN. That is harmless, and when it lands, its `DIGEST_EXEMPT` row must go: the guard
+reds a map that is both. Any new lava or lights map a fidelity branch adds meets the guard and must choose.
+
+**Trap candidate.** *A perturbation that reaches a shared object measures the sharer.* A per-visit entry that holds a
+world row is the world's state as much as the map's; editing it in place measured the world memo, not the map.
 ### Seedling fidelity BOSSKILLS — the King of Fire and the Tentacled Beast, modelled and fought (two switches, OFF)
 
 Planner `seedling-fidelity-planning-9`, wave 20. Two new switches ship OFF: `CONTACT_FIDELITY.kingOfFireFight` (L82,

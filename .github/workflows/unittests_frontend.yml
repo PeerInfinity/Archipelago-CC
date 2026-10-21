@@ -540,10 +540,13 @@ jobs:
       shards: ${{ steps.plan.outputs.shards }}
       needed: ${{ steps.needed.outputs.needed }}
     steps:
-      # ⛓ NO submodules and NO `npm ci`: the plan reads `gateRoster()` (a
-      # directory of `check-*.mjs`) and `ci-arm-costs.json`, and imports
-      # nothing outside `scripts/procgen`. Paying 127 MB of wasm for a
-      # partition would be a minute per push for nothing.
+      # ⛓ NO submodules: the plan reads `gateRoster()` (a directory of
+      # `check-*.mjs`) and `ci-arm-costs.json`. Paying 127 MB of wasm for a
+      # partition would be a minute per push for nothing. ⛓ ci-manual-moves:
+      # `npm ci` IS paid now — the path filter (`ciPathFilter.js`) derives a
+      # gate's input populations through `rowInputKey.js`, which imports
+      # esbuild. A submodule is in those populations as its GITLINK path, which
+      # is what a compare lists for a pointer move, so no checkout is needed.
       - name: Checkout repository
         uses: actions/checkout@v6.0.2
 
@@ -551,6 +554,10 @@ jobs:
         uses: actions/setup-node@v6.4.0
         with:
           node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
 
       # ════════════════════════════════════════════════════════════════
       # ⛓ ci-skip-rules RULE 2 (⚖ user, 2026-10-17) — A DOCS-ONLY PUSH RUNS
@@ -573,8 +580,13 @@ jobs:
           SHA: ${{ github.sha }}
           REPO: ${{ github.repository }}
         run: |
+          # ⛓ ci-manual-moves — the change list is ALSO the path filter's input
+          # (`--changed=` below): /tmp/changed.txt holds the paths, or `ALL`
+          # when there is no list to trust (a PR, a dispatch, an unreadable or
+          # truncated compare) — which keeps every path-filtered shard.
+          echo ALL > /tmp/changed.txt
           decide() {
-            if [ "$EVENT" != "push" ] || [ "$REF" = "refs/heads/main" ]; then
+            if [ "$EVENT" != "push" ]; then
               echo "run: $EVENT on $REF always runs" >&2; echo true; return
             fi
             base="$BEFORE"
@@ -584,7 +596,11 @@ jobs:
             fi
             n=$(printf '%s\n' "$files" | grep -c . || true)
             if [ "$n" -ge 300 ]; then echo "run: $n changed files (list may be truncated)" >&2; echo true; return; fi
+            printf '%s\n' "$files" > /tmp/changed.txt
             echo "$n changed file(s) in $base...$SHA:" >&2; printf '%s\n' "$files" | sed 's/^/  /' >&2
+            if [ "$REF" = "refs/heads/main" ]; then
+              echo "run: main always runs the browser shards" >&2; echo true; return
+            fi
             printf '%s\n' "$files" | node --input-type=module -e "import { docsOnly } from './scripts/procgen/ciDocsOnly.js'; let d = ''; process.stdin.on('data', (c) => { d += c; }).on('end', () => console.log(docsOnly(d.split('\\n')) ? 'false' : 'true'));"
           }
           needed=$(decide | tail -1)
@@ -597,8 +613,11 @@ jobs:
         run: |
           set -o pipefail
           # ⛓ the human table goes in the log; the JSON goes to the matrix.
-          node scripts/procgen/ci-gates.mjs --plan --set=browser
-          SHARDS=$(node scripts/procgen/ci-gates.mjs --plan --set=browser --json)
+          node scripts/procgen/ci-gates.mjs --plan --set=browser --changed=/tmp/changed.txt
+          # ⛓ ci-manual-moves — a `@ci-paths` gate's shard (seedling-wasm-ship)
+          # is in the matrix only when a pushed path hits its filter, and on
+          # every non-push run; the stderr lines say which, and why.
+          SHARDS=$(node scripts/procgen/ci-gates.mjs --plan --set=browser --json --changed=/tmp/changed.txt)
           echo "shards=$SHARDS" >> "$GITHUB_OUTPUT"
           echo "MEASURED: $SHARDS"
 

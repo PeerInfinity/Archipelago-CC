@@ -1,0 +1,6 @@
+t=0 [max:3] |
+h=0 [fade,max:3] |
+t=1..147 [max:3] |
+t=148..150 [s:chaser,max:3] | drawImage(seedling/SlashHit, 0, 0, 104.024, 48.881) scale=0.6x0.6
+t=151..152 [s:chaser,max:3] | drawImage(seedling/SlashHit, 32, 0, 104.024, 48.881) scale=0.6x0.6
+t=153..192 [max:3] |

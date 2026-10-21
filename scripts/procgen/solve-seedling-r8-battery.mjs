@@ -3,6 +3,8 @@
  * solve-seedling-r8-battery — the LIVE SOLVER re-solves the leg-only act2
  * rooms from staged boots. R8 slice 2, kickoff §4 slice 2 track B.
  *
+ * @ci-box the user moved the `solve-seedling-*` chain `--check`s off push (⚖ 2026-10-21): the box answers this row (`node scripts/procgen/standing-values.mjs --write --key=<its key>`), and CI runs no arm for it.
+ *
  * ── THE DERIVATION (stated, then computed — never copied) ─────────────
  *
  * The battery is derived from chain `act2-the-sword`'s OWN `walk.units`:

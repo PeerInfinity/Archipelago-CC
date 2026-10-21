@@ -5255,6 +5255,7 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "audit",
+                "changed",
                 "host",
                 "json",
                 "plan",
@@ -5272,6 +5273,12 @@ export const INSTRUMENTS = frz({
                         "flag"
                     ],
                     "name": "audit"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "changed"
                 },
                 {
                     "how": [
