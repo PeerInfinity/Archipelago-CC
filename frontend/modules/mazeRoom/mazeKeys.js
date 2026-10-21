@@ -27,11 +27,31 @@ export const MAZE_SUBSTRATE = 'maze';
 export const ACTION_MOVE = 'move';
 export const ACTION_WAIT = 'wait';
 export const ACTION_LOCATION_CHECK = 'locationCheck';
+/**
+ * ⛓⛓ ITEM ACTIONS (slice tile-primitives-item-actions, ⚖ 2026-10-21). Only an
+ * item-action world (one with an `action_lib`) accepts these; every other
+ * world's queues are made of the three verbs above, unchanged.
+ *   `turn`  — actionId = the direction to face (N/E/S/W); a turn passes.
+ *   `use`   — actionId = the `action_lib` ID, ⛔ NEVER the key (⚖ "queue entries
+ *             name the ACTION ID"), so a rebinding moves no recording.
+ *   `cross` — a walk-through region BOUNDARY inside one shared level world
+ *             (⚖ "Shared level world"; the overlay is Stage 2). actionId = the
+ *             direction stepped (the engine step IS a move); `params` =
+ *             `{boundary, sourceRegion, targetRegion}`, so a replay publishes
+ *             the region move WITHOUT an exit lookup, and the loop-mode gate
+ *             is asked BEFORE the in-world step. Never folds.
+ */
+export const ACTION_TURN = 'turn';
+export const ACTION_USE = 'use';
+export const ACTION_CROSS = 'cross';
 
 export const ACTION_TYPES = Object.freeze([
     ACTION_MOVE,
     ACTION_WAIT,
     ACTION_LOCATION_CHECK,
+    ACTION_TURN,
+    ACTION_USE,
+    ACTION_CROSS,
 ]);
 
 export const DIRECTIONS = Object.freeze(['N', 'E', 'S', 'W']);
@@ -69,6 +89,76 @@ export function waitEntry(loops) {
 /** An explicit location check at the current tile. */
 export function locationCheckEntry(locationName) {
     return mazeEntry(ACTION_LOCATION_CHECK, locationName);
+}
+
+/** A turn-in-place entry: face `dir` without moving. */
+export function turnEntry(dir, loops) {
+    return mazeEntry(ACTION_TURN, dir, loops);
+}
+
+/** A use entry for an `action_lib` id (never a key). */
+export function useEntry(actionId, loops) {
+    return mazeEntry(ACTION_USE, actionId, loops);
+}
+
+/**
+ * A boundary-crossing entry. ⛔ All three params are REQUIRED — the replay
+ * reads the regions off the entry, never off an exit table.
+ */
+export function crossEntry(dir, { boundary, sourceRegion, targetRegion }) {
+    const entry = mazeEntry(ACTION_CROSS, dir);
+    entry.params = { boundary, sourceRegion, targetRegion };
+    return entry;
+}
+
+/** The default use keys, in the order an unkeyed `action_lib` entry takes them. */
+export const DEFAULT_USE_KEYS = Object.freeze(['z', 'x', 'c', 'v']);
+
+/**
+ * `action_lib` → `{key: actionId}` (lower-case keys). An entry's own `key`
+ * wins; an entry without one takes the first free default key, in sorted-id
+ * order. ⛔ An entry left with no free key is simply unbound (it can still be
+ * queued by its button), and two entries naming one key are refused by name.
+ */
+export function useKeyBindings(actionLib) {
+    const out = {};
+    const ids = Object.keys(actionLib ?? {}).sort();
+    for (const id of ids) {
+        const key = actionLib[id]?.key;
+        if (!key) continue;
+        const k = String(key).toLowerCase();
+        if (out[k] !== undefined) {
+            throw new Error(`action_lib: ${out[k]} and ${id} are both bound to '${k}'`);
+        }
+        out[k] = id;
+    }
+    const free = DEFAULT_USE_KEYS.filter((k) => out[k] === undefined);
+    for (const id of ids) {
+        if (actionLib[id]?.key || free.length === 0) continue;
+        out[free.shift()] = id;
+    }
+    return out;
+}
+
+const SHIFT_ARROW_TURNS = Object.freeze({
+    ArrowUp: 'N', ArrowDown: 'S', ArrowLeft: 'W', ArrowRight: 'E',
+});
+
+/**
+ * A keyboard event (`{key, shiftKey}`) → queue entry, or `null`.
+ * ⛓ Shift+arrow = turn and Z/X/C/V = use — ONLY when `actionLib` is non-empty
+ * (an item-action world); on any other world this is `KEY_MAP[key]`, so a
+ * Shift+arrow still moves there exactly as it always did.
+ */
+export function keyToMazeEntry(event, actionLib) {
+    const key = event?.key;
+    if (typeof key !== 'string') return null;
+    if (actionLib && Object.keys(actionLib).length > 0) {
+        if (event.shiftKey && SHIFT_ARROW_TURNS[key]) return turnEntry(SHIFT_ARROW_TURNS[key]);
+        const actionId = useKeyBindings(actionLib)[key.toLowerCase()];
+        if (actionId !== undefined) return useEntry(actionId);
+    }
+    return KEY_MAP[key] ?? null;
 }
 
 /**
@@ -113,6 +203,12 @@ export function describeMazeAction(entry) {
             return 'wait';
         case ACTION_LOCATION_CHECK:
             return `check ${entry.actionId ?? ''}`.trimEnd();
+        case ACTION_TURN:
+            return `turn ${entry.actionId ?? '?'}`;
+        case ACTION_USE:
+            return `use ${entry.actionId ?? '?'}`;
+        case ACTION_CROSS:
+            return `cross ${entry.actionId ?? '?'} → ${entry.params?.targetRegion ?? '?'}`;
         default:
             return entry.actionId === null || entry.actionId === undefined
                 ? entry.actionType

@@ -27,9 +27,12 @@ import { fnv1a32, stableStringify } from '../procgenCore/contentIdentity.js';
 import {
     INPUT_N, INPUT_S, INPUT_E, INPUT_W, INPUT_WAIT,
     effectiveInventory,
+    facingAfterBump,
     getItem,
     getObstacle,
     step,
+    turnInput,
+    useInput,
     whyBlocked,
 } from './mazeRoomEngine.js';
 import { serializeMazeLevel } from './procgenMaze.js';
@@ -37,7 +40,11 @@ import {
     ACTION_MOVE,
     ACTION_WAIT,
     ACTION_LOCATION_CHECK,
+    ACTION_TURN,
+    ACTION_USE,
+    ACTION_CROSS,
     MAZE_SUBSTRATE,
+    describeMazeAction,
 } from './mazeKeys.js';
 
 /** Direction letter to the engine input constant. */
@@ -75,8 +82,8 @@ export function intendedTileFor(from, dir) {
  * shut — nothing on button_A0"* rather than as an obstacle id. ⛔ Every caller
  * already read ONE string; nothing else moved.
  */
-function refusalReason(world, state, dir, inventoryOverride, clearanceOpts) {
-    const input = MOVE_DIR_TO_INPUT[dir];
+function refusalReason(world, state, dir, inventoryOverride, clearanceOpts, input = MOVE_DIR_TO_INPUT[dir],
+    verb = `move ${dir}`) {
     /**
      * ⛔ THE OVERRIDE AND THE CLEARANCE OPTIONS GO THROUGH — a defect this
      * slice's own suite caught the moment the delegation landed. `step` was
@@ -91,7 +98,7 @@ function refusalReason(world, state, dir, inventoryOverride, clearanceOpts) {
      * world, which is a seam defect and not a fact about the move — so the
      * sentence says so rather than printing an empty reason.
      */
-    return `move ${dir} blocked: ${why ?? '⛔ SEAM — `step` refused it and `whyBlocked` says '
+    return `${verb} blocked: ${why ?? '⛔ SEAM — `step` refused it and `whyBlocked` says '
         + 'it is legal'}`;
 }
 
@@ -105,6 +112,10 @@ function refusalReason(world, state, dir, inventoryOverride, clearanceOpts) {
  * @param {*} [opts.inventoryOverride] - playback-mode inventory; `undefined`
  *   keeps the engine's historical pickup-into-state.inventory behaviour.
  * @param {object} [opts.clearanceOpts] - `{evaluateRule}` for logic gates.
+ * @param {Function} [opts.gate] - a `cross` entry's loop-mode gate,
+ *   `({boundary, sourceRegion, targetRegion}) => true | false | string`; asked
+ *   BEFORE the in-world step, and anything but `true` refuses (a string is the
+ *   reason). Absent → no gate (the standalone panel, the lab).
  * @returns {{next: object|null, reason: string|null}} `next === state` means
  *   the verb passes a turn the ENGINE has no opinion about (`locationCheck`
  *   — a panel-side publish); `next === null` means the entry was REFUSED and
@@ -112,23 +123,66 @@ function refusalReason(world, state, dir, inventoryOverride, clearanceOpts) {
  *   returns a NEW state with `turn + 1`, because the engine now owns "a turn
  *   passes". `next === state` is therefore not a test for "nothing happened"
  *   — ask the ENTRY (`actionType`) or compare positions.
+ *   ⛓ ITEM ACTIONS: a refused move (or cross) on an item-action world also
+ *   carries `faced` — the state turned toward the bump (⚖ "Refusal + facing");
+ *   the caller adopts it in place of `next`. A `cross` that ran carries
+ *   `crossing: {boundary, sourceRegion, targetRegion}` for the caller to
+ *   publish.
  */
-export function executeMazeEntry(world, state, entry, { inventoryOverride, clearanceOpts } = {}) {
+export function executeMazeEntry(world, state, entry, { inventoryOverride, clearanceOpts, gate } = {}) {
     if (!world || !state) {
         return { next: null, reason: 'no world or state loaded' };
     }
     const actionType = entry?.actionType;
-    if (actionType === ACTION_MOVE) {
+    if (actionType === ACTION_MOVE || actionType === ACTION_CROSS) {
         const dir = entry.actionId;
         const input = MOVE_DIR_TO_INPUT[dir];
         if (!input) {
-            return { next: null, reason: `unknown move direction '${dir}'` };
+            return { next: null, reason: `unknown ${actionType} direction '${dir}'` };
         }
+        let crossing = null;
+        if (actionType === ACTION_CROSS) {
+            const p = entry.params ?? {};
+            if (!p.boundary || !p.sourceRegion || !p.targetRegion) {
+                return {
+                    next: null,
+                    reason: `${describeMazeAction(entry)} refused: a cross entry needs params `
+                        + '{boundary, sourceRegion, targetRegion}',
+                };
+            }
+            crossing = { boundary: p.boundary, sourceRegion: p.sourceRegion, targetRegion: p.targetRegion };
+            // ⛓ The loop-mode gate runs BEFORE the in-world step: a gated
+            // crossing must not move the player onto the far side's floor.
+            const verdict = gate ? gate(crossing) : true;
+            if (verdict !== true) {
+                return {
+                    next: null,
+                    reason: `${describeMazeAction(entry)} gated: `
+                        + `${typeof verdict === 'string' ? verdict : 'the loop-mode action gate refused it'}`,
+                };
+            }
+        }
+        const next = step(world, state, input, inventoryOverride, clearanceOpts);
+        if (next === null) {
+            const out = {
+                next: null,
+                reason: refusalReason(world, state, dir, inventoryOverride, clearanceOpts, input,
+                    actionType === ACTION_CROSS ? describeMazeAction(entry) : `move ${dir}`),
+            };
+            const faced = facingAfterBump(state, input);
+            if (faced !== null) out.faced = faced;
+            return out;
+        }
+        return crossing === null ? { next, reason: null } : { next, reason: null, crossing };
+    }
+    if (actionType === ACTION_TURN || actionType === ACTION_USE) {
+        const input = actionType === ACTION_TURN ? turnInput(entry.actionId) : useInput(entry.actionId);
         const next = step(world, state, input, inventoryOverride, clearanceOpts);
         if (next === null) {
             return {
                 next: null,
-                reason: refusalReason(world, state, dir, inventoryOverride, clearanceOpts),
+                reason: refusalReason(world, state, entry.actionId, inventoryOverride, clearanceOpts,
+                    input, describeMazeAction(entry)),
             };
         }
         return { next, reason: null };
@@ -173,7 +227,12 @@ function storedEntry(entry, loops) {
         actionId: entry.actionId ?? null,
         substrate: entry.substrate ?? MAZE_SUBSTRATE,
     };
-    if (isRefused(entry)) out.params = { refused: true };
+    // ⛓ A `cross` keeps its regions — they ARE its replay (no exit lookup).
+    if (entry.actionType === ACTION_CROSS && entry.params) {
+        const { boundary, sourceRegion, targetRegion } = entry.params;
+        out.params = { boundary, sourceRegion, targetRegion };
+    }
+    if (isRefused(entry)) out.params = { ...(out.params ?? {}), refused: true };
     out.loops = loops;
     return out;
 }
@@ -208,7 +267,8 @@ export function projectActions(entries, from = 0, to = undefined) {
             : raw;
         const runs = Math.max(1, Number.isInteger(entry.loops) ? entry.loops : 1);
         const key = foldKey(entry);
-        const foldable = entry.actionType !== ACTION_LOCATION_CHECK;
+        const foldable = entry.actionType !== ACTION_LOCATION_CHECK
+            && entry.actionType !== ACTION_CROSS;
         if (foldable && key === prevKey && out.length > 0) {
             out[out.length - 1].loops += runs;
         } else {
@@ -369,15 +429,22 @@ export function deriveRequires(world, startState, actions) {
     let engine = startState;
     let turn = 0;
     for (const entry of expandEntries(actions)) {
-        const dir = entry.actionType === ACTION_MOVE ? entry.actionId : null;
+        const dir = entry.actionType === ACTION_MOVE || entry.actionType === ACTION_CROSS
+            ? entry.actionId : null;
         const from = engine.player_pos;
         // ⛔ The inventory is read BEFORE the move: the clearance check `step`
         // ran is the one that used this stance (see step's own comment — the
         // button under the player's FEET is still pressed at the instant the
         // move is attempted).
         const inv = effectiveInventory(world, engine.inventory, from, engine.blocks);
-        const { next } = executeMazeEntry(world, engine, entry);
-        if (next === null) { turn += 1; continue; }
+        const { next, faced } = executeMazeEntry(world, engine, entry);
+        if (next === null) { if (faced) engine = faced; turn += 1; continue; }
+        // ⛓ ITEM ACTIONS: an accepted USE needed its item in hand (a use is
+        // refused without it), unless the walk picked it up or a button holds it.
+        if (entry.actionType === ACTION_USE) {
+            const item = world.actionLib?.[entry.actionId]?.item;
+            if (item && !held.has(item) && !pickedUp.has(item)) requires.add(item);
+        }
         if (dir !== null) {
             const target = intendedTileFor(from, dir);
             const cells = [target];

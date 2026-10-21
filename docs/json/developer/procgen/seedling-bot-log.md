@@ -24392,3 +24392,46 @@ producer roster is 93 / 0 red, before and after.
 **Trap candidate.** *A mutant predicted from the victim alone can pass.* "Price frame h only" was predicted to miss the
 t810 box, and it did not: a 4x4 shot under 1 px/t overlaps the box on both frames. The frame is pinned by a constructed
 row (`dangerMap.test.js`: frame 17 is the first that meets the box, so horizon 16 sees it only through h+1).
+### Seedling fidelity L1516 — L15's chest is a Solid, L16's enclosed pit, leg 209's hit (`chestProbeLineEnd`, `enclosedPitCorner`, OFF)
+
+The report is `CC/docs/cloud-reports/seedling-fidelity-l1516.md`. Base `98689e2e3c`. Two `CONTACT_FIDELITY` switches,
+both OFF and byte-identical OFF: the identity block's rows are equal OFF and ON (md5 `14f71e53…`), the six producer
+`--check`s are unchanged, and the 54 chest-level route-survey steps match on every field with both switches ON.
+
+**D1/D2 — the chest the model walked through** (`chestProbeLineEnd`; `chest.chestProbeLine`).
+- `Chest.update` opens on `collideLine("Player", px+2, py+17, px+12, py+17)` (`Chest.as:63`). `World.collideLine` at
+  precision 1 walks `while (x < toX)` and tests the end point only when `precision > 1` (`World.as:442`, `:514`), so
+  the integer probes are px+2..px+11. The keyLock's transcription already said `x1: 11`; the chest's said px+12, read
+  inclusive by `keyLineTouches`.
+- The chest is built, Solid, and unopened in the model: it opened, one pixel early. rules-2's first L15 swim cut
+  climbed column 9 at x 157.997 (box left 155.997, first probe 156): the game kept the chest Solid and stopped the
+  player at y 114.343; the model opened it at t200 and walked to L16.
+- Game witness `probe-seedling-l15-chest-line.mjs` (p4g headless logic-only): `edge` (the stop) and `inner` (4 ticks
+  less east, x ≈ 152: the chest opens on both sides). ON reproduces both at 0 px; OFF drifts at t200 on `edge`.
+
+**D3 — sweep leg 206 is not a shove** (`enclosedPitCorner`; `solverBot.enclosedPitCorners`, `enclosedPitCornerKeys`).
+- The goal `out_pit_8_3` is L16's pit (13,4), and all four of its neighbours are pits. The planner exempts only the goal
+  tile, so the goal is an island; `pushableblock@256,80` was merely the nearest frontier solid, and a `PushableBlock`
+  in a pit is destroyed without filling it (`PushableBlock.as:76-85`).
+- `Player.getState` reads one point a tick (the cell holding (x, y+1)); the fall starts on the first Pit read and lerps
+  to that cell's centre. A diagonal step moves both axes in one tick, so the point jumps the corner (224,80) from floor
+  (14,5) straight into (13,4).
+- ON: the reach-pit executor walks to a stance in a diagonal floor cell, previews the corner step with
+  `run.previewStepper` (pre-steps of up to 12 ticks on one axis, then the diagonal; a candidate counts only if the first
+  fall's `target` is the pit's centre), takes it, and coasts the fall. A pit with no diagonal floor cell, or a player
+  already in the pit's cell (L84 (2,2), leg 671, which lands from L83 into it), keeps the walk.
+- Game witness `probe-seedling-l16-corner-pit.mjs`: `corner` falls into (13,4) and lands L17 (136, …); `control` (8
+  ticks of up first) falls into (14,4) and lands at x 152; `solve`, the solver's own leg-206 solution from the arrival
+  (335 ticks), falls into (13,4) and ends L17 (136,56). All three at 0 px.
+
+**D4 — leg 209's UNBILLED-HIT is billed by the model.** Stepping the leg's arrival staging (seam 4887) with nothing
+held, `arrowtrap@112,32#0.1` hits on model tick 6: `hits` 1, `hitsTimer` 19, (120, 51.25), which is the game's tape-0
+read exactly. The leg refused at plan time (`wasm-hold-16`, 0 ticks), so the sweep had no model row to bill it against.
+Hand-over to the JS arc (the sweep's hit attribution on a refused leg); the refusal itself is correct (⚖ 2026-10-21).
+
+**Trap candidate.** *A refusal names the nearest frontier solid, not the reason.* Leg 206's refusal read like a shove
+gap ("Obstacle: solid:pushableblock … Strategy 'shove' failed"); the real fact was in its tail ("different connected
+components"), and the component was one tile surrounded by pits.
+
+**Trap candidate.** *An inclusive integer range transcribed from an exclusive raycast.* `keyLineTouches` reads `x1`
+inclusive; every caller must hand it `toX - 1`. The keyLock did, the chest did not.

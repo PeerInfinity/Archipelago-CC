@@ -10,6 +10,8 @@ import logging
 import sys
 from typing import Any, Dict, List, Set, Tuple, Optional
 
+from ._unknown_kind import unknown_kind
+
 from .constants import BOOLEAN_RULE_TYPES
 from ._codegen_utils import (
     ANALYZER_BOOL_TYPES,
@@ -550,6 +552,7 @@ class RuleCodeGenerator(
                     'CanReachLocation': 'location_check',
                     'CanReachEntrance': 'entrance_check',
                     'EntranceAccessRule': 'entrance_access_rule',
+                    'EntranceAccessRuleCall': 'entrance_access_rule',  # what rule_builder serialises
                     'True_': 'constant',
                     'False_': 'constant',
                     'Helper': 'helper',
@@ -566,6 +569,13 @@ class RuleCodeGenerator(
                     'Name': 'name',  # Option/setting references
                     'CountItem': 'count_item',  # Item count for arithmetic/comparisons
                     'AST_min': 'min',  # Min operation from AST export
+                    'AST_max': 'max',  # Max operation from AST export
+                    'AST_count_item': 'count_item',
+                    'HasAnyCount': 'group_check',
+                    'CountFromList': 'count_from_list',
+                    'MinValue': 'min',
+                    'MaxValue': 'max',
+                    'AST_weighted_count_true': 'weighted_count_true',
                     'List': 'list',  # Rule Builder format list for comparisons
                     'AST_group_count': 'AST_group_count',  # Group count for comparisons (state.count_group)
                     'group_count': 'group_count',  # Group count for comparisons
@@ -717,6 +727,7 @@ class RuleCodeGenerator(
             'AST_group_count': self._convert_ast_group_count,
             'group_count': self._convert_ast_group_count,
             'dict_lambda_lookup': self._convert_dict_lambda_lookup,
+            'weighted_count_true': self._convert_weighted_count_true,
         }
 
         converter = converters.get(rule_type)
@@ -728,9 +739,9 @@ class RuleCodeGenerator(
         if rb_rule == 'AST_block':
             return self._convert_ast_block(rule)
 
-        # Unknown rule type - return True_() as placeholder
-        # Don't use inline comments as they break multi-line expressions
-        return 'True_()'
+        # Unknown rule type: loud (⚖ D3); lossy mode keeps the True_() placeholder
+        # (no inline comments: they break multi-line expressions)
+        return unknown_kind('rule dispatch', rule_type or rb_rule or repr(rule)[:60], 'True_()')
 
     def _convert_name(self, rule: Dict[str, Any]) -> str:
         """Convert a name reference to a constant or context lookup.

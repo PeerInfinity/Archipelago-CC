@@ -5,6 +5,8 @@ Rule expression mixin — complex expression conversion methods.
 import logging
 from typing import Any, Dict, List, Set, Tuple, Optional
 
+from ._unknown_kind import unknown_kind
+
 from ._codegen_utils import (
     is_placement_lookup,
     extract_placement_location,
@@ -286,6 +288,14 @@ class RuleExpressionMixin:
             # HasAllCounts expects a dict of {item_name: count}
             return f'HasAllCounts({repr(items)})'
 
+        if rb_rule == 'HasAnyCount':
+            items = args.get('item_counts', args.get('items', {}))
+            if not items:
+                # match state.has_any_count
+                return self._make_bool_constant(False)
+            self.required_imports.add('HasAnyCount')
+            return f'HasAnyCount({repr(items)})'
+
         if rb_rule == 'HasGroup':
             group = args.get('item_name_group', args.get('group', ''))
             count_raw = args.get('count', 1)
@@ -369,7 +379,7 @@ class RuleExpressionMixin:
             self.required_imports.add('CanReachEntrance')
             return f'CanReachEntrance({repr(entrance)})'
 
-        if rb_rule == 'EntranceAccessRule':
+        if rb_rule in ('EntranceAccessRule', 'EntranceAccessRuleCall'):
             # EntranceAccessRule looks up an entrance's access_rule and evaluates it
             # This is used for ALttP underworld glitch rules where dungeon_entrance.access_rule()
             # is called with potentially a fake pearl state
@@ -518,6 +528,22 @@ class RuleExpressionMixin:
         # Handle AST_prog_item_count rule (for state counter items like coins)
         # This converts {"rule": "AST_prog_item_count", "args": {"key": " coins"}}
         # to CountItem(" coins") for use in Compare expressions
+        # MinValue / MaxValue (rule_builder's own names): {"left": ..., "right": ...}
+        if rb_rule in ('MinValue', 'MaxValue'):
+            self.required_imports.add(rb_rule)
+            left_code = self._convert_arithmetic_operand(args.get('left', 0))
+            right_code = self._convert_arithmetic_operand(args.get('right', 0))
+            return f'{rb_rule}({left_code}, {right_code})'
+
+        # CountFromList: the cumulative count of a list of items
+        if rb_rule == 'CountFromList':
+            items = args.get('item_names', args.get('items', []))
+            self.required_imports.add('CountFromList')
+            return f'CountFromList({", ".join(repr(item) for item in items)})'
+
+        if rb_rule == 'AST_weighted_count_true':
+            return self._convert_weighted_count_true(args)
+
         if rb_rule == 'AST_prog_item_count':
             key = args.get('key', '')
             return self._make_count_item(key)
@@ -529,7 +555,7 @@ class RuleExpressionMixin:
 
         # Handle AST_group_count rule (from AST format, counts items in a group)
         # This comes from state.count_group() calls in access rules
-        if rb_rule == 'AST_group_count':
+        if rb_rule in ('AST_group_count', 'group_count'):
             group = args.get('group', '')
             self.required_imports.add('CountGroup')
             return f'CountGroup({repr(group)})'
@@ -573,9 +599,33 @@ class RuleExpressionMixin:
             # Otherwise treat as a setting reference and resolve to constant
             return self._resolve_setting_to_bool(name, default=False)
 
-        # Unknown Rule Builder rule - return True_() as placeholder
+        # Unknown Rule Builder rule: loud (⚖ D3); lossy mode keeps the True_() placeholder
+        placeholder = unknown_kind('rule_builder chain', rb_rule, 'True_()')
         self.required_imports.add('True_')
-        return 'True_()'
+        return placeholder
+
+    def _convert_weighted_count_true(self, rule: Dict[str, Any]) -> Optional[str]:
+        """weighted_count_true (either format): the weights of the true conditions sum to >= count.
+
+        An integer weight w is the condition counted w times, i.e. AtLeast over repeated children
+        (AtLeast does not de-duplicate). A non-integer weight or count has no codegen path.
+        """
+        count = rule.get('count', 0)
+        weighted = rule.get('weighted_conditions', [])
+        if not (isinstance(count, int) and all(
+                isinstance(pair, (list, tuple)) and len(pair) == 2
+                and isinstance(pair[1], int) and pair[1] >= 0 for pair in weighted)):
+            return unknown_kind('weighted_count_true', 'weighted_count_true (non-integer weight or count)', 'True_()')
+        if count <= 0:
+            return self._make_bool_constant(True)
+        children = [cond for cond, weight in weighted for _ in range(weight)]
+        if count > len(children):
+            return self._make_bool_constant(False)
+        child_exprs = [self._convert_rule(child) for child in children]
+        if any(expr is None for expr in child_exprs):
+            return None
+        self.required_imports.add('AtLeast')
+        return f'AtLeast({count}, {", ".join(child_exprs)})'
 
     def _convert_compare_operand(self, operand: Any) -> str:
         """Convert a compare operand to Python code.

@@ -92,5 +92,25 @@ Every site that dispatches on a kind follows the rule for its class:
   substrate's own fixed set): keep **throwing**. That throw is their drift guard.
 
 The known gaps above are where today's code breaks this policy. Fixing them is the follow-up work.
+
+**As built (R2a, 2026-10-21):**
+
+- **Worker.** `stateManager/core/ruleEvaluator.js` `executeHelper` returns `undefined` (warned once
+  per name) for a helper that exists nowhere, instead of `false`. An unknown Rule Builder name lands
+  there too, because the RB switch's default branch coerces it to a helper call. The reachability
+  loop reads `undefined` with `Boolean()`, so undetermined means "not traversable" there: this was
+  measured identical on every preset. `generic_helper` answers `undefined` where it answered `true`.
+- **Rule Builder names rule_builder really emits:** `EntranceAccessRuleCall` is handled (an alias of
+  `EntranceAccessRule`), `ASTRule` evaluates its `rule_data`, and `bool` is Python `bool()`.
+  `NestedRule` and `WrapperRule` are abstract bases and are refused by name.
+- **Codegen.** The three kind sinks (the RB chain, the rule dispatcher, and the helper-body
+  expression generator) raise `UnknownRuleKindError`, naming the kind
+  (`world_generator/_unknown_kind.py`). `--lossy` (or `WorldGenerator(lossy=True)` /
+  `build_apworld(lossy=True)`) is the opt-in way to keep the always-true placeholder; it lists each
+  one by `<site>:<kind>`. Committed presets that still need `--lossy`: kh1 (`if_statement`), kh2
+  (`AST_comparison`), and smz3 (`Attribute`, `AST_lambda`). The unknown-helper-NAME fallback
+  (`LOSSY FALLBACK: Unknown helper …`) is a separate sink and has not changed.
+- **rule_builder `ASTRule`** raises `NotImplementedError` naming the AST type, instead of answering
+  `True`.
 `rule-type-dispatch-inventory.md` lists the dispatch sites themselves, including display walkers the
 census does not cover.

@@ -1,0 +1,40 @@
+{
+ "tape": "solve",
+ "set_id": "seedling-vanilla-record-f5bdb07d",
+ "mounted": "seedling-vanilla-record-f5bdb07d",
+ "observations": 356,
+ "game": {
+  "pit": {
+   "tx": 13,
+   "ty": 4,
+   "at": {
+    "x": 216.00381310962067,
+    "y": 71.749344745076
+   }
+  },
+  "final": {
+   "t": 355,
+   "x": 136,
+   "y": 56.00000000000002,
+   "level": 17
+  }
+ },
+ "model": {
+  "pit": {
+   "tx": 13,
+   "ty": 4,
+   "at": {
+    "x": 216.00381310962067,
+    "y": 71.749344745076
+   }
+  },
+  "final": {
+   "t": 355,
+   "x": 136,
+   "y": 56.00000000000002,
+   "level": 17
+  },
+  "max": 0,
+  "first": null
+ }
+}
