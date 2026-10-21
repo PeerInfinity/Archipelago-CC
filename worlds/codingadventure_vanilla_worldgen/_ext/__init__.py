@@ -55,6 +55,9 @@ try:
         HelperCall,
         OptionValue,
         WeightedSum,
+        MinValue,
+        MaxValue,
+        EntranceAccessRuleCall,
         BOOLEAN_RULE_TYPES,
     )
     USING_FORK_RULE_BUILDER = True
@@ -94,6 +97,9 @@ except ImportError:
         HelperCall,
         OptionValue,
         WeightedSum,
+        MinValue,
+        MaxValue,
+        EntranceAccessRuleCall,
         BOOLEAN_RULE_TYPES,
     )
     from .world_mixin import RuleWorldMixin  # noqa: F401

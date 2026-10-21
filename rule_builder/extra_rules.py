@@ -138,9 +138,9 @@ class ASTRule(Rule[TWorld], game="Archipelago"):
     """
     Wraps an AST format rule that can't be converted to a native Rule Builder class.
 
-    This class provides explain support for complex AST format rules while
-    delegating evaluation to either a pre-computed value or returning True
-    as a fallback.
+    This class provides explain support for complex AST format rules. It cannot EVALUATE one:
+    evaluation raises, naming the AST type (⚖ D3, rule-node-registry 2026-10-21 — it used to
+    answer True, silently making the rule free). The JS engine evaluates the wrapped rule_data.
     """
     rule_data: dict[str, Any] = dataclasses.field(default_factory=lambda: dict[str, Any]())
     """The original AST format rule data"""
@@ -164,9 +164,10 @@ class ASTRule(Rule[TWorld], game="Archipelago"):
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:
-            # AST rules currently return True as fallback
-            # Future enhancement: implement AST rule evaluation
-            return True
+            rule_type = self.rule_data.get('type', 'unknown')
+            raise NotImplementedError(
+                f"ASTRule({rule_type}): rule_builder cannot evaluate an AST rule of type {rule_type!r}; "
+                f"convert it to a Rule Builder rule (docs/json/developer/reference/rule-kind-registry.md)")
 
         @override
         def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
