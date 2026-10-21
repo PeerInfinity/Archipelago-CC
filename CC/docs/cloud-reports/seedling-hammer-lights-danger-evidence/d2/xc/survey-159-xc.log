@@ -1,0 +1,20 @@
+241  L101 visit 3  boot=staged:r8-solve-11  goals: reach-exit(teleporter@104,24 → L110)
+242  L110 visit 1  boot=staged:r8-solve-11  goals: reach-pit(pit@64,64 (out_pit_3_2, tile 4,4) chained via L0 stairs@256,272 → L2)
+243  L2  visit 3  boot=staged:r8-solve-11  goals: reach-exit(teleporter@48,96 → L3)
+244  L3  visit 3  boot=staged:r8-solve-11  goals: reach-exit(teleporter@0,64 → L111)
+245  L111 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@128,48 → L112)
+246  L112 visit 1  boot=staged:r8-solve-11  goals: skip(Level 112 - Owl (sphere 11.2) → Seal — no solver executor fights finalboss@64,96 (no encounter row in L112, no strategy row for solid:finalboss); its report {112,0} is not walked) then reach-exit(teleporter@112,0 → L113)
+247  L113 visit 1  boot=staged:r8-solve-11  goals: reach-exit(teleporter@16,0 → L114)
+248  L114 visit 1  boot=staged:r8-solve-11  goals: clear-tag(L114 flag 0: watcher@72,72 cleared (flag:L114:0) — broken before row 12.1 walks its landing) then reach-exit(teleporter@64,144 → L113)
+249  L113 visit 2  boot=staged:r8-solve-11  goals: reach-exit(teleporter@112,0 → L115)
+250  L115 visit 1  boot=staged:r8-solve-11  goals: collect-placement(Level 115 - The Seed (sphere 12.1) → The Seed)
+
+wrote /home/user/Archipelago-CC/.cache/seedling-survey/through-end/route.json
+
+## THE ADDENDUM — 0 step(s) of the alternative leg 2 that the chosen route never walks
+
+== step 159 — L69 ... SOLVED 826 ticks, 3 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 130198 ms
+
+wrote /tmp/claude-0/-home-user-Archipelago-CC/1a7c6cbe-1030-572c-8a8b-4ec499c39ad7/scratchpad/d2/xc-after/survey-159-xc.json
+
+## HEADLINE: 1/1 route steps SOLVE today
