@@ -29,6 +29,8 @@ import { loadPackStack } from '../contentPacks/contentPacks.js';
 import { createArtLibrary } from '../artLibrary/artLibrary.js';
 import { createJsRuntime } from './jsRuntimeCore.js';
 import { md5 } from './md5.js';
+import { runTape as runFixtureTape } from './tapeRunner.js';
+import { atlasLevelSource } from './levelSource.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
 import { cameraView, formatOp, paintOps, roomOps } from './seedlingSkinRenderer.js';
 import {
@@ -81,7 +83,55 @@ function runTape(rules) {
     }
     return rows;
 }
+/**
+ * ⛓ G3b — A DEATH AND ITS RESPAWN IN THE SAME LEVEL: stand still in L26 until
+ * the puncher kills the player. The run and `run.world` are the SAME objects
+ * across the restart (measured: the level's memoised build), and the body
+ * stands facing down on both sides of it, so only a VISIT epoch gives the
+ * respawned `Player` a fresh "down-stand" (`Player.as:388`) instead of the dead
+ * one's running clock.
+ */
+export const DEATH_TAPE = Object.freeze({ level: 26, at: [48, 160], n: 200 });
+/** `epochOf(run, view)` replaces the adapter's epoch — the G2 mutant hands back `run.world`. */
+function runDeathTape(epochOf = null) {
+    const rt = createJsRuntime({ onStateChanged: () => {}, log: () => {} });
+    rt.game.configure(JSON.stringify({ classes: GAME.classes, state_properties: GAME.state_properties }));
+    rt.setVanilla(MAP);
+    rt.queueItems([{ class: 'game', property: 'menu', value: false }, { class: 'Main', property: 'hasSword', value: true },
+        { invocation: 'new_instance', className: 'Game', args: [DEATH_TAPE.level, ...DEATH_TAPE.at] }]);
+    const rows = [];
+    let skin = null;
+    for (let i = 0; i < DEATH_TAPE.n; i += 1) {
+        rt.tick(new Set());
+        const v = skinView(rt.run);
+        const view = epochOf ? { ...v, epoch: epochOf(rt.run, v) } : v;
+        skin = stepPlayerSkin(skin, view, rt.ticks);
+        rows.push({ tick: rt.ticks, view, skin, ops: playerOps(view, art, { tick: rt.ticks, skin }), deaths: rt.deaths.length, run: rt.run, world: rt.run.world });
+    }
+    return rows;
+}
 const lineOf = (r) => `t=${r.tick} ${r.skin.anim} | ${r.ops.map((o) => formatPlayerOp(o, formatOp)).join(' ; ')}`;
+
+/**
+ * ⛓ G3c — THE BOB BOSS'S DEATH TINTS AND FADES THE PLAYER (`BobBoss.as:202-225`): the committed `r5-bobboss-fire`
+ * tape (L32, three forms) through the model. The golden keeps the ticks of each death window and the one after it.
+ */
+function runBossFadeTape(rules) {
+    const tape = JSON.parse(readFileSync(join(HERE, 'fixtures/tapes/r5-bobboss-fire.json'), 'utf8'));
+    const rows = [];
+    let skin = null;
+    runFixtureTape(tape, {
+        levelSource: atlasLevelSource(),
+        onTick: (t, now, held, run) => {
+            const view = skinView(run);
+            skin = stepPlayerSkin(skin, view, t, { rules });
+            rows.push({ tick: t, view, skin, ops: playerOps(view, art, { tick: t, skin, rules }) });
+        },
+    });
+    return rows;
+}
+const fadeLines = (rows) => rows.filter((r, i) => r.view.bossFade || rows[i - 1]?.view.bossFade)
+    .map((r) => `${lineOf(r)}${r.view.bossFade ? ` [next=${r.view.bossFade.next}]` : ''}`);
 
 /** Synthetic views: one `skinView`-shaped object per tick. */
 const EPOCH_A = { room: 'A' };
@@ -132,6 +182,45 @@ describe('1–2. golden player ops (frame CHOICE, not pixels)', () => {
         expect(rows.some((r) => r.view.slash?.anim === 'slashnarrow')).toBe(true);
         expect(rows.at(-1).deaths).toBe(1);
         expect(rows.every((r) => r.ops.length > 0)).toBe(true);
+    });
+
+    it('⛓ G3b: a death and the respawn in the SAME level start a fresh Player — not the dead one\'s running clock (the epoch is the visit, not `run.world`)', () => {
+        const rows = runDeathTape();
+        expect(rows.map(lineOf)).toEqual(golden('player-L26-death.txt', rows.map(lineOf)));
+        const at = rows.findIndex((r) => r.deaths === 1);
+        expect(at, 'the puncher kills the player').toBeGreaterThan(0);
+        expect(rows.at(-1).deaths).toBe(1);
+        expect(rows.every((r) => r.view.level === DEATH_TAPE.level)).toBe(true);
+        // the premise, measured: the SAME run and the SAME world object across the restart
+        expect(rows[at].run).toBe(rows[at - 1].run);
+        expect(rows[at].world).toBe(rows[at - 1].world);
+        // "down-stand" on both sides; the respawned body's Spritemap is born on the respawn tick, frame 0
+        expect([rows[at - 1].skin.anim, rows[at].skin.anim]).toEqual(['down-stand', 'down-stand']);
+        expect(rows[at].skin.born).toBe(rows[at].tick);
+        expect(rows[at].ops.at(-1).frame).toBe(0);
+        // ⛔ the G2 epoch (`run.world`) keeps the dead body's clock running through the respawn — the bug this pins
+        const old = runDeathTape((run) => run.world);
+        expect(old[at].skin.born).toBe(old[0].skin.born);
+        expect(old[at].ops.at(-1).frame).not.toBe(0);
+        expect(old.map(lineOf).filter((l, i) => l !== rows.map(lineOf)[i]).length).toBeGreaterThan(5);
+    });
+
+    it('⛓ G3c: the Bob Boss\'s death tints the player toward white-blue and fades it out and back (r5-bobboss-fire, all three deaths)', () => {
+        const rows = runBossFadeTape();
+        const lines = fadeLines(rows);
+        expect(lines).toEqual(golden('player-bobboss-fade-L32.txt', lines));
+        // not vacuous: three windows of 120 updates, each running the timer 119 → 0
+        const windows = rows.filter((r, i) => r.view.bossFade && !rows[i - 1]?.view.bossFade);
+        expect(windows.map((r) => r.view.bossFade.next)).toEqual([119, 119, 119]);
+        expect(rows.filter((r) => r.view.bossFade).length).toBe(360);
+        // the BODY (`player.graphic`); the sword is its own Spritemap, which the boss never writes
+        const body = (r) => r.ops.find((o) => Object.values(SUIT_KEYS).includes(o.key));
+        expect(rows.some((r) => r.view.bossFade && r.ops.some((o) => o.key === SWORD_KEYS.plain && !o.tint && !o.alpha))).toBe(true);
+        const first = rows.indexOf(windows[0]);
+        expect(body(rows[first]).tint).toBe('#0202ff');                   // uint(255 · 1/120) = 2
+        expect(body(rows[first]).alpha).toBeCloseTo(79 / 80, 12);
+        const end = rows.findIndex((r, i) => i > first && r.view.bossFade?.next === 0);
+        expect([body(rows[end]).tint, body(rows[end]).alpha]).toEqual([undefined, undefined]);   // n 0: white, alpha 1
     });
 
     it('the synthetic views: hit flash, freeze, pit, descent, ghost sword, dark suit + dark-sword dash', () => {
@@ -211,6 +300,22 @@ describe('3. the independent stratum — by hand from the AS3', () => {
         expect(red).toEqual([19, 18, 17, 16, 15, 14, 13, 12, 11, 10]);
     });
 
+    it('the boss death (BobBoss.as:213-226): colour (v, v, 255), v = uint(255·(1 − n/120)); alpha (n − 40)/80 down to n 40, then 1 − n/40', () => {
+        const fade = (n) => PLAYER_RULES.bossFade({ next: n });
+        expect(fade(119)).toEqual({ tint: '#0202ff', alpha: 79 / 80 });
+        expect(fade(60)).toEqual({ tint: '#7f7fff', alpha: 0.25 });
+        expect(fade(40)).toEqual({ tint: '#aaaaff', alpha: 0 });
+        expect(fade(20)).toEqual({ tint: '#d4d4ff', alpha: 0.5 });
+        expect(fade(0)).toEqual({ tint: null, alpha: 1 });
+        // the player's own update runs AFTER the boss (it is first in the update list): a hit flash's toggle wins
+        let skin = null;
+        const tints = [5, 9, 8].map((h, i) => {
+            skin = stepPlayerSkin(skin, base({ hitsTimer: h, bossFade: { next: 100 - i } }), 2000 + i);
+            return skin.tint;
+        });
+        expect(tints).toEqual(['#2a2aff', HIT_TINT, '#2e2eff']);
+    });
+
     it('the freeze (Player.as:591-600): blue while frozenTimer > 0, white at 0', () => {
         const rows = runSynthetic().filter((r) => r.view.hitsTimer === 0 && !r.view.fall && r.view.epoch === EPOCH_A).slice(1, 6);
         expect(rows.map((r) => body(r).tint ?? null)).toEqual([FROZEN_TINT, FROZEN_TINT, FROZEN_TINT, null, null]);
@@ -269,10 +374,16 @@ describe('4. ⛔ ONE MUTANT PER RULE — each turns a golden red', () => {
         ['swordPose: clockwise FlashPunk angle', { swordPose: (sw, swing, i) => { const p = PLAYER_RULES.swordPose(sw, swing, i); return { ...p, angle: -p.angle }; } }, 'tape'],
         ['tintStep: red for the whole i-frame', { tintStep: (s, v) => (v.hitsTimer > 0 ? HIT_TINT : (v.frozenTimer > 0 ? FROZEN_TINT : null)) }, 'synth'],
         ['fallPose: the pit does not fade', { fallPose: (v, t, s) => ({ ...PLAYER_RULES.fallPose(v, t, s), alpha: 1 }) }, 'synth'],
+        ['bossFade: the colour without the fade', { bossFade: (f) => ({ ...PLAYER_RULES.bossFade(f), alpha: 1 }) }, 'fade'],
     ])('%s', (_label, rules, which) => {
+        if (which === 'fade') {
+            const gold = readFileSync(join(GOLDENS, 'player-bobboss-fade-L32.txt'), 'utf8').trimEnd().split('\n');
+            expect(differs(fadeLines(runBossFadeTape(rules)), gold)).toBeGreaterThan(5);
+            return;
+        }
         const lines = which === 'tape' ? runTape(rules).map(lineOf) : runSynthetic(rules).map(lineOf);
         expect(differs(lines, which === 'tape' ? tapeGolden() : synthGolden())).toBeGreaterThan(0);
-    });
+    }, 120_000);
 });
 
 describe('5. the adapter reads the run and writes nothing', () => {
@@ -289,9 +400,14 @@ describe('5. the adapter reads the run and writes nothing', () => {
         });
         const v = skinView(run);
         expect(v).toEqual({
-            epoch: world, level: 7, x: 10, y: 20, vx: -1, vy: 0, direction: 2, directionFace: 3, terrain: 1, hitsTimer: 12, frozenTimer: 4,
+            epoch: { run, key: '7|0|0' }, level: 7, x: 10, y: 20, vx: -1, vy: 0, direction: 2, directionFace: 3, terrain: 1, hitsTimer: 12, frozenTimer: 4,
             suit: 'dark', sword: 'dark', slash: { anim: 'slashnarrow', endsAt: 33 }, fall: { kind: 'pit', alpha: 0.5, target: { x: 8, y: 24 } },
+            bossFade: null,
         });
+        // ⛓ G3c: a dying Bob Boss whose timer has run (the boss getter is G3b's)
+        const dying = { ...run, bobBoss: new Map([['boss', { destroy: true, nextBossTimer: 77 }]]) };
+        expect(skinView(dying).bossFade).toEqual({ next: 77 });
+        expect(skinView({ ...dying, bobBoss: new Map([['boss', { destroy: true, nextBossTimer: 120 }]]) }).bossFade).toBe(null);
         expect(skinView(null)).toBe(null);
     });
 

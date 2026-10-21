@@ -68,14 +68,15 @@
  *
  * Usage:
  *   node scripts/procgen/plan-seedling-r5-l40-part5.mjs [--write]
+ *   node scripts/procgen/plan-seedling-r5-l40-part5.mjs --check   # the committed fixtures are byte-identical
  */
 
-import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { emitFixtures } from './producerFixtureBytes.js';
 
 argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -92,6 +93,7 @@ const { ICE_TURRET } = await import(join(MODULE, 'iceTurret.js'));
 const { KILL_PRESS_CADENCE } = await import(join(MODULE, 'combatVerbs.js'));
 
 const WRITE = process.argv.includes('--write');
+const CHECK = process.argv.includes('--check');
 const levelSource = atlasLevelSource();
 const TURRET = L40_CORPSE.turret.id;
 
@@ -233,6 +235,9 @@ const synth = (steps, name) => synthesizeLegs([{
         grants: [{ level: 40, items: ['sword', 'fire', 'conch', 'feather'] }],
         persistence: PERSISTENCE,
         equips: [],
+        // The dead-frame LOCKSTEP (`Bot.pinDeadFrames`, tape v5): declared here so the
+        // drive verifies the pinned execution and the tape asks the game for it.
+        pins: ['dead_frames'],
         roles: [...ROLES],
     },
     name,
@@ -497,12 +502,10 @@ if (bad > 0) throw new Error(`${bad} of ${checks.length} claims FAILED`);
  * 1,966 observations of both arms. The refusal is retired because the thing
  * it was protecting has been proved, not because the slice wanted to write.
  */
-if (WRITE) {
-    for (const t of [tape, controlTape]) {
-        const path = join(MODULE, 'fixtures', 'tapes', `${t.name}.json`);
-        writeFileSync(path, serializeTape(t));
-        console.log(`\n   wrote ${path}`);
-    }
-} else {
+const outputs = [tape, controlTape].map((t) => {
+    const path = join(MODULE, 'fixtures', 'tapes', `${t.name}.json`);
+    return { path, text: serializeTape(t) };
+});
+if (!emitFixtures(outputs, { write: WRITE, check: CHECK })) {
     console.log('\n(dry run — pass --write to emit the tapes, then record with --win)');
 }

@@ -22,9 +22,10 @@
  * Usage:
  *   node scripts/procgen/plan-seedling-r5-feather.mjs            # plan + report
  *   node scripts/procgen/plan-seedling-r5-feather.mjs --write    # write the tape
+ *   node scripts/procgen/plan-seedling-r5-feather.mjs --check    # the committed tape is byte-identical
  */
 
-import { writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -52,6 +53,24 @@ const {
 } = await import(join(MODULE, 'r5Feather.js'));
 
 const WRITE = process.argv.includes('--write');
+const CHECK = process.argv.includes('--check');
+
+/**
+ * `--check`: the committed fixture must be BYTE-identical to what this plan
+ * derives today — the regenerate-r*-tapes form, so a drift prints
+ * `DIFFERS <name>:` and reds the `producer-checks` CI job.
+ */
+const checkBytes = (name, json) => {
+    const path = join(MODULE, 'fixtures', 'tapes', `${name}.json`);
+    const have = existsSync(path) ? readFileSync(path, 'utf8') : null;
+    if (have === json) {
+        console.log(`same ${name}: ${json.length} bytes`);
+        return true;
+    }
+    console.log(`DIFFERS ${name}: ${have === null ? 'the file does not exist'
+        : `${have.length} bytes committed vs ${json.length} derived`} — re-run with --write`);
+    return false;
+};
 const source = atlasLevelSource();
 /** ⛓ The world the walk really runs in: both items are banked at the boot. */
 const held = { hasSword: true, canSwim: true };
@@ -306,7 +325,10 @@ for (const k of uncrossed) console.log(`      · ${k}`);
     }
 }
 
-if (WRITE) {
+if (CHECK) {
+    console.log('');
+    if (!checkBytes(tape.name, serializeTape(tape))) process.exit(1);
+} else if (WRITE) {
     const path = join(MODULE, 'fixtures', 'tapes', `${tape.name}.json`);
     writeFileSync(path, serializeTape(tape));
     console.log(`\n   wrote ${path}`);

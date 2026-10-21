@@ -475,6 +475,8 @@ describe('who takes the box', () => {
          * fidelity WALLFLYER the body-and-death witness, `probe-seedling-wallflyer-mobiles.mjs`;
          * fidelity STATICLADDER the DarkTrap light-death witness, `probe-seedling-darktrap-mobiles.mjs`, and the
          * class-parametric chaser witness (K2's lavarunner), `probe-seedling-chaser-mobiles.mjs`;
+         * fidelity LIGHTS the L69 Lights fight's witness (the intro, the fliers, the shots, the report),
+         * `probe-seedling-lights.mjs`;
          * hammer-phase C1 the static sword-kill witness, `probe-seedling-static-sword-mobiles.mjs`;
          * RULES l38-button-event the cross-room ButtonRoom write witness, `probe-seedling-cross-room-button.mjs`;
          * fidelity ENCOUNTERS2 the encounter per-tick witness, `probe-seedling-encounter-ticks.mjs`;
@@ -512,12 +514,13 @@ describe('who takes the box', () => {
             'probe-seedling-descent.mjs', 'probe-seedling-wasm-midroom-replan.mjs', 'probe-seedling-dash-window.mjs',
             'probe-seedling-restart-warp.mjs', 'probe-seedling-divergence-sweep.mjs', 'probe-seedling-slot-order.mjs',
             'probe-seedling-contact-divergence.mjs', 'probe-seedling-axe-phase.mjs', 'probe-seedling-arrival-solid.mjs',
-            'probe-seedling-restart-route.mjs', 'probe-seedling-restart-held-items.mjs', 'probe-seedling-arrival-escape.mjs',
+            'probe-seedling-restart-route.mjs', 'probe-seedling-walk-order.mjs', 'probe-seedling-restart-held-items.mjs', 'probe-seedling-arrival-escape.mjs',
             'probe-seedling-obstacle-events.mjs', 'probe-seedling-lethal-landings.mjs', 'probe-seedling-tentacle-mouth.mjs', 'probe-seedling-loop-restart.mjs', 'probe-seedling-bosslock-latch.mjs', 'probe-seedling-persistence-rebuild.mjs', 'probe-seedling-killlock.mjs', 'probe-seedling-iceturret-spear.mjs', 'probe-seedling-cleartag.mjs', 'probe-seedling-ladder2-phase.mjs', 'probe-seedling-bobsoldier-mobiles.mjs', 'probe-seedling-wallflyer-mobiles.mjs', 'probe-seedling-darktrap-mobiles.mjs', 'probe-seedling-chaser-mobiles.mjs', 'probe-seedling-static-sword-mobiles.mjs', 'probe-seedling-cross-room-button.mjs',
             'probe-seedling-encounter-ticks.mjs',
             'probe-seedling-wand-mobiles.mjs', 'probe-seedling-l37-fallrock.mjs', 'probe-seedling-rock-remove.mjs', 'probe-seedling-l32-rock-move.mjs',
             'probe-seedling-bombpusher.mjs', 'probe-seedling-staged-hits.mjs', 'probe-seedling-seal-delivery.mjs',
             'probe-seedling-bomb-blast-body.mjs',
+            'probe-seedling-lights.mjs',
             'check-seedling-bot-differential.mjs',
             'probe-seedling-hold.mjs', 'probe-seedling-pushblock-weapon.mjs', 'probe-seedling-u15-turret-mobiles.mjs',
             'probe-seedling-u7-puncher-mobiles.mjs', 'probe-seedling-u9-shield-mobiles.mjs'];

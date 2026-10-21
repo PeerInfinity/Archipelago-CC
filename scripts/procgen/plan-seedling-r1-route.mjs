@@ -46,14 +46,15 @@
  * reason.
  *
  * Run: node scripts/procgen/plan-seedling-r1-route.mjs [--write] [--verbose]
+ *      node scripts/procgen/plan-seedling-r1-route.mjs --check   # the committed fixtures are byte-identical
  */
 
-import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { emitFixtures } from './producerFixtureBytes.js';
 
 argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -70,6 +71,7 @@ const {
 } = await import(join(MODULE, 'r1Walk.js'));
 
 const WRITE = process.argv.includes('--write');
+const CHECK = process.argv.includes('--check');
 const VERBOSE = process.argv.includes('--verbose');
 const OUT = join(MODULE, 'fixtures', 'r1-route.json');
 
@@ -557,9 +559,7 @@ if (unbuildable.size > 0) {
     console.log(`levels that do not build (${unbuildable.size}): `
         + `${[...unbuildable.keys()].join(', ')}`);
 }
-if (WRITE) {
-    writeFileSync(OUT, `${JSON.stringify(route, null, 2)}\n`);
-    console.log(`\nwrote ${OUT}`);
-} else {
+const outputs = [{ path: OUT, text: `${JSON.stringify(route, null, 2)}\n` }];
+if (!emitFixtures(outputs, { write: WRITE, check: CHECK })) {
     console.log('\n(dry run — pass --write to update fixtures/r1-route.json)');
 }

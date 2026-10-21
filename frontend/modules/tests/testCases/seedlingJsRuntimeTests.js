@@ -702,6 +702,141 @@ registerTest({
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
+/**
+ * ⛓ GRAPHICS G3b — the room bodies' sibling row, G3's shape one family over: the JS page mounted STANDALONE in this
+ * row's own iframe and driven through its own `__swfBridge` to `Game(22, 80, 112)` — `r2-wallflyer-contact`'s boot,
+ * the player on the row two of L22's four wallflyers look down. No panel, preset or AP state is touched; the iframe
+ * is removed however the row ends.
+ *
+ * It asserts what node cannot: the wallflyer sheet DECODES in a browser and the page's tick loop folds the room
+ * bodies into their skin, so `__seedlingJsGraphics.roomBodies` reports the four wallflyers drawn as
+ * `seedling:enemy/wallflyer` from the seedling pack, and a frame CHANGES (the launch's "jump", or the resting
+ * world-clock pair) — the reducer is live.
+ */
+export async function seedlingJsRuntimeGraphicsRoomBodies(tc) {
+    const frame = document.createElement('iframe');
+    // Visible (a display:none frame gets no animation frames, and the page paints only in rAF), but out of the way.
+    Object.assign(frame.style, { position: 'fixed', right: '0', bottom: '0', width: '160px', height: '160px',
+        opacity: '0.01', pointerEvents: 'none', border: '0' });
+    const errors = [];
+    try {
+        frame.src = './modules/seedlingDemo/jsRuntime.html?graphics=seedling&camera=follow';
+        document.body.appendChild(frame);
+        const win = await tc.pollForValue(() => {
+            const w = frame.contentWindow;
+            return w?.__runtimeReady && w.__seedlingJsRuntime?.vanilla && w.__seedlingJsGraphics?.status === 'ready' ? w : null;
+        }, 'the standalone JS page loaded the vanilla map and the seedling pack stack', 20000, 200);
+        tc.reportCondition('the standalone page is up with its pack', !!win);
+        if (!win) return tc.getOverallResult();
+        const origError = win.console.error.bind(win.console);
+        win.console.error = (...a) => { errors.push(a.map(String).join(' ')); origError(...a); };
+        win.addEventListener('error', (e) => errors.push(`uncaught: ${e.message}`));
+        const game = await (await fetch('./modules/flashPanel/games/seedling.json')).json();
+        win.__swfBridge.game.configure(JSON.stringify({ classes: game.classes, state_properties: game.state_properties }));
+        win.__swfBridge.queueItems([{ class: 'game', property: 'menu', value: false },
+            { invocation: 'new_instance', className: 'Game', args: [22, 80, 112] }]);
+        const g = win.__seedlingJsGraphics;
+        const flyersOf = (e) => (e?.ops ?? []).filter((o) => o.key === 'seedling:enemy/wallflyer');
+        const first = await tc.pollForValue(() => (flyersOf(g.roomBodies).length >= 4 ? g.roomBodies : null),
+            'the page drew the four wallflyers of level 22 from the pack', 15000, 100);
+        tc.log(`roomBodies: ${JSON.stringify(g.roomBodies)}`);
+        tc.assertEqual('level 22\'s four wallflyers resolved to seedling:enemy/wallflyer from the seedling pack', '4/seedling',
+            `${flyersOf(first).length}/${[...new Set(flyersOf(first).map((o) => o.pack))].join(',')}`);
+        tc.assertEqual('every sheet decoded (none fell back to rectangles)', '[]', JSON.stringify(g.failedSheets));
+        const frames0 = flyersOf(first).map((o) => o.frame).join(',');
+        const moved = await tc.pollForValue(() => {
+            const now = flyersOf(g.roomBodies).map((o) => o.frame).join(',');
+            return now !== frames0 ? now : null;
+        }, 'a wallflyer\'s frame changed (the reducer runs in the tick loop)', 10000, 50);
+        tc.assertEqual('the wallflyers animate (their frames moved off the first paint\'s)', true, !!moved);
+        tc.assertEqual('no console error on the page', '[]', JSON.stringify(errors));
+        const rt = win.__seedlingJsRuntime;
+        tc.assertEqual('the run is in level 22 and did not halt', '22/null', `${rt.run?.level}/${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        frame.remove();
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-graphics-room-bodies',
+    name: 'Seedling JS runtime: the room bodies in the original graphics (G3b)',
+    description: 'Mounts jsRuntime.html?graphics=seedling&camera=follow standalone in its own iframe, drives it to level 22 '
+        + '(four wallflyers) through its own __swfBridge, and asserts the page draws each as seedling:enemy/wallflyer from '
+        + 'the seedling pack, every sheet decodes, a frame changes, and no console error. Touches no panel, preset or AP '
+        + 'state; the iframe is removed however it ends.',
+    testFunction: seedlingJsRuntimeGraphicsRoomBodies,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/**
+ * ⛓ GRAPHICS G3c — the puzzlements' sibling row, G3b's shape one module over: the JS page mounted STANDALONE in this
+ * row's own iframe and driven through its own `__swfBridge` to `Game(61, 104, 144)` — level 61's two red spinning
+ * axes, the player standing where neither blade reaches (measured: no hit, no death in 600 ticks). No panel, preset
+ * or AP state is touched; the iframe is removed however the row ends.
+ *
+ * It asserts what node cannot: the axe sheet DECODES in a browser and the page's tick loop counts the axes' updates,
+ * so `__seedlingJsGraphics.hazards` reports both drawn as `seedling:puzzlement/spinningaxeRed` from the seedling pack,
+ * and their angle CHANGES — the renderer's own update clock is live.
+ */
+export async function seedlingJsRuntimeGraphicsHazards(tc) {
+    const frame = document.createElement('iframe');
+    // Visible (a display:none frame gets no animation frames, and the page paints only in rAF), but out of the way.
+    Object.assign(frame.style, { position: 'fixed', right: '0', bottom: '0', width: '160px', height: '160px',
+        opacity: '0.01', pointerEvents: 'none', border: '0' });
+    const errors = [];
+    try {
+        frame.src = './modules/seedlingDemo/jsRuntime.html?graphics=seedling&camera=follow';
+        document.body.appendChild(frame);
+        const win = await tc.pollForValue(() => {
+            const w = frame.contentWindow;
+            return w?.__runtimeReady && w.__seedlingJsRuntime?.vanilla && w.__seedlingJsGraphics?.status === 'ready' ? w : null;
+        }, 'the standalone JS page loaded the vanilla map and the seedling pack stack', 20000, 200);
+        tc.reportCondition('the standalone page is up with its pack', !!win);
+        if (!win) return tc.getOverallResult();
+        const origError = win.console.error.bind(win.console);
+        win.console.error = (...a) => { errors.push(a.map(String).join(' ')); origError(...a); };
+        win.addEventListener('error', (e) => errors.push(`uncaught: ${e.message}`));
+        const game = await (await fetch('./modules/flashPanel/games/seedling.json')).json();
+        win.__swfBridge.game.configure(JSON.stringify({ classes: game.classes, state_properties: game.state_properties }));
+        win.__swfBridge.queueItems([{ class: 'game', property: 'menu', value: false },
+            { invocation: 'new_instance', className: 'Game', args: [61, 104, 144] }]);
+        const g = win.__seedlingJsGraphics;
+        const axesOf = (e) => (e?.ops ?? []).filter((o) => o.key === 'seedling:puzzlement/spinningaxeRed');
+        const first = await tc.pollForValue(() => (axesOf(g.hazards).length >= 2 ? g.hazards : null),
+            'the page drew the two red axes of level 61 from the pack', 15000, 100);
+        tc.log(`hazards: ${JSON.stringify(g.hazards)}`);
+        tc.assertEqual('level 61\'s two axes resolved to seedling:puzzlement/spinningaxeRed from the seedling pack', '2/seedling',
+            `${axesOf(first).length}/${[...new Set(axesOf(first).map((o) => o.pack))].join(',')}`);
+        tc.assertEqual('every sheet decoded (none fell back to rectangles)', '[]', JSON.stringify(g.failedSheets));
+        const rot0 = axesOf(first).map((o) => o.rot).join(',');
+        const turned = await tc.pollForValue(() => {
+            const now = axesOf(g.hazards).map((o) => o.rot).join(',');
+            return now !== rot0 ? now : null;
+        }, 'an axe\'s angle changed (the update clock runs in the tick loop)', 10000, 50);
+        tc.assertEqual('the axes turn (their angles moved off the first paint\'s)', true, !!turned);
+        tc.assertEqual('no console error on the page', '[]', JSON.stringify(errors));
+        const rt = win.__seedlingJsRuntime;
+        tc.assertEqual('the run is in level 61 and did not halt', '61/null', `${rt.run?.level}/${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        frame.remove();
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-graphics-hazards',
+    name: 'Seedling JS runtime: the puzzlements in the original graphics (G3c)',
+    description: 'Mounts jsRuntime.html?graphics=seedling&camera=follow standalone in its own iframe, drives it to level 61 '
+        + '(two red spinning axes) through its own __swfBridge, and asserts the page draws each as '
+        + 'seedling:puzzlement/spinningaxeRed from the seedling pack, every sheet decodes, an angle changes, and no console '
+        + 'error. Touches no panel, preset or AP state; the iframe is removed however it ends.',
+    testFunction: seedlingJsRuntimeGraphicsHazards,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
 export async function seedlingJsRuntimeBotCompletesAtlasLocation(tc) {
     let previous = 'auto';
     try { previous = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }

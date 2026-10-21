@@ -24110,3 +24110,95 @@ an honest refusal. Neither leg solves: the hammer wall (H1) is still the wall.
 **Pins moved:** the `contactFidelity.test` defaults; `fidelityL40Guard` "ships ON"; identity **carved pairs c4
 `b9d2185d` → `ebb9e743`** (`spinnerSwingLineOfSight` alone: `winding post-sword seed=7` threw the line-of-sight
 assertion OFF and runs to `SATURATED` ON). No producer names the switches; tapeRunner pairs unmoved.
+
+### Seedling fidelity IGNEOUS — the Igneous-to-Lava tile (type 31), modelled (`igneousLava`, OFF)
+
+⚖ The user (2026-10-20): *"Launch IGNEOUS now"* — planning-9's finding: sweep leg 649 (`level_76 <- in_L71_304_256 ->
+exit:out_teleporter_304_112`) dies on the game at t39 while the model walks on. Base `934f99422b`. The report is
+`CC/docs/cloud-reports/seedling-fidelity-igneous.md`.
+
+**The tile, on the game** (p4g headless, five tapes, `fixtures/igneous-witness/`, every one reproduced by the model ON at
+0 px, the deaths included). `Tile.render`'s case 31 (`Tile.as:390-433`) runs on screen only. The trigger is the player's
+ORIGIN within √512/2 ≈ 11.31 px of the tile's CENTRE (a `Tile`'s `x, y` is `_x + w/2`). The counter falls 8 → 0, and the
+NINTH in-range render breaks the tile (8 do not: the `k8` / `k9` twins differ by one input tick). Once broken, a frame
+steps every 9 renders with nobody near, and the third writes `t = 17` (IgneousLava.png is 48×16, three frames): 36 renders
+from first contact. The counter CARRIES across an absence (`k4-stand` dies at t79; a reset would give t83), and a death
+restart rebuilds the tile (`k9-rebuild`: death t141 = first in-range t105 + 36). Leg 649 itself: in range t3, break t11,
+lava at the t38 render, death on the t39 update, respawn (24,88) t69.
+
+**The model.** `igneousLava.js` is the state machine. `levelRun.renderIgneousNow` runs at the frame's render point
+(beside `renderBossesNow`, and in `runFrozenTick`), asks `onScreen(0)` against the camera, and writes the lava through
+the Bulb's per-visit overlay, so the next update's `getState` reads 17. Refused by name (`IGNEOUS_UNMODELLED`), as an
+interim: a dead span the run does not step while a tile is live, an uncertain shake band, and an arrival within range
+(measured: no teleporter arrival is). New run state `igneousStates` is NOT in `stateDigestParts` (handed to the hammer
+arc). There is a new family, `igneousTiles`.
+
+**The solver.** The OFF plan for survey step 195 (= leg 649's room) waits for `lavachain@128,64`'s phase standing on tile
+(2,5), and L76's route is a type-31 snake between two islands of safe floor. With only the model ON, every rung refuses:
+the tile turns, the path behind is cut. `dangerMap.igneousDanger` prices a breaking tile's lava tick and a WAIT that would
+break one. `igneousWalkDanger` replays the clocks along a previewed walk, and `probeSamples` refuses a walk that stands on
+a tile it turns, naming the tile and its clock. Step 195 ON: SOLVED 496 (OFF 519). The ON walk is witnessed on the game at
+|Δ| 0 with no death (`igneous-l76-survey195-on`).
+
+**Movers ON:** survey 195 (SOLVED 519 → SOLVED 496; the other 14 type-31 steps unchanged); sweep leg 649 in node (583 →
+580 t; the OFF plan dies six times under the ON model, the ON plan never), the other 48 type-31 legs unchanged. No
+tapeRunner pair (638 `17bbc7ff`), identity row or producer `--check` moves OFF. Bounded ON: 0 real reds.
+
+**Trap candidates.**
+- A render-driven timer is not an update-driven one: it runs on frozen frames and the load fade, and stops off screen.
+- A dwell is invisible to a per-box danger query: the player's OWN presence is the hazard's clock, so the check has to
+  replay the walk.
+- A `Tile`'s `x, y` is its centre (`super(_x + w/2, _y + h/2)`), not the `.oel` corner.
+
+### Seedling fidelity LIGHTS — the L69 Lights fight, modelled and solved (`lightsBossFight`, OFF)
+
+The report is `CC/docs/cloud-reports/seedling-fidelity-lights.md`. Everything is behind
+`CONTACT_FIDELITY.lightsBossFight` (OFF; `SEEDLING_LIGHTS_BOSS_FIGHT=0|1`). OFF is byte-identical: the identity block
+equals W0's in a pristine worktree, and the new strategy and verb rows are absent and non-enumerable.
+
+**D1 — the fight on the game** (`probe-seedling-lights.mjs`, p4g headless; `fixtures/lights-witness/`):
+- The intro NPC does not run on its own. It opens on an X release within 24 px of (80,80), and its two pages are tape
+  ticks. Its removal nulls `myText`, and the six fliers spawn on the next controller update at (80,−32).
+- `FP.RAD` is π/−180, so the spin decreases. The runtime's trig is musl's, which is one ulp off V8 on about 1% of
+  arguments. `runtimeLibm.js` transcribes it.
+- `endState()` writes `{69,0}` on the tick after the last flier leaves the world. It adds the exit Teleporter
+  (72,72) → L36 (112,96), live from the next tick, and the totem's type becomes `""`.
+
+**D2 — the model** (`lightBoss.js`, `lightBossWorld.js`, stepped by `levelRun.stepLightsNow`; family `lightsFight`):
+- What it covers: the controller, the fliers, the shots as player hits, and the totem as a Solid.
+- How fliers take damage: the fliers' sword/spear hits (the spear's T+3/T+5 repeats included), and the dark suit's
+  retaliation.
+- The kill arm: the `anim` corpse.
+- The write: the `{69,0}` write through `apReportWrite`.
+- What it reproduces: four game witnesses at 0 px (stand 701, revisit 81, solve-sword 560, solve-spear 362 ticks).
+
+**D3 — the solver.**
+- `solid:lightbosscontroller → lights` (`lightsVerb.execLights`): the intro paged, then sorties and dodges chosen on an
+  exact forecast of a cloned fight, sword or spear only.
+- Refusals: `cannot-act` (another primary weapon) and `unresolved` (the forecast leaves the live fight, a hit, or the
+  bound).
+- Both solves are game witnesses at 0 px and end in L36.
+
+**D4 — movers.**
+- The local survey ON solves 163 (L69, 559 t; OFF: NO-EDGE, the survey's atlas lookup) and 164 (L36, 50 t; OFF:
+  NO-ARRIVAL). The full route ON reads 196 / 54 / 2 / 2 of 254, against CI 39496129402's 194 / 54 / 3 / 3. The remaining
+  NO-EDGE pair is L57's `tentaclebeast` (steps 94/95, 125/126).
+- The bounded set ON (125 files) has 4 reds, all of them pins the flip must move:
+  - the `contactFidelity.test` defaults;
+  - `fidelityLights`' OFF-default row;
+  - `enemyDamage.test`'s `refused > 15` floor (LightBoss is now modelled: 15);
+  - `fidelityApFlip`'s "Lights … room unchanged". That row was written without the fight; the totem is a 16×16 Solid
+    on the game until `endState`.
+- The keyed L69 sweep does not move. Both legs are refused before any model tick, in the JS arc's goal resolver:
+  `jsRuntimeSolver.solverGoalFor` finds no live exit teleporter, and the controller's `BOSS_REPORT_REFUSAL` has no fight
+  executor. Both are hand-overs.
+
+**STOP (the hammer arc's region).** The danger map does not see the fliers or the shots. Pricing them would need
+`stateDigest` to cover `lightsFights`, `lightsExits` and `lightsSpearRepeats`.
+
+**Trap candidates.**
+- `playerPhysicsV2.step` rebuilds its own live bag, so a new live-geometry key is silently dropped unless `step`
+  carries it: the totem stayed solid after `endState`.
+- The runtime's trig is musl, not V8. A transcription that is exact in V8 can drift by one ulp per call.
+- A key file built with `… ; wc -l` carries a second line, and `--contact-fidelity` refuses it by name.
+- The sweep's default `--host` is :8000.

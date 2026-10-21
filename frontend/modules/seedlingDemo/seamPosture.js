@@ -46,7 +46,11 @@ export const GAMEPLAY_DRAW_CONSUMERS = Object.freeze({
         + 'its aim (2 draws/spawn) and the grenade decision (1 draw/tick while walking)',
     tentaclebeast: 'TentacleBeast.as:138-168 — spawn placement, up to 202 draws/frame '
         + 'in the whirlpool loop (DEFERRED by name this rung)',
-    lightboss: 'LightBoss.as:67 — `if (!Math.floor(Math.random() * 90))` (DEFERRED)',
+    // ⛓ fidelity LIGHTS: CORRECTED — the draw is `Rng.cos()`, the COSMETIC stream (a sound pick, `Music.playSound("Boss 6
+    // Move")`), not `Math.random()`; never modelled (⚖ 2026-10-10). Kept as a row because without `rng.split` the cosmetic
+    // draws share the one stream. (The key matches no placed entity type — `lightbosscontroller` is what L69 places.)
+    lightboss: 'LightBoss.as:67 — `if (!Math.floor(Rng.cos() * 90)) Music.playSound("Boss 6 Move")` — COSMETIC (a sound '
+        + 'pick; shares the stream only without `rng.split`)',
 });
 
 /**

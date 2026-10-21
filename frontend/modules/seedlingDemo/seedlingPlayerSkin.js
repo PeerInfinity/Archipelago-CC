@@ -80,6 +80,7 @@
 import { FP_ELAPSED_PER_TICK } from '../artLibrary/artLibrary.js';
 import { FALL_ALPHA_SPEED, FALL_ALPHA_START, INITIAL_DIRECTION, playerBoxAt } from './playerPhysicsV2.js';
 import { PLAYER_COLOUR, cosmeticRand } from './seedlingSkinRenderer.js';
+import { FORM_TELEPORT_AT, FORM_TRANSITION_FRAMES } from './bobBoss.js';
 
 /** `Player.as:83-86` — the `states` rows that read "swim-": water, lava, waterfall. */
 export const SWIM_STATES = Object.freeze(new Set([1, 17, 25]));
@@ -105,9 +106,12 @@ export const SWORD_KEYS = Object.freeze({
 
 /**
  * THE ADAPTER. Everything the player's picture reads, from the run, as a plain
- * object (null when there is no run). `epoch` is the room's world OBJECT — an
- * identity only, compared by `stepPlayerSkin`: a new world is a new `Player`,
- * whose Spritemap starts afresh.
+ * object (null when there is no run). `epoch` is the VISIT — the run, the
+ * level and how many crossings and deaths it has made (G3's identity) — an
+ * identity only, compared by `stepPlayerSkin`: a new visit is a new `Player`,
+ * whose Spritemap starts afresh. ⛔ Not `run.world`: that is the level's
+ * MEMOISED build, the same object after a death's restart in the same level,
+ * and re-wrapped by a tile write mid-visit (G3's finding).
  */
 export function skinView(run) {
     if (!run?.state) return null;
@@ -120,7 +124,7 @@ export function skinView(run) {
         ? { kind: 'pit', alpha: s.fall.alpha, target: { ...s.fall.target } }
         : (s.fall?.phase === 'descent' ? { kind: 'ceiling', yStart: s.fall.yStart } : null);
     return {
-        epoch: run.world ?? null,
+        epoch: { run, key: `${run.level}|${run.transitions?.length ?? 0}|${run.playerDeaths?.length ?? 0}` },
         level: run.level,
         x: s.x,
         y: s.y,
@@ -138,7 +142,37 @@ export function skinView(run) {
             ? { anim: slashInfo.state.anim ?? 'slash', endsAt: slashInfo.endsAt ?? null }
             : null,
         fall,
+        // ⛓ G3c: the Bob Boss's death writes the PLAYER's colour and alpha (`BobBoss.as:202-225`) while its
+        // `nextBossTimer` runs down — the run carries the timer (G3b's adapter reads the same getter).
+        bossFade: bossFadeOf(run),
     };
+}
+
+/**
+ * The Bob Boss's death window, or null: `{ next }` once `death()` has spent at
+ * least one `nextBossTimer` (the boss is destroyed and the timer is below its
+ * max). `run.bobBoss` builds its arena on first ask; the arena stepper asks it
+ * on every tick under `!noclip` (G3b's audit), and the build is a pure function
+ * of the room's rock.
+ */
+function bossFadeOf(run) {
+    const b = 'bobBoss' in run ? run.bobBoss?.get?.('boss') ?? null : null;
+    return b && b.destroy && b.nextBossTimer < FORM_TRANSITION_FRAMES ? { next: b.nextBossTimer } : null;
+}
+
+/**
+ * `BobBoss.death()`'s writes to the player's Image (`BobBoss.as:213-226`), after
+ * its `nextBossTimer--`: the colour `getColorRGB(v, v, 255)` with
+ * `v = uint(255 · (1 − n / 120))`, and the alpha — fading out to `n = 40`
+ * (`(n − 40) / 80`), then in (`1 − n / 40`) at the room's centre. The boss
+ * updates BEFORE the player (it is first in the update list), so the player's
+ * own `freezeStep`/`hitUpdate` run on top of this colour (`stepPlayerSkin`).
+ */
+function bossFade({ next: n }) {
+    const v = Math.trunc(255 * (1 - n / FORM_TRANSITION_FRAMES));
+    const alpha = n <= FORM_TELEPORT_AT ? 1 - n / FORM_TELEPORT_AT
+        : (n - FORM_TELEPORT_AT) / (FORM_TRANSITION_FRAMES - FORM_TELEPORT_AT);
+    return { tint: v === 255 ? null : `#${v.toString(16).padStart(2, '0').repeat(2)}ff`, alpha };
 }
 
 /** `sprites()`'s choice (`Player.as:1665-1688`): the animation name for this tick. */
@@ -154,6 +188,8 @@ export function playerAnimName(view, swimStates = SWIM_STATES) {
 }
 
 /** A fresh `Player`'s picture (`Player.as:388`: "down-stand", unmirrored, white). */
+/** One visit or another: the adapter's `{run, key}`, or (a synthetic view) the same object. */
+const sameEpoch = (a, b) => a === b || (!!a && !!b && a.run !== undefined && a.run === b.run && a.key === b.key);
 const freshSkin = (epoch, tick) => ({
     epoch, born: tick, anim: 'down-stand', since: tick, mirrored: false, tint: null,
     slash: null, prevHits: 0, prevFrozen: 0,
@@ -216,7 +252,7 @@ function fallPose(view, tick, skin) {
  * EVERY FRAME RULE, by name, so a test can swap ONE for a mutant (`opts.rules`)
  * and watch the goldens go red — G1's `mask` hook, generalised.
  */
-export const PLAYER_RULES = Object.freeze({ animName: playerAnimName, played, mirror, tintStep, swordPose, fallPose, swimStates: SWIM_STATES });
+export const PLAYER_RULES = Object.freeze({ animName: playerAnimName, played, mirror, tintStep, swordPose, fallPose, bossFade, swimStates: SWIM_STATES });
 
 /**
  * One GAME tick of the picture's own state (call it after every `tick()`).
@@ -225,8 +261,11 @@ export const PLAYER_RULES = Object.freeze({ animName: playerAnimName, played, mi
 export function stepPlayerSkin(prev, view, tick, { rules = PLAYER_RULES } = {}) {
     if (!view) return prev;
     const R = rules === PLAYER_RULES ? rules : { ...PLAYER_RULES, ...rules };
-    const skin = prev && prev.epoch === view.epoch ? { ...prev } : freshSkin(view.epoch, tick);
-    skin.tint = R.tintStep(skin, view);
+    const skin = prev && sameEpoch(prev.epoch, view.epoch) ? { ...prev } : freshSkin(view.epoch, tick);
+    // ⛓ G3c: the boss's death writes the colour first; the player's own update steps on from it.
+    const fade = view.bossFade ? R.bossFade(view.bossFade) : null;
+    skin.tint = R.tintStep(fade ? { ...skin, tint: fade.tint } : skin, view);
+    skin.fadeAlpha = fade ? fade.alpha : null;
     skin.prevHits = view.hitsTimer;
     skin.prevFrozen = view.frozenTimer;
     // ── the body's animation: `sprites()` does not run during the descent ──
@@ -285,7 +324,7 @@ export function playerOps(view, art, { tick, skin, rules = PLAYER_RULES }) {
     const pose = R.fallPose(view, tick, s);
     // FlashPunk turns COUNTER-clockwise (`FP.RAD` = π / −180, `FP.as:749`); an op's `rot` is the canvas's clockwise.
     const rot = pose.angle ? -pose.angle : 0;
-    const alpha = pose.alpha;
+    const alpha = s.fadeAlpha ?? pose.alpha;
     const frame = art.frameAt(suitKey, s.anim, R.played(tick, s.since)) ?? 0;
     const body = { rot, flipX: s.mirrored, alpha, tint: s.tint, layer, fallback };
     const ops = [];

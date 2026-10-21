@@ -22,6 +22,7 @@ import {
     moveUp, refCounts, renameGroup,
 } from './quickLaunchTree.js';
 import { getModuleManager } from './moduleManagerRef.js';
+import { MiniSection } from './quickLaunchMini.js';
 
 // Declared here, not in index.js: index.js imports this file and reads MODULE_ID
 // at evaluation (moduleInfo.name), and tests/testCases/quickLaunchTests.js imports
@@ -82,6 +83,8 @@ export const filedText = (n) => `${n}×`;
 export const filedTitle = (n) => `Filed ${n === 1 ? 'once' : `${n} times`} in your groups`;
 export const MODULES_TARGET = Object.freeze({ moduleId: 'modules', componentType: 'modulesPanel' });
 const REFRESH_EVENTS = ['module:stateChanged', 'app:readyForUiDataLoad', 'settings:changed'];
+/** The Mini panels section redraws on its own module's event (and on the ones above). */
+const MINI_CHANGED_EVENT = 'miniPanels:changed';
 
 /** Edit mode's controls: one class each, so tests and CSS address them by name. */
 export const CONTROLS = Object.freeze({
@@ -205,6 +208,7 @@ export class QuickLaunchUI {
                 this._scheduleRender();
             }, MODULE_ID));
         }
+        this._unsubs.push(eventBus.subscribe(MINI_CHANGED_EVENT, () => this.miniSection.render(), MODULE_ID));
     }
 
     getRootElement() { return this.rootElement; }
@@ -280,7 +284,8 @@ export class QuickLaunchUI {
         bar.append(top, buttons);
         this.groupsEl = document.createElement('div');
         this.groupsEl.className = 'ql-groups';
-        this.rootElement.append(bar, this.groupsEl);
+        this.miniSection = new MiniSection();
+        this.rootElement.append(bar, this.miniSection.element, this.groupsEl);
         // A destroyed panel (closed tab) must stop re-rendering.
         this.container?.on?.('destroy', () => this.destroy());
     }
@@ -396,6 +401,7 @@ export class QuickLaunchUI {
         this._shown = shown;
         this._showFoldMode();
         this.countEl.hidden = !this._filtering;
+        this.miniSection.render();
         this.countEl.textContent = this._filtering ? countText(model, shown) : '';
         const sections = [];
         if (this.editing) sections.push(this._rootControls());
