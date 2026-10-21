@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 85,
-            "count": 132,
+            "browser": 86,
+            "count": 133,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 438,
-        "browser": 150,
+        "blockStyle": 439,
+        "browser": 151,
         "cited": 229,
-        "files": 451,
+        "files": 452,
         "lineStyle": 13,
-        "withDocblock": 451,
-        "withFlags": 368
+        "withDocblock": 452,
+        "withFlags": 369
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -14011,6 +14011,43 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling ROCKMOVE's \"Remove bundle\", ON THE GAME (rules `rules-rock-remove`).",
             "path": "scripts/procgen/probe-seedling-rock-remove.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-rope-verb.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-rope-verb — ⛓⛓⛓ seedling-fidelity-rope: THE SOLVER'S `rope` VERB (`CONTACT_FIDELITY.ropeCutVerb`), ITS PLANS PLAYED ON THE GAME.",
+            "path": "scripts/procgen/probe-seedling-rope-verb.mjs"
         },
         {
             "argvHelpers": [
