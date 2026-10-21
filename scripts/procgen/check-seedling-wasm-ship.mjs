@@ -2,6 +2,12 @@
 /**
  * check-seedling-wasm-ship — **THE ONLY ARM THAT CAN SEE A REAL SOLVE'S VERDICT.**
  *
+ * @ci-paths frontend/modules/flashPanel/** frontend/modules/seedlingDemo/** frontend/modules/swfRecompilerPanel/browser vendor/seedling
+ *   ⛓ ci-manual-moves (⚖ user 2026-10-21; js-7's conditions): what the shipped page boots. CI runs this
+ *   arm only when a pushed path hits those trees or its derived inputs (`ciPathFilter.js`: this gate's and
+ *   the browser-gates job's own scripts' input populations, the workflow included), and on every dispatch:
+ *   `gh workflow run unittests_frontend.yml -R PeerInfinity/Archipelago-CC --ref <branch>`.
+ *
  * `watch.html`'s ▶ load-in-wasm button ships what the page holds into the real
  * recompiled Seedling and prints TWO verdicts beside the JS run's own answer:
  * the END STATE (did the real game finish where the model finished) and, since

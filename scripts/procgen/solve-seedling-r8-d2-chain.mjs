@@ -4,6 +4,8 @@
  * MULTI-SEGMENT CHAIN, driven by the live solver. R8 slice 7 track D;
  * SPLICED at R9 slice 3.
  *
+ * @ci-box the user moved the `solve-seedling-*` chain `--check`s off push (⚖ 2026-10-21): the box answers this row (`node scripts/procgen/standing-values.mjs --write --key=<its key>`), and CI runs no arm for it.
+ *
  * ── WHAT THIS IS, AND WHY IT IS **THREE** SEGMENTS ────────────────────
  *
  * ⛓⛓⛓ R9 SLICE 3 SPLICED L18 IN FRONT — ⚖ ruling 5's ONE attributed licence
