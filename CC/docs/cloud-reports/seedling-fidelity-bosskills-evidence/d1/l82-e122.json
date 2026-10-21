@@ -1,0 +1,70 @@
+{
+ "tape_version": 8,
+ "game": "seedling",
+ "boot": {
+  "level": 82,
+  "x": 152,
+  "y": 176
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [],
+ "despawn": [],
+ "equips": [],
+ "pins": [
+  "sound",
+  "dead_frames"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 1,
+  "split": true,
+  "cosmetic": 0,
+  "fp": 0
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasDarkSuit": true
+  }
+ },
+ "tick0": null,
+ "hold": false,
+ "tick_count": 260,
+ "inputs": [
+  {
+   "key": "up",
+   "from": 100,
+   "to": 101
+  },
+  {
+   "key": "primary",
+   "from": 122,
+   "to": 123
+  },
+  {
+   "key": "up",
+   "from": 128,
+   "to": 162
+  },
+  {
+   "key": "primary",
+   "from": 166,
+   "to": 167
+  },
+  {
+   "key": "primary",
+   "from": 174,
+   "to": 175
+  }
+ ],
+ "name": "l82-e122",
+ "description": "bosskills D1 scratch",
+ "note": ""
+}

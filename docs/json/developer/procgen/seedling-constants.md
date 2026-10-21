@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**80 files, 6530 literals.** Class × position:
+**82 files, 6849 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
-| physics | 7 | 1711 | 596 | 2314 |
-| rule | 13 | 1074 | 518 | 1605 |
+| physics | 7 | 1718 | 599 | 2324 |
+| rule | 13 | 1194 | 584 | 1791 |
 | cosmetic | 0 | 62 | 14 | 76 |
-| structural | 15 | 387 | 2133 | 2535 |
+| structural | 15 | 387 | 2256 | 2658 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 35 | 3234 | 3261 | 6530 |
+| total | 35 | 3361 | 3453 | 6849 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
-| physics | 1799 | 0 | 97 | 123 | 4 | 291 | 2314 |
-| rule | 506 | 141 | 240 | 22 | 604 | 92 | 1605 |
+| physics | 1809 | 0 | 97 | 123 | 4 | 291 | 2324 |
+| rule | 662 | 141 | 243 | 22 | 616 | 107 | 1791 |
 
 Rows whose note starts `REVIEW:`: **114**.
 
@@ -514,7 +514,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**20 named scalars** are `physics` or `rule` (15 with an AS3 anchor), and **175 small tables** (at most 16 literals) hold at least one (98 with an AS3 reference).
+**20 named scalars** are `physics` or `rule` (15 with an AS3 anchor), and **183 small tables** (at most 16 literals) hold at least one (106 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -605,6 +605,14 @@ None: a name declared in several files now reads one profile key (the table belo
 | `BURNABLE_TREE` | seedlingDemo/bobBoss.js | 10 | 10 | rule | derivation/magnitude | Scenery/BurnableTree.as:burn |
 | `BOB_BOSS_LEDGER` | seedlingDemo/bobBoss.js | 2 | 2 | rule | sentinel |  |
 | `DARK_SWORD` | seedlingDemo/witch.js | 4 | 4 | rule | magnitude | Pickups/DarkSword.as:setHitbox |
+| `LAVA_BALL` | seedlingDemo/lavaBoss.js | 8 | 8 | rule | magnitude | Projectiles/LavaBall.as:LavaBall |
+| `LAVA_EXPLOSION` | seedlingDemo/lavaBoss.js | 3 | 3 | rule | magnitude | Projectiles/Explosion.as:Explosion |
+| `LAVA_RUNNER` | seedlingDemo/lavaBoss.js | 7 | 7 | physics | magnitude | Enemies/LavaRunner.as:LavaRunner |
+| `LAVA_ARENA_ROCK` | seedlingDemo/lavaBoss.js | 6 | 6 | rule | magnitude | Game.as:bossrock |
+| `TENTACLE_BEAST_ANIMS` | seedlingDemo/tentacleBeast.js | 6 | 6 | rule | magnitude | Enemies/TentacleBeast.as:sprTentacleBeast |
+| `TENTACLE` | seedlingDemo/tentacleBeast.js | 12 | 12 | rule | magnitude | Enemies/Tentacle.as:hitRect |
+| `TENTACLE_ANIMS` | seedlingDemo/tentacleBeast.js | 12 | 12 | rule | magnitude | Enemies/Tentacle.as:sprTentacle |
+| `WHIRLPOOL` | seedlingDemo/tentacleBeast.js | 6 | 6 | rule | magnitude | Puzzlements/Whirlpool.as:spinRate |
 | `BASE_SPIN_RATE` | seedlingDemo/bobBossFight.js | 1 | 1 | physics | magnitude | Enemies/BobSoldier.as:swordSpinRate |
 | `BOB_BOSS_BOX` | seedlingDemo/bobBossFight.js | 4 | 4 | physics | magnitude | Enemies/BobBoss.as:setHitbox |
 | `FINAL_BOSS_ANIMS` | seedlingDemo/finalBossFight.js | 8 | 4 | rule | count/magnitude | FinalBoss.as:47-50 |
@@ -641,7 +649,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `MAGICAL_LOCK_CALLBACK_TICK_OFFSET` | seedlingDemo/magicalLock.js | 1 | 1 | rule | derivation |  |
 | `MAGICAL_LOCK_MATRIX` | seedlingDemo/magicalLock.js | 8 | 8 | rule | sentinel |  |
 | `INVENTORY_TERM` | seedlingDemo/camera.js | 2 | 2 | rule | derivation |  |
-| `SHAKE_WRITERS` | seedlingDemo/camera.js | 5 | 5 | rule | magnitude |  |
+| `SHAKE_WRITERS` | seedlingDemo/camera.js | 7 | 7 | rule | magnitude |  |
 | `RANDOM_RANGE` | seedlingDemo/camera.js | 2 | 2 | rule | bound |  |
 | `CAMERA_DEAD_ZONE_RESIDUE` | seedlingDemo/camera.js | 2 | 2 | rule | bound |  |
 | `PLAYER_DAMAGE` | seedlingDemo/playerDamage.js | 5 | 4 | rule | count/magnitude | Player.as:hitsTimerMax Player.as:hitsTimerInt |

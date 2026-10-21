@@ -55,16 +55,19 @@
  * Usage:
  *   node scripts/procgen/probe-seedling-r5-spinner.mjs
  *   node scripts/procgen/probe-seedling-r5-spinner.mjs --write
+ *   node scripts/procgen/probe-seedling-r5-spinner.mjs --check
+ *       (exit 1 unless both committed tapes are, byte for byte, what this probe derives)
  *   node scripts/procgen/check-seedling-bot-differential.mjs --record --win \
  *       --only=r5-press-glide,r5-press-repeat
  */
 
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { emitFixtures } from './producerFixtureBytes.js';
 
 argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -81,6 +84,7 @@ const {
 } = await import(join(MODULE, 'spinner.js'));
 
 const WRITE = process.argv.includes('--write');
+const CHECK = process.argv.includes('--check');
 const levelSource = atlasLevelSource();
 const tapePath = (n) => join(MODULE, 'fixtures', 'tapes', `${n}.json`);
 
@@ -267,13 +271,9 @@ console.log('     node scripts/procgen/check-seedling-bot-differential.mjs --rec
     + '--only=r5-press-glide,r5-press-repeat');
 
 const bad = checks.filter((c) => !c.ok).length;
-if (WRITE) {
-    for (const t of [glide, repeat]) {
-        writeFileSync(tapePath(t.name), serializeTape(t));
-        console.log(`\n   wrote ${tapePath(t.name)}`);
-    }
-} else {
-    console.log('\n(dry run — pass --write to emit the two tapes)');
+const outputs = [glide, repeat].map((t) => ({ path: tapePath(t.name), text: serializeTape(t) }));
+if (!emitFixtures(outputs, { write: WRITE, check: CHECK })) {
+    console.log('\n(dry run — pass --write to emit the two tapes, --check to compare them)');
 }
 if (bad > 0) throw new Error(`${bad} of ${checks.length} claims FAILED`);
 console.log(`\n${checks.length}/${checks.length} claims PASS`);

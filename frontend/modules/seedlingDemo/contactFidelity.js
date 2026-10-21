@@ -797,6 +797,20 @@ export const CONTACT_FIDELITY = {
      */
     lightsBossFight: false,
     /**
+     * seedling-fidelity-bosskills D2 — THE KING OF FIRE (`lavaBoss.js`, L82) IS STEPPED: the 99-update cycle, the
+     * LavaRunners (bridged chasers once they land), the LavaBalls and their reflection, the 120-update damage window
+     * and the death's report `{82,0}`; the body leaves the solids at its removal; a WandShot flies through it; the
+     * `solid:lavaboss` → `lavaboss` strategy executes the fight. OFF: no fight is built, the census body stays the
+     * wall it always was, a press on it refuses as before and the strategy refuses by name — byte-identical.
+     */
+    kingOfFireFight: false,
+    /**
+     * seedling-fidelity-bosskills D3 — THE TENTACLED BEAST (`tentacleBeast.js`, L57): the wake, the seeded
+     * `Math.random` spawns (the run's declared `rng` stream, as the Owl's), the tentacles' sit window and their
+     * `hitRect`, the whirlpools, the death's report `{57,0}` and the mouth Teleporter. OFF: byte-identical.
+     */
+    tentacleBeastFight: false,
+    /**
      * fidelity L1516 D2 — A CHEST'S PROBE LINE STOPS ONE PIXEL SHORT OF `toX` (`chest.chestProbeLine`).
      *
      *     Chest.as:63      collideLine("Player", x-originX+m, …, x-originX+width-2*m, …)   (m = 2)
@@ -979,6 +993,9 @@ if (globalThis.process?.env?.SEEDLING_IGNEOUS_LAVA === '0') CONTACT_FIDELITY.ign
 // ⛓ fidelity LIGHTS: `SEEDLING_LIGHTS_BOSS_FIGHT=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_LIGHTS_BOSS_FIGHT === '1') CONTACT_FIDELITY.lightsBossFight = true;
 if (globalThis.process?.env?.SEEDLING_LIGHTS_BOSS_FIGHT === '0') CONTACT_FIDELITY.lightsBossFight = false;
+// ⛓ seedling-fidelity-bosskills — the two boss fights, for a node measurement (both ship OFF).
+if (globalThis.process?.env?.SEEDLING_KING_OF_FIRE_FIGHT === '1') CONTACT_FIDELITY.kingOfFireFight = true;
+if (globalThis.process?.env?.SEEDLING_TENTACLE_BEAST_FIGHT === '1') CONTACT_FIDELITY.tentacleBeastFight = true;
 // ⛓ fidelity L1516 D2: `SEEDLING_CHEST_PROBE_LINE_END=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_CHEST_PROBE_LINE_END === '1') CONTACT_FIDELITY.chestProbeLineEnd = true;
 if (globalThis.process?.env?.SEEDLING_CHEST_PROBE_LINE_END === '0') CONTACT_FIDELITY.chestProbeLineEnd = false;

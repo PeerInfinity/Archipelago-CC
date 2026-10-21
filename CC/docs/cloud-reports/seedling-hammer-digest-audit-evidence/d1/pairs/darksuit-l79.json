@@ -1,0 +1,398 @@
+{
+ "spec": "darksuit-l79",
+ "rows": [
+  {
+   "t": 0,
+   "level": 79,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 10,
+   "level": 79,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 20,
+   "level": 79,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 30,
+   "level": 79,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 40,
+   "level": 79,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 50,
+   "level": 79,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 53,
+   "level": 79,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  }
+ ],
+ "summary": {
+  "apReportFlags": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "tileWritesByLevel": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "igneousStates": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "moonrockFlags": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "finalBossStates": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "podStates": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "placedGrenadeStates": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "lavaChainStates": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "spinningAxeStates": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "watcherStates": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "blastStates": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "blastReachCache": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "shooterStates": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "spitStates": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "bombPusherStates": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "bombStates": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "wandShotStates": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "bossFlags": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "shieldBossFlags": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "finalBossFlags": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "watcherFlags": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "finalDoorFlags": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "bossShotStates": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "arrowTrapStates": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "arrowsInFlight": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "wallFlyerStates": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "drillStates": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "staticBodyStates": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "darkTrapStates": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "chaserStates": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "poleFlags": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "rockFlags": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "pickupFlags": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "apItemFlags": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "poleStates": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "talkerStates": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "lightsFights": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "lightsExits": {
+   "samples": 7,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "spinnerStates": {
+   "samples": 7,
+   "perturbed": 7,
+   "leaves": 7,
+   "partsMoved": {
+    "visit": 7
+   },
+   "surfaceMoved": 0,
+   "undoExact": 7
+  }
+ }
+}

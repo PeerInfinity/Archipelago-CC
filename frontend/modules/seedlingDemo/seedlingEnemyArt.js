@@ -96,6 +96,18 @@ export const ENEMY_ART = Object.freeze([
     { pack: 'seedling', key: 'seedling:enemy/grenade', file: 'Grenade.png', fw: 16, fh: 16, origin: [8, 8],
         as3: 'Enemies/Grenade.as:16-17 Spritemap(16, 16); :43 centerOO; :44-47 explode [0,1,0,2,0,3,4,3] fps 12, hit [5,6,7] fps 12, sit [0,4] fps 5 (played in the ctor)',
         anims: { explode: fps([0, 1, 0, 2, 0, 3, 4, 3], 12), hit: fps([5, 6, 7], 12), sit: fps([0, 4], 5) } },
+    // ── G4: the effects and the HUD (`seedlingEffectSkin.js`). The droplet and the heart are frame-only rows (the
+    //    droplet's frame is a Number the class steps itself; the heart's is `int(i > healthc)`). ──
+    { pack: 'seedling', key: 'seedling:fx/explosion', file: 'Explosion.png', fw: 128, fh: 128, origin: [64, 64],
+        as3: 'Projectiles/Explosion.as:15-16 Spritemap(128, 128, endAnim); :29-31 explode [0..7] fps 20, centerOO; :38 scale = r·2/128; :39 angle = Rng.cos()·360',
+        anims: { explode: fps(range(0, 7), 20) } },
+    { pack: 'seedling', key: 'seedling:fx/slashhit', file: 'SlashHit.png', fw: 32, fh: 16, origin: [16, 8],
+        as3: 'Scenery/SlashHit.as:13-14 Spritemap(32, 16, endAnim); :19-21 centerOO, slash [0,1] fps 15; :22 scale = sc/32 + 0.35',
+        anims: { slash: fps([0, 1], 15) } },
+    { pack: 'seedling', key: 'seedling:fx/droplet', file: 'Droplet.png', fw: 9, fh: 5, origin: [4.5, 2.5],
+        as3: 'Game.as:393-394 sprDroplet Spritemap(9, 5); :802 centerOO; Scenery/Droplet.as:92-101 frame/alpha/colour per render' },
+    { pack: 'seedling', key: 'seedling:hud/heart', file: 'Health.png', fw: 12, fh: 12, origin: [0, 0],
+        as3: 'Game.as:396-397 sprHealth Spritemap(12, 12); :1537-1546 drawHealth: frame int(i > healthc), screen-anchored' },
     // ── AP item looks: `Pickups/APItem.as:52-66,94-104` (the sheet and frame size each look binds; 0x0 = an Image,
     //    i.e. the whole file) and `:160-172` (`centerOO`, frame 0 — an APItem never advances its frame) ──
     ...[['sword', 'Sword.png', 16, 16], ['shield', 'Shield.png', 7, 7], ['darkshield', 'DarkShield.png', 9, 9, 'Image'],
