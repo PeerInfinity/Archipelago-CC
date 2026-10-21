@@ -19,6 +19,9 @@ import {
     buildFlagItemRules,
     resolveCondition,
     conditionKey,
+    entitySemantics,
+    entitySealedTiles,
+    entityFootprint,
 } from './seedlingSemantics.js';
 
 /**
@@ -156,7 +159,7 @@ export function analyzeSeedlingAtlas(atlas, deps) {
  * @param {{ mapDoc:object, gameConfig:object }} deps
  * @returns {{ gridFor:Function, conditionKey:Function, resolveCondition:Function, unresolved:string[] }}
  */
-export function seedlingMazeProjectionDeps({ mapDoc, gameConfig }) {
+export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = null }) {
     const levels = indexSeedlingLevels(mapDoc);
     const options = seedlingAnalyzerOptions(gameConfig);
     return {
@@ -167,5 +170,93 @@ export function seedlingMazeProjectionDeps({ mapDoc, gameConfig }) {
             const level = levels.get(levelKeyOf(region.map_ref));
             return level ? buildSeedlingRegionGrid(region.bounds, level) : null;
         },
+        // ⛓ SHARED LEVEL WORLDS (tile-primitives Stage 2) — OPT-IN. Only a
+        // compile that passes `levelWorlds: {partition}` (the atlas's entry of
+        // `seedling-subregion-partition.json`) projects a level with an
+        // interaction as one world; every other compile — the starter
+        // `seedling_atlas_maze` preset among them — is byte-identical.
+        ...(levelWorlds ? {
+            levelEntitiesFor: (region) => {
+                const level = levels.get(levelKeyOf(region.map_ref));
+                return level ? seedlingLevelEntities(level, options.resolveCondition) : null;
+            },
+            partitionFor: (region) => levelWorlds.partition?.regions?.[region.region_id] ?? null,
+        } : {}),
     };
+}
+
+/**
+ * Which Seedling entity CLASS plays which maze primitive in a shared level
+ * world. The classes are the semantics table's own (`ENTITY_SEMANTICS[tag].class`,
+ * cited to the ActionScript); this table is only the binding of those classes to
+ * the four primitives the maze engine has. A class not named here is not an
+ * interaction: its cell keeps whatever the transcription says.
+ *
+ * ⛔ Deliberately NARROW. `GrassLock` / `WandLock` / `RockLock` extend `Lock`
+ * but open by other protocols (room clear, a wand shot, a placed rock) and
+ * `ButtonRoom` latches; none of them is a held button, so none of them is here.
+ */
+export const SEEDLING_LEVEL_WORLD_CLASSES = Object.freeze({
+    PushableBlock: 'block',
+    Button: 'button',
+    Lock: 'lock',
+    BreakableRock: 'rock',
+});
+
+/** `hasSword` → `sword`: an action id from the engine flag the semantics row names. */
+const actionIdOfFlag = (flagName) => flagName.replace(/^has/, '').toLowerCase();
+
+/**
+ * One level's level-world entity rows (`projectLevelWorld`'s input), from the
+ * semantics tables:
+ *
+ *   block   a PushableBlock's sealed tile
+ *   button  a Button's tile, grouped by its `tset`
+ *   lock    a Lock's sealed tiles, grouped by its `tset` (⚖ enemies are not
+ *           holders — the room-clear half of Lock is not modelled)
+ *   rock    a BreakableRock's sealed tiles; `strike` = one action per flag its
+ *           condition names, the flag's AP item through the engine binding
+ *
+ * A rock whose condition is not a flag or an any-of flags is REFUSED by name —
+ * a strike is one item, so an And has no action to bind to.
+ *
+ * @param {object} level a map-document level
+ * @param {(condition:object)=>object|null} resolveCondition
+ * @returns {Array<{kind:string, tiles:number[][], group?:string, strike?:object[], label:string}>}
+ */
+export function seedlingLevelEntities(level, resolveCondition) {
+    const rows = [];
+    for (const entity of level.entities ?? []) {
+        const sem = entitySemantics(entity);
+        const kind = SEEDLING_LEVEL_WORLD_CLASSES[sem?.class];
+        if (!kind) continue;
+        const label = `${entity.type}@${entity.x},${entity.y}`;
+        const sealed = entitySealedTiles(entity, sem);
+        const tiles = sealed.length > 0 ? sealed : (() => {
+            const f = entityFootprint(entity, sem);
+            const out = [];
+            for (let y = f.y; y < f.y + f.h; y += 1) for (let x = f.x; x < f.x + f.w; x += 1) out.push([x, y]);
+            return out;
+        })();
+        const row = { kind, tiles, label };
+        if (kind === 'button' || kind === 'lock') row.group = String(entity.attrs?.tset ?? '0');
+        if (kind === 'rock') {
+            const flags = sem.condition?.flag !== undefined ? [sem.condition]
+                : Array.isArray(sem.condition?.any) ? sem.condition.any : null;
+            if (!flags || flags.some((c) => typeof c?.flag !== 'string')) {
+                throw new Error(`${label}: a rock's condition must be a flag or an any-of flags to bind a strike, `
+                    + `got ${JSON.stringify(sem.condition)}`);
+            }
+            row.strike = flags.map((c) => {
+                const rule = resolveCondition(c);
+                if (rule?.rule !== 'Has' || (rule.args?.count ?? 1) !== 1) {
+                    throw new Error(`${label}: flag "${c.flag}" resolves to ${JSON.stringify(rule)}, not one Has — `
+                        + 'a strike needs exactly one item');
+                }
+                return { action: actionIdOfFlag(c.flag), item: rule.args.item_name };
+            });
+        }
+        rows.push(row);
+    }
+    return rows;
 }

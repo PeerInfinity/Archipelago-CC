@@ -13,6 +13,7 @@ import {
     extractPathsAndObstacles,
     isExit,
     hasItemActions,
+    sharedWorldCrossing,
 } from './mazeRoomEngine.js';
 import {
     DEFAULT_ITEMS, DEFAULT_OBSTACLES, isObstacleCleared,
@@ -277,6 +278,7 @@ export class MazeRoomUI {
             // surfaces deliver grants identically.
             onConsumableGrant: (grant) => this._grantConsumableTile(grant),
             onManaGrant: (amount) => this._grantManaTile(amount),
+            onRegionCross: (crossing) => this._onVisualizerRegionCross(crossing),
         });
 
         // Tile-level action queue (Cavernous-2-style). Player keydowns
@@ -1565,6 +1567,18 @@ export class MazeRoomUI {
     }
 
     _adoptLoadedRegion(payload, { skipRender = false } = {}) {
+        // ⛓ SHARED LEVEL WORLD (tile-primitives Stage 2): a crossing between two
+        // AP regions of ONE level world is a walk inside it. procgenPlayer marks
+        // it `sameWorld`; the panel keeps the player, the blocks, what was
+        // broken, the queue, the replay, the fog and the visit recording, and
+        // only the region changes. Anything else is an ordinary entry below.
+        if (payload?.sameWorld === true && payload.world && payload.world === this.world && this.state) {
+            this.currentRegionId = payload.region_id ?? this.currentRegionId;
+            this.message = `Crossed into ${this.currentRegionId}`;
+            this._visualizer?.setRegion?.(this.currentRegionId);
+            if (!skipRender) this.render();
+            return;
+        }
         // Payload shape (per procgen-player.md §"Event flow"):
         //   { region_id, world, arrivedFrom }
         // arrivedFrom.exit_id (when present) names the exit IN THE
@@ -1617,8 +1631,16 @@ export class MazeRoomUI {
         this.arrivedFromExitId = payload?.arrivedFrom?.exit_id ?? null;
         this.arrivalDoorId = arrival?.exitId ?? null;
         let spawnAt = null;
+        // ⛓ A fresh entry into a shared level world with no arrival exit lands
+        // on the ENTERED region's own entrance (the world's `entrance` is its
+        // carrier's).
+        const ownEntrance = arrival ? null
+            : this.world?.sharedWorld?.entrances?.[payload?.region_id] ?? null;
         if (arrival) {
             spawnAt = { x: arrival.x, y: arrival.y };
+            this.state.player_pos = spawnAt;
+        } else if (ownEntrance) {
+            spawnAt = { x: ownEntrance.x, y: ownEntrance.y };
             this.state.player_pos = spawnAt;
         }
         this.stats = null;
@@ -2156,6 +2178,22 @@ export class MazeRoomUI {
      * region into this panel via maze:loadRegion. The visualizer
      * itself paused on _awaitingRegionLoad until setWorld arrives.
      */
+    /**
+     * ⛓ SHARED LEVEL WORLD: a visualizer walk (the bot, an explore target)
+     * crossed into another AP region of the same world. Same publish as a
+     * keyboard `cross` — the walk itself never pauses, the world is the same.
+     */
+    _onVisualizerRegionCross(crossing) {
+        this.currentRegionId = crossing.targetRegion;
+        const fromLoop = this._loopsDrivenAction != null;
+        this.apis?.dispatcher?.publish?.('user:regionMove', {
+            sourceRegion: crossing.sourceRegion,
+            targetRegion: crossing.targetRegion,
+            exitName: crossing.exitName ?? null,
+            ...(fromLoop ? { fromLoop: true } : {}),
+        }, { initialTarget: 'bottom' });
+    }
+
     _onVisualizerExitCross(exit, sourceRegion) {
         const dispatcher = this.apis?.dispatcher;
         if (!dispatcher?.publish) return;
@@ -4037,6 +4075,22 @@ export class MazeRoomUI {
      */
     _executeQueueAction(entry) {
         if (entry?.actionType === ACTION_MOVE) {
+            // ⛓ SHARED LEVEL WORLD: a move whose arrival cell another AP region
+            // owns IS a crossing. It is PROMOTED in place to the `cross` entry
+            // the queue format already has (⚖ "cross + dir + params"), so the
+            // loop-mode gate runs before the step and the recording keeps the
+            // regions — its replay needs no exit lookup.
+            const crossing = this._sharedWorldCrossingFor(entry);
+            if (crossing) {
+                entry.actionType = ACTION_CROSS;
+                entry.params = {
+                    ...(entry.params ?? {}),
+                    boundary: crossing.boundary,
+                    sourceRegion: crossing.sourceRegion,
+                    targetRegion: crossing.targetRegion,
+                };
+                return this._executeCrossAction(entry);
+            }
             return this._executeMoveAction(entry);
         }
         if (entry?.actionType === ACTION_WAIT) {
@@ -4051,14 +4105,85 @@ export class MazeRoomUI {
             return this._executeInPlaceAction(entry);
         }
         if (entry?.actionType === ACTION_CROSS) {
-            // ⛓ The entry's SHAPE and its executor exist (gate before step,
-            // regions on the entry); the in-world boundary overlay and the
-            // same-world region-move branch that would let the panel run one
-            // are Stage 2 of the tile-primitives arc (shared level world).
-            return `${describeMazeAction(entry)} refused: this panel has no shared level world `
-                + 'to cross inside yet (Stage 2)';
+            return this._executeCrossAction(entry);
         }
         return `unknown maze action type '${entry?.actionType}'`;
+    }
+
+    /**
+     * The in-world crossing a MOVE entry would make from where the player
+     * stands now, or `null` — off a shared level world, for any other entry,
+     * or when the arrival cell is "no news" / the player's own region.
+     */
+    _sharedWorldCrossingFor(entry) {
+        if (!this.world?.sharedWorld || !this.state) return null;
+        const to = intendedTileFor(this.state.player_pos, entry?.actionId);
+        if (!to) return null;
+        return sharedWorldCrossing(this.world, this.currentRegionId, to.x, to.y);
+    }
+
+    /**
+     * ⛓ Run a `cross` entry INSIDE a shared level world: the loop-mode gate is
+     * asked first (a gated crossing must not put the player on the far side's
+     * floor), then the step runs exactly as a move does, then the panel
+     * publishes `user:regionMove` for the AP exit the atlas declares —
+     * procgenPlayer recognises the shared world and answers `sameWorld`, so
+     * the player, the blocks and every broken rock stay where they are.
+     *
+     * Refused by name: off a shared world (the entry has nothing to cross
+     * inside), or when the player is not in the entry's `sourceRegion` (a
+     * replay that has left the route it was recorded on).
+     */
+    _executeCrossAction(entry) {
+        const p = entry?.params ?? {};
+        if (!this.world?.sharedWorld) {
+            return `${describeMazeAction(entry)} refused: this world is not a shared level world`;
+        }
+        if (p.sourceRegion !== this.currentRegionId) {
+            return `${describeMazeAction(entry)} refused: the player is in "${this.currentRegionId}", `
+                + `not "${p.sourceRegion}"`;
+        }
+        const gate = this._crossGate();
+        // Region FIRST, so the step's own events (a check on the boundary
+        // cell) are filed under the region the player arrives in; a refused
+        // step puts it back.
+        this.currentRegionId = p.targetRegion;
+        const reason = this._executeMoveAction(entry, { gate });
+        if (reason !== null) {
+            this.currentRegionId = p.sourceRegion;
+            return reason;
+        }
+        const dispatcher = this.apis?.dispatcher;
+        const exitName = this.world.sharedWorld.links[`${p.sourceRegion}>${p.targetRegion}`] ?? null;
+        const fromLoop = this._loopsDrivenAction != null;
+        this._visualizer?.setRegion?.(p.targetRegion);
+        dispatcher?.publish?.('user:regionMove', {
+            sourceRegion: p.sourceRegion,
+            targetRegion: p.targetRegion,
+            exitName,
+            ...(fromLoop ? { fromLoop: true } : {}),
+        }, { initialTarget: 'bottom' });
+        return null;
+    }
+
+    /**
+     * The loop-mode action gate a `cross` entry asks BEFORE its step — the
+     * same question procgenPlayer asks of every `user:regionMove`
+     * (`loops.gateSubstrateAction`). Absent (no loops module) → no gate.
+     */
+    _crossGate() {
+        const gate = centralRegistry?.getPublicFunction?.('loops', 'gateSubstrateAction');
+        if (typeof gate !== 'function') return undefined;
+        const fromLoop = this._loopsDrivenAction != null;
+        return (crossing) => (gate({
+            kind: 'move',
+            regionName: crossing.sourceRegion,
+            data: {
+                sourceRegion: crossing.sourceRegion,
+                targetRegion: crossing.targetRegion,
+                ...(fromLoop ? { fromLoop: true } : {}),
+            },
+        }) === false ? 'the loop-mode action gate refused it' : true);
     }
 
     /**
@@ -4074,7 +4199,7 @@ export class MazeRoomUI {
      * @param {object} entry - a `move` queue entry; `actionId` is the direction
      * @returns {string|null} the refusal reason, or null when the move ran
      */
-    _executeMoveAction(entry) {
+    _executeMoveAction(entry, { gate } = {}) {
         const dir = entry?.actionId;
         if (!this.world || !this.state) return 'no world or state loaded';
         // In playback mode (externalInventory non-null) the snapshot is
@@ -4106,6 +4231,7 @@ export class MazeRoomUI {
             const { next, reason, faced } = executeMazeEntry(this.world, this.state, entry, {
                 inventoryOverride: this.externalInventory ?? undefined,
                 clearanceOpts: clearOpts,
+                gate,
             });
             if (next === null) {
                 refusal = reason;

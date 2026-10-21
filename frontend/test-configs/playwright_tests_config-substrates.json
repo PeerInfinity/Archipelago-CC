@@ -447,6 +447,12 @@
             "category": "Seedling atlas maze"
         },
         {
+            "id": "seedling-playthrough-maze-l15-level-world",
+            "enabled": true,
+            "category": "Seedling atlas maze",
+            "_comment": "Tile-primitives Stage 2: Seedling L15 as ONE shared level world — sword refused, then granted; rocks struck, block pushed onto the button, the held lock crossed into r1c9 with the level's state kept."
+        },
+        {
             "id": "seedling-atlas-sphere-placed-region",
             "enabled": true,
             "category": "Seedling atlas maze",

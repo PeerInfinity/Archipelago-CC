@@ -283,7 +283,8 @@ describe('⛓ the links the render emits', () => {
         //   360 → 362: spiral victory — architecture.md and substrate-registry.md → stepped-pipeline.md § The item layer.
         //   362 → 364: Noiz2sa measured final span — noiz2sa.md § Pricing → the cloud measurement report, twice.
         //   364 → 366: generic `flash` entry removed — architecture.md's substrate table → noiz2sa.md, flash.md.
-        expect(checked).toBe(366);
+        //   366 → 367: shared level worlds — maze.md's persistence bullet → its own § Shared level worlds.
+        expect(checked).toBe(367);
     });
 
     it('tags each link with the kind that produced it', () => {
