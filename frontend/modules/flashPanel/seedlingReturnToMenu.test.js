@@ -58,10 +58,11 @@ describe('every committed Seedling preset — DERIVED from the presets', () => {
             expect(returnToMenu(rules), p).toBe(realisesOurs(rules));
             return [p, returnToMenu(rules)];
         }));
-        // ⛓ the two that realise no Seedling room are the maze PROJECTIONS of the starter atlas: the maze
-        //   substrate declares no warp, so they keep real soft-lock detection (the rule, not an exception list).
+        // ⛓ the ones that realise no Seedling room are the maze PROJECTIONS — of the starter atlas, and (since
+        //   tile-primitives Stage 2) of the playthrough atlas's growing level list: the maze substrate declares
+        //   no warp, so they keep real soft-lock detection (the rule, not an exception list).
         expect(Object.entries(census).filter(([, v]) => !v).map(([p]) => p))
-            .toEqual(['seedling_atlas_maze', 'seedling_atlas_sphere']);
+            .toEqual(['seedling_atlas_maze', 'seedling_atlas_sphere', 'seedling_playthrough_maze']);
     });
 
     it('⛔ and NO preset carries an exit into Menu — the flag is not an edge', () => {
