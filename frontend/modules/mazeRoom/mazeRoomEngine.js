@@ -1073,11 +1073,8 @@ function obstaclesAlongPath(world, startState, plan) {
  * first-discovery tree: the tree this builds once, in the same FIFO order and
  * `INPUTS` order. `plans(position)` answers what that `reach` answered: `[]`
  * for the entrance itself, `null` for a tile the tree never reached.
- *
- * `open` (a Set of obstacle ids) makes every OTHER obstacle a wall — the tree
- * of the routes that cross only those obstacles (one minimal set's route).
  */
-function ghostPlansFromEntrance(world, open = null) {
+function ghostPlansFromEntrance(world) {
     const start = createState(world);
     const key = (x, y) => `${x},${y}`;
     const origin = key(start.player_pos.x, start.player_pos.y);
@@ -1090,7 +1087,6 @@ function ghostPlansFromEntrance(world, open = null) {
         for (const input of INPUTS) {
             const next = ghostStep(world, s, input);
             if (!next) continue;
-            if (open && !opensFor(world, open, next.player_pos)) continue;
             const k = key(next.player_pos.x, next.player_pos.y);
             if (parent.has(k)) continue;
             parent.set(k, { from, input });
@@ -1109,11 +1105,6 @@ function ghostPlansFromEntrance(world, open = null) {
     };
 }
 
-function opensFor(world, open, position) {
-    const id = getObstacle(world, position.x, position.y);
-    return !id || open.has(id);
-}
-
 /**
  * ⛓⛓ ALL ROUTES, AS MINIMAL OBSTACLE SETS (⚖ T2, user 2026-10-21: "All-routes
  * minimal sets"; slice maze-logic-t1t2-fix). The extraction used to emit the
@@ -1126,20 +1117,50 @@ function opensFor(world, open, position) {
  * one already kept is dropped, and one it contains evicts it. What survives at
  * a target is exactly its minimal sets — every route's crossing set contains
  * one. No subset lattice: a procgen_topdown region carries up to 29 obstacle
- * ids (measured), so 2^n is out; the antichains stay small. Exit tiles are dead
- * ends, as in the ghost tree.
+ * ids (measured), so 2^n is out. Exit tiles are dead ends, as in the ghost tree.
+ *
+ * ⛔ THE ANTICHAINS ARE CAPPED at `ROUTE_SETS_PER_CELL` per cell, smallest sets
+ * kept. Measured: every committed preset region, the pipeline sweep and the
+ * generated levels peak at 2, but an Initialise-as-maze room with a logic gate
+ * on each of its 64–186 location tiles reaches ~3,700 per cell and never
+ * finishes (CI's slow `locationCapacity` tier hung). Capping stays SOUND: every
+ * kept set is a real route's, so a target's rule only ever drops routes —
+ * stricter, never looser — and `pathsToTarget` adds the ghost route back, so it
+ * is never stricter than the single-path form either. `capped` says it bit.
  */
+export const ROUTE_SETS_PER_CELL = 16;
+
+function popcount(mask) {
+    let n = 0;
+    for (let m = mask; m !== 0n; m &= m - 1n) n += 1;
+    return n;
+}
+
+/** Smaller first; among equals, the lower mask. */
+const routeSetOrder = (a, b) => popcount(a) - popcount(b) || (a < b ? -1 : a > b ? 1 : 0);
+
 function minimalObstacleSets(world) {
     const start = createState(world).player_pos;
     const ids = [...new Set(world.obstacles.values())];
     const bit = new Map(ids.map((id, i) => [id, 1n << BigInt(i)]));
     const key = (x, y) => `${x},${y}`;
     const labels = new Map([[key(start.x, start.y), [0n]]]);
+    // "x,y|mask" → the label it was first reached from: a kept set's own route, read back.
+    const parent = new Map();
+    let capped = false;
     const keep = (k, mask) => {
         const list = labels.get(k);
         if (!list) { labels.set(k, [mask]); return true; }
         if (list.some((m) => (m & mask) === m)) return false;
-        labels.set(k, [...list.filter((m) => (m & mask) !== mask), mask]);
+        const next = [...list.filter((m) => (m & mask) !== mask), mask];
+        if (next.length > ROUTE_SETS_PER_CELL) {
+            capped = true;
+            next.sort(routeSetOrder);
+            const dropped = next.pop();
+            labels.set(k, next);
+            return dropped !== mask;
+        }
+        labels.set(k, next);
         return true;
     };
     const queue = [{ x: start.x, y: start.y, mask: 0n }];
@@ -1153,36 +1174,49 @@ function minimalObstacleSets(world) {
             if (!isFloor(world, nx, ny)) continue;
             const id = getObstacle(world, nx, ny);
             const next = id ? mask | bit.get(id) : mask;
-            if (keep(key(nx, ny), next)) queue.push({ x: nx, y: ny, mask: next });
+            if (!keep(key(nx, ny), next)) continue;
+            const label = `${key(nx, ny)}|${next}`;
+            if (!parent.has(label)) parent.set(label, `${key(x, y)}|${mask}`);
+            queue.push({ x: nx, y: ny, mask: next });
         }
     }
     const maskOf = (obstacles) => obstacles.reduce((m, id) => m | bit.get(id), 0n);
     const idsOf = (mask) => ids.filter((id) => (mask & bit.get(id)) !== 0n);
-    const popcount = (m) => idsOf(m).length;
-    const setsAt = (position) => [...(labels.get(key(position.x, position.y)) ?? [])]
-        .sort((a, b) => popcount(a) - popcount(b) || (a < b ? -1 : a > b ? 1 : 0));
-    return { setsAt, maskOf, idsOf };
+    const setsAt = (position) => [...(labels.get(key(position.x, position.y)) ?? [])].sort(routeSetOrder);
+    /** The obstacles the route that kept `mask` at `position` crosses, in encounter order. */
+    const routeObstacles = (position, mask) => {
+        const cells = [];
+        for (let at = `${key(position.x, position.y)}|${mask}`; parent.has(at); at = parent.get(at)) cells.push(at.split('|')[0]);
+        const seen = [];
+        for (const cell of cells.reverse()) {
+            const id = world.obstacles.get(cell);
+            if (id && !seen.includes(id)) seen.push(id);
+        }
+        return seen;
+    };
+    return { setsAt, maskOf, routeObstacles, capped };
 }
 
 /**
  * One path per minimal set. ⛓ When the ghost path's own set is minimal it comes
  * FIRST and verbatim (its encounter order), so a target with one route — every
  * committed preset's region, measured at W0 — extracts byte-identically to the
- * single-path form. Every other set is walked by the ghost tree restricted to
- * that set's obstacles; the route it finds crosses the whole set (a route over
- * fewer would make a smaller set, and the set is minimal).
+ * single-path form. Every other set is listed in the order its own route (the
+ * label-setting walk that kept it) crosses it.
  */
-function pathsToTarget(world, position, plans, routes, plansFor) {
+function pathsToTarget(world, position, plans, routes) {
     const sets = routes.setsAt(position);
     if (sets.length === 0) return [];
     const ghostObstacles = obstaclesAlongPath(world, createState(world), plans(position));
     const ghostMask = routes.maskOf(ghostObstacles);
+    // Exact antichains always hold a subset of the ghost route's set; a capped one may not.
+    if (!sets.some((m) => (m & ghostMask) === m)) sets.push(ghostMask);
     const ordered = sets.includes(ghostMask) ? [ghostMask, ...sets.filter((m) => m !== ghostMask)] : sets;
     return ordered.map((mask, i) => ({
         path_id: `p${i + 1}`,
         obstacles: mask === ghostMask
             ? ghostObstacles
-            : obstaclesAlongPath(world, createState(world), plansFor(mask)(position)),
+            : routes.routeObstacles(position, mask),
     }));
 }
 
@@ -1303,12 +1337,7 @@ export function extractPathsAndObstacles(world, opts = {}) {
     const regionId = opts.regionId ?? 'maze_room';
     const plans = ghostPlansFromEntrance(world);
     const routes = minimalObstacleSets(world);
-    const restricted = new Map();
-    const plansFor = (mask) => {
-        if (!restricted.has(mask)) restricted.set(mask, ghostPlansFromEntrance(world, new Set(routes.idsOf(mask))));
-        return restricted.get(mask);
-    };
-    const paths = (position) => pathsToTarget(world, position, plans, routes, plansFor);
+    const paths = (position) => pathsToTarget(world, position, plans, routes);
     const priced = (world.blocks?.size || world.buttons?.size) ? blockWorldAccessRules(world) : null;
     const accessRule = (position) => (priced ? { access_rule: priced(position) } : {});
 
@@ -1346,6 +1375,8 @@ export function extractPathsAndObstacles(world, opts = {}) {
         entrance: { x: world.entrance.x, y: world.entrance.y },
         exits,
         locations,
+        // Present only when the cap bit: some target's paths may omit a cheaper route.
+        ...(routes.capped ? { route_sets_capped: ROUTE_SETS_PER_CELL } : {}),
     };
 }
 

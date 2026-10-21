@@ -14,7 +14,7 @@
 import { describe, it, expect } from 'vitest';
 import {
     createWorld, createState, step, setTile, setObstacle, setItem, getExitAt, mazeVisitedKey,
-    extractPathsAndObstacles, INPUTS, TILE_WALL, BLOCK_WORLD_MAX_ITEMS,
+    extractPathsAndObstacles, INPUTS, TILE_WALL, BLOCK_WORLD_MAX_ITEMS, ROUTE_SETS_PER_CELL, isFloor,
 } from './mazeRoomEngine.js';
 import { generateMazeLevel, MAZE_PALETTE } from './procgenMaze.js';
 import { parseAreaSpec } from '../procgenCore/areaSpec.js';
@@ -151,6 +151,54 @@ describe('T2 — every route, one path per minimal obstacle set', () => {
         const ex = extractPathsAndObstacles(w);
         expect(ex.exits.find((e) => e.id === 'b').paths).toEqual([]);
         expect(compiled(w).exits.find((e) => e.id === 'b').rule).toEqual({ rule: 'False_' });
+    });
+});
+
+describe('T2 — the per-cell cap (a gate on every other tile)', () => {
+    // A checkerboard of DISTINCT gates: every cell off the entrance's colour is a gate, so the
+    // minimal sets multiply with distance — the shape of an Initialise-as-maze room with a logic
+    // gate on each location tile (measured: ~3,700 sets per cell uncapped, never finishing).
+    const board = (n) => {
+        const w = createWorld(n, n, { entrance: { x: 0, y: 0 }, exits: [{ exit_id: 'exit', x: n - 1, y: n - 1 }] });
+        for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if ((x + y) % 2) setObstacle(w, x, y, `g_${x}_${y}`);
+        return w;
+    };
+    /** Does a route crossing ONLY `ids` reach `target`? (positions BFS, other obstacles walled) */
+    const reachesWith = (w, ids, target) => {
+        const seen = new Set(['0,0']);
+        const queue = [[0, 0]];
+        while (queue.length) {
+            const [x, y] = queue.shift();
+            if (x === target.x && y === target.y) return true;
+            if (getExitAt(w, x, y) !== null && !(x === 0 && y === 0)) continue;
+            for (const [dx, dy] of [[0, -1], [0, 1], [1, 0], [-1, 0]]) {
+                const k = `${x + dx},${y + dy}`;
+                const id = w.obstacles.get(k);
+                if (seen.has(k) || !isFloor(w, x + dx, y + dy) || (id && !ids.includes(id))) continue;
+                seen.add(k);
+                queue.push([x + dx, y + dy]);
+            }
+        }
+        return false;
+    };
+
+    it('caps BY NAME, and every path it keeps is a real route — sound, never stricter than the ghost route', () => {
+        const w = board(9);
+        const t0 = performance.now();
+        const ex = extractPathsAndObstacles(w);
+        expect(performance.now() - t0).toBeLessThan(5000);
+        expect(ex.route_sets_capped).toBe(ROUTE_SETS_PER_CELL);
+        const exit = ex.exits[0];
+        expect(exit.paths.length).toBeGreaterThan(1);
+        for (const p of exit.paths) expect(reachesWith(w, p.obstacles, exit.position)).toBe(true);
+        const ghost = exit.paths[0].obstacles; // p1 is the ghost route verbatim
+        expect(exit.paths.every((p) => p.obstacles.length >= 1)).toBe(true);
+        expect(exit.paths.some((p) => p.obstacles.every((id) => ghost.includes(id)))).toBe(true);
+    });
+
+    it('no cap on a room whose antichains stay small (the flag is absent, the output unchanged)', () => {
+        expect(extractPathsAndObstacles(board(3)).route_sets_capped).toBeUndefined();
+        expect(extractPathsAndObstacles(picture(['P.R.X', '.###.', '..G..'])).route_sets_capped).toBeUndefined();
     });
 });
 
