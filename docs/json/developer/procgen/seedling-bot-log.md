@@ -17669,12 +17669,12 @@ its byte-frozen free oracle is compared against.
 | 29 | `r9-solve-30` | L30 → L32 | 210 | — |
 | 30 | `r9-solve-32` | L32 → END | 839 | — |
 
-**ROUTE COMPLETE** — the chain walks all 30 route steps, from the true start to route step 30 in L32 (Level 032 - Bob Boss (sphere 3.1) → Fire); there is no next room on this route.
+**NO REFUSED STEP** — /home/runner/work/Archipelago-CC/Archipelago-CC/.cache/seedling-survey/through-4.2-route-only/route.json / survey.json are not on disk — run `node scripts/procgen/survey-seedling-route.mjs --through=4.2 --route=route-only --out=.cache/seedling-survey/through-4.2-route-only/survey.json` first. ⛔ The gap and stop rows are the SURVEY's answer and this script will not invent them..
 
 **COVERAGE, BY ROUTE MODE** (`campaign-frontier.json` `coverage`; `route-only` is the route the chain was recorded on):
 
-- `route-only` through 3.1: **30/30** route steps — COMPLETE
-- `full` through 3.1: **13/47** route steps — the chain leaves this route at segment 14: `r9-solve-0` arrives in L13, route step 14 crosses to L86
+- `route-only` through 4.2: UNASSERTED — /home/runner/work/Archipelago-CC/Archipelago-CC/.cache/seedling-survey/through-4.2-route-only/route.json / survey.json are not on disk — run `node scripts/procgen/survey-seedling-route.mjs --through=4.2 --route=route-only --out=.cache/seedling-survey/through-4.2-route-only/survey.json` first. ⛔ The gap and stop rows are the SURVEY's answer and this script will not invent them.
+- `full` through 4.2: UNASSERTED — /home/runner/work/Archipelago-CC/Archipelago-CC/.cache/seedling-survey/through-4.2/route.json / survey.json are not on disk — run `node scripts/procgen/survey-seedling-route.mjs --through=4.2 --route=full --out=.cache/seedling-survey/through-4.2/survey.json` first. ⛔ The gap and stop rows are the SURVEY's answer and this script will not invent them.
 
 <!-- GENERATED:campaign-chain END -->
 

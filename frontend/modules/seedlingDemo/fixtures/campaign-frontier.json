@@ -67,66 +67,39 @@
     32
   ],
   "sources": {
-    "frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json": "037a2d5d7afb761f34867e99eea4b8d3",
+    "frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json": "38366d55a06a2ec86aeb2e845cdd89e2",
     "frontend/modules/flashPanel/atlases/seedling-map.json": "647bd46a7ff6f1eacb0d956b81344a44",
-    "frontend/modules/flashPanel/atlases/seedling-sphere-order.json": "f10e4e16ead9f4693ed04ad46d49155f"
+    "frontend/modules/flashPanel/atlases/seedling-sphere-order.json": "525c3b32d65564a3483d382787a4c6a8"
   },
-  "lastArrival": {
-    "step": 30,
-    "level": 32,
-    "segment": "r9-solve-32"
-  },
+  "lastArrival": null,
   "nextStep": null,
   "refusal": null,
-  "covered": 30,
-  "complete": true,
-  "why": "the chain walks all 30 route steps, from the true start to route step 30 in L32 (Level 032 - Bob Boss (sphere 3.1) → Fire); there is no next room on this route",
+  "covered": null,
+  "why": "/home/runner/work/Archipelago-CC/Archipelago-CC/.cache/seedling-survey/through-4.2-route-only/route.json / survey.json are not on disk — run `node scripts/procgen/survey-seedling-route.mjs --through=4.2 --route=route-only --out=.cache/seedling-survey/through-4.2-route-only/survey.json` first. ⛔ The gap and stop rows are the SURVEY's answer and this script will not invent them.",
   "coverage": {
     "route-only": {
       "mode": "route-only",
-      "through": "3.1",
-      "survey": "through-3.1-route-only",
-      "routeSteps": 30,
-      "complete": true,
-      "lastArrival": {
-        "step": 30,
-        "level": 32,
-        "segment": "r9-solve-32"
-      },
+      "through": "4.2",
+      "survey": "through-4.2-route-only",
+      "routeSteps": null,
+      "complete": false,
+      "lastArrival": null,
       "nextStep": null,
       "refusal": null,
-      "covered": 30,
-      "why": "the chain walks all 30 route steps, from the true start to route step 30 in L32 (Level 032 - Bob Boss (sphere 3.1) → Fire); there is no next room on this route"
+      "covered": null,
+      "why": "/home/runner/work/Archipelago-CC/Archipelago-CC/.cache/seedling-survey/through-4.2-route-only/route.json / survey.json are not on disk — run `node scripts/procgen/survey-seedling-route.mjs --through=4.2 --route=route-only --out=.cache/seedling-survey/through-4.2-route-only/survey.json` first. ⛔ The gap and stop rows are the SURVEY's answer and this script will not invent them."
     },
     "full": {
       "mode": "full",
-      "through": "3.1",
-      "survey": "through-3.1",
-      "routeSteps": 47,
+      "through": "4.2",
+      "survey": "through-4.2",
+      "routeSteps": null,
       "complete": false,
-      "lastArrival": {
-        "step": 13,
-        "level": 0,
-        "segment": "r9-solve-2"
-      },
-      "nextStep": {
-        "step": 14,
-        "level": 0,
-        "visit": 2,
-        "crossesTo": 86,
-        "goals": [
-          "teleporter@160,272 → L86"
-        ]
-      },
+      "lastArrival": null,
+      "nextStep": null,
       "refusal": null,
-      "divergence": {
-        "segment": "r9-solve-0",
-        "arrives": 13,
-        "routeStep": 14,
-        "routeCrossesTo": 86
-      },
-      "covered": 13,
-      "why": "the chain's measured arrivals stop prefixing the route at segment 14 (r9-solve-0 arrives in L13; route step 14 crosses to L86). The chain walks a different route from here, so this route's next step is `nextStep` and no refusal stops the chain."
+      "covered": null,
+      "why": "/home/runner/work/Archipelago-CC/Archipelago-CC/.cache/seedling-survey/through-4.2/route.json / survey.json are not on disk — run `node scripts/procgen/survey-seedling-route.mjs --through=4.2 --route=full --out=.cache/seedling-survey/through-4.2/survey.json` first. ⛔ The gap and stop rows are the SURVEY's answer and this script will not invent them."
     }
   }
 }
