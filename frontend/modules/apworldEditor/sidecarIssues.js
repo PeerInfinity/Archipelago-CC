@@ -80,6 +80,7 @@
 
 import {
     ENVELOPE_SIDECAR_FIELDS, SIDECAR_FIELD_ERRORS, sidecarFieldsOf, sidecarPayloadErrors,
+    sharedWorldAliasError,
 } from '../procgenCore/sidecarFields.js';
 import { apExitNameCandidates } from '../procgenCore/apLocationNaming.js';
 import { regionsOf } from '../procgenCore/rulesGraph.js';
@@ -482,8 +483,28 @@ export function sidecarIssues(doc, player = DEFAULT_PLAYER_ID) {
     };
     const entries = Object.entries(block);
 
+    const own = (region) => (Object.prototype.hasOwnProperty.call(regions, region) ? regions[region] : null);
     for (const [region, entry] of entries) {
-        const docRegion = Object.prototype.hasOwnProperty.call(regions, region) ? regions[region] : null;
+        // ⛓ SHARED LEVEL WORLDS (tile-primitives Stage 2): an ALIAS carries no
+        // payload — it is checked for a sibling that carries its world. The
+        // CARRIER's payload plays every region of the level, so it is held to
+        // the UNION of their exits and locations.
+        const alias = sharedWorldAliasError(block, entry);
+        if (alias !== null) {
+            if (!own(region)) {
+                out.push(issue(K.NO_REGION, region,
+                    `slot ${p} has no region "${region}" — nothing in the document reaches this entry`));
+            }
+            if (alias !== '') out.push(issue(K.REF_UNRESOLVED, region, alias, 'shared_world'));
+            continue;
+        }
+        const members = entry?.playable_payload?.shared_world?.regions;
+        const docRegion = Array.isArray(members) && own(region)
+            ? {
+                exits: members.flatMap((m) => own(m)?.exits ?? []),
+                locations: members.flatMap((m) => own(m)?.locations ?? []),
+            }
+            : own(region);
         const { issues, unchecked } = entryIssues(p, region, entry, docRegion, registrySize);
         out.push(...issues);
         if (unchecked.declaration) notice(K.NO_DECLARATION, entry.substrate, 'absent');

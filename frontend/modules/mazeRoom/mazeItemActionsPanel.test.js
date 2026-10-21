@@ -77,12 +77,11 @@ describe('MazeRoomUI — item actions', () => {
         expect('facing' in panel.state).toBe(false);
     });
 
-    it('a cross entry is refused by name until the shared level world exists (Stage 2)', () => {
+    it('a cross entry is refused by name off a shared level world (Stage 2 runs it on one)', () => {
         const panel = panelOn(ROCK_CORRIDOR);
         const reason = panel._executeQueueAction(crossEntry('E',
             { boundary: 'b', sourceRegion: 'r1c5', targetRegion: 'r1c9' }));
-        expect(reason).toBe('cross E → r1c9 refused: this panel has no shared level world to cross '
-            + 'inside yet (Stage 2)');
+        expect(reason).toBe('cross E → r1c9 refused: this world is not a shared level world');
     });
 
     it('the panel draws a broken rock as floor and a facing tick; a plain world draws neither', () => {

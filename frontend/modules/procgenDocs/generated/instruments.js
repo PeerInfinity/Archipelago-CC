@@ -104,7 +104,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 10,
+            "count": 11,
             "id": "make"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 440,
+        "blockStyle": 441,
         "browser": 152,
-        "cited": 232,
-        "files": 454,
+        "cited": 233,
+        "files": 455,
         "lineStyle": 14,
-        "withDocblock": 454,
-        "withFlags": 371
+        "withDocblock": 455,
+        "withFlags": 372
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -4806,6 +4806,7 @@ export const INSTRUMENTS = frz({
             "category": "check",
             "citedBy": [
                 "docs/json/developer/procgen/concepts.md",
+                "docs/json/developer/procgen/maze.md",
                 "docs/json/developer/procgen/substrate-registry.md",
                 "docs/json/developer/procgen/text-adventure.md"
             ],
@@ -6857,6 +6858,39 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling font maker — writes the glyph sheet behind the JS runtime's font seam (`seedlingEffectSkin.KEYS.font` = `seedling:font/default`, frame = char code − 32) from the GLYPHS table below.",
             "path": "scripts/procgen/make-seedling-font.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "make",
+            "citedBy": [
+                "docs/json/developer/procgen/maze.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "make-seedling-playthrough-maze.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "quiet"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "The `seedling_playthrough_maze` preset: Seedling's PLAYTHROUGH atlas, restricted to a growing list of levels, projected into the MAZE substrate (tile-primitives Stage 2, session tile-primitives-stage2-l15).",
+            "path": "scripts/procgen/make-seedling-playthrough-maze.mjs"
         },
         {
             "argvHelpers": [],
