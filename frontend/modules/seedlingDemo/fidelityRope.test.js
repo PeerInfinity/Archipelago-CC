@@ -51,31 +51,33 @@ const solve = (boot, goal, { items = ['hasSword'], cleared = [] } = {}) => {
     }
 };
 const ON = (fn) => withContactFidelity({ ropeCutVerb: true }, fn);
+// ⛓ planning-9's flip (⚖ user "Yes, flip it", 2026-10-21): the switch is ON by default, so the OFF rows say so.
+const OFF = (fn) => withContactFidelity({ ropeCutVerb: false }, fn);
 const clearTagRow = (out) => out.records.find((r) => r.goal === 'clear-tag');
 
 describe('fidelity ROPE — the switch', () => {
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.ropeCutVerb).toBe(false);
-        expect(CONTACT_FIDELITY.ropeCutVerb).toBe(false);
+    it('is ON by default (planning-9\'s flip)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.ropeCutVerb).toBe(true);
+        expect(CONTACT_FIDELITY.ropeCutVerb).toBe(true);
     });
-    it('OFF: no row, no verb — the enumerated tables are what they were (the row is non-enumerable either way)', () => {
+    it('OFF: no row, no verb — the enumerated tables are what they were (the row is non-enumerable either way)', () => OFF(() => {
         expect(OBSTACLE_STRATEGIES['solid:rope']).toBeUndefined();
         expect(STRATEGY_EXECUTORS.rope).toBeUndefined();
         expect(Object.keys(OBSTACLE_STRATEGIES)).not.toContain('solid:rope');
         expect(Object.keys(STRATEGY_EXECUTORS)).not.toContain('rope');
         expect(clearTagVerbOf('solid:rope')).toEqual({ verb: null, registered: false });
-    });
+    }));
     it('ON: `solid:rope` selects `rope`, registered — and the JS mapping reads it (`clearTagVerbOf`)', () => ON(() => {
         expect(OBSTACLE_STRATEGIES['solid:rope']).toBe('rope');
         expect(typeof STRATEGY_EXECUTORS.rope).toBe('function');
         expect(Object.keys(OBSTACLE_STRATEGIES)).not.toContain('solid:rope');
         expect(clearTagVerbOf('solid:rope')).toEqual({ verb: 'rope', registered: true });
     }));
-    it('OFF: a clear-tag on L16\'s rope refuses `no-verb` by name', () => {
+    it('OFF: a clear-tag on L16\'s rope refuses `no-verb` by name', () => OFF(() => {
         const { refusal } = solve(FROM_L15, L16);
         expect(refusal.obstacle).toMatchObject({ kind: 'clear-tag', id: 'rope@32,16', reason: 'no-verb' });
         expect(refusal.message).toMatch(/no strategy row exists for solid:rope/);
-    });
+    }));
 });
 
 describe('fidelity ROPE — D2: the clear-tag on a rope\'s own tag (the switch ON)', () => {

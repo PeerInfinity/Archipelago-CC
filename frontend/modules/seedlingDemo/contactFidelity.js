@@ -820,8 +820,11 @@ export const CONTACT_FIDELITY = {
      * `rope@96,384`). The cut itself is the run's (`levelRun.pullRope`, R5 slice 10), witnessed on the game by
      * `probe-seedling-rope-events.mjs`. OFF: no row, no verb — byte-identical (the survey's L39 steps keep "No
      * strategy row exists"). `SEEDLING_ROPE_CUT_VERB=0|1` for a node measurement.
+     * ⛓ planning-9's flip (⚖ user, 2026-10-21, "Yes, flip it") turns it ON, landing as one integration with js rope-goal
+     * and rules-2's `rules-rope-events` (which makes the cut an event the logic requires). Measured movers (CI, wave-22
+     * A/B): survey L39 steps 73 / 164 change refusal text (REFUSED → REFUSED); the 28 rope-level sweep legs: 0 movers.
      */
-    ropeCutVerb: false,
+    ropeCutVerb: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

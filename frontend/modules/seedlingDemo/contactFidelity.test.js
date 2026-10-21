@@ -197,7 +197,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ seedling-fidelity-bosskills: the King of Fire's and the Tentacled Beast's fights ship OFF.
             kingOfFireFight: false, tentacleBeastFight: false,
             // ⛓ fidelity ROPE (wave 22): the `rope` verb ships OFF.
-            ropeCutVerb: false });
+            // ⛓ planning-9's flip (⚖ user "Yes, flip it", 2026-10-21) turns `ropeCutVerb` ON.
+            ropeCutVerb: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
