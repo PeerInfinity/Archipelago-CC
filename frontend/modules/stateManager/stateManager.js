@@ -727,20 +727,6 @@ export class StateManager {
     this._logDebug(`Debug mode set to: ${mode}`);
   }
 
-  /**
-   * Debug specific critical regions to understand evaluation discrepancies
-   */
-  debugCriticalRegions() {
-    return RuleEvaluatorModule.debugCriticalRegions(this);
-  }
-
-  /**
-   * Debug evaluation of a specific rule
-   */
-  debugRuleEvaluation(rule, depth = 0) {
-    return RuleEvaluatorModule.debugRuleEvaluation(this, rule, depth);
-  }
-
   // Helper to create a snapshot-like interface from the instance itself
   // Needed for internal methods that rely on rule evaluation (like isLocationAccessible)
   _createSelfSnapshotInterface(contextVariables = {}) {
