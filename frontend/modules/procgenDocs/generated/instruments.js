@@ -1469,7 +1469,9 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/census-seedling-sites.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "rendered"
+            ],
             "browser": false,
             "category": "census",
             "citedBy": [
