@@ -723,7 +723,9 @@ async function main() {
                 // ⛓ EVENT GOALS — and the events, each with its `side` region's level (the arrival `atlasEventGoal` reads)
                 const regions = s.atlas.regions instanceof Map ? s.atlas.regions : new Map(Object.entries(s.atlas.regions ?? {}));
                 const events = (s.atlas.events ?? []).map((e) => ({ ...e, sideLevel: regions.get(e.side)?.level ?? null }));
-                return JSON.stringify({ deliveredSet: s.wasm.deliveredSet, entries: s.atlas.entries, refused: s.atlas.refused, events });
+                // ⛓ LIGHTS WIRING — and the map's boss rows (`bosses`, present on the vanilla arm), bound by the bare leg's switch
+                return JSON.stringify({ deliveredSet: s.wasm.deliveredSet, entries: s.atlas.entries, refused: s.atlas.refused, events,
+                    ...(s.atlas.bosses ? { bosses: s.atlas.bosses } : {}) });
             });
             writeFileSync(DUMP, d);
             console.log(`INFO: dumped the delivered set + the name map → ${DUMP}`);
