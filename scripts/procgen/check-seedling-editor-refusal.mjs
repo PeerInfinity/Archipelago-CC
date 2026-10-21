@@ -38,8 +38,9 @@
  *
  * ⚠ THE BOOTS ARE COMMITTED BLOCKS, not invented here. Rows 2–3 and the
  * L11 row use `r8-solve-11` re-pointed by `?level=` (the survey's own staged
- * construction). Row 1 boots `l71-shieldlock-open` — a committed tape whose
- * own boot IS L71 at (256,256) — and asks for `teleporter@304,96` (→ L72).
+ * construction). Row 1 boots the first of `ROW1_CANDIDATES` that still holds
+ * (GATESUBJ D3, below) — each a committed tape's OWN boot. Until GATESUBJ it
+ * was `l71-shieldlock-open` (L71 at (256,256)) asking for `teleporter@304,96`.
  *
  * ⛓⛓ SEEDLING SWIM U1, W0 — WHY ROW 1 NO LONGER NAMES L16. Row 1 drove the
  * climb L16 → exit 352,80 until the R9 L16 slice (2026-09-27):
@@ -52,6 +53,26 @@
  * `spinningaxe@256,144` is EXHAUSTED with 5 recorded queries, 0 dangerous —
  * a HAZARD, not a body, so no removal rung applies and the refusal is the
  * ladder's own.
+ *
+ * ⛓⛓⛓ SEEDLING FIDELITY GATESUBJ, D3 — **THE SUBJECT IS A CANDIDATE LIST THE
+ * GATE WALKS, NOT A LITERAL** (the third recurrence of the trap the phases
+ * gate's docblock names: *"a pinned SUBJECT over a property that a solver
+ * change can revoke"*). L71's climb past `spinningaxe@256,144` SOLVES since
+ * `0fdd9f967f` (fidelity AXE D2, *"DODGE gets an AXE arm"* — the hazard the
+ * U1 report called un-removable got a dodge, not a removal), so row 1 read
+ * `status=ok` and five checks failed under a `continue-on-error` arm.
+ *
+ * ⛓ Re-aimed by measurement, U1's method: a Node sweep of `solveForPage`
+ * over every committed tape's own boot × every usable census goal (the
+ * GATESUBJ report carries the table). `ROW1_CANDIDATES` below is that table's
+ * ladder refusals, in a declared order; the gate solves them IN THE PAGE in
+ * that order and the FIRST whose readout is still the ladder's own refusal
+ * (`refused`, `combat ladder is EXHAUSTED`, `dangerQueries > 0`) is row 1's
+ * subject. The rest are NAMED, never silently skipped, and a list that has
+ * run dry refuses by name. ⛔ The subject is chosen on the ladder refusal and
+ * the POPULATION only; the zero (`dangerousQueries === 0`) and the on-screen
+ * line are still the CLAIMS asserted about it, so the selection cannot make
+ * them vacuous.
  *
  * ⛔ AND NO ROW MAY DIE. A readout without a field is a FAIL line naming the
  * field; a script that throws on row 1 reports nothing about rows 2–4.
@@ -139,10 +160,58 @@ async function solveInPage(level, goals, extra = '', boot = BOOT) {
 }
 
 // ── 1. ⚖ §12d ITEM 10 — THE DANGER RECORD ON THE REFUSAL PATH ───────────
-console.log('## L71 (`l71-shieldlock-open`\'s boot → teleporter@304,96) — the ladder is '
-    + 'EXHAUSTED, and the refusal carries what the bot was told');
-{
-    const r = await solveInPage(71, 'exit:304,96', '', `${TAPES}/l71-shieldlock-open.json`);
+/**
+ * ⛓ ROW 1's CANDIDATES, in the order the gate tries them (GATESUBJ D3). Each is
+ * a committed tape's OWN boot (so `level` is that boot's level) and a goal the
+ * census offers there. Measured at `f1b4f85446` with `solveForPage`; the
+ * order is DURABILITY first — a danger the ladder has no removal for before a
+ * body a later kill rung might clear — then the smaller level.
+ */
+const ROW1_CANDIDATES = Object.freeze([
+    { boot: 'frontier3-l62-door-niche', level: 62, goal: 'exit:48,304',
+        why: 'static enemy:darktrap@112,208 on the climb to L61 — EXHAUSTED, 6 queries, 0 dangerous' },
+    { boot: 'pushblock-l65-sword-press', level: 65, goal: 'exit:128,0',
+        why: 'static enemy:darktrap@144,144 on the way to L63 — EXHAUSTED, 7 queries, 0 dangerous' },
+    { boot: 'prox-l40-turret-volley', level: 40, goal: 'exit:944,96',
+        why: 'static enemy:iceturret@472,400 before the bosslock — EXHAUSTED, 9 queries, 0 dangerous' },
+    { boot: 'r2-terrain-killlock', level: 5, goal: 'exit:80,16',
+        why: 'chaser:bob@16,64 — EXHAUSTED, 7 queries, 0 dangerous' },
+    { boot: 'bobsoldier-sword', level: 30, goal: 'place:64,64',
+        why: 'chaser:bobsoldier@48,80 — EXHAUSTED, 7 queries, 0 dangerous' },
+]);
+/** The ladder's own refusal, with a population to assert the zero over. */
+const isLadderRefusal = (solve) => solve.status === 'refused'
+    && /combat ladder is EXHAUSTED/.test(solve.message ?? '')
+    && typeof solve.dangerQueries === 'number' && solve.dangerQueries > 0;
+let row1 = null;
+const walked = [];
+for (const c of ROW1_CANDIDATES) {
+    // eslint-disable-next-line no-await-in-loop
+    const r = await solveInPage(c.level, c.goal, '', `${TAPES}/${c.boot}.json`);
+    const ok = isLadderRefusal(r.solve);
+    walked.push(`${c.boot} → ${c.goal}: ${r.solve.status}`
+        + `${r.solve.status === 'refused' ? `, ${r.solve.dangerQueries} query(s)`
+            + `${/combat ladder is EXHAUSTED/.test(r.solve.message ?? '') ? ', EXHAUSTED'
+                : ' — NOT the ladder\'s refusal'}` : ''}`);
+    if (ok) { row1 = { c, r }; break; }
+    // eslint-disable-next-line no-await-in-loop
+    await r.page.close();
+}
+console.log(`## row 1 — ${row1 ? `L${row1.c.level} (\`${row1.c.boot}\`'s boot → ${row1.c.goal})`
+    : 'NO candidate'}: the ladder is EXHAUSTED, and the refusal carries what the bot was told`);
+for (const w of walked) console.log(`   tried  ${w}`);
+for (const c of ROW1_CANDIDATES.slice(walked.length)) {
+    console.log(`   not tried (an earlier candidate held)  ${c.boot} → ${c.goal}`);
+}
+check(row1 !== null,
+    '⛓⛓ a LADDER refusal still exists to check — searched over the declared candidates, '
+    + 'first that holds wins',
+    row1 ? `${row1.c.boot} → ${row1.c.goal} (candidate ${walked.length} of ${ROW1_CANDIDATES.length})`
+        : `NONE of the ${ROW1_CANDIDATES.length} candidate(s) is still the ladder's own refusal `
+        + 'with a recorded population — re-measure (the GATESUBJ report carries the sweep) and '
+        + 'extend ROW1_CANDIDATES');
+if (row1) {
+    const { r } = row1;
     check(r.solve.status === 'refused',
         '⛓ the page reports the solver\'s own REFUSAL, not a page error',
         `status=${r.solve.status}`);
@@ -164,7 +233,7 @@ console.log('## L71 (`l71-shieldlock-open`\'s boot → teleporter@304,96) — th
         && /every gate this walk reached answered CLEAR/.test(r.detail),
         '⛔ …and the page SAYS SO on screen, not only in a readout nobody reads',
         (r.detail.match(/the danger the bot was told[^\n]*/) ?? ['(absent)'])[0].slice(0, 90));
-    if (SHOT) await r.page.locator('main').screenshot({ path: `${SHOT}/slice10-L71-refusal.png` });
+    if (SHOT) await r.page.locator('main').screenshot({ path: `${SHOT}/slice10-row1-refusal.png` });
     check(unexpectedErrors(r.errors).length === 0, 'no page errors',
         unexpectedErrors(r.errors).join(' | ') || 'clean');
     await r.page.close();
