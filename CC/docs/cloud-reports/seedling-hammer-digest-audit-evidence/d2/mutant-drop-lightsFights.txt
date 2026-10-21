@@ -1,0 +1,19 @@
+     ✓ two fresh runs of one staging agree at every tick, and no two ticks share one 231ms
+     ✓ reading it changes nothing: a run digested every tick walks the tape as one that never is  303ms
+     ✓ digest EQUAL below T = 406 and DIFFERENT from T on — the clear lands at T, in place and persist only  304ms
+     ✓ ⚠ a reader that CAN tell them apart below T is a LEDGER no escape reads: the kill-lock row's `declaredAt` 48ms
+     ✓ a run with NO row (pass 1) digests equal below T too; its own advance at T is what tells (the kill-lock arm) 272ms
+     ✓ a module switch moves `globals` alone, and only while it is set 4ms
+     ✓ the game clock (`seam.time`) moves `clock` (and the staging that declares it), from tick 0 5ms
+     ✓ a tick moves `place` and `clock`, and the player's walk moves `player` 6ms
+     × the guard: each per-visit map `levelRun.js` declares is in a digest part or in DIGEST_EXEMPT, never both 20ms
+     × the guard's mutants: a new `…States` map, a new reset in `freshVisitState`, a stale exemption — each red by name 11ms
+     × the L69 fight (`lightsFights`), built in one run and not the other, moves `visit` alone 20ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected [ 'lightsFights' ] to deeply equal []
++   "lightsFights",
+AssertionError: expected [ 'fooStates', 'lightsFights' ] to deeply equal [ 'fooStates' ]
++   "lightsFights",
+AssertionError: expected [] to deeply equal [ 'visit' ]
+-   "visit",
+      Tests  3 failed | 8 passed (11)

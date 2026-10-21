@@ -109,8 +109,9 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { argvFor, gateRoster, LOCAL_HOST, machineDrivers, REPO } from './gateRoster.js';
-import { gateStandingRows, standingRows } from './standingValues.js';
+import { EXCLUDED as PRODUCER_EXCLUDED, enrolled as producerChecksEnrolled } from './ci-producer-checks.mjs';
+import { argvFor, ciBoxIn, gateRoster, LOCAL_HOST, machineDrivers, REPO } from './gateRoster.js';
+import { gateStandingRows, readStandingValues, standingRows } from './standingValues.js';
 
 /**
  * ⛓ ONE SHARD'S BUDGET — ten minutes of the RUNNER'S OWN milliseconds (S5b).
@@ -374,24 +375,77 @@ const IDENTITY_KINDS = new Map();
 function identityRowKinds({ repo = REPO } = {}) {
     if (IDENTITY_KINDS.has(repo)) return IDENTITY_KINDS.get(repo);
     const kindOf = new Map(machineDrivers({ repo }).map((d) => [d.file, d.kind]));
+    const covered = producerChecksCovers({ repo });
+    const gatePaths = new Map(gateRoster({ repo }).filter(ciRunnable).map((g) => [g.path, g]));
+    const bank = readStandingValues({ repo })?.rows ?? {};
     const rows = standingRows({ repo })
         .filter((row) => row.kind === 'identity')
         .map((row) => {
             const script = (/scripts\/procgen\/[A-Za-z0-9._-]+/.exec(row.command) ?? [])[0]
                 ?? null;
-            return { row,
-                drives: script
-                    ? kindOf.get(script.slice('scripts/procgen/'.length)) ?? null : null };
+            const drives = script
+                ? kindOf.get(script.slice('scripts/procgen/'.length)) ?? null : null;
+            return { row, drives, noArm: noArmReason({ row, script, drives, covered, gatePaths, bank, repo }) };
         });
     IDENTITY_KINDS.set(repo, rows);
     return rows;
 }
 
+/**
+ * ⛓⛓ ci-manual-moves (⚖ user, 2026-10-21) — the producers the gating
+ * `Producer --checks` job runs, by basename: `ci-producer-checks.mjs`'s own
+ * globs minus its own `EXCLUDED`. ⛔ Read from that file, never re-typed here:
+ * a second glob would drift from the job that actually gates.
+ */
+function producerChecksCovers({ repo = REPO } = {}) {
+    return new Set(producerChecksEnrolled(repo)
+        .map((p) => p.split('/').pop().replace(/\.mjs$/, ''))
+        .filter((name) => PRODUCER_EXCLUDED[name] === undefined));
+}
+
+/**
+ * ⛓⛓⛓ ci-manual-moves (⚖ user, 2026-10-21) — **WHY AN IDENTITY ROW GETS NO
+ * CI ARM, OR `null`.** Four reasons, each DERIVED, each printed by name as a
+ * `## CI-SKIPPED` line and refused by name by `ci-summary --gate=`:
+ *
+ *   `windows`    ⚖ 72 (a): the instrument holds the Windows Python driver.
+ *   `ci-box`     the instrument's own docblock declares `@ci-box <reason>`
+ *                (the same declaration a gate makes, read by the same
+ *                `ciBoxIn`). The kind-pair censuses and the `solve-seedling-*`
+ *                chain declare it: the user moved them off push to the box.
+ *   `producer`   `Producer --checks` (`ci-producer-checks.mjs`, gating) runs
+ *                the same `<script> --check`, so a second headless arm pays
+ *                for the same bytes twice. ⛔ A row the bank marks `ciSourced`
+ *                KEEPS its arm: its standing value is QUOTED off that arm's
+ *                line (`plan-seedling-r7-attribution`), and the job prints
+ *                none. `EXCLUDED` producers (r7-ends-meet) are not covered.
+ *   `gate`       the row runs a CI-runnable roster gate's own script, whose
+ *                `gate:` arm already runs it (`identity: generated set` =
+ *                `gate: seedling-generated-set`).
+ */
+function noArmReason({ row, script, drives, covered, gatePaths, bank, repo }) {
+    if (drives === 'windows') {
+        return { kind: 'windows', why: 'its instrument holds the Windows Python driver (⚖ 72 (a))' };
+    }
+    if (script) {
+        const abs = join(repo, script);
+        const box = existsSync(abs) ? ciBoxIn(readFileSync(abs, 'utf8'), { file: script }) : null;
+        if (box) return { kind: 'ci-box', why: `${script.split('/').pop()} declares \`@ci-box\` — ${box.reason}` };
+    }
+    const producer = /^producer: ([a-z0-9-]+) --check$/.exec(row.key)?.[1];
+    if (producer && covered.has(producer) && !bank[row.key]?.ciSourced) {
+        return { kind: 'producer',
+            why: 'the gating `Producer --checks` job runs the same `--check` (ci-producer-checks.mjs)' };
+    }
+    const gate = script ? gatePaths.get(script) : null;
+    if (gate) return { kind: 'gate', why: `the CI-runnable gate ${gate.file} runs the same script under its own arm` };
+    return null;
+}
+
 export function ciIdentityArms({ repo = REPO } = {}) {
     return identityRowKinds({ repo })
-        /** ⛔ ⚖ 72 (a) — a runner has no `/mnt/c/Windows/py.exe`, so this row
-         *  has no answer at any SHA and gets no arm to imply one. */
-        .filter((r) => r.drives !== 'windows')
+        /** ⛔ every row with a `noArm` reason (above) is named, never run here. */
+        .filter((r) => !r.noArm)
         /** ⛓ H2 — a `dual` instrument runs headless by default, so its row
          *  gets an arm, and that arm needs a browser. */
         .map(({ row, drives }) => ({ gate: null, row, label: null, argv: null,
@@ -402,19 +456,22 @@ export function ciIdentityArms({ repo = REPO } = {}) {
  * ⛓ The identity rows ⚖ 72 (a) keeps on the box — named by every job that
  * runs an identity set, for the same reason `ci-gates.mjs` names the Windows
  * GATES: a row absent from a log without a sentence reads as one that passed.
- *
- * ⛓⛓ IT IS FOUR ROWS AND NOT ONE, WHICH THE CANDIDATE SET DID NOT SHOW.
- * `identity: generated set` is the expensive one; `solve-seedling-r8-d2-chain`,
- * `solve-seedling-r8-tail` and `solve-seedling-r9-campaign` each hold the same
- * literal and are excluded by the same clause. ⛔ All three are `cheap`, so no
- * economy turns on them today — and the classifier is a TEXT classifier, so a
- * row that holds the path but never reaches it on its `--check` path is
- * excluded anyway. That is conservative in the direction that keeps a value
- * the runner cannot produce out of the bank, which is the direction ⚖ 72 (a)
- * chose.
+ * ⛔ The classifier is a TEXT classifier, so a row that holds the path but
+ * never reaches it on its `--check` path is excluded anyway — conservative in
+ * the direction ⚖ 72 (a) chose.
  */
 export function ciUnrunnableIdentityRows({ repo = REPO } = {}) {
-    return identityRowKinds({ repo }).filter((r) => r.drives === 'windows').map((r) => r.row);
+    return identityRowKinds({ repo }).filter((r) => r.noArm?.kind === 'windows').map((r) => r.row);
+}
+
+/**
+ * ⛓ ci-manual-moves — EVERY identity row CI runs no arm for, with its reason
+ * (`noArmReason`): the Windows rows above plus the declared/covered ones.
+ * `ci-gates.mjs` prints each as `## CI-SKIPPED`, `ci-summary` refuses each.
+ */
+export function ciArmlessIdentityRows({ repo = REPO } = {}) {
+    return identityRowKinds({ repo }).filter((r) => r.noArm)
+        .map((r) => ({ row: r.row, kind: r.noArm.kind, why: r.noArm.why }));
 }
 
 /**
@@ -759,11 +816,27 @@ export function ciGatePlanFor({ repo = REPO, host = LOCAL_HOST, set = 'browser',
     budgetMs = CI_SHARD_BUDGET_MS } = {}) {
     const arms = ciGateArms({ repo, host, set });
     const doc = readCiArmCosts({ repo });
+    /**
+     * ⛓⛓ ci-manual-moves — an arm whose gate declares `@ci-paths` is NOT
+     * partitioned: it gets a shard of its own, numbered after the partition,
+     * so every job at a SHA agrees on every id whether or not the plan job
+     * put that shard in the matrix (`ciPathFilter.js` decides that, from the
+     * pushed paths). ⛔ The partition never sees the path arm, so dropping its
+     * shard cannot move any other arm's.
+     */
+    const pathArms = arms.filter((a) => a.gate?.ciPaths);
+    const rest = arms.filter((a) => !a.gate?.ciPaths);
     /** ⛓ ci-jsut-split — the headless set is a FIXED pair; the browser set (and
      *  `all`, which nothing shards) keeps the budget packing. */
-    const shards = set === 'headless'
-        ? planFixedShards({ arms, costs: doc?.arms ?? {} })
-        : planCiShards({ arms, costs: doc?.arms ?? {}, budgetMs });
+    const packed = set === 'headless'
+        ? planFixedShards({ arms: rest, costs: doc?.arms ?? {} })
+        : planCiShards({ arms: rest, costs: doc?.arms ?? {}, budgetMs });
+    const shards = [...packed, ...pathArms.map((arm, i) => {
+        const ms = doc?.arms?.[arm.key]?.ms;
+        return { id: packed.length + i, name: armName(arm), ms: Number.isFinite(ms) ? ms : budgetMs,
+            headroomMs: 0, unpriced: Number.isFinite(ms) ? 0 : 1, keys: [arm.key],
+            pathFiltered: arm.gate.file };
+    })];
     return { arms, shards, budgetMs,
         measuredAt: doc?.measuredAt ?? null,
         pricedFrom: doc?.runs ?? [] };

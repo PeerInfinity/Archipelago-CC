@@ -66,6 +66,8 @@ import { levelSourceFromAtlas } from './atlasSource.js';
 import { TILE_SIZE } from './levelWorld.js';
 // ⛓ LIGHTS WIRING — the fight's exit, as the model's world build makes it (a leaf module: no imports).
 import { lightsWorldRows } from './lightBossWorld.js';
+// ⛓ BOSS WIRING — the Tentacled Beast's ctor and mouth offsets (`TentacleBeast.as`), so its fight exit is the model's.
+import { TENTACLE_BEAST } from './tentacleBeast.js';
 import { KILLLOCK_BODIES, killLockBodiesStamp, normalizeKillLockBodies, withKillLockBodies } from './killLockBodies.js';
 import { CONTACT_FIDELITY, contactFidelityStamp, normalizeContactFidelity, withContactFidelity } from './contactFidelity.js';
 import { axeDodgeAskStamp, withAxeDodgeAsk } from './axeDodgeAskHook.js';
@@ -478,6 +480,8 @@ export function passNote(plan, { expired = false } = {}) {
  *   while the run stands latched on the goal's teleporter — still the door's `reach-exit`: the solver
  *   steps off a latched door itself, fidelity STEP-OFF)
  * @param {object|null} ctx.placement  the location's entity (`{x, y}`, OEL)
+ * @param {Function|null} [ctx.levelSource]  ⛓ BOSS WIRING — `(level) => record`, the room source the run was built
+ *   from: a `FIGHT_EXITS` row whose fight view carries no tag reads it off the room's placement (null = no such row binds)
  *
  * ⛓ §5.36 (⚖ the user: the SOLVER for everything) — a mounted GENERATED set's
  * goals are mapped here too, exactly as a real room's: the old "a generated
@@ -485,7 +489,7 @@ export function passNote(plan, { expired = false } = {}) {
  * every committed generated leg the walker did, and the swim apitem the
  * walker never reached).
  */
-export function solverGoalFor(goal, { run, resolved, placement = null }) {
+export function solverGoalFor(goal, { run, resolved, placement = null, levelSource = null }) {
     if (goal?.kind === 'exit' && resolved?.pit) {
         // ⛓ S4 — a pit exit → `reach-pit` at the pit TILE the walker resolved (its rect origin = tile·16).
         const { tx, ty } = resolved.pit;
@@ -498,7 +502,10 @@ export function solverGoalFor(goal, { run, resolved, placement = null }) {
         const tp = run?.world?.teleporters?.[resolved?.allowTeleporter];
         if (!tp) {
             // ⛓ LIGHTS WIRING — an exit a boss FIGHT adds (L69's endState Teleporter): the fight, then the exit.
-            const fight = fightExitOf(run, goal);
+            const fight = fightExitOf(run, goal, levelSource);
+            // ⛓ BOSS WIRING — a fight already won whose exit is not in the arrival's world yet (the beast's mouth: the
+            // model builds the dead fight, and so the mouth, when the fight is first asked) is the door's plain reach-exit.
+            if (fight?.standing) return { goal: { kind: 'reach-exit', exit: { x: fight.exit.x, y: fight.exit.y } } };
             if (fight) return fightExitGoal(goal, run, fight);
             return { walker: 'no live teleporter resolved for the exit' };
         }
@@ -539,24 +546,48 @@ export function solverGoalFor(goal, { run, resolved, placement = null }) {
  * fight's controllers (present only while the fight's switch is ON, so OFF nothing here is reached) and the exit the
  * model's own world build makes once the controller's tag is cleared (`lightBossWorld.lightsWorldRows`' exit arm).
  * Nothing is typed: the obstacle, its tag and the exit are the controller row's and the model's.
- * ⚠ One row per fight SHAPE: a later boss with a runtime exit (fidelity's Tentacled Beast) adds its own row here.
+ * ⚠ One row per fight SHAPE. Each row is `fightsOf(run, levelSource)` → the uncleared-or-cleared fight rows
+ * `{id, x, y, tag, cleared}` (empty while the switch is OFF) and `exitOf(row)` → the exit the fight's end adds.
+ *
+ * ⛓ BOSS WIRING (slice `seedling-js-boss-wiring`) — L57's TENTACLED BEAST: its mouth `Teleporter` is added at the end of
+ * "dying" (`TentacleBeast.createMouthEntrance`, `levelWorld.withRuntimeTeleporters`). The fight is the run's
+ * (`run.entities('tentacleBeastFight')`, null while `CONTACT_FIDELITY.tentacleBeastFight` is OFF or the room holds
+ * none); its view names the body (`tentaclebeast@<x>,<y>`, the `.oel` placement) but not the tag, so the tag is the
+ * placement's in the room source. The mouth is the model's ctor and mouth offsets from that placement.
  */
 export const FIGHT_EXITS = Object.freeze([
     Object.freeze({
-        controllers: 'lightsControllers',
+        fightsOf: (run) => run?.world?.lightsControllers ?? [],
         exitOf: (c) => lightsWorldRows({ attrs: { fliernum: String(c.flierNum) } }, c.x, c.y, c.tag, new Set([c.tag])).exit,
+    }),
+    Object.freeze({
+        fightsOf: (run, levelSource) => {
+            const view = typeof run?.entities === 'function' ? run.entities('tentacleBeastFight') : null;
+            if (!view || typeof levelSource !== 'function') return [];
+            const p = (levelSource(run.level)?.entities ?? []).filter((e) => `${e.type}@${e.x},${e.y}` === view.id);
+            if (p.length !== 1 || !Number.isInteger(Number(p[0].attrs?.tag))) return [];
+            return [{ id: view.id, x: p[0].x, y: p[0].y, tag: Number(p[0].attrs.tag), cleared: view.beast.dead === true }];
+        },
+        // A cleared {57,0} builds the beast dead WITH its mouth (`TentacleBeast.as:52-60`): the exit stands.
+        standsWhenCleared: true,
+        exitOf: (c) => ({ x: c.x + TENTACLE_BEAST.ctorDx + TENTACLE_BEAST.mouthDx,
+            y: c.y + TENTACLE_BEAST.ctorDy + TENTACLE_BEAST.mouthDy }),
     }),
 ]);
 
-/** ⛓ LIGHTS WIRING — `{controller, exit}`: an uncleared fight whose exit lands on one of the goal's cells, or null. */
-export function fightExitOf(run, goal) {
+/**
+ * ⛓ LIGHTS WIRING — `{controller, exit}`: an uncleared fight whose exit lands on one of the goal's cells, or null.
+ * ⛓ BOSS WIRING — a row that lists a CLEARED fight (`standing`: the row says the exit already stands in the game) is
+ * answered `{controller, exit, standing: true}`; a row that lists only uncleared ones (Lights') is never asked that.
+ */
+export function fightExitOf(run, goal, levelSource = null) {
     const tiles = Array.isArray(goal?.tiles) && goal.tiles.length ? goal.tiles : Array.isArray(goal?.tile) ? [goal.tile] : [];
     for (const row of FIGHT_EXITS) {
-        for (const controller of run?.world?.[row.controllers] ?? []) {
-            if (controller.cleared) continue;
+        for (const controller of row.fightsOf(run, levelSource)) {
+            if (controller.cleared && row.standsWhenCleared !== true) continue;
             const exit = row.exitOf(controller);
             if (exit && tiles.some(([tx, ty]) => Math.floor(exit.x / TILE_SIZE) === tx && Math.floor(exit.y / TILE_SIZE) === ty)) {
-                return { controller, exit };
+                return controller.cleared ? { controller, exit, standing: true } : { controller, exit };
             }
         }
     }
@@ -1129,7 +1160,7 @@ export function createRuntimeSolver({
         keysFor(run, goal, resolved) {
             if (!enabled) return null;
             const mapped = solverGoalFor(goal, {
-                run, resolved, placement: goal?.kind === 'location' ? placementOf(goal) : null,
+                run, resolved, placement: goal?.kind === 'location' ? placementOf(goal) : null, levelSource: getLevelSource(),
             });
             if (mapped.walker) { cancel(); return null; }
             if (plan) {

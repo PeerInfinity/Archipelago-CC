@@ -1,0 +1,24 @@
+t=0 [max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 0, 0, 148, 11) ; fillRect(#000000, 0, 0, 160, 160)
+h=0 [fade,max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 0, 0, 148, 11) ; fillRect(#000000, 0, 0, 160, 160) alpha=0.95
+h=0 [fade,max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 0, 0, 148, 11) ; fillRect(#000000, 0, 0, 160, 160) alpha=0.9
+h=0 [fade,max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 0, 0, 148, 11) ; fillRect(#000000, 0, 0, 160, 160) alpha=0.85
+h=0 [fade,max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 0, 0, 148, 11) ; fillRect(#000000, 0, 0, 160, 160) alpha=0.8
+h=0 [fade,max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 0, 0, 148, 11) ; fillRect(#000000, 0, 0, 160, 160) alpha=0.75
+h=0 [fade,max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 0, 0, 148, 11) ; fillRect(#000000, 0, 0, 160, 160) alpha=0.7
+h=0 [fade,max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 0, 0, 148, 11) ; fillRect(#000000, 0, 0, 160, 160) alpha=0.65
+h=0 [fade,max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 0, 0, 148, 11) ; fillRect(#000000, 0, 0, 160, 160) alpha=0.6
+h=0 [fade,max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 0, 0, 148, 11) ; fillRect(#000000, 0, 0, 160, 160) alpha=0.55
+h=0 [fade,max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 0, 0, 148, 11) ; fillRect(#000000, 0, 0, 160, 160) alpha=0.5
+h=0 [fade,max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 0, 0, 148, 11) ; fillRect(#000000, 0, 0, 160, 160) alpha=0.45
+h=0 [fade,max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 0, 0, 148, 11) ; fillRect(#000000, 0, 0, 160, 160) alpha=0.4
+h=0 [fade,max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 0, 0, 148, 11) ; fillRect(#000000, 0, 0, 160, 160) alpha=0.35
+h=0 [fade,max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 0, 0, 148, 11) ; fillRect(#000000, 0, 0, 160, 160) alpha=0.3
+h=0 [fade,max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 0, 0, 148, 11) ; fillRect(#000000, 0, 0, 160, 160) alpha=0.25
+h=0 [fade,max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 0, 0, 148, 11) ; fillRect(#000000, 0, 0, 160, 160) alpha=0.2
+h=0 [fade,max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 0, 0, 148, 11) ; fillRect(#000000, 0, 0, 160, 160) alpha=0.15
+h=0 [fade,max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 0, 0, 148, 11) ; fillRect(#000000, 0, 0, 160, 160) alpha=0.1
+h=0 [fade,max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 0, 0, 148, 11) ; fillRect(#000000, 0, 0, 160, 160) alpha=0.05
+h=0 [fade,max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 0, 0, 148, 11)
+t=1..79 [max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 0, 0, 148, 11)
+t=80..106 [hit:1,max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 0, 0, 137, 0) ; drawImage(seedling/Health, 12, 0, 148, 11)
+t=107..127 [hit:2,max:3] |  || drawImage(seedling/Health, 0, 0, 148, 0) ; drawImage(seedling/Health, 12, 0, 137, 0) ; drawImage(seedling/Health, 12, 0, 148, 11)

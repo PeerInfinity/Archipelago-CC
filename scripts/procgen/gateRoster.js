@@ -402,6 +402,34 @@ export function ciShallowIn(text, { file = '(text)' } = {}) {
 }
 
 /**
+ * ⛓⛓ ci-manual-moves (⚖ user, 2026-10-21; js-7's conditions) — **A GATE CI
+ * RUNS ONLY WHEN A PUSH MOVES WHAT IT READS.** `@ci-paths <glob> <glob> …`
+ * names the trees the gate's SUBJECT lives in (a submodule, a page's module
+ * dirs) — the part no import graph can see. ⛔ The scripts are NOT declared
+ * here: `ciGatePlan.ciPathFilterFor` adds the derived code/spawn closure of
+ * the gate and of the job's own entry scripts, so a declaration cannot go
+ * stale against an import. CI gives such an arm its OWN shard, put in the
+ * matrix only when a changed path hits the filter — and always on a dispatch.
+ * Refused by name when empty, doubled, or paired with `@ci-box`.
+ */
+export function ciPathsIn(text, { file = '(text)' } = {}) {
+    const hits = [...text.matchAll(CI_PATHS_LINE_RE)];
+    if (!hits.length) return null;
+    if (hits.length > 1) {
+        throw new Error(`gateRoster: ${file} declares ${hits.length} @ci-paths lines — one filter `
+            + 'per gate, or two readers disagree on which one decides');
+    }
+    const globs = hits[0][1].trim().split(/\s+/).filter(Boolean);
+    if (!globs.length) {
+        throw new Error(`gateRoster: ${file} has an empty @ci-paths line — an empty filter would `
+            + 'take the gate off every push silently');
+    }
+    return { globs };
+}
+
+const CI_PATHS_LINE_RE = /^[ \t]*\*[ \t]*@ci-paths\b(.*)$/gm;
+
+/**
  * The box-only refusal a gate declares, or `null`. ⛔ Same refusals as
  * `ciShallowIn`, and for the same reason: an empty reason would arm a SILENT
  * exclusion from CI, which is the exact shape this declaration replaces.
@@ -601,6 +629,7 @@ export function gateRoster({ repo = REPO } = {}) {
         const ciFace = ciFaceIn(text, { file });
         const ciArgv = ciArgvIn(text, { file });
         const ciBox = ciBoxIn(text, { file });
+        const ciPaths = ciPathsIn(text, { file });
         const standingRow = standingRowIn(text, { file });
         const treeWrites = treeWritesIn(text, { file });
         const variants = variantsIn(text, { file });
@@ -638,6 +667,10 @@ export function gateRoster({ repo = REPO } = {}) {
                 + ' — a box-only gate has no CI run for a face to re-key or for argv to point,'
                 + ' so one of the two is not true of this gate.');
         }
+        if (ciBox && ciPaths) {
+            throw new Error(`gateRoster: ${file} declares \`@ci-box\` AND \`@ci-paths\` — a box-only `
+                + 'gate has no CI run for a path filter to schedule.');
+        }
         if (ciFace && ciArgv) {
             throw new Error(`gateRoster: ${file} declares BOTH \`@ci-face `
                 + `${ciFace.prefix}\` and \`@ci-argv ${ciArgv.argv.join(' ')}\` — a face is a `
@@ -666,6 +699,9 @@ export function gateRoster({ repo = REPO } = {}) {
             /** ⛓ …and the BOX-ONLY refusal it declares, or `null` (V3b) —
              *  `ciRunnable` reads this, so a gate with one gets no CI arm. */
             ciBox,
+            /** ⛓ …and the PATH FILTER it declares, or `null` (ci-manual-moves) —
+             *  CI runs its arm only on a push that moves what it reads. */
+            ciPaths,
             /** ⛓ …and the OTHER row its standing value lives under, or `null`
              *  (F1 task 0) — `standingRows` derives no `gate:` row for it. */
             standingRow,

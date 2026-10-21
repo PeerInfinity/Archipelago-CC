@@ -17183,6 +17183,13 @@ export function createLevelRun({
      * EXCLUDED with its reason. A binding added to that reach later is a binding this list must gain, and the census
      * tool in the report's evidence is how to tell.
      *
+     * ⛓ THE VISIT AUDIT (hammer-phase DA, `CC/docs/cloud-reports/seedling-hammer-digest-audit.md`): the same census at
+     * `bf259ff199` reads 75 bindings (74 with the shadow filter); the one new is `lightsFights` (`liveSolidOpts` →
+     * `lightTotemsNow`, the L69 totem's solid, ON only), now in `visit`. Every other per-visit map — every
+     * `const …States = new Map()`, every `…ByLevel` map, every `…Windows`, everything `freshVisitState` resets — is in a
+     * part below or in `levelRunStateDigest.test.js`'s `DIGEST_EXEMPT` with the fact that lets it stay out, and that
+     * file's guard row reds a new one by name until it chooses.
+     *
      * ⛔ `persistence`, `timedClears` AND `declaredClears` ARE NOT IN THAT REACH. A declared row reaches the escape
      * only through what `applyTimedClears` WRITES — `clearedByLevel` and the rebuilt `world`, both digested — and it
      * writes at `c.at === tick` only. So a run whose row is `PENDING_AT` and one whose row is `at = T` digest EQUAL
@@ -17241,11 +17248,18 @@ export function createLevelRun({
             /** the save-side state the builds and the activators read */
             persist: part({ clearedByLevel, pendingEarnedClears, despawnedByLevel, staticRemovedTags, unreadRoomWrites,
                 totemParts, keys, collectedPickups, lockSnap, moonrockSet, chestOpens, rockFalls }),
-            /** the per-visit runtime state: every `…States` map the reach reads, and the windows */
+            /**
+             * the per-visit runtime state: every `…States` map the reach reads, and the windows (the rest are
+             * `DIGEST_EXEMPT`'s, each with its reason); `lightsFights` is the L69 fight, whose `totemGone` opens the
+             * totem's solid in `liveSolidOpts` (DA); `igneousStates` is fidelity's (`dfaa06e240`), which DA measured
+             * UNREAD by the escape: a superset key, so it only costs misses; `lavaBossFights` + `lavaArenaRocks` are
+             * BOSSKILLS' (the King of Fire's body and L82's arena rock, read through `liveSolidOpts`)
+             */
             visit: part({ activatorStates, bridgeStates, pushableStates, rockStates, burnStates, ropeStates,
                 fallRockStates, moonrockStates, crusherStates, bossStates, shieldBossStates, finalDoorStates,
                 turretStates, beamTowerStates, magicalLockStates, chestStates, pulserStates, spinnerStates,
-                pullsByLevel, wandWindows, fireWindows, igneousStates, lavaBossFights, lavaArenaRocks }),
+                pullsByLevel, wandWindows, fireWindows, igneousStates, lightsFights, lavaBossFights,
+                lavaArenaRocks }),
             /**
              * the module switches this file's import closure consults — a separate component because a reader of
              * them reads no run: the caller keys on solverBot's own (see the report's hand-over)
