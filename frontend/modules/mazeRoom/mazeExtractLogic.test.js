@@ -14,7 +14,7 @@
 import { describe, it, expect } from 'vitest';
 import {
     createWorld, createState, step, setTile, setObstacle, setItem, getExitAt, mazeVisitedKey,
-    extractPathsAndObstacles, INPUTS, TILE_WALL, BLOCK_WORLD_MAX_ITEMS, ROUTE_SETS_PER_CELL, isFloor,
+    extractPathsAndObstacles, worldInputs, TILE_WALL, BLOCK_WORLD_MAX_ITEMS, ROUTE_SETS_PER_CELL, isFloor,
 } from './mazeRoomEngine.js';
 import { generateMazeLevel, MAZE_PALETTE } from './procgenMaze.js';
 import { parseAreaSpec } from '../procgenCore/areaSpec.js';
@@ -23,6 +23,7 @@ import { parseSkeleton } from '../procgenCore/skeletonKinds.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import { DEFAULT_OBSTACLES, evaluateRuleAgainstInventory } from '../shared/procgen/library.js';
 import { deriveRegionLogic, ruleFromMinimalSets } from './tileSpike/deriveTileLogic.js';
+import { itemActionPicture, ACTION_GADGETS, SWORD } from './mazeItemActions.fixtures.js';
 import HELPERS from './tileSpike/maze_tiles.helpers.json' with { type: 'json' };
 
 const has = (item) => ({ rule: 'Has', args: { item_name: item } });
@@ -63,7 +64,7 @@ function guardRoom({ seed = 2, rock = null } = {}) {
 const compiled = (w) => compileRegion(extractPathsAndObstacles(w), { obstacleLib: w.obstacleLib ?? DEFAULT_OBSTACLES });
 const ruleAt = (c, x, y) => c.locations.find((l) => l.position.x === x && l.position.y === y).rule;
 
-/** The engine's own answer: BFS over the real `step` holding `inventory` (AP: pickups grant nothing). */
+/** The engine's own answer: BFS over the real `step` (every input the world takes) holding `inventory` (AP: pickups grant nothing). */
 function engineCells(world, inventory) {
     const w = { ...world, items: new Map() };
     const start = createState(w);
@@ -74,7 +75,7 @@ function engineCells(world, inventory) {
     for (let head = 0; head < queue.length; head++) {
         const s = queue[head];
         if (head > 0 && getExitAt(w, s.player_pos.x, s.player_pos.y) !== null) continue;
-        for (const input of INPUTS) {
+        for (const input of worldInputs(w)) {
             const n = step(w, s, input);
             if (n === null || seen.has(mazeVisitedKey(n))) continue;
             seen.add(mazeVisitedKey(n));
@@ -242,6 +243,47 @@ describe('T1 — a block world is priced by the engine', () => {
         const many = Array.from({ length: BLOCK_WORLD_MAX_ITEMS }, (_, i) => has(`item_${i}`));
         expect(() => extractPathsAndObstacles(withRock({ rule: 'And', children: many })))
             .toThrow(new RegExp(`item axis has ${BLOCK_WORLD_MAX_ITEMS + 2} items, over the cap ${BLOCK_WORLD_MAX_ITEMS}`));
+    });
+});
+
+describe('T3 — an item-action world is priced by the engine (a strike-only rock)', () => {
+    // The Q3 search's strike row (tileSpike/deriveTileLogic.test.js): `rock` only a strike opens
+    // (clear_set []), `rock_swim` a strike OR Swim; the lower row is sealed off the location.
+    const ROW = ['########', '#P..rLX#', '#..S...#', '########'];
+    const world = (rockId) => {
+        const w = itemActionPicture(ROW);
+        w.obstacleLib.rock_swim = { kind: 'rock', clear_set: [['Progressive Swim']], struck_by: ['sword'] };
+        setTile(w, 5, 2, TILE_WALL);
+        setTile(w, 6, 2, TILE_WALL);
+        if (rockId !== 'rock') setObstacle(w, 4, 1, rockId);
+        return w;
+    };
+    const oracleAgrees = (w) => {
+        const c = compiled(w);
+        const derived = deriveRegionLogic(w, HELPERS);
+        return derived.targets.filter((t) => {
+            const mine = t.kind === 'exit' ? c.exits.find((e) => `exit:${e.id}` === t.id).rule : ruleAt(c, t.x, t.y);
+            const oracle = ruleFromMinimalSets(t.minimal);
+            return subsets([...new Set([...derived.items, ...namesIn(mine)])])
+                .some((set) => evaluateRuleAgainstInventory(mine, new Set(set)) !== evaluateRuleAgainstInventory(oracle, new Set(set)));
+        }).map((t) => t.id);
+    };
+
+    for (const [rockId, expected] of [['rock', has(SWORD)], ['rock_swim', or(has('Progressive Swim'), has(SWORD))]]) {
+        it(`${rockId}: the location and the exit = ${JSON.stringify(expected)} (the path compiler priced a strike-only rock False_)`, () => {
+            const w = world(rockId);
+            const c = compiled(w);
+            expect(ruleAt(c, 5, 1)).toEqual(expected);
+            expect(c.exits[0].rule).toEqual(expected);
+            expect(engineDisagreements(w, ['Progressive Swim', SWORD])).toEqual([]);
+            expect(oracleAgrees(w)).toEqual([]);
+        });
+    }
+
+    it('everything at once (rock + key door + block onto a button): the engine and the Q3 search agree', () => {
+        const w = itemActionPicture(ACTION_GADGETS);
+        expect(engineDisagreements(w, [SWORD, 'key_red'])).toEqual([]);
+        expect(oracleAgrees(w)).toEqual([]);
     });
 });
 

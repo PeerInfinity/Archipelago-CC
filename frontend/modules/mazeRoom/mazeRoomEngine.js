@@ -1464,6 +1464,13 @@ function* subsetsOfSize(items, k, from = 0, acc = []) {
  * search). Exit tiles are dead ends. Lattice by size; a set that already covers
  * every live target is skipped (sound: clearance is monotone in the inventory).
  * Returns `(position) → rule`.
+ *
+ * ⛓ T3 (the same slice, after item actions landed): an ITEM-ACTION world (an
+ * `action_lib`) is priced here too. A rock with `clear_set: []` and
+ * `struck_by` opens only to a strike, which the path compiler cannot see, so it
+ * priced the rock as never clearable. The search steps `worldInputs` (turns +
+ * uses), and the item of every action a region obstacle is `struck_by` joins
+ * the axis.
  */
 function blockWorldAccessRules(world) {
     const lib = world.obstacleLib ?? DEFAULT_OBSTACLES;
@@ -1474,7 +1481,12 @@ function blockWorldAccessRules(world) {
         if (!entry) continue;
         if ((entry.clear_set_type ?? 'combo_list') === 'rule') clearRuleItems(entry.clear_rule, id, axis);
         else for (const combo of entry.clear_set ?? []) for (const item of combo) axis.add(item);
+        for (const actionId of entry.struck_by ?? []) {
+            const item = world.actionLib?.[actionId]?.item;
+            if (item) axis.add(item);
+        }
     }
+    const inputs = worldInputs(world);
     const items = [...axis].filter((i) => !held.has(i)).sort();
     if (items.length > BLOCK_WORLD_MAX_ITEMS) {
         throw new Error(`extractPathsAndObstacles: a block world's item axis has ${items.length} items, `
@@ -1491,7 +1503,7 @@ function blockWorldAccessRules(world) {
         for (let head = 0; head < queue.length; head++) {
             const s = queue[head];
             if (isDeadEndExit(apWorld, s.player_pos.x, s.player_pos.y, origin)) continue;
-            for (const input of INPUTS) {
+            for (const input of inputs) {
                 const next = step(apWorld, s, input);
                 if (!next) continue;
                 const k = mazeVisitedKey(next);
@@ -1532,7 +1544,8 @@ export function extractPathsAndObstacles(world, opts = {}) {
     const plans = ghostPlansFromEntrance(world);
     const routes = minimalObstacleSets(world);
     const paths = (position) => pathsToTarget(world, position, plans, routes);
-    const priced = (world.blocks?.size || world.buttons?.size) ? blockWorldAccessRules(world) : null;
+    const priced = (world.blocks?.size || world.buttons?.size || hasItemActions(world))
+        ? blockWorldAccessRules(world) : null;
     const accessRule = (position) => (priced ? { access_rule: priced(position) } : {});
 
     // Exits are region-to-region connections; one entry per exit tile
