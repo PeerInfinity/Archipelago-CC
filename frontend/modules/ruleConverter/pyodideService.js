@@ -1,12 +1,9 @@
 /**
  * Converter Service
  *
- * This module was originally planned to use Pyodide (Python in WebAssembly),
- * but now uses pure JavaScript implementations for better performance and
- * compatibility with static hosting like GitHub Pages.
- *
- * The JavaScript implementations handle the most common rule patterns.
- * For complex edge cases, consider using the Flask-based converter.
+ * The Quick engine: pure JavaScript implementations, instant and offline.
+ * They handle the most common rule patterns. The panel's Exact engine runs
+ * the real exporter under Pyodide instead (../helperScript/helperScript.js).
  */
 
 import { convertJsonToPython, convertJsonToLambda, convertJsonToFunction } from './jsonToPython.js';

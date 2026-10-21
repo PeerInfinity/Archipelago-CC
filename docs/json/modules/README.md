@@ -129,7 +129,7 @@ Kept in the codebase but deprecated (⚖ 2026-10-11): disabled in every launch m
 - [Meta Game Panel](./metaGamePanel.md) *(disabled)* — loads a scripted scenario (a MetaGame configuration) and edits its JSON; an early draft of the procgen idea. Its service module is [MetaGame](./metaGame.md).
 - [Progress Bar Panel](./progressBarPanel.md) *(disabled)* — hosts the progress bars Meta Game scenarios create. Its service module is [ProgressBar](./progressBar.md).
 - **JtA Game Data** (`jtaGameDataPanel`), **JtA Action Queue** (`jtaActionQueue`) and **JtA Cost Debugger** (`jtaCostDebugger`) *(disabled)* — the non-procgen Journey to Ascension panels (view/control JtA game data; queue and execute JtA actions; step-through debugger for JtA cost generation), superseded by `jtaSubstrateWrapper`.
-- **Rule Converter** (`ruleConverter`) *(disabled)* — converts between Python code and JSON rule format; very out of date.
+- **Rule Converter** (`ruleConverter`) *(disabled)* — converts between Python code and JSON rule format. Its Quick engine (the JavaScript ports, as you type) is very out of date; its **Exact** engine (2026-10-20) converts a script of `def name(state, player, …)` helper functions to a rules.json `helpers` dict and back with the real exporter analyzer and world_generator, through `helperScript/` below. In-app row: `rule-converter-exact-mode-round-trips` (test-substrates).
 
 ## Submodules and Non-Module Directories
 
@@ -140,3 +140,6 @@ These live under `frontend/modules/` but are not frontend modules in the registr
 - **`swfRecompilerPanel/browser/`** — git submodule `PeerInfinity/swfrecomp-browser`: the built in-browser recompiler page (one release, from one SWFRecomp-CC commit, named in its `release.json`), which the SWF Recompiler panel drives. `scripts/procgen/check-seedling-source-pin.mjs` row (iv) holds its commit equal to the default Seedling build's recompiler.
 - **`journey-to-ascension/`**, **`jta-randomizer/`** — bundled game builds/forks consumed by their wrapper modules, not modules themselves.
 - **`testModule/`** — a minimal dynamically-loaded panel used as a test fixture.
+- **`pyodideRuntime/`** — the shared half of running this repo's Python in the page: the pinned Pyodide version, where a repo package is served (`sitePackageBaseUrl`: the repo root locally, a copy staged into the site on Pages), and the worker-side boot + manifest-driven package loader. Used by `apworldBuild/` and `helperScript/`.
+- **`apworldBuild/`** — rules.json → `.apworld` with the real `world_generator` under Pyodide; see [APWorld Editor](./apworldEditor.md).
+- **`helperScript/`** — Python ⇄ the rules.json `helpers` format with `exporter/script_api.py` under Pyodide: `pythonToHelpers(source)` / `helpersToPython(helpers, {rules, playerId})`, one shared worker. It fetches the exporter SUBSET `helperScriptFiles.json` lists (`scripts/build/helper-script-files.mjs`) and, for Python generation, `world_generator/`. The Rule Converter's Exact engine is its first caller. Node check: `scripts/test/check-helper-script-pyodide.mjs`.

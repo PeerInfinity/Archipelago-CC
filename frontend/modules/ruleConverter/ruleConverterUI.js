@@ -3,11 +3,22 @@
  *
  * Provides a dual-editor interface for converting between Python code
  * and Archipelago-CC JSON rule format.
+ *
+ * Two engines:
+ *   - Quick (JS): the JavaScript ports (pythonToJson.js / jsonToPython.js) —
+ *     instant, converts as you type, common patterns only.
+ *   - Exact (Pyodide): the exporter's real analyzer and world_generator's real
+ *     helper codegen, run in the page (helperScript/). Works on a SCRIPT of
+ *     `def name(state, player, ...)` functions ⇄ a rules.json `helpers` dict,
+ *     converts on the Convert buttons (the first use loads Python).
  */
 
 import { getModuleEventBus } from './index.js';
 import { convertJsonToPython, convertJsonToLambda, convertJsonToFunction } from './jsonToPython.js';
 import { convertPythonToJson } from './pythonToJson.js';
+import { pythonToHelpers, helpersToPython } from '../helperScript/helperScript.js';
+import { getLastRawJsonData } from '../stateManager/index.js';
+import { loadedRulesForOptions, parseHelpersJson } from './exactEngine.js';
 
 // Helper function for logging
 function log(level, message, ...data) {
@@ -18,6 +29,24 @@ function log(level, message, ...data) {
     consoleMethod(`[ruleConverterUI] ${message}`, ...data);
   }
 }
+
+const QUICK_EXAMPLE = "state.has('Sword') and state.has('Shield')";
+
+const EXACT_EXAMPLE = `def has_light(state, player):
+    return state.has("Lantern", player) or state.has("Torch", player)
+
+
+def can_enter_cave(state, player):
+    return has_light(state, player) and state.has("Cave Key", player)
+`;
+
+/** helperScript's progress stages, as the status line says them. */
+const EXACT_STAGE_LABELS = {
+  'loading-python': 'Loading Python (first use, a few seconds)…',
+  'loading-exporter': 'Loading the exporter…',
+  'loading-generator': 'Loading the world generator…',
+  'converting': 'Converting…',
+};
 
 /**
  * Rule Converter Panel UI Component
@@ -31,9 +60,22 @@ class RuleConverterUI {
 
     this.rootElement = document.createElement('div');
     this.rootElement.className = 'rule-converter-panel';
+    // Tests reach the instance through its element (as the APWorld editor's do).
+    this.rootElement.__panel = this;
 
     // State
+    this.engine = 'quick';
     this.pythonFormat = 'expression';
+    this.exactLoaded = false;
+    // Exact conversions finished (success or not): a caller that pressed a
+    // Convert button waits for this to move, not for isConverting to blink.
+    this.exactRuns = 0;
+    // The newest stateManager:rawJsonDataLoaded payload seen while mounted.
+    // ⛔ Not getLastRawJsonData() alone: that updates only on files:jsonLoaded,
+    // and a load straight through the proxy (testController.loadRulesFromFile)
+    // publishes the event without moving it.
+    this.lastRawPayload = null;
+    this._subscriptions = [];
     this.debounceTimer = null;
     this.isConverting = false;
     this.lastEditedPane = null;
@@ -57,12 +99,24 @@ class RuleConverterUI {
         <span class="converter-title">Rule Format Converter</span>
         <div class="converter-controls">
           <label>
+            Engine:
+            <select class="engine-select">
+              <option value="quick">Quick (JS)</option>
+              <option value="exact">Exact (Pyodide)</option>
+            </select>
+          </label>
+          <label class="format-label">
             Format:
             <select class="format-select">
               <option value="expression">Expression</option>
               <option value="lambda">Lambda</option>
               <option value="function">Function</option>
             </select>
+          </label>
+          <label class="options-label" style="display: none;"
+                 title="Read option definitions from the loaded game, so options convert as options rather than world attributes">
+            <input type="checkbox" class="use-game-options" checked>
+            Use loaded game's options
           </label>
         </div>
       </div>
@@ -72,6 +126,7 @@ class RuleConverterUI {
           <div class="pane-header">
             <span class="pane-title">Python</span>
             <div class="pane-actions">
+              <button class="btn-convert-python exact-only" style="display: none;">Convert &rarr;</button>
               <button class="btn-copy-python">Copy</button>
               <button class="btn-clear-python">Clear</button>
             </div>
@@ -87,6 +142,7 @@ class RuleConverterUI {
           <div class="pane-header">
             <span class="pane-title">JSON</span>
             <div class="pane-actions">
+              <button class="btn-convert-json exact-only" style="display: none;">&larr; Convert</button>
               <button class="btn-copy-json">Copy</button>
               <button class="btn-format-json">Format</button>
               <button class="btn-clear-json">Clear</button>
@@ -122,6 +178,12 @@ class RuleConverterUI {
     this.pythonEditor = this.rootElement.querySelector('.python-editor');
     this.jsonEditor = this.rootElement.querySelector('.json-editor');
     this.formatSelect = this.rootElement.querySelector('.format-select');
+    this.engineSelect = this.rootElement.querySelector('.engine-select');
+    this.formatLabel = this.rootElement.querySelector('.format-label');
+    this.optionsLabel = this.rootElement.querySelector('.options-label');
+    this.useGameOptions = this.rootElement.querySelector('.use-game-options');
+    this.convertPythonButton = this.rootElement.querySelector('.btn-convert-python');
+    this.convertJsonButton = this.rootElement.querySelector('.btn-convert-json');
     this.statusIndicator = this.rootElement.querySelector('.status-indicator');
     this.statusMessage = this.rootElement.querySelector('.status-message');
     this.timing = this.rootElement.querySelector('.timing');
@@ -135,7 +197,7 @@ class RuleConverterUI {
     this._bindEvents();
 
     // Set initial example
-    this.pythonEditor.value = "state.has('Sword') and state.has('Shield')";
+    this.pythonEditor.value = QUICK_EXAMPLE;
     this._scheduleConversion('python');
   }
 
@@ -166,6 +228,13 @@ class RuleConverterUI {
       .converter-title {
         font-weight: 500;
         color: #e94560;
+      }
+
+      .converter-controls {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        font-size: 0.85rem;
       }
 
       .converter-controls select {
@@ -242,6 +311,11 @@ class RuleConverterUI {
 
       .pane-actions button:hover {
         background: #e94560;
+      }
+
+      .pane-actions button:disabled {
+        opacity: 0.5;
+        cursor: wait;
       }
 
       .python-editor,
@@ -357,14 +431,20 @@ class RuleConverterUI {
     // Python editor changes
     this.pythonEditor.addEventListener('input', () => {
       this.lastEditedPane = 'python';
-      this._scheduleConversion('python');
+      if (this.engine === 'exact') this._markEdited('Python');
+      else this._scheduleConversion('python');
     });
 
     // JSON editor changes
     this.jsonEditor.addEventListener('input', () => {
       this.lastEditedPane = 'json';
-      this._scheduleConversion('json');
+      if (this.engine === 'exact') this._markEdited('JSON');
+      else this._scheduleConversion('json');
     });
+
+    this.engineSelect.addEventListener('change', () => this._setEngine(this.engineSelect.value));
+    this.convertPythonButton.addEventListener('click', () => this._exactPythonToHelpers(this.pythonEditor.value));
+    this.convertJsonButton.addEventListener('click', () => this._exactHelpersToPython(this.jsonEditor.value));
 
     // Format select change
     this.formatSelect.addEventListener('change', () => {
@@ -410,23 +490,38 @@ class RuleConverterUI {
     });
   }
 
+  _subscribe(eventName, handler) {
+    const unsub = this.eventBus?.subscribe?.(eventName, handler);
+    this._subscriptions.push(
+      typeof unsub === 'function'
+        ? unsub
+        : () => this.eventBus?.unsubscribe?.(eventName, handler),
+    );
+  }
+
   _subscribeToEvents() {
+    this._subscribe('stateManager:rawJsonDataLoaded', (payload) => {
+      this.lastRawPayload = payload ?? null;
+    });
+
     // Listen for requests to set content
-    this.eventBus.subscribe('ruleConverter:setJson', (data) => {
+    this._subscribe('ruleConverter:setJson', (data) => {
       if (data && data.rule) {
         const jsonStr = typeof data.rule === 'string' ? data.rule : JSON.stringify(data.rule, null, 2);
         this.jsonEditor.value = jsonStr;
         if (data.convert !== false) {
-          this._convertJsonToPython(jsonStr);
+          if (this.engine === 'exact') this._exactHelpersToPython(jsonStr);
+          else this._convertJsonToPython(jsonStr);
         }
       }
     });
 
-    this.eventBus.subscribe('ruleConverter:setPython', (data) => {
+    this._subscribe('ruleConverter:setPython', (data) => {
       if (data && data.code) {
         this.pythonEditor.value = data.code;
         if (data.convert !== false) {
-          this._convertPythonToJson(data.code);
+          if (this.engine === 'exact') this._exactPythonToHelpers(data.code);
+          else this._convertPythonToJson(data.code);
         }
       }
     });
@@ -565,6 +660,168 @@ class RuleConverterUI {
     }
   }
 
+  /**
+   * Switch engines. Exact works on a script ⇄ a helpers dict, so it hides the
+   * Quick engine's Format choice and swaps the Quick example for a script.
+   */
+  _setEngine(engine) {
+    this.engine = engine === 'exact' ? 'exact' : 'quick';
+    this.engineSelect.value = this.engine;
+    const exact = this.engine === 'exact';
+    if (this.debounceTimer) {
+      clearTimeout(this.debounceTimer);
+      this.debounceTimer = null;
+    }
+    this.formatLabel.style.display = exact ? 'none' : '';
+    this.optionsLabel.style.display = exact ? '' : 'none';
+    for (const button of this.rootElement.querySelectorAll('.exact-only')) {
+      button.style.display = exact ? '' : 'none';
+    }
+    this.pythonEditor.placeholder = exact
+      ? 'Enter Python functions: def name(state, player, ...): ...'
+      : 'Enter Python code...';
+    this.jsonEditor.placeholder = exact ? 'Enter a helpers dict: { "name": rule, ... }' : 'Enter JSON rule...';
+    this._hideError();
+    this._hideWarnings();
+    this.timing.textContent = '';
+
+    if (exact) {
+      const code = this.pythonEditor.value.trim();
+      if (!code || code === QUICK_EXAMPLE) {
+        this.pythonEditor.value = EXACT_EXAMPLE;
+        this.jsonEditor.value = '';
+      }
+      this._setStatus('', this.exactLoaded
+        ? 'Exact: press Convert'
+        : 'Exact: press Convert (the first use loads Python, a few seconds)');
+    } else if (this.pythonEditor.value.trim()) {
+      this._scheduleConversion('python');
+    } else {
+      this._setStatus('', 'Ready');
+    }
+    this.eventBus.publish('ruleConverter:stateChanged', { engine: this.engine });
+  }
+
+  _markEdited(pane) {
+    this._hideError();
+    this._hideWarnings();
+    this._setStatus('', `${pane} edited — press Convert`);
+  }
+
+  _setBusy(busy) {
+    this.convertPythonButton.disabled = busy;
+    this.convertJsonButton.disabled = busy;
+    this.engineSelect.disabled = busy;
+  }
+
+  _exactProgress(stage) {
+    this._setStatus('', EXACT_STAGE_LABELS[stage] ?? stage);
+  }
+
+  _exactLoadedOnce(ms) {
+    if (this.exactLoaded) return;
+    this.exactLoaded = true;
+    this.eventBus.publish('ruleConverter:pyodideLoaded', { ms });
+  }
+
+  /**
+   * Exact engine, Python → helpers. Functions the analyzer cannot convert are
+   * named in the error panel; the ones it could still fill the JSON pane.
+   * Resolves to helperScript's result, or null when Python itself failed.
+   */
+  async _exactPythonToHelpers(code) {
+    if (this.isConverting) return null;
+    this.isConverting = true;
+    this._setBusy(true);
+    this._hideError();
+    this._hideWarnings();
+    this._showDirection('\u2192');
+    try {
+      const result = await pythonToHelpers(code, { onProgress: (s) => this._exactProgress(s) });
+      this._exactLoadedOnce(result.ms);
+      this.jsonEditor.value = JSON.stringify(result.helpers, null, 2);
+      this._showWarnings(result.warnings);
+      this.timing.textContent = `${result.ms}ms`;
+      if (result.errors.length) {
+        this._showError(result.errors.join('\n'));
+        this.eventBus.publish('ruleConverter:conversionError', {
+          direction: 'python-to-helpers', engine: 'exact', error: result.errors.join('\n'),
+        });
+      } else {
+        this._setStatus(result.warnings.length ? 'warning' : 'success', 'Converted');
+        this.eventBus.publish('ruleConverter:conversionComplete', {
+          direction: 'python-to-helpers', engine: 'exact', python: code, json: result.helpers,
+        });
+      }
+      return result;
+    } catch (e) {
+      this._showError('Python failed: ' + e.message);
+      this.eventBus.publish('ruleConverter:conversionError', {
+        direction: 'python-to-helpers', engine: 'exact', error: e.message,
+      });
+      return null;
+    } finally {
+      this.isConverting = false;
+      this.exactRuns += 1;
+      this._setBusy(false);
+    }
+  }
+
+  /**
+   * Exact engine, helpers → Python. With "Use loaded game's options" on, the
+   * loaded rules document supplies the option definitions.
+   * Resolves to helperScript's result, or null on bad JSON / a Python failure.
+   */
+  async _exactHelpersToPython(jsonStr) {
+    if (this.isConverting) return null;
+    const parsed = parseHelpersJson(jsonStr);
+    if (parsed.error) {
+      this._showError(parsed.error);
+      return null;
+    }
+    this.isConverting = true;
+    this._setBusy(true);
+    this._hideError();
+    this._hideWarnings();
+    this._showDirection('\u2190');
+    const loaded = this.useGameOptions.checked
+      ? loadedRulesForOptions(this.lastRawPayload ?? getLastRawJsonData())
+      : null;
+    try {
+      const result = await helpersToPython(parsed.helpers, {
+        rules: loaded?.rules ?? null,
+        playerId: loaded?.playerId ?? '1',
+        onProgress: (s) => this._exactProgress(s),
+      });
+      this._exactLoadedOnce(result.ms);
+      this._showWarnings(result.warnings);
+      this.timing.textContent = `${result.ms}ms`;
+      if (result.errors.length) {
+        this._showError(result.errors.join('\n'));
+        this.eventBus.publish('ruleConverter:conversionError', {
+          direction: 'helpers-to-python', engine: 'exact', error: result.errors.join('\n'),
+        });
+      } else {
+        this.pythonEditor.value = result.code;
+        this._setStatus(result.warnings.length ? 'warning' : 'success', 'Converted');
+        this.eventBus.publish('ruleConverter:conversionComplete', {
+          direction: 'helpers-to-python', engine: 'exact', python: result.code, json: parsed.helpers,
+        });
+      }
+      return result;
+    } catch (e) {
+      this._showError('Python failed: ' + e.message);
+      this.eventBus.publish('ruleConverter:conversionError', {
+        direction: 'helpers-to-python', engine: 'exact', error: e.message,
+      });
+      return null;
+    } finally {
+      this.isConverting = false;
+      this.exactRuns += 1;
+      this._setBusy(false);
+    }
+  }
+
   _setStatus(type, message) {
     this.statusIndicator.className = 'status-indicator' + (type ? ' ' + type : '');
     this.statusMessage.textContent = message;
@@ -610,6 +867,10 @@ class RuleConverterUI {
     if (this.debounceTimer) {
       clearTimeout(this.debounceTimer);
     }
+    for (const unsub of this._subscriptions) {
+      try { unsub(); } catch (error) { log('warn', 'unsubscribe failed', error); }
+    }
+    this._subscriptions = [];
   }
 
   // Required by Golden Layout

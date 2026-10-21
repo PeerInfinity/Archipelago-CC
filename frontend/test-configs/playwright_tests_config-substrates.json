@@ -1935,6 +1935,12 @@
             "enabled": true,
             "category": "Playback Bot",
             "_comment": "jta-loop-mode (2026-10-12): a three-zone JtA-only world starting in a JtA zone (the procgen-loop-mode-jta tutorial's shape)."
+        },
+        {
+            "id": "rule-converter-exact-mode-round-trips",
+            "enabled": true,
+            "category": "Rule Converter",
+            "_comment": "helper-script P4: the Rule Converter's Exact engine — real exporter analyzer + world_generator under Pyodide (CDN, booted on the first Convert). A helper script both ways through the Convert buttons, and the loaded alttp_worldgen preset's 36 helpers round-trip with its options. Category unclaimed by testBatches.js, so batch fast (on push)."
         }
     ]
 }

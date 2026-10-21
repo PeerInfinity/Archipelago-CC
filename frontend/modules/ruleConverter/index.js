@@ -1,5 +1,7 @@
 // Rule Format Converter Module
-// Converts between Python code and Archipelago-CC JSON rule format using Pyodide
+// Converts between Python code and Archipelago-CC JSON rule format: the Quick
+// engine with the JavaScript ports, the Exact engine with the real exporter
+// analyzer and world_generator under Pyodide (../helperScript/).
 
 import RuleConverterUI from './ruleConverterUI.js';
 import eventBus from '../../app/core/eventBus.js';
@@ -38,7 +40,7 @@ export const moduleInfo = {
   icon: '\u{1F504}', // Counterclockwise arrows emoji
   column: 2,
   category: 'Deprecated Panels',
-  description: 'Type a Python access rule or a JSON rule and see the other converted as you type, with any warnings.',
+  description: 'Type a Python access rule or a JSON rule and see the other converted as you type, with any warnings. Exact mode converts a script of helper functions to a rules.json helpers block and back with the real exporter (Pyodide).',
 };
 
 /**
