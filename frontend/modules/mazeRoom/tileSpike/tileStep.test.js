@@ -210,8 +210,13 @@ describe('tile-primitives — scripted step ≡ engine step with ITEM ACTIONS', 
         const findings = (h, name) => actionDisagreements(itemActionPicture(ACTION_FIXTURES[name]), h).out.length;
 
         it('the mutant bodies are the real helper minus one conjunct (shape check)', () => {
+            // The mutants below drop a conjunct BY POSITION, so pin what each position IS.
             expect(HELPERS.strikes.body.type).toBe('and');
-            expect(HELPERS.strikes.body.conditions).toHaveLength(3);
+            const [obstacle, struck, notBroken, ...rest] = HELPERS.strikes.body.conditions;
+            expect(obstacle).toMatchObject({ type: 'compare', left: attr('obstacle'), op: 'is not' });
+            expect(struck).toEqual(attr('struck'));
+            expect(notBroken).toEqual({ type: 'not', condition: attr('broken') });
+            expect(rest).toEqual([]);
         });
 
         it('strikes that ignores `struck` (breaks ANY obstacle) is caught by "a rock before a door"', () => {
