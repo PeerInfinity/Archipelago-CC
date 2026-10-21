@@ -815,7 +815,7 @@ export const CONTACT_FIDELITY = {
      * `solid:rope` row (`rope`), the PULL rung's swing stance and `execPull` asked by a `clear-tag` on the rope's own
      * tag (`{16,0}` `rope@32,16`, `{28,0}` `rope@160,64`) or by a rope across a frontier corridor (L39's
      * `rope@96,384`). The cut itself is the run's (`levelRun.pullRope`, R5 slice 10), witnessed on the game by
-     * `probe-seedling-rope-events.mjs`. OFF: no row, no verb — byte-identical (the survey's L39 steps keep "No
+     * rules-2's rope-events game probe (it lands with `rules-rope-events`). OFF: no row, no verb — byte-identical (the survey's L39 steps keep "No
      * strategy row exists"). `SEEDLING_ROPE_CUT_VERB=0|1` for a node measurement.
      * ⛓ planning-9's flip (⚖ user, 2026-10-21, "Yes, flip it") turns it ON, landing as one integration with js rope-goal
      * and rules-2's `rules-rope-events` (which makes the cut an event the logic requires). Measured movers (CI, wave-22

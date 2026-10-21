@@ -2,7 +2,7 @@
  * Seedling fidelity ROPE (wave 22): the `rope` verb — a `RopeStart` CUT on purpose, behind
  * `CONTACT_FIDELITY.ropeCutVerb` (OFF).
  *
- *   · D1 (the game): rules-2's `probe-seedling-rope-events.mjs` (7 tapes) + fidelity F7's `probe-seedling-f7-reentry.mjs`
+ *   · D1 (the game): rules-2's rope-events game probe (7 tapes; it lands with `rules-rope-events`) + fidelity F7's `probe-seedling-f7-reentry.mjs`
  *     witness the cuts themselves; `fixtures/rope-witness/` (`probe-seedling-rope-verb.mjs --record`, p4g) are THIS
  *     verb's own plans played on the game, replayed here against the model at 0 px.
  *   · D2 (the verb): `OBSTACLE_STRATEGIES['solid:rope'] = 'rope'` and `STRATEGY_EXECUTORS.rope = execRope`, switch-gated

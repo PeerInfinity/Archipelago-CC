@@ -239,13 +239,7 @@ export const INSTRUMENTS = frz({
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
-    "findings": [
-        {
-            "name": "probe-seedling-rope-events.mjs",
-            "severity": "cited by a doc, NOWHERE in the tree",
-            "what": "`probe-seedling-rope-events.mjs` is named in [docs/json/developer/procgen/seedling-bot-log.md] and there is no such file in `scripts/procgen/`. It is nowhere in this repository: the citation is DEAD — renamed, removed, or never written. ⛔ Reported, not fixed."
-        }
-    ],
+    "findings": [],
     "flagRule": "a flag is counted where the script READS ARGV for it. A `--x=` literal alone is not enough: `--enable-features=` and `--use-angle=` are the two commonest in this directory and both are Chrome launch arguments. What the file's own `Run:` block shows is published separately as `documentedFlags`.",
     "patterns": {
         "cite": "/(?<![\\w/*.-])(?:scripts\\/procgen\\/)?([a-z][a-zA-Z0-9-]*\\.mjs)\\b/g",

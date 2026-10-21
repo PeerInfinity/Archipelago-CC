@@ -24333,7 +24333,7 @@ they move (REFUSED → REFUSED past the cut, a walk stall at `wandlock@144,64`).
 writes a `ropePulls` row, and `levelRun.earnedClearsNow` has no rope arm. So a rope's clear-tag finishes on the run's
 `ropePulls` row for its flag, past its tick. A rope that booted pulled (`check()` re-hit it) is `already-clear`.
 
-**Witnesses (p4g, 0 px).** rules-2's `probe-seedling-rope-events.mjs` (7 tapes) and F7's re-entry probe, re-run on this
+**Witnesses (p4g, 0 px).** rules-2's rope-events game probe (7 tapes; it lands with its `rules-rope-events` slice) and F7's re-entry probe, re-run on this
 session's port. Three of the verb's own plans (`probe-seedling-rope-verb.mjs --record`, `fixtures/rope-witness/`): the L16
 cut and the crossing to L18 with 0 hits, the verb's own swing (`execPull` pressed t26, the flag at t28), and L28's cut
 (`{28,0}` and the rock's `{28,1}` on the same tick, t45).
