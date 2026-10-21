@@ -1,0 +1,134 @@
+t=0 [max:3] |
+h=0 [fade,max:3] |
+t=1..968 [max:3] |
+t=969 [x:bomb,max:3] | drawImage(seedling/Explosion, 0, 0, 291, 22) rot=-318.1472 scale=0.375x0.375
+t=970 [max:3] | drawImage(seedling/Explosion, 0, 0, 291, 22) rot=-318.1472 scale=0.375x0.375
+t=971..972 [max:3] | drawImage(seedling/Explosion, 128, 0, 291, 22) rot=-318.1472 scale=0.375x0.375
+t=973 [max:3] | drawImage(seedling/Explosion, 256, 0, 291, 22) rot=-318.1472 scale=0.375x0.375
+t=974..975 [max:3] | drawImage(seedling/Explosion, 384, 0, 291, 22) rot=-318.1472 scale=0.375x0.375
+t=976 [max:3] | drawImage(seedling/Explosion, 512, 0, 291, 22) rot=-318.1472 scale=0.375x0.375
+t=977..978 [max:3] | drawImage(seedling/Explosion, 640, 0, 291, 22) rot=-318.1472 scale=0.375x0.375
+t=979 [max:3] | drawImage(seedling/Explosion, 768, 0, 291, 22) rot=-318.1472 scale=0.375x0.375
+t=980..981 [max:3] | drawImage(seedling/Explosion, 896, 0, 291, 22) rot=-318.1472 scale=0.375x0.375
+t=982..1014 [max:3] |
+t=1015 [x:bomb,max:3] | drawImage(seedling/Explosion, 0, 0, 253, 34) rot=-28.7748 scale=0.375x0.375
+t=1016 [max:3] | drawImage(seedling/Explosion, 0, 0, 253, 34) rot=-28.7748 scale=0.375x0.375
+t=1017..1018 [max:3] | drawImage(seedling/Explosion, 128, 0, 253, 34) rot=-28.7748 scale=0.375x0.375
+t=1019 [max:3] | drawImage(seedling/Explosion, 256, 0, 253, 34) rot=-28.7748 scale=0.375x0.375
+t=1020..1021 [max:3] | drawImage(seedling/Explosion, 384, 0, 253, 34) rot=-28.7748 scale=0.375x0.375
+t=1022 [max:3] | drawImage(seedling/Explosion, 512, 0, 253, 34) rot=-28.7748 scale=0.375x0.375
+t=1023..1024 [max:3] | drawImage(seedling/Explosion, 640, 0, 253, 34) rot=-28.7748 scale=0.375x0.375
+t=1025 [max:3] | drawImage(seedling/Explosion, 768, 0, 253, 34) rot=-28.7748 scale=0.375x0.375
+t=1026..1027 [max:3] | drawImage(seedling/Explosion, 896, 0, 253, 34) rot=-28.7748 scale=0.375x0.375
+t=1028..1060 [max:3] |
+t=1061 [x:bomb,max:3] | drawImage(seedling/Explosion, 0, 0, 253, 86) rot=-352.0107 scale=0.375x0.375
+t=1062 [max:3] | drawImage(seedling/Explosion, 0, 0, 253, 86) rot=-352.0107 scale=0.375x0.375
+t=1063..1064 [max:3] | drawImage(seedling/Explosion, 128, 0, 253, 86) rot=-352.0107 scale=0.375x0.375
+t=1065 [max:3] | drawImage(seedling/Explosion, 256, 0, 253, 86) rot=-352.0107 scale=0.375x0.375
+t=1066..1067 [max:3] | drawImage(seedling/Explosion, 384, 0, 253, 86) rot=-352.0107 scale=0.375x0.375
+t=1068 [max:3] | drawImage(seedling/Explosion, 512, 0, 253, 86) rot=-352.0107 scale=0.375x0.375
+t=1069..1070 [max:3] | drawImage(seedling/Explosion, 640, 0, 253, 86) rot=-352.0107 scale=0.375x0.375
+t=1071 [max:3] | drawImage(seedling/Explosion, 768, 0, 253, 86) rot=-352.0107 scale=0.375x0.375
+t=1072..1073 [max:3] | drawImage(seedling/Explosion, 896, 0, 253, 86) rot=-352.0107 scale=0.375x0.375
+t=1074..1106 [max:3] |
+t=1107 [x:bomb,max:3] | drawImage(seedling/Explosion, 0, 0, 241, 132) rot=-110.5535 scale=0.375x0.375
+t=1108 [max:3] | drawImage(seedling/Explosion, 0, 0, 241, 132) rot=-110.5535 scale=0.375x0.375
+t=1109..1110 [max:3] | drawImage(seedling/Explosion, 128, 0, 241, 132) rot=-110.5535 scale=0.375x0.375
+t=1111 [max:3] | drawImage(seedling/Explosion, 256, 0, 241, 132) rot=-110.5535 scale=0.375x0.375
+t=1112..1113 [max:3] | drawImage(seedling/Explosion, 384, 0, 241, 132) rot=-110.5535 scale=0.375x0.375
+t=1114 [max:3] | drawImage(seedling/Explosion, 512, 0, 241, 132) rot=-110.5535 scale=0.375x0.375
+t=1115..1116 [max:3] | drawImage(seedling/Explosion, 640, 0, 241, 132) rot=-110.5535 scale=0.375x0.375
+t=1117 [max:3] | drawImage(seedling/Explosion, 768, 0, 241, 132) rot=-110.5535 scale=0.375x0.375
+t=1118..1119 [max:3] | drawImage(seedling/Explosion, 896, 0, 241, 132) rot=-110.5535 scale=0.375x0.375
+t=1120..1152 [max:3] |
+t=1153 [x:bomb,max:3] | drawImage(seedling/Explosion, 0, 0, 220, 154) rot=-77.228 scale=0.375x0.375
+t=1154 [max:3] | drawImage(seedling/Explosion, 0, 0, 220, 154) rot=-77.228 scale=0.375x0.375
+t=1155..1156 [max:3] | drawImage(seedling/Explosion, 128, 0, 220, 154) rot=-77.228 scale=0.375x0.375
+t=1157 [max:3] | drawImage(seedling/Explosion, 256, 0, 220, 154) rot=-77.228 scale=0.375x0.375
+t=1158..1159 [max:3] | drawImage(seedling/Explosion, 384, 0, 220, 154) rot=-77.228 scale=0.375x0.375
+t=1160 [max:3] | drawImage(seedling/Explosion, 512, 0, 220, 154) rot=-77.228 scale=0.375x0.375
+t=1161..1162 [max:3] | drawImage(seedling/Explosion, 640, 0, 220, 154) rot=-77.228 scale=0.375x0.375
+t=1163 [max:3] | drawImage(seedling/Explosion, 768, 0, 220, 154) rot=-77.228 scale=0.375x0.375
+t=1164..1165 [max:3] | drawImage(seedling/Explosion, 896, 0, 220, 154) rot=-77.228 scale=0.375x0.375
+t=1166..1198 [max:3] |
+t=1199 [x:bomb,max:3] | drawImage(seedling/Explosion, 0, 0, 220, 154) rot=-232.0348 scale=0.375x0.375
+t=1200 [max:3] | drawImage(seedling/Explosion, 0, 0, 220, 154) rot=-232.0348 scale=0.375x0.375
+t=1201..1202 [max:3] | drawImage(seedling/Explosion, 128, 0, 220, 154) rot=-232.0348 scale=0.375x0.375
+t=1203 [max:3] | drawImage(seedling/Explosion, 256, 0, 220, 154) rot=-232.0348 scale=0.375x0.375
+t=1204..1205 [max:3] | drawImage(seedling/Explosion, 384, 0, 220, 154) rot=-232.0348 scale=0.375x0.375
+t=1206 [max:3] | drawImage(seedling/Explosion, 512, 0, 220, 154) rot=-232.0348 scale=0.375x0.375
+t=1207..1208 [max:3] | drawImage(seedling/Explosion, 640, 0, 220, 154) rot=-232.0348 scale=0.375x0.375
+t=1209 [max:3] | drawImage(seedling/Explosion, 768, 0, 220, 154) rot=-232.0348 scale=0.375x0.375
+t=1210..1211 [max:3] | drawImage(seedling/Explosion, 896, 0, 220, 154) rot=-232.0348 scale=0.375x0.375
+t=1212..1244 [max:3] |
+t=1245 [x:bomb,max:3] | drawImage(seedling/Explosion, 0, 0, 157, 91) rot=-339.1177 scale=0.375x0.375
+t=1246 [max:3] | drawImage(seedling/Explosion, 0, 0, 157, 91) rot=-339.1177 scale=0.375x0.375
+t=1247..1248 [max:3] | drawImage(seedling/Explosion, 128, 0, 157, 91) rot=-339.1177 scale=0.375x0.375
+t=1249 [max:3] | drawImage(seedling/Explosion, 256, 0, 157, 91) rot=-339.1177 scale=0.375x0.375
+t=1250..1251 [max:3] | drawImage(seedling/Explosion, 384, 0, 157, 91) rot=-339.1177 scale=0.375x0.375
+t=1252 [max:3] | drawImage(seedling/Explosion, 512, 0, 157, 91) rot=-339.1177 scale=0.375x0.375
+t=1253..1254 [max:3] | drawImage(seedling/Explosion, 640, 0, 157, 91) rot=-339.1177 scale=0.375x0.375
+t=1255 [max:3] | drawImage(seedling/Explosion, 768, 0, 157, 91) rot=-339.1177 scale=0.375x0.375
+t=1256..1257 [max:3] | drawImage(seedling/Explosion, 896, 0, 157, 91) rot=-339.1177 scale=0.375x0.375
+t=1258..1290 [max:3] |
+t=1291 [x:bomb,max:3] | drawImage(seedling/Explosion, 0, 0, 117, 71) rot=-294.7051 scale=0.375x0.375
+t=1292 [max:3] | drawImage(seedling/Explosion, 0, 0, 117, 71) rot=-294.7051 scale=0.375x0.375
+t=1293..1294 [max:3] | drawImage(seedling/Explosion, 128, 0, 117, 71) rot=-294.7051 scale=0.375x0.375
+t=1295 [max:3] | drawImage(seedling/Explosion, 256, 0, 117, 71) rot=-294.7051 scale=0.375x0.375
+t=1296..1297 [max:3] | drawImage(seedling/Explosion, 384, 0, 117, 71) rot=-294.7051 scale=0.375x0.375
+t=1298 [max:3] | drawImage(seedling/Explosion, 512, 0, 117, 71) rot=-294.7051 scale=0.375x0.375
+t=1299..1300 [max:3] | drawImage(seedling/Explosion, 640, 0, 117, 71) rot=-294.7051 scale=0.375x0.375
+t=1301 [max:3] | drawImage(seedling/Explosion, 768, 0, 117, 71) rot=-294.7051 scale=0.375x0.375
+t=1302..1303 [max:3] | drawImage(seedling/Explosion, 896, 0, 117, 71) rot=-294.7051 scale=0.375x0.375
+t=1304..1336 [max:3] |
+t=1337 [x:bomb,max:3] | drawImage(seedling/Explosion, 0, 0, 105, 71) rot=-203.3018 scale=0.375x0.375
+t=1338 [max:3] | drawImage(seedling/Explosion, 0, 0, 105, 71) rot=-203.3018 scale=0.375x0.375
+t=1339..1340 [max:3] | drawImage(seedling/Explosion, 128, 0, 105, 71) rot=-203.3018 scale=0.375x0.375
+t=1341 [max:3] | drawImage(seedling/Explosion, 256, 0, 105, 71) rot=-203.3018 scale=0.375x0.375
+t=1342..1343 [max:3] | drawImage(seedling/Explosion, 384, 0, 105, 71) rot=-203.3018 scale=0.375x0.375
+t=1344 [max:3] | drawImage(seedling/Explosion, 512, 0, 105, 71) rot=-203.3018 scale=0.375x0.375
+t=1345..1346 [max:3] | drawImage(seedling/Explosion, 640, 0, 105, 71) rot=-203.3018 scale=0.375x0.375
+t=1347 [max:3] | drawImage(seedling/Explosion, 768, 0, 105, 71) rot=-203.3018 scale=0.375x0.375
+t=1348..1349 [max:3] | drawImage(seedling/Explosion, 896, 0, 105, 71) rot=-203.3018 scale=0.375x0.375
+t=1350..1382 [max:3] |
+t=1383 [x:bomb,max:3] | drawImage(seedling/Explosion, 0, 0, 105, 71) rot=-66.5918 scale=0.375x0.375
+t=1384 [max:3] | drawImage(seedling/Explosion, 0, 0, 105, 71) rot=-66.5918 scale=0.375x0.375
+t=1385..1386 [max:3] | drawImage(seedling/Explosion, 128, 0, 105, 71) rot=-66.5918 scale=0.375x0.375
+t=1387 [max:3] | drawImage(seedling/Explosion, 256, 0, 105, 71) rot=-66.5918 scale=0.375x0.375
+t=1388..1389 [max:3] | drawImage(seedling/Explosion, 384, 0, 105, 71) rot=-66.5918 scale=0.375x0.375
+t=1390 [max:3] | drawImage(seedling/Explosion, 512, 0, 105, 71) rot=-66.5918 scale=0.375x0.375
+t=1391..1392 [max:3] | drawImage(seedling/Explosion, 640, 0, 105, 71) rot=-66.5918 scale=0.375x0.375
+t=1393 [max:3] | drawImage(seedling/Explosion, 768, 0, 105, 71) rot=-66.5918 scale=0.375x0.375
+t=1394..1395 [max:3] | drawImage(seedling/Explosion, 896, 0, 105, 71) rot=-66.5918 scale=0.375x0.375
+t=1396..1428 [max:3] |
+t=1429 [x:bomb,max:3] | drawImage(seedling/Explosion, 0, 0, 170, 71) rot=-356.709 scale=0.375x0.375
+t=1430 [max:3] | drawImage(seedling/Explosion, 0, 0, 170, 71) rot=-356.709 scale=0.375x0.375
+t=1431..1432 [max:3] | drawImage(seedling/Explosion, 128, 0, 170, 71) rot=-356.709 scale=0.375x0.375
+t=1433 [max:3] | drawImage(seedling/Explosion, 256, 0, 170, 71) rot=-356.709 scale=0.375x0.375
+t=1434..1435 [max:3] | drawImage(seedling/Explosion, 384, 0, 170, 71) rot=-356.709 scale=0.375x0.375
+t=1436 [max:3] | drawImage(seedling/Explosion, 512, 0, 170, 71) rot=-356.709 scale=0.375x0.375
+t=1437..1438 [max:3] | drawImage(seedling/Explosion, 640, 0, 170, 71) rot=-356.709 scale=0.375x0.375
+t=1439 [max:3] | drawImage(seedling/Explosion, 768, 0, 170, 71) rot=-356.709 scale=0.375x0.375
+t=1440..1441 [max:3] | drawImage(seedling/Explosion, 896, 0, 170, 71) rot=-356.709 scale=0.375x0.375
+t=1442..1474 [max:3] |
+t=1475 [x:bomb,max:3] | drawImage(seedling/Explosion, 0, 0, 121, 22) rot=-235.0622 scale=0.375x0.375
+t=1476 [max:3] | drawImage(seedling/Explosion, 0, 0, 121, 22) rot=-235.0622 scale=0.375x0.375
+t=1477..1478 [max:3] | drawImage(seedling/Explosion, 128, 0, 121, 22) rot=-235.0622 scale=0.375x0.375
+t=1479 [max:3] | drawImage(seedling/Explosion, 256, 0, 121, 22) rot=-235.0622 scale=0.375x0.375
+t=1480..1481 [max:3] | drawImage(seedling/Explosion, 384, 0, 121, 22) rot=-235.0622 scale=0.375x0.375
+t=1482 [max:3] | drawImage(seedling/Explosion, 512, 0, 121, 22) rot=-235.0622 scale=0.375x0.375
+t=1483..1484 [max:3] | drawImage(seedling/Explosion, 640, 0, 121, 22) rot=-235.0622 scale=0.375x0.375
+t=1485 [max:3] | drawImage(seedling/Explosion, 768, 0, 121, 22) rot=-235.0622 scale=0.375x0.375
+t=1486..1487 [max:3] | drawImage(seedling/Explosion, 896, 0, 121, 22) rot=-235.0622 scale=0.375x0.375
+t=1488..1520 [max:3] |
+t=1521 [x:bomb,max:3] | drawImage(seedling/Explosion, 0, 0, 39, 43) rot=-215.0221 scale=0.375x0.375
+t=1522 [max:3] | drawImage(seedling/Explosion, 0, 0, 39, 43) rot=-215.0221 scale=0.375x0.375
+t=1523..1524 [max:3] | drawImage(seedling/Explosion, 128, 0, 39, 43) rot=-215.0221 scale=0.375x0.375
+t=1525 [max:3] | drawImage(seedling/Explosion, 256, 0, 39, 43) rot=-215.0221 scale=0.375x0.375
+t=1526..1527 [max:3] | drawImage(seedling/Explosion, 384, 0, 39, 43) rot=-215.0221 scale=0.375x0.375
+t=1528 [max:3] | drawImage(seedling/Explosion, 512, 0, 39, 43) rot=-215.0221 scale=0.375x0.375
+t=1529..1530 [max:3] | drawImage(seedling/Explosion, 640, 0, 39, 43) rot=-215.0221 scale=0.375x0.375
+t=1531 [max:3] | drawImage(seedling/Explosion, 768, 0, 39, 43) rot=-215.0221 scale=0.375x0.375
+t=1532..1533 [max:3] | drawImage(seedling/Explosion, 896, 0, 39, 43) rot=-215.0221 scale=0.375x0.375
+t=1534..1542 [max:3] |
+t=1543 [x:bomb,max:3] | drawImage(seedling/Explosion, 0, 0, 56, 84) rot=-283.9142 scale=0.375x0.375 ; drawImage(seedling/Explosion, 0, 0, 72, 88) rot=-242.6174 scale=0.375x0.375 ; drawImage(seedling/Explosion, 0, 0, 72, 88) rot=-96.9124 scale=0.375x0.375

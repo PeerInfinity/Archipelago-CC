@@ -448,7 +448,7 @@ export function arrivalSolverGoal(goal, { staging, levelSource, record, run: giv
     // ⛓ EVENT GOALS — nor does an event location (→ `clear-tag`).
     const placement = goal.kind === 'location' && !goal.encounter && !goal.event
         ? locationEntityOf(record, goal.tag, goal.entityType ?? null) : null;
-    return solverGoalFor(goal, { run, resolved, placement, generated: false });
+    return solverGoalFor(goal, { run, resolved, placement, generated: false, levelSource });
 }
 
 /**

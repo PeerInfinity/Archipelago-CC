@@ -1,0 +1,1714 @@
+{
+ "spec": "lights-stand-on",
+ "rows": [
+  {
+   "t": 0,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 10,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 10,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 20,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 20,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 30,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 30,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 40,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 27,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 40,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 50,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 27,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 50,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 60,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 27,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 60,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 70,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 153,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 70,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 80,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 153,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 80,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 90,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 153,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 90,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 100,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 153,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 100,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 110,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 153,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 110,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 120,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 153,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 120,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 130,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 183,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 130,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 140,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 183,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 140,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 150,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 183,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 150,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 160,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 183,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 160,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 170,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 213,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 170,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 180,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 213,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 180,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 190,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 213,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 190,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 200,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 210,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 203,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 210,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 220,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 230,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 223,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 230,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 240,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 223,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 240,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 250,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 203,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 250,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 260,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 223,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 260,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 270,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 208,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 270,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 280,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 203,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 280,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 290,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 188,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 290,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 300,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 188,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 300,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 310,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 208,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 310,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 320,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 193,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 320,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 330,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 188,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 330,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 340,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 183,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 340,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 350,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 213,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 350,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 360,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 360,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 370,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 370,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 380,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 380,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 390,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 390,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 400,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 400,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 410,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 410,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 420,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 420,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 430,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 430,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 440,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 440,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 450,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 450,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 460,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 460,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 470,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 470,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 480,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 480,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 490,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 490,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 500,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 500,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 510,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 510,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 520,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 520,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 530,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 530,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 540,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 540,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 550,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 550,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 560,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 560,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 570,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 570,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 580,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 580,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 590,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 590,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 600,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 600,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 610,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 610,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 620,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 620,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 630,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 630,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 640,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 640,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 650,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 650,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 660,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 660,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 670,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 670,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 680,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 680,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 690,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 690,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "t": 700,
+   "level": 69,
+   "map": "lightsFights",
+   "leaves": 21,
+   "moved": [],
+   "surfaceMoved": true,
+   "previewsMoved": true
+  },
+  {
+   "t": 700,
+   "level": 69,
+   "map": "spinnerStates",
+   "leaves": 1,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  }
+ ],
+ "summary": {
+  "apReportFlags": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "tileWritesByLevel": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "igneousStates": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "moonrockFlags": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "finalBossStates": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "podStates": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "placedGrenadeStates": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "lavaChainStates": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "spinningAxeStates": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "watcherStates": {
+   "samples": 71,
+   "perturbed": 70,
+   "leaves": 910,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 70
+  },
+  "blastStates": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "blastReachCache": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "shooterStates": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "spitStates": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "bombPusherStates": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "bombStates": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "wandShotStates": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "bossFlags": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "shieldBossFlags": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "finalBossFlags": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "watcherFlags": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "finalDoorFlags": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "bossShotStates": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "arrowTrapStates": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "arrowsInFlight": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "wallFlyerStates": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "drillStates": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "staticBodyStates": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "darkTrapStates": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "chaserStates": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "poleFlags": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "rockFlags": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "pickupFlags": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "apItemFlags": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "poleStates": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "talkerStates": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "lightsFights": {
+   "samples": 71,
+   "perturbed": 70,
+   "leaves": 6451,
+   "partsMoved": {},
+   "surfaceMoved": 68,
+   "undoExact": 70
+  },
+  "lightsExits": {
+   "samples": 71,
+   "perturbed": 0,
+   "leaves": 0,
+   "partsMoved": {},
+   "surfaceMoved": 0,
+   "undoExact": 0
+  },
+  "spinnerStates": {
+   "samples": 71,
+   "perturbed": 71,
+   "leaves": 71,
+   "partsMoved": {
+    "visit": 71
+   },
+   "surfaceMoved": 0,
+   "undoExact": 71
+  }
+ }
+}

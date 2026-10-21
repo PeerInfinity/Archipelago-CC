@@ -1,0 +1,25 @@
+[centralRegistry] CentralRegistry initialized
+[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker (file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:244:25)
+    at new StateManagerProxy (file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:112:10)
+    at file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async loadRegistry (file:///home/user/Archipelago-CC/scripts/procgen/reference/registry.mjs:99:17)
+    at async buildRegistry (file:///home/user/Archipelago-CC/scripts/procgen/reference/registry.mjs:214:36)
+    at async file:///home/user/Archipelago-CC/scripts/procgen/generate-procgen-reference.mjs:104:18
+[discoveryState] [DiscoveryState] Constructed
+PASS: urlGrammar.js is what the code says
+PASS: catalogue.js is what the code says
+PASS: refusals.js is what the code says
+PASS: registry.js is what the code says
+PASS: instruments.js is what the code says
+PASS: docsIndex.js is what the code says
+PASS: capabilities.js is what the code says
+PASS: docs/json/developer/procgen/substrate-registry.md § GENERATED:substrate-capability-matrix is what the code says
+PASS: docs/json/developer/procgen/architecture.md § GENERATED:procgen-instruments is what the code says
+PASS: docs/json/developer/procgen/README.md § GENERATED:procgen-docs-index is what the code says
+PASS: docs/json/developer/procgen/seedling-bot-log.md § GENERATED:campaign-chain is what the code says
+PASS: docs/json/features/procgen-substrates.md § GENERATED:substrate-capability-chart is what the code says
+
+ALL 7 GENERATED MODULES AND 5 MARKDOWN REGIONS MATCH THE CODE

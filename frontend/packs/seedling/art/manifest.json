@@ -538,6 +538,26 @@
       "w": 128,
       "h": 16
     },
+    "Explosion": {
+      "file": "sheets/Explosion.png",
+      "w": 1024,
+      "h": 128
+    },
+    "SlashHit": {
+      "file": "sheets/SlashHit.png",
+      "w": 64,
+      "h": 16
+    },
+    "Droplet": {
+      "file": "sheets/Droplet.png",
+      "w": 54,
+      "h": 5
+    },
+    "Health": {
+      "file": "sheets/Health.png",
+      "w": 24,
+      "h": 12
+    },
     "Sword": {
       "file": "sheets/Sword.png",
       "w": 48,
@@ -2635,6 +2655,76 @@
         }
       },
       "as3": "Enemies/Grenade.as:16-17 Spritemap(16, 16); :43 centerOO; :44-47 explode [0,1,0,2,0,3,4,3] fps 12, hit [5,6,7] fps 12, sit [0,4] fps 5 (played in the ctor)"
+    },
+    "seedling:fx/explosion": {
+      "sheet": "Explosion",
+      "fw": 128,
+      "fh": 128,
+      "frames": 8,
+      "origin": [
+        64,
+        64
+      ],
+      "anims": {
+        "explode": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 20
+        }
+      },
+      "as3": "Projectiles/Explosion.as:15-16 Spritemap(128, 128, endAnim); :29-31 explode [0..7] fps 20, centerOO; :38 scale = r·2/128; :39 angle = Rng.cos()·360"
+    },
+    "seedling:fx/slashhit": {
+      "sheet": "SlashHit",
+      "fw": 32,
+      "fh": 16,
+      "frames": 2,
+      "origin": [
+        16,
+        8
+      ],
+      "anims": {
+        "slash": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1
+          ],
+          "fps": 15
+        }
+      },
+      "as3": "Scenery/SlashHit.as:13-14 Spritemap(32, 16, endAnim); :19-21 centerOO, slash [0,1] fps 15; :22 scale = sc/32 + 0.35"
+    },
+    "seedling:fx/droplet": {
+      "sheet": "Droplet",
+      "fw": 9,
+      "fh": 5,
+      "frames": 6,
+      "origin": [
+        4.5,
+        2.5
+      ],
+      "as3": "Game.as:393-394 sprDroplet Spritemap(9, 5); :802 centerOO; Scenery/Droplet.as:92-101 frame/alpha/colour per render"
+    },
+    "seedling:hud/heart": {
+      "sheet": "Health",
+      "fw": 12,
+      "fh": 12,
+      "frames": 2,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "Game.as:396-397 sprHealth Spritemap(12, 12); :1537-1546 drawHealth: frame int(i > healthc), screen-anchored"
     },
     "seedling:pickup/sword": {
       "sheet": "Sword",
