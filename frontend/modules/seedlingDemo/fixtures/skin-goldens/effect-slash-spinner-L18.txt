@@ -1,0 +1,9 @@
+t=0 [max:3] |
+h=0 [fade,max:3] |
+t=1..2185 [max:3] |
+t=2186..2188 [s:spinner,max:3] | drawImage(seedling/SlashHit, 0, 0, 47.261, 79.588) scale=0.9125x0.9125
+t=2189..2190 [s:spinner,max:3] | drawImage(seedling/SlashHit, 32, 0, 47.261, 79.588) scale=0.9125x0.9125
+t=2191..3265 [max:3] |
+t=3266..3268 [s:spinner,max:3] | drawImage(seedling/SlashHit, 0, 0, 109.632, 64.548) scale=0.9125x0.9125
+t=3269..3270 [s:spinner,max:3] | drawImage(seedling/SlashHit, 32, 0, 109.632, 64.548) scale=0.9125x0.9125
+t=3271..3278 [max:3] |

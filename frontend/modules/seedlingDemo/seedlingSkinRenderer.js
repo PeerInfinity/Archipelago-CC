@@ -348,16 +348,19 @@ export function roomOps(world, art, {
 /**
  * The visible rectangle in room pixels. `room`: the whole room (today's view).
  * `follow`: the original's 160×160 camera — the run's own camera when it has
- * one (`run.cameraNow`; a shaking band is drawn at its middle), else the
+ * one (`run.cameraNow`; a shaking band is drawn at its middle, or where
+ * `opts.jiggle(cameraNow)` puts it — G4), else the
  * follow target clamped as `Game.view()` clamps it.
  */
-export function cameraView(mode, world, state, run = null) {
+export function cameraView(mode, world, state, run = null, { jiggle = null } = {}) {
     const room = world.world;
     if (mode !== 'follow') return { x: 0, y: 0, w: room.width, h: room.height };
     let cam = null;
     try {
         const now = run?.cameraNow ?? null;
         if (now?.cam) cam = now.cam;
+        // ⛓ G4 — `jiggle(cameraNow)` places the camera inside a shake band (the cosmetic draw); absent, the middle.
+        else if (now?.band && jiggle) cam = jiggle(now);
         else if (now?.band) cam = { x: Math.round((now.band.x.lo + now.band.x.hi) / 2), y: Math.round((now.band.y.lo + now.band.y.hi) / 2) };
     } catch { cam = null; }
     if (!cam) {
