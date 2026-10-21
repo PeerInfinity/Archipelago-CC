@@ -5,6 +5,8 @@
  * currently ends at, driven by the live solver, each segment booting its
  * predecessor's MEASURED LATCH. ⚖ Ruling 11 (user, 2026-08-20), R9 slice 6.
  *
+ * @ci-box the user moved the `solve-seedling-*` chain `--check`s off push (⚖ 2026-10-21): the box answers this row (`node scripts/procgen/standing-values.mjs --write --key=<its key>`), and CI runs no arm for it.
+ *
  * ── WHAT THIS IS ─────────────────────────────────────────────────────────
  *
  * ⚖ *"As we work our way through Seedling, I'll want to construct a sequence
