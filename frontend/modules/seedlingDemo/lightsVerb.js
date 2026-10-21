@@ -30,6 +30,8 @@ import {
     lightBossRect, playerBoxAt, rectsOverlap, slashRect, spearRect, stepLightBossFlier, stepLightBossFlierGraphic,
     stepLightBossShot, stepLightsController,
 } from './solverView.js';
+// ⛓ fidelity LIGHTSARR D2: the shield's shove, forecast as the run steps it (`levelRun.lightsShieldBumpNow`).
+import { lightsShieldBump } from './solverView.js';
 
 /** The planner's numbers. Each is a search bound or a safety margin, not a game constant. */
 export const LIGHTS_VERB = Object.freeze({
@@ -120,7 +122,9 @@ function forecastTick(s, held, env) {
     for (const b of F.bodies) if (b.removing) { b.removing = false; b.removed = true; }
     let landed = 0;
     let killed = 0;
-    // `Player.update`: `slash()`/`spear()` first — the window's test on the position the last move left.
+    // `Player.update`: `shieldBump()` (a held shield, a moving player: the box the last frame left), then
+    // `slash()`/`spear()` — the window's test on the position the last move left.
+    if (env.shield) lightsShieldBump(F, { player: s.player, rendered: s.player, slashing: s.slashing });
     s.slashTimer = Math.max(0, s.slashTimer - 1);
     const due = s.tests.filter((t) => t.k === 0);
     s.tests = s.tests.filter((t) => t.k > 0).map((t) => ({ ...t, k: t.k - 1 }));
@@ -276,7 +280,13 @@ export function execLights(run, perTick, resolved, ctx) {
         damage: weapon === 'spear' ? 2 : (run.progress('inventory')?.hasDarkSword ? 2 : 1),
         force: weapon === 'spear' ? LIGHTS_SPEAR_FORCE : 5,
         hitType: weapon === 'spear' ? 'Spear' : 'Sword',
+        // ⛓ fidelity LIGHTSARR D2: `Player.shieldBump` shoves a flier the moving shield touches.
+        shield: run.progress('inventory')?.hasShield === true,
     };
+    if (env.shield && run.progress('inventory')?.hasDarkShield === true) {
+        refuse('cannot-act', 'the dark shield is held: `Player.shieldBump` HITS a flier whose `hitsTimer <= 0` '
+            + '(`o.hit(5, p, 0.5, "Shield")`), which is not witnessed on a LightBoss (fidelity LIGHTSARR residue)');
+    }
     // ── 1. the intro ──
     let paged = 0;
     if (fightOf(run).introUp) {

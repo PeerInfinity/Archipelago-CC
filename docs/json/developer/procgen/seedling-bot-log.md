@@ -24310,3 +24310,46 @@ A clear-tag on {57,0} binds the beast in `world.pixelmasks`.
 escape through `liveSolidOpts`), so the King of Fire switch must not flip until the digest covers them (hammer arc).
 The survey stages L57 unsplit (`r8-solve-11`'s block), so step 125 refuses on the stream premise (staging, JS arc). The
 atlas has no `out_tentaclebeast_80_48` edge, so steps 94/95/125/126 stay NO-EDGE (rules/survey).
+
+### Seedling fidelity LIGHTSARR — the Lights fight after a real arrival: the shield's shove (`lightsBossFight`, OFF)
+
+The report is `CC/docs/cloud-reports/seedling-fidelity-lightsarr.md`. Base `98689e2e3c`. Everything is behind
+`CONTACT_FIDELITY.lightsBossFight` (still OFF); no new switch.
+
+**D1 — the arrival was not the cause.** The sweep's legs 607/608 (run 39626706339) leave the plan at t170/t171 with one
+hit the forecast called impossible. The suspect was the clock at a wasm arrival (`arrivalClock` model 5454 vs live 5453).
+Measured:
+- The captured request already carries the shifted seam (5433 → 5432; the plan's tick 0 is live 5453), so the solve ran
+  on the live clock.
+- Leg 608's plan, replayed in node (616 t, the page's own answer) and played on p4g from its own staging, bills the SAME
+  hit at t170. The game row matches the sweep's to the bit (y 102.70749889921584).
+- The first tick where model ≠ game is **t154**. Flier 0, inside its `hits_timer` (16), takes v (−2.92, −2.02) on the
+  game, and again at t157 and t160, as the player walks left into it. That is `Player.shieldBump` →
+  `Enemy.knockback(5, p)`. The model had no shield arm for a LightBoss, and the four LIGHTS witnesses held no shield.
+
+**D2 — the model.**
+- `lightBoss.lightBossKnockback` and `lightsShieldBump` model the shove. `levelRun.lightsShieldBumpNow` steps it, called
+  from `shieldBumpNow` (the player's update, with the box the previous frame's render placed).
+- `lightsVerb`'s forecast steps the same shove.
+- The dark shield on a flier out of its i-frame is refused by name (unwitnessed).
+- Two game witnesses reproduce at 0 px:
+  - `lightsarr-shield` (617 t, leg 608's plan, through its death);
+  - `lightsarr-arrival` (541 t: booted in L70, into its pit, the ceiling drop into L69, the intro, a scripted fight).
+- Mutants: no shove fails at t154; the box taken off the live player fails at t195.
+
+**D3 — movers.**
+- Re-solved in node with the fix, both legs win on the game at 0 px: 608 in 672 t (0 hits, {69,0} at t671) and 607 in
+  680 t (0 hits, in L36).
+- The seam census −3..3 gives a PLAN at every time for both legs.
+- The LIGHTS witnesses (fast and slow) are unchanged; none of them holds a shield.
+- The local survey ON moves step 159 (L69): SOLVED 559 t / 0 hits → SOLVED 823 t / **1 hit**. The hit lands at t811,
+  after the fight: a shot still in flight catches the reach-exit walk, which the danger map cannot see (LIGHTS hand-over
+  2, the hammer arc's region).
+
+**Trap candidates.**
+- A witness set that holds one inventory misses every arm the inventory adds. Here the four LIGHTS witnesses had no
+  shield, and the shield is a player-side contact that moves enemies.
+- The sweep's "arrival" (19 dead frames and a held re-arrival at the rules' landing) is not the game's pit fall. A pit
+  fall from L70 drops from the ceiling to (56,53) and bounces for about 86 ticks with input ignored. A boot-staged replay
+  of a captured request reproduces the sweep's game rows; a pit-fall witness is a different arrival.
+- `replay-seedling-solve-request.mjs --seam-time-sweep` prints `error` as the kind of a successful PLAN (`kind ?? 'error'`).
