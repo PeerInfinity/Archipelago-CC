@@ -4186,6 +4186,26 @@ export function withTileWrites(world, writes) {
     return o;
 }
 
+/**
+ * ⛓ seedling-fidelity-bosskills D3 — a world with RUNTIME teleporters ahead of its placed ones: a `Teleporter` an
+ * entity adds while the room runs (the Tentacled Beast's mouth, `TentacleBeast.createMouthEntrance`) is PREPENDED to
+ * the update list, so it is asked first — `playerPhysicsV2` walks `teleporters` in that order. Rows are
+ * `levelWorld`'s own teleporter shape. No rows: the world itself.
+ */
+export function withRuntimeTeleporters(world, rows) {
+    if (!rows || rows.length === 0) return world;
+    const teleporters = [...rows, ...world.teleporters];
+    const o = Object.create(world);
+    Object.defineProperties(o, {
+        teleporters: { value: teleporters, enumerable: true },
+        runtimeTeleporters: { value: rows.map((r) => ({ ...r })), enumerable: true },
+        teleporterHit: {
+            value: (box) => teleporters.filter((t) => !t.deactivated && rectsOverlap(box, t.rect)), enumerable: true,
+        },
+    });
+    return o;
+}
+
 export function buildLevelWorld(levelRecord, {
     roles = PRE_R5_ROLES, cleared = null, inventory = null, nextLevelRecord = null,
 } = {}) {

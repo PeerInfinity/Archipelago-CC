@@ -10419,6 +10419,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "arg"
                     ],
+                    "name": "dir"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
                     "name": "file"
                 },
                 {

@@ -35,7 +35,7 @@
 
 import {
     NEAREST_TILE_INDEX, PLAYER_SOLID_TYPES, SOLID_GRID, TILE_SIZE,
-    addedTimeKey, buildLevelWorld, normalizeLiveOpts, rect, rectsOverlap, tagOf, withTileWrites,
+    addedTimeKey, buildLevelWorld, normalizeLiveOpts, rect, rectsOverlap, tagOf, withRuntimeTeleporters, withTileWrites,
 } from './levelWorld.js';
 import {
     INITIAL_FRAMES_THIS_CHARACTER, PICKUP_CEREMONY, PICKUP_CEREMONY_BY_KEYTYPE,
@@ -141,6 +141,10 @@ import {
     LAVA_BOSS, LAVA_EXPLOSION, LAVA_RUNNER, createLavaBossFight, explosionReaches, lavaBallRect, lavaBossHit, lavaBossRect, lavaBossView,
     lavaArenaRockSchedule, reflectLavaBall, renderLavaBoss, stepLavaBall, stepLavaBoss, stepLavaRunnerAir,
 } from './lavaBoss.js';
+import {
+    TENTACLE, createTentacleBeastFight, hitTentacle, stepTentacle, stepTentacleBeast, stepWhirlpool, tentacleBeastView,
+    tentacleRect, tentacleStreamRefusal,
+} from './tentacleBeast.js';
 // ⛓ fidelity APBOSSES D2: the R4 boss-report AS3 (`CONTACT_FIDELITY.apReportBosses`).
 import {
     AP_REPORT_ROWS, BOB_KILLED_TAG, FIRE_BOSS_DROP_TAG, DARK_SWORD_WITCH_TAG, bobBossFinalDeath, fallRockLargeSpawn,
@@ -427,6 +431,8 @@ export const ENTITY_FAMILY_NAMES = Object.freeze([
     'bombs',
     // ⛓ seedling-fidelity-bosskills D2: the King of Fire's fight (null OFF, or in a room without one).
     'lavaBossFight',
+    // ⛓ seedling-fidelity-bosskills D3: the Tentacled Beast's (likewise).
+    'tentacleBeastFight',
 ]);
 
 /**
@@ -1227,7 +1233,9 @@ export function createLevelRun({
     const tileWriteEvents = [];
     /** ⛓ fidelity-bulb: every Bulb death's fenceposts — `drop` (the armed update's end), `lava`, `removed`. */
     const bulbEvents = [];
-    const visitWorld = (n) => withTileWrites(worldFor(n), tileWritesByLevel.get(n) ?? null);
+    const visitWorld = (n) => withRuntimeTeleporters(withTileWrites(worldFor(n), tileWritesByLevel.get(n) ?? null),
+        // ⛓ bosskills D3: the Tentacled Beast's mouth, once it exists (none OFF).
+        tentacleMouthRowsFor(n));
     /**
      * The despawns, pending until their tick — `applyTimedClears`' twin, and
      * deliberately its twin down to the live-binding refresh.
@@ -1326,6 +1334,8 @@ export function createLevelRun({
         // ⛓ bosskills D2: the King of Fire's fight is per visit (a rebuild is a fresh, sleeping body).
         lavaBossFights.delete(n);
         lavaArenaRocks.delete(n);
+        // ⛓ bosskills D3: and the Tentacled Beast's (a rebuild reads its tag again).
+        tentacleFights.delete(n);
         // ⛓⛓⛓ R6 slice 6f: and the Owl, whose rebuild re-arms `started`,
         // `rockfallTime`, `cpod`, `hitThisSequence` and `hits` — every one of
         // them an instance field — and rebuilds his four pods, each replaying
@@ -1951,6 +1961,18 @@ export function createLevelRun({
     };
     /** ⛓ bosskills D2: `{t, level, kind, …}` per fight event (`lavaBoss.js`'s own, plus the player-side ones). */
     const lavaBossLedger = [];
+    /** ⛓ bosskills D3: the Tentacled Beast's event rows. */
+    const tentacleLedger = [];
+    /** ⛓ bosskills D3: `run.entities('tentacleBeastFight')`. */
+    const tentacleBeastFightNow = () => {
+        const f = tentacleFightFor(level);
+        if (f === null) return null;
+        // `streamRefusal`: why the run's draw stream cannot be the game's here (null when it can) — the verb's gate.
+        const streamRefusal = f.stream === null ? (f.beast.dead ? null : 'has no declared seed for this room')
+            : tentacleStreamRefusal(rng, { bootLevel: boot.level, level, worldEntries,
+                onlyThisRoom: tentacleLevelsBuilt.size === 1 && tentacleLevelsBuilt.has(level) });
+        return { ...tentacleBeastView(f), streamRefusal };
+    };
     /** ⛓ bosskills D2: `run.entities('lavaBossFight')` — the fight's view (`lavaBoss.lavaBossView`) plus its runners. */
     const lavaBossFightNow = () => {
         const f = lavaBossFightFor(level);
@@ -1961,6 +1983,61 @@ export function createLevelRun({
     };
     /** ⛓ bosskills D2: L82's arena rock (`lavaBoss.LAVA_ARENA_ROCK`) per visit — `{id, schedule, armed, landed}`. */
     const lavaArenaRocks = new Map();
+    /**
+     * ⛓⛓⛓ seedling-fidelity-bosskills D3 — THE TENTACLED BEAST (`tentacleBeast.js`), per visit, only while
+     * `CONTACT_FIDELITY.tentacleBeastFight` is on. A room whose tag is cleared builds the beast DEAD with its mouth
+     * already standing (`TentacleBeast.as:52-60`); a live one opens its draw stream at the build (the ctor's one
+     * `coins` draw), on the window's declared seed — the premises are asked when a draw is owed (`spawn`).
+     */
+    const tentacleFights = new Map();
+    /** The draw stream per beast room, kept across rebuilds (`tentacleFightFor`), and the levels built this run. */
+    const tentacleStreams = new Map();
+    const tentacleLevelsBuilt = new Set();
+    /** The mouth Teleporter, in `levelWorld`'s teleporter shape (`VanillaSet.as:142`: L58 at (56, 96)). */
+    const TENTACLE_MOUTH_TO = Object.freeze({ level: 58, x: 56, y: 96 });
+    const tentacleMouthRowsFor = (n) => {
+        const f = tentacleFights.get(n);
+        if (!f || !f.mouth) return [];
+        const { x, y } = f.mouth;
+        return [{ tag: -1, invert: false, deactivated: false, isStairs: false, x, y,
+            rect: { x, y, w: 16, h: 16, right: x + 16, bottom: y + 16 }, to: TENTACLE_MOUTH_TO.level,
+            playerx: TENTACLE_MOUTH_TO.x, playery: TENTACLE_MOUTH_TO.y,
+            arrival: { x: TENTACLE_MOUTH_TO.x + 8, y: TENTACLE_MOUTH_TO.y + 8 }, runtime: 'tentacle_beast_mouth' }];
+    };
+    const tentacleFightFor = (n) => {
+        if (!CONTACT_FIDELITY.tentacleBeastFight) return null;
+        if (n === level) tentacleLevelsBuilt.add(n);
+        if (!tentacleFights.has(n)) {
+            let fight = null;
+            const e = (levelSource(n)?.entities ?? []).filter((x) => x.type === 'tentaclebeast');
+            if (e.length > 1) throw new Error(`levelRun: level ${n} places ${e.length} \`tentaclebeast\`s; the fight is built from one.`);
+            if (e.length === 1) {
+                const tag = Number(e[0].attrs?.tag ?? -1);
+                const dead = tag >= 0 && (clearedByLevel.get(n) ?? []).includes(tag);
+                // ⛔ THE STREAM IS THE RUN'S, NOT THE VISIT'S (the Owl's rule): a death rebuilds the room, and the
+                // rebuild's ctor pays its `coins` draw from wherever the stream stood (measured D3: seeds 2 and 3
+                // die in L57 and the game's state runs on). It is carried only while no OTHER room was built since
+                // the reseed — another room's build spends draws this schedule does not book.
+                const carried = tentacleStreams.get(n) ?? null;
+                fight = createTentacleBeastFight({ x: e[0].x, y: e[0].y, tag },
+                    { seed: !dead && carried === null && Number.isInteger(rng?.seed) && rng.seed > 0 ? rng.seed : null });
+                if (carried !== null) {
+                    carried.draw('build');
+                    if (!dead) fight.stream = carried;
+                }
+                if (fight.stream) tentacleStreams.set(n, fight.stream);
+                if (dead) {
+                    // The ctor's dead arm: no tentacles, no whirlpools, activated, and the mouth at once.
+                    Object.assign(fight.beast, { dead: true, activated: true, maxTentacles: 0, maxWhirlpools: 0, spr: null });
+                    fight.mouth = { x: fight.beast.x - 8, y: fight.beast.y - 8 };
+                    fight.reportBanked = true;
+                }
+            }
+            tentacleFights.set(n, fight);
+            if (fight?.mouth && n === level) world = visitWorld(level);
+        }
+        return tentacleFights.get(n);
+    };
     /**
      * The live boxes, for `collidesSolid`'s `shieldBosses` arm and for the
      * press census's.
@@ -4612,6 +4689,8 @@ export function createLevelRun({
         // ⛓ bosskills D2: the King of Fire's fight is per visit (a rebuild is a fresh, sleeping body).
         lavaBossFights.delete(n);
         lavaArenaRocks.delete(n);
+        // ⛓ bosskills D3: and the Tentacled Beast's (a rebuild reads its tag again).
+        tentacleFights.delete(n);
         // ⛓⛓⛓ R6 slice 6f: and the Owl, whose rebuild re-arms `started`,
         // `rockfallTime`, `cpod`, `hitThisSequence` and `hits` — every one of
         // them an instance field — and rebuilds his four pods, each replaying
@@ -6293,6 +6372,9 @@ export function createLevelRun({
         }
         // ⛓ bosskills D2: with the fight stepped, the body's census row is `lavaBossSlashNow`'s, below.
         if (lavaBossFightFor(level) !== null) audit.live = audit.live.filter((r) => r.as3 !== 'LavaBoss');
+        // ⛓ bosskills D3: and the Tentacled Beast's body — a "Solid" `Enemy` whose `hit` lands on nothing anything reads
+        // (its update never runs `Enemy.update`: no move, no i-frame tick, and `destroy` read by no line).
+        if (tentacleFightFor(level) !== null) audit.live = audit.live.filter((r) => r.tag !== 'tentaclebeast');
         const refused = audit.live.filter(
             (r) => !MODELLED_PRESS_ARMS.has(r.as3) && !INERT_PRESS_ARMS.has(r.as3)
                 && !enemyClassModelled(r),
@@ -7297,6 +7379,8 @@ export function createLevelRun({
         bobBossSlashNow({ rect, reachLimit, weapon, pressTick, hits });
         // ⛓ bosskills D2: the King of Fire's balls and body (no-op OFF).
         lavaBossSlashNow({ rect, reachLimit, weapon, ghost, pressTick, hits });
+        // ⛓ bosskills D3: the Tentacled Beast's tentacles (no-op OFF).
+        tentacleSlashNow({ rect, reachLimit, weapon, ghost, pressTick, hits });
         presses.push({
             t: pressTick, fired: ticksCompleted, level, weapon, direction, rect, hits,
             // ⛓ GHOSTSWORD: what the 24 x 48 rect collected and the 24 px reach dropped (absent for every other weapon).
@@ -15794,6 +15878,120 @@ export function createLevelRun({
         }
     }
 
+    // ── ⛓⛓⛓ seedling-fidelity-bosskills D3: THE TENTACLED BEAST, IN THE GAME'S OWN FRAME ORDER ─────────────────
+    //   · `stepTentacleRuntimeNow` — the tentacles and whirlpools, runtime-added (newest first, ahead of every placed
+    //     entity): a whirlpool's pull is an ABSOLUTE write to the player, before the player updates;
+    //   · `stepTentacleBeastNow` — the body, after the runtime adds and before the player;
+    //   · `tentacleSlashNow` — a swing's "Enemy" arm on a tentacle (`canHit`, latched in its own update);
+    //   · `drainTentacleBeastNow` — `updateLists()`: removals, then the frame's spawns, newest first.
+
+    function bankTentacleReport(f) {
+        if (f.report === null || f.reportBanked) return;
+        f.reportBanked = true;
+        const flag = outOfBandFlagFor(level, f.tag);
+        bossFlags.set(ledgerKey(flag), { ...flag, id: f.id, level, t: ticksCompleted + 1 });
+        if (!pendingEarnedClears.has(flag.level)) pendingEarnedClears.set(flag.level, new Set());
+        pendingEarnedClears.get(flag.level).add(flag.tag);
+        tentacleLedger.push({ t: ticksCompleted + 1, level, kind: 'report', id: f.id, flag: { ...flag } });
+    }
+
+    function stepTentacleRuntimeNow() {
+        const f = tentacleFightFor(level);
+        if (f === null || noclip) return;
+        for (const body of f.runtime) {
+            if (body.kind === 'whirlpool') {
+                const w = body.body;
+                const r = stepWhirlpool(w, { player: { x: state.x, y: state.y, box: playerBoxAt(state.x, state.y) } });
+                if (r.pull) {
+                    if (r.drown) {
+                        throw new Error(`levelRun: ${w.id} pulls the player to its centre at tick ${ticksCompleted + 1} in `
+                            + `level ${level} and calls \`Player.drown()\` from outside the player — not transcribed; `
+                            + 'refused by name (bosskills D3).');
+                    }
+                    state = { ...state, x: r.pull.x, y: r.pull.y };
+                    tentacleLedger.push({ t: ticksCompleted + 1, level, kind: 'pull', id: w.id, x: r.pull.x, y: r.pull.y });
+                }
+                continue;
+            }
+            const t = body.body;
+            const r = stepTentacle(t, { frozen: ceremony !== null, playerBox: playerBoxAt(state.x, state.y) });
+            if (r.swipe) {
+                applyPlayerHit({ source: 'tentacle', id: t.id, force: TENTACLE.force, damage: TENTACLE.damage,
+                    from: { x: t.x, y: t.y },
+                    // the suit's `e.hit(…, "Suit")` lands on a tentacle that is not sitting: nothing
+                    retaliate: (p) => ({ id: t.id, ...hitTentacle(t, { d: DARK_SUIT_DAMAGE, t: 'Suit', frozen: ceremony !== null }) }) });
+            }
+            if (r.gone) {
+                f.beast.maxTentacles -= 1;
+                f.beast.maxWhirlpools += 1;
+                tentacleLedger.push({ t: ticksCompleted + 1, level, kind: 'tentacle-gone', id: t.id,
+                    maxTentacles: f.beast.maxTentacles });
+            } else if (r.removed) {
+                tentacleLedger.push({ t: ticksCompleted + 1, level, kind: 'tentacle-sank', id: t.id });
+            }
+        }
+    }
+
+    function stepTentacleBeastNow() {
+        const f = tentacleFightFor(level);
+        if (f === null || noclip) return;
+        stepTentacleBeast(f, {
+            tick: ticksCompleted + 1,
+            frozen: ceremony !== null,
+            levelWidth: world.world.width,
+            player: { x: state.x, y: state.y, fallFromCeiling: !!state.fall },
+            setShake: () => { shake = applyShakeWriter(shake, 'tentacleRise'); },
+            streamRefusal: () => (f.stream === null ? 'has no declared seed for this room (or the room was built dead)'
+                : tentacleStreamRefusal(rng, { bootLevel: boot.level, level, worldEntries,
+                    onlyThisRoom: tentacleLevelsBuilt.size === 1 && tentacleLevelsBuilt.has(level) })),
+        });
+        bankTentacleReport(f);
+        for (const ev of f.events.splice(0, f.events.length)) {
+            tentacleLedger.push({ ...ev, level });
+            if (ev.kind === 'mouth') world = visitWorld(level);
+        }
+    }
+
+    function tentacleSlashNow({ rect: r, reachLimit, weapon, ghost, pressTick, hits }) {
+        const f = tentacleFightFor(level);
+        if (f === null || noclip) return;
+        const t0 = (weapon === 'sword' && !ghost) ? 'Sword' : 'Spear';
+        const d = ghost ? 2 : (weapon === 'sword' && inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE);
+        const maskBox = { x: f.beast.x - 23, y: f.beast.y - 22, right: f.beast.x + 23, bottom: f.beast.y + 22 };
+        for (const body of f.runtime) {
+            if (body.kind !== 'tentacle' || body.body.pendingRemove) continue;
+            const t = body.body;
+            const box = tentacleRect(t);
+            // `collideRectInto` (inclusive), then the reach, then the line of sight.
+            if (!(box.right >= r.x && box.bottom >= r.y && box.x <= r.right && box.y <= r.bottom)) continue;
+            if (distanceRectPoint(state.x, state.y, box) > reachLimit) continue;
+            if (!ghost) {
+                const lx0 = Math.min(state.x, t.x);
+                const lx1 = Math.max(state.x, t.x);
+                const ly0 = Math.min(state.y, t.y);
+                const ly1 = Math.max(state.y, t.y);
+                if (lx1 >= maskBox.x && lx0 <= maskBox.right && ly1 >= maskBox.y && ly0 <= maskBox.bottom) {
+                    throw new Error(`levelRun: a swing at ${t.id} at tick ${ticksCompleted + 1} draws its line of sight across `
+                        + 'the Tentacled Beast\'s pixelmask box; the game samples the mask and the model\'s line walks boxes. '
+                        + 'Refused by name (bosskills D3).');
+                }
+                if (collideLineSolid(state.x, state.y, t.x, t.y)) continue;
+            }
+            const v = hitTentacle(t, { d, t: t0, frozen: ceremony !== null });
+            tentacleLedger.push({ t: ticksCompleted + 1, level, kind: 'tentacle-hit', id: t.id, pressTick, ...v });
+            hits.push({ as3: 'Tentacle', id: t.id, landed: v.landed, killed: v.killed });
+        }
+    }
+
+    function drainTentacleBeastNow() {
+        const f = tentacleFightFor(level);
+        if (f === null || noclip) return;
+        f.runtime = f.runtime.filter((b) => !b.body.pendingRemove);
+        for (const sp of f.spawned.splice(0, f.spawned.length)) f.runtime.unshift(sp);
+        f.tentacles = f.runtime.filter((b) => b.kind === 'tentacle').map((b) => b.body);
+        f.whirlpools = f.runtime.filter((b) => b.kind === 'whirlpool').map((b) => b.body);
+    }
+
     function renderLavaBossNow() {
         const f = lavaBossFightFor(level);
         if (f === null || noclip) return;
@@ -16150,6 +16348,7 @@ export function createLevelRun({
         bombPushers: bombPushersNow,
         bombs: bombsNow,
         lavaBossFight: lavaBossFightNow,
+        tentacleBeastFight: tentacleBeastFightNow,
     });
 
     /**
@@ -17873,6 +18072,10 @@ export function createLevelRun({
          * the balls in flight, the report), or null: the switch is off, or the room holds no fight. A copy.
          */
         get lavaBossFight() { return lavaBossFightNow(); },
+        /** ⛓ bosskills D3: the Tentacled Beast's fight (`tentacleBeast.tentacleBeastView`) or null. A copy. */
+        get tentacleBeastFight() { return tentacleBeastFightNow(); },
+        /** ⛓ bosskills D3: the Tentacled Beast's event rows, a copy. */
+        get tentacleBeastEvents() { return tentacleLedger.map((r) => ({ ...r })); },
         /** ⛓ bosskills D2: the King of Fire's event rows (`{t, level, kind, …}`), a copy. */
         get lavaBossEvents() { return lavaBossLedger.map((r) => ({ ...r })); },
         get shakeWritersHere() {
@@ -19232,6 +19435,8 @@ export function createLevelRun({
                 stepMagicalLocksNow();
                 // ⛓ bosskills D2: the King of Fire's balls and airborne runners, runtime-added like the shots.
                 stepLavaBallsNow();
+                // ⛓ bosskills D3: the Tentacled Beast's tentacles and whirlpools, likewise.
+                stepTentacleRuntimeNow();
             }
             if (!noclip) stepBlastsNow();
             // ⛓ U15-swim D1: the turret spits, beside the blasts and for their reasons.
@@ -20664,6 +20869,8 @@ export function createLevelRun({
             if (!noclip) stepChasersNow();
             // ⛓ bosskills D2: the King of Fire, after his runners (runtime-added, so ahead of him) and before the player.
             if (!noclip) stepLavaBossNow();
+            // ⛓ bosskills D3: the Tentacled Beast, likewise before the player.
+            if (!noclip) stepTentacleBeastNow();
             // ⚠ A touch-lock window drops the KEYS, not the tick.
             // `receiveInput` gates `Player.input()` alone, so friction, both
             // sweeps and `getState` all still run — which is why the player
@@ -21290,6 +21497,7 @@ export function createLevelRun({
                 // ⛓ bosskills D2: and the King of Fire's removal, Explosions and spawns (an Explosion's knockback is
                 // written into `state`, so `next` re-reads it — the blasts' own reason above).
                 drainLavaBossNow();
+                drainTentacleBeastNow();
                 next = state;
             }
             // ── ⛓⛓ …AND THEN `render()`. `Engine.onEnterFrame` is

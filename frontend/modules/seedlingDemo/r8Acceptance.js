@@ -2565,6 +2565,16 @@ export const R8_STRATEGY_EXECUTORS = Object.freeze({
             'the schedule: none — the policy reads the run every tick (the reflect, the 120-update window, the '
                 + 'runners); a variant is chosen by PLAYING each on a fork until one kills without a death, and the '
                 + 'completion is OBSERVED: the body\'s removal (`LavaBoss.as:195`), one tick late']),
+        /** ⛓ seedling-fidelity-bosskills D3 — the Tentacled Beast (`solverBot.execTentacleBeast`, `tentacleBeastPolicy.js`). */
+        tentaclebeast: Object.freeze([
+            'the body: the clear-tag\'s `tentaclebeast@80,48`, a `pixelmask` Solid (`world.pixelmasks`), joined to the '
+                + 'run\'s fight (`run.entities(\'tentacleBeastFight\')`, built only while '
+                + '`CONTACT_FIDELITY.tentacleBeastFight` is on)',
+            'the stance: none — the policy wakes it (within 48 px) and then strikes each sitting tentacle from a spot '
+                + 'outside every swipe band that is about to fire',
+            'the schedule: none — the placements are the run\'s own draw stream (`TentacleDrawStream`, refused by name '
+                + 'when its premises fail); a variant is chosen by PLAYING each on a fork, and the completion is '
+                + 'OBSERVED: the mouth standing (`createMouthEntrance`, the end of "dying")']),
     }),
 
     /**

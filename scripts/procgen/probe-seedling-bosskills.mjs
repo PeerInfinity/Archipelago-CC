@@ -12,13 +12,19 @@
  * A sample is `{t, level, hits, cleared, x, y, boss, balls, runners, tentacles}`:
  *   · `boss` — the `LavaBoss` row (`anim`, `index`, `hits`, `hitsTimer`, `alpha`) or the `TentacleBeast` row, or null;
  *   · `balls` / `runners` / `tentacles` — `[x, y]` per `LavaBall` / `LavaRunner` / `Tentacle`, in the game's list order;
- *   · `cleared` — the persistence-cleared tags of the boot level.
+ *   · `cleared` — the persistence-cleared tags of the boot level;
+ *   · (D3, only when the boss row is the `TentacleBeast`) `tentacleRows` — `[x, y, anim, index, alpha]` per `Tentacle`
+ *     and `whirlpools` — `[x, y]` per `Whirlpool`, in the game's list order (⚠ always empty: a `Whirlpool` is an
+ *     `Entity`, not a `Mobile`, and `botMobiles` lists Mobiles), and `rngState` — the gameplay generator's state after
+ *     the tick (`botStatus().rng.state`), which is how a witness checks the whirlpools' draws. The King of Fire's
+ *     samples carry none of the three, so its recorded witnesses compare byte for byte as before.
  *
  * Run (the dev server at the repo root, `SEEDLING_PORT`, default 8000):
  *   node scripts/procgen/probe-seedling-bosskills.mjs --file=<tape.json> [--out=<samples.json>]
  *   … --record --name=<name>   write `fixtures/lavaboss-witness/<name>.json` (the tape embedded, the samples) —
  *                              `fidelityKingOfFire.test.js` replays it against the model in node, the switch ON
  *   … --witness=<name>         re-play a recorded witness's own tape on the game and compare it to its samples
+ *   … --dir=tentaclebeast-witness   the fixtures directory --record / --witness use (default lavaboss-witness)
  */
 
 import { chromium } from 'playwright';
@@ -41,7 +47,7 @@ export function sampleOf(m, s, level) {
     const cls = (r) => r.cls.replace(/^.*::/, '');
     const boss = rows.find((r) => /(LavaBoss|TentacleBeast)$/.test(r.cls)) ?? null;
     const xy = (re) => rows.filter((r) => re.test(cls(r))).map((r) => [r.x, r.y]);
-    return {
+    const out = {
         t: m.tick ?? s.tick,
         level: s.level,
         hits: s.hits ?? null,
@@ -54,6 +60,12 @@ export function sampleOf(m, s, level) {
         runners: xy(/^LavaRunner$/),
         tentacles: xy(/^Tentacle$/),
     };
+    if (out.boss?.cls === 'TentacleBeast') {
+        out.tentacleRows = rows.filter((r) => cls(r) === 'Tentacle').map((r) => [r.x, r.y, r.anim, r.anim_index, r.alpha]);
+        out.whirlpools = xy(/^Whirlpool$/);
+        out.rngState = s.rng?.state ?? null;
+    }
+    return out;
 }
 
 async function main() {
@@ -61,7 +73,7 @@ async function main() {
     const HERE = dirname(fileURLToPath(import.meta.url));
     const REPO = join(HERE, '..', '..');
     const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
-    const WITNESS_DIR = join(MODULE, 'fixtures', 'lavaboss-witness');
+    const WITNESS_DIR = join(MODULE, 'fixtures', arg('dir') ?? 'lavaboss-witness');
     const WITNESS = arg('witness');
     const FILE = arg('file');
     if (!FILE === !WITNESS) {

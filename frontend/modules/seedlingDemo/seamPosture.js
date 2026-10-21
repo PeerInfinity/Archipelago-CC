@@ -45,7 +45,9 @@ export const GAMEPLAY_DRAW_CONSUMERS = Object.freeze({
     finalboss: 'FinalBoss.as:142-144,158 — the rockfall spawn decision (1 draw/tick), '
         + 'its aim (2 draws/spawn) and the grenade decision (1 draw/tick while walking)',
     tentaclebeast: 'TentacleBeast.as:138-168 — spawn placement, up to 202 draws/frame '
-        + 'in the whirlpool loop (DEFERRED by name this rung)',
+        + 'in the whirlpool loop (MODELLED by seedling-fidelity-bosskills D3 behind '
+        + '`CONTACT_FIDELITY.tentacleBeastFight`: `tentacleBeast.TentacleDrawStream`, under a declared seed, '
+        + '`split: true` and this room the only one built since the reseed; refused by name otherwise)',
     lightboss: 'LightBoss.as:67 — `if (!Math.floor(Math.random() * 90))` (DEFERRED)',
 });
 

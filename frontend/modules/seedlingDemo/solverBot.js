@@ -194,6 +194,8 @@ import { ARROW_LANE_CROSSING, ARROW_LANE_TRACE, LaneCrossingExcept, admitLaneCro
     laneCrossingFor } from './arrowLaneCrossing.js';
 // ⛓ seedling-fidelity-bosskills D2 — the King of Fire's policy (the run steps the fight, `lavaBoss.js`).
 import { LAVA_BOSS_POLICY_VARIANTS, createLavaBossPolicy, lavaBossPolicyStep } from './lavaBossPolicy.js';
+// ⛓ seedling-fidelity-bosskills D3 — the Tentacled Beast's policy (the run steps the fight, `tentacleBeast.js`).
+import { TENTACLE_BEAST_POLICY_VARIANTS, createTentacleBeastPolicy, tentacleBeastPolicyStep } from './tentacleBeastPolicy.js';
 
 /**
  * ⛓⛓⛓ THE TRANSIT PROBE'S OWN NON-VACUITY, AS A FUNCTION.
@@ -660,6 +662,15 @@ export const OBSTACLE_STRATEGIES = Object.freeze({
      * refuses by name.
      */
     'solid:lavaboss': 'lavaboss',
+    /**
+     * ⛓⛓⛓ seedling-fidelity-bosskills D3 — **THE TENTACLED BEAST IS FOUGHT.** L57's only way on is its mouth
+     * (`createMouthEntrance`, a Teleporter to `tentacle_beast_mouth` once eight tentacles are gone); the route survey's
+     * step 125 read *"no strategy row for solid:tentaclebeast"*. The verb (`execTentacleBeast`) plays
+     * `tentacleBeastPolicy` against the run's own stepped fight (`tentacleBeast.js`), whose placements are the run's
+     * own draw stream; with `CONTACT_FIDELITY.tentacleBeastFight` off, or the stream's premises unmet, it resolves
+     * `held: false` and refuses by name.
+     */
+    'solid:tentaclebeast': 'tentaclebeast',
 });
 
 /**
@@ -819,6 +830,8 @@ export const STRATEGY_EXECUTORS = Object.freeze({
      * death on the fork kills on the run. See `execLavaBoss`.
      */
     lavaboss: execLavaBoss,
+    /** ⛓ bosskills D3 — the Tentacled Beast, the King of Fire's pattern (variants on forks). See `execTentacleBeast`. */
+    tentaclebeast: execTentacleBeast,
 });
 
 /**
@@ -2739,6 +2752,8 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
     if (strategy === 'approach') return resolveApproachStrategy(run, obstacle, contacts, blocked);
     // ⛓ bosskills D2 — the King of Fire (`held: false` while `kingOfFireFight` is off).
     if (strategy === 'lavaboss') return resolveLavaBossStrategy(run, obstacle);
+    // ⛓ bosskills D3 — the Tentacled Beast (`held: false` while `tentacleBeastFight` is off or its stream is unmet).
+    if (strategy === 'tentaclebeast') return resolveTentacleBeastStrategy(run, obstacle);
     if (strategy !== 'hold') return null;
     return resolveHoldStrategy(run, obstacle, contacts, blocked);
 }
@@ -15937,6 +15952,107 @@ function execLavaBoss(run, perTick, resolved, ctx) {
         tried, report: r.report };
 }
 
+/**
+ * ⛓⛓⛓ seedling-fidelity-bosskills D3 — RESOLVE the `tentaclebeast` work order: L57's Tentacled Beast (the clear-tag on
+ * its report `{57,0}`). The fight is the RUN's (`run.entities('tentacleBeastFight')`, `tentacleBeast.js`); `held:
+ * false` (a refusal by name) when the switch is off, when the run cannot fight (no sword: a tentacle takes one sword
+ * hit while it sits), when the beast is already dead, or when the run's draw stream cannot be the game's (the view's
+ * `streamRefusal`: a declared seed, `split: true`, and the room the only one built since the reseed).
+ */
+function resolveTentacleBeastStrategy(run, obstacle) {
+    const refuse = (option, why) => ({ strategy: 'tentaclebeast', held: false, boss: obstacle.id,
+        rejected: [{ option, why }] });
+    if (!CONTACT_FIDELITY.tentacleBeastFight) {
+        return refuse(`fight ${obstacle.id}`, 'the Tentacled Beast\'s fight is not stepped with '
+            + '`CONTACT_FIDELITY.tentacleBeastFight` off — the beast is a body the model does not fight');
+    }
+    const fight = run.entities('tentacleBeastFight');
+    if (!fight || fight.id !== obstacle.id) {
+        return refuse(`fight ${obstacle.id}`, `the run holds no Tentacled Beast fight for ${obstacle.id} in level ${run.level}`);
+    }
+    if (fight.beast.dead) return refuse(`fight ${obstacle.id}`, `${obstacle.id} is already dead`);
+    const inv = run.progress('inventory') ?? {};
+    if (!inv.hasSword) {
+        return refuse(`fight ${obstacle.id}`, 'a tentacle dies to one sword hit while it sits; this run holds no sword');
+    }
+    if (fight.streamRefusal) {
+        return refuse(`fight ${obstacle.id}`, `the tentacles' placements are \`Math.random()\` draws, and the run's `
+            + `stream ${fight.streamRefusal}`);
+    }
+    return {
+        strategy: 'tentaclebeast',
+        postCondition: 'mouth',
+        target: { x: fight.beast.x, y: fight.beast.y },
+        boss: obstacle.id,
+        rejected: [{
+            option: 'route around the beast',
+            why: `L57's only way on is ${obstacle.id}'s mouth, which the game adds only at the end of "dying", after `
+                + 'eight tentacles are gone',
+        }],
+    };
+}
+
+/**
+ * Executor: the `tentaclebeast` verb. ⛓ bosskills D3.
+ *
+ * The run steps the whole fight (the draws included), so the policy (`tentacleBeastPolicy.js`) is played, not planned
+ * around: each variant is played on a FORK of the run until one opens the mouth with no death, and that one is played
+ * on the run. The completion is OBSERVED: the mouth standing (`run.entities('tentacleBeastFight').mouth`), which the
+ * game adds at the end of "dying" — the report `{57,0}` is written at its start.
+ */
+const TENTACLE_BEAST_FIGHT_BOUND = 6000;
+function playTentacleBeastPolicy(r, perTick, params, ctx) {
+    const mem = createTentacleBeastPolicy(params);
+    const deathsBefore = (r.ledger('playerHits') ?? []).filter((h) => h.died).length;
+    for (let spent = 0; spent <= TENTACLE_BEAST_FIGHT_BOUND; spent += 1) {
+        const view = r.entities('tentacleBeastFight');
+        if (view === null) return { ok: false, why: `the room (level ${r.level}) holds no fight any more`, spent };
+        if (view.mouth) return { ok: true, spent, report: view.report, log: mem.log };
+        const held = tentacleBeastPolicyStep(mem, { view, p: r.state, slashing: r.progress('slashInfo').state.slashing });
+        if (perTick) perTick.push(held);
+        const { transition } = r.advance(held);
+        if (transition) {
+            fail(`${ctx.what}: the run crossed from level ${transition.from_level} to ${transition.to_level} during the `
+                + 'Tentacled Beast\'s fight. The fight is per visit.');
+        }
+        const deaths = (r.ledger('playerHits') ?? []).filter((h) => h.died).length;
+        if (deaths > deathsBefore) return { ok: false, why: `the player died at spent ${spent}`, spent };
+    }
+    return { ok: false, why: `the mouth is not open after ${TENTACLE_BEAST_FIGHT_BOUND} ticks`, spent: TENTACLE_BEAST_FIGHT_BOUND };
+}
+function execTentacleBeast(run, perTick, resolved, ctx) {
+    const obstacle = { kind: 'solid', id: resolved.boss, tag: 'tentaclebeast' };
+    if (resolved.held === false) {
+        throw new SolverRefusal(`${ctx.what}: tentaclebeast ${resolved.boss}: ${resolved.rejected?.[0]?.why ?? 'not held'}`,
+            { obstacle });
+    }
+    const from = perTick.length;
+    const tried = [];
+    let params = TENTACLE_BEAST_POLICY_VARIANTS[0];
+    if (typeof ctx.fork === 'function') {
+        params = null;
+        for (const v of TENTACLE_BEAST_POLICY_VARIANTS) {
+            const f = ctx.fork();
+            if (!f) break;
+            const r = playTentacleBeastPolicy(f, null, v, ctx);
+            tried.push({ params: { ...v }, ok: r.ok, spent: r.spent, why: r.why ?? null });
+            if (r.ok) { params = v; break; }
+        }
+        if (params === null) {
+            throw new SolverRefusal(`${ctx.what}: no Tentacled Beast policy variant opens the mouth of ${resolved.boss} `
+                + `without a death on a fork of this run — ${tried.map((t) => `${JSON.stringify(t.params)}: ${t.why}`).join('; ')}`,
+            { obstacle });
+        }
+    }
+    const r = playTentacleBeastPolicy(run, perTick, params, ctx);
+    if (!r.ok) {
+        throw new SolverRefusal(`${ctx.what}: the Tentacled Beast policy ${JSON.stringify(params)} did not open the `
+            + `mouth of ${resolved.boss}: ${r.why}`, { obstacle });
+    }
+    return { verb: 'tentaclebeast', target: resolved.boss, from, ticks: perTick.length - from, params: { ...params },
+        tried, report: r.report };
+}
+
 function execFight(run, perTick, resolved, ctx) {
     const id = resolved.boss;
     const UP = new Set(['up']);
@@ -23883,8 +23999,12 @@ function solveSegmentUnder({
         const parsed = goal.obstacle ? /^([a-z0-9_]+)@(-?\d+),(-?\d+)$/i.exec(goal.obstacle) : null;
         const solidAt = (s) => (s.x === goal.at.x && s.y === goal.at.y)
             || (s.rect?.x === goal.at.x && s.rect?.y === goal.at.y);
+        // ⛓ bosskills D3: the Tentacled Beast is a `pixelmask` Solid (`world.pixelmasks`, never `world.solids`), so a
+        // clear-tag on its report binds it there; its row's resolver answers the switch (`held: false` OFF).
         const solid = (run.world.solids ?? []).find((s) => solidAt(s)
-            && (!parsed || s.tag === parsed[1])) ?? null;
+            && (!parsed || s.tag === parsed[1]))
+            ?? (parsed?.[1] === 'tentaclebeast'
+                ? (run.world.pixelmasks ?? []).find((s) => solidAt(s) && s.tag === 'tentaclebeast') ?? null : null);
         const cls = parsed?.[1] ?? solid?.tag ?? null;
         const id = `${cls ?? '?'}@${goal.at.x},${goal.at.y}`;
         const whatCT = `solverBot(${name}) clear-tag {${flag.level},${flag.tag}} ${id}`;

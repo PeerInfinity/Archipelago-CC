@@ -184,6 +184,8 @@ export { SHIELD_BOSS, shieldBossBandRect, shieldBossBodyRect, shieldBossDeathSch
 export { WAND_VERB, WAND_WINDOW, wandShotSpawn, wandShotVelocity, withWandVerb } from './wandVerb.js';
 export { createWandShot, stepWandShot, wandShotRect } from './wandShot.js';
 export { MAGICAL_LOCK_OPEN_TICK_OFFSET } from './magicalLock.js';
+// ⛓ seedling-fidelity-bosskills D3: the tentacle's body and its swipe, for `tentacleBeastPolicy`.
+export { tentacleRect, tentacleSwipeRect } from './tentacleBeast.js';
 // spinner.js — botDriverV2, dangerMap, solverBot · seedling 5
 export {
     enemiesUnseenByBlockSweep, hammerHitsPlayer, MODELLED_ENEMY_CLASSES, SPINNER, spinnerRect,

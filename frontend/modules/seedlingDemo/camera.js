@@ -293,6 +293,14 @@ export const SHAKE_WRITERS = Object.freeze({
         op: '=', value: 15, src: 'Enemies/LavaBoss.as:246',
         who: 'every sweep of the King of Fire (L82), once a cycle',
     }),
+    /**
+     * ⛓ seedling-fidelity-bosskills D3 — the Tentacled Beast rising (`tentacleBeast.js`, under
+     * `CONTACT_FIDELITY.tentacleBeastFight`): `Game.shake = 5` every update its "rise" plays.
+     */
+    tentacleRise: Object.freeze({
+        op: '=', value: 5, src: 'Enemies/TentacleBeast.as:89-92',
+        who: 'every update the Tentacled Beast (L57) plays its rise',
+    }),
 });
 
 /**
