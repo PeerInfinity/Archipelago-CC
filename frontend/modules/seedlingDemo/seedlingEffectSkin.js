@@ -42,8 +42,13 @@
  * `darkLight`: G5); the intro's dust (`Game.cutscene[0]` only, a clock the
  * model refuses); the Wand's kill explosion on a chaser and the LavaBall's
  * (no ledger row carries one); the NPC dialogues and their portraits (the run
- * carries the pickup ceremony's dialogue only); the font's glyphs (⚖ open: a
- * placeholder font stands in, `PLACEHOLDER_FONT`).
+ * carries the pickup ceremony's dialogue only).
+ *
+ * THE FONT (G4b, ⚖ the user 2026-10-21: "let's make our own pixel font"): the
+ * seedling pack names `KEYS.font`, an ORIGINAL glyph sheet authored in
+ * `scripts/procgen/make-seedling-font.mjs` (not 04B_03, whose licence is
+ * unclear): a 4 × 8 cell, so advance 4 and line height 8 (04B_03's ascent +
+ * descent at size 8). `PLACEHOLDER_FONT` remains for a stack without it.
  */
 import { cosmeticRand } from './seedlingSkinRenderer.js';
 import { ANIMS, ENEMY_COLOUR, familyOf, freshSprite, hashId, play, rectOp, spriteOp, updateSprite } from './seedlingEnemySkin.js';
@@ -56,18 +61,18 @@ export const KEYS = Object.freeze({
     droplet: 'seedling:fx/droplet',
     heart: 'seedling:hud/heart',
     spinner: 'seedling:enemy/spinner',
-    /** ⚖ THE FONT SEAM: a pack that names this key supplies the glyphs (frame = char code − 32). No pack does yet. */
+    /** THE FONT SEAM: a pack that names this key supplies the glyphs (frame = char code − 32, `glyphFrame`); the seedling pack's is authored (G4b). */
     font: 'seedling:font/default',
 });
 
 /** WHAT G4 DRAWS. With G1–G3c's `drawn` this is the skinned paint's whole roster. */
 export const EFFECT_COVERAGE = Object.freeze({
     drawn: Object.freeze(['Explosion (totem shot, totem death, bomb)', 'SlashHit (press kills: chasers, spinners)', 'Droplet (rain)',
-        'BossTotem white-out cover', 'hearts (drawHealth)', 'blackCover (load fade)', 'talk() bars + typed text (pickup ceremonies; placeholder font)']),
+        'BossTotem white-out cover', 'hearts (drawHealth)', 'blackCover (load fade)', 'talk() bars + typed text (pickup ceremonies; the authored SeedlingFont, G4b)']),
     modelled: Object.freeze([]),
     remaining: Object.freeze(['Coin (dead code: never spawned)', 'the grenade light + every Light / nightBmp copy (G5)',
         'DustParticle (intro cutscene only)', 'the Wand-kill and LavaBall explosions (no ledger row)',
-        'NPC dialogues + portraits (no run state)', 'the 04B_03 glyphs (⚖ font open)', 'the fire / seed / death covers (no run state)']),
+        'NPC dialogues + portraits (no run state)', 'the fire / seed / death covers (no run state)']),
 });
 
 // ── constants, each from the AS3 ────────────────────────────────────────
@@ -97,10 +102,10 @@ const TALK = Object.freeze({ n: 6, alpha: 0.8, colour: '#000000', textToImageMar
 const HEART = Object.freeze({ cols: 2, w: 12, h: 12 });
 
 /**
- * ⚖ THE PLACEHOLDER FONT (the font is OPEN, user 2026-10-21). FlashPunk's
- * `Text` measures `textWidth + 4` × `textHeight + 4` (`Text.as:40-41,53-54`);
- * these metrics stand in for 04B_03's at size 8 until a pack names a font
- * (`KEYS.font`). A glyph is drawn as a box, recorded by its char code.
+ * THE PLACEHOLDER FONT, for a stack that names no font (`KEYS.font`; the
+ * seedling pack does since G4b). FlashPunk's `Text` measures `textWidth + 4` ×
+ * `textHeight + 4` (`Text.as:40-41,53-54`). A glyph is drawn as a box,
+ * recorded by its char code.
  */
 export const PLACEHOLDER_FONT = Object.freeze({ id: 'placeholder', advance: 4, lineHeight: 9, gutter: 4, glyphW: 3, glyphH: 5 });
 
@@ -310,9 +315,13 @@ function whiteOutAlpha(w) {
 /** `talk()`'s `fullString = talkingText.substr(0, currentCharacter)` (`Game.as:1721-1722`). */
 const typedText = (d) => d.text.substr(0, d.currentCharacter);
 
+/** The font seam's frame for a char code: the sheet starts at the space (G4b). */
+const glyphFrame = (code) => code - 32;
+
 /** The reducer's and the ops' rules, by name, so a test can swap ONE for a mutant (`opts.rules`). */
 export const EFFECT_RULES = Object.freeze({
     explosionPose, slashScale, rainSpawn, makeDroplet, dropletStep, heartsSample, fadeCovers, whiteOutAlpha, typedText, updateSprite,
+    glyphFrame,
 });
 
 // ── the reducer ─────────────────────────────────────────────────────────
@@ -462,8 +471,13 @@ export function measureText(text, font = PLACEHOLDER_FONT) {
     return { w: Math.max(...lines.map((l) => l.length)) * font.advance + font.gutter, h: lines.length * font.lineHeight + font.gutter, lines };
 }
 
-/** One text draw as glyph ops (the text's top-left at `x, y`, Flash's 2 px gutter inside). */
-function textOps(text, x, y, font, art, colour, alpha = 1) {
+/**
+ * One text draw as glyph ops (the text's top-left at `x, y`, Flash's 2 px
+ * gutter inside). A sheet's glyphs are white; any other colour is a TINT, as
+ * `Text.color` is FlashPunk's multiplying `Image.color` (`drawTextBold`'s
+ * black copies, `Game.as:1760-1774`).
+ */
+function textOps(text, x, y, font, art, colour, R, alpha = 1) {
     const ops = [];
     measureText(text, font).lines.forEach((line, li) => {
         [...line].forEach((ch, ci) => {
@@ -472,7 +486,8 @@ function textOps(text, x, y, font, art, colour, alpha = 1) {
             const gx = x + font.gutter / 2 + ci * font.advance;
             const gy = y + font.gutter / 2 + li * font.lineHeight;
             if (font.sprite) {
-                const op = spriteOp(art, KEYS.font, code - 32, { x: gx, y: gy }, { layer: 0, tint: colour === '#ffffff' ? null : colour });
+                const fallback = { rect: { x: gx, y: gy + 1, w: 3, h: 5, right: gx + 3, bottom: gy + 6 }, colour, alpha, layer: 0 };
+                const op = spriteOp(art, KEYS.font, R.glyphFrame(code), { x: gx, y: gy }, { layer: 0, tint: colour === '#ffffff' ? null : colour, fallback });
                 if (op) ops.push({ ...op, glyph: code, font: font.id });
             } else {
                 ops.push({ rect: { x: gx, y: gy + (font.lineHeight - font.glyphH) / 2, w: font.glyphW, h: font.glyphH,
@@ -507,13 +522,13 @@ function talkOps(view, art, cam, font, R) {
     const alignOffsetX = Math.trunc((SCREEN - w - m.w) / 2);
     const tx = Math.floor(w + alignOffsetX);
     const ty = Math.floor((SCREEN * (n - 1 / 2)) / n - m.h / 2 + 1);
-    ops.push(...textOps(shown, cam.x + tx, cam.y + ty, font, art, '#ffffff'));
+    ops.push(...textOps(shown, cam.x + tx, cam.y + ty, font, art, '#ffffff', R));
     if (d.currentCharacter > d.text.length && !view.cutscene0) {
         const x = measureText('<X>', font);
         const px = SCREEN - x.w;
         const py = Math.floor(SCREEN - bar - x.h / 2);
-        for (const [ox, oy] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) ops.push(...textOps('<X>', cam.x + px + ox, cam.y + py + oy, font, art, '#000000'));
-        ops.push(...textOps('<X>', cam.x + px, cam.y + py, font, art, '#ffffff'));
+        for (const [ox, oy] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) ops.push(...textOps('<X>', cam.x + px + ox, cam.y + py + oy, font, art, '#000000', R));
+        ops.push(...textOps('<X>', cam.x + px, cam.y + py, font, art, '#ffffff', R));
     }
     return ops;
 }
