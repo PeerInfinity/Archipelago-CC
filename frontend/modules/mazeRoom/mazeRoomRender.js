@@ -56,6 +56,11 @@
  *   isConsumableCollected (x,y)=>boolean|null  null = nothing tracks them (the
  *                                  panel closes its region id into this; the
  *                                  page has no regions at all)
+ *   broken                string[]|null  ITEM ACTIONS: `state.broken` — the posKeys
+ *                                  of obstacles struck down this visit, drawn as
+ *                                  open floor; null = none (every other world)
+ *   facing                'N'|'E'|'S'|'W'|null  ITEM ACTIONS: `state.facing`, drawn
+ *                                  as a tick on the player; null draws nothing
  *
  * ── ⛓ THE GATE IS AN ORDERED DRAW-OP LOG, AND WHY THAT IS THE PIXELS ──
  *
@@ -140,7 +145,7 @@ export function consumableTileColor(substrateId) {
 export const VIEW_FIELDS = Object.freeze([
     'tilePx', 'playerPos', 'inventory', 'isPlayback', 'checkedLocations', 'ruleEvaluator',
     'fogEnabled', 'isTileVisible', 'seenTiles', 'isExitVisible', 'isLocationVisible',
-    'isConsumableCollected',
+    'isConsumableCollected', 'broken', 'facing',
 ]);
 
 /**
@@ -234,6 +239,7 @@ export function assertView(view) {
  */
 export function plainView({
     tilePx = TILE_PX, playerPos = null, inventory = null, ruleEvaluator = null,
+    broken = null, facing = null,
 } = {}) {
     return {
         tilePx,
@@ -248,6 +254,8 @@ export function plainView({
         isExitVisible: () => true,
         isLocationVisible: () => true,
         isConsumableCollected: null,
+        broken,
+        facing,
     };
 }
 
@@ -299,6 +307,8 @@ export function drawWorld(ctx, world, view) {
     // Adventure's 12 Freeincarnates).
     const isPlayback = view.isPlayback;
     const checkedLocations = view.checkedLocations ?? new Set();
+    // ITEM ACTIONS: a struck-down obstacle is not drawn at all — it is floor now.
+    const broken = Array.isArray(view.broken) && view.broken.length > 0 ? new Set(view.broken) : null;
 
     // §5 rendering pass — exits, entrance border, combo-list
     // obstacles, items, and gate borders, in an order that gets
@@ -311,7 +321,7 @@ export function drawWorld(ctx, world, view) {
             // here so undiscovered items / exits / gate borders
             // don't even render before the blackout.
             if (view.fogEnabled && !view.isTileVisible(x, y)) continue;
-            const obstacleId = w.obstacles.get(key);
+            const obstacleId = broken?.has(key) ? undefined : w.obstacles.get(key);
             const obstacle = obstacleId ? obstacleLib[obstacleId] : null;
             const isLogicGate = obstacle?.clear_set_type === 'rule';
             const gateClosed = isLogicGate
@@ -539,5 +549,13 @@ export function drawWorld(ctx, world, view) {
         ctx.beginPath();
         ctx.arc(x * px + px / 2, y * px + px / 2, px * 0.35, 0, Math.PI * 2);
         ctx.fill();
+        // ITEM ACTIONS: a tick on the side the player faces (the use target).
+        const tick = { N: [0, -1], S: [0, 1], E: [1, 0], W: [-1, 0] }[view.facing];
+        if (tick) {
+            const cx = x * px + px / 2 + tick[0] * px * 0.38;
+            const cy = y * px + px / 2 + tick[1] * px * 0.38;
+            ctx.fillStyle = COLORS.wall;
+            ctx.fillRect(cx - px * 0.08, cy - px * 0.08, px * 0.16, px * 0.16);
+        }
     }
 }
