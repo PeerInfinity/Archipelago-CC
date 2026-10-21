@@ -610,25 +610,18 @@
   "js.ast": [
    "enemy_requirement",
    "error",
-   "formatted_value",
    "game_specific_check",
    "generic_rule",
-   "set_comprehension",
    "setting_in",
-   "starred",
-   "tuple_assign",
    "unknown",
    "unknown_capability"
   ],
   "js.rb": [
    "AST_enemy_requirement",
    "AST_error",
-   "AST_formatted_value",
    "AST_game_specific_check",
    "AST_generic_rule",
-   "AST_set_comprehension",
    "AST_setting_in",
-   "AST_starred",
    "AST_unknown",
    "AST_unknown_capability"
   ],
@@ -780,5 +773,5 @@
    "weighted_sum"
   ]
  },
- "gap_ceiling": 159
+ "gap_ceiling": 152
 }

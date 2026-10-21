@@ -112,5 +112,20 @@ The known gaps above are where today's code breaks this policy. Fixing them is t
   (`LOSSY FALLBACK: Unknown helper …`) is a separate sink and has not changed.
 - **rule_builder `ASTRule`** raises `NotImplementedError` naming the AST type, instead of answering
   `True`.
+
+**As built (R2b, 2026-10-21):**
+
+- **Helper-body kinds** (`shared/ruleEngine`, tests in `ruleEngine/pythonExpressionKinds.test.js`):
+  `tuple_assign` unpacks like Python (a mismatch leaves the targets undetermined); `formatted_value`
+  is Python `str()` and `f_string` formats through it; `set_comprehension` is the generator's values
+  deduplicated by value; `starred` spreads inside list/tuple/set literals and `call` arguments, and
+  is undetermined anywhere else.
+- **Checked against Python, not only against the census.** tunic `has_required_stats` was compared
+  with the Python function over 62 inventories × 19 areas. The new handlers alone agreed on 1083 of
+  1178; four more defects on the same path were fixed to reach 1178 of 1178: literals now see the
+  helper body's locals, attribute access reads the exporter's serialised NamedTuple, `for_range`
+  reads the exporter's `stop`/`step` (it read `end`), and `set()`/list mutators on a local work. A
+  census gap closing does not mean the helper that uses the kind is now right. Diff the helper
+  against Python.
 `rule-type-dispatch-inventory.md` lists the dispatch sites themselves, including display walkers the
 census does not cover.
