@@ -525,6 +525,12 @@
             "_comment": "GRAPHICS G3b. jsRuntime.html?graphics=seedling&camera=follow mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 22 (four wallflyers, r2-wallflyer-contact's boot): each is drawn as seedling:enemy/wallflyer from the seedling pack, every sheet decodes, a frame changes (the per-tick reducer is live), zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
         },
         {
+            "id": "seedling-js-runtime-graphics-hazards",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "GRAPHICS G3c. jsRuntime.html?graphics=seedling&camera=follow mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 61 (two red spinning axes; the stance no blade reaches): each is drawn as seedling:puzzlement/spinningaxeRed from the seedling pack, every sheet decodes, an angle changes (the renderer's update clock is live), zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+        },
+        {
             "id": "seedling-js-runtime-solver-opens-kill-lock",
             "enabled": true,
             "category": "Seedling JS runtime",

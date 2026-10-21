@@ -73,6 +73,29 @@ export const ENEMY_ART = Object.freeze([
         anims: { walk: fps([0, 1, 2, 1], 10) } })),
     { pack: 'seedling', key: 'seedling:enemy/bobbossWeapons', file: 'BobBossWeapons.png', fw: 24, fh: 5, origin: [0, 3],
         as3: 'Enemies/BobBoss.as:22-23 Spritemap(24, 5); :53-55 y = -3, originY = 3, frame = the form; BobSoldier.as:187-198 angle = swordSpin deg' },
+    // ── G3c: the puzzlements and the last of the room bodies (`seedlingHazardSkin.js`). ⚠ The manifest refuses
+    //    `fps 0`, and LavaChain's frames ride its own transcription (`lavaChain.LAVA_CHAIN.anims`, the sim's), so the
+    //    chain, the crusher, the totem and the bomb are frame-only rows. ──
+    ...[['spinningaxe', 'SpinningAxe.png', 0], ['spinningaxeRed', 'SpinningAxeRed.png', 1]].map(([k, file, colour]) => ({
+        pack: 'seedling', key: `seedling:puzzlement/${k}`, file, origin: [4, 10],
+        as3: `Puzzlements/SpinningAxe.as:15-16,26-35 Image (${file}, _colorType ${colour}); :37-40 originX 4, originY = height / 2; :52 angle += spinRate` })),
+    { pack: 'seedling', key: 'seedling:puzzlement/crusher', file: 'Crusher.png', fw: 32, fh: 32, origin: [16, 16],
+        as3: 'Puzzlements/Crusher.as:18-19 Spritemap(32, 32), no anims (frame 0); :38 centerOO; :109-113 angle += 8 while v ≠ 0, else 0' },
+    { pack: 'seedling', key: 'seedling:puzzlement/lavachain', file: 'LavaChain.png', fw: 64, fh: 16, origin: [8, 8],
+        as3: 'Puzzlements/LavaChain.as:18-19 Spritemap(64, 16); :34-37 origin (8, 8); :39-42 sit [0], extend [1,2] fps 15, hit [3,4,5,5,5,5,4,3] fps 15, retract [6..12] fps 25; :52 angle = 90 · direction' },
+    { pack: 'seedling', key: 'seedling:enemy/bosstotem', file: 'BossTotem.png', fw: 32, fh: 48, origin: [0, 0],
+        as3: 'Enemies/BossTotem.as:18-19 Spritemap(32, 48): frame 0 the head, 1 an arm, 2 a leg; :605-640 each part sets its own origin (legs (0,0), arms (armsBase.x · scaleX, 0), head headOrigin (16, 47))' },
+    { pack: 'seedling', key: 'seedling:projectile/bosstotemshot', file: 'BossTotemShot.png', fw: 20, fh: 20, origin: [10, 10],
+        as3: 'Projectiles/BossTotemShot.as:17-18 Spritemap(20, 20); :27 centerOO; :28-29 fly [0,1,2] fps 10, played in the ctor',
+        anims: { fly: fps([0, 1, 2], 10) } },
+    { pack: 'seedling', key: 'seedling:enemy/bombpusher', file: 'BombPusher.png', fw: 48, fh: 48, origin: [24, 24],
+        as3: 'Enemies/BombPusher.as:15-16 Spritemap(48, 48); :27 centerOO; :29-30 shoot [0,2,1,2,3] fps 5, sit [0,3] fps 2',
+        anims: { shoot: fps([0, 2, 1, 2, 3], 5), sit: fps([0, 3], 2) } },
+    { pack: 'seedling', key: 'seedling:projectile/bomb', file: 'Bomb.png', fw: 16, fh: 16, origin: [8, 8],
+        as3: 'Projectiles/Bomb.as:15-16 Spritemap(16, 16), no anims; :29 centerOO; :41-51 scale from t, angle += 15 a tick' },
+    { pack: 'seedling', key: 'seedling:enemy/grenade', file: 'Grenade.png', fw: 16, fh: 16, origin: [8, 8],
+        as3: 'Enemies/Grenade.as:16-17 Spritemap(16, 16); :43 centerOO; :44-47 explode [0,1,0,2,0,3,4,3] fps 12, hit [5,6,7] fps 12, sit [0,4] fps 5 (played in the ctor)',
+        anims: { explode: fps([0, 1, 0, 2, 0, 3, 4, 3], 12), hit: fps([5, 6, 7], 12), sit: fps([0, 4], 5) } },
     // ── AP item looks: `Pickups/APItem.as:52-66,94-104` (the sheet and frame size each look binds; 0x0 = an Image,
     //    i.e. the whole file) and `:160-172` (`centerOO`, frame 0 — an APItem never advances its frame) ──
     ...[['sword', 'Sword.png', 16, 16], ['shield', 'Shield.png', 7, 7], ['darkshield', 'DarkShield.png', 9, 9, 'Image'],
