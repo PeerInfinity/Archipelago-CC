@@ -14,14 +14,23 @@ import { scriptedStep } from './tileStep.js';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
 
 const DOOR_A = { name: 'Door A', id: 'door_A', clear_set_type: 'combo_list', clear_set: [['sw_A']] };
+// A rule-type obstacle (the L15 shape: a rock either weapon or Swim gets past) — read against the
+// step's own inventory, not a snapshot.
+const ROCK = {
+    name: 'Rock', id: 'rock', clear_set_type: 'rule',
+    clear_rule: { rule: 'Or', children: [
+        { rule: 'Has', args: { item_name: 'Progressive Sword' } },
+        { rule: 'Has', args: { item_name: 'Progressive Swim' } }] },
+};
 const BUTTON_A = { name: 'Button A', id: 'button_A', kind: 'button', holds: 'sw_A' };
 
 // '#' wall · '.' floor · 'P' entrance · 'B' block · 'b' button_A · 'D' door_A · 'F' flag_B · 'K' key_red · 'R' door_red
+// · 'O' rock (rule obstacle) · 'S' Progressive Sword
 function picture(rows) {
     let entrance = { x: 0, y: 0 };
     rows.forEach((r, y) => [...r].forEach((c, x) => { if (c === 'P') entrance = { x, y }; }));
     const w = createWorld(rows[0].length, rows.length, { entrance, exits: [{ exit_id: 'exit', ...entrance }] });
-    w.obstacleLib = { ...w.obstacleLib, door_A: DOOR_A };
+    w.obstacleLib = { ...w.obstacleLib, door_A: DOOR_A, rock: ROCK };
     w.buttonLib = { button_A: BUTTON_A };
     rows.forEach((r, y) => [...r].forEach((c, x) => {
         if (c === '#') setTile(w, x, y, TILE_WALL);
@@ -31,6 +40,8 @@ function picture(rows) {
         if (c === 'R') setObstacle(w, x, y, 'door_red');
         if (c === 'F') setItem(w, x, y, 'flag_B');
         if (c === 'K') setItem(w, x, y, 'key_red');
+        if (c === 'O') setObstacle(w, x, y, 'rock');
+        if (c === 'S') setItem(w, x, y, 'Progressive Sword');
     }));
     return w;
 }
@@ -46,6 +57,8 @@ const FIXTURES = {
     //   reaching the door's row). Here a push E along row 2 meets the door shut.
     'a block over an item, pushed through a held door':
         ['########', '#P.....#', '#.BK.D.#', '#..b...#', '#......#', '########'],
+    // The block's lane crosses a RULE obstacle; the sword that clears it is in the room.
+    'a block pushed through a rule-gated rock': ['#######', '#PS...#', '#.B.O.#', '#..b..#', '#######'],
 };
 
 function reachable(world, cap = 20000) {

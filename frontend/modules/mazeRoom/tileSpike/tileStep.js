@@ -54,10 +54,10 @@ function tileAt(world, x, y, blocks, playerPos) {
     let clearSet = null;
     if (obstacle !== null) {
         const entry = world.obstacleLib?.[obstacle];
-        if ((entry?.clear_set_type ?? 'combo_list') !== 'combo_list') {
-            throw new Error(`spike: obstacle ${obstacle} is ${entry.clear_set_type}, only combo_list is modelled`);
-        }
-        clearSet = entry?.clear_set ?? [];
+        const type = entry?.clear_set_type ?? 'combo_list';
+        if (type === 'rule') clearSet = ruleToClearSet(entry.clear_rule, obstacle);
+        else if (type === 'combo_list') clearSet = entry?.clear_set ?? [];
+        else throw new Error(`spike: obstacle ${obstacle} is ${type}, only combo_list and rule are modelled`);
     }
     return {
         floor: isFloor(world, x, y),
@@ -67,6 +67,25 @@ function tileAt(world, x, y, blocks, playerPos) {
         obstacle,
         clear_set: clearSet,
     };
+}
+
+/**
+ * A `clear_set_type: 'rule'` obstacle's rule as the combo list the `cleared` helper reads, so the
+ * condition is answered against THIS step's effective inventory (held tokens and a search's
+ * hypothetical inventory included) — not a stateManager snapshot (brief, spike finding F2).
+ * Has / And / Or / True_ / False_ only; any other kind is refused BY NAME (registry D3).
+ */
+export function ruleToClearSet(rule, obstacle = '?') {
+    switch (rule?.rule) {
+        case 'True_': return [[]];
+        case 'False_': return [];
+        case 'Has': return [[rule.args.item_name]];
+        case 'Or': return (rule.children ?? []).flatMap((c) => ruleToClearSet(c, obstacle));
+        case 'And': return (rule.children ?? []).reduce(
+            (acc, c) => acc.flatMap((a) => ruleToClearSet(c, obstacle).map((b) => [...a, ...b])), [[]]);
+        default:
+            throw new Error(`tile logic: obstacle ${obstacle}'s clear_rule kind ${rule?.rule ?? rule?.type} is not modelled`);
+    }
 }
 
 /** The HOLD primitive: carried ∪ the token of every button whose `pressed` condition holds. */
@@ -85,9 +104,10 @@ export function scriptedEffectiveInventory(world, carried, playerPos, blocks, ti
 
 /**
  * `step`'s contract: the next state, or a refusal naming the PRIMITIVE that refused —
- * `{ next: null, refused: { primitive, cell, helper } }`.
+ * `{ next: null, refused: { primitive, cell, helper } }`. `latch: false` turns the item pickup
+ * off: an AP-logic search holds a fixed inventory and a location tile grants nothing.
  */
-export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_LIB) {
+export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_LIB, { latch = true } = {}) {
     if (input === INPUT_WAIT) {
         return { next: { ...cloneState(state), turn: state.turn + 1 }, refused: null };
     }
@@ -120,7 +140,7 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
         next.blocks[next.blocks.indexOf(pushedFrom)] = pushedTo;
         next.blocks.sort();
     }
-    const itemId = getItem(world, nx, ny);
+    const itemId = latch ? getItem(world, nx, ny) : null;
     if (itemId) next.inventory.add(itemId);
     return { next, refused: null };
 }
