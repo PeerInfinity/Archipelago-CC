@@ -318,6 +318,12 @@ export const FAMILY_BLOCKS = deepFreeze([
     { family: 'lightsFight', kind: RUN_ENTITIES, blocks: ['hp', 'emitter', 'contact'],
         solverReads: ['lightsVerb'], strategies: [],
         why: 'L69\'s fight (fidelity LIGHTS: `levelRun.lightsFightNow`, `lightBoss.js`): the intro, the controller\'s `worldFrame` pattern (spin, radius, state), the six `LightBoss` fliers (contact, `hits`, the die anim) and their `LightBossShot`s; the `lights` verb forecasts a clone of it. `null` while `CONTACT_FIDELITY.lightsBossFight` is off.' },
+    { family: 'lavaBossFight', kind: RUN_ENTITIES, blocks: [],
+        solverReads: ['solverBot'], strategies: [],
+        why: 'L82\'s King of Fire, stepped (seedling-fidelity-bosskills D2: `levelRun.lavaBossFightNow`, `lavaBoss.js`): the body\'s cycle, hits, window and fade, its balls and its runners; `null` while `CONTACT_FIDELITY.kingOfFireFight` is off. A bespoke fight, so no generic block.' },
+    { family: 'tentacleBeastFight', kind: RUN_ENTITIES, blocks: [],
+        solverReads: ['solverBot'], strategies: [],
+        why: 'L57\'s Tentacled Beast, stepped (seedling-fidelity-bosskills D3: `levelRun.tentacleBeastFightNow`, `tentacleBeast.js`): the beast, its tentacles and whirlpools, the draw stream\'s state and `streamRefusal`, the mouth; `null` while `CONTACT_FIDELITY.tentacleBeastFight` is off. A bespoke fight, so no generic block.' },
 
     /* ── the hazard volumes (`hazards.hazardVolume`, avoid volumes, unions over phase) ── */
     { family: 'volume:crusher', kind: VOLUME, blocks: ['lane-charge', 'contact'],

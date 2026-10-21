@@ -228,6 +228,11 @@ export const R8_NORMALIZE_LIVE_BATCH = Object.freeze({
             file: 'levelRun.js', builder: 'liveSolidOpts', at: 'stepBlastsNow',
             action: 'brand', why: 'already hoisted above the blast loop; branded',
         }),
+        // ⛓ seedling-fidelity-bosskills D2: the King of Fire's balls, the spits' shape one family over.
+        Object.freeze({
+            file: 'levelRun.js', builder: 'liveSolidOpts', at: 'stepLavaBallsNow',
+            action: 'brand', why: 'hoisted above the ball loop (a ball moves nothing the bag holds); branded',
+        }),
         // ⛓ U15-swim D1: the turret spits, the blasts' shape one family over.
         Object.freeze({
             file: 'levelRun.js', builder: 'liveSolidOpts', at: 'stepSpitsNow',
@@ -416,6 +421,8 @@ export const R8_NORMALIZE_LIVE_BATCH = Object.freeze({
             // ⛓ fidelity BEAMTOWER D1: the drifting tower — the planner reads its PLACEMENT (null OFF anyway); the
             // run's own sweep (and so every preview) reads the drift.
             'beamTowers',
+            // ⛓ seedling-fidelity-bosskills D2: the King of Fire's body — the planner reads its PLACEMENT (null OFF).
+            'lavaBosses',
         ]),
         suppliedAndDropped: Object.freeze(['turrets', 'bosses']),
         why: 'PRESERVED EXACTLY — forwarding the six would re-route the planner and no '
@@ -2550,6 +2557,24 @@ export const R8_STRATEGY_EXECUTORS = Object.freeze({
             'the cost: zero ticks of its own — the exemption of the 129 px range IS the verb, and '
                 + 'the walk the loop then plans pays every volley the run steps (`freeze(15)`, one '
                 + 'damage per blast, the death reboot)']),
+        /** ⛓ seedling-fidelity-bosskills D2 — the King of Fire (`solverBot.execLavaBoss`, `lavaBossPolicy.js`). */
+        lavaboss: Object.freeze([
+            'the body: the frontier\'s own `solid:lavaboss` id, joined to the run\'s fight (`run.lavaBossFight`, '
+                + 'built only while `CONTACT_FIDELITY.kingOfFireFight` is on)',
+            'the stance: 80 px below the body on its column, where the sweep\'s middle ball comes down',
+            'the schedule: none — the policy reads the run every tick (the reflect, the 120-update window, the '
+                + 'runners); a variant is chosen by PLAYING each on a fork until one kills without a death, and the '
+                + 'completion is OBSERVED: the body\'s removal (`LavaBoss.as:195`), one tick late']),
+        /** ⛓ seedling-fidelity-bosskills D3 — the Tentacled Beast (`solverBot.execTentacleBeast`, `tentacleBeastPolicy.js`). */
+        tentaclebeast: Object.freeze([
+            'the body: the clear-tag\'s `tentaclebeast@80,48`, a `pixelmask` Solid (`world.pixelmasks`), joined to the '
+                + 'run\'s fight (`run.entities(\'tentacleBeastFight\')`, built only while '
+                + '`CONTACT_FIDELITY.tentacleBeastFight` is on)',
+            'the stance: none — the policy wakes it (within 48 px) and then strikes each sitting tentacle from a spot '
+                + 'outside every swipe band that is about to fire',
+            'the schedule: none — the placements are the run\'s own draw stream (`TentacleDrawStream`, refused by name '
+                + 'when its premises fail); a variant is chosen by PLAYING each on a fork, and the completion is '
+                + 'OBSERVED: the mouth standing (`createMouthEntrance`, the end of "dying")']),
     }),
 
     /**
