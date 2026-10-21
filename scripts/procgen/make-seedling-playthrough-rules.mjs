@@ -198,6 +198,10 @@ const CROSS_LEVEL_OPENERS = OV.buildCrossLevelOpeners(MAP);
 const GROUP_OPENERS = OV.buildGroupOpeners(MAP);
 /** ⛓ RULES kill-locks — every kill-lock room's census and ruling (`OV.killLockRoomRuling`). */
 const KILL_LOCKS = OV.buildKillLockRulings(MAP);
+// ⛓ RULES block-path — who can hold each re-closing lock's button (the room's pushables; ⚖ enemies don't
+// count). The grid builder prices an entry by the block paths where `seedlingBlockPaths.blockHolderVerdict`
+// decides it.
+const BLOCK_HOLDERS = OV.buildBlockHolders(MAP);
 /** ⛓ RULES kill-locks — the census, for a reader that reports it. Additive. */
 export const playthroughKillLocks = KILL_LOCKS;
 const entityOverride = (entity, base, level) => {
@@ -209,7 +213,7 @@ const entityOverride = (entity, base, level) => {
         };
     }
     return OV.overlayEntitySemantics(entity, base, {
-        level: level.level, crossLevelOpeners: CROSS_LEVEL_OPENERS, groupOpeners: GROUP_OPENERS, killLocks: KILL_LOCKS,
+        level: level.level, crossLevelOpeners: CROSS_LEVEL_OPENERS, groupOpeners: GROUP_OPENERS, killLocks: KILL_LOCKS, blockHolders: BLOCK_HOLDERS,
     });
 };
 
@@ -1191,7 +1195,7 @@ export function playthroughButtonEvents(doc, { existing = [] } = {}) {
         return e;
     };
     const ruling = (t, crossLevelOpeners) => OV.overlayEntitySemantics(entityOf(t), SEM.entitySemantics(entityOf(t)), {
-        level: t.level, crossLevelOpeners, groupOpeners: GROUP_OPENERS, killLocks: KILL_LOCKS,
+        level: t.level, crossLevelOpeners, groupOpeners: GROUP_OPENERS, killLocks: KILL_LOCKS, blockHolders: BLOCK_HOLDERS,
     });
     const tileOf = ({ x, y }) => [Math.floor(x / TILE), Math.floor(y / TILE)];
     const key = ([x, y]) => `${x},${y}`;

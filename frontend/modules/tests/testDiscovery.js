@@ -72,6 +72,7 @@ export const TEST_CASE_FILES = [
   './testCases/miniPanelsTests.js',
   './testCases/tutorialTests.js',
   './testCases/storagePanelTests.js',
+  './testCases/ruleConverterTests.js',
   //'./testCases/manualTests.js',
 ];
 

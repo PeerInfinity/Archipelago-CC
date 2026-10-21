@@ -232,24 +232,9 @@
       "why": "shield@112,48 is a pickup — the game's item, not a blocker"
     },
     {
-      "level": 20,
-      "tag": 4,
-      "why": "buttonroom@192,16 — a cleared tag boots it ALREADY PRESSED, so its whole Activators group starts fading from frame one — which `activators.js` does not model"
-    },
-    {
       "level": 30,
       "tag": 4,
       "why": "torchpickup@64,64 is a pickup — the game's item, not a blocker"
-    },
-    {
-      "level": 61,
-      "tag": 1,
-      "why": "buttonroom@176,40 — a cleared tag boots it ALREADY PRESSED, so its whole Activators group starts fading from frame one — which `activators.js` does not model"
-    },
-    {
-      "level": 62,
-      "tag": 1,
-      "why": "darktrap has no declared persistence response"
     },
     {
       "level": 64,

@@ -1169,14 +1169,14 @@
     },
     {
       "file": "r5-l37-burn-control.json",
-      "tickCount": 226,
+      "tickCount": 212,
       "bootLevel": 37,
       "tapeVersion": 5,
       "noHazards": []
     },
     {
       "file": "r5-l37-burn.json",
-      "tickCount": 226,
+      "tickCount": 212,
       "bootLevel": 37,
       "tapeVersion": 5,
       "noHazards": []

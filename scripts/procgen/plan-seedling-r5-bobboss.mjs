@@ -47,15 +47,17 @@
  * Usage:
  *   node scripts/procgen/plan-seedling-r5-bobboss.mjs            # report
  *   node scripts/procgen/plan-seedling-r5-bobboss.mjs --write    # write tapes
+ *   node scripts/procgen/plan-seedling-r5-bobboss.mjs --check    # the committed fixtures are byte-identical
  *   node scripts/procgen/plan-seedling-r5-bobboss.mjs --read     # read the probe
  */
 
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { emitFixtures } from './producerFixtureBytes.js';
 
 argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -73,6 +75,7 @@ const {
 const { R5_ARENA_ARM_Y, KEY_LEG } = await import(join(MODULE, 'r5Chain.js'));
 
 const WRITE = process.argv.includes('--write');
+const CHECK = process.argv.includes('--check');
 const READ = process.argv.includes('--read');
 const source = atlasLevelSource();
 const world = buildLevelWorld(source(ARENA.level), { roles: ROLES });
@@ -281,13 +284,11 @@ console.log(`   ${presses.length} presses at ${PRESS_CADENCE}, t ${PRESS_FROM}..
 console.log('   fire arm    grants [sword] — expects hasFire, {32,1} and {31,29}');
 console.log('   control     grants []      — expects no fire, {32,1} only');
 
-if (WRITE) {
-    const dir = join(MODULE, 'fixtures', 'tapes');
-    for (const t of [probe, fight, control]) {
-        const path = join(dir, `${t.name}.json`);
-        writeFileSync(path, serializeTape(t));
-        console.log(`   wrote ${path}`);
-    }
-} else if (!READ) {
+const dir = join(MODULE, 'fixtures', 'tapes');
+const outputs = [probe, fight, control].map((t) => {
+    const path = join(dir, `${t.name}.json`);
+    return { path, text: serializeTape(t) };
+});
+if (!emitFixtures(outputs, { write: WRITE, check: CHECK }) && !READ) {
     console.log('\n(dry run — pass --write to emit the tapes, --read to read the probe back)');
 }

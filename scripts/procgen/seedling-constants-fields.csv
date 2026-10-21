@@ -249,6 +249,8 @@ frontend/modules/seedlingDemo/levelRun.js|advance|h997443db|1|0,rule,magnitude,,
 frontend/modules/seedlingDemo/levelRun.js|advance|ha0be1487|1|0,rule,sentinel,,cutscene id 1 (bloody seed reboot)
 frontend/modules/seedlingDemo/levelRun.js|advance|h0b8becb4|1|0,rule,magnitude,,boss totem laser damage
 frontend/modules/seedlingDemo/levelRun.js|advance|hd7b0522b|2|0,rule,sentinel,,cutscene id 2 (plain seed reboot)
+frontend/modules/flashPanel/seedlingBlockPaths.js|*|*,structural,,,
+frontend/modules/flashPanel/seedlingBlockPaths.js|BLOCK_FATAL_TILES|(module),rule,sentinel,Puzzlements/PushableBlock.as:destroy,tile type ids a block is destroyed on (Water 1 / Pit 6 / Lava 17)
 frontend/modules/flashPanel/seedlingSemantics.js|*|*,structural,,,
 frontend/modules/flashPanel/seedlingSemantics.js|TILE_COLUMN_TO_TYPE|(module),rule,sentinel,,tileset column -> tile type id (Game.as switch)
 frontend/modules/flashPanel/seedlingSemantics.js|TILE_TYPE_IDS|(module),rule,sentinel,,tile type id by name (Tile.as:32-69); P1 names the ids the records held

@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**79 files, 6493 literals.** Class × position:
+**80 files, 6528 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
 | physics | 7 | 1711 | 594 | 2312 |
-| rule | 13 | 1071 | 518 | 1602 |
+| rule | 13 | 1074 | 518 | 1605 |
 | cosmetic | 0 | 62 | 14 | 76 |
-| structural | 13 | 379 | 2111 | 2503 |
+| structural | 15 | 387 | 2133 | 2535 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 33 | 3223 | 3237 | 6493 |
+| total | 35 | 3234 | 3259 | 6528 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
 | physics | 1799 | 0 | 97 | 123 | 4 | 289 | 2312 |
-| rule | 506 | 141 | 240 | 22 | 601 | 92 | 1602 |
+| rule | 506 | 141 | 240 | 22 | 604 | 92 | 1605 |
 
 Rows whose note starts `REVIEW:`: **114**.
 
@@ -514,7 +514,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**20 named scalars** are `physics` or `rule` (15 with an AS3 anchor), and **174 small tables** (at most 16 literals) hold at least one (97 with an AS3 reference).
+**20 named scalars** are `physics` or `rule` (15 with an AS3 anchor), and **175 small tables** (at most 16 literals) hold at least one (98 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -715,5 +715,6 @@ None: a name declared in several files now reads one profile key (the table belo
 | `ATANLO` | seedlingDemo/runtimeLibm.js | 8 | 8 | physics | derivation |  |
 | `PI` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
 | `PI_LO` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `BLOCK_FATAL_TILES` | flashPanel/seedlingBlockPaths.js | 3 | 3 | rule | sentinel | Puzzlements/PushableBlock.as:destroy |
 
 <!-- CENSUS:seedling-constants END -->

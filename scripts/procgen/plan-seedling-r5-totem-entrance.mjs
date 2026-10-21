@@ -40,14 +40,15 @@
  * Usage:
  *   node scripts/procgen/plan-seedling-r5-totem-entrance.mjs
  *   node scripts/procgen/plan-seedling-r5-totem-entrance.mjs --write
+ *   node scripts/procgen/plan-seedling-r5-totem-entrance.mjs --check   # the committed fixtures are byte-identical
  */
 
-import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { emitFixtures } from './producerFixtureBytes.js';
 
 argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -63,6 +64,7 @@ const { TOTEM_PAIR } = await import(join(MODULE, 'r5Totem.js'));
 const { CEREMONY_DEAD_FRAMES } = await import(join(MODULE, 'sealCeremony.js'));
 
 const WRITE = process.argv.includes('--write');
+const CHECK = process.argv.includes('--check');
 const levelSource = atlasLevelSource();
 /** What the route holds by the time it reaches L38 — all four, banked at boot. */
 const HELD = Object.freeze(['sword', 'fire', 'conch', 'feather']);
@@ -138,6 +140,9 @@ function armFor(name, targets, description) {
             noHazards: [],
             grants: [{ level: 38, items: [...HELD] }],
             persistence: [],
+            equips: [],
+            // The dead-frame LOCKSTEP (`Bot.pinDeadFrames`, tape v5).
+            pins: ['dead_frames'],
         },
         name,
         lattice: 8,
@@ -150,7 +155,6 @@ function armFor(name, targets, description) {
     const tape = {
         ...out.tape,
         description,
-        pins: [],
         inputs: [...out.tape.inputs, { key: 'up', from, to: from + L39_HOLD_TICKS }],
         tick_count: from + L39_HOLD_TICKS + L39_TAIL_TICKS,
     };
@@ -252,12 +256,10 @@ for (const c of checks) {
 }
 if (bad > 0) throw new Error(`${bad} of ${checks.length} claims FAILED`);
 
-if (WRITE) {
-    for (const arm of [press, control]) {
-        const path = join(MODULE, 'fixtures', 'tapes', `${arm.tape.name}.json`);
-        writeFileSync(path, serializeTape(arm.tape));
-        console.log(`\n   wrote ${path}`);
-    }
-} else {
+const outputs = [press, control].map((arm) => {
+    const path = join(MODULE, 'fixtures', 'tapes', `${arm.tape.name}.json`);
+    return { path, text: serializeTape(arm.tape) };
+});
+if (!emitFixtures(outputs, { write: WRITE, check: CHECK })) {
     console.log('\n(dry run — pass --write to emit the tapes)');
 }

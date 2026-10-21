@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 28,
         "headings": 1143,
         "indexHeadings": 2,
-        "lines": 31152,
+        "lines": 31153,
         "pages": 4,
-        "words": 426330
+        "words": 426345
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -388,10 +388,10 @@ export const DOCS_INDEX = frz({
             "file": "seedling-constants.md",
             "h1": "Seedling Constants Census",
             "headings": 16,
-            "lines": 720,
+            "lines": 721,
             "links": [],
             "path": "docs/json/developer/procgen/seedling-constants.md",
-            "words": 10692
+            "words": 10707
         },
         {
             "description": "The contract two bots share: what every input tape says whatever game it drives (the envelope), how Seedling's tape and Robot Wants Kitty's two tape forms map onto it, the core every observation stream reports, and why the gates compare exactly. `frontend/modules/seedlingDemo/tapeEnvelope.js` reads the envelope and `observationTolerance.js` is the diagnostic comparator; neither is a gate.",

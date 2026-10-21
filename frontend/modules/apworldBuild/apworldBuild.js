@@ -10,7 +10,7 @@
  * ── HOW THE PYTHON GETS HERE ───────────────────────────────────────────
  *
  * Nothing is re-implemented in JavaScript. The worker
- * (`apworldBuildWorker.js`) loads Pyodide from its CDN, fetches each file of
+ * (`apworldBuildWorker.js`, on `pyodideRuntime/`) loads Pyodide from its CDN, fetches each file of
  * `world_generator/` listed in `worldGeneratorFiles.json` (generated from
  * `git ls-files` by `scripts/build/world-generator-files.mjs`; a static site
  * cannot list a directory), writes them into Pyodide's filesystem and calls
@@ -31,17 +31,11 @@
  * pay for the generation (about a second for alttp, measured in node).
  */
 
-/**
- * ⛓ Pyodide is pinned exactly. 0.28.3 (CPython 3.13) is the version the
- * generator was proved under (node, 2026-10-01: adventure and alttp built,
- * byte-identical to a native run apart from the packing stamp). Moving it is a
- * re-check, not a pointer bump.
- */
-export const PYODIDE_VERSION = '0.28.3';
+import { sitePackageBaseUrl } from '../pyodideRuntime/pyodideRuntime.js';
 
-export function pyodideIndexUrl(version = PYODIDE_VERSION) {
-    return `https://cdn.jsdelivr.net/pyodide/v${version}/full/`;
-}
+// The pin, the CDN URL and the served-package rule live in pyodideRuntime/,
+// shared with helperScript/; re-exported here for existing importers.
+export { PYODIDE_VERSION, pyodideIndexUrl } from '../pyodideRuntime/pyodideRuntime.js';
 
 /** ⛓ The worker file, relative to `frontend/modules/`. */
 export const BUILD_WORKER_PATH = 'apworldBuild/apworldBuildWorker.js';
@@ -59,19 +53,12 @@ export function resolveBuildWorkerUrl() {
 }
 
 /**
- * Where `world_generator/` is served, given the app page's URL. The app page
- * lives in `frontend/`; when that directory is called `frontend` the server
- * is serving the repo root and the package is its sibling, otherwise
- * `frontend/` IS the site (Pages) and the deploy put the package inside it.
- *
- *     http://localhost:8000/frontend/index.html → http://localhost:8000/world_generator/
- *     https://x.github.io/Archipelago-CC/       → https://x.github.io/Archipelago-CC/world_generator/
+ * Where `world_generator/` is served, given the app page's URL — the repo
+ * root locally, the staged copy inside the site on Pages
+ * (`sitePackageBaseUrl`).
  */
 export function worldGeneratorBaseUrl(pageHref = globalThis.location?.href) {
-    const dir = new URL('./', pageHref);
-    return dir.pathname.endsWith('/frontend/')
-        ? new URL('../world_generator/', dir).href
-        : new URL('world_generator/', dir).href;
+    return sitePackageBaseUrl('world_generator', pageHref);
 }
 
 /**

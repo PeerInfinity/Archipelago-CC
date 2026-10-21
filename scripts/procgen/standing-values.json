@@ -1405,26 +1405,28 @@
       "kind": "identity",
       "cheap": false,
       "quoted": true,
-      "why": "DERIVED from the parts (⚖ 70 (c)) — campaign 39 tape(s) 905/0/0 MEASURED @5954a0b07c4a66387e52c4a7427679cddc934c2a [channel: headless] · map-walk 21 tape(s) 449/0/0 MEASURED @5954a0b07c4a66387e52c4a7427679cddc934c2a [channel: headless] · mechanic 229 tape(s) 5028/0/0 MEASURED @3cdee3d270c0236e47ea966a43dc61d17f4d8f87 [channel: headless]. Each part carries its OWN head: a category is owed a drive when the tree moved under IT, not when the tree moved at all. ⛓ Carried by: run 39498690396 @837b5c7f11 (tier full, key 6e2b9745bc179301) — REUSED at 3cdee3d270: the tier key at this head equals the run's (ci-skip-rules rule 3).",
-      "measuredAt": "5954a0b07c4a66387e52c4a7427679cddc934c2a",
+      "why": "DERIVED from the parts (⚖ 70 (c)) — campaign 39 tape(s) 905/0/0 MEASURED @fcf25a376764f0c8ba87a5c545be9eb4cb7a54c4 [channel: headless] · map-walk 21 tape(s) 449/0/0 MEASURED @fcf25a376764f0c8ba87a5c545be9eb4cb7a54c4 [channel: headless] · mechanic 229 tape(s) 5028/0/0 MEASURED @fcf25a376764f0c8ba87a5c545be9eb4cb7a54c4 [channel: headless]. Each part carries its OWN head: a category is owed a drive when the tree moved under IT, not when the tree moved at all. ⛓ Carried by: run 39536515938 @fcf25a3767 (tier full, key 01d556d5e9c38979) — REUSED at fcf25a3767: the tier key at this head equals the run's (ci-skip-rules rule 3).",
+      "measuredAt": "fcf25a376764f0c8ba87a5c545be9eb4cb7a54c4",
       "categories": {
         "campaign": {
           "tapes": 39,
           "value": "905/0/0",
-          "measuredAt": "5954a0b07c4a66387e52c4a7427679cddc934c2a",
+          "measuredAt": "fcf25a376764f0c8ba87a5c545be9eb4cb7a54c4",
+          "coveredBy": "run 39536515938 @fcf25a3767 (tier full, key 01d556d5e9c38979) — REUSED at fcf25a3767: the tier key at this head equals the run's (ci-skip-rules rule 3)",
           "channel": "headless"
         },
         "map-walk": {
           "tapes": 21,
           "value": "449/0/0",
-          "measuredAt": "5954a0b07c4a66387e52c4a7427679cddc934c2a",
+          "measuredAt": "fcf25a376764f0c8ba87a5c545be9eb4cb7a54c4",
+          "coveredBy": "run 39536515938 @fcf25a3767 (tier full, key 01d556d5e9c38979) — REUSED at fcf25a3767: the tier key at this head equals the run's (ci-skip-rules rule 3)",
           "channel": "headless"
         },
         "mechanic": {
           "tapes": 229,
           "value": "5028/0/0",
-          "measuredAt": "3cdee3d270c0236e47ea966a43dc61d17f4d8f87",
-          "coveredBy": "run 39498690396 @837b5c7f11 (tier full, key 6e2b9745bc179301) — REUSED at 3cdee3d270: the tier key at this head equals the run's (ci-skip-rules rule 3)",
+          "measuredAt": "fcf25a376764f0c8ba87a5c545be9eb4cb7a54c4",
+          "coveredBy": "run 39536515938 @fcf25a3767 (tier full, key 01d556d5e9c38979) — REUSED at fcf25a3767: the tier key at this head equals the run's (ci-skip-rules rule 3)",
           "channel": "headless"
         }
       }
