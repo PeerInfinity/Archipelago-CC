@@ -1181,6 +1181,10 @@
           },
           "required": ["gx", "gy"]
         },
+        "shared_world": {
+          "type": "string",
+          "description": "SHARED LEVEL WORLD (tile-primitives Stage 2): the key of the one maze world every AP region of a level plays in. Exactly one entry of the level carries the world in its `playable_payload` (whose `shared_world.key` equals this); every other entry of the level names the key and carries NO payload — an alias the play-time warehouse (`procgenPlayerEngine.buildWarehouse`) resolves to the same world object. Producer: `projectLevelWorld`, frontend/modules/procgenPipeline/regionAtlasMazeProjection.js."
+        },
         "playable_payload": {
           "type": "object",
           "description": "OPAQUE — the substrate's own serialized world, produced by that substrate's adapter `serializeWorld`. This schema deliberately states no inner shape: the payload belongs to the substrate, not to rules.json. Each substrate DECLARES its payload's fields on its registry entry (`sidecarFields`, read through `sidecarFieldsOf` in frontend/modules/procgenCore/sidecarFields.js), and scripts/procgen/check-sidecar-fields.mjs holds every committed entry to that declaration."
