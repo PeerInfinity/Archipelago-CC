@@ -127,5 +127,14 @@ The known gaps above are where today's code breaks this policy. Fixing them is t
   reads the exporter's `stop`/`step` (it read `end`), and `set()`/list mutators on a local work. A
   census gap closing does not mean the helper that uses the kind is now right. Diff the helper
   against Python.
+- **Codegen (`world_generator/_helper_statements.py`).** A helper body whose root is a single
+  statement (kh1 `has_x_worlds`: a bare `if_statement`) is generated as a one-statement block.
+  `_STATEMENT_TYPES` is pinned to the registry's `statement: true` kinds. Any `AST_<t>` node that the
+  AST→RB converter wrapped (kh2's `AST_comparison`) is unwrapped and generated as `t`, as the JS
+  engine does with `_original_ast_type`. An unwrapped `t` with no codegen still fails by its own
+  name. The census reads that rule too (`helper_codegen.rb` handles `AST_<t>` when
+  `helper_codegen.ast` handles `t`), which closed 23 gaps. The strict sweep over every committed
+  preset now fails on **smz3 only**: its rules are `lambda items: …` over TotalSMZ3's own
+  `Progression` object (`Attribute` ×260, `AST_lambda` ×306).
 `rule-type-dispatch-inventory.md` lists the dispatch sites themselves, including display walkers the
 census does not cover.
