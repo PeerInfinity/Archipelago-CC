@@ -567,3 +567,172 @@ export function crossRoomPrerequisitesOf(map, declarations, namedRooms) {
         return { flag: { level, tag: d.flag.tag }, writers, gated, verb: d.verb, cite: d.cite };
     });
 }
+
+/**
+ * ⛓⛓ RULES rope-events — **A CUT ROPE AS AN AP EVENT.** A `RopeStart` hit (the Sword's or ghost sword's slash,
+ * `Player.as:917` — the "Rope" type skips the line-of-sight test; the Spear's thrust, `:989`; Fire, `:1032`: all
+ * through `genericHit` → `(e as RopeStart).hit()`, `:1095-1097`, which checks no weapon) clears the rope's OWN tag
+ * (`RopeStart.as:46`) and sets `activate` on every `Activators` of the room with the same `t` (`:79-91`). On every
+ * later entry `check()` (`Game.as:868-877`, once per world) sees the cleared tag and hits it again (`:31-38`), so the
+ * group is re-published on every visit: the cut is a CROSS-VISIT state, and logic must not assume it — it is an
+ * event in the region the rope is cut from (game-witnessed, `probe-seedling-rope-events.mjs` + fidelity F7's
+ * `probe-seedling-f7-reentry.mjs`).
+ *
+ * The event is keyed on the ROPE's own tag (`flag:L<level>:<tag>`, named `L<level> flag <tag>: rope@<x>,<y> cleared`).
+ * What the cut OPENS is read off its group, per peer (`ropePeerEffect`); a rope is minted only when every peer opens
+ * something and nothing closes:
+ *   - `silences` an `ArrowTrap` with `shoot = 1` fires while `activate XOR shootDefault` (`ArrowTrap.as:30-40`), so
+ *                the cut stops it: its LANE is crossable only with the event (the caller charges the lane cells);
+ *   - `holds`    a `FallRock` whose landing tile is a `Button`'s: the rock falls on the cut (`FallRock.as:103-109`),
+ *                is rebuilt fallen from its own tag (`:42-47`), and as a Solid presses the button on every visit — a
+ *                holder for the button's re-closing lock (`seedlingBlockPaths` reads it through the event);
+ *   - REFUSED by name (the rope is NOT minted): a trap the cut ARMS (`shoot = 0`), a rock that lands on anything but
+ *                a button (it CLOSES that tile — the gate would need `Not(event)`), a `Pulser` (the cut arms it:
+ *                `pulser-arm`, a push the model does not place), or any other peer.
+ * The cut condition is the transcription's (`seedlingSemantics`' rope row: Sword|Spear|Fire, ⚖ the user 2026-10-21
+ * "Yes, fire should count too"), priced from the cells beside the rope's own tile (the melee reach; Fire's reach is
+ * not widened here).
+ */
+export const ROPE_EVENT_CITE = 'Puzzlements/RopeStart.as:31-49,79-91 + Player.as:917,989,1032,1095-1097 + Game.as:868-877';
+
+/** The rope's event name (also its event item's name). */
+export const ropeEventName = ({ level, tag, x, y }) => obstacleEventName({ level, tag, cls: 'rope', x, y });
+
+/** The analyzer condition "this rope was cut" — resolved to `Has(<event>)` by the playthrough's resolver. */
+export const ropeEventCondition = (rope) => ({ event: ropeEventName(rope) });
+
+/**
+ * Every rope of a map extract and its tset group: `{level, x, y, tag, tset, peers: [{type, x, y, tset, tag, attrs}]}`,
+ * the peers being the level's other entities with the same `tset` (what `set activate` reaches).
+ */
+export function ropesOf(map) {
+    return map.levels.flatMap((l) => (l.entities ?? []).filter((e) => e.type === 'rope').map((r) => {
+        const tset = Number(r.attrs?.tset);
+        return {
+            level: l.level, x: r.x, y: r.y, tag: Number(r.attrs?.tag), tset,
+            peers: (l.entities ?? []).filter((e) => e !== r && e.attrs?.tset !== undefined && Number(e.attrs.tset) === tset)
+                .map((e) => ({ type: e.type, x: e.x, y: e.y, tset, tag: e.attrs?.tag === undefined ? null : Number(e.attrs.tag), attrs: e.attrs })),
+        };
+    }));
+}
+
+/**
+ * What a cut does to one peer of the rope's group (`ropesOf` row), in its level (`level.entities`).
+ * @returns {{effect:'silences'|'holds'|'arms'|'closes'|'unknown', why:string}}
+ */
+export function ropePeerEffect(peer, level) {
+    if (peer.type === 'arrowtrap') {
+        return Number(peer.attrs?.shoot) === 1
+            ? { effect: 'silences', why: 'arrowtrap shoot=1: fires while activate XOR shootDefault (ArrowTrap.as:30-40), the cut stops it' }
+            : { effect: 'arms', why: 'arrowtrap shoot=0: the cut STARTS it firing (ArrowTrap.as:30-40)' };
+    }
+    if (peer.type === 'fallrock') {
+        const under = (level.entities ?? []).filter((e) => e.x === peer.x && e.y === peer.y && e.type !== 'fallrock');
+        if (under.some((e) => e.type === 'button')) {
+            return { effect: 'holds', why: 'fallrock lands on a button and presses it on every visit (FallRock.as:42-47,103-109)' };
+        }
+        return { effect: 'closes', why: `fallrock lands as a Solid on ${under.map((e) => `${e.type}@${e.x},${e.y}`).join(', ') || 'its tile'} — `
+            + 'the gate would need NOT(event)' };
+    }
+    if (peer.type === 'pulser') return { effect: 'arms', why: 'pulser: the cut arms it (pulser-arm; its pushes are not placed by the model)' };
+    return { effect: 'unknown', why: `${peer.type}: no ruled response to its group's activate` };
+}
+
+/**
+ * One rope's verdict: its peers' effects, and `refuse` (a named reason) unless every peer opens something.
+ * @returns {{effects:{peer:object, effect:string, why:string}[], refuse:string|null}}
+ */
+export function ropeVerdict(row, level) {
+    const who = `L${row.level} rope@${row.x},${row.y} {${row.level},${row.tag}}`;
+    if (!Number.isInteger(row.tag) || row.tag < 0) return { effects: [], refuse: `${who}: no persistence tag — the cut is not saved` };
+    const effects = row.peers.map((p) => ({ peer: p, ...ropePeerEffect(p, level) }));
+    if (effects.length === 0) return { effects, refuse: `${who}: its group holds no other entity` };
+    const bad = effects.filter((e) => e.effect !== 'silences' && e.effect !== 'holds');
+    if (bad.length > 0) return { effects, refuse: `${who}: ${bad.map((e) => `${e.peer.type}@${e.peer.x},${e.peer.y} ${e.effect} (${e.why})`).join('; ')}` };
+    return { effects, refuse: null };
+}
+
+/**
+ * The rope rows → the events (ONE per minted rope) and, by name, the ropes refused.
+ *
+ * @param {object[]} rows `ropesOf(map)`
+ * @param {object} ctx
+ * @param {(n:number) => object} ctx.level the level record
+ * @param {(row:object) => {region_id:string, sub_region?:string, side:string}} ctx.place the sub-region the rope is
+ *   cut from (throws by name when it cannot say)
+ * @param {(row:object) => object|null} ctx.rule the cut's own condition as a rules.json rule
+ * @returns {{events:object[], minted:object[], refused:string[]}}
+ */
+export function deriveRopeEvents(rows, ctx) {
+    const events = [];
+    const minted = [];
+    const refused = [];
+    for (const row of rows) {
+        const { effects, refuse } = ropeVerdict(row, ctx.level(row.level));
+        if (refuse) { refused.push(refuse); continue; }
+        const place = ctx.place(row);
+        minted.push({ ...row, effects });
+        events.push({
+            region_id: place.region_id,
+            ...(place.sub_region === undefined ? {} : { sub_region: place.sub_region }),
+            name: ropeEventName(row),
+            access_rule: ctx.rule(row) ?? null,
+            fields: {
+                event_id: obstacleEventId(row),
+                event_kind: OBSTACLE_EVENT_KIND,
+                obstacle: { level: row.level, tag: row.tag, class: 'rope', x: row.x, y: row.y },
+                action: { verb: 'cut', item: null, opens: effects.map((e) => ({ class: e.peer.type, x: e.peer.x, y: e.peer.y, effect: e.effect })) },
+                side: place.side,
+                across: [],
+            },
+        });
+    }
+    const byId = (a, b) => a.fields.event_id.localeCompare(b.fields.event_id, 'en', { numeric: true });
+    return { events: events.sort(byId), minted, refused };
+}
+
+/**
+ * The LANE cells a silenced trap guards, as analyzer charges: every cell of the tile columns its lane covers, from the
+ * trap's row DOWN to the first `wall` (an arrow stops only on a Solid, `Arrow.as:18,55-60`, and a breakable rock it
+ * stops on is gone once broken — so the lane runs through every non-wall cell, the state where every rock is broken).
+ * A lane cell becomes crossing material charged `condition` — except a DOOR tile (a landing or a link), which stays
+ * open: the analyzer binds a door to a component, so the doors in a lane form their own pocket, and every way out of
+ * it crosses the charged cells. Refused by name: a kept-open door with a neighbour that is neither a lane cell, a wall,
+ * nor another such door (the pocket would leak round the lane).
+ *
+ * @param {{width:number, height:number, cells:object[]}} grid the uncharged grid
+ * @param {{x0:number, x1:number, fromY:number}[]} lanes pixel lanes (`arrowTrap.arrowLane`)
+ * @param {object} condition the charge (`ropeEventCondition`)
+ * @param {Set<string>} doorTiles `"tx,ty"` of the level's landings and links
+ * @param {number} tile the tile size
+ * @returns {{tile:[number,number], condition:object, open:boolean}[]}
+ */
+export function ropeLaneCharges(grid, lanes, condition, doorTiles, tile = 16) {
+    const { width, height, cells } = grid;
+    const lane = new Set();
+    for (const l of lanes) {
+        for (let tx = Math.floor(l.x0 / tile); tx * tile < l.x1; tx += 1) {
+            if (tx < 0 || tx >= width) continue;
+            for (let ty = Math.max(0, Math.floor(l.fromY / tile)); ty < height; ty += 1) {
+                if (cells[ty * width + tx]?.kind === 'wall') break;
+                lane.add(`${tx},${ty}`);
+            }
+        }
+    }
+    const open = new Set([...lane].filter((k) => doorTiles.has(k)));
+    for (const k of open) {
+        const [x, y] = k.split(',').map(Number);
+        for (const [nx, ny] of [[x, y - 1], [x + 1, y], [x, y + 1], [x - 1, y]]) {
+            if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
+            const nk = `${nx},${ny}`;
+            if (lane.has(nk) || cells[ny * width + nx]?.kind === 'wall') continue;
+            throw new Error(`rope lanes: the door [${k}] stands in a lane, but its neighbour [${nk}] is outside it — `
+                + 'the pocket would be entered without crossing the lane');
+        }
+    }
+    return [...lane].sort((a, b) => {
+        const [ax, ay] = a.split(',').map(Number);
+        const [bx, by] = b.split(',').map(Number);
+        return ay - by || ax - bx;
+    }).map((k) => ({ tile: k.split(',').map(Number), condition, open: open.has(k) }));
+}
