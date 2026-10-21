@@ -55,14 +55,15 @@
  * Usage:
  *   node scripts/procgen/plan-seedling-r5-bosskey.mjs            # plan + report
  *   node scripts/procgen/plan-seedling-r5-bosskey.mjs --write    # write tapes
+ *   node scripts/procgen/plan-seedling-r5-bosskey.mjs --check    # the committed fixtures are byte-identical
  */
 
-import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { emitFixtures } from './producerFixtureBytes.js';
 
 argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -84,6 +85,7 @@ const {
 } = await import(join(MODULE, 'r5Chain.js'));
 
 const WRITE = process.argv.includes('--write');
+const CHECK = process.argv.includes('--check');
 const source = atlasLevelSource();
 const worldFor = (n) => buildLevelWorld(source(n), { roles: ROLES });
 
@@ -279,17 +281,15 @@ console.log(`\n## the shut-before control`);
 console.log(`   boots ${JSON.stringify(R5_LOCK_SHUT_BOOT)}, holds UP for ${holdTicks} ticks `
     + `against a lock that would open on ${opensOn} — so a pin here is the KEY's absence`);
 
-if (WRITE) {
-    const dir = join(MODULE, 'fixtures', 'tapes');
-    for (const t of [legTape, shutTape]) {
-        const path = join(dir, `${t.name}.json`);
-        // Round-tripped rather than trusted: `serializeTape` will happily
-        // write a field combination `parseTape` refuses, and the place to
-        // find that out is here rather than at `botLoadTape` in a browser.
-        parseTape(serializeTape(t));
-        writeFileSync(path, serializeTape(t));
-        console.log(`   wrote ${path}`);
-    }
-} else {
+const dir = join(MODULE, 'fixtures', 'tapes');
+const outputs = [legTape, shutTape].map((t) => {
+    const path = join(dir, `${t.name}.json`);
+    // Round-tripped rather than trusted: `serializeTape` will happily
+    // write a field combination `parseTape` refuses, and the place to
+    // find that out is here rather than at `botLoadTape` in a browser.
+    parseTape(serializeTape(t));
+    return { path, text: serializeTape(t) };
+});
+if (!emitFixtures(outputs, { write: WRITE, check: CHECK })) {
     console.log('\n(dry run — pass --write to emit the two tapes)');
 }
