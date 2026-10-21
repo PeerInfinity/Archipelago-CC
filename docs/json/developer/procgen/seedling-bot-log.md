@@ -17674,7 +17674,7 @@ its byte-frozen free oracle is compared against.
 **COVERAGE, BY ROUTE MODE** (`campaign-frontier.json` `coverage`; `route-only` is the route the chain was recorded on):
 
 - `route-only` through 3.1: **30/30** route steps — COMPLETE
-- `full` through 3.1: **17/51** route steps — the chain leaves this route at segment 18: `r9-solve-16` arrives in L18, route step 18 crosses to L17
+- `full` through 3.1: **13/47** route steps — the chain leaves this route at segment 14: `r9-solve-0` arrives in L13, route step 14 crosses to L86
 
 <!-- GENERATED:campaign-chain END -->
 
