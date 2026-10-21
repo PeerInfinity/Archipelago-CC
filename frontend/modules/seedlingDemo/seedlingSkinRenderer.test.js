@@ -84,6 +84,17 @@ describe('2. hand-computed cells (the investigation\'s worked example of level 0
         expect(at).toBeGreaterThan(l.lastIndexOf('drawImage(seedling/Shore, 240, 0, 48, 48)'));
     });
 
+    it('⛓ G3c: `drawnObjects` drops the static solid a caller draws as a body (L42\'s crushers); omitted, every object is drawn', () => {
+        const world = roomOf(42);
+        const all = roomOps(world, art, { level: 42 });
+        const crushers = world.objectSolids.filter((o) => o.tag === 'crusher');
+        expect(crushers).toHaveLength(2);
+        const dropped = roomOps(world, art, { level: 42, drawnObjects: (o) => o.tag === 'crusher' });
+        expect(all.length - dropped.length).toBe(2);
+        const rectsOf = (ops) => ops.filter((o) => o.rect && crushers.some((c) => c.rect.x === o.rect.x && c.rect.y === o.rect.y)).length;
+        expect([rectsOf(all), rectsOf(dropped)]).toEqual([2, 0]);
+    });
+
     it('Y-SORT: the player stands IN FRONT of a tree whose base is above him, BEHIND one whose base is below', () => {
         const world = roomOf(0);
         const tree = world.objectSolids.find((o) => o.tag === 'tree');

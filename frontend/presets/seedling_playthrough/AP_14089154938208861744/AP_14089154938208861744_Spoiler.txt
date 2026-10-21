@@ -104,12 +104,12 @@ Playthrough:
 1: {
   Level 010 - Sword: Progressive Sword
   Level 011 - Chest: Seal
-  Level 017 - Chest: Seal
   Level 086 - Chest: Seal
 }
 2: {
   L0 flag 1: breakablerock@288,176 cleared: L0 flag 1: breakablerock@288,176 cleared
   L0 flag 4: breakablerock@80,112 cleared: L0 flag 4: breakablerock@80,112 cleared
+  Level 017 - Chest: Seal
   Level 019 - Boss Key 0: Red Key
   Level 019 - Shieldspire: Seal
   Level 036 - Chest: Seal

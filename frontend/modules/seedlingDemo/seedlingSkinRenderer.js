@@ -282,10 +282,14 @@ const sprite = (art, key, frame, at, extra = {}) => {
  * @param {object[]} [opts.apItemSprites] the AP items' ops (`seedlingEnemySkin.apItemOps`, G3); when given they
  *   replace the logo drawn for each of `apItems`
  * @param {object[]} [opts.entitySprites] every other body's ops (`seedlingEnemySkin.enemyOps`, G3), Y-sorted
+ * @param {function} [opts.drawnObjects] `(objectSolid) → boolean`: a static solid the caller draws itself as a body
+ *   (G3c's crushers, axes, chains, totem, bomb pusher — `seedlingHazardSkin.HAZARD_OBJECT_TAGS`), so its build-time
+ *   rectangle is not painted under (or, for a crusher that has moved, beside) the sprite. Omitted: every object is drawn.
  * @param {Function} [opts.mask] the autotiler (a test's MUTANT; default `autotileMask`)
  */
 export function roomOps(world, art, {
     level, tick = 0, player = null, playerSprites = null, apItems = [], apItemSprites = null, entitySprites = null, mask = autotileMask,
+    drawnObjects = null,
 } = {}) {
     const plan = planFor(world, level, mask);
     const ops = [];
@@ -309,6 +313,7 @@ export function roomOps(world, art, {
     }
 
     for (const o of plan.objects) {
+        if (drawnObjects?.(o)) continue;
         const fallback = rectOp(o.rect, objectSolidColour(o), 0.85, -o.rect.bottom);
         if (o.cls?.as3 === 'CliffSide' && has('seedling:scenery/cliffside')) {
             ops.push(sprite(art, 'seedling:scenery/cliffside', o.cls.frame ?? 0, o, { layer: 0, fallback }));

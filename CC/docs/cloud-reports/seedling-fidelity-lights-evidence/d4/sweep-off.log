@@ -1,0 +1,26 @@
+# box lock: BUSY — probe-seedling-divergence-sweep.mjs (pid 23568, browser) since 2026-10-21T00:00:53.526Z; queuing for up to 3600s
+# box lock: TAKEN by probe-seedling-divergence-sweep.mjs (browser, pid 27862) — head 81bd3d5c6, 6 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+INFO: mode bare: 2 legs in 2 page(s) (of 863 legs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 1: collideLinePointsExact,wallFlyerSwordHits,drillLive,bobSoldierLive,wallFlyerKill,wallFlyerShieldBump,darkTrapLight,spearingWindow,fallBurnsPress,bulbLive,baitForecast,forcedHits,bombPusherLive,totemShotBlastInt,rebootShake,strikeIframeLapse,fallRockPostFall,forecastSpeedByTerrain,buttonFallReleaseStep,waypointSlide,lavaChainPlayerHit,ceremonyShove,flyerLive,beamTowerDrift,beamTowerBeamHit,spinningAxePlayerHit,sealDoorApproach,axeTimingRung,axeGateTransit,statueTalkRange,watcherTalkVerb,apReportBosses,guardApproachStance,coveredGoalRefusal,shakeBandMoot,spinnerSwingLineOfSight (--contact-fidelity)
+AXE_DODGE: page 1: setting default (model default on)
+UPGRADE-WINDOW: page 1: setting 85
+DASH_ONLY_WINDOW: page 1: setting default
+DASH_SHAPE: page 1: setting default
+INFO: page 1 booted in 38 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 607 start (page 1, pageLeg 0)
+ROW {"id":607,"key":"level_69 <- in_pit_L70_3_8 -> exit:out_lightbosscontroller_72_72","mode":"bare","producer":"solver","page":1,"pageLeg":0,"level":69,"arrive":[48,128],"goal":"level_69 -> level_36","kind":"exit","sphere":"6.7","before":{"slots":[],"has":[]},"landed":{"level":69,"x":48,"y":128,"jumps":1,"replaced":null},"rngSplitAtArrival":{"echo":false,"latch":null,"begin":null},"answer":{"ok":true,"action":"force-re-arrival"},"end":"failed","failed":"the solver has no goal for level_69 -> level_36: no live teleporter resolved for the exit","notes":["[wasm playback] the solver has no goal for l…
+INFO: page 1: 1 page error(s), ~2 swaps
+RECYCLE: page 1: launch 311 ms, newPage 210 ms, pageClose 29 ms, browserClose 889 ms
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+CONTACT: page 2: collideLinePointsExact,wallFlyerSwordHits,drillLive,bobSoldierLive,wallFlyerKill,wallFlyerShieldBump,darkTrapLight,spearingWindow,fallBurnsPress,bulbLive,baitForecast,forcedHits,bombPusherLive,totemShotBlastInt,rebootShake,strikeIframeLapse,fallRockPostFall,forecastSpeedByTerrain,buttonFallReleaseStep,waypointSlide,lavaChainPlayerHit,ceremonyShove,flyerLive,beamTowerDrift,beamTowerBeamHit,spinningAxePlayerHit,sealDoorApproach,axeTimingRung,axeGateTransit,statueTalkRange,watcherTalkVerb,apReportBosses,guardApproachStance,coveredGoalRefusal,shakeBandMoot,spinnerSwingLineOfSight (--contact-fidelity)
+AXE_DODGE: page 2: setting default (model default on)
+UPGRADE-WINDOW: page 2: setting 85
+DASH_ONLY_WINDOW: page 2: setting default
+DASH_SHAPE: page 2: setting default
+INFO: page 2 booted in 36 s; botStatus fields: input,seam,slash,menu_state,rng,save,pins,sound_pin,camera,game_time,frozen_timer,hits_timer,hits,drown_timer,equips,inventory_slots,secondary,primary,saw_auto_advance,persistence_cleared,persistence,grants,menu,cutscene,items,y,x,level,saw_input_refused,receive_input,noclip,dead_frames,buffered,tick_count,tick,error,frozen,held,finished,arm,armed,loaded
+LEG 608 start (page 2, pageLeg 0)
+ROW {"id":608,"key":"level_69 <- in_pit_L70_3_8 -> location:Level 069 - Lights","mode":"bare","producer":"solver","page":2,"pageLeg":0,"level":69,"arrive":[48,128],"goal":"Level 069 - Lights","kind":"location","sphere":"6.7","before":{"slots":[],"has":[]},"landed":{"level":69,"x":48,"y":128,"jumps":1,"replaced":null},"rngSplitAtArrival":{"echo":false,"latch":null,"begin":null},"end":"unresolved","failed":"\"Level 069 - Lights\" is a location the vanilla arm's map did NOT bind — \"Level 069 - Lights\" is a BOSS KILL (a lightbosscontroller in level 69, reported at {69,0}): its check is bound, but th…
+INFO: page 2: 1 page error(s), ~1 swaps
+RECYCLE: page 2: launch 86 ms, newPage 174 ms, pageClose 78 ms, browserClose 651 ms
+INFO: sweep done

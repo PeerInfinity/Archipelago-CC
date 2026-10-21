@@ -31,6 +31,7 @@ import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { blockKeyOf, resolveQueueBlocks } from '../loops/blockIdentity.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { mountChecksLine } from '../commonUI/checksLine.js';
 
 export class PlaybackBotPanel {
     static moduleApis = null;
@@ -49,6 +50,14 @@ export class PlaybackBotPanel {
         this._cachedRulesJson = null;
         // The loaded slot's player id (rules.json's per-player blocks, e.g. `exporter[p].return_to_menu`).
         this._cachedPlayerId = null;
+        // ⛓ MINI VIEW (modules/miniPanels) — the panel shrunk to one row: the bot's five buttons, its status
+        // line, the checks line when Checks rides here, and ⤢ to expand. The rest stays built but hidden, so
+        // expanding is instant and the run is untouched.
+        this._mini = false;
+        this._miniExtras = null;
+        this._miniChecks = null;
+        this._miniChecksLine = null;
+        this._onExpand = null;
 
         if (typeof document === 'undefined') {
             this.rootElement = null;
@@ -96,6 +105,7 @@ export class PlaybackBotPanel {
 
         this._mountBot();
         this._render();
+        this._placeMiniExtras();
 
         // Re-render on sphere-log load events so the empty-state
         // placeholder swaps for the bot UI when the user picks a
@@ -173,10 +183,68 @@ export class PlaybackBotPanel {
 
     getBot() { return this._bot; }
 
+    isMiniMode() { return this._mini; }
+
+    /** The mini row sizes itself to this element's natural height. */
+    getMiniContentElement() { return this.rootElement; }
+
+    /** Show the mini view (or the full one). `onExpand` is what the mini view's ⤢ button calls. */
+    setMiniMode(on, { onExpand = null } = {}) {
+        if (!this.rootElement) return;
+        this._mini = !!on;
+        if (onExpand) this._onExpand = onExpand;
+        this.rootElement.classList.toggle('pb-mini', this._mini);
+        if (this._mini) this._ensureMiniExtras();
+        this._placeMiniExtras();
+    }
+
+    /** Show the checks line inside the mini row (Checks on while the bot is mini). */
+    setMiniChecks(on) {
+        if (!this.rootElement) return;
+        this._ensureMiniExtras();
+        if (on && !this._miniChecksLine) {
+            this._miniChecksLine = mountChecksLine(this._miniChecks, {
+                bus: eventBus, stateManager, moduleName: 'playbackBot',
+            });
+        } else if (!on && this._miniChecksLine) {
+            this._miniChecksLine.dispose();
+            this._miniChecksLine = null;
+            this._miniChecks.textContent = '';
+        }
+        this._miniChecks.hidden = !on;
+    }
+
+    _ensureMiniExtras() {
+        if (this._miniExtras) return;
+        const extras = document.createElement('div');
+        extras.className = 'pb-mini-extras';
+        const checks = document.createElement('span');
+        checks.className = 'pb-mini-checks';
+        checks.hidden = true;
+        const expand = document.createElement('button');
+        expand.type = 'button';
+        expand.className = 'pb-mini-expand';
+        expand.textContent = '⤢';
+        expand.title = 'Expand: back to the full Playback Bot panel';
+        expand.addEventListener('click', () => this._onExpand?.());
+        extras.append(checks, expand);
+        this._miniExtras = extras;
+        this._miniChecks = checks;
+    }
+
+    /** The extras ride last in the root (after the bot and any placeholder); re-placed after each render. */
+    _placeMiniExtras() {
+        if (this._miniExtras && this.rootElement && this.rootElement.lastChild !== this._miniExtras) {
+            this.rootElement.appendChild(this._miniExtras);
+        }
+    }
+
     onPanelShow() {}
     onPanelResize() {}
 
     destroy() {
+        this._miniChecksLine?.dispose();
+        this._miniChecksLine = null;
         for (const off of this._sphereDataSubscriptions) {
             try { off(); } catch (_e) { /* noop */ }
         }
@@ -320,6 +388,9 @@ export class PlaybackBotPanel {
 
     _renderEmptyOverlay() {
         const hasLog = this._hasSphereLog();
+        // Without a sphere log the bot can still check any reachable location (its timer source): keep it
+        // visible then, with the placeholder as a note above it.
+        const usable = hasLog || !!this._bot?.hasTimer?.();
         const botEl = this._bot?.getElement();
 
         // Detach previous placeholder if any.
@@ -336,7 +407,7 @@ export class PlaybackBotPanel {
             if (botEl.parentNode !== this.rootElement) {
                 this.rootElement.appendChild(botEl);
             }
-            botEl.style.display = hasLog ? '' : 'none';
+            botEl.style.display = usable ? '' : 'none';
         }
 
         if (!hasLog) {
@@ -346,10 +417,13 @@ export class PlaybackBotPanel {
                 <div class="playback-bot-empty-state-heading">No sphere log loaded.</div>
                 <div class="playback-bot-empty-state-body">
                     Generate a world in the Procgen Pipeline and press Load into frontend, or pick a preset with a sphere log in the Presets panel, to begin.
+                    ${usable ? 'Without one, set <b>Check next</b> to <b>Any reachable location</b>: it needs no sphere log.' : ''}
                 </div>
             `;
-            this.rootElement.appendChild(placeholder);
+            if (usable && botEl) this.rootElement.insertBefore(placeholder, botEl);
+            else this.rootElement.appendChild(placeholder);
             this._emptyEl = placeholder;
         }
+        this._placeMiniExtras();
     }
 }

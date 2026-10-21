@@ -48,7 +48,11 @@ export const GAMEPLAY_DRAW_CONSUMERS = Object.freeze({
         + 'in the whirlpool loop (MODELLED by seedling-fidelity-bosskills D3 behind '
         + '`CONTACT_FIDELITY.tentacleBeastFight`: `tentacleBeast.TentacleDrawStream`, under a declared seed, '
         + '`split: true` and this room the only one built since the reseed; refused by name otherwise)',
-    lightboss: 'LightBoss.as:67 — `if (!Math.floor(Math.random() * 90))` (DEFERRED)',
+    // ⛓ fidelity LIGHTS: CORRECTED — the draw is `Rng.cos()`, the COSMETIC stream (a sound pick, `Music.playSound("Boss 6
+    // Move")`), not `Math.random()`; never modelled (⚖ 2026-10-10). Kept as a row because without `rng.split` the cosmetic
+    // draws share the one stream. (The key matches no placed entity type — `lightbosscontroller` is what L69 places.)
+    lightboss: 'LightBoss.as:67 — `if (!Math.floor(Rng.cos() * 90)) Music.playSound("Boss 6 Move")` — COSMETIC (a sound '
+        + 'pick; shares the stream only without `rng.split`)',
 });
 
 /**

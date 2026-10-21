@@ -1,0 +1,101 @@
+{
+ "tape_version": 8,
+ "game": "seedling",
+ "boot": {
+  "level": 76,
+  "x": 16,
+  "y": 80
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [],
+ "despawn": [],
+ "equips": [],
+ "pins": [
+  "sound",
+  "dead_frames"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 418414780,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 1763053598
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasFire": true,
+   "hasWand": true,
+   "hasFireWand": false,
+   "canSwim": true,
+   "hasSpear": true,
+   "hasDarkShield": true,
+   "hasDarkSuit": false,
+   "hasDarkSword": true,
+   "hasFeather": true,
+   "hasTorch": true
+  },
+  "beam": false,
+  "rock_set": false,
+  "hits_max": 4,
+  "first_use": false,
+  "extended": false,
+  "time": 5790,
+  "primary": 0,
+  "secondary": 0,
+  "grass_cut": 0,
+  "cutscene": [
+   false,
+   false,
+   false,
+   false
+  ],
+  "menu_state": 0,
+  "music": {
+   "set": "Room",
+   "index": 1
+  }
+ },
+ "tick0": null,
+ "hold": false,
+ "tick_count": 170,
+ "inputs": [
+  {
+   "key": "right",
+   "from": 0,
+   "to": 7
+  },
+  {
+   "key": "left",
+   "from": 10,
+   "to": 18
+  },
+  {
+   "key": "right",
+   "from": 40,
+   "to": 52
+  },
+  {
+   "key": "left",
+   "from": 54,
+   "to": 66
+  },
+  {
+   "key": "right",
+   "from": 100,
+   "to": 112
+  }
+ ],
+ "name": "igneous-l76-k9-rebuild",
+ "description": "\u26d3 fidelity IGNEOUS D1 \u2014 NINE in-range renders (t5-t13): breaks at t13, lava at t40 with the player away; stepping on at t52 is the lava death (respawn t82). The restart REBUILDS the tile: in range t105, break t113, lava t140, death t141. Recorded on p4g headless (probe-seedling-encounter-ticks.mjs --tape-file --out).",
+ "note": ""
+}

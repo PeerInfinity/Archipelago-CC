@@ -277,11 +277,20 @@ const botPlay = { ...BOT, selector: '.playback-bot .playback-control-bar-button-
 const botStop = { ...BOT, selector: '.playback-bot .playback-control-bar-button-stop' };
 const botStatus = { ...BOT, selector: '.playback-bot .playback-bot-status' };
 const checksLine = { ...CLIENT, selector: '#console-checks-line' };
+const QL = { panel: 'quickLaunchPanel' };
+const miniToggle = (row) => ({ ...QL, selector: `.ql-mini-row[data-mini="${row}"] .ql-mini-toggle` });
+const CHECKS_PANEL = { panel: 'checksPanel' };
+const checksPanelLine = { ...CHECKS_PANEL, selector: '.checks-panel-content' };
+const botRoot = { ...BOT, selector: '.playback-bot-panel' };
+const botMiniChecks = { ...BOT, selector: '.pb-mini-checks' };
+const botExpand = { ...BOT, selector: '.pb-mini-expand' };
+const isBotMini = (ctx) => ctx.query(botRoot)?.classList.contains('pb-mini') === true;
 
 export const TRACKER_TIMER = tracker({
     id: 'tracker-timer',
+    covers: ['checksPanel'],
     title: 'Tracking: check reachable locations automatically',
-    summary: 'Let the Playback Bot check every reachable location by itself, on a timer.',
+    summary: 'Let the Playback Bot check every reachable location by itself, on a timer; keep it and the count in the mini row.',
     intro: 'The **Playback Bot** can check reachable locations by itself — a game that plays itself, for testing or for watching the logic unfold. Set it to **any reachable location** and it works as a timer: each tick it checks what is reachable now. The **Console** counts the checks.',
     sections: [
         {
@@ -319,6 +328,45 @@ export const TRACKER_TIMER = tracker({
                         text: 'Set **Check next** back to **Sphere log, in order**, the bot\'s usual way of playing.',
                         actions: [{ select: { ...botSource, value: 'sphere' } }],
                         done: (ctx) => ctx.query(botSource)?.value === 'sphere',
+                    },
+                },
+            ],
+        },
+        {
+            id: 'mini',
+            title: 'In the mini row',
+            blocks: [
+                { prose: 'The bot and the *Checked* count can also sit in a thin **mini row** above the middle column, so they stay in view whatever tab is in front. The **Quick Launch** panel\'s **Mini panels** section switches them.' },
+                {
+                    step: {
+                        id: 'checks-on',
+                        text: 'In **Quick Launch → Mini panels**, press **Turn on** beside **Checks**: the *Checked* line appears in a row of its own above the middle column.',
+                        actions: [{ click: miniToggle('checks') }],
+                        done: (ctx) => /^Checked: /.test(ctx.text(checksPanelLine)),
+                    },
+                },
+                {
+                    step: {
+                        id: 'bot-mini',
+                        text: 'Press **Make mini** beside **Playback Bot**: the bot shrinks to its buttons and status line in the mini row, and the *Checked* line moves in beside them.',
+                        actions: [{ click: miniToggle('bot') }],
+                        done: (ctx) => isBotMini(ctx) && /^Checked: /.test(ctx.text(botMiniChecks)) && !ctx.query(CHECKS_PANEL),
+                    },
+                },
+                {
+                    step: {
+                        id: 'expand',
+                        text: 'Press **⤢** at the end of the bot\'s mini row: it is the full panel again, and *Checked* is back in a row of its own.',
+                        actions: [{ click: botExpand }],
+                        done: (ctx) => !isBotMini(ctx) && /^Checked: /.test(ctx.text(checksPanelLine)),
+                    },
+                },
+                {
+                    step: {
+                        id: 'checks-off',
+                        text: 'Press **Turn off** beside **Checks**: the mini row is gone.',
+                        actions: [{ click: miniToggle('checks') }],
+                        done: (ctx) => !ctx.query(CHECKS_PANEL),
                     },
                 },
             ],

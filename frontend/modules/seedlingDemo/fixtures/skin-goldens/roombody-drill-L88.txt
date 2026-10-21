@@ -1,0 +1,300 @@
+t=1 [d:sit,d:hidden] |
+t=2 [d:sit,d:hidden] |
+t=3 [d:sit,d:hidden] |
+t=4 [d:sit,d:hidden] |
+t=5 [d:sit,d:hidden] |
+t=6 [d:sit,d:hidden] |
+t=7 [d:sit,d:hidden] |
+t=8 [d:sit,d:hidden] |
+t=9 [d:sit,d:hidden] |
+t=10 [d:sit,d:hidden] |
+t=11 [d:sit,d:hidden] |
+t=12 [d:sit,d:hidden] |
+t=13 [d:sit,d:hidden] |
+t=14 [d:sit,d:hidden] |
+t=15 [d:sit,d:hidden] |
+t=16 [d:sit,d:hidden] |
+t=17 [d:sit,d:hidden] |
+t=18 [d:sit,d:hidden] |
+t=19 [d:sit,d:hidden] |
+t=20 [d:sit,d:hidden] |
+t=21 [d:sit,d:hidden] |
+t=22 [d:sit,d:hidden] |
+t=23 [d:sit,d:hidden] |
+t=24 [d:sit,d:hidden] |
+t=25 [d:sit,d:hidden] |
+t=26 [d:sit,d:hidden] |
+t=27 [d:sit,d:hidden] |
+t=28 [d:sit,d:hidden] |
+t=29 [d:sit,d:hidden] |
+t=30 [d:sit,d:hidden] |
+t=31 [d:sit,d:hidden] |
+t=32 [d:sit,d:hidden] |
+t=33 [d:sit,d:hidden] |
+t=34 [d:sit,d:hidden] |
+t=35 [d:sit,d:hidden] |
+t=36 [d:sit,d:hidden] |
+t=37 [d:sit,d:hidden] |
+t=38 [d:sit,d:hidden] |
+t=39 [d:sit,d:hidden] |
+t=40 [d:sit,d:hidden] |
+t=41 [d:sit,d:hidden] |
+t=42 [d:sit,d:hidden] |
+t=43 [d:sit,d:hidden] |
+t=44 [d:sit,d:hidden] |
+t=45 [d:sit,d:hidden] |
+t=46 [d:sit,d:hidden] |
+t=47 [d:sit,d:hidden] |
+t=48 [d:sit,d:hidden] |
+t=49 [d:sit,d:hidden] |
+t=50 [d:sit,d:hidden] |
+t=51 [d:sit,d:hidden] |
+t=52 [d:sit,d:hidden] |
+t=53 [d:sit,d:hidden] |
+t=54 [d:sit,d:hidden] |
+t=55 [d:sit,d:hidden] |
+t=56 [d:sit,d:hidden] |
+t=57 [d:sit,d:hidden] |
+t=58 [d:sit,d:hidden] |
+t=59 [d:sit,d:hidden] |
+t=60 [d:sit,d:hidden] |
+t=61 [d:sit,d:hidden] |
+t=62 [d:sit,d:hidden] |
+t=63 [d:sit,d:hidden] |
+t=64 [d:sit,d:hidden] |
+t=65 [d:sit,d:hidden] |
+t=66 [d:sit,d:hidden] |
+t=67 [d:sit,d:hidden] |
+t=68 [d:sit,d:hidden] |
+t=69 [d:sit,d:hidden] |
+t=70 [d:sit,d:hidden] |
+t=71 [d:sit,d:hidden] |
+t=72 [d:sit,d:hidden] |
+t=73 [d:sit,d:hidden] |
+t=74 [d:sit,d:hidden] |
+t=75 [d:sit,d:hidden] |
+t=76 [d:sit,d:hidden] |
+t=77 [d:sit,d:hidden] |
+t=78 [d:sit,d:hidden] |
+t=79 [d:sit,d:hidden] |
+t=80 [d:sit,d:hidden] |
+t=81 [d:sit,d:hidden] |
+t=82 [d:sit,d:hidden] |
+t=83 [d:sit,d:hidden] |
+t=84 [d:sit,d:hidden] |
+t=85 [d:sit,d:hidden] |
+t=86 [d:sit,d:hidden] |
+t=87 [d:sit,d:hidden] |
+t=88 [d:sit,d:hidden] |
+t=89 [d:sit,d:hidden] |
+t=90 [d:sit,d:hidden] |
+t=91 [d:sit,d:hidden] |
+t=92 [d:sit,d:hidden] |
+t=93 [d:sit,d:hidden] |
+t=94 [d:sit,d:hidden] |
+t=95 [d:sit,d:hidden] |
+t=96 [d:sit,d:hidden] |
+t=97 [d:sit,d:hidden] |
+t=98 [d:sit,d:hidden] |
+t=99 [d:sit,d:hidden] |
+t=100 [d:sit,d:hidden] |
+t=101 [d:sit,d:hidden] |
+t=102 [d:sit,d:hidden] |
+t=103 [d:sit,d:hidden] |
+t=104 [d:sit,d:hidden] |
+t=105 [d:sit,d:hidden] |
+t=106 [d:sit,d:hidden] |
+t=107 [d:sit,d:hidden] |
+t=108 [d:sit,d:hidden] |
+t=109 [d:sit,d:hidden] |
+t=110 [d:sit,d:hidden] |
+t=111 [d:sit,d:hidden] |
+t=112 [d:sit,d:hidden] |
+t=113 [d:sit,d:hidden] |
+t=114 [d:sit,d:hidden] |
+t=115 [d:sit,d:hidden] |
+t=116 [d:sit,d:hidden] |
+t=117 [d:sit,d:hidden] |
+t=118 [d:sit,d:hidden] |
+t=119 [d:sit,d:hidden] |
+t=120 [d:sit,d:hidden] |
+t=121 [d:sit,d:hidden] |
+t=122 [d:sit,d:hidden] |
+t=123 [d:sit,d:hidden] |
+t=124 [d:sit,d:hidden] |
+t=125 [d:sit,d:hidden] |
+t=126 [d:sit,d:hidden] |
+t=127 [d:sit,d:hidden] |
+t=128 [d:sit,d:hidden] |
+t=129 [d:sit,d:hidden] |
+t=130 [d:sit,d:hidden] |
+t=131 [d:sit,d:hidden] |
+t=132 [d:sit,d:hidden] |
+t=133 [d:sit,d:hidden] |
+t=134 [d:sit,d:hidden] |
+t=135 [d:sit,d:hidden] |
+t=136 [d:sit,d:hidden] |
+t=137 [d:drill,d:hidden] |
+t=138 [d:drill,d:shown] | seedling:enemy/drill#1 drawImage(seedling/Drill, 16, 0, 128, 176)
+t=139 [d:drill,d:shown] | seedling:enemy/drill#1 drawImage(seedling/Drill, 16, 0, 128, 176)
+t=140 [d:drill,d:shown] | seedling:enemy/drill#2 drawImage(seedling/Drill, 32, 0, 128, 176)
+t=141 [d:drill,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 176)
+t=142 [d:drill,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 176)
+t=143 [d:drill,d:shown] | seedling:enemy/drill#4 drawImage(seedling/Drill, 64, 0, 128, 176)
+t=144 [d:undrill,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 176)
+t=145 [d:undrill,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 176)
+t=146 [d:undrill,d:shown] | seedling:enemy/drill#2 drawImage(seedling/Drill, 32, 0, 128, 176)
+t=147 [d:undrill,d:shown] | seedling:enemy/drill#2 drawImage(seedling/Drill, 32, 0, 128, 176)
+t=148 [d:undrill,d:shown] | seedling:enemy/drill#1 drawImage(seedling/Drill, 16, 0, 128, 176)
+t=149 [d:undrill,d:shown] | seedling:enemy/drill#0 drawImage(seedling/Drill, 0, 0, 128, 176)
+t=150 [d:undrill,d:shown] | seedling:enemy/drill#0 drawImage(seedling/Drill, 0, 0, 128, 176)
+t=151 [d:sit,d:shown] | seedling:enemy/drill#0 drawImage(seedling/Drill, 0, 0, 128, 176)
+t=152 [d:drill,d:hidden] |
+t=153 [d:drill,d:shown] | seedling:enemy/drill#1 drawImage(seedling/Drill, 16, 0, 128, 192)
+t=154 [d:drill,d:shown] | seedling:enemy/drill#1 drawImage(seedling/Drill, 16, 0, 128, 192)
+t=155 [d:drill,d:shown] | seedling:enemy/drill#2 drawImage(seedling/Drill, 32, 0, 128, 192)
+t=156 [d:drill,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 192)
+t=157 [d:drill,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 192)
+t=158 [d:drill,d:shown] | seedling:enemy/drill#4 drawImage(seedling/Drill, 64, 0, 128, 192)
+t=159 [d:undrill,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 192)
+t=160 [d:undrill,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 192)
+t=161 [d:undrill,d:shown] | seedling:enemy/drill#2 drawImage(seedling/Drill, 32, 0, 128, 192)
+t=162 [d:undrill,d:shown] | seedling:enemy/drill#2 drawImage(seedling/Drill, 32, 0, 128, 192)
+t=163 [d:undrill,d:shown] | seedling:enemy/drill#1 drawImage(seedling/Drill, 16, 0, 128, 192)
+t=164 [d:undrill,d:shown] | seedling:enemy/drill#0 drawImage(seedling/Drill, 0, 0, 128, 192)
+t=165 [d:undrill,d:shown] | seedling:enemy/drill#0 drawImage(seedling/Drill, 0, 0, 128, 192)
+t=166 [d:sit,d:shown] | seedling:enemy/drill#0 drawImage(seedling/Drill, 0, 0, 128, 192)
+t=167 [d:drill,d:hidden] |
+t=168 [d:drill,d:shown] | seedling:enemy/drill#1 drawImage(seedling/Drill, 16, 0, 128, 208)
+t=169 [d:drill,d:shown] | seedling:enemy/drill#1 drawImage(seedling/Drill, 16, 0, 128, 208)
+t=170 [d:hit,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 208) tint=#ff0000
+t=171 [d:hit,d:shown] | seedling:enemy/drill#4 drawImage(seedling/Drill, 64, 0, 128, 208) tint=#ff0000
+t=172 [d:hit,d:shown] | seedling:enemy/drill#4 drawImage(seedling/Drill, 64, 0, 128, 208) tint=#ff0000
+t=173 [d:hit,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 208) tint=#ff0000
+t=174 [d:hit,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 208) tint=#ff0000
+t=175 [d:hit,d:shown] | seedling:enemy/drill#4 drawImage(seedling/Drill, 64, 0, 128, 208) tint=#ff0000
+t=176 [d:hit,d:shown] | seedling:enemy/drill#4 drawImage(seedling/Drill, 64, 0, 128, 208) tint=#ff0000
+t=177 [d:hit,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 208) tint=#ff0000
+t=178 [d:hit,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 208) tint=#ff0000
+t=179 [d:hit,d:shown] | seedling:enemy/drill#4 drawImage(seedling/Drill, 64, 0, 128, 208) tint=#ff0000
+t=180 [d:hit,d:shown] | seedling:enemy/drill#4 drawImage(seedling/Drill, 64, 0, 128, 208)
+t=181 [d:hit,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 208)
+t=182 [d:hit,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 208)
+t=183 [d:hit,d:shown] | seedling:enemy/drill#4 drawImage(seedling/Drill, 64, 0, 128, 208)
+t=184 [d:hit,d:shown] | seedling:enemy/drill#4 drawImage(seedling/Drill, 64, 0, 128, 208)
+t=185 [d:hit,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 208)
+t=186 [d:hit,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 208)
+t=187 [d:hit,d:shown] | seedling:enemy/drill#4 drawImage(seedling/Drill, 64, 0, 128, 208)
+t=188 [d:hit,d:shown] | seedling:enemy/drill#4 drawImage(seedling/Drill, 64, 0, 128, 208)
+t=189 [d:hit,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 208)
+t=190 [d:hit,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 208) tint=#ff0000
+t=191 [d:hit,d:shown] | seedling:enemy/drill#4 drawImage(seedling/Drill, 64, 0, 128, 208) tint=#ff0000
+t=192 [d:hit,d:shown] | seedling:enemy/drill#4 drawImage(seedling/Drill, 64, 0, 128, 208) tint=#ff0000
+t=193 [d:hit,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 208) tint=#ff0000
+t=194 [d:hit,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 208) tint=#ff0000
+t=195 [d:hit,d:shown] | seedling:enemy/drill#4 drawImage(seedling/Drill, 64, 0, 128, 208) tint=#ff0000
+t=196 [d:hit,d:shown] | seedling:enemy/drill#4 drawImage(seedling/Drill, 64, 0, 128, 208) tint=#ff0000
+t=197 [d:hit,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 208) tint=#ff0000
+t=198 [d:hit,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 208) tint=#ff0000
+t=199 [d:undrill,d:shown] | seedling:enemy/drill#3 drawImage(seedling/Drill, 48, 0, 128, 208)
+t=200 [d:undrill,d:shown] | seedling:enemy/drill#2 drawImage(seedling/Drill, 32, 0, 128, 208)
+t=201 [d:undrill,d:shown] | seedling:enemy/drill#2 drawImage(seedling/Drill, 32, 0, 128, 208)
+t=202 [d:undrill,d:shown] | seedling:enemy/drill#1 drawImage(seedling/Drill, 16, 0, 128, 208)
+t=203 [d:undrill,d:shown] | seedling:enemy/drill#0 drawImage(seedling/Drill, 0, 0, 128, 208)
+t=204 [d:undrill,d:shown] | seedling:enemy/drill#0 drawImage(seedling/Drill, 0, 0, 128, 208)
+t=205 [d:sit,d:shown] | seedling:enemy/drill#0 drawImage(seedling/Drill, 0, 0, 128, 208)
+t=206 [d:drill,d:hidden] |
+t=207 [d:hit,d:hidden] |
+t=208 [d:hit,d:hidden] |
+t=209 [d:hit,d:hidden] |
+t=210 [d:hit,d:hidden] |
+t=211 [d:hit,d:hidden] |
+t=212 [d:hit,d:hidden] |
+t=213 [d:hit,d:hidden] |
+t=214 [d:hit,d:hidden] |
+t=215 [d:hit,d:hidden] |
+t=216 [d:hit,d:hidden] |
+t=217 [d:hit,d:hidden] |
+t=218 [d:hit,d:hidden] |
+t=219 [d:hit,d:hidden] |
+t=220 [d:hit,d:hidden] |
+t=221 [d:hit,d:hidden] |
+t=222 [d:hit,d:hidden] |
+t=223 [d:hit,d:hidden] |
+t=224 [d:hit,d:hidden] |
+t=225 [d:hit,d:hidden] |
+t=226 [d:hit,d:hidden] |
+t=227 [d:hit,d:hidden] |
+t=228 [d:hit,d:hidden] |
+t=229 [d:hit,d:hidden] |
+t=230 [d:hit,d:hidden] |
+t=231 [d:hit,d:hidden] |
+t=232 [d:hit,d:hidden] |
+t=233 [d:hit,d:hidden] |
+t=234 [d:hit,d:hidden] |
+t=235 [d:hit,d:hidden] |
+t=236 [d:die,d:shown] | seedling:enemy/drill#5 drawImage(seedling/Drill, 80, 0, 128, 192)
+t=237 [d:die,d:shown] | seedling:enemy/drill#5 drawImage(seedling/Drill, 80, 0, 128, 192) tint=#ff0000
+t=238 [d:die,d:shown] | seedling:enemy/drill#5 drawImage(seedling/Drill, 80, 0, 128, 192) tint=#ff0000
+t=239 [d:die,d:shown] | seedling:enemy/drill#5 drawImage(seedling/Drill, 80, 0, 128, 192) tint=#ff0000
+t=240 [d:die,d:shown] | seedling:enemy/drill#6 drawImage(seedling/Drill, 96, 0, 128, 192) tint=#ff0000
+t=241 [d:die,d:shown] | seedling:enemy/drill#6 drawImage(seedling/Drill, 96, 0, 128, 192) tint=#ff0000
+t=242 [d:die,d:shown] | seedling:enemy/drill#6 drawImage(seedling/Drill, 96, 0, 128, 192) tint=#ff0000
+t=243 [d:die,d:shown] | seedling:enemy/drill#7 drawImage(seedling/Drill, 112, 0, 128, 192) tint=#ff0000
+t=244 [d:die,d:shown] | seedling:enemy/drill#7 drawImage(seedling/Drill, 112, 0, 128, 192) tint=#ff0000
+t=245 [d:die,d:shown] | seedling:enemy/drill#7 drawImage(seedling/Drill, 112, 0, 128, 192) tint=#ff0000
+t=246 [d:die,d:shown] | seedling:enemy/drill#8 drawImage(seedling/Drill, 128, 0, 128, 192) tint=#ff0000
+t=247 [d:die,d:shown] | seedling:enemy/drill#8 drawImage(seedling/Drill, 128, 0, 128, 192)
+t=248 [d:die,d:shown] | seedling:enemy/drill#8 drawImage(seedling/Drill, 128, 0, 128, 192)
+t=249 [d:die,d:shown] | seedling:enemy/drill#9 drawImage(seedling/Drill, 144, 0, 128, 192)
+t=250 [d:die,d:shown] | seedling:enemy/drill#9 drawImage(seedling/Drill, 144, 0, 128, 192)
+t=251 [d:die,d:shown] | seedling:enemy/drill#9 drawImage(seedling/Drill, 144, 0, 128, 192)
+t=252 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192)
+t=253 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192)
+t=254 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192)
+t=255 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192)
+t=256 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.9
+t=257 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.8
+t=258 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.7
+t=259 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.6
+t=260 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.5
+t=261 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.4
+t=262 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.3
+t=263 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.2
+t=264 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.1
+t=265 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0
+t=266 [] |
+t=267 [] |
+t=268 [] |
+t=269 [] |
+t=270 [] |
+t=271 [] |
+t=272 [] |
+t=273 [] |
+t=274 [] |
+t=275 [] |
+t=276 [] |
+t=277 [] |
+t=278 [] |
+t=279 [] |
+t=280 [] |
+t=281 [] |
+t=282 [] |
+t=283 [] |
+t=284 [] |
+t=285 [] |
+t=286 [] |
+t=287 [] |
+t=288 [] |
+t=289 [] |
+t=290 [] |
+t=291 [] |
+t=292 [] |
+t=293 [] |
+t=294 [] |
+t=295 [] |
+t=296 [] |
+t=297 [] |
+t=298 [] |
+t=299 [] |
+t=300 [] |

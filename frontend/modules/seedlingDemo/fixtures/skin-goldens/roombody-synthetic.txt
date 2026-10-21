@@ -1,0 +1,13 @@
+t=5000 [b0:forming] | seedling:enemy/bobboss0#0 drawImage(seedling/BobBoss1, 0, 0, 70, 70) scale=1.9833333333333334x1.9833333333333334 alpha=0.0167 tint=#04ff04 ; seedling:enemy/bobbossWeapons#0 drawImage(seedling/BobBossWeapons, 0, 0, 80, 77) rot=-270 alpha=0.0167
+t=5001 [b0:forming] | seedling:enemy/bobboss0#0 drawImage(seedling/BobBoss1, 0, 0, 70, 70) scale=1.9666666666666668x1.9666666666666668 alpha=0.0333 tint=#08ff08 ; seedling:enemy/bobbossWeapons#0 drawImage(seedling/BobBossWeapons, 0, 0, 80, 77) rot=-270 alpha=0.0333
+t=5002 [b0:forming] | seedling:enemy/bobboss0#0 drawImage(seedling/BobBoss1, 0, 0, 70, 70) scale=1.95x1.95 alpha=0.05 tint=#0cff0c ; seedling:enemy/bobbossWeapons#0 drawImage(seedling/BobBossWeapons, 0, 0, 80, 77) rot=-270 alpha=0.05
+t=5003 [b0:forming] | seedling:enemy/bobboss0#0 drawImage(seedling/BobBoss1, 0, 0, 70, 70) scale=1.9333333333333333x1.9333333333333333 alpha=0.0667 tint=#10ff10 ; seedling:enemy/bobbossWeapons#0 drawImage(seedling/BobBossWeapons, 0, 0, 80, 77) rot=-270 alpha=0.0667
+t=5004 [b0:forming] | seedling:enemy/bobboss0#0 drawImage(seedling/BobBoss1, 0, 0, 70, 70) scale=1.9166666666666665x1.9166666666666665 alpha=0.0833 tint=#15ff15 ; seedling:enemy/bobbossWeapons#0 drawImage(seedling/BobBossWeapons, 0, 0, 80, 77) rot=-270 alpha=0.0833
+t=5005 [b0:stand,b:squash] | seedling:enemy/bobboss0#0 drawImage(seedling/BobBoss1, 0, 0, 70, 70) scale=0.9090909090909091x1.1
+t=5006 [b0:stand,b:squash] | seedling:enemy/bobboss0#0 drawImage(seedling/BobBoss1, 0, 0, 70, 70) scale=0.8264462809917354x1.2000000000000002
+t=5007 [b0:stand,b:squash] | seedling:enemy/bobboss0#0 drawImage(seedling/BobBoss1, 0, 0, 70, 70) scale=0.7513148009015777x1.3000000000000003
+t=5008 [i:idle] | seedling:enemy/iceturret#0 drawImage(seedling/IceTurret, 0, 0, 68, 64) rot=-180
+t=5009 [i:dead] | seedling:enemy/iceturret#6 drawImage(seedling/IceTurret, 192, 0, 68, 64) rot=-180
+t=5010 [i:dead] | seedling:enemy/iceturret#6 drawImage(seedling/IceTurret, 192, 0, 68, 64) rot=-189
+t=5011 [i:dead] | seedling:enemy/iceturret#6 drawImage(seedling/IceTurret, 192, 0, 68, 64) rot=-197.1
+t=5012 [i:dead] | seedling:enemy/iceturret#6 drawImage(seedling/IceTurret, 192, 0, 68, 64) rot=-204.39

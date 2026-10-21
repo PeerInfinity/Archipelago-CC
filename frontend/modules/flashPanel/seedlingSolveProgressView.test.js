@@ -74,13 +74,26 @@
  *   f8 one glyph for every kind                       -> 'a glyph per kind …' and 'the stance square …' red
  *   f9 the danger drawn at its source's placement     -> 'the stance square …' reds
  *   f10 a work counter that is an object drawn         -> '`caches` / `churn` count objects …' reds
+ *
+ * ⛓ CACHES VIEW — hammer-phase PR's `caches` / `churn` drawn per segment, `soft-lock` in the danger colour. Its
+ * mutants (all RED):
+ *   c1 the hit rate over hits alone / misses alone      -> 'CACHES: …' reds
+ *   c2 the caches lines made on a snapshot without them  -> 'a snapshot without `caches`/`churn` …' reds (+ every
+ *                                                          identity row: a node made changes `rec.created`)
+ *   c3 a `null` member drawn as `0 hit / 0 miss`         -> 'CACHES: a null member …' reds
+ *   c4 every chip in the danger colour                   -> 'SOFT-LOCK: the chip …' and the RK/stamps identity rows red
+ *   c5 the kinds line rebuilt on every render            -> 'SOFT-LOCK: the kinds line …' reds
+ *   c6 the caches box left above the stamp lines         -> 'ORDER: …' reds
+ *   c7 the last why in the danger colour whatever its kind -> 'SOFT-LOCK: the last why …' and the RK/stamps identity rows red
+ *   c8 the lines kept when a later snapshot drops the fields -> 'a later snapshot without them …' reds
+ *   c9 `open` left out of the churn line                 -> 'CHURN: …' and the PR golden red
  */
 import { createHash } from 'node:crypto';
 
 import { describe, expect, it } from 'vitest';
 
 import {
-    cellColour, DANGER_GLYPHS, frameTargetTile, levelColour, recentLevel, shadeLevel, SolveProgressView,
+    cellColour, DANGER_GLYPHS, DANGER_KINDS, frameTargetTile, levelColour, recentLevel, shadeLevel, SolveProgressView,
 } from './seedlingSolveProgressView.js';
 import { SOLVE_PROGRESS_INTERVAL_MS } from '../seedlingDemo/solveProgressTap.js';
 
@@ -1179,7 +1192,9 @@ describe('⛓ FRAME VIEW — the row highlight', () => {
 });
 
 describe('⛓ FRAME VIEW — fields the view does not know draw nothing', () => {
-    it('`caches` / `churn` count objects (top level, segment, budget, budget.work) leave every byte as it was', () => {
+    // ⛓ CACHES VIEW — the TOP-LEVEL `caches` / `churn` are drawn now (hammer-phase PR's fields); the same names
+    // anywhere else are still nothing the view knows
+    it('`caches` / `churn` count objects nested in segment, budget, budget.work leave every byte as it was', () => {
         const extra = { hits: 4, misses: 1 };
         const drawn = (withExtra) => {
             const t = setup();
@@ -1189,7 +1204,6 @@ describe('⛓ FRAME VIEW — fields the view does not know draw nothing', () => 
                     const note = structuredClone(n);
                     if (withExtra) {
                         const s = note.snapshot;
-                        Object.assign(s, { caches: extra, churn: extra });
                         Object.assign(s.segment, { caches: extra, churn: extra });
                         Object.assign(s.budget, { caches: extra, churn: extra });
                         Object.assign(s.budget.work, { caches: extra, churn: extra });
@@ -1204,13 +1218,228 @@ describe('⛓ FRAME VIEW — fields the view does not know draw nothing', () => 
         expect(drawn(true)).toEqual(drawn(false));
     });
 
-    it('a kind the view does not list (`soft-lock`) is a chip by name, after the listed kinds', () => {
+    it('`soft-lock` (listed since hammer-phase PR, before `other`) is a chip after the earlier kinds', () => {
         const t = setup();
         try {
             const tree = node2('s', 'segment', { danger: 1, 'soft-lock': 2 }, [], { active: true });
             t.emit({ solveId: 1, snapshot: snap2(1, { tree }), final: false });
             t.runFrames();
             expect(chipsOf(t.view._lines[0])).toEqual(['danger 1', 'soft-lock 2']);
+        } finally { t.restore(); }
+    });
+});
+
+// ── ⛓ CACHES VIEW — hammer-phase PR's `caches` / `churn`, and `soft-lock` in the danger colour ──
+
+/** The danger colour (the frame view's danger mark), as the tests read it off the style text. */
+const DANGER = '#ff8c1a';
+/** A PR snapshot: `snap2` with `caches` / `churn` as given (`undefined` = the field is absent). */
+const prSnap = (seq, { caches, churn, tree = node2('s', 'segment', {}, [], { active: true }), ...rest } = {}) => {
+    const s = snap2(seq, { tree, ...rest });
+    if (caches !== undefined) s.caches = caches;
+    if (churn !== undefined) s.churn = churn;
+    return s;
+};
+const ESCAPE = { hits: 6, crossPassHits: 2, misses: 4, stored: 2, tripped: 0, digestMoved: 1, cap: 1, bypassed: 3 };
+const CHURN = { opened: 12, succeeded: 5, rejected: 4, moved: 7 };
+/** A PR stream: the string pull and the escape cache counting up, the churn too, the last note final. */
+function prStream() {
+    return [1, 2, 3].map((seq) => ({ solveId: 1, final: seq === 3, snapshot: prSnap(seq, {
+        caches: { stringPull: { hits: 10 * seq, misses: 5 }, escapeCrossPass: seq === 1 ? null : ESCAPE },
+        churn: { opened: 4 * seq, succeeded: 2 * seq, rejected: seq === 3 ? 2 * seq : seq, moved: seq } }) }));
+}
+
+describe('⛓ CACHES VIEW — a snapshot without `caches`/`churn` draws exactly as before', () => {
+    it('v1, v2 without stamps, stamped and framed streams make no caches node and draw no caches line', () => {
+        for (const stream of [v1Stream, v2NoStampsStream, stampedStream, () => [framed(1, L40_FRAME), framed(2, null)]]) {
+            const t = setup();
+            try {
+                for (const n of stream()) { t.emit(n); t.runFrames(); }
+                expect(t.view.cachesBox).toBe(null);
+                expect(t.view.meter.children.some((c) => c.className === 'flash-panel-solve-progress-caches')).toBe(false);
+            } finally { t.restore(); }
+        }
+    });
+});
+
+describe('⛓ CACHES VIEW — the caches and the churn, per segment', () => {
+    it('CACHES: each member\'s hits and misses with its hit rate; the escape cache names its non-zero miss outcomes', async () => {
+        const { cachesText } = await import('./seedlingSolveProgress.js');
+        expect(cachesText(prSnap(1, { caches: { stringPull: { hits: 30, misses: 10 }, escapeCrossPass: ESCAPE } })))
+            .toBe('caches (this segment): string-pull 30 hit / 10 miss (75% hit) · escape cross-pass 6 hit (2 cross-pass)'
+                + ' / 4 miss (60% hit) [stored 2, digest moved 1, cap 1] · bypassed 3');
+        // no lookups yet: no rate (never a 0/0); no cross-pass hit, no outcome, no bypass: none named
+        expect(cachesText(prSnap(1, { caches: { stringPull: { hits: 0, misses: 0 },
+            escapeCrossPass: { hits: 1, crossPassHits: 0, misses: 0, stored: 0, tripped: 0, digestMoved: 0, cap: 0, bypassed: 0 } } })))
+            .toBe('caches (this segment): string-pull 0 hit / 0 miss · escape cross-pass 1 hit / 0 miss (100% hit)');
+        expect(cachesText(prSnap(1))).toBe(null);
+        expect(cachesText(null)).toBe(null);
+    });
+
+    it('CACHES: a null member (its switch OFF, or nothing asked yet) and a member without counts draw `—`', async () => {
+        const { cachesText } = await import('./seedlingSolveProgress.js');
+        expect(cachesText(prSnap(1, { caches: { stringPull: null, escapeCrossPass: null } })))
+            .toBe('caches (this segment): string-pull — · escape cross-pass —');
+        expect(cachesText(prSnap(1, { caches: { stringPull: { hits: 'x', misses: 1 } } })))
+            .toBe('caches (this segment): string-pull — · escape cross-pass —');
+    });
+
+    it('CHURN: opened, succeeded, rejected (its share of the opened), still open, climb moves; a missing field is left out', async () => {
+        const { churnText } = await import('./seedlingSolveProgress.js');
+        expect(churnText(prSnap(1, { churn: CHURN })))
+            .toBe('churn (this segment): opened 12 · succeeded 5 · rejected 4 (33% of opened) · open 3 · climb moves 7');
+        expect(churnText(prSnap(1, { churn: { opened: 0, succeeded: 0, rejected: 0, moved: 0 } })))
+            .toBe('churn (this segment): opened 0 · succeeded 0 · rejected 0 · open 0 · climb moves 0');
+        expect(churnText(prSnap(1, { churn: { opened: 3, moved: 1 } }))).toBe('churn (this segment): opened 3 · climb moves 1');
+        expect(churnText(prSnap(1, { churn: {} }))).toBe('churn (this segment): none');
+        expect(churnText(prSnap(1))).toBe(null);
+    });
+
+    it('the view draws both lines at the end of the meter; each is written only when its text changes', () => {
+        const t = setup();
+        try {
+            const [a, b, c] = prStream();
+            t.emit(a);
+            t.runFrames();
+            expect(t.view.meter.children.at(-1)).toBe(t.view.cachesBox);
+            expect(t.view.cachesText.textContent).toBe('caches (this segment): string-pull 10 hit / 5 miss (67% hit) · escape cross-pass —');
+            expect(t.view.churnText.textContent).toBe('churn (this segment): opened 4 · succeeded 2 · rejected 1 (25% of opened) · open 1 · climb moves 1');
+            t.emit(b);
+            t.runFrames();
+            expect(t.view.cachesText.textContent).toBe('caches (this segment): string-pull 20 hit / 5 miss (80% hit) · escape cross-pass '
+                + '6 hit (2 cross-pass) / 4 miss (60% hit) [stored 2, digest moved 1, cap 1] · bypassed 3');
+            t.emit(c);
+            t.runFrames();
+            expect(t.view.churnText.textContent).toBe('churn (this segment): opened 12 · succeeded 6 · rejected 6 (50% of opened) · open 0 · climb moves 3');
+            // the same counts again (a new seq): neither line is written
+            const lines = t.view.stats.linesWritten;
+            t.emit({ ...c, snapshot: { ...c.snapshot, seq: 4 }, final: true });
+            t.runFrames();
+            expect(t.view.cachesText.textContent).toMatch(/string-pull 30 hit/);
+            expect(t.view.stats.linesWritten).toBe(lines);
+        } finally { t.restore(); }
+    });
+
+    it('a later snapshot without them (a v1 solve after a PR one) empties both lines; the box stays, unmade nothing', () => {
+        const t = setup();
+        try {
+            t.emit(prStream()[1]);
+            t.runFrames();
+            const box = t.view.cachesBox;
+            for (const n of v1Stream()) { t.emit({ ...n, solveId: 2 }); t.runFrames(); }
+            expect(t.view.cachesBox).toBe(box);
+            expect([t.view.cachesText.textContent, t.view.churnText.textContent]).toEqual(['', '']);
+        } finally { t.restore(); }
+    });
+
+    it('ORDER: the caches box stays LAST in the meter whichever came first, the stamps or the caches', () => {
+        for (const order of ['caches first', 'stamps first', 'together']) {
+            const t = setup();
+            try {
+                const withCaches = (s) => Object.assign(s, { caches: { stringPull: { hits: 1, misses: 1 }, escapeCrossPass: null },
+                    churn: CHURN });
+                const notes = order === 'caches first' ? [prSnap(1, { caches: { stringPull: null, escapeCrossPass: null } }),
+                    withCaches(stamped(2, { request: REQUEST }))]
+                    : order === 'stamps first' ? [stamped(1, { request: REQUEST }), withCaches(stamped(2))]
+                        : [withCaches(stamped(1, { request: REQUEST }))];
+                for (const s of notes) { t.emit({ solveId: 1, snapshot: s, final: false }); t.runFrames(); }
+                const name = (c) => (c === t.view.cachesBox ? 'caches' : c === t.view.asksText ? 'asks' : c === t.view.workText ? 'work'
+                    : c === t.view.etaText ? 'eta' : c === t.view.wallText ? 'wall' : c === t.view.meterText ? 'text' : 'bar');
+                expect(t.view.meter.children.map(name), order).toEqual(['bar', 'text', 'eta', 'wall', 'asks', 'work', 'caches']);
+            } finally { t.restore(); }
+        }
+    });
+
+    it('the DOM of a PR stream, note by note (golden)', () => {
+        const t = setup();
+        try {
+            const md5s = [];
+            for (const n of prStream()) { t.emit(n); t.runFrames(); md5s.push(drawnMd5(t)); }
+            expect(md5s).toEqual(PR_STREAM_MD5S);
+        } finally { t.restore(); }
+    });
+});
+
+/** ⛓ CACHES VIEW — `drawnMd5` of each `prStream` note, measured with this slice's view (the md5 pins the DOM). */
+const PR_STREAM_MD5S = ['2e3355db766351c5f62c05cd7a7baae2', 'dae0e2c85156eed062a8edce90c9094b',
+    'e8e2fd6b9b584d83fbdf0aa1f4f99356'];
+
+describe('⛓ CACHES VIEW — SOFT-LOCK in the danger colour', () => {
+    const softTree = (n = 2) => node2('s', 'segment', {}, [node2('s/r', 'rung', { danger: 1, 'soft-lock': n }),
+        node2('s/q', 'rung', { exhausted: 1 })], { active: true });
+    const chipCss = (line) => (line._chips?.children ?? []).map((c) => [c.textContent, c.style.cssText.includes(DANGER)]);
+
+    it('DANGER_KINDS is `soft-lock` alone', () => { expect(DANGER_KINDS).toEqual(['soft-lock']); });
+
+    it('SOFT-LOCK: the chip of a soft-lock refusal is in the danger colour; every other chip is not', () => {
+        const t = setup();
+        try {
+            t.emit({ solveId: 1, snapshot: snap2(1, { tree: softTree() }), final: false });
+            t.runFrames();
+            expect(chipCss(rowOf(t, 's/r'))).toEqual([['danger 1', false], ['soft-lock 2', true]]);
+            expect(chipCss(rowOf(t, 's/q'))).toEqual([['exhausted 1', false]]);
+        } finally { t.restore(); }
+    });
+
+    it('SOFT-LOCK: the kinds line reads the same; its soft-lock entry is a span in the danger colour, rebuilt only on change', () => {
+        const t = setup();
+        try {
+            t.emit({ solveId: 1, snapshot: snap2(1, { tree: softTree() }), final: false });
+            t.runFrames();
+            const k = t.view.kindsText;
+            expect(k.textContent).toBe('refusals by kind (this segment, each once): danger 1 · exhausted 1 · soft-lock 2 · Σ 4');
+            expect(k.children.map((c) => c.data ?? [c.textContent, c.style.cssText.includes(DANGER)])).toEqual([
+                'refusals by kind (this segment, each once): danger 1 · exhausted 1 · ', ['soft-lock 2', true], ' · Σ 4']);
+            const lines = t.view.stats.linesWritten;
+            const span = k.children[1];
+            t.emit({ solveId: 1, snapshot: snap2(2, { tree: softTree() }), final: false });
+            t.runFrames();
+            expect(t.view.stats.linesWritten).toBe(lines);
+            expect(k.children[1]).toBe(span);
+            t.emit({ solveId: 1, snapshot: snap2(3, { tree: softTree(3) }), final: false });
+            t.runFrames();
+            expect(k.children[1].textContent).toBe('soft-lock 3');
+            // no soft-lock any more: the line is ONE text again (the RK view's shape)
+            t.emit({ solveId: 1, snapshot: snap2(4, { tree: node2('s', 'segment', {}, [node2('s/q', 'rung', { exhausted: 1 })],
+                { active: true }) }), final: false });
+            t.runFrames();
+            expect(k.children).toEqual([]);
+            expect(k.textContent).toBe('refusals by kind (this segment, each once): exhausted 1 · Σ 1');
+        } finally { t.restore(); }
+    });
+
+    it('SOFT-LOCK: the last why is in the danger colour when its kind is soft-lock, and only then (open or closed)', () => {
+        const t = setup();
+        try {
+            const why = (kind) => ({ kind, key: 's/r', why: 'collecting Seed@32,48 here is a soft-lock: the page never ends', name: 'Error' });
+            t.emit({ solveId: 1, snapshot: snap2(1, { tree: softTree(), lastWhy: why('soft-lock') }), final: false });
+            t.runFrames();
+            expect(t.view.whyText.style.cssText.includes(DANGER)).toBe(true);
+            t.view.whyText.click();
+            expect(t.view.whyText.style.cssText).toMatch(/white-space:pre-wrap/);
+            expect(t.view.whyText.style.cssText.includes(DANGER)).toBe(true);
+            t.emit({ solveId: 1, snapshot: snap2(2, { tree: softTree(), lastWhy: why('exhausted') }), final: false });
+            t.runFrames();
+            expect(t.view.whyText.style.cssText.includes(DANGER)).toBe(false);
+        } finally { t.restore(); }
+    });
+});
+
+describe('⛓ CACHES VIEW — the view never writes into what was posted', () => {
+    it('every note DEEP-FROZEN and byte-compared after its render: the posts are the same with the view drawing them', () => {
+        const freeze = (o) => { if (o && typeof o === 'object') { Object.values(o).forEach(freeze); Object.freeze(o); } return o; };
+        const t = setup();
+        try {
+            const notes = [...prStream(), { solveId: 1, snapshot: snap2(4, { tree: node2('s', 'segment', { 'soft-lock': 1 }, [],
+                { active: true }), lastWhy: { kind: 'soft-lock', key: 's', why: 'w', name: null } }), final: true }];
+            const renders = t.view.stats.renders;
+            for (const n of notes) {
+                const before = JSON.stringify(n);
+                t.emit(freeze(n));
+                t.runFrames();
+                expect(JSON.stringify(n)).toBe(before);
+            }
+            expect(t.view.stats.renders - renders).toBe(notes.length);
         } finally { t.restore(); }
     });
 });

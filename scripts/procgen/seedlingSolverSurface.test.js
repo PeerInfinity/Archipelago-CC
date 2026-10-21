@@ -377,7 +377,8 @@ describe('the progress and ledger folds (engine-prep C4), mutants over a tempora
     it('(c) run.progress(f) with a variable ⇒ RED, a named blind spot (and a file the run:progress row does not name)', () => {
         const lines = mutate({ [DANGER]: (s) => `${s}\nexport const mutantC = (run, f) => run.progress(f);\n` });
         expect(lines).toHaveLength(2);
-        expect(lines[0]).toMatch(/dangerMap\.js:\d+ reaches run:progress — the row names only botDriverV2\.js, director\.js, solverBot\.js/);
+        // ⛓ fidelity LIGHTS: `lightsVerb.js` reads `run.progress('primaryWeapon' | 'slashInfo' | 'inventory')` now.
+        expect(lines[0]).toMatch(/dangerMap\.js:\d+ reaches run:progress — the row names only botDriverV2\.js, director\.js, lightsVerb\.js, solverBot\.js/);
         expect(lines[1]).toMatch(/dangerMap\.js:\d+ run\.progress\(f\) — not a string literal — a BLIND SPOT: the census cannot name the field/);
     });
 

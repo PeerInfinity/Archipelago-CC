@@ -1,4 +1,5 @@
 // frontend/app/core/panelManager.js
+import { recordPanelUi } from './panelUiRegistry.js';
 import eventBus from './eventBus.js';
 import { GoldenLayout } from '../../libs/golden-layout/js/esm/golden-layout.js';
 import { centralRegistry } from './centralRegistry.js'; // Corrected import
@@ -35,7 +36,8 @@ function log(level, message, ...data) {
  * `initialization/index.js`, not by `registerPanelComponent`'s wrapper below.
  * Until T4 only that unused wrapper wired these, so a provider's `onShow`
  * never ran on a tab switch (measured: the container emitted 'show' 3 times,
- * the provider heard 0).
+ * the provider heard 0). Being on every path, it also records the panel in
+ * panelUiRegistry.js (container → UI instance), for the mini row.
  *
  * @param {object} container  the Golden Layout ComponentContainer
  * @param {object} uiProvider the panel's UI instance
@@ -43,6 +45,7 @@ function log(level, message, ...data) {
  */
 export function wirePanelLifecycle(container, uiProvider) {
   const wired = [];
+  recordPanelUi(container, uiProvider);
   if (!container || typeof container.on !== 'function' || !uiProvider) return wired;
   for (const [event, method] of [['show', 'onShow'], ['hide', 'onHide'], ['resize', 'onResize']]) {
     if (typeof uiProvider[method] === 'function') {

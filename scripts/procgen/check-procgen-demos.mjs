@@ -105,6 +105,8 @@ import { closeServer, serveRepoRoot } from './serveRepoRoot.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { gateRoster } from './gateRoster.js';
 import { siblingGatesIn } from './gateDedup.js';
+import { DROPPED_CEILING, DROPPED_GRID, dryGridMessage, findDroppedSubject }
+    from './droppedElementSubject.js';
 
 /**
  * ⛓ R9 P3b, ⚖ 54 (7) — **THE BOX LOCK.** This gate drives the machine (browser),
@@ -168,6 +170,47 @@ const UNDER_A_BATTERY = BOX?.passthrough === true;
 let ROSTER_FILES = null;
 const dedupedSiblingIn = (command) => siblingGatesIn(
     command, (ROSTER_FILES ??= new Set(gateRoster().map((g) => g.file))));
+
+/**
+ * ⛓⛓⛓ **A SUBJECT A SOLVER CHANGE CAN REVOKE IS SEARCHED, AND THE CATALOGUE'S
+ * LITERAL IS ASSERTED EQUAL TO THE SEARCH** (Seedling fidelity GATESUBJ, D1).
+ *
+ * Demo 9 (`dropped-element`) needs a level whose element the certification
+ * DROPS. Its url typed `seed=3&biome=post-sword` and went red at `e346241d6a`
+ * (swim U6b/U9/U10): seed 3 now certifies, so the claim read `refused = null`
+ * for three weeks under a `continue-on-error` arm. This is the THIRD recurrence
+ * of the trap the phases gate's docblock names (*"a pinned SUBJECT over a
+ * property that a solver change can revoke"*).
+ *
+ * ⛔ WHY THE LITERAL STAYS IN `demos.js` RATHER THAN BEING GENERATED FROM THE
+ * SEARCH: `demos.js` is a static data module with three readers — this row,
+ * `demos.html` in a browser (on GitHub Pages too) and the generated reference
+ * (`generated/catalogue.js`). A search there would run the generator in every
+ * reader's page load, and the reference would stop being byte-stable. So the
+ * search lives HERE, in the one reader that executes things, and a mismatch
+ * FAILS BY NAME with the line to paste. It shares its rule with
+ * `check-seedling-editor-phases.mjs`'s CLAIM 5 through `droppedElementSubject.js`.
+ *
+ * Keyed by entry id; each value returns `{seed, biome, elements}` or `null`.
+ */
+const SEARCHED_SUBJECTS = Object.freeze({
+    'dropped-element': async () => {
+        const { generateStep } = await import(
+            '../../frontend/modules/seedlingDemo/watchGenerate.js');
+        return findDroppedSubject(generateStep).subject;
+    },
+});
+/** `{seed, biome, elements}` as the url and the cli each spell it. */
+const urlSubject = (url) => {
+    const q = new URLSearchParams(url);
+    return { seed: Number(q.get('seed')), biome: q.get('biome'), elements: q.get('elements') };
+};
+const cliSubject = (command) => {
+    const flag = (k) => (new RegExp(`--${k}=(\\S+)`).exec(command) ?? [])[1] ?? null;
+    return { seed: Number(flag('seed')), biome: flag('biome'), elements: flag('elements') };
+};
+const sameSubject = (a, b) => a.seed === b.seed && a.biome === b.biome
+    && a.elements === b.elements;
 
 /** ⛓ The catalogue PAGE — the module's other reader, gated below. */
 const DEMOS_PAGE = '/frontend/modules/procgenDocs/demos.html';
@@ -300,6 +343,34 @@ try {
             entry.prose ? 'prose entry — it points at a doc and names no URL of its own'
                 : entry.claim);
         if (entry.prose) continue;
+        if (SEARCHED_SUBJECTS[entry.id]) {
+            // eslint-disable-next-line no-await-in-loop
+            const found = await SEARCHED_SUBJECTS[entry.id]();
+            check(found !== null,
+                `⛓⛓⛓ "${name}"'s SUBJECT is SEARCHED, not typed — it still exists `
+                + `(${DROPPED_GRID.biome}/${DROPPED_GRID.elements}, seeds 1..${DROPPED_CEILING}, `
+                + 'smaller seed wins)',
+                found ? `seed ${found.seed}` : dryGridMessage());
+            if (found) {
+                const want = (text, spell) => text
+                    .replace(spell.seed, `$1${found.seed}`).replace(spell.biome, `$1${found.biome}`);
+                const urlFix = want(entry.url, { seed: /(seed=)\d+/, biome: /(biome=)[\w-]+/ });
+                check(sameSubject(urlSubject(entry.url), found),
+                    '⛓⛓ …and the catalogue\'s `url` NAMES the searched subject',
+                    sameSubject(urlSubject(entry.url), found) ? entry.url
+                        : `${JSON.stringify(urlSubject(entry.url))} ≠ search ${JSON.stringify(found)} `
+                        + `— paste into demos.js: url: '${urlFix}',`);
+                if (entry.cli) {
+                    const cliFix = want(entry.cli.command,
+                        { seed: /(--seed=)\d+/, biome: /(--biome=)[\w-]+/ });
+                    check(sameSubject(cliSubject(entry.cli.command), found),
+                        '⛓⛓ …and so does its `cli`',
+                        sameSubject(cliSubject(entry.cli.command), found) ? entry.cli.command
+                            : `${JSON.stringify(cliSubject(entry.cli.command))} ≠ search `
+                            + `— paste into demos.js: command: '${cliFix}'`);
+                }
+            }
+        }
         /**
          * ⛓⛓⛓ E1 — THE HEADLESS TWIN, EXECUTED. ⛔ It runs BEFORE the page is
          * loaded so that a catalogue whose CLI has rotted says so first: the

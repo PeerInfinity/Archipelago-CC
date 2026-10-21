@@ -442,6 +442,17 @@ jobs:
             exit 1
           fi
 
+      # ⛔⛔ GATESUBJ D4 — A RED ARM IS RED, BY NAME, UNLESS IT IS DECLARED.
+      # The gate step keeps `continue-on-error` (a standing-value reader); at
+      # f1b4f85446 that let five arms print `exit=1` on every push for 2–3 weeks
+      # under green jobs. This step reads the battery's own `## CI-GATE |` lines
+      # and fails when an arm is red and NOT in `CI_GATE_EXPECTED_RED`
+      # (`scripts/procgen/ciExpectedRed.js`, each row with an owner), when a
+      # listed arm is now green, or when a listed key names no arm.
+      - name: Expected reds only? (shard ${{ matrix.shard }})
+        if: ${{ !cancelled() }}
+        run: node scripts/procgen/ci-expected-red.mjs /tmp/gates.log
+
   # ══════════════════════════════════════════════════════════════════════
   # ⛓⛓ SEEDLING HAMMER-PHASE RR (⚖ user, 2026-10-19) — EVERY PRODUCER'S OWN
   # `--check`, AND THIS ONE IS A MERGE GATE.
@@ -726,6 +737,17 @@ jobs:
             echo "::error title=gate battery TRUNCATED::shard ${{ matrix.shard.id }} printed $(grep -ac '^## CI-GATE |' /tmp/gates.log) CI-GATE line(s) and no CI-DONE line — cut by its step deadline or crashed"
             exit 1
           fi
+
+      # ⛔⛔ GATESUBJ D4 — A RED ARM IS RED, BY NAME, UNLESS IT IS DECLARED.
+      # The gate step keeps `continue-on-error` (a standing-value reader); at
+      # f1b4f85446 that let five arms print `exit=1` on every push for 2–3 weeks
+      # under green jobs. This step reads the battery's own `## CI-GATE |` lines
+      # and fails when an arm is red and NOT in `CI_GATE_EXPECTED_RED`
+      # (`scripts/procgen/ciExpectedRed.js`, each row with an owner), when a
+      # listed arm is now green, or when a listed key names no arm.
+      - name: Expected reds only? (shard ${{ matrix.shard.id }})
+        if: ${{ !cancelled() }}
+        run: node scripts/procgen/ci-expected-red.mjs /tmp/gates.log
 
       - name: 'Shard ${{ matrix.shard.id }} — summary'
         if: always()

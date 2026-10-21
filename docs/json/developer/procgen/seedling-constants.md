@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**77 files, 6421 literals.** Class × position:
+**82 files, 6847 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
-| physics | 5 | 1579 | 450 | 2034 |
-| rule | 13 | 1187 | 563 | 1763 |
+| physics | 7 | 1718 | 597 | 2322 |
+| rule | 13 | 1194 | 584 | 1791 |
 | cosmetic | 0 | 62 | 14 | 76 |
-| structural | 13 | 377 | 2158 | 2548 |
+| structural | 15 | 387 | 2256 | 2658 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 31 | 3205 | 3185 | 6421 |
+| total | 35 | 3361 | 3451 | 6847 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
-| physics | 1753 | 0 | 97 | 123 | 4 | 57 | 2034 |
-| rule | 662 | 139 | 243 | 22 | 590 | 107 | 1763 |
+| physics | 1809 | 0 | 97 | 123 | 4 | 289 | 2322 |
+| rule | 662 | 141 | 243 | 22 | 616 | 107 | 1791 |
 
 Rows whose note starts `REVIEW:`: **114**.
 
@@ -464,7 +464,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `levelCount` | 116 | rule | count |  | tapeFormat.js `LEVEL_COUNT` |
 | `wandSpeed` | 3 | physics | magnitude | Player.as:wandSpeed | wandVerb.js `WAND_SPEED` |
 
-### The 42 derived or aliased top-level constants
+### The 43 derived or aliased top-level constants
 
 | name | file | initialiser |
 |---|---|---|
@@ -510,10 +510,11 @@ None: a name declared in several files now reads one profile key (the table belo
 | `CHECK_OFFSET_Y` | seedlingDemo/playerPhysicsV1.js | `-HITBOX.originY + HITBOX.height - PROFILE.checkOffsetYInset` |
 | `DAY_LENGTH_FRAMES` | seedlingDemo/gameClock.js | `160 * GAME_FPS` |
 | `PAGE_BOOT_TIME` | seedlingDemo/gameClock.js | `DAY_LENGTH_FRAMES / 2` |
+| `TOINT` | seedlingDemo/runtimeLibm.js | `1.5 / EPS` |
 
 ### The profile candidates outside the profile
 
-**18 named scalars** are `physics` or `rule` (14 with an AS3 anchor), and **155 small tables** (at most 16 literals) hold at least one (104 with an AS3 reference).
+**20 named scalars** are `physics` or `rule` (15 with an AS3 anchor), and **183 small tables** (at most 16 literals) hold at least one (106 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -535,6 +536,8 @@ None: a name declared in several files now reads one profile key (the table belo
 | `STATUE_TALK_RANGE` | seedlingDemo/endingChain.js | 32 | rule | bound | NPCs/Statue.as:talkRange |
 | `NO_FORCE_CAP` | seedlingDemo/enemyDamage.js | -1 | physics | sentinel | Enemies/Enemy.as:maxForce |
 | `TIME_PER_FRAME` | seedlingDemo/lavaChain.js | 45 | rule | magnitude | Game.as:timePerFrame |
+| `SPEAR_FORCE` | seedlingDemo/lightBoss.js | 7 | physics | magnitude | Player.as:spearForce |
+| `EPS` | seedlingDemo/runtimeLibm.js | 2.220446049250313e-16 | physics | derivation |  |
 
 | table | file | literals | physics/rule | classes | kinds | AS3 |
 |---|---|---|---|---|---|---|
@@ -658,6 +661,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `STATIC_ARROW_DEATH` | seedlingDemo/enemyDamage.js | 2 | 2 | rule | count/magnitude | Arrow.as:51-53 |
 | `STATIC_SWORD_DEATH` | seedlingDemo/enemyDamage.js | 2 | 2 | rule | count/magnitude | Enemies/Turret.as:sprTurret |
 | `DARKTRAP_LIGHT_DEATH` | seedlingDemo/enemyDamage.js | 8 | 8 | rule | bound/count/derivation/magnitude | Enemies/DarkTrap.as:deathCounter Enemies/DarkTrap.as:die1 Scenery/Light.as:radiusMin Scenery/LightPole.as:originY Scenery/LightPole.as:render Game.as:timePerFrame |
+| `IGNEOUS` | seedlingDemo/igneousLava.js | 9 | 9 | physics/rule | count/derivation/magnitude/sentinel | Scenery/Tile.as:render Scenery/Tile.as:igneousCounterMax Game.as:sprIgneousLava Scenery/Tile.as:w Scenery/Tile.as:h |
 | `SLASH_SPRITES` | seedlingDemo/combatVerbs.js | 6 | 6 | physics | magnitude | Player.as:41-45 |
 | `SLASH_SCALE_NORMAL` | seedlingDemo/combatVerbs.js | 2 | 2 | physics | magnitude | Player.as:1258-1265 |
 | `SLASH_SCALE_DASH` | seedlingDemo/combatVerbs.js | 2 | 2 | physics | magnitude |  |
@@ -693,5 +697,32 @@ None: a name declared in several files now reads one profile key (the table belo
 | `SEEDLING_PLAYER_BOX` | flashPanel/seedlingSemantics.js | 2 | 2 | physics | magnitude | Player.as:normalHitbox |
 | `CLIFFSIDE_FRAME_FACES` | flashPanel/seedlingSemantics.js | 4 | 4 | rule | sentinel | Game.as:2084-2089 Scenery/CliffSide.as:15-34 |
 | `DIRECTIONS` | flashPanel/seedlingSemantics.js | 8 | 8 | rule | sign |  |
+| `LIGHT_BOSS_WORLD` | seedlingDemo/lightBossWorld.js | 8 | 8 | physics | magnitude |  |
+| `C1` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `C2` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `C3` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `C4` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `C5` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `C6` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `S1` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `S2` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `S3` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `S4` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `S5` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `S6` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `TOINT` | seedlingDemo/runtimeLibm.js | 1 | 1 | physics | derivation |  |
+| `PIO4` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `INVPIO2` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `PIO2_1` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `PIO2_1T` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `PIO2_2` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `PIO2_2T` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `PIO2_3` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `PIO2_3T` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `ATANHI` | seedlingDemo/runtimeLibm.js | 8 | 8 | physics | derivation |  |
+| `ATANLO` | seedlingDemo/runtimeLibm.js | 8 | 8 | physics | derivation |  |
+| `PI` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `PI_LO` | seedlingDemo/runtimeLibm.js | 2 | 2 | physics | derivation |  |
+| `BLOCK_FATAL_TILES` | flashPanel/seedlingBlockPaths.js | 3 | 3 | rule | sentinel | Puzzlements/PushableBlock.as:destroy |
 
 <!-- CENSUS:seedling-constants END -->
