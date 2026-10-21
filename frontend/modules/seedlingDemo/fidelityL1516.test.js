@@ -35,9 +35,10 @@ const replay = (name) => {
 const ENV = ['SEEDLING_CONTACT_FIDELITY', 'SEEDLING_CHEST_PROBE_LINE_END'];
 
 describe('L1516 D2 — a chest\'s probe line stops one pixel short of `toX`', () => {
-    it.skipIf(ENV.some((k) => process.env[k]))('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.chestProbeLineEnd).toBe(false);
-        expect(CONTACT_FIDELITY.chestProbeLineEnd).toBe(false);
+    // ⛓ planning-9's flip (⚖ user "Flip chest / pit switches", 2026-10-21): shipped OFF, ON by default since.
+    it.skipIf(ENV.some((k) => process.env[k]))('is ON by default (the flip)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.chestProbeLineEnd).toBe(true);
+        expect(CONTACT_FIDELITY.chestProbeLineEnd).toBe(true);
     });
 
     it('the line: OFF px+2..px+12 (byte-identical), ON px+2..px+11 (the keyLock\'s transcription)', () => {
@@ -98,9 +99,9 @@ describe('L1516 D3 — an enclosed pit is entered across a corner', async () => 
     const SOLVE = JSON.parse(readFileSync(join(WIT, 'l16-corner-pit-solve.tape.json'), 'utf8'));
     const cornerRow = (name) => JSON.parse(readFileSync(join(WIT, `l16-corner-pit-${name}.json`), 'utf8'));
 
-    it.skipIf(ENV.some((k) => process.env[k]) || process.env.SEEDLING_ENCLOSED_PIT_CORNER)('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.enclosedPitCorner).toBe(false);
-        expect(CONTACT_FIDELITY.enclosedPitCorner).toBe(false);
+    it.skipIf(ENV.some((k) => process.env[k]) || process.env.SEEDLING_ENCLOSED_PIT_CORNER)('is ON by default (the flip)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.enclosedPitCorner).toBe(true);
+        expect(CONTACT_FIDELITY.enclosedPitCorner).toBe(true);
     });
 
     it('L16 (13,4) is the one enclosed pit of its cluster; its corners are (12,5) and (14,5)', () => {

@@ -824,8 +824,10 @@ export const CONTACT_FIDELITY = {
      * y 114.24 under the Solid; the model's px+12 probe opened the chest and walked through it. ON: the line ends at
      * px+11 (the keyLock's transcription). OFF: px+12, byte-identical. `SEEDLING_CHEST_PROBE_LINE_END=0|1` for a node
      * measurement.
+     * ⛓ planning-9's flip (⚖ user, 2026-10-21, "Flip chest / pit switches") turns it ON. Measured movers (CI, wave-21
+     * A/B): sweep leg 206 failed → done ×2; the route survey (full) and the 236 chest-level legs: 0 movers (crossed↔done noise).
      */
-    chestProbeLineEnd: false,
+    chestProbeLineEnd: true,
     /**
      * fidelity L1516 D3 — AN ENCLOSED PIT IS ENTERED ACROSS A CORNER (`solverBot.enclosedPitCorners`, the reach-pit
      * executor). `Player.getState` reads one point a tick (`Player.as:679`), so a diagonal step jumps it across the
@@ -833,8 +835,10 @@ export const CONTACT_FIDELITY = {
      * the game (p4g, `l16-corner-pit-corner` / `-control`, 0 px). ON: the executor walks to a stance in a diagonal floor
      * cell and takes the corner step its preview found. OFF: the plan exemption alone, which cannot reach such a pit
      * (refused by name), byte-identical. `SEEDLING_ENCLOSED_PIT_CORNER=0|1` for a node measurement.
+     * ⛓ planning-9's flip (⚖ user, 2026-10-21, "Flip chest / pit switches") turns it ON. Measured movers (CI, wave-21
+     * A/B): sweep leg 206 failed → done ×2; the route survey (full) and the 236 chest-level legs: 0 movers (crossed↔done noise).
      */
-    enclosedPitCorner: false,
+    enclosedPitCorner: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
