@@ -235,7 +235,7 @@ export const INSTRUMENTS = frz({
         "files": 451,
         "lineStyle": 13,
         "withDocblock": 451,
-        "withFlags": 367
+        "withFlags": 368
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1469,7 +1469,9 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/census-seedling-sites.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "rendered"
+            ],
             "browser": false,
             "category": "census",
             "citedBy": [
@@ -10211,8 +10213,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
-                "arg",
-                "sameTape"
+                "arg"
             ],
             "browser": false,
             "category": "plan",
@@ -13319,6 +13320,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "only",
                 "record",
                 "win",
@@ -13326,6 +13328,12 @@ export const INSTRUMENTS = frz({
             ],
             "file": "probe-seedling-r5-spinner.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -17791,7 +17799,14 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "stamp-seedling-vanilla-set.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
             "inheritedFlags": [
                 {
                     "from": "argvHelp.js",
