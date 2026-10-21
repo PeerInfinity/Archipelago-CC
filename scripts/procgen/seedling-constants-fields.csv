@@ -1208,6 +1208,7 @@ frontend/modules/seedlingDemo/chest.js|CHEST|(module)|16,physics,magnitude,,setH
 frontend/modules/seedlingDemo/chest.js|CHEST|(module)|1,rule,count,,Math.random draws per construction
 frontend/modules/seedlingDemo/chest.js|chestProbeLine|chestProbeLine|2,physics,derivation,,right inset 2 * CHEST.m
 frontend/modules/seedlingDemo/chest.js|chestProbeLine|chestProbeLine|1,physics,derivation,,probe row CHEST.box.h + 1
+frontend/modules/seedlingDemo/chest.js|chestProbeLine|chestProbeLine|0,physics,derivation,World.as:collideLine,fidelity L1516 chestProbeLineEnd: OFF arm 0 (x1 = toX); ON arm 1 (toX never probed at precision 1)
 frontend/modules/seedlingDemo/chest.js|chestStanceBand|chestStanceBand,structural,,,search rows / emptiness check
 frontend/modules/seedlingDemo/chest.js|createChestState|h0bda2f5d|0|0,rule,sentinel,,frame 0 = closed
 frontend/modules/seedlingDemo/chest.js|createChestState|h0bda2f5d|0|1,structural,,,openTimer initial 0
