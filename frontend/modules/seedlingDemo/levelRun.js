@@ -240,6 +240,8 @@ import {
     lightsExitRow, lightsFightView, stepLightBossFlier, stepLightBossFlierGraphic, stepLightBossShot,
     stepLightsController, withLightsExit,
 } from './lightBoss.js';
+// ⛓ fidelity LIGHTSARR D2: the moving shield's shove on a flier (`lightsShieldBumpNow`).
+import { lightsShieldBump } from './lightBoss.js';
 import { DRILL, drillRect, hitDrill, newDrill, stepDrill, stepDrillGraphic } from './drill.js';
 // ⚠ `SWORD_FORCE` ONLY. `combatVerbs` owns the swing GEOMETRY, which this
 // file does not use — the press rect comes from `presses.slashRect` — but
@@ -15456,6 +15458,7 @@ export function createLevelRun({
     function shieldBumpNow() {
         bobShieldBumpNow();
         if (!inventory?.hasShield) return;
+        lightsShieldBumpNow();
         const slashing = slashState.slashing;
         const rendered = shieldRenderState ?? state;
         const p = { x: state.x, y: state.y };
@@ -15604,6 +15607,23 @@ export function createLevelRun({
         for (const r of due) {
             lightsSlashNow({ rect: spearRect(state.x, state.y, r.direction), reachLimit: Infinity, weapon: 'spear',
                 pressTick: r.pressTick, hits: [], ghost: false, direction: r.direction, repeat: 'lights' });
+        }
+    }
+
+    /**
+     * ⛓⛓ SEEDLING FIDELITY LIGHTSARR D2 — `Player.shieldBump` against the L69 fliers (`lightBoss.lightsShieldBump`),
+     * from `shieldBumpNow` (the player's update, after the fight stepped this tick; the shield is held). The box is
+     * where the previous frame's render left it (`shieldRenderState`), the gate and the shove's point the live `state`.
+     * Rows go to `shieldBumpLedger` (family `lightboss`) and the fight's ledger (`shield-bump`).
+     */
+    function lightsShieldBumpNow() {
+        const fight = CONTACT_FIDELITY.lightsBossFight ? (lightsFights.get(level) ?? null) : null;
+        if (!fight) return;
+        const rows = lightsShieldBump(fight, { player: state, rendered: shieldRenderState ?? state,
+            slashing: slashState.slashing, dark: inventory?.hasDarkShield === true });
+        for (const r of rows) {
+            shieldBumpLedger.push({ t: ticksCompleted + 1, level, family: 'lightboss', ...r });
+            lightsEvents.push({ t: ticksCompleted + 1, level, what: 'shield-bump', ...r });
         }
     }
 

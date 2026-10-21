@@ -1902,6 +1902,7 @@ frontend/modules/seedlingDemo/lightBoss.js|createLightsFight|createLightsFight,s
 frontend/modules/seedlingDemo/lightBoss.js|flierSeq|(module),structural,,,fidelity LIGHTS: a monotonic id counter (not a game field)
 frontend/modules/seedlingDemo/lightBoss.js|flyPattern|flyPattern,rule,sentinel,,fidelity LIGHTS: the pattern ids (state 1 flyCircleInvert; 2 flyCircleDouble); i % 2 picks the even fliers; 2*PI
 frontend/modules/seedlingDemo/lightBoss.js|fpSign|fpSign,structural,,,FP.sign
+frontend/modules/seedlingDemo/lightBoss.js|lightsShieldBump|lightsShieldBump,structural,,,"fidelity LIGHTSARR: the dark shield's gate hitsTimer <= 0 (Player.shieldBump)"
 frontend/modules/seedlingDemo/lightBoss.js|moveAxis|moveAxis,structural,,,Mobile.moveX/moveY 1 px sub-steps
 frontend/modules/seedlingDemo/lightBoss.js|removeFlier|removeFlier,structural,,,fidelity LIGHTS: removeFlier's index arithmetic and its one-state step
 frontend/modules/seedlingDemo/lightBoss.js|stepLightBossFlier|stepLightBossFlier,structural,,,zero tests
