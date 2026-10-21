@@ -6,7 +6,7 @@
  * the two rooms it decides to the game. (L16's re-entry, with and without `{16,0}`, is fidelity F7's own probe,
  * `probe-seedling-f7-reentry.mjs`; this one adds the CUT and L28.)
  *
- * Seven tapes, each on a FRESH page, all built on `fixtures/tapes/r9-solve-16.json`'s staging (its `seam`, `save` and
+ * Nine tapes, each on a FRESH page, all built on `fixtures/tapes/r9-solve-16.json`'s staging (its `seam`, `save` and
  * `rng`; boot, persistence, inputs and items replaced; `tick0` dropped):
  *   l16-cut        r9-solve-16 as recorded: boot L16 at the L15 arrival (32,64) with the Sword; the solve cuts
  *                  `rope@32,16` from the west, crosses the three lanes and leaves by `stairsup@352,80` → L18 with no hit
@@ -21,6 +21,10 @@
  *                  the button on this visit, so the lock is open and the walk crosses (y < the lock's top)
  *   l28-control    the same walk with nothing cleared: the lock stands and the walk stops under it
  *   l28-rock-only  the same walk with `{28,1}` alone cleared: which tag builds the rock fallen (FallRock.as:42-47)
+ *   l28-back       boot in r1c18 just NORTH of the lock (176,176), no items, `{28,0}` + `{28,1}` cleared, walk south: the
+ *                  rules' `level_28__r1c18 -> level_28__r11c4` = Has(cut) — the fallen rock holds the button on this visit,
+ *                  so the lock fades (`Lock.activationStep`, ~100 ticks after the entry) and the walk passes it SOUTH
+ *   l28-back-control  the same, nothing cleared: the lock stands and the walk stops north of it
  *
  * Prints `PASS:`/`FAIL:` rows, `ROW {json}`, and `ALL CHECKS PASSED` / `N CHECK(S) FAILED`.
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build, or SKIP.
@@ -44,6 +48,8 @@ const REPO = join(HERE, '..', '..');
 const SOURCE_TAPE = 'frontend/modules/seedlingDemo/fixtures/tapes/r9-solve-16.json';
 /** `grasslock@176,208`'s top edge: a walk north of it has crossed. */
 export const L28_LOCK_TOP = 208;
+/** …and its bottom edge: a walk from the north (r1c18) that passes it has crossed the other way. */
+export const L28_LOCK_BOTTOM = 224;
 export const L16_ROPE = '16,0';
 export const L28_ROPE = '28,0';
 export const L28_ROCK = '28,1';
@@ -59,6 +65,7 @@ export function ropeTapes(source) {
     const clear = (...tags) => tags.map((t) => ({ level: 28, tag: t, note: '' }));
     const cutWalk = [{ key: 'down', from: 0, to: 41 }, { key: 'right', from: 41, to: 82 }];
     const presses = (from, n) => Array.from({ length: n }, (_, i) => ({ key: 'primary', from: from + i * 12, to: from + i * 12 + 1 }));
+    const southWalk = [{ key: 'down', from: 0, to: 180 }];
     const crossWalk = [{ key: 'right', from: 0, to: Number(process.env.L28_R ?? 41) },
         { key: 'up', from: Number(process.env.L28_R ?? 41), to: 260 }];
     return {
@@ -79,6 +86,12 @@ export function ropeTapes(source) {
         }),
         'l28-cross': tape('l28-cross', {
             boot: { level: 28, x: 128, y: 288 }, persistence: clear(0, 1), seam: seam({}), tick_count: 260, inputs: crossWalk,
+        }),
+        'l28-back': tape('l28-back', {
+            boot: { level: 28, x: 176, y: 176 }, persistence: clear(0, 1), seam: seam({}), tick_count: 180, inputs: southWalk,
+        }),
+        'l28-back-control': tape('l28-back-control', {
+            boot: { level: 28, x: 176, y: 176 }, persistence: [], seam: seam({}), tick_count: 180, inputs: southWalk,
         }),
         'l28-control': tape('l28-control', {
             boot: { level: 28, x: 128, y: 288 }, persistence: [], seam: seam({}), tick_count: 260, inputs: crossWalk,
@@ -101,6 +114,7 @@ export function readRun(ticks, status) {
         clears,
         hits: status?.hits ?? null,
         minY28: in28.length ? Math.min(...in28.map((o) => o.y)) : null,
+        maxY28: in28.length ? Math.max(...in28.map((o) => o.y)) : null,
         final: ticks.at(-1) ?? null,
     };
 }
@@ -110,6 +124,8 @@ export function expectRope(name, r) {
     if (name === 'l16-cut') return r.clears.includes(L16_ROPE) && r.hits === 0 && r.transitions.some((t) => t.from === 16 && t.to === 18);
     if (name === 'l28-cut' || name === 'l28-fire') return r.clears.includes(L28_ROPE) && r.clears.includes(L28_ROCK);
     if (name === 'l28-noitem') return !r.clears.includes(L28_ROPE);
+    if (name === 'l28-back') return r.maxY28 !== null && r.maxY28 > L28_LOCK_BOTTOM;
+    if (name === 'l28-back-control') return r.maxY28 !== null && r.maxY28 <= L28_LOCK_BOTTOM;
     if (name === 'l28-control') return r.minY28 !== null && r.minY28 >= L28_LOCK_TOP;
     return r.minY28 !== null && r.minY28 < L28_LOCK_TOP;
 }
@@ -206,6 +222,8 @@ async function main() {
                 'l28-fire': `with FIRE alone (no Sword, no Spear) the same cut clears {${L28_ROPE}} and {${L28_ROCK}} (Player.as:1032)`,
                 'l28-noitem': `the CONTROL: the same walk and presses with no item cut nothing`,
                 'l28-cross': `on a later visit (both tags cleared, no items) the fallen rock holds the button: north of the lock (y < ${L28_LOCK_TOP})`,
+                'l28-back': `from r1c18 (booted north of the lock, both tags cleared, no items) the lock is crossed SOUTH too (y > ${L28_LOCK_BOTTOM})`,
+                'l28-back-control': `the CONTROL: nothing cleared, the same walk from r1c18 stops north of the lock (y <= ${L28_LOCK_BOTTOM})`,
                 'l28-control': `with nothing cleared the lock stands: the walk stays at y >= ${L28_LOCK_TOP}`,
                 'l28-rock-only': `{${L28_ROCK}} alone builds the rock fallen: north of the lock (y < ${L28_LOCK_TOP})`,
             }[name];
