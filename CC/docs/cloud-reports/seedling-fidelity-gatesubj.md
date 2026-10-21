@@ -128,7 +128,14 @@ A listed arm absent from the log belongs to another shard (`ELSEWHERE`) and is n
 
 ## The CI run at my last code head
 
-CI_AT_HEAD
+Run **39545422705** at `ea4a9fe258`: **conclusion `success`, all 13 jobs green**, including every `Expected reds only?` step.
+
+- **Browser shard 2** (`seedling-ap-placement +22`): `## CI-GATE | gate: procgen-demos | 264/0 | exit=0 | ALL CHECKS PASSED`; `## CI-GATE | gate: seedling-editor-phases | 94/0 | exit=0 | ALL CHECKS PASSED`; `## CI-GATE | gate: seedling-editor-refusal | 21/0 | exit=0 | ALL CHECKS PASSED`. The judge read `## EXPECTED-RED-DONE | 23 gate line(s) read | 0 red | 0 expected-red`.
+- **Headless shard 0**: the two hammer arms are still `0/0 | exit=1 | (no total)`, and the judge read `EXPECTED-RED` for both (owner `seedling-hammer-phase-planning-2`), then `51 gate line(s) read | 0 red | 2 expected-red`. `seedling-full-tier-owed` read `2/0/1 | exit=0`.
+- **Headless shard 1**: `## CI-GATE | gate: procgen-help | 449/0 | exit=0` (the D4 import fix holds). The judge read `49 gate line(s) read | 0 red | 0 expected-red`.
+- **Vitest** (`node scripts/procgen/ci-vitest-summary.mjs ea4a9fe258`): `suite: vitest (unfiltered) 876/21592 (21592 passed | 0 skipped | 0 failed)`; `slow battery 21/261 (261 passed | 0 failed)`.
+
+The demos value moved 260/1 → 264/0: D1 added the search's three rows, and the claim row turned PASS.
 
 ## What the brief got wrong (measured)
 
