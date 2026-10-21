@@ -1,0 +1,42 @@
+{
+ "spec": "blast-only",
+ "rows": [
+  {
+   "tape": "r5-l40-part5",
+   "t": 1650,
+   "level": 40,
+   "map": "blastStates",
+   "leaves": 18,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  },
+  {
+   "tape": "r5-l40-part5-control",
+   "t": 1650,
+   "level": 40,
+   "map": "blastStates",
+   "leaves": 18,
+   "moved": [
+    "visit"
+   ],
+   "surfaceMoved": false,
+   "previewsMoved": false
+  }
+ ],
+ "summary": {
+  "blastStates": {
+   "samples": 7310,
+   "perturbed": 7,
+   "leaves": 114,
+   "partsMoved": {
+    "visit": 2
+   },
+   "surfaceMoved": 0,
+   "undoExact": 7
+  }
+ },
+ "stops": []
+}
