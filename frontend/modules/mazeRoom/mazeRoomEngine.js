@@ -9,6 +9,7 @@
 import { createRng } from '../shared/rng.js';
 import { reach, makeBfsSolver } from '../shared/simulatorCore.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES, isObstacleCleared } from '../shared/procgen/library.js';
+import { makeAndRule, makeHasRule, makeOrRule } from '../shared/rulesJsonBuilder.js';
 import {
     REGION_GROW_STEP, REGION_GROW_MAX_ATTEMPTS,
     clockwisePerimeterTiles,
@@ -1041,9 +1042,11 @@ function ghostStep(world, state, input) {
 //
 // Produces the central paths-and-obstacles representation
 // (docs/json/developer/procgen/paths-and-obstacles.md). For each
-// target location (the exit + every item pickup), we walk an
-// obstacle-transparent BFS from the entrance, then annotate the path
-// with the obstacles it crossed. Emits a single path per location.
+// target location (the exit + every item pickup), we emit ONE PATH PER
+// MINIMAL OBSTACLE SET over all routes from the entrance (⚖ T2, below), each
+// annotated with the obstacles it crosses in encounter order. A region with
+// blocks or buttons is priced by a search over the real `step` instead (⚖ T1,
+// `blockWorldAccessRules`), which rides on each target as `access_rule`.
 
 function obstaclesAlongPath(world, startState, plan) {
     const seen = [];
@@ -1070,8 +1073,11 @@ function obstaclesAlongPath(world, startState, plan) {
  * first-discovery tree: the tree this builds once, in the same FIFO order and
  * `INPUTS` order. `plans(position)` answers what that `reach` answered: `[]`
  * for the entrance itself, `null` for a tile the tree never reached.
+ *
+ * `open` (a Set of obstacle ids) makes every OTHER obstacle a wall — the tree
+ * of the routes that cross only those obstacles (one minimal set's route).
  */
-function ghostPlansFromEntrance(world) {
+function ghostPlansFromEntrance(world, open = null) {
     const start = createState(world);
     const key = (x, y) => `${x},${y}`;
     const origin = key(start.player_pos.x, start.player_pos.y);
@@ -1084,6 +1090,7 @@ function ghostPlansFromEntrance(world) {
         for (const input of INPUTS) {
             const next = ghostStep(world, s, input);
             if (!next) continue;
+            if (open && !opensFor(world, open, next.player_pos)) continue;
             const k = key(next.player_pos.x, next.player_pos.y);
             if (parent.has(k)) continue;
             parent.set(k, { from, input });
@@ -1102,16 +1109,208 @@ function ghostPlansFromEntrance(world) {
     };
 }
 
-function pathsToTarget(world, position, plans) {
-    const plan = plans(position);
-    if (plan === null) return [];
-    const obstacles = obstaclesAlongPath(world, createState(world), plan);
-    return [{ path_id: 'p1', obstacles }];
+function opensFor(world, open, position) {
+    const id = getObstacle(world, position.x, position.y);
+    return !id || open.has(id);
+}
+
+/**
+ * ⛓⛓ ALL ROUTES, AS MINIMAL OBSTACLE SETS (⚖ T2, user 2026-10-21: "All-routes
+ * minimal sets"; slice maze-logic-t1t2-fix). The extraction used to emit the
+ * ONE ghost path the BFS found first, so a door on that path was charged even
+ * when another route avoided it (seed 2 guard room: key_red@7,3 = Has(key_red)
+ * though the engine walks there with no key) — over-strict, never too loose.
+ *
+ * Label setting over positions: each cell keeps the ANTICHAIN of obstacle-id
+ * sets some route from the entrance crosses to stand there; a set that contains
+ * one already kept is dropped, and one it contains evicts it. What survives at
+ * a target is exactly its minimal sets — every route's crossing set contains
+ * one. No subset lattice: a procgen_topdown region carries up to 29 obstacle
+ * ids (measured), so 2^n is out; the antichains stay small. Exit tiles are dead
+ * ends, as in the ghost tree.
+ */
+function minimalObstacleSets(world) {
+    const start = createState(world).player_pos;
+    const ids = [...new Set(world.obstacles.values())];
+    const bit = new Map(ids.map((id, i) => [id, 1n << BigInt(i)]));
+    const key = (x, y) => `${x},${y}`;
+    const labels = new Map([[key(start.x, start.y), [0n]]]);
+    const keep = (k, mask) => {
+        const list = labels.get(k);
+        if (!list) { labels.set(k, [mask]); return true; }
+        if (list.some((m) => (m & mask) === m)) return false;
+        labels.set(k, [...list.filter((m) => (m & mask) !== mask), mask]);
+        return true;
+    };
+    const queue = [{ x: start.x, y: start.y, mask: 0n }];
+    for (let head = 0; head < queue.length; head++) {
+        const { x, y, mask } = queue[head];
+        if (!labels.get(key(x, y)).includes(mask)) continue; // evicted since queued
+        if (isDeadEndExit(world, x, y, start)) continue;
+        for (const input of INPUTS) {
+            const nx = x + DELTAS[input].dx;
+            const ny = y + DELTAS[input].dy;
+            if (!isFloor(world, nx, ny)) continue;
+            const id = getObstacle(world, nx, ny);
+            const next = id ? mask | bit.get(id) : mask;
+            if (keep(key(nx, ny), next)) queue.push({ x: nx, y: ny, mask: next });
+        }
+    }
+    const maskOf = (obstacles) => obstacles.reduce((m, id) => m | bit.get(id), 0n);
+    const idsOf = (mask) => ids.filter((id) => (mask & bit.get(id)) !== 0n);
+    const popcount = (m) => idsOf(m).length;
+    const setsAt = (position) => [...(labels.get(key(position.x, position.y)) ?? [])]
+        .sort((a, b) => popcount(a) - popcount(b) || (a < b ? -1 : a > b ? 1 : 0));
+    return { setsAt, maskOf, idsOf };
+}
+
+/**
+ * One path per minimal set. ⛓ When the ghost path's own set is minimal it comes
+ * FIRST and verbatim (its encounter order), so a target with one route — every
+ * committed preset's region, measured at W0 — extracts byte-identically to the
+ * single-path form. Every other set is walked by the ghost tree restricted to
+ * that set's obstacles; the route it finds crosses the whole set (a route over
+ * fewer would make a smaller set, and the set is minimal).
+ */
+function pathsToTarget(world, position, plans, routes, plansFor) {
+    const sets = routes.setsAt(position);
+    if (sets.length === 0) return [];
+    const ghostObstacles = obstaclesAlongPath(world, createState(world), plans(position));
+    const ghostMask = routes.maskOf(ghostObstacles);
+    const ordered = sets.includes(ghostMask) ? [ghostMask, ...sets.filter((m) => m !== ghostMask)] : sets;
+    return ordered.map((mask, i) => ({
+        path_id: `p${i + 1}`,
+        obstacles: mask === ghostMask
+            ? ghostObstacles
+            : obstaclesAlongPath(world, createState(world), plansFor(mask)(position)),
+    }));
+}
+
+/** The obstacle-id items a rule obstacle's `clear_rule` names, for the block-world search. */
+function clearRuleItems(rule, obstacleId, out) {
+    switch (rule?.rule) {
+        case 'True_': case 'False_': return out;
+        case 'Has':
+            if ((rule.args?.count ?? 1) > 1) {
+                throw new Error(`extractPathsAndObstacles: obstacle '${obstacleId}' needs ${rule.args.count}× `
+                    + `'${rule.args.item_name}' — the block-world search holds a SET inventory and cannot price a count`);
+            }
+            out.add(rule.args.item_name);
+            return out;
+        case 'And': case 'Or':
+            for (const child of rule.children ?? []) clearRuleItems(child, obstacleId, out);
+            return out;
+        default:
+            throw new Error(`extractPathsAndObstacles: obstacle '${obstacleId}' clear_rule kind `
+                + `'${rule?.rule}' is not one the block-world search can price (Has/And/Or/True_/False_)`);
+    }
+}
+
+/** ⛔ Refused BY NAME above this — the lattice is 2^n engine searches. */
+export const BLOCK_WORLD_MAX_ITEMS = 12;
+/** ⛔ Refused BY NAME above this many engine states in one search. */
+export const BLOCK_WORLD_MAX_STATES = 200000;
+
+function* subsetsOfSize(items, k, from = 0, acc = []) {
+    if (acc.length === k) { yield acc.slice(); return; }
+    for (let i = from; i <= items.length - (k - acc.length); i++) {
+        acc.push(items[i]);
+        yield* subsetsOfSize(items, k, i + 1, acc);
+        acc.pop();
+    }
+}
+
+/**
+ * ⛓⛓⛓ A REGION WITH BLOCKS OR BUTTONS IS PRICED BY THE ENGINE (⚖ T1, user
+ * 2026-10-21: "Engine search for block worlds"; slice maze-logic-t1t2-fix). The
+ * ghost walk never asks about a block: it charged a button's HELD token (`sw_A0`,
+ * derived per step while something stands on the button) as an ITEM — never
+ * satisfiable in AP — and ignored both a block's own path (a rock it must be
+ * pushed through) and a block that walls a corridor.
+ *
+ * Here, per inventory over the region's item axis (every item an obstacle's
+ * clear set or rule names, minus held tokens), a BFS over the REAL `step` from
+ * the entrance says which tiles the player can stand on; each target's minimal
+ * inventories become its rule. AP mode: the inventory is fixed — a location
+ * tile is a check and grants nothing (the world's items are emptied for the
+ * search). Exit tiles are dead ends. Lattice by size; a set that already covers
+ * every live target is skipped (sound: clearance is monotone in the inventory).
+ * Returns `(position) → rule`.
+ */
+function blockWorldAccessRules(world) {
+    const lib = world.obstacleLib ?? DEFAULT_OBSTACLES;
+    const held = new Set(Object.values(world.buttonLib ?? {}).map((b) => b.holds).filter(Boolean));
+    const axis = new Set();
+    for (const id of new Set(world.obstacles.values())) {
+        const entry = lib[id];
+        if (!entry) continue;
+        if ((entry.clear_set_type ?? 'combo_list') === 'rule') clearRuleItems(entry.clear_rule, id, axis);
+        else for (const combo of entry.clear_set ?? []) for (const item of combo) axis.add(item);
+    }
+    const items = [...axis].filter((i) => !held.has(i)).sort();
+    if (items.length > BLOCK_WORLD_MAX_ITEMS) {
+        throw new Error(`extractPathsAndObstacles: a block world's item axis has ${items.length} items, `
+            + `over the cap ${BLOCK_WORLD_MAX_ITEMS}: ${items.join(', ')}`);
+    }
+    const apWorld = { ...world, items: new Map() };
+    const reachUnder = (inventory) => {
+        const s0 = createState(apWorld);
+        s0.inventory = new Set(inventory);
+        const origin = s0.player_pos;
+        const seen = new Set([mazeVisitedKey(s0)]);
+        const cells = new Set([`${origin.x},${origin.y}`]);
+        const queue = [s0];
+        for (let head = 0; head < queue.length; head++) {
+            const s = queue[head];
+            if (isDeadEndExit(apWorld, s.player_pos.x, s.player_pos.y, origin)) continue;
+            for (const input of INPUTS) {
+                const next = step(apWorld, s, input);
+                if (!next) continue;
+                const k = mazeVisitedKey(next);
+                if (seen.has(k)) continue;
+                seen.add(k);
+                cells.add(`${next.player_pos.x},${next.player_pos.y}`);
+                queue.push(next);
+            }
+            if (seen.size > BLOCK_WORLD_MAX_STATES) {
+                throw new Error(`extractPathsAndObstacles: the block-world search under {${inventory}} `
+                    + `exceeded ${BLOCK_WORLD_MAX_STATES} states`);
+            }
+        }
+        return cells;
+    };
+    const targets = new Map();
+    for (const exit of world.exits.values()) targets.set(`${exit.x},${exit.y}`, []);
+    for (const key of world.items.keys()) targets.set(key, []);
+    const full = reachUnder(items);
+    const live = [...targets.keys()].filter((k) => full.has(k));
+    const covered = (k, set) => targets.get(k).some((m) => m.every((i) => set.includes(i)));
+    for (let k = 0; k <= items.length; k++) {
+        for (const set of subsetsOfSize(items, k)) {
+            if (live.every((t) => covered(t, set))) continue;
+            const cells = reachUnder(set);
+            for (const t of live) if (!covered(t, set) && cells.has(t)) targets.get(t).push(set);
+        }
+    }
+    return (position) => {
+        const minimal = targets.get(`${position.x},${position.y}`) ?? [];
+        if (minimal.length === 0) return { rule: 'False_' };
+        return makeOrRule(minimal.map((set) => makeAndRule(set.map((item) => makeHasRule(item)))));
+    };
 }
 
 export function extractPathsAndObstacles(world, opts = {}) {
     const regionId = opts.regionId ?? 'maze_room';
     const plans = ghostPlansFromEntrance(world);
+    const routes = minimalObstacleSets(world);
+    const restricted = new Map();
+    const plansFor = (mask) => {
+        if (!restricted.has(mask)) restricted.set(mask, ghostPlansFromEntrance(world, new Set(routes.idsOf(mask))));
+        return restricted.get(mask);
+    };
+    const paths = (position) => pathsToTarget(world, position, plans, routes, plansFor);
+    const priced = (world.blocks?.size || world.buttons?.size) ? blockWorldAccessRules(world) : null;
+    const accessRule = (position) => (priced ? { access_rule: priced(position) } : {});
 
     // Exits are region-to-region connections; one entry per exit tile
     // in `world.exits`. Target region resolution (for multi-region
@@ -1122,7 +1321,8 @@ export function extractPathsAndObstacles(world, opts = {}) {
             id: exit.exit_id,
             position: { x: exit.x, y: exit.y },
             target_region: exit.targetRegion ?? null,
-            paths: pathsToTarget(world, { x: exit.x, y: exit.y }, plans),
+            paths: paths({ x: exit.x, y: exit.y }),
+            ...accessRule({ x: exit.x, y: exit.y }),
         });
     }
 
@@ -1136,7 +1336,8 @@ export function extractPathsAndObstacles(world, opts = {}) {
             id: `${itemId}_pickup`,
             position: { x, y },
             item: itemId,
-            paths: pathsToTarget(world, { x, y }, plans),
+            paths: paths({ x, y }),
+            ...accessRule({ x, y }),
         });
     }
 
