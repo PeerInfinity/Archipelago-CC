@@ -780,7 +780,7 @@ export const CONTACT_FIDELITY = {
      * `solid:lightbosscontroller` row (`lights`) fights it. OFF: nothing here runs, byte-identical.
      * `SEEDLING_LIGHTS_BOSS_FIGHT=0|1` for a node measurement.
      */
-    lightsBossFight: false,
+    lightsBossFight: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
