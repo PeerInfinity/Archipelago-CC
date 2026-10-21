@@ -15,12 +15,15 @@
  *     python3 scripts/procgen/extract-seedling-vanilla-set.py
  *     node    scripts/procgen/stamp-seedling-vanilla-set.mjs
  *
+ *   node scripts/procgen/stamp-seedling-vanilla-set.mjs --check
+ *       exit 1 unless the committed fixture is, byte for byte, what stamping it would write (writes nothing)
+ *
  * ⚠ The printed hash is load-bearing OUTSIDE this repo: `VanillaSet.SET_ID` in
  * the seedling fork must carry the same string, or the built-in manifest and its
  * twin disagree about which set the game is running — which is exactly what the
  * save stamp keys on.
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { stampLevelSetIdentity, validateLevelSet } from
@@ -28,6 +31,7 @@ import { stampLevelSetIdentity, validateLevelSet } from
 
 
 import { argvHelp } from './argvHelp.js';
+import { emitFixtures } from './producerFixtureBytes.js';
 
 argvHelp(import.meta.url);
 const REPO = dirname(dirname(dirname(fileURLToPath(import.meta.url))));
@@ -36,9 +40,12 @@ const PATH = join(REPO, 'frontend/modules/seedlingDemo/fixtures/seedling-vanilla
 const set = JSON.parse(readFileSync(PATH, 'utf8'));
 const before = set.set_id;
 stampLevelSetIdentity(set, 'seedling-vanilla');
-writeFileSync(PATH, `${JSON.stringify(set, null, 1)}\n`);
+// ⛔ `--check` stamps in memory and compares (slice seedling-js-producer-sweep): an
+// unstamped or hand-edited fixture is a red, not a silent rewrite.
+const CHECK = process.argv.includes('--check');
+emitFixtures([{ path: PATH, text: `${JSON.stringify(set, null, 1)}\n` }], { write: !CHECK, check: CHECK });
 
-console.log(`stamped ${PATH}`);
+console.log(`${CHECK ? 'checked' : 'stamped'} ${PATH}`);
 console.log(`  ${before}  ->  ${set.set_id}`);
 console.log(`  content_hash: ${set.provenance.content_hash}`);
 

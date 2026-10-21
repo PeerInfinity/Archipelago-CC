@@ -1,0 +1,163 @@
+{
+  "cleared": {
+    "params": [
+      "tile"
+    ],
+    "body": {
+      "type": "or",
+      "conditions": [
+        {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "tile"
+            },
+            "attr": "obstacle"
+          },
+          "op": "is",
+          "right": {
+            "type": "constant",
+            "value": null
+          }
+        },
+        {
+          "type": "any_of",
+          "element_rule": {
+            "type": "all_of",
+            "element_rule": {
+              "type": "item_check",
+              "item": {
+                "type": "name",
+                "name": "t"
+              }
+            },
+            "iterator_info": {
+              "type": "comprehension_details",
+              "target": {
+                "type": "name",
+                "name": "t"
+              },
+              "iterator": {
+                "type": "name",
+                "name": "combo"
+              }
+            }
+          },
+          "iterator_info": {
+            "type": "comprehension_details",
+            "target": {
+              "type": "name",
+              "name": "combo"
+            },
+            "iterator": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "tile"
+              },
+              "attr": "clear_set"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "player_may_enter": {
+    "params": [
+      "cell",
+      "tile"
+    ],
+    "body": {
+      "type": "and",
+      "conditions": [
+        {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "tile"
+          },
+          "attr": "floor"
+        },
+        {
+          "type": "helper",
+          "name": "cleared",
+          "args": [
+            {
+              "type": "name",
+              "name": "tile"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "block_may_enter": {
+    "params": [
+      "cell",
+      "tile"
+    ],
+    "body": {
+      "type": "and",
+      "conditions": [
+        {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "tile"
+          },
+          "attr": "floor"
+        },
+        {
+          "type": "not",
+          "condition": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "tile"
+            },
+            "attr": "block"
+          }
+        },
+        {
+          "type": "helper",
+          "name": "cleared",
+          "args": [
+            {
+              "type": "name",
+              "name": "tile"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "presses": {
+    "params": [
+      "cell",
+      "tile"
+    ],
+    "body": {
+      "type": "or",
+      "conditions": [
+        {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "tile"
+          },
+          "attr": "block"
+        },
+        {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "tile"
+          },
+          "attr": "player"
+        }
+      ]
+    }
+  }
+}
