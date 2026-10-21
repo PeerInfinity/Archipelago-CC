@@ -169,3 +169,23 @@ describe('deriveRequires', () => {
         expect(deriveRequires(w, start, acts).requires).toEqual([SWORD]);
     });
 });
+
+describe('the maze lab replays item actions', () => {
+    it('framesForActions: frames carry facing / broken only on an item-action world', async () => {
+        const { framesForActions } = await import('./mazeLab.js');
+        const w = itemActionPicture(ROCK_CORRIDOR);
+        const lab = { record: w, palette: { items: [SWORD] } };
+        const frames = framesForActions(lab, [
+            moveEntry('E'), moveEntry('E'),
+            { ...moveEntry('N'), params: { refused: true } },   // a recorded bump
+            turnEntry('E'), useEntry('sword'), moveEntry('E'),
+        ]);
+        expect(frames.map((f) => `${f.player.x},${f.player.y} ${f.facing} ${f.broken.join(';')}`)).toEqual([
+            '1,1 S ', '2,1 E ', '3,1 E ', '3,1 N ', '3,1 E ', '3,1 E 4,1', '4,1 E 4,1',
+        ]);
+        const plain = itemActionPicture(ROCK_CORRIDOR, { actionLib: null });
+        const plainFrames = framesForActions({ record: plain }, [moveEntry('E')]);
+        expect('facing' in plainFrames[1]).toBe(false);
+        expect('broken' in plainFrames[1]).toBe(false);
+    });
+});

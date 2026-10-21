@@ -49,7 +49,7 @@ import { COLORS, TILE_PX, drawWorld, plainView } from './mazeRoomRender.js';
  * input was; `mazeLab.framesForActions` is what produced the entry.
  */
 import {
-    ACTION_LOCATION_CHECK, ACTION_MOVE, ACTION_WAIT, KEY_MAP, describeMazeAction, moveEntry,
+    ACTION_LOCATION_CHECK, ACTION_MOVE, ACTION_WAIT, describeMazeAction, keyToMazeEntry, moveEntry,
 } from './mazeKeys.js';
 /**
  * ⛓⛓⛓ SLICE S2b — **THE MANUAL ARM'S SESSION, HEADLESS.** ⛔ Everything about a
@@ -786,6 +786,8 @@ export function main() {
         drawWorld(ctx, w, plainView({
             tilePx: TILE_PX,
             playerPos: shownFrame()?.player ?? null,
+            broken: shownFrame()?.broken ?? null,
+            facing: shownFrame()?.facing ?? null,
         }));
         /**
          * ⛔⛔ EDITOR v3 E2c — **THE THREE SIBLING OVERLAYS ARE THE LAB LEVEL'S,
@@ -4011,7 +4013,8 @@ export function main() {
                 return;
             }
             if (e.ctrlKey || e.metaKey || e.altKey) return;
-            const spec = KEY_MAP[e.key];
+            // ⛓ ITEM ACTIONS: Shift+arrow / Z X C V on a level with an action_lib.
+            const spec = keyToMazeEntry(e, state.record?.actionLib);
             if (!spec) return;
             e.preventDefault();
             pressWalk(spec);
