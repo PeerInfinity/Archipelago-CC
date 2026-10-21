@@ -17,35 +17,44 @@
  */
 import { readFileSync } from 'node:fs';
 
-import { argvHelp } from './argvHelp.js';
+import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { CI_GATE_EXPECTED_RED, formatJudgement, judgeExpectedRed } from './ciExpectedRed.js';
 import { ciGateArms } from './ciGatePlan.js';
 
 argvHelp(import.meta.url);
 
-const ARGV = process.argv.slice(2);
-if (ARGV.includes('--table')) {
-    for (const [key, e] of Object.entries(CI_GATE_EXPECTED_RED)) {
-        console.log(`${key}\n  owner: ${e.owner}\n  since: ${e.since}\n  why:   ${e.why}`);
+/**
+ * ⛔ NOTHING RUNS ON IMPORT — `check-procgen-help.mjs` imports every instrument
+ * here and reds one whose import DOES something (this file's first CI run did:
+ * `procgen-help 448/1`, `IMPORT SIDE EFFECT`).
+ */
+function main() {
+    const ARGV = process.argv.slice(2);
+    if (ARGV.includes('--table')) {
+        for (const [key, e] of Object.entries(CI_GATE_EXPECTED_RED)) {
+            console.log(`${key}\n  owner: ${e.owner}\n  since: ${e.since}\n  why:   ${e.why}`);
+        }
+        process.exit(0);
     }
-    process.exit(0);
+    const path = ARGV.find((a) => !a.startsWith('--'));
+    if (!path) {
+        console.log('FAIL: name the battery log to judge (e.g. /tmp/gates.log)');
+        process.exit(1);
+    }
+    let log;
+    try {
+        log = readFileSync(path, 'utf8');
+    } catch (e) {
+        console.log(`FAIL: cannot read ${path} — ${e.message}`);
+        process.exit(1);
+    }
+    const known = ciGateArms({ set: 'all' }).map((a) => a.key);
+    const judged = judgeExpectedRed(log, CI_GATE_EXPECTED_RED, known);
+    console.log(formatJudgement(judged));
+    for (const r of judged.rows.filter((x) => !x.ok)) {
+        console.log(`::error title=gate arm ${r.verdict}::${r.key}`);
+    }
+    process.exit(judged.red > 0 ? 1 : 0);
 }
-const path = ARGV.find((a) => !a.startsWith('--'));
-if (!path) {
-    console.log('FAIL: name the battery log to judge (e.g. /tmp/gates.log)');
-    process.exit(1);
-}
-let log;
-try {
-    log = readFileSync(path, 'utf8');
-} catch (e) {
-    console.log(`FAIL: cannot read ${path} — ${e.message}`);
-    process.exit(1);
-}
-const known = ciGateArms({ set: 'all' }).map((a) => a.key);
-const judged = judgeExpectedRed(log, CI_GATE_EXPECTED_RED, known);
-console.log(formatJudgement(judged));
-for (const r of judged.rows.filter((x) => !x.ok)) {
-    console.log(`::error title=gate arm ${r.verdict}::${r.key}`);
-}
-process.exit(judged.red > 0 ? 1 : 0);
+
+if (isEntryPoint(import.meta.url)) main();
