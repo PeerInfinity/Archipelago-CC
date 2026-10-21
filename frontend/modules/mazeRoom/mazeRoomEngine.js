@@ -415,6 +415,12 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     if (sidecar.arrival === 'zone' || sidecar.arrival === 'region') {
         world.arrival = sidecar.arrival;
     }
+    // ⛓ SHARED LEVEL WORLD (tile-primitives Stage 2): which AP region owns
+    // which cell. Absent on every other sidecar, so `world.sharedWorld` stays
+    // undefined and nothing below changes for them.
+    if (sidecar.shared_world !== undefined) {
+        world.sharedWorld = checkSharedWorld(sidecar.shared_world, width, height, 'deserializeMazeWorld');
+    }
 
     // Hazards (maze content modules Phase 2). Each sidecar entry is the
     // immutable shape (tiles + cycleLength + length + shape); phase
@@ -515,6 +521,79 @@ export function checkActionLib(lib, who) {
         }
     }
     return { ...lib };
+}
+
+/** The ownership alphabet (the projection's `SHARED_WORLD_ALPHABET` — kept in sync by test). */
+export const SHARED_WORLD_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+/**
+ * ⛓ The `shared_world` payload field, CHECKED — `{key, regions, rows,
+ * entrances, links}` (written by the atlas projection's `projectLevelWorld`).
+ * `rows[y][x]` is the index (in `SHARED_WORLD_ALPHABET`) of the AP region in
+ * `regions` that owns the cell, or `.` for "no news". A malformed one is
+ * refused BY NAME rather than loaded as a world whose crossings fire nowhere.
+ */
+export function checkSharedWorld(sw, width, height, who) {
+    const bad = (why) => new Error(`${who}: "shared_world" ${why}`);
+    if (!sw || typeof sw !== 'object' || Array.isArray(sw)) throw bad('must be an object');
+    if (typeof sw.key !== 'string' || sw.key === '') throw bad('needs a non-empty string "key"');
+    if (!Array.isArray(sw.regions) || sw.regions.length === 0
+            || sw.regions.some((r) => typeof r !== 'string' || r === '')) {
+        throw bad('needs a non-empty "regions" list of AP region names');
+    }
+    if (sw.regions.length > SHARED_WORLD_ALPHABET.length) throw bad(`names more regions than the alphabet holds`);
+    if (!Array.isArray(sw.rows) || sw.rows.length !== height
+            || sw.rows.some((r) => typeof r !== 'string' || r.length !== width)) {
+        throw bad(`"rows" must be ${height} strings of length ${width}`);
+    }
+    for (const row of sw.rows) {
+        for (const ch of row) {
+            if (ch === '.') continue;
+            const i = SHARED_WORLD_ALPHABET.indexOf(ch);
+            if (i < 0 || i >= sw.regions.length) throw bad(`"rows" holds '${ch}', which names no region`);
+        }
+    }
+    const entrances = {};
+    for (const r of sw.regions) {
+        const at = sw.entrances?.[r];
+        if (!at || !Number.isInteger(at.x) || !Number.isInteger(at.y)) throw bad(`has no entrance for "${r}"`);
+        entrances[r] = { x: at.x, y: at.y };
+    }
+    return {
+        key: sw.key,
+        regions: sw.regions.slice(),
+        rows: sw.rows.slice(),
+        entrances,
+        links: { ...(sw.links ?? {}) },
+    };
+}
+
+/** The AP region owning cell (x, y) of a shared level world, or `null` ("no news" / not shared). */
+export function sharedWorldOwnerAt(world, x, y) {
+    const sw = world?.sharedWorld;
+    if (!sw) return null;
+    const ch = sw.rows[y]?.[x];
+    if (!ch || ch === '.') return null;
+    return sw.regions[SHARED_WORLD_ALPHABET.indexOf(ch)] ?? null;
+}
+
+/**
+ * ⛓ THE IN-WORLD CROSSING: standing in `currentRegion` and arriving on (x, y),
+ * does the player cross into another AP region of this shared world? Returns
+ * `{boundary: "x,y", sourceRegion, targetRegion, exitName}` or `null`.
+ * `exitName` is the AP exit the atlas declares for that direction, or `null`
+ * when it declares none (the walk is still the engine's to allow).
+ */
+export function sharedWorldCrossing(world, currentRegion, x, y) {
+    const owner = sharedWorldOwnerAt(world, x, y);
+    if (owner === null || owner === currentRegion) return null;
+    if (!world.sharedWorld.regions.includes(currentRegion)) return null;
+    return {
+        boundary: posKey(x, y),
+        sourceRegion: currentRegion,
+        targetRegion: owner,
+        exitName: world.sharedWorld.links[`${currentRegion}>${owner}`] ?? null,
+    };
 }
 
 /**

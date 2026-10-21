@@ -60,8 +60,18 @@ const isGated = (rule) => !!rule && rule.rule !== 'True_';
  *   compare nothing; a malformed `rules` member sets `declarationError` too.
  */
 export async function regionRuleAgreement(doc, player, name) {
-    const substrate = sidecarOf(doc, player, name)?.substrate ?? null;
+    const sidecar = sidecarOf(doc, player, name);
+    const substrate = sidecar?.substrate ?? null;
     const empty = { substrate, endpoints: 0, gated: 0, disagreements: [] };
+    // ⛓ A SHARED LEVEL WORLD alias (tile-primitives Stage 2) has no payload of
+    // its own to derive rules from: its world is its carrier's.
+    if (typeof sidecar?.shared_world === 'string' && sidecar.playable_payload === undefined) {
+        return {
+            ...empty,
+            status: RULE_AGREEMENT.NOT_CHECKED,
+            why: `an alias of shared level world "${sidecar.shared_world}" — no payload of its own to derive rules from`,
+        };
+    }
     const { rt, why } = regionRoundTripOf(substrate);
     if (!rt) return { ...empty, status: RULE_AGREEMENT.NO_ROUND_TRIP, why };
     let rules;

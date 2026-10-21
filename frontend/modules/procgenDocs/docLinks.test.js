@@ -290,15 +290,17 @@ describe('the corpus census — printed, then pinned', () => {
          *   364 → 366  generic `flash` entry removed (2026-10-18): architecture.md's substrate table
          *              gains its `noiz2sa` row → noiz2sa.md and the no-generic-entry note → flash.md
          *              (`doc` 280 → 282).
+         *   366 → 367  shared level worlds (2026-10-21, tile-primitives Stage 2): maze.md's item-actions
+         *              persistence bullet → its own § Shared level worlds (`same-doc` 22 → 23).
          */
         expect(by).toEqual({
-            'same-doc': 22,
+            'same-doc': 23,
             doc: 282,
             external: 22,
             repo: 40,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(366);
+        expect(CORPUS.length).toBe(367);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {

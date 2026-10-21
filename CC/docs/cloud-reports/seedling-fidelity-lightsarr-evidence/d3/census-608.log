@@ -1,0 +1,16 @@
+ROW {"id":608,"key":"level_69 <- in_pit_L70_3_8 -> location:Level 069 - Lights","i":0,"run":0,"seamTime":5429,"budgetWork":640,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":603,"work":21},{"pass":"full","ok":true,"kind":null,"ticks":666,"work":44}],"work":65,"ok":true,"kind":null,"answer":"92fc88a63158","message":null,"points":97,"trace":"6fd922d465ea","checkpoints":[],"ms":115642}
+ROW {"id":608,"key":"level_69 <- in_pit_L70_3_8 -> location:Level 069 - Lights","i":0,"run":0,"seamTime":5430,"budgetWork":640,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":803,"work":28},{"pass":"full","ok":true,"kind":null,"ticks":658,"work":44}],"work":72,"ok":true,"kind":null,"answer":"bd402513e480","message":null,"points":104,"trace":"79e3de566746","checkpoints":[],"ms":218527}
+ROW {"id":608,"key":"level_69 <- in_pit_L70_3_8 -> location:Level 069 - Lights","i":0,"run":0,"seamTime":5431,"budgetWork":640,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":797,"work":27},{"pass":"full","ok":true,"kind":null,"ticks":662,"work":44}],"work":71,"ok":true,"kind":null,"answer":"5f41db56af78","message":null,"points":103,"trace":"3c840d51c172","checkpoints":[],"ms":222511}
+ROW {"id":608,"key":"level_69 <- in_pit_L70_3_8 -> location:Level 069 - Lights","i":0,"run":0,"seamTime":5432,"budgetWork":640,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":803,"work":28},{"pass":"full","ok":true,"kind":null,"ticks":672,"work":44}],"work":72,"ok":true,"kind":null,"answer":"01a61cdb2bda","message":null,"points":104,"trace":"79e3de566746","checkpoints":[],"ms":178014}
+ROW {"id":608,"key":"level_69 <- in_pit_L70_3_8 -> location:Level 069 - Lights","i":0,"run":0,"seamTime":5433,"budgetWork":640,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":565,"work":20},{"pass":"full","ok":true,"kind":null,"ticks":663,"work":44}],"work":64,"ok":true,"kind":null,"answer":"0e5020cda283","message":null,"points":96,"trace":"7dff2a8abf35","checkpoints":[],"ms":104376}
+ROW {"id":608,"key":"level_69 <- in_pit_L70_3_8 -> location:Level 069 - Lights","i":0,"run":0,"seamTime":5434,"budgetWork":640,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":577,"work":21},{"pass":"full","ok":true,"kind":null,"ticks":662,"work":44}],"work":65,"ok":true,"kind":null,"answer":"664e04dc284b","message":null,"points":97,"trace":"6fd922d465ea","checkpoints":[],"ms":103341}
+ROW {"id":608,"key":"level_69 <- in_pit_L70_3_8 -> location:Level 069 - Lights","i":0,"run":0,"seamTime":5435,"budgetWork":640,"passes":[{"pass":"dashless","ok":true,"kind":null,"ticks":578,"work":21},{"pass":"full","ok":true,"kind":null,"ticks":528,"work":40}],"work":61,"ok":true,"kind":null,"answer":"63623e86783d","message":null,"points":93,"trace":"4149a9913293","checkpoints":[],"ms":47258}
+CENSUS: leg 608 request 0, captured at seam time 5432, budget 640
+SEAM-SWEEP: leg 608: 7 distinct answer(s) over 7 seam time(s) — VARIES WITH seam.time
+  t=5429 error work=65 [dashless:21,full:44] PLAN
+  t=5430 error work=72 [dashless:28,full:44] PLAN
+  t=5431 error work=71 [dashless:27,full:44] PLAN
+  t=5432 error work=72 [dashless:28,full:44] PLAN
+  t=5433 error work=64 [dashless:20,full:44] PLAN
+  t=5434 error work=65 [dashless:21,full:44] PLAN
+  t=5435 error work=61 [dashless:21,full:40] PLAN

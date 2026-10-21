@@ -71,6 +71,7 @@
 
 import { keyLineTouches } from './activators.js';
 import { rectsOverlap } from './levelWorld.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
 
 export class ChestError extends Error {
     constructor(message) { super(message); this.name = 'ChestError'; }
@@ -125,7 +126,12 @@ export function chestProbeLine(px, py) {
     }
     return Object.freeze({
         x0: px + CHEST.m,
-        x1: px + CHEST.box.w - 2 * CHEST.m,
+        // ⛓ fidelity L1516 D2 (`CONTACT_FIDELITY.chestProbeLineEnd`): `keyLineTouches` reads `x1` INCLUSIVE, and
+        // `World.collideLine` at precision 1 never tests `toX` (`while (x < toX)`, the end-point check is
+        // `precision > 1` only; `World.as:442`, `:514`) — the keyLock's line already says so (`x1: 11`). OFF: `toX`
+        // itself, one probe too many on the right, so a box whose left edge sits in (px+11, px+12] opened the chest in
+        // the model and not on the game (L15 `chest@144,96`, the player stopped under it at x 157.98).
+        x1: px + CHEST.box.w - 2 * CHEST.m - (CONTACT_FIDELITY.chestProbeLineEnd ? 1 : 0),
         y: py + CHEST.box.h + 1,
     });
 }

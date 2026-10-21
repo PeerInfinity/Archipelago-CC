@@ -156,6 +156,8 @@ export {
     LIGHT_BOSS, SPEAR_FORCE as LIGHTS_SPEAR_FORCE, cloneLightsFight, lightBossFlierHit, lightBossRect,
     stepLightBossFlier, stepLightBossFlierGraphic, stepLightBossShot, stepLightsController,
 } from './lightBoss.js';
+// ⛓ fidelity LIGHTSARR D2: the shield's shove on a flier, forecast as the run steps it.
+export { lightsShieldBump } from './lightBoss.js';
 // levelWorld.js — botDriverV2, dangerMap, hazards, solverBot, strikePolicy · seedling 3, physics 6
 export {
     assertRect, isNormalizedLiveOpts, LIVE_GEOMETRY_KEYS, normalizeLiveOpts, PRE_R5_ROLES, rect, rectsOverlap,

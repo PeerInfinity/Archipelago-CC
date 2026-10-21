@@ -49,6 +49,8 @@ import { getPanelInstance } from '../../mazeRoom/index.js';
 import { getGameStateSingleton } from '../../gameState/singleton.js';
 import { getActivePanel as getBotPanel } from '../../playbackBot/index.js';
 import { getSphereStateSingleton } from '../../sphereState/singleton.js';
+import { nativeReachUnder } from '../../mazeRoom/tileSpike/deriveLevelWorldLogic.js';
+import { sharedWorldOwnerAt, TURN_PREFIX, USE_PREFIX } from '../../mazeRoom/mazeRoomEngine.js';
 
 const PRESET_PATH = './presets/seedling_atlas_maze/AP_1/AP_1_rules.json';
 // A world sphere growth GREW with pieces of the same map hung off it
@@ -736,6 +738,97 @@ async function sphereWorldBotCompletion(testController) {
 
     return testController.getOverallResult();
 }
+
+// ────────────────────────────────────────────────────────────────
+// 5. L15 as ONE shared level world (tile-primitives Stage 2)
+// ────────────────────────────────────────────────────────────────
+const L15_PRESET_PATH = './presets/seedling_playthrough_maze/AP_1/AP_1_rules.json';
+const L15_R1C5 = 'level_15__r1c5';
+const L15_R1C9 = 'level_15__r1c9';
+
+/**
+ * Seedling L15 played in the maze as one shared level world: the sword is refused before it is
+ * held; once granted through stateManager, the player breaks both rocks, pushes the block onto the
+ * button and walks through the held lock — and crossing into r1c9 changes the AP region (dispatcher,
+ * procgenPlayer, gameState) while the panel KEEPS the level's state: same world object, the block
+ * still on the button, both rocks still broken. The route is planned off the LIVE world
+ * (`nativeReachUnder`), never hard-coded.
+ */
+async function l15SharedLevelWorld(testController) {
+    testController.log('Loading seedling_playthrough_maze (Seedling L15 as one shared level world)…');
+    await testController.loadRulesFromFile(L15_PRESET_PATH);
+    await testController.stateManager.pingWorker('after-rules-load', 5000);
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'mazeRoomPanel' });
+    const panel = await testController.pollForValue(
+        () => {
+            const p = getPanelInstance();
+            return (p?.world?.sharedWorld && p.state && p.currentRegionId === L15_R1C5) ? p : null;
+        },
+        `maze panel mounted in ${L15_R1C5}`, 20000, 250);
+    testController.assertEqual('the preset put the player in L15 r1c5 on a shared level world', true, !!panel);
+    if (!panel) return testController.getOverallResult();
+    const world = panel.world;
+
+    // ── negative: no sword, no strike ──
+    press(panel, world.actionLib.sword.key);
+    testController.assertEqual('Z without the sword is refused by the engine',
+        'use sword blocked: use sword needs Progressive Sword', panel._queueRefusal);
+
+    // ── grant the sword through the normal stateManager path ──
+    await testController.stateManager.addItemToInventory('Progressive Sword', 1);
+    const held = await testController.pollForCondition(
+        () => getPanelInstance()?.externalInventory?.has?.('Progressive Sword') === true,
+        'the panel sees the granted sword', 15000, 200);
+    testController.assertEqual('the panel sees the granted sword', true, !!held);
+    if (!held) return testController.getOverallResult();
+
+    const start = `${panel.state.player_pos.x},${panel.state.player_pos.y}`;
+    const reach = nativeReachUnder({ ...world, entrance: { ...panel.state.player_pos } }, ['Progressive Sword']);
+    const goal = [...reach.cells.keys()].find((c) => {
+        const [x, y] = c.split(',').map(Number);
+        return sharedWorldOwnerAt(world, x, y) === L15_R1C9;
+    });
+    testController.assertEqual(`with the sword, r1c9 is reachable from ${start}`, true, !!goal);
+    if (!goal) return testController.getOverallResult();
+    const plan = reach.planTo(goal);
+    testController.log(`plan to ${goal}: ${plan.length} inputs, ${plan.filter((i) => i.startsWith(USE_PREFIX)).length} strikes`);
+    for (const input of plan) {
+        if (input.startsWith(TURN_PREFIX)) {
+            panel._handleKeydown({ key: KEY_FOR[input.slice(TURN_PREFIX.length)], shiftKey: true, preventDefault: () => {} });
+        } else if (input.startsWith(USE_PREFIX)) {
+            press(panel, world.actionLib[input.slice(USE_PREFIX.length)].key);
+        } else {
+            press(panel, KEY_FOR[input]);
+        }
+        if (panel._queueRefusal) break;
+    }
+    testController.assertEqual('every input of the plan ran', null, panel._queueRefusal);
+
+    const crossed = await testController.pollForCondition(
+        () => readCurrentRegion() === L15_R1C9 && getPanelInstance()?.currentRegionId === L15_R1C9,
+        `walking onto r1c9's floor moved the AP region to ${L15_R1C9}`, 15000, 200);
+    testController.assertEqual('the in-world crossing changed the AP region (gameState + panel)', true, !!crossed);
+    const now = getPanelInstance();
+    testController.assertEqual('the panel KEPT the same world object', true, now?.world === world);
+    testController.assertEqual('the block is still on the button', '7,2', now?.state?.blocks?.join('|'));
+    testController.assertEqual('both rocks are still broken', '6,1|6,5', now?.state?.broken?.join('|'));
+    testController.assertEqual('the player stands where the plan ended', goal,
+        `${now?.state?.player_pos?.x},${now?.state?.player_pos?.y}`);
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-playthrough-maze-l15-level-world',
+    name: 'Seedling playthrough (maze): L15 plays as one shared level world',
+    description: 'Seedling L15 projected as ONE maze world (tile-primitives Stage 2): the sword is '
+               + 'refused before it is held; once granted, the player breaks both rocks, pushes the '
+               + 'block onto the button and crosses the held lock into r1c9 — the AP region changes '
+               + 'through the real dispatcher / procgenPlayer / gameState while the panel keeps the '
+               + 'same world, the block and the broken rocks.',
+    testFunction: l15SharedLevelWorld,
+    category: 'Seedling atlas maze',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
 
 registerTest({
     id: 'seedling-atlas-maze-boundary-crossing',

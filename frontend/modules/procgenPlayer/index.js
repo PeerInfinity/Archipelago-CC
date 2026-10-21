@@ -29,7 +29,7 @@
  */
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { buildWarehouse, findStartRegion } from './procgenPlayerEngine.js';
+import { buildWarehouse, findStartRegion, sharesWorld } from './procgenPlayerEngine.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { SKIP_MENU_DEFAULT, skipsStart } from '../menuPanel/menuPanelEngine.js';
 
@@ -300,8 +300,19 @@ function handleRegionMove(data) {
         const isStartHop = target === startHop?.region && (startHop.sourceRegion
             ? data?.sourceRegion === startHop.sourceRegion
             : data?.restart === true && data?.fromReset === true);
+        // ⛓ SHARED LEVEL WORLD (tile-primitives Stage 2): a move between two
+        // regions of ONE level world is a walk inside it, not a load. The
+        // region still changes (activeSubstrateChanged, gameState's current
+        // region and path, discovery — everything downstream of this event),
+        // but the substrate is told `sameWorld` so it KEEPS the player, the
+        // blocks and what was broken rather than re-entering the level.
+        // A start hop, a restart and a reset are never same-world: each is a
+        // fresh entry by definition.
+        const sameWorld = !isStartHop && data?.fromReset !== true && data?.restart !== true
+            && sharesWorld(warehouse, data?.sourceRegion, target);
         publishLoadRegion(target, arrivedFrom, isStartHop
-            ? { startHop: true, ...(data?.restart === true ? { restart: true } : {}) } : null);
+            ? { startHop: true, ...(data?.restart === true ? { restart: true } : {}) }
+            : (sameWorld ? { sameWorld: true } : null));
     } else if (warehouse) {
         // Target is a region the warehouse doesn't own (e.g. AP-native
         // Menu, or a non-procgen region). No substrate panel is "the

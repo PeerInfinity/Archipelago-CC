@@ -6907,12 +6907,16 @@ export const REGISTRY = frz({
                 {
                     "id": "maze",
                     "present": true,
-                    "short": "19 keys",
+                    "short": "24 keys",
                     "type": "object",
                     "value": [
+                        "action_lib",
                         "arrival",
                         "atlas_region",
                         "atlas_sub_region",
+                        "blocks",
+                        "buttonLib",
+                        "buttons",
                         "consumableTiles",
                         "entrance",
                         "exits",
@@ -6926,6 +6930,7 @@ export const REGISTRY = frz({
                         "obstacleLib",
                         "obstacles",
                         "origin",
+                        "shared_world",
                         "tile_size",
                         "tiles",
                         "width"
