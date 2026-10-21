@@ -30,6 +30,14 @@
  *                          the lock opens and the walk crosses to L99. OFF the same staging refuses with the sweep's
  *                          words (*"no side of iceturret@104,24 is reachable"*).
  *
+ * ⚖ PINNED `strikeIframeLapse` OFF for the PLANNED arm (planner seedling-js-planning-7, 2026-10-21; the DD witness's
+ * precedent, 084e615142): the arm's committed tape was solved, and its embedded GAME recording made, under the
+ * pre-lapse strike gate, BEFORE the lapse flip (19aaa5cce4, ⚖ user 2026-10-15). With the lapse ON the same request
+ * re-plans 724 t, not 693 (the turret's removal at t533, not t501) — a plan the game never played. So the switch is
+ * STAMPED into the arm (`contactFidelity`), and `armPlan` solves under it whatever the default; a re-plan under the
+ * lapse needs a game re-record, which is the user's call. `fidelityIceTurretSpear.test.js` already compares this
+ * arm's bytes under the same pin.
+ *
  * Writes `seedlingDemo/fixtures/iceturret-spear-witness/<arm>.json` (`--author`: the tape and the model's readings;
  * `--record`: adds the game's stream and body rows). `fidelityIceTurretSpear.test.js` replays them in node.
  * `--check` re-derives every arm's tape and compares it with the committed one byte for byte.
@@ -63,7 +71,9 @@ export const ICETURRET_SPEAR_ARMS = Object.freeze([
     Object.freeze({ name: 'c3-l98-spear-l93', kind: 'plan', boot: { x: 112, y: 176 }, hitsMax: 4,
         goals: [{ kind: 'reach-exit', exit: { x: 112, y: 112 } }],
         offRefusal: /reach-exit \(112,112\)->L99 -> kill: no side of iceturret@104,24 is reachable — down: /,
-        endLevel: 99 }),
+        endLevel: 99,
+        // ⚖ the off-default switch this arm's plan is solved under (the docblock's PINNED paragraph).
+        contactFidelity: Object.freeze({ strikeIframeLapse: false }) }),
 ]);
 
 /** The base staging (`stagingFromTape` of the KILLLOCK turret witness's tape) re-pointed at `arm.boot`. */
@@ -76,21 +86,23 @@ export async function armStaging(arm) {
 }
 
 /**
- * A planned arm's solve (`twoPassSolve`, the authoring scripts' path) with `ICE_TURRET_SPEAR_ARM` set to `enabled`:
- * `{staging, solved, refusal}`.
+ * A planned arm's solve (`twoPassSolve`, the authoring scripts' path) with `ICE_TURRET_SPEAR_ARM` set to `enabled`,
+ * under the arm's stamped `contactFidelity` switches: `{staging, solved, refusal}`.
  */
 export async function armPlan(arm, enabled) {
     const { createRunForStaging } = await import(join(MODULE, 'tapeRunner.js'));
     const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
     const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
     const { withIceTurretSpearArm } = await import(join(MODULE, 'solverBot.js'));
+    const { withContactFidelity } = await import(join(MODULE, 'contactFidelity.js'));
     const staging = await armStaging(arm);
     const levelSource = atlasLevelSource();
     const makeRun = (p) => createRunForStaging({ ...staging, persistence: p }, levelSource);
     try {
-        const solved = await withIceTurretSpearArm(enabled, () => twoPassSolve({ makeRun,
-            goals: arm.goals.map((g) => JSON.parse(JSON.stringify(g))), name: arm.name, boot: staging.boot,
-            persistence: staging.persistence, log: () => {} }));
+        const solved = await withContactFidelity(arm.contactFidelity ?? {}, () => withIceTurretSpearArm(enabled,
+            () => twoPassSolve({ makeRun,
+                goals: arm.goals.map((g) => JSON.parse(JSON.stringify(g))), name: arm.name, boot: staging.boot,
+                persistence: staging.persistence, log: () => {} })));
         return { staging, solved, refusal: null };
     } catch (e) {
         return { staging, solved: null, refusal: e };
