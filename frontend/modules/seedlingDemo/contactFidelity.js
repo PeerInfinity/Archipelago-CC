@@ -818,7 +818,7 @@ export const CONTACT_FIDELITY = {
      * `probe-seedling-rope-events.mjs`. OFF: no row, no verb — byte-identical (the survey's L39 steps keep "No
      * strategy row exists"). `SEEDLING_ROPE_CUT_VERB=0|1` for a node measurement.
      */
-    ropeCutVerb: false,
+    ropeCutVerb: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
