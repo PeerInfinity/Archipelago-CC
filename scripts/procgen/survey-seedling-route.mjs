@@ -277,6 +277,18 @@ function atlasEdges(from) {
         }));
 }
 
+/** ⛓ fidelity LIGHTS D4: the switch set this process runs under, and the L69 controller's death exit. */
+const LIGHTS_FIDELITY = await import(join(MODULE, 'contactFidelity.js'));
+const LIGHTS_WORLD = await import(join(MODULE, 'lightBossWorld.js'));
+function lightsDeathEdge(from, to, x, y) {
+    const e = (levelsByNo.get(from)?.entities ?? []).find((n) => n.type === 'lightbosscontroller' && n.x === x && n.y === y);
+    if (!e) return null;
+    const exit = LIGHTS_WORLD.lightsWorldRows(e, x, y, Number(e.attrs?.tag ?? -1), new Set([Number(e.attrs?.tag ?? -1)])).exit;
+    if (!exit || exit.to !== to) return null;
+    return { from, to, via: `lightbosscontroller@${x},${y}`, exit: { x, y }, arrival: { x: exit.playerx, y: exit.playery },
+        death: true };
+}
+
 /** ONE edge for a route hop; two would make the goal ambiguous, so it says so. */
 function edgeFor(from, to) {
     const hits = atlasEdges(from).filter((e) => e.to === to);
@@ -449,6 +461,12 @@ function hopEdge(from, to, hop) {
         const m = /^out_([a-z]+)_(-?\d+)_(-?\d+)$/.exec(id);
         const edge = m && atlasEdges(from).find((e) => e.to === to && e.via === `${m[1]}@${m[2]},${m[3]}`);
         if (edge) return { edge, refusal: null };
+        // ⛓ fidelity LIGHTS D4 (`CONTACT_FIDELITY.lightsBossFight`; OFF never reached): a DEATH exit. `endState()` adds the
+        // Teleporter when the fight is won (`LightBossController.as:102-107`), so the .oel holds no `to` — the model's own
+        // build answers it (`lightBossWorld.lightsWorldRows`, the cleared arm), and the edge is that Teleporter.
+        const death = m && m[1] === 'lightbosscontroller' && LIGHTS_FIDELITY.CONTACT_FIDELITY.lightsBossFight
+            ? lightsDeathEdge(from, to, Number(m[2]), Number(m[3])) : null;
+        if (death) return { edge: death, refusal: null };
         return { edge: null, refusal: `the AP exit '${hop.name}' is ${id || '(no exit_id)'}, and the `
             + `atlas has no such entity with \`to\` ${to} in L${from} — the two sources disagree.` };
     }
