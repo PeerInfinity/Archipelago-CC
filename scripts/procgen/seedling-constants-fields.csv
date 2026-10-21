@@ -1530,7 +1530,6 @@ frontend/modules/seedlingDemo/levelRun.js|shieldBumpNow|h71955e33|0|1,structural
 frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|0,rule,bound,,U10 forecast punch: hitsTimer > 0 i-frame gate (attackPlayer)
 frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|1,rule,magnitude,,U10 forecast punch: the hitUpdate decrement this tick applies before the graphic half
 frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|2,rule,bound,,U10 forecast punch: attackPlayer returns if hitsTimer > 0
-frontend/modules/seedlingDemo/playerPhysicsV2.js|step|h8f93e98b|-1|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked (U11-swim D2: the facing a hit parks; sprites() pins direction to it while >= 0)
 frontend/modules/seedlingDemo/levelRun.js|stepOptsFor|h14b15328|-1|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked (U11-swim D2: stepOptsFor's default; the drive passes damage.directionFace)
 frontend/modules/seedlingDemo/bobBossFight.js|bobBossShieldBump|h7d55bf85|0|0,rule,bound,Player.as:shieldBump,the dark arm fires only when o.hitsTimer <= 0 (R1-swim D3: BobBoss.hit there; inside the i-frame it is the plain shove)
 frontend/modules/seedlingDemo/levelRun.js|previewStepper|h2e35f0c8|0|0,structural,,,U12-swim D1: a room with no pull gets the same closure (empty test)
@@ -1875,6 +1874,53 @@ frontend/modules/seedlingDemo/apReportBosses.js|BOB_ARENA_LEVEL|(module),rule,ma
 frontend/modules/seedlingDemo/apReportBosses.js|WITCH_LEVEL|(module),rule,magnitude,,the Witch's level (L12)
 frontend/modules/seedlingDemo/apReportBosses.js|AP_REPORT_ROWS|(module),rule,sentinel,,R4 report rows: the (level; tag) slot each kill or pickup clears and its upstream boss_locations id
 frontend/modules/seedlingDemo/apReportBosses.js|fallRockLargeSpawn|fallRockLargeSpawn,rule,magnitude,,FallRockLarge @0eda15f785: the boss it adds is form 0 (bossType 0)
+frontend/modules/seedlingDemo/igneousLava.js|(module)|h74da805f|31|0,rule,sentinel,Scenery/Tile.as:render,case 31 — Tile.types id of Igneous-to-Lava
+frontend/modules/seedlingDemo/igneousLava.js|(module)|h94411dce|17|0,rule,sentinel,Scenery/Tile.as:render,t = 17 — the Lava tile id it becomes
+frontend/modules/seedlingDemo/igneousLava.js|(module)|hcb66c838|8|0,rule,count,Scenery/Tile.as:igneousCounterMax,igneousCounterMax = 8 renders per step
+frontend/modules/seedlingDemo/igneousLava.js|(module)|hce9a7b95|3|0,rule,count,Game.as:sprIgneousLava,IgneousLava.png 48x16 in 16x16 frames: frameCount 3
+frontend/modules/seedlingDemo/igneousLava.js|(module)|h21b28d78|16|0,physics,magnitude,Scenery/Tile.as:w,Tile w = 16 (radius sqrt(w*w + h*h)/2)
+frontend/modules/seedlingDemo/igneousLava.js|(module)|h21b28d78|16|1,physics,magnitude,Scenery/Tile.as:w,Tile w = 16 (radius sqrt(w*w + h*h)/2)
+frontend/modules/seedlingDemo/igneousLava.js|(module)|h21b28d78|16|2,physics,magnitude,Scenery/Tile.as:h,Tile h = 16 (radius sqrt(w*w + h*h)/2)
+frontend/modules/seedlingDemo/igneousLava.js|(module)|h21b28d78|16|3,physics,magnitude,Scenery/Tile.as:h,Tile h = 16 (radius sqrt(w*w + h*h)/2)
+frontend/modules/seedlingDemo/igneousLava.js|(module)|h21b28d78|2|0,physics,derivation,Scenery/Tile.as:render,the half of the diagonal: sqrt(w*w + h*h)/2
+frontend/modules/seedlingDemo/igneousLava.js|(module)|h77d9b1d8|0|0,structural,,,igneousFrame = 0 at construction (Tile.as:80)
+frontend/modules/seedlingDemo/igneousLava.js|stepIgneousRender|h9a459137|0|0,structural,,,igneousCounter > 0 (Tile.as:397)
+frontend/modules/seedlingDemo/igneousLava.js|stepIgneousRender|h07d50ee3|1|0,structural,,,igneousCounter-- (Tile.as:399)
+frontend/modules/seedlingDemo/igneousLava.js|stepIgneousRender|h9a459137|0|1,structural,,,igneousCounter > 0 (Tile.as:411)
+frontend/modules/seedlingDemo/igneousLava.js|stepIgneousRender|h07d50ee3|1|1,structural,,,igneousCounter-- (Tile.as:413)
+frontend/modules/seedlingDemo/igneousLava.js|stepIgneousRender|h95d0de43|1|0,structural,,,igneousFrame++ (Tile.as:418)
+frontend/modules/seedlingDemo/igneousLava.js|igneousRendersToLava|h05bb1004|0|0,structural,,,a turned tile: no renders left
+frontend/modules/seedlingDemo/igneousLava.js|igneousRendersToLava|h7e2282e5|1|0,structural,,,the reset render counts: counterMax decrements + 1
+frontend/modules/seedlingDemo/igneousLava.js|igneousRendersToLava|h7dc160eb|1|0,structural,,,the reset render counts: counter decrements + 1
+frontend/modules/seedlingDemo/igneousLava.js|igneousRendersToLava|h384e863a|1|0,structural,,,frames left after the current one
+frontend/modules/seedlingDemo/playerPhysicsV2.js|step|hd93e06b5|-1|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked (U11-swim D2: the facing a hit parks; sprites() pins direction to it while >= 0)
+frontend/modules/seedlingDemo/lightBoss.js|LIGHT_BOSS|(module),physics,magnitude,,fidelity LIGHTS: the fight's AS3 numbers — radius 48..64 (an int) on worldFrame(180; 4); the shot frames; spawn y -32; FP.RAD = pi/-180; flier hitbox 12x12/6; steer divisor 20; cap 1.5; lightLength 4; shotSpeed 1; hitsMax 3; i-frames 30; contact force 3; die 9 frames at rate 20; shot 4x4/2 with f 0; intro talkingSpeed 4 / lineLength 34 / talkRange 24
+frontend/modules/seedlingDemo/lightBoss.js|SPEAR_FORCE|(module),physics,magnitude,Player.as:spearForce,fidelity LIGHTS: Player.spearForce 7 — the push a spear thrust hands Enemy.hit
+frontend/modules/seedlingDemo/lightBoss.js|createLightBossFlier|createLightBossFlier|-1,rule,sentinel,Enemies/Enemy.as:maxForce,fidelity LIGHTS: Enemy.maxForce -1 = no force clamp
+frontend/modules/seedlingDemo/lightBoss.js|createLightBossFlier|createLightBossFlier,structural,,,fidelity LIGHTS: zero inits and the flier sequence counter
+frontend/modules/seedlingDemo/lightBoss.js|createLightsFight|createLightsFight,structural,,,"fidelity LIGHTS: zero inits (spin, state, updates)"
+frontend/modules/seedlingDemo/lightBoss.js|flierSeq|(module),structural,,,fidelity LIGHTS: a monotonic id counter (not a game field)
+frontend/modules/seedlingDemo/lightBoss.js|flyPattern|flyPattern,rule,sentinel,,fidelity LIGHTS: the pattern ids (state 1 flyCircleInvert; 2 flyCircleDouble); i % 2 picks the even fliers; 2*PI
+frontend/modules/seedlingDemo/lightBoss.js|fpSign|fpSign,structural,,,FP.sign
+frontend/modules/seedlingDemo/lightBoss.js|moveAxis|moveAxis,structural,,,Mobile.moveX/moveY 1 px sub-steps
+frontend/modules/seedlingDemo/lightBoss.js|removeFlier|removeFlier,structural,,,fidelity LIGHTS: removeFlier's index arithmetic and its one-state step
+frontend/modules/seedlingDemo/lightBoss.js|stepLightBossFlier|stepLightBossFlier,structural,,,zero tests
+frontend/modules/seedlingDemo/lightBoss.js|stepLightBossShot|stepLightBossShot,structural,,,zero tests
+frontend/modules/seedlingDemo/lightBoss.js|stepLightsController|stepLightsController,structural,,,the update counter and the zero test
+frontend/modules/seedlingDemo/lightBoss.js|toInt|toInt,structural,,,int(NaN) = 0
+frontend/modules/seedlingDemo/lightBossWorld.js|LIGHT_BOSS_WORLD|(module),physics,magnitude,,fidelity LIGHTS: the totem 16x16 Solid; the exit Teleporter (level 36 at 112;96; 16x16; the arrival's half tile)
+frontend/modules/seedlingDemo/lightBossWorld.js|lightsWorldRows|lightsWorldRows,rule,sentinel,,fidelity LIGHTS: tag -1 = untagged (never deactivated); tag >= 0 tests
+frontend/modules/seedlingDemo/runtimeLibm.js|*|(module),physics,derivation,,fidelity LIGHTS: musl libm's IEEE-754 words — the __cos/__sin/atan polynomial coefficients and __rem_pio2's reduction constants (src/math/*.c); DBL_EPSILON and toint = 1.5/EPS; the runtime's trig
+frontend/modules/seedlingDemo/runtimeLibm.js|F64|(module),structural,,,a one-element Float64Array scratch
+frontend/modules/seedlingDemo/runtimeLibm.js|fromWords|fromWords,structural,,,the little-endian word indices
+frontend/modules/seedlingDemo/runtimeLibm.js|hiWord|hiWord,structural,,,the little-endian word index
+frontend/modules/seedlingDemo/runtimeLibm.js|*|cos,physics,derivation,,"musl cos(): the high-word thresholds (pi/4; 2^-27*sqrt2; Inf/NaN), the quadrant switch"
+frontend/modules/seedlingDemo/runtimeLibm.js|*|sin,physics,derivation,,"musl sin(): the high-word thresholds (pi/4; 2^-26; Inf/NaN), the quadrant switch"
+frontend/modules/seedlingDemo/runtimeLibm.js|*|kcos,physics,derivation,,musl __cos: hz = 0.5*z; w = 1 - hz
+frontend/modules/seedlingDemo/runtimeLibm.js|*|ksin,physics,derivation,,musl __sin: iy == 0; 0.5*y
+frontend/modules/seedlingDemo/runtimeLibm.js|*|remPio2,physics,derivation,,"musl __rem_pio2: the |x| bands (3pi/4; 5pi/4; 7pi/4; 9pi/4; 2^20*pi/2), the 16/49-bit second/third rounds, the exponent masks"
+frontend/modules/seedlingDemo/runtimeLibm.js|*|atan,physics,derivation,,musl atan(): the reduction bands (7/16; 11/16; 19/16; 39/16; 2^66) and its constants
+frontend/modules/seedlingDemo/runtimeLibm.js|*|atan2,physics,derivation,,"musl atan2(): the sign/quadrant switch (m), the 2^64 ratio bounds, pi/2 pi/4 3pi/4"
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,

@@ -232,6 +232,14 @@ import {
     createStaticBodyDamage, enemyHit, enemyHitUpdate, killLockLedger, removalTicksAfterHit,
 } from './enemyDamage.js';
 import { CONTACT_FIDELITY } from './contactFidelity.js';
+// ⛓ fidelity IGNEOUS D2: the Igneous-to-Lava tile's render-driven crumble (`renderIgneousNow`).
+import { IGNEOUS, IGNEOUS_FRESH, igneousInRange, stepIgneousRender } from './igneousLava.js';
+// ⛓⛓⛓ SEEDLING FIDELITY LIGHTS (`CONTACT_FIDELITY.lightsBossFight`): the L69 fight (`stepLightsNow`).
+import {
+    LIGHT_BOSS, SPEAR_FORCE as LIGHTS_SPEAR_FORCE, createLightsFight, lightBossFlierHit, lightBossRect,
+    lightsExitRow, lightsFightView, stepLightBossFlier, stepLightBossFlierGraphic, stepLightBossShot,
+    stepLightsController, withLightsExit,
+} from './lightBoss.js';
 import { DRILL, drillRect, hitDrill, newDrill, stepDrill, stepDrillGraphic } from './drill.js';
 // ⚠ `SWORD_FORCE` ONLY. `combatVerbs` owns the swing GEOMETRY, which this
 // file does not use — the press rect comes from `presses.slashRect` — but
@@ -421,6 +429,9 @@ export const ENTITY_FAMILY_NAMES = Object.freeze([
     'darkTraps',
     'bombPushers',
     'bombs',
+    'igneousTiles',
+    // ⛓ fidelity LIGHTS D2: the L69 fight (`lightBoss.lightsFightView`); null in every other room and while OFF.
+    'lightsFight',
 ]);
 
 /**
@@ -1221,7 +1232,22 @@ export function createLevelRun({
     const tileWriteEvents = [];
     /** ⛓ fidelity-bulb: every Bulb death's fenceposts — `drop` (the armed update's end), `lava`, `removed`. */
     const bulbEvents = [];
-    const visitWorld = (n) => withTileWrites(worldFor(n), tileWritesByLevel.get(n) ?? null);
+    // ⛓ fidelity LIGHTS D2: and the exit Teleporter `endState()` added this visit (`lightsExits`; none: the same object).
+    const visitWorld = (n) => withLightsExit(withTileWrites(worldFor(n), tileWritesByLevel.get(n) ?? null),
+        lightsExits.get(n) ?? null);
+    /**
+     * ⛓⛓⛓ fidelity IGNEOUS D2 — THE IGNEOUS-TO-LAVA TILES' CRUMBLE STATE, per VISIT (`Map<level, {tiles: Map<"tx,ty",
+     * igneousLava state>, dead}>`; a tile absent from `tiles` is `IGNEOUS_FRESH`). `igneousCounter`, `igneousBreakApart`
+     * and `igneousFrame` are `Tile` instance fields and a new `Game` rebuilds the tile from the `.oel` (witnessed: a
+     * death restart builds it whole), so `freshVisitState` drops the entry; a tile that turns is ALSO a write in
+     * `tileWritesByLevel` (the Bulb's overlay), which every reader of `t` already sees. `dead` is `clock.deadFrames` at
+     * the last render, so a dead span the run did not step is caught by name. Only `CONTACT_FIDELITY.igneousLava` ever
+     * writes here.
+     * ⚠ NOT IN `stateDigestParts` (that function is the hammer arc's): see the slice report's hand-over.
+     */
+    const igneousStates = new Map();
+    /** ⛓ fidelity IGNEOUS: every crumble event — `{t, level, tile: "tx,ty", event: 'break' | 'frame' | 'lava'}`. */
+    const igneousEvents = [];
     /**
      * The despawns, pending until their tick — `applyTimedClears`' twin, and
      * deliberately its twin down to the live-binding refresh.
@@ -2604,6 +2630,8 @@ export function createLevelRun({
         shieldBosses: shieldBossRectsNow(),
         finalDoors: finalDoorRectsNow(),
         beamTowers: beamTowerRectsNow(),
+        // ⛓ fidelity LIGHTS D2: the totem's live state, only while the switch is ON (OFF: the bag as before).
+        ...(CONTACT_FIDELITY.lightsBossFight ? { lightTotems: lightTotemsNow() } : {}),
         ...extra,
     });
     /** The boxes of every rock this visit has DROPPED — `collidesSolid`'s arm. */
@@ -4486,6 +4514,12 @@ export function createLevelRun({
     const freshVisitState = (n) => {
         // ⛓ fidelity-bulb: a new `Game` rebuilds every Tile from the `.oel` — a Bulb's lava does not survive the door.
         tileWritesByLevel.delete(n);
+        // ⛓ fidelity IGNEOUS D2: and every Igneous-to-Lava tile is built whole again (counter 8, not breaking).
+        igneousStates.delete(n);
+        // ⛓ fidelity LIGHTS D2: a new `Game` builds the controller again (`check()`: intro + totem, or `endState()`).
+        lightsFights.delete(n);
+        lightsExits.delete(n);
+        lightsSpearRepeats.length = 0;
         // ⛓ U14-swim D1: a new `Game` constructs the moonrock again, from `rockSet`.
         moonrockStates.delete(n);
         // ⛓ U15-swim D1: and every turret (angle 0, `shootTimer` 0) and no spit.
@@ -7225,6 +7259,8 @@ export function createLevelRun({
         }
         // ⛓⛓ Swim U5: the BobBoss, a runtime `Enemy` no census holds.
         bobBossSlashNow({ rect, reachLimit, weapon, pressTick, hits });
+        // ⛓ fidelity LIGHTS D2: the six LightBoss fliers — runtime `Enemy`s no census holds, as the BobBoss is.
+        lightsSlashNow({ rect, reachLimit, weapon, pressTick, hits, ghost, direction, repeat: thrust.repeat ?? null });
         presses.push({
             t: pressTick, fired: ticksCompleted, level, weapon, direction, rect, hits,
             // ⛓ GHOSTSWORD: what the 24 x 48 rect collected and the 24 px reach dropped (absent for every other weapon).
@@ -9521,6 +9557,99 @@ export function createLevelRun({
             renderBossTotem(b);
         }
     }
+
+    /** ⛓ fidelity IGNEOUS: the level's type-31 tiles as BUILT (the base world's rows; a write never edits them). */
+    const igneousTilesMemo = new WeakMap();
+    const igneousTilesOf = (w) => {
+        if (!igneousTilesMemo.has(w)) igneousTilesMemo.set(w, Object.freeze(w.tiles.filter((t) => t.t === IGNEOUS.type)));
+        return igneousTilesMemo.get(w);
+    };
+
+    /**
+     * ⛓⛓⛓ fidelity IGNEOUS D2 — `Tile.render()`'s case 31 for every Igneous-to-Lava tile of the room, at the END of
+     * the frame beside `renderBossesNow` (`Engine.onEnterFrame` is `update(); render();`), so it reads the player where
+     * this tick's update left them and the camera this tick's `view()` landed on. A tile that turns is written lava
+     * through the per-visit overlay and `world` is re-wrapped, so the NEXT update's `getState` reads 17 — the game's
+     * one-frame order (witnessed: leg 649's tile turns at the t38 render and the player dies on the t39 update).
+     *
+     * `Tile.render` early-returns off screen (`onScreen(0)` for type 31), so an off-screen tile does not count; an
+     * UNCERTAIN shake band refuses by name for a tile the render would change. A tile that is neither in range nor
+     * breaking is skipped before the camera is asked: its render changes nothing whatever the camera.
+     *
+     * ⛔ REFUSED BY NAME (an INTERIM, not modelled): frames the run spent DEAD since the last render (a freeze span, a
+     * ceremony, a room-load fade — `Tile.render` runs on every one of them) while a tile was breaking or in range, and
+     * an arrival within range of an unturned tile (the load fade's renders would count it). Measured: no teleporter
+     * arrival lands within range of a type-31 tile.
+     */
+    function renderIgneousNow() {
+        if (!CONTACT_FIDELITY.igneousLava) return;
+        const tiles = igneousTilesOf(worldFor(level));
+        if (tiles.length === 0) return;
+        const dead = clock.deadFrames;
+        let visit = igneousStates.get(level);
+        if (!visit) {
+            visit = { tiles: new Map(), dead };
+            igneousStates.set(level, visit);
+            const arrival = spawnFromBoot(worldCtor);
+            const near = tiles.find((t) => igneousInRange(t, arrival.x, arrival.y));
+            if (near) {
+                throw Object.assign(new Error(`levelRun: the arrival (${arrival.x}, ${arrival.y}) in level ${level} is `
+                    + `within ${IGNEOUS.radius.toFixed(2)} px of Igneous-to-Lava tile (${near.tx},${near.ty}), and `
+                    + '`Tile.render` counts the load fade\'s frames too — not modelled; refused by name (fidelity IGNEOUS).'),
+                { code: 'IGNEOUS_UNMODELLED' });
+            }
+        }
+        const spent = dead - visit.dead;
+        visit.dead = dead;
+        for (const tile of tiles) {
+            const key = `${tile.tx},${tile.ty}`;
+            const s = visit.tiles.get(key) ?? IGNEOUS_FRESH;
+            if (s.lava) continue;
+            const inRange = igneousInRange(tile, state.x, state.y);
+            if (!inRange && !s.breaking) continue;
+            if (spent > 0) {
+                throw Object.assign(new Error(`levelRun: ${spent} dead frame(s) were spent before tick `
+                    + `${ticksCompleted} in level ${level} while Igneous-to-Lava tile (${key}) was `
+                    + `${s.breaking ? `breaking (frame ${s.frame}, counter ${s.counter})` : 'in range'}. \`Tile.render\` `
+                    + 'runs on dead frames and this run does not step them — not modelled; refused by name (fidelity IGNEOUS).'),
+                { code: 'IGNEOUS_UNMODELLED' });
+            }
+            const vis = camBand === null ? (camOnScreen(tile.rect, cam, 0) ? 'on' : 'off')
+                : onScreenUnderShake(tile.rect, camBand, 0);
+            if (vis === 'uncertain') {
+                throw Object.assign(new Error(`levelRun: at tick ${ticksCompleted} Igneous-to-Lava tile (${key}) in level `
+                    + `${level} is on screen for some cameras of the shake band and off for others, and its render `
+                    + 'would change it — the jiggle is not modelled; refused by name (fidelity IGNEOUS).'),
+                { code: 'IGNEOUS_UNMODELLED' });
+            }
+            if (vis === 'off') continue;
+            const r = stepIgneousRender(s, inRange);
+            visit.tiles.set(key, r.state);
+            if (r.event === null) continue;
+            igneousEvents.push({ t: ticksCompleted, level, tile: key, event: r.event });
+            if (r.event !== 'lava') continue;
+            const writes = new Map(tileWritesByLevel.get(level) ?? []);
+            writes.set(key, IGNEOUS.becomes);
+            tileWritesByLevel.set(level, writes);
+            world = visitWorld(level);
+            tileWriteEvents.push({ t: ticksCompleted, level, id: `igneous@${key}`, kind: 'igneous-lava',
+                x: tile.x, y: tile.y, tile: { tx: tile.tx, ty: tile.ty }, becomes: IGNEOUS.becomes });
+        }
+    }
+
+    /**
+     * ⛓ fidelity IGNEOUS: the room's type-31 tiles and their clocks, for the solver — `[{tx, ty, x, y, rect, counter,
+     * breaking, frame, lava}]` in build order; `null` while `CONTACT_FIDELITY.igneousLava` is off (the tiles are then
+     * plain floor to the model, as they always were).
+     */
+    const igneousTilesNow = () => {
+        if (!CONTACT_FIDELITY.igneousLava) return null;
+        const visit = igneousStates.get(level);
+        return igneousTilesOf(worldFor(level)).map((t) => ({
+            tx: t.tx, ty: t.ty, x: t.x, y: t.y, rect: t.rect,
+            ...(visit?.tiles.get(`${t.tx},${t.ty}`) ?? IGNEOUS_FRESH),
+        }));
+    };
 
     /**
      * `Entity.onScreen(20)` for one shot, three-valued.
@@ -14066,6 +14195,8 @@ export function createLevelRun({
         // ceremony. The same argument as `freezeStep` above, one frame higher
         // up.
         stepCameraNow(state, world.world);
+        // ⛓ fidelity IGNEOUS D2: and `render()` runs on a frozen frame — the tiles keep counting (OFF: returns at once).
+        if (!noclip) renderIgneousNow();
         /**
          * ⛓⛓⛓ R9 SLICE 12e‴: AND SO DOES `slash()`'s TIMER, one line ABOVE
          * `super.update()` instead of below it — same flag, same argument,
@@ -15442,6 +15573,279 @@ export function createLevelRun({
         }
     }
 
+    // ── ⛓⛓⛓ SEEDLING FIDELITY LIGHTS (wave 20, `CONTACT_FIDELITY.lightsBossFight`): THE L69 LIGHTS FIGHT ─────────────
+    /**
+     * The fight, per level and per VISIT (`freshVisitState` drops it): `lightBoss.createLightsFight` plus the intro
+     * NPC's talk state. Built on the first ask in a room whose world has a held `lightbosscontroller`
+     * (`levelWorld`'s `lightsControllers`, present only while ON); `null` everywhere else.
+     */
+    const lightsFights = new Map();
+    /** The exit Teleporter `endState()` added THIS visit, per level — `visitWorld` wraps the world with it. */
+    const lightsExits = new Map();
+    /** `{t, level, what, …}` — the fight's ledger: intro, spawn, shots, contacts, hits, deaths, removals, the end. */
+    const lightsEvents = [];
+    /**
+     * ⛓ fidelity LIGHTS D2 — THE SPEAR'S OTHER TWO TESTS, against the fliers only. `spearDelayMax` is 1, so
+     * `Player.spear()` tests its 32x5 rect on T+1, T+3 and T+5 (`presses.SPEAR_HIT_TICKS_UNMODELLED`); the package's
+     * press window carries T+1 alone, because every arm it reached is idempotent inside five ticks. Two DIFFERENT fliers
+     * are not, so the two repeats run here — from the live position, in the latched direction — and nowhere else.
+     */
+    const lightsSpearRepeats = [];
+    const LIGHTS_SPEAR_REPEATS = Object.freeze([2, 4]);
+    function lightsSpearRepeatsNow() {
+        if (lightsSpearRepeats.length === 0) return;
+        const due = lightsSpearRepeats.filter((r) => r.at === ticksCompleted);
+        if (due.length === 0) return;
+        for (let i = lightsSpearRepeats.length - 1; i >= 0; i -= 1) {
+            if (lightsSpearRepeats[i].at <= ticksCompleted) lightsSpearRepeats.splice(i, 1);
+        }
+        for (const r of due) {
+            lightsSlashNow({ rect: spearRect(state.x, state.y, r.direction), reachLimit: Infinity, weapon: 'spear',
+                pressTick: r.pressTick, hits: [], ghost: false, direction: r.direction, repeat: 'lights' });
+        }
+    }
+
+    function lightsFightFor(n) {
+        if (!CONTACT_FIDELITY.lightsBossFight || noclip) return null;
+        if (lightsFights.has(n)) return lightsFights.get(n);
+        const rows = (worldFor(n).lightsControllers ?? []).filter((c) => !c.cleared);
+        if (rows.length > 1) {
+            throw new Error(`levelRun: level ${n} holds ${rows.length} live \`lightbosscontroller\`s — \`flierNumber\` and `
+                + '`spinCenter` are STATIC fields (`LightBossController.as:16-17`), so two would share one; not modelled.');
+        }
+        const row = rows[0] ?? null;
+        const fight = row ? createLightsFight({ x: row.x, y: row.y, flierNum: row.flierNum, tag: row.tag }) : null;
+        if (fight) {
+            fight.level = n;
+            fight.intro = { talking: false, talked: false, d: null, removedPending: false };
+            fight.totemGone = false;
+            fight.pendingEnd = false;
+        }
+        lightsFights.set(n, fight);
+        return fight;
+    }
+
+    /** `liveSolidOpts`' `lightTotems`: the totem's state by its solid's `lightTotemId` (only rooms with a fight). */
+    function lightTotemsNow() {
+        const fight = lightsFights.get(level) ?? null;
+        if (!fight) return null;
+        return new Map([[fight.id, { gone: fight.totemGone }]]);
+    }
+
+    /**
+     * `run.entities('lightsFight')` — this room's fights as a LIST (one per live controller; L69 places one), each a copy
+     * (`lightBoss.lightsFightView`); `null` in a room with none and while the switch is OFF.
+     */
+    function lightsFightNow() {
+        // Built on the first ask, as `stepLightsNow` builds it on the first tick (`check()` ran at the room's build).
+        const fight = CONTACT_FIDELITY.lightsBossFight ? lightsFightFor(level) : null;
+        return fight ? [lightsFightView(fight, { events: lightsEvents.filter((e) => e.level === level) })] : null;
+    }
+
+    /**
+     * `LightBossShot.update`'s cull — `onScreen()`, margin 0 (stricter than `TurretSpit`'s 8, so the one that decides) —
+     * against the camera the previous frame's `view()` left. Under a shake band an UNCERTAIN verdict reads the game's
+     * camera when a witness hands it in; otherwise a shot whose box is outside every cell the player can stand on (the
+     * room's wall ring: the screen IS the 160x160 room, so a cull is only ever in question at its border) is removed
+     * and FLAGGED (`band: true`) — it can reach nothing (`hitables = ["Player"]`) — and any other is refused by name.
+     */
+    function lightsShotOnScreen(s, box, margin) {
+        if (camBand === null) {
+            if (cameraWitness) assertWitnessCamera(`LightBossShot ${s.id}`);
+            return camOnScreen(box, cam, margin);
+        }
+        const verdict = onScreenUnderShake(box, camBand, margin);
+        if (verdict !== 'uncertain') return verdict === 'on';
+        if (cameraWitness) {
+            const w = assertWitnessCamera(`LightBossShot ${s.id}`);
+            if (w) return camOnScreen(box, w, margin);
+        }
+        const inner = world.walkableTiles.some((t) => rectsOverlap(box, t.rect ?? { x: t.x, y: t.y, w: 16, h: 16,
+            right: t.x + 16, bottom: t.y + 16 }));
+        if (!inner) {
+            s.band = true;
+            return false;
+        }
+        throw new Error(`levelRun: whether LightBossShot ${s.id} is culled at tick ${ticksCompleted + 1} in level ${level} `
+            + 'depends on where inside `Game.shake`\'s jiggle the camera landed, and the shot is over a cell the player can '
+            + 'reach. Refused by name (camera.js, "THE SHAKE, AND WHY IT IS A BAND").');
+    }
+
+    /**
+     * ONE TICK OF THE L69 FIGHT, in the game's update order (`lightBoss.js`): the previous frame's end (the exit
+     * Teleporter added and the totem's `type = ""` render), every shot (newest first), every flier (newest first, its
+     * graphic in its own slot), the intro NPC, the controller (on `Game.time`), then this frame's `updateLists`: the
+     * fliers whose `animEnd` fired leave the world, and a finished intro's `removed()` sets `myText = null`.
+     *
+     * @returns {{frozen: boolean}} `frozen`: an intro page frame (the caller runs `runFrozenTick`)
+     */
+    function stepLightsNow(held) {
+        const fight = lightsFightFor(level);
+        if (!fight) return { frozen: false };
+        const t = ticksCompleted + 1;
+        if (fight.pendingEnd) {
+            // The end of the frame `endState()` ran in: its Teleporter is in the world, and the totem's render wrote
+            // `type = ""` — both act from this update on.
+            fight.pendingEnd = false;
+            fight.totemGone = true;
+            lightsExits.set(level, lightsExitRow(fight));
+            world = visitWorld(level);
+            lightsEvents.push({ t, level, what: 'exit-added', x: fight.x, y: fight.y });
+        }
+        if (wandShotsFor(level).length > 0 && fight.bodies.some((b) => !b.removed)) {
+            throw new Error(`levelRun: a WandShot is in flight in level ${level} at tick ${t} with the Lights fliers alive. `
+                + '`WandShot.update` stops on an `"Enemy"` inside its own `moveX` sweep and calls `Enemy.hit(force, p, '
+                + 'damage, "Wand")` (`WandShot.as:97-117`); the wand arm against a LightBoss is not modelled (fidelity '
+                + 'LIGHTS residue). Refused by name.');
+        }
+        const frozen = ceremony !== null;
+        const box = playerBoxAt(state.x, state.y);
+        // ── the shots, newest first ──
+        for (let i = fight.shots.length - 1; i >= 0; i -= 1) {
+            const s = fight.shots[i];
+            if (s.removed) continue;
+            const r = stepLightBossShot(s, { frozen, playerBox: box, onScreen: (b, m) => lightsShotOnScreen(s, b, m) });
+            if (r.hitPlayer) {
+                lightsEvents.push({ t, level, what: 'shot-hit', id: s.id, x: s.x, y: s.y });
+                // `(hits[i] as Player).hit(null, v.length, new Point(x, y))` — `e` is null: no retaliation.
+                applyPlayerHit({
+                    source: 'lightbossshot', id: s.id, force: Math.sqrt(s.vx * s.vx + s.vy * s.vy),
+                    damage: LIGHT_BOSS.shot.damage, from: { x: s.x, y: s.y }, retaliate: null,
+                });
+            } else if (r.culled) {
+                lightsEvents.push({ t, level, what: 'shot-culled', id: s.id, x: s.x, y: s.y, ...(s.band ? { band: true } : {}) });
+            }
+        }
+        fight.shots = fight.shots.filter((s) => !s.removed);
+        // ── the fliers, newest first ──
+        for (let i = fight.bodies.length - 1; i >= 0; i -= 1) {
+            const f = fight.bodies[i];
+            if (f.removed) continue;
+            stepLightBossFlier(f, {
+                frozen,
+                playerBox: box,
+                onContact: (body) => {
+                    lightsEvents.push({ t, level, what: 'contact', id: body.id, x: body.x, y: body.y });
+                    applyPlayerHit({
+                        source: 'lightboss', id: body.id, force: LIGHT_BOSS.flier.contactForce,
+                        damage: LIGHT_BOSS.flier.damage, from: { x: body.x, y: body.y },
+                        // `if (e && hasDarkSuit) e.hit(darkSuitForce, Point(x, y), darkSuitDamage, "Suit")`
+                        retaliate: () => {
+                            const v = lightBossFlierHit(fight, body, { d: DARK_SUIT_DAMAGE, force: DARK_SUIT_FORCE,
+                                t: 'Suit', from: { x: state.x, y: state.y }, frozen });
+                            lightsEvents.push({ t, level, what: 'suit-hit', id: body.id, landed: v.landed,
+                                killed: v.killed === true, hits: body.hits });
+                            return { id: body.id, landed: v.landed, hits: body.hits, hitsTimer: body.hitsTimer,
+                                ...(v.killed ? { killed: true } : {}) };
+                        },
+                    });
+                },
+            });
+            if (stepLightBossFlierGraphic(f)) f.removing = true;
+        }
+        // ── the intro NPC (`NPC.talk()`, a temporary NPC whose `removed()` nulls the controller's `myText`) ──
+        let introFrozen = false;
+        const intro = fight.intro;
+        if (fight.introUp && !intro.removedPending) {
+            const released = releasedThisTick(held, TALK_KEY);
+            const inRange = inTalkRange({ x: fight.center.x, y: fight.center.y }, { x: state.x, y: state.y },
+                LIGHT_BOSS.intro.talkRange);
+            if (intro.talking) {
+                // `NPC.as:195` — `Game.freezeObjects = true` every frame while talking, above the key test.
+                introFrozen = true;
+                const r = stepNpcDialogue(intro.d, released, inRange);
+                if (intro.d.done) {
+                    intro.talking = false;
+                    introFrozen = false;
+                    framesThisCharacter = intro.d.framesThisCharacter;
+                    // `if (myCurrentText >= myText.length) { talking = false; if (temporary) FP.world.remove(this); }`
+                    // — walking out of the circle ends the talk WITHOUT the removal (`talked` resets out of range).
+                    if (!r.left) intro.removedPending = true;
+                    lightsEvents.push({ t, level, what: r.left ? 'intro-left' : 'intro-done', pages: intro.d.pages.length });
+                }
+            } else if (!inRange) {
+                intro.talked = false;
+            } else if (released && !intro.talked) {
+                intro.d = beginNpcDialogue(LIGHT_BOSS.intro.text, {
+                    talkingSpeed: LIGHT_BOSS.intro.talkingSpeed,
+                    lineLength: LIGHT_BOSS.intro.lineLength,
+                    framesThisCharacter,
+                });
+                intro.talking = true;
+                intro.talked = true;
+                // The render still types this frame; the freeze is the NEXT frame's `talk()`.
+                stepDialogue(intro.d, false);
+                lightsEvents.push({ t, level, what: 'intro-open', pages: intro.d.pages.length });
+            }
+        }
+        // ── the controller ──
+        const out = stepLightsController(fight, { frozen: frozen || introFrozen, time: clock.now() });
+        if (out.spawned) lightsEvents.push({ t, level, what: 'spawn', n: fight.fliers.length, time: clock.now() });
+        for (const s of out.shots) lightsEvents.push({ t, level, what: 'shot', id: s.id, x: s.x, y: s.y, vx: s.vx, vy: s.vy });
+        if (out.ended) {
+            // `myTotem.die = true; endState();` — the {69,0} write in band (`Game.setPersistence(tag, false)`,
+            // `:106`), through APFLIP's report path; the Teleporter and the totem's flip act from the next update.
+            fight.endedAt = t;
+            fight.pendingEnd = true;
+            apReportWrite({ level, tag: fight.tag }, fight.id);
+            lightsEvents.push({ t, level, what: 'end-state', flag: { level, tag: fight.tag } });
+        }
+        // ── this frame's `updateLists` ──
+        for (const f of fight.bodies) {
+            if (f.removing && !f.removed) {
+                f.removing = false;
+                f.removed = true;
+                lightsEvents.push({ t, level, what: 'removed', id: f.id });
+            }
+        }
+        if (intro.removedPending) {
+            intro.removedPending = false;
+            fight.introUp = false;
+        }
+        return { frozen: introFrozen };
+    }
+
+    /**
+     * A press test against the fliers (`Player.slash` / `Player.spear` → `genericHit` → `Enemy.hit`): the sword's reach
+     * gate (`FP.distanceRectPoint <= slashingSprite.width * scaleX`) and its `collideLine("Solid")` line of sight (the
+     * totem is a Solid; a ghost swing waives it), the spear's none (`Player.as:960-990` tests only the rect). Then
+     * `Enemy.hit(force, Point(x, y), d, t)` — `swordForce` 5 or `spearForce` 7.
+     */
+    function lightsSlashNow({ rect: r, reachLimit, weapon, pressTick, hits, ghost, direction = null, repeat = null }) {
+        const fight = CONTACT_FIDELITY.lightsBossFight ? (lightsFights.get(level) ?? null) : null;
+        if (!fight) return;
+        // The spear's first test schedules its two repeats (`lightsSpearRepeatsNow`): T+3 and T+5.
+        if (weapon === 'spear' && repeat === null) {
+            for (const k of LIGHTS_SPEAR_REPEATS) lightsSpearRepeats.push({ at: ticksCompleted + k, direction, pressTick });
+        }
+        for (const f of fight.bodies) {
+            if (f.removed) continue;
+            const box = lightBossRect(f);
+            if (!rectsOverlap(r, box)) continue;
+            let gate = null;
+            let reach = null;
+            if (weapon !== 'spear') {
+                reach = distanceRectPoint(state.x, state.y, box);
+                if (reach > reachLimit) gate = `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit}`;
+                else if (!ghost && collideLineSolid(state.x, state.y, f.x, f.y)) gate = 'collideLine("Solid") is blocked';
+            }
+            let verdict = { landed: false, killed: false, refusedAt: gate };
+            if (!gate) {
+                verdict = lightBossFlierHit(fight, f, {
+                    d: pressHitDamage(weapon),
+                    force: weapon === 'spear' ? LIGHTS_SPEAR_FORCE : SWORD_FORCE,
+                    t: pressHitType(weapon),
+                    from: { x: state.x, y: state.y },
+                    frozen: ceremony !== null,
+                });
+            }
+            lightsEvents.push({ t: ticksCompleted, level, what: 'press-hit', id: f.id, weapon, pressTick,
+                landed: verdict.landed, killed: verdict.killed === true, hits: f.hits, hitsTimer: f.hitsTimer,
+                reach, why: verdict.refusedAt ?? null });
+            hits.push({ as3: 'LightBoss', id: f.id, landed: verdict.landed, killed: verdict.killed === true });
+        }
+    }
+
     function bobBossSlashNow({ rect: r, reachLimit, weapon, pressTick, hits }) {
         const a = bobArena;
         if (!a || a.none || a.level !== level || !a.boss) return;
@@ -15761,6 +16165,8 @@ export function createLevelRun({
         darkTraps: darkTrapsNow,
         bombPushers: bombPushersNow,
         bombs: bombsNow,
+        igneousTiles: igneousTilesNow,
+        lightsFight: lightsFightNow,
     });
 
     /**
@@ -17724,6 +18130,8 @@ export function createLevelRun({
         get tileWriteEvents() { return tileWriteEvents.map((d) => ({ ...d, tile: { ...d.tile } })); },
         /** ⛓ fidelity-bulb: the tiles the CURRENT visit has written (`"tx,ty"` → t); empty with none. */
         get tileWrites() { return new Map(tileWritesByLevel.get(level) ?? []); },
+        /** ⛓ fidelity IGNEOUS: every Igneous-to-Lava crumble event this run has stepped (copied out). */
+        get igneousEvents() { return igneousEvents.map((e) => ({ ...e })); },
         /**
          * ⛓⛓⛓ R5 SLICE 20 — the ice turrets, as `collidesSolid` sees them.
          *
@@ -17836,6 +18244,8 @@ export function createLevelRun({
         /** ⛓ seedling-fidelity-bombpusher: the lobbers and the bombs in flight (empty while the key is OFF). */
         get bombPushers() { return bombPushersNow(); },
         get bombs() { return bombsNow(); },
+        get igneousTiles() { return igneousTilesNow(); },
+        get lightsFight() { return lightsFightNow(); },
         /** ⛓ seedling-fidelity-bombpusher: the bomb ledger — see `stepBombsNow` / `drainBombBlastsNow`. */
         get bombEvents() { return bombEventsNow(); },
         /** ⛓ fidelity BEAMTOWER D1: the towers' stepped `y` per tick (`LEDGER_KINDS.beamTowerTrace`; empty OFF). */
@@ -19377,6 +19787,19 @@ export function createLevelRun({
              * on it, and that is `open` inside each arm plus the ceremony
              * refusal below.
              */
+            /**
+             * ⛓⛓⛓ SEEDLING FIDELITY LIGHTS D2 (`CONTACT_FIDELITY.lightsBossFight`): THE L69 FIGHT, in its slots — the
+             * shots, the fliers, the totem, the intro NPC and the controller are all ahead of the Player (`lightBoss.js`'s
+             * header). An intro page frame is a TAPE TICK with a frozen player, as a placed talker's is. OFF (or any other
+             * room): `{frozen: false}` and nothing else.
+             */
+            if (!noclip) {
+                const lt = stepLightsNow(held);
+                if (lt.frozen) {
+                    prevHeld = new Set(held);
+                    return runFrozenTick(activators, 'the Lights intro');
+                }
+            }
             if (!noclip) {
                 const talkerRelease = releasedThisTick(held, TALK_KEY);
                 const tr = stepTalkersNow(talkerRelease);
@@ -20345,6 +20768,8 @@ export function createLevelRun({
                 const fired = swordWindowStep(swordWindow, ticksCompleted);
                 swordWindow = fired.window;
                 for (const thrust of fired.fires) applyThrust(thrust);
+                // ⛓ fidelity LIGHTS D2: a spear thrust's T+3 / T+5 tests against the L69 fliers (`lightsSpearRepeatsNow`).
+                lightsSpearRepeatsNow();
             }
             // ── ⛓ THE FIRE WINDOW'S HIT TICKS ────────────────────────
             // `Player.update` calls `fire()` in the same place it calls
@@ -20884,6 +21309,8 @@ export function createLevelRun({
             // reads, which is the whole mechanism behind the beam's
             // one-frame lag.
             if (!noclip) renderBossesNow();
+            // ⛓ fidelity IGNEOUS D2: and every Igneous-to-Lava tile's render (OFF: returns at once).
+            if (!noclip && !next.transition) renderIgneousNow();
 
             // ── ⛓⛓⛓ R6 SLICE 3: THE DEATH REBOOT, AT END OF TICK ────
             //

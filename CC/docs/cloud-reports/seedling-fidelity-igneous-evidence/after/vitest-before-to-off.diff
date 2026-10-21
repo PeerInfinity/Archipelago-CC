@@ -1,0 +1,34 @@
+0a1,5
+> failed	frontend/modules/seedlingDemo/entityBlocks.test.js > D4 — the doc section is pinned to the tables its family table is FAMILY_BLOCKS, row for row
+> failed	frontend/modules/seedlingDemo/entityBlocks.test.js > D4 — the doc section is pinned to the tables its three lists are the derived lists, with the families behind each
+> failed	frontend/modules/seedlingDemo/levelRun.test.js > engine-prep C3: run.entities(family) is the getter, by another name every family was witnessed NON-TRIVIALLY by the rows above
+> failed	frontend/modules/seedlingDemo/solveProgress.test.js > hammer-phase TC2 — the active frame (`frame`, additive within v: 2) ⛓⛓ the danger's kind is read off the source's own fields
+> failed	scripts/procgen/seedlingSolverSurface.test.js > the committed contract equals a fresh census every row is classified — a class, a form and a why
+2662a2668
+> passed	frontend/modules/seedlingDemo/contactFidelityHook.test.js > the settings: one boolean per switch of CONTACT_FIDELITY, the schema default IS the model's default igneousLava → flashPanel.seedlingContactIgneousLava, default false
+3045,3046d3050
+< passed	frontend/modules/seedlingDemo/entityBlocks.test.js > D4 — the doc section is pinned to the tables its family table is FAMILY_BLOCKS, row for row
+< passed	frontend/modules/seedlingDemo/entityBlocks.test.js > D4 — the doc section is pinned to the tables its three lists are the derived lists, with the families behind each
+3601a3606,3621
+> passed	frontend/modules/seedlingDemo/fidelityIgneous.test.js > IGNEOUS — the solver's pricing (D3) dangerAt: a BREAKING tile is lava from its clock in both modes
+> passed	frontend/modules/seedlingDemo/fidelityIgneous.test.js > IGNEOUS — the solver's pricing (D3) dangerAt: a WAIT that would break a tile in range is danger; a transit past an unbroken one is not
+> passed	frontend/modules/seedlingDemo/fidelityIgneous.test.js > IGNEOUS — the solver's pricing (D3) igneous-l76-survey195-on — the ON plan on the game: 0 px, no death, the snake crumbling behind it
+> passed	frontend/modules/seedlingDemo/fidelityIgneous.test.js > IGNEOUS — the solver's pricing (D3) the walk check names the tile and its clock where a dwell turns it under the walk (leg 649's 40 ticks)
+> passed	frontend/modules/seedlingDemo/fidelityIgneous.test.js > IGNEOUS — the state machine (`Tile.as:390-433`) a fresh tile turns on its 36th consecutive in-range render; 9 to break, then 27 with nobody near
+> passed	frontend/modules/seedlingDemo/fidelityIgneous.test.js > IGNEOUS — the state machine (`Tile.as:390-433`) in range from the CENTRE: d <= 11.3137 counts, d 11.75 does not
+> passed	frontend/modules/seedlingDemo/fidelityIgneous.test.js > IGNEOUS — the state machine (`Tile.as:390-433`) out of range before the break changes nothing — the counter is not reset
+> passed	frontend/modules/seedlingDemo/fidelityIgneous.test.js > IGNEOUS — the state machine (`Tile.as:390-433`) the constants are the AS3's: counter 8, three frames (IgneousLava.png is 48x16), radius sqrt(512)/2, 31 → 17
+> passed	frontend/modules/seedlingDemo/fidelityIgneous.test.js > IGNEOUS — the tile on the game (D1) and in the model (D2) an arrival within range of an unturned tile refuses by name (the load fade's renders would count it)
+> passed	frontend/modules/seedlingDemo/fidelityIgneous.test.js > IGNEOUS — the tile on the game (D1) and in the model (D2) igneous-l76-fresh-stand — OFF parts from the game at its tick; ON 0 px, the lava death included
+> passed	frontend/modules/seedlingDemo/fidelityIgneous.test.js > IGNEOUS — the tile on the game (D1) and in the model (D2) igneous-l76-k4-stand — OFF parts from the game at its tick; ON 0 px, the lava death included
+> passed	frontend/modules/seedlingDemo/fidelityIgneous.test.js > IGNEOUS — the tile on the game (D1) and in the model (D2) igneous-l76-k8 — OFF parts from the game at its tick; ON 0 px, the lava death included
+> passed	frontend/modules/seedlingDemo/fidelityIgneous.test.js > IGNEOUS — the tile on the game (D1) and in the model (D2) igneous-l76-k9-rebuild — OFF parts from the game at its tick; ON 0 px, the lava death included
+> passed	frontend/modules/seedlingDemo/fidelityIgneous.test.js > IGNEOUS — the tile on the game (D1) and in the model (D2) igneous-l76-leg649 — OFF parts from the game at its tick; ON 0 px, the lava death included
+> passed	frontend/modules/seedlingDemo/fidelityIgneous.test.js > IGNEOUS — the tile on the game (D1) and in the model (D2) ships OFF
+> passed	frontend/modules/seedlingDemo/fidelityIgneous.test.js > IGNEOUS — the tile on the game (D1) and in the model (D2) the query: `igneousTiles` is null OFF; ON it lists L76's 36 tiles with their clocks
+4390d4409
+< passed	frontend/modules/seedlingDemo/levelRun.test.js > engine-prep C3: run.entities(family) is the getter, by another name every family was witnessed NON-TRIVIALLY by the rows above
+6176d6194
+< passed	frontend/modules/seedlingDemo/solveProgress.test.js > hammer-phase TC2 — the active frame (`frame`, additive within v: 2) ⛓⛓ the danger's kind is read off the source's own fields
+8062d8079
+< passed	scripts/procgen/seedlingSolverSurface.test.js > the committed contract equals a fresh census every row is classified — a class, a form and a why

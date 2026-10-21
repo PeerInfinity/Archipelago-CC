@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 83,
-            "count": 130,
+            "browser": 84,
+            "count": 131,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 435,
-        "browser": 148,
-        "cited": 227,
-        "files": 448,
+        "blockStyle": 436,
+        "browser": 149,
+        "cited": 228,
+        "files": 449,
         "lineStyle": 13,
-        "withDocblock": 448,
-        "withFlags": 364
+        "withDocblock": 449,
+        "withFlags": 365
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -12257,6 +12257,63 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-level-set-transport — the RECEIVER's half of the level-set delivery, driven in the built artifact.",
             "path": "scripts/procgen/probe-seedling-level-set-transport.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-lights.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "compare"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "file"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "frames"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "witness"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-lights — ⛓⛓⛓ seedling-fidelity-lights D1/D2: THE L69 LIGHTS FIGHT, ASKED OF THE GAME TICK BY SAMPLED TICK, and (with `--compare`) of the model at the same ticks.",
+            "path": "scripts/procgen/probe-seedling-lights.mjs"
         },
         {
             "argvHelpers": [

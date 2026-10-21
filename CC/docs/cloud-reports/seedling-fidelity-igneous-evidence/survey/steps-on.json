@@ -1,0 +1,107 @@
+[
+ {
+  "step": 189,
+  "level": 85,
+  "verdict": "SOLVED",
+  "ticks": 18,
+  "refusal": null
+ },
+ {
+  "step": 190,
+  "level": 71,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "refusal": "solverBot(survey-step-190) chest (160,256) stance -> kill -> chaser kill (lavarunner@64,224) by press: lavarunner@64,224 is still in the world after the whole 144-tick bound (0 guard step(s)); it stands at (54.8,233.5), 69.7 px from the player, and its straight chase line to the player is blocked by tile:Dark Stone \u2014 the body is PINNED on the solid between them (a chaser does not path-find)."
+ },
+ {
+  "step": 192,
+  "level": 74,
+  "verdict": "SOLVED",
+  "ticks": 321,
+  "refusal": null
+ },
+ {
+  "step": 194,
+  "level": 71,
+  "verdict": "SOLVED",
+  "ticks": 327,
+  "refusal": null
+ },
+ {
+  "step": 195,
+  "level": 76,
+  "verdict": "SOLVED",
+  "ticks": 496,
+  "refusal": null
+ },
+ {
+  "step": 196,
+  "level": 77,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "refusal": "solverBot(survey-step-196): no corridor for goal reach-exit toward (104,312) in level 77. Obstacle: proximity-hazard:lavatrap (lavatrap@96,192). No strategy row exists for this obstacle. Planner said: no walkable tile path in level 77 from tile (1,2) to (6,19). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game."
+ },
+ {
+  "step": 197,
+  "level": 78,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "refusal": "solverBot(survey-step-197): no corridor for goal reach-exit toward (40,8) in level 78. Obstacle: proximity-hazard:lavatrap (lavatrap@144,48); also on the frontier: lavatrap@144,96. No strategy row exists for this obstacle. Planner said: no walkable tile path in level 78 from tile (16,1) to (2,0). The two are in different connected components of the tiles the player box fits in \u2014 which at the v2 rung includes being separated by water, a pixelmask or a teleporter volume, none of which is a wall in the game."
+ },
+ {
+  "step": 199,
+  "level": 78,
+  "verdict": "SOLVED",
+  "ticks": 392,
+  "refusal": null
+ },
+ {
+  "step": 200,
+  "level": 77,
+  "verdict": "SOLVED",
+  "ticks": 475,
+  "refusal": null
+ },
+ {
+  "step": 201,
+  "level": 76,
+  "verdict": "SOLVED",
+  "ticks": 434,
+  "refusal": null
+ },
+ {
+  "step": 202,
+  "level": 71,
+  "verdict": "SOLVED",
+  "ticks": 193,
+  "refusal": null
+ },
+ {
+  "step": 220,
+  "level": 85,
+  "verdict": "SOLVED",
+  "ticks": 18,
+  "refusal": null
+ },
+ {
+  "step": 221,
+  "level": 71,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "refusal": "solverBot(survey-step-221) reach-exit (224,304)->L80 -> kill -> chaser kill (lavarunner@64,224) by press: lavarunner@64,224 is still in the world after the whole 144-tick bound (0 guard step(s)); it stands at (54.8,233.5), 69.7 px from the player, and its straight chase line to the player is blocked by tile:Dark Stone \u2014 the body is PINNED on the solid between them (a chaser does not path-find)."
+ },
+ {
+  "step": 223,
+  "level": 71,
+  "verdict": "SOLVED",
+  "ticks": 171,
+  "refusal": null
+ },
+ {
+  "step": 232,
+  "level": 99,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "refusal": "solverBot(survey-step-232) reach-exit (48,96)->L100 -> kill: the count is still waiting on [lavarunner@192,64, lavarunner@160,32, lavarunner@176,64] and no stance derives for any of them \u2014 no stance derives for lavarunner@176,64 on level 99: the player's box priced no stance, so the TARGET's box was scanned too (+0 reachable cell(s)): 81 cell(s) inside its 80 px leash, 35 of those reachable, and 35 of THOSE refused by the forecast [(120,88): the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (136,136): the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (136,88): the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; \u2026]. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question over the whole duration rather than at the instant. GUARD APPROACH (guardApproachStance): no approach stance for lavarunner@176,64 either \u2014 REACH: 9 lattice cell(s) within the sword's 16 px of its box, 1 of those with no corridor here or onward, +35 candidate(s) whose walk did not settle or plan; TIMING: 0 candidate(s) where lavarunner@176,64 outlives the ceiling or lands on the player first; LEASH: 0 candidate(s) where another body reaches the player \u2014 of 35 asked [(120,88) reach: the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (136,136) reach: the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (136,88) reach: the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; \u2026]. | no stance derives for lavarunner@160,32 on level 99: the player's box priced no stance, so the TARGET's box was scanned too (+0 reachable cell(s)): 81 cell(s) inside its 80 px leash, 26 of those reachable, and 26 of THOSE refused by the forecast [(120,88): the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (136,88): the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (120,72): the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; \u2026]. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question over the whole duration rather than at the instant. GUARD APPROACH (guardApproachStance): no approach stance for lavarunner@160,32 either \u2014 REACH: 9 lattice cell(s) within the sword's 16 px of its box, 4 of those with no corridor here or onward, +26 candidate(s) whose walk did not settle or plan; TIMING: 0 candidate(s) where lavarunner@160,32 outlives the ceiling or lands on the player first; LEASH: 0 candidate(s) where another body reaches the player \u2014 of 26 asked [(120,88) reach: the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (136,88) reach: the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (120,72) reach: the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; \u2026]. | no stance derives for lavarunner@192,64 on level 99: the player's box priced no stance, so the TARGET's box was scanned too (+0 reachable cell(s)): 81 cell(s) inside its 80 px leash, 30 of those reachable, and 30 of THOSE refused by the forecast [(136,88): the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (152,120): the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (120,72): the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; \u2026]. \u26d4 A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question over the whole duration rather than at the instant. GUARD APPROACH (guardApproachStance): no approach stance for lavarunner@192,64 either \u2014 REACH: 9 lattice cell(s) within the sword's 16 px of its box, 4 of those with no corridor here or onward, +30 candidate(s) whose walk did not settle or plan; TIMING: 0 candidate(s) where lavarunner@192,64 outlives the ceiling or lands on the player first; LEASH: 0 candidate(s) where another body reaches the player \u2014 of 30 asked [(136,88) reach: the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (152,120) reach: the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; (120,72) reach: the preview did not settle \u2014 the preview spent 400 tick(s) without arriving \u2014 the walk is checked as far as it was previewed and no further; \u2026]."
+ }
+]
