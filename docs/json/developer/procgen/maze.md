@@ -184,9 +184,9 @@ A world with an `action_lib` (the sidecar field `action_lib`, `world.actionLib`)
 - **Use and strike.** `USE:<id>` needs the entry's `item` in the effective inventory. If the facing cell holds an obstacle whose library entry lists the action in `struck_by` and it is not broken yet, the strike breaks it. The posKey goes into `state.broken`, a sorted list that lasts for this visit only, like block positions. A broken obstacle is open whatever its `clear_set` says, for the player and for a pushed block. A use that hits nothing is legal and passes a turn. A rock only a strike opens has `clear_set: []`; one Swim also passes has `[['Progressive Swim']]`.
 - **The visited key** gains `|f<dir>|<broken>` on these worlds only.
 - **Conditions.** The engine's strike is native: the `struck_by` check. The entry's `condition` names the helper the tile-primitives spike asks (`tileSpike/`, `strikes(cell, tile)`), and a parity suite holds the two equal.
-- **Persistence.** Breaks are per visit. A per-game "break permanently" knob (Seedling's rocks stay broken) is later work.
+- **Persistence.** Breaks are per visit. In a [shared level world](#shared-level-worlds) a visit spans the whole level, so a break survives crossings between its sub-regions. A per-game "break permanently" knob (Seedling's rocks stay broken) is designed but not built: an `obstacleLib` entry would gain `persists: true`, written by the game's producer from its semantics table's `persists`.
 
-No generator writes an `action_lib` yet. Test fixtures (`mazeItemActions.fixtures.js`) and any sidecar or lab level record that carries one load it. The shared Seedling level world (Stage 2 of the tile-primitives arc) is the first planned producer.
+The first producer is the shared level world projection (`projectLevelWorld`, below): one action per item a rock's condition names, keyed `z`, `x`, `c`, `v` in the order the condition names them (Seedling L15: `sword` on Z, `spear` on X). Test fixtures (`mazeItemActions.fixtures.js`) and lab level records load one too.
 
 ## The action queue (`shared/actionQueue` + `mazeKeys.js` + `mazeQueueExecutor.js`)
 
@@ -199,7 +199,7 @@ A tile-level action queue with an icon-row UI, built on the shared `ActionQueue`
 | `locationCheck` | location name | Explicit check at the current tile; used by saved and replayed queues and loops delegation (stepping onto a location already checks it) |
 | `turn` | `N` / `E` / `S` / `W` | Item-action worlds: face that way without moving (Shift+arrow); a turn passes |
 | `use` | `action_lib` id | Item-action worlds: use the action on the facing cell (Z, X, C, V by default). The id is stored, never the key, so rebinding moves no recording |
-| `cross` | `N` / `E` / `S` / `W` | Walk across an in-world region boundary of a shared level world. `params: {boundary, sourceRegion, targetRegion}` carries the regions, so a replay needs no exit lookup. The executor asks its injected `gate` (the loop-mode action gate) before the in-world step, and the result carries `crossing` for the caller to publish. Shape and executor only: the panel refuses it by name until Stage 2 builds the boundary overlay and the same-world region move |
+| `cross` | `N` / `E` / `S` / `W` | Walk across an in-world region boundary of a shared level world. `params: {boundary, sourceRegion, targetRegion}` carries the regions, so a replay needs no exit lookup. The executor asks its injected `gate` (the loop-mode action gate) before the in-world step, and the result carries `crossing` for the caller to publish. On a shared level world the panel PROMOTES a `move` to a `cross` in place when the arrival cell belongs to another region. It refuses one by name off a shared world, or when the player is not in `sourceRegion` |
 
 | File | Role |
 |---|---|
@@ -261,6 +261,28 @@ The maze can also be handed a world. The region atlas's **maze projection** (`pr
 Every departure is a named note in the report's `maze_notes`, never a silent drop — for example `walled_unlabelled`, `carved`, `opened_solid`, `single_route`, `sink_walled`, `exit_tile_collision`. The full list is the `kind:` values in `regionAtlasMazeProjection.js`.
 
 **`exit_tile_collision` matters because one maze tile can only be one crossing.** Seedling's linker lands each arrival on the destination's return door, which the real game tolerates; projected, two doors want one tile. The rule: the exit with a `targetRegion` survives, and an arrival-only exit (`targetRegion: null`, the far end of a `one_way` link) is evicted, since the entrance already gives a place to arrive. Two real crossings on one tile stay a named collision. Without this rule a linked two-room set could project to a one-way trap that AP reachability cannot see.
+
+### Shared level worlds
+
+Some levels have an interaction that spans their sub-regions. In Seedling L15 the block, its button, the lock the button holds and the two rocks on the block's path straddle `r1c5` and `r1c9`. One world per sub-region would show each world half the puzzle, so such a level projects into ONE maze world (`projectLevelWorld`, ⚖ "Shared level world", tile-primitives Stage 2), played and searched as one. Levels without an interaction project as above.
+
+- **Opt-in, derived.** Only a compile whose projection deps carry `levelEntitiesFor` and `partitionFor` asks. Seedling's are built by `seedlingMazeProjectionDeps({…, levelWorlds: {partition}})`. A level becomes a level world when its entity rows hold a block, a button or a rock. The rows come from the semantics tables (`seedlingLevelEntities`; the class-to-primitive binding is `SEEDLING_LEVEL_WORLD_CLASSES`), never a hand list. The starter `seedling_atlas_maze` preset is compiled without the option and stays byte-identical.
+- **What each row becomes.** A block becomes `blocks`. A button becomes `buttons` plus a `buttonLib` entry holding `sw_<group>`. A lock becomes an obstacle cleared by its group's held token; a lock with no button in the level is walled. A rock becomes an obstacle with `clear_set: []` and `struck_by` (see item actions). A gated terrain cell is floor carrying its own rule (water is `Has(Progressive Swim)`). Anything not modelled is walled and named in a note: a condition with no AP item, a directional or sink cell, an unmapped puzzle entity. A wall can only make the world harder than the game, so the logic stays sound.
+- **Ownership.** `shared_world.rows` says which AP region owns each cell. The value comes from the atlas's own persisted partition (`atlases/seedling-subregion-partition.json`), not a recompute: the raw semantics grid splits L15 four ways, and the atlas was analyzed three ways. A cell owned by no region (water, a rock, the lock) means "no news". A partition that disagrees with the atlas's `sub_regions`, or with the sub-region an exit or location is bound to, is refused as stale.
+- **One payload, aliases.** The level's first sub-region carries the payload. Every other sub-region's sidecar is `{substrate, shared_world: <key>}` with no payload. `buildWarehouse` resolves an alias to the very same world object, and refuses one whose carrier is missing. `check-sidecar-fields.mjs` checks an alias for its carrier instead of field by field.
+- **Crossing inside the world.** Arriving on a cell another region owns is a crossing (`sharedWorldCrossing`). The panel runs it as a `cross` entry: loop-mode gate first, then the step, then `user:regionMove` with the atlas's AP exit name (`shared_world.links`). procgenPlayer sees that both regions share a world (`sharesWorld`) and publishes the load with `sameWorld: true`. `_adoptLoadedRegion` then keeps the player, blocks, breaks, queue, replay, fog and visit recording, and changes only the region. The visualizer reports crossings on its own walks (`onRegionCross`) without pausing. A fresh entry with no arrival exit lands on the entered region's own `shared_world.entrances` cell. A start hop, a reset and a restart are never same-world.
+- **The preset.** `seedling_playthrough_maze` is produced by `scripts/procgen/make-seedling-playthrough-maze.mjs [--check]`. It holds the playthrough atlas cut to the growing `LEVELS` list (v1: `level_15`), played in the maze, with exits to unlisted levels unwired.
+- **Logic is certified, not emitted.** The preset's AP exit rules are the atlas's. `tileSpike/deriveLevelWorldLogic.js` derives, for every ordered pair of sub-regions, the inventories with which a player arriving in one can stand on the other. It searches with the native `step` or the scripted tile definition. The tests hold the derived rules equal to the atlas's at every item subset (L15: `r1c5 → r1c9` = Or(Sword, Ghost Spear, Swim), every other pair Swim) and replay every witness on the engine.
+
+**Fidelity fences of a level world:**
+
+| Fence | Effect |
+|---|---|
+| The player is one cell; Seedling's body is a 4×5 box | The maze lets a player on a button step into an orthogonally adjacent held door for one cell, as rules-block-path's body rule allows. L15's button and lock are diagonal, so no crossing depends on it |
+| Enemies are not holders (⚖) | Lock's room-clear half is not modelled. L15 has no enemies |
+| A pushed block enters any obstacle its pusher's inventory clears | With Swim a block can be pushed through water, which the game may not allow. In L15, Swim alone already reaches every sub-region, so no derived rule moves |
+| Breaks are per visit (⚖ knob designed, not built) | Re-entering the level re-closes its rocks; the sound side for logic |
+| One visit recording spans the level world | A same-world crossing neither finalizes nor restarts it. Loop-mode Record blocks inside a shared world are not designed yet |
 
 Two payload facts hold for any hand-built or projected maze sidecar:
 

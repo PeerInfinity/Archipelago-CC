@@ -333,6 +333,11 @@ function planCrossings(region, crossings) {
  */
 export function projectRegionToMaze(region, grid, ctx) {
     const { resolveCondition, conditionKey, wiredExit, internalExitName, tileSize } = ctx;
+    // ⛓ A level whose entity rows carry an INTERACTION plays as one shared
+    // level world (below). Only a compile that supplies `levelEntitiesFor`
+    // asks — every other compile is byte-identical to before.
+    const entities = typeof ctx.levelEntitiesFor === 'function' ? ctx.levelEntitiesFor(region, grid) : null;
+    if (levelHasInteraction(entities)) return projectLevelWorld(region, grid, ctx, entities);
     const analysis = analyzeRegion(region, grid, { conditionKey, resolveCondition });
     const components = analysis.components;
     const bindings = bindingsFor(region);
@@ -544,6 +549,381 @@ export function projectRegionToMaze(region, grid, ctx) {
         });
     }
     return { sidecars, notes, analysis };
+}
+
+// --- the shared LEVEL WORLD ---------------------------------------------------
+//
+// ⚖ "Shared level world" (tile-primitives Stage 2, user 2026-10-21). A level
+// whose interaction spans its sub-regions — Seedling L15's block, its button,
+// the lock it holds and the rocks on the block's path straddle r1c5 and r1c9 —
+// cannot be played or searched as one world per sub-region: each world would
+// see half the puzzle. Such a level projects into ONE maze world:
+//
+//   floor          every non-wall cell of the level
+//   gated cell     floor + the rule obstacle of its terrain (water = Swim)
+//   block          `blocks` (the cell is floor)
+//   button         `buttons` + `buttonLib.<id>.holds` = the group's token
+//   lock           an obstacle cleared by the HELD token of its group
+//   rock           an obstacle with `clear_set: []` and `struck_by` = one
+//                  action per item its condition names (`action_lib`)
+//   ownership      `shared_world.rows`: which AP sub-region owns each cell, from
+//                  the atlas's own partition — walking from a cell of one into
+//                  a cell of another IS the crossing (`user:regionMove`), and
+//                  every other cell is "no news"
+//
+// Every AP region name is kept. The payload is carried ONCE (the level's first
+// sub-region); every other sub-region's sidecar is an ALIAS `{substrate,
+// shared_world: <key>}` that the play-time warehouse resolves to the same
+// world object. Nothing is hand-coded: the entity rows come from the game's
+// semantics tables (`levelEntitiesFor`) and the ownership from its persisted
+// partition (`partitionFor`), the same two-truths rule as above.
+//
+// ⛔ What a level world does NOT model is WALLED and named, never opened: a
+// cell whose terrain condition has no AP item, a directional or sink cell, an
+// unmapped puzzle entity. A wall can only make the world harder than the game,
+// which keeps it sound (never a solution the game refuses).
+
+/** The interaction primitives a level-world entity row may name. */
+export const LEVEL_WORLD_ENTITY_KINDS = Object.freeze(['block', 'button', 'lock', 'rock']);
+
+/** The maze's default use keys, in order (mazeKeys DEFAULT_USE_KEYS — kept in sync by test). */
+export const LEVEL_WORLD_USE_KEYS = Object.freeze(['z', 'x', 'c', 'v']);
+
+/** The ownership alphabet: index into `shared_world.regions` (the partition's own). */
+export const SHARED_WORLD_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+/** The token a button group holds, and the ids of its button / lock entries. */
+const groupToken = (group) => `sw_${group}`;
+const buttonId = (group) => `button_${group}`;
+const lockId = (group) => `lock_${group}`;
+const rockId = (actions) => `rock_${actions.join('_')}`;
+
+/**
+ * Does this level's entity list carry an interaction (a block, a button, a
+ * rock)? A lock alone is not one: with no button its group can never open,
+ * and the per-sub-region projection already walls it.
+ */
+export function levelHasInteraction(entities) {
+    return Array.isArray(entities)
+        && entities.some((e) => e.kind === 'block' || e.kind === 'button' || e.kind === 'rock');
+}
+
+/**
+ * Project ONE atlas region with an interaction into a shared level world.
+ *
+ * @param {object} region the atlas region
+ * @param {object} grid the analyzer cell grid for it
+ * @param {object} ctx `projectRegionToMaze`'s, plus `partitionFor(region)` →
+ *   `{sub_regions, rows, origin:[x,y]}` (the atlas's persisted partition)
+ * @param {Array<object>} entities `levelEntitiesFor`'s rows:
+ *   `{kind, tiles:[[x,y]…] (atlas tiles), group?, strike?:[{action, item}], label}`
+ * @returns {{ sidecars: object, notes: Array, analysis: null, sharedWorld: string }}
+ */
+export function projectLevelWorld(region, grid, ctx, entities) {
+    const { resolveCondition, wiredExit, internalExitName, tileSize } = ctx;
+    const regionId = region.region_id;
+    const bindings = bindingsFor(region);
+    const notes = [];
+    const note = (n) => notes.push({ region_id: regionId, ...n });
+    const ox = grid.origin?.x ?? 0;
+    const oy = grid.origin?.y ?? 0;
+    const local = (tile) => [tile[0] - ox, tile[1] - oy];
+    const inGrid = ([x, y]) => x >= 0 && y >= 0 && x < grid.width && y < grid.height;
+
+    // --- ownership: the atlas's own partition, checked against the atlas ----
+    // A region with no subgraph is ONE AP region: it owns every cell, and no
+    // partition is needed to say so.
+    const unsplit = bindings.length === 1 && bindings[0].sub === null;
+    const partition = !unsplit && typeof ctx.partitionFor === 'function' ? ctx.partitionFor(region) : null;
+    if (!unsplit && !partition) {
+        throw new Error(`atlas region "${regionId}" has an interaction (a level world) but no persisted `
+            + 'partition says which sub-region owns which tile — regenerate the partition for this atlas');
+    }
+    if (partition) {
+        const declared = bindings.map((b) => b.sub).sort();
+        const held = [...partition.sub_regions].sort();
+        if (declared.join('|') !== held.join('|')) {
+            throw new Error(`atlas region "${regionId}" declares sub_regions [${declared.join(', ')}] but its `
+                + `partition holds [${held.join(', ')}] — the partition is stale against the atlas`);
+        }
+    }
+    const [px, py] = partition?.origin ?? [0, 0];
+    /** The binding index owning atlas tile `t`, or -1 ("no news"). */
+    const ownerOf = ([tx, ty]) => {
+        if (unsplit) return 0;
+        const ch = partition.rows[ty - py]?.[tx - px];
+        if (!ch || ch === '.') return -1;
+        const sub = partition.sub_regions[SHARED_WORLD_ALPHABET.indexOf(ch)];
+        return bindings.findIndex((b) => b.sub === sub);
+    };
+
+    const builder = createWorldBuilder(grid);
+    const claimed = new Set(); // local "x,y" an entity row decides
+    const keyOf = (x, y) => `${x},${y}`;
+
+    // --- entity rows ---------------------------------------------------------
+    const blocks = [];
+    const buttons = [];
+    const buttonLib = {};
+    const actionLib = {};
+    const groupsWithButton = new Set();
+    for (const e of entities) if (e.kind === 'button') groupsWithButton.add(String(e.group));
+    const actionFor = (strike) => {
+        if (!actionLib[strike.action]) {
+            const used = Object.keys(actionLib).length;
+            actionLib[strike.action] = {
+                item: strike.item,
+                primitive: 'strike',
+                condition: 'strikes',
+                ...(used < LEVEL_WORLD_USE_KEYS.length ? { key: LEVEL_WORLD_USE_KEYS[used] } : {}),
+            };
+        } else if (actionLib[strike.action].item !== strike.item) {
+            throw new Error(`atlas region "${regionId}": action "${strike.action}" names two items `
+                + `(${actionLib[strike.action].item}, ${strike.item})`);
+        }
+        return strike.action;
+    };
+    for (const e of entities) {
+        if (!LEVEL_WORLD_ENTITY_KINDS.includes(e.kind)) {
+            throw new Error(`atlas region "${regionId}": level-world entity kind "${e.kind}" is not one of `
+                + `${LEVEL_WORLD_ENTITY_KINDS.join(', ')}`);
+        }
+        const tiles = (e.tiles ?? []).map(local).filter(inGrid);
+        if (tiles.length === 0) {
+            note({ kind: 'entity_off_grid', message: `${e.label ?? e.kind} has no tile inside the region — skipped` });
+            continue;
+        }
+        if (e.kind === 'block') {
+            if (tiles.length !== 1) {
+                throw new Error(`atlas region "${regionId}": ${e.label ?? 'a block'} covers ${tiles.length} tiles; `
+                    + 'a maze block is one cell');
+            }
+            const [x, y] = tiles[0];
+            builder.floor(x, y);
+            claimed.add(keyOf(x, y));
+            blocks.push({ x, y });
+            continue;
+        }
+        if (e.kind === 'button') {
+            const group = String(e.group);
+            buttonLib[buttonId(group)] = { kind: 'button', holds: groupToken(group) };
+            for (const [x, y] of tiles) {
+                builder.floor(x, y);
+                claimed.add(keyOf(x, y));
+                buttons.push({ x, y, id: buttonId(group) });
+            }
+            continue;
+        }
+        if (e.kind === 'lock') {
+            const group = String(e.group);
+            if (!groupsWithButton.has(group)) {
+                // No button can ever hold it: walled, exactly as the
+                // per-sub-region projection walls an unlabelled crossing.
+                note({ kind: 'lock_without_button', message: `${e.label ?? 'a lock'} (group ${group}) has no button in this level — WALLED` });
+                for (const [x, y] of tiles) claimed.add(keyOf(x, y));
+                continue;
+            }
+            builder.obstacleLib[lockId(group)] = {
+                id: lockId(group),
+                name: `lock (group ${group})`,
+                kind: 'door',
+                clear_set: [[groupToken(group)]],
+                color: '#3a7',
+            };
+            for (const [x, y] of tiles) {
+                builder.floor(x, y);
+                claimed.add(keyOf(x, y));
+                builder.obstacles.set(keyOf(x, y), lockId(group));
+            }
+            continue;
+        }
+        // rock
+        const strikes = e.strike ?? [];
+        if (strikes.length === 0) {
+            throw new Error(`atlas region "${regionId}": ${e.label ?? 'a rock'} names no item that strikes it`);
+        }
+        const actions = strikes.map(actionFor);
+        const id = rockId(actions);
+        builder.obstacleLib[id] = {
+            id,
+            name: `rock (${actions.join(' or ')})`,
+            kind: 'rock',
+            clear_set: [],
+            struck_by: actions,
+            color: '#7a6a55',
+        };
+        for (const [x, y] of tiles) {
+            builder.floor(x, y);
+            claimed.add(keyOf(x, y));
+            builder.obstacles.set(keyOf(x, y), id);
+        }
+    }
+
+    // --- terrain -------------------------------------------------------------
+    for (let y = 0; y < grid.height; y += 1) {
+        for (let x = 0; x < grid.width; x += 1) {
+            if (claimed.has(keyOf(x, y))) continue;
+            const cell = grid.cells[y * grid.width + x];
+            if (cell.kind === 'open') { builder.floor(x, y); continue; }
+            if (cell.kind === 'wall') continue;
+            if (cell.kind === 'gated') {
+                const own = occupancyRule(cell, resolveCondition);
+                if (own.rule && own.unresolved.length === 0) {
+                    builder.floor(x, y);
+                    builder.gate(x, y, own.rule);
+                } else {
+                    note({ kind: 'unresolved_walled', tile: [x + ox, y + oy], message: `a gated cell at [${x + ox},${y + oy}] has a condition with no AP item behind it — WALLED in the level world` });
+                }
+                continue;
+            }
+            // directional / sink / an unmapped puzzle entity (a chest, …).
+            // Walled; a location or exit standing on it is opened below.
+            if (cell.kind === 'directional' || cell.kind === 'sink') {
+                note({ kind: 'unmodelled_walled', tile: [x + ox, y + oy], message: `a ${cell.kind} cell at [${x + ox},${y + oy}] is not modelled in a level world — WALLED` });
+            }
+        }
+    }
+
+    /** An exit / location tile that is not floor is opened where the atlas puts it. */
+    const openAt = ([x, y], label) => {
+        if (builder.isFloor(x, y)) return;
+        builder.floor(x, y);
+        note({ kind: 'opened_solid', tile: [x + ox, y + oy], label, message: `${label} at [${x + ox},${y + oy}] sits on a cell the level world walls — opened, because that is where the atlas puts it` });
+    };
+
+    // --- exits: every wired boundary exit of every sub-region ---------------
+    const exits = [];
+    const exitAt = new Set();
+    for (const exit of region.exits ?? []) {
+        const wired = wiredExit(regionId, exit.exit_id);
+        if (!wired) continue;
+        const [x, y] = local(exit.entrance_tile);
+        if (exitAt.has(keyOf(x, y))) {
+            note({ kind: 'exit_tile_collision', message: `exit "${wired.apExitName}" wants tile [${x},${y}], already taken — DROPPED` });
+            continue;
+        }
+        const owner = ownerOf(exit.entrance_tile);
+        const bound = bindings.findIndex((b) => boundTo(exit, b.sub));
+        if (owner !== -1 && owner !== bound) {
+            throw new Error(`atlas region "${regionId}": exit "${exit.exit_id}" is bound to "${bindings[bound]?.sub}" `
+                + `but its tile is owned by "${bindings[owner].sub}" — the partition is stale`);
+        }
+        openAt([x, y], `exit "${exit.exit_id}"`);
+        if (exit.access_rule) builder.gate(x, y, exit.access_rule);
+        exitAt.add(keyOf(x, y));
+        exits.push({
+            exit_id: wired.apExitName,
+            x,
+            y,
+            side: exit.side ?? null,
+            exitName: wired.apExitName,
+            targetRegion: wired.targetApRegion,
+            targetExitId: wired.returnApExitName ?? null,
+            isTeleporter: exit.kind === 'teleporter',
+            atlas_exit_id: exit.exit_id,
+        });
+    }
+
+    // --- locations -----------------------------------------------------------
+    for (const loc of region.locations ?? []) {
+        const [x, y] = local(loc.tile);
+        const owner = ownerOf(loc.tile);
+        const bound = bindings.findIndex((b) => boundTo(loc, b.sub));
+        if (owner !== -1 && owner !== bound) {
+            throw new Error(`atlas region "${regionId}": location "${loc.name}" is bound to "${bindings[bound]?.sub}" `
+                + `but its tile is owned by "${bindings[owner].sub}" — the partition is stale`);
+        }
+        openAt([x, y], `location "${loc.name}"`);
+        if (loc.access_rule) builder.gate(x, y, loc.access_rule);
+        builder.items.set(keyOf(x, y), {
+            id: typeof loc.vanilla_item === 'string' && loc.vanilla_item.length > 0
+                ? loc.vanilla_item : ATLAS_LOCATION_SLOT_ITEM,
+            locationName: loc.name,
+        });
+    }
+
+    // --- ownership rows, entrances and the in-world crossings' AP names ------
+    const rows = [];
+    for (let y = 0; y < grid.height; y += 1) {
+        let row = '';
+        for (let x = 0; x < grid.width; x += 1) {
+            const owner = builder.isFloor(x, y) ? ownerOf([x + ox, y + oy]) : -1;
+            row += owner === -1 ? '.' : SHARED_WORLD_ALPHABET[owner];
+        }
+        rows.push(row);
+    }
+    const entrances = {};
+    for (const [i, { sub, apName }] of bindings.entries()) {
+        // The arrival a game makes: the first atlas exit bound to this
+        // sub-region (its entrance tile), else its first owned floor cell.
+        const exit = (region.exits ?? []).find((x) => boundTo(x, sub));
+        let at = exit ? local(exit.entrance_tile) : null;
+        if (!at) {
+            const y = rows.findIndex((r) => r.includes(SHARED_WORLD_ALPHABET[i]));
+            at = y === -1 ? null : [rows[y].indexOf(SHARED_WORLD_ALPHABET[i]), y];
+        }
+        if (!at) {
+            throw new Error(`atlas region "${regionId}": sub-region "${sub}" owns no floor cell in the level world`);
+        }
+        entrances[apName] = { x: at[0], y: at[1] };
+    }
+    const links = {};
+    for (const row of region.subgraph?.internal_exits ?? []) {
+        const directions = [[row.from, row.to]];
+        if (row.bidirectional === true) directions.push([row.to, row.from]);
+        for (const [from, to] of directions) {
+            const name = internalExitName(regionId, from, to);
+            if (!name) continue;
+            const key = `${apRegionName(regionId, from)}>${apRegionName(regionId, to)}`;
+            if (!(key in links)) links[key] = name;
+        }
+    }
+
+    // --- assemble: ONE payload, carried by the first sub-region --------------
+    const carrier = bindings[0].apName;
+    const sortRows = (a, b) => (a.y - b.y) || (a.x - b.x);
+    const payload = {
+        width: grid.width,
+        height: grid.height,
+        tiles: builder.tiles,
+        entrance: entrances[carrier],
+        exits,
+        obstacles: [...builder.obstacles].map(([key, id]) => {
+            const [x, y] = key.split(',').map(Number);
+            return { x, y, id };
+        }).sort(sortRows),
+        items: [...builder.items].map(([key, entry]) => {
+            const [x, y] = key.split(',').map(Number);
+            return { x, y, id: entry.id, locationName: entry.locationName };
+        }).sort(sortRows),
+        obstacleLib: builder.obstacleLib,
+        ...(blocks.length > 0 ? { blocks: blocks.sort(sortRows) } : {}),
+        ...(buttons.length > 0 ? { buttons: buttons.sort(sortRows), buttonLib } : {}),
+        ...(Object.keys(actionLib).length > 0 ? { action_lib: actionLib } : {}),
+        shared_world: {
+            key: regionId,
+            regions: bindings.map((b) => b.apName),
+            rows,
+            entrances,
+            links,
+        },
+        atlas_region: regionId,
+        ...(Number.isInteger(region.map_ref) ? { level: region.map_ref } : {}),
+        tile_size: tileSize,
+        origin: { x: ox, y: oy },
+    };
+    const sidecars = {
+        [carrier]: { substrate: MAZE_SUBSTRATE, shared_world: regionId, playable_payload: payload },
+    };
+    for (const { apName } of bindings.slice(1)) {
+        sidecars[apName] = { substrate: MAZE_SUBSTRATE, shared_world: regionId };
+    }
+    note({
+        kind: 'level_world',
+        message: `projected as ONE shared level world "${regionId}" (${bindings.length} AP region(s), carried by "${carrier}"): `
+            + `${blocks.length} block(s), ${buttons.length} button(s), ${Object.keys(actionLib).length} action(s)`,
+    });
+    return { sidecars, notes, analysis: null, sharedWorld: regionId };
 }
 
 /**
