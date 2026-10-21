@@ -3,7 +3,7 @@
  *
  * ⛓⛓⛓ seedling-fidelity-bosskills D3. The solver's `tentaclebeast` verb (`solverBot.execTentacleBeast`) drives this
  * one tick at a time against the live run, reading only what the run publishes (`run.state`,
- * `run.entities('tentacleBeastFight')`, `run.progress('slashInfo')`). The fight's placements are DRAWS, but the run
+ * the run's `tentacleBeastFight` family, `run.progress('slashInfo')`). The fight's placements are DRAWS, but the run
  * steps the draw stream itself (`TentacleDrawStream`, under its premises), so the run's own state is the whole of what
  * the policy needs, and its answer is checked by playing it, never assumed.
  *
@@ -84,7 +84,7 @@ export function createTentacleBeastPolicy(params = TENTACLE_BEAST_POLICY_VARIANT
 }
 
 /**
- * ONE tick's keys. `view` is `run.entities('tentacleBeastFight')` (null = no fight), `p` is `run.state`, `slashing`
+ * ONE tick's keys. `view` is the run's `tentacleBeastFight` family (null = no fight), `p` is `run.state`, `slashing`
  * the run's `slashInfo.state.slashing`. Returns a Set of key names (the tape's).
  */
 export function tentacleBeastPolicyStep(mem, { view, p, slashing }) {

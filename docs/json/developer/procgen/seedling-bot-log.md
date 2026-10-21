@@ -24110,3 +24110,38 @@ an honest refusal. Neither leg solves: the hammer wall (H1) is still the wall.
 **Pins moved:** the `contactFidelity.test` defaults; `fidelityL40Guard` "ships ON"; identity **carved pairs c4
 `b9d2185d` → `ebb9e743`** (`spinnerSwingLineOfSight` alone: `winding post-sword seed=7` threw the line-of-sight
 assertion OFF and runs to `SATURATED` ON). No producer names the switches; tapeRunner pairs unmoved.
+
+### Seedling fidelity BOSSKILLS — the King of Fire and the Tentacled Beast, modelled and fought (two switches, OFF)
+
+Planner `seedling-fidelity-planning-9`, wave 20. Two new switches ship OFF: `CONTACT_FIDELITY.kingOfFireFight` (L82,
+`lavaBoss.js` + `lavaBossPolicy.js`, verb `lavaboss`) and `CONTACT_FIDELITY.tentacleBeastFight` (L57,
+`tentacleBeast.js` + `tentacleBeastPolicy.js`, verb `tentaclebeast`). The report is
+`CC/docs/cloud-reports/seedling-fidelity-bosskills.md`.
+
+**The King of Fire (L82).** The fight is deterministic: a 99-update cycle (sit 19, 20 on the wake; smash 16; smashback
+16; armsup 22; sweep 10; sweepback 16), two LavaRunners at the end of the smash, and a five-ball fan at the end of the
+sweep. Reflecting the middle ball opens a 120-update window, and the first sword hit inside it counts; three counts kill
+him. `hitByDarkStuff` cannot reach him: nothing in the game delivers a Shield or Suit hit to a LavaBoss. Five game
+witnesses (`fixtures/lavaboss-witness/`) hold at 0 px on every tick, including the arena rock's 180 dead frames (which
+age `slashTimer` and the i-frames), the respawn at the ctor's `playerPosition` (152,176), an airborne runner reached by a
+swing, and the suit-on-lava "undead" runner. Route survey steps 203 and 224 SOLVE ON (1363 t, {82,1} and {82,0} earned).
+
+**The Tentacled Beast (L57).** The placements are gameplay `Math.random()` draws, and the model now steps them on the
+runtime LFSR (`TentacleDrawStream`). That needs a declared seed, `split: true`, and this room as the only one built since
+the reseed; a death's rebuild carries the stream on and pays the ctor's `coins` draw again. Otherwise the fight refuses
+by name. Measured on p4g: the tentacle facing is `xpos < FP.width / 2` with the LEVEL's width (`Game.as:2065`), not the
+screen's 160. `play("cut")` while "cut" plays keeps the timer's fraction. The whirlpool loop's `cont` is never reset,
+so one rejected try burns all 101. Four game witnesses (`fixtures/tentaclebeast-witness/`) hold at 0 px, including the
+generator's state on every tick, a swipe hit, a death and rebuild, and the solver's walk through the mouth into L58.
+A clear-tag on {57,0} binds the beast in `world.pixelmasks`.
+
+**Trap candidates.**
+- `botMobiles` lists `Mobile`s, and a `Whirlpool` is a plain `Entity`, so the game's whirlpools never appear in a probe.
+  The generator's state is the only witness of their draws.
+- A comparison script that prints PASS when the model threw on tick 1 compares nothing (D3's first `levelWidth` slip:
+  "PASS … model ticks 1"). Gate on the model's tick count.
+
+**Hand-overs.** `stateDigestParts` does not cover `lavaBossFights` / `lavaArenaRocks` (the body and the rock reach the
+escape through `liveSolidOpts`), so the King of Fire switch must not flip until the digest covers them (hammer arc).
+The survey stages L57 unsplit (`r8-solve-11`'s block), so step 125 refuses on the stream premise (staging, JS arc). The
+atlas has no `out_tentaclebeast_80_48` edge, so steps 94/95/125/126 stay NO-EDGE (rules/survey).

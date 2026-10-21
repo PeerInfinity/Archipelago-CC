@@ -312,6 +312,12 @@ export const FAMILY_BLOCKS = deepFreeze([
     { family: 'bombs', kind: RUN_ENTITIES, blocks: ['explode'],
         solverReads: ['dangerMap', 'solverBot'], strategies: [],
         why: 'the `Bomb`s in flight, newest first (fidelity BOMBPUSHER: `levelRun.bombsNow`): position, velocity and the 30-update count to the `Explosion` (r 15) the 31st update adds.' },
+    { family: 'lavaBossFight', kind: RUN_ENTITIES, blocks: [],
+        solverReads: ['solverBot'], strategies: [],
+        why: 'L82\'s King of Fire, stepped (seedling-fidelity-bosskills D2: `levelRun.lavaBossFightNow`, `lavaBoss.js`): the body\'s cycle, hits, window and fade, its balls and its runners; `null` while `CONTACT_FIDELITY.kingOfFireFight` is off. A bespoke fight, so no generic block.' },
+    { family: 'tentacleBeastFight', kind: RUN_ENTITIES, blocks: [],
+        solverReads: ['solverBot'], strategies: [],
+        why: 'L57\'s Tentacled Beast, stepped (seedling-fidelity-bosskills D3: `levelRun.tentacleBeastFightNow`, `tentacleBeast.js`): the beast, its tentacles and whirlpools, the draw stream\'s state and `streamRefusal`, the mouth; `null` while `CONTACT_FIDELITY.tentacleBeastFight` is off. A bespoke fight, so no generic block.' },
 
     /* ── the hazard volumes (`hazards.hazardVolume`, avoid volumes, unions over phase) ── */
     { family: 'volume:crusher', kind: VOLUME, blocks: ['lane-charge', 'contact'],

@@ -2664,8 +2664,11 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
         // ⛓ F4: L8's sandtraps, hit and killed by the arrows.
         { tape: 'f4-l8-sandtraps', families: ['staticBodies'] },
     ];
+    // ⛓ bosskills: a stepped boss fight's family is ONE view object (`{id, …}`) or null — the view is non-trivial.
     const nontrivial = (v) => v === false
-        || ((v instanceof Set || v instanceof Map) ? v.size > 0 : Array.isArray(v) ? v.length > 0 : false);
+        || ((v instanceof Set || v instanceof Map) ? v.size > 0 : Array.isArray(v) ? v.length > 0
+            : (v !== null && typeof v === 'object' && Object.getPrototypeOf(v) === Object.prototype
+                && typeof v.id === 'string'));
     const witnessed = new Set();
 
     /** Every family, query against getter, after every tick; returns the mismatches. */
@@ -2699,7 +2702,7 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
             'brokenRocks', 'crushersParked', 'pushesSettled', 'openBridges', 'arrowsInFlight',
             'burnedTrees', 'latchedGroups', 'pulledRopes', 'turretDamage', 'turretsSettled',
             'arrowFlights', 'bosses', 'talkCircles', 'bobBoss', 'pulls', 'shooters', 'staticBodies',
-            'darkTraps', 'bombPushers', 'bombs',
+            'darkTraps', 'bombPushers', 'bombs', 'lavaBossFight', 'tentacleBeastFight',
         ]);
         expect(Object.isFrozen(ENTITY_FAMILY_NAMES)).toBe(true);
         for (const f of ENTITY_FAMILY_NAMES) {
@@ -2785,6 +2788,28 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
             expect(bad).toEqual([]);
             expect(seen.has('bombPushers')).toBe(true);
             expect(seen.has('bombs')).toBe(true);
+            for (const f of seen) witnessed.add(f);
+        });
+    });
+
+    it('L82\'s King of Fire (bosskills D2, the switch ON, the pit arrival): lavaBossFight, through the query', () => {
+        withContactFidelity({ kingOfFireFight: true }, () => {
+            const run = createLevelRun({ levelSource, boot: { level: 82, x: 160, y: 272 }, roles: ROLES });
+            const { bad, seen } = compareEveryTick(run, 60, () => new Set(['up']));
+            expect(bad).toEqual([]);
+            expect(seen.has('lavaBossFight')).toBe(true);
+            for (const f of seen) witnessed.add(f);
+        });
+    });
+
+    it('L57\'s Tentacled Beast (bosskills D3, the switch ON, seed 1 split): tentacleBeastFight, through the query', () => {
+        withContactFidelity({ tentacleBeastFight: true }, () => {
+            const run = createLevelRun({ levelSource, boot: { level: 57, x: 96, y: 160 }, roles: ROLES,
+                rng: { seed: 1, split: true, cosmetic: 0, fp: 0 }, pins: ['sound', 'dead_frames'],
+                seam: { items: { hasSword: true, canSwim: true } } });
+            const { bad, seen } = compareEveryTick(run, 60, () => new Set(['up']));
+            expect(bad).toEqual([]);
+            expect(seen.has('tentacleBeastFight')).toBe(true);
             for (const f of seen) witnessed.add(f);
         });
     });
