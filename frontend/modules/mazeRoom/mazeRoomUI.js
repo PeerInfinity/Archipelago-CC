@@ -12,6 +12,7 @@ import {
     generateMaze,
     extractPathsAndObstacles,
     isExit,
+    hasItemActions,
 } from './mazeRoomEngine.js';
 import {
     DEFAULT_ITEMS, DEFAULT_OBSTACLES, isObstacleCleared,
@@ -40,7 +41,7 @@ import {
     grantItem,
     fireLoopResetTeleport,
 } from '../resourceChannels/resourceChannelsLibrary.js';
-import { findPath, stepsToActions } from './mazeAutopather.js';
+import { findPath, stepsToActions, planItemActions, inputsToEntries } from './mazeAutopather.js';
 import { SubstrateInactiveOverlay } from '../shared/substrateInactiveOverlay.js';
 import { substrateRegistryEntry } from './mazeRoomLibrary.js';
 import { getSavedQueues } from '../loops/savedQueueStore.js';
@@ -911,6 +912,23 @@ export class MazeRoomUI {
             }
             return;
         }
+        // ⛓ ITEM ACTIONS (⚖ "Plan strikes"): the visualizer plans an
+        // item-action world over engine states (`_planTilePath`), so the queue
+        // mirror is filled from the SAME planner, from the panel's own state —
+        // turn and use entries included.
+        if (this._plansItemActions()) {
+            const planned = planItemActions(this.world, this.state,
+                { kind: 'tile', x: target.x, y: target.y }, {
+                    inventory: this.externalInventory ?? undefined,
+                    clearanceOpts: this._planningClearanceOpts(),
+                    excludeOtherExits: true,
+                });
+            if (planned) this._appendEntries(inputsToEntries(planned.inputs));
+            if (action.type === 'locationCheck' && action.locationName) {
+                this._mazeQueue.add(locationCheckEntry(action.locationName));
+            }
+            return;
+        }
         let path = null;
         try {
             path = findPath(
@@ -1040,6 +1058,11 @@ export class MazeRoomUI {
      * becomes seen on arrival via _onVisualizerChange's per-step fog
      * expansion — that primes the next chain leg.
      */
+    /** ⛓ ITEM ACTIONS: plan over engine states (strikes included) on this world? */
+    _plansItemActions() {
+        return hasItemActions(this.world) && !(this.world.hazards?.length > 0) && !!this.state;
+    }
+
     _resolveExploreTarget() {
         if (!this.fogEnabled) return { alreadyComplete: true };
         const seenTiles = this.seenTilesByRegion.get(this._seenSetKey());
@@ -1052,6 +1075,17 @@ export class MazeRoomUI {
         }
         const fromPos = this.state?.player_pos;
         if (!fromPos) return { alreadyComplete: true };
+        if (this._plansItemActions()) {
+            // ⛓ ITEM ACTIONS: a frontier past an unbroken rock is reachable by a strike.
+            const planned = planItemActions(this.world, this.state, { kind: 'closestUnexplored' }, {
+                seenTiles,
+                inventory: this.externalInventory ?? undefined,
+                clearanceOpts: this._planningClearanceOpts(),
+                excludeOtherExits: true,
+            });
+            if (!planned || planned.length === 0) return { alreadyComplete: true };
+            return { x: planned.end.x, y: planned.end.y, name: null };
+        }
         const result = findPath(
             this.world,
             fromPos,
@@ -1114,17 +1148,23 @@ export class MazeRoomUI {
             let bestByDistance = null;
             let bestDistance = Infinity;
             for (const exit of candidates) {
-                const result = findPath(
-                    this.world, fromPos,
-                    { kind: 'tile', x: exit.x, y: exit.y },
-                    {
-                        inventory: this.externalInventory,
-                        obstacleLib: this.world?.obstacleLib,
+                const result = this._plansItemActions()
+                    ? planItemActions(this.world, this.state, { kind: 'tile', x: exit.x, y: exit.y }, {
+                        inventory: this.externalInventory ?? undefined,
                         clearanceOpts: this._planningClearanceOpts(),
                         excludeOtherExits: true,
-                        hazards: this.world?.hazards,
-                    },
-                );
+                    })
+                    : findPath(
+                        this.world, fromPos,
+                        { kind: 'tile', x: exit.x, y: exit.y },
+                        {
+                            inventory: this.externalInventory,
+                            obstacleLib: this.world?.obstacleLib,
+                            clearanceOpts: this._planningClearanceOpts(),
+                            excludeOtherExits: true,
+                            hazards: this.world?.hazards,
+                        },
+                    );
                 if (result && result.length < bestDistance) {
                     bestDistance = result.length;
                     bestByDistance = exit;
@@ -2364,6 +2404,10 @@ export class MazeRoomUI {
             Object.assign(this.state, {
                 player_pos: newPos,
                 ...(typeof vState.turn === 'number' ? { turn: vState.turn } : {}),
+                // ⛓ ITEM ACTIONS: a visualizer turn / strike changes facing and
+                // the broken set without moving — same one-fact-per-tick copy.
+                ...(vState.facing !== undefined ? { facing: vState.facing } : {}),
+                ...(Array.isArray(vState.broken) ? { broken: vState.broken.slice() } : {}),
             });
         }
         // Tick detection: the visualizer's turn counter strictly
@@ -2554,13 +2598,22 @@ export class MazeRoomUI {
         // the upcoming path. (No locationCheck terminator — explore
         // doesn't end at a specific location.)
         const startPos = this.state?.player_pos ?? { x: 0, y: 0 };
-        const path = findPath(
+        const planned = this._plansItemActions()
+            ? planItemActions(this.world, this.state, { kind: 'tile', x: next.x, y: next.y }, {
+                inventory: this.externalInventory ?? undefined,
+                clearanceOpts: this._planningClearanceOpts(),
+                excludeOtherExits: true,
+            })
+            : null;
+        const path = planned ? null : findPath(
             this.world,
             { x: startPos.x, y: startPos.y },
             { kind: 'tile', x: next.x, y: next.y },
             { hazards: this.world?.hazards, allowWait: true },
         );
-        if (path && Array.isArray(path.steps) && path.steps.length >= 2) {
+        if (planned) {
+            this._appendEntries(inputsToEntries(planned.inputs));
+        } else if (path && Array.isArray(path.steps) && path.steps.length >= 2) {
             const moves = stepsToActions(path.steps);
             this._appendEntries(moves);
         }

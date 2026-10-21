@@ -69,7 +69,7 @@ export function itemActionPicture(rows, { actionLib = SWORD_ACTION_LIB } = {}) {
 export const ROCK_CORRIDOR = Object.freeze([
     '#######',
     '#P..rX#',
-    '#.S...#',
+    '#.S.###',
     '#######',
 ]);
 
