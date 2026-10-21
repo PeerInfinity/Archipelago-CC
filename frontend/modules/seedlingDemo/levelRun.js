@@ -232,6 +232,8 @@ import {
     createStaticBodyDamage, enemyHit, enemyHitUpdate, killLockLedger, removalTicksAfterHit,
 } from './enemyDamage.js';
 import { CONTACT_FIDELITY } from './contactFidelity.js';
+// ⛓ fidelity IGNEOUS D2: the Igneous-to-Lava tile's render-driven crumble (`renderIgneousNow`).
+import { IGNEOUS, IGNEOUS_FRESH, igneousInRange, stepIgneousRender } from './igneousLava.js';
 import { DRILL, drillRect, hitDrill, newDrill, stepDrill, stepDrillGraphic } from './drill.js';
 // ⚠ `SWORD_FORCE` ONLY. `combatVerbs` owns the swing GEOMETRY, which this
 // file does not use — the press rect comes from `presses.slashRect` — but
@@ -421,6 +423,7 @@ export const ENTITY_FAMILY_NAMES = Object.freeze([
     'darkTraps',
     'bombPushers',
     'bombs',
+    'igneousTiles',
 ]);
 
 /**
@@ -1222,6 +1225,19 @@ export function createLevelRun({
     /** ⛓ fidelity-bulb: every Bulb death's fenceposts — `drop` (the armed update's end), `lava`, `removed`. */
     const bulbEvents = [];
     const visitWorld = (n) => withTileWrites(worldFor(n), tileWritesByLevel.get(n) ?? null);
+    /**
+     * ⛓⛓⛓ fidelity IGNEOUS D2 — THE IGNEOUS-TO-LAVA TILES' CRUMBLE STATE, per VISIT (`Map<level, {tiles: Map<"tx,ty",
+     * igneousLava state>, dead}>`; a tile absent from `tiles` is `IGNEOUS_FRESH`). `igneousCounter`, `igneousBreakApart`
+     * and `igneousFrame` are `Tile` instance fields and a new `Game` rebuilds the tile from the `.oel` (witnessed: a
+     * death restart builds it whole), so `freshVisitState` drops the entry; a tile that turns is ALSO a write in
+     * `tileWritesByLevel` (the Bulb's overlay), which every reader of `t` already sees. `dead` is `clock.deadFrames` at
+     * the last render, so a dead span the run did not step is caught by name. Only `CONTACT_FIDELITY.igneousLava` ever
+     * writes here.
+     * ⚠ NOT IN `stateDigestParts` (that function is the hammer arc's): see the slice report's hand-over.
+     */
+    const igneousStates = new Map();
+    /** ⛓ fidelity IGNEOUS: every crumble event — `{t, level, tile: "tx,ty", event: 'break' | 'frame' | 'lava'}`. */
+    const igneousEvents = [];
     /**
      * The despawns, pending until their tick — `applyTimedClears`' twin, and
      * deliberately its twin down to the live-binding refresh.
@@ -4486,6 +4502,8 @@ export function createLevelRun({
     const freshVisitState = (n) => {
         // ⛓ fidelity-bulb: a new `Game` rebuilds every Tile from the `.oel` — a Bulb's lava does not survive the door.
         tileWritesByLevel.delete(n);
+        // ⛓ fidelity IGNEOUS D2: and every Igneous-to-Lava tile is built whole again (counter 8, not breaking).
+        igneousStates.delete(n);
         // ⛓ U14-swim D1: a new `Game` constructs the moonrock again, from `rockSet`.
         moonrockStates.delete(n);
         // ⛓ U15-swim D1: and every turret (angle 0, `shootTimer` 0) and no spit.
@@ -9522,6 +9540,99 @@ export function createLevelRun({
         }
     }
 
+    /** ⛓ fidelity IGNEOUS: the level's type-31 tiles as BUILT (the base world's rows; a write never edits them). */
+    const igneousTilesMemo = new WeakMap();
+    const igneousTilesOf = (w) => {
+        if (!igneousTilesMemo.has(w)) igneousTilesMemo.set(w, Object.freeze(w.tiles.filter((t) => t.t === IGNEOUS.type)));
+        return igneousTilesMemo.get(w);
+    };
+
+    /**
+     * ⛓⛓⛓ fidelity IGNEOUS D2 — `Tile.render()`'s case 31 for every Igneous-to-Lava tile of the room, at the END of
+     * the frame beside `renderBossesNow` (`Engine.onEnterFrame` is `update(); render();`), so it reads the player where
+     * this tick's update left them and the camera this tick's `view()` landed on. A tile that turns is written lava
+     * through the per-visit overlay and `world` is re-wrapped, so the NEXT update's `getState` reads 17 — the game's
+     * one-frame order (witnessed: leg 649's tile turns at the t38 render and the player dies on the t39 update).
+     *
+     * `Tile.render` early-returns off screen (`onScreen(0)` for type 31), so an off-screen tile does not count; an
+     * UNCERTAIN shake band refuses by name for a tile the render would change. A tile that is neither in range nor
+     * breaking is skipped before the camera is asked: its render changes nothing whatever the camera.
+     *
+     * ⛔ REFUSED BY NAME (an INTERIM, not modelled): frames the run spent DEAD since the last render (a freeze span, a
+     * ceremony, a room-load fade — `Tile.render` runs on every one of them) while a tile was breaking or in range, and
+     * an arrival within range of an unturned tile (the load fade's renders would count it). Measured: no teleporter
+     * arrival lands within range of a type-31 tile.
+     */
+    function renderIgneousNow() {
+        if (!CONTACT_FIDELITY.igneousLava) return;
+        const tiles = igneousTilesOf(worldFor(level));
+        if (tiles.length === 0) return;
+        const dead = clock.deadFrames;
+        let visit = igneousStates.get(level);
+        if (!visit) {
+            visit = { tiles: new Map(), dead };
+            igneousStates.set(level, visit);
+            const arrival = spawnFromBoot(worldCtor);
+            const near = tiles.find((t) => igneousInRange(t, arrival.x, arrival.y));
+            if (near) {
+                throw Object.assign(new Error(`levelRun: the arrival (${arrival.x}, ${arrival.y}) in level ${level} is `
+                    + `within ${IGNEOUS.radius.toFixed(2)} px of Igneous-to-Lava tile (${near.tx},${near.ty}), and `
+                    + '`Tile.render` counts the load fade\'s frames too — not modelled; refused by name (fidelity IGNEOUS).'),
+                { code: 'IGNEOUS_UNMODELLED' });
+            }
+        }
+        const spent = dead - visit.dead;
+        visit.dead = dead;
+        for (const tile of tiles) {
+            const key = `${tile.tx},${tile.ty}`;
+            const s = visit.tiles.get(key) ?? IGNEOUS_FRESH;
+            if (s.lava) continue;
+            const inRange = igneousInRange(tile, state.x, state.y);
+            if (!inRange && !s.breaking) continue;
+            if (spent > 0) {
+                throw Object.assign(new Error(`levelRun: ${spent} dead frame(s) were spent before tick `
+                    + `${ticksCompleted} in level ${level} while Igneous-to-Lava tile (${key}) was `
+                    + `${s.breaking ? `breaking (frame ${s.frame}, counter ${s.counter})` : 'in range'}. \`Tile.render\` `
+                    + 'runs on dead frames and this run does not step them — not modelled; refused by name (fidelity IGNEOUS).'),
+                { code: 'IGNEOUS_UNMODELLED' });
+            }
+            const vis = camBand === null ? (camOnScreen(tile.rect, cam, 0) ? 'on' : 'off')
+                : onScreenUnderShake(tile.rect, camBand, 0);
+            if (vis === 'uncertain') {
+                throw Object.assign(new Error(`levelRun: at tick ${ticksCompleted} Igneous-to-Lava tile (${key}) in level `
+                    + `${level} is on screen for some cameras of the shake band and off for others, and its render `
+                    + 'would change it — the jiggle is not modelled; refused by name (fidelity IGNEOUS).'),
+                { code: 'IGNEOUS_UNMODELLED' });
+            }
+            if (vis === 'off') continue;
+            const r = stepIgneousRender(s, inRange);
+            visit.tiles.set(key, r.state);
+            if (r.event === null) continue;
+            igneousEvents.push({ t: ticksCompleted, level, tile: key, event: r.event });
+            if (r.event !== 'lava') continue;
+            const writes = new Map(tileWritesByLevel.get(level) ?? []);
+            writes.set(key, IGNEOUS.becomes);
+            tileWritesByLevel.set(level, writes);
+            world = visitWorld(level);
+            tileWriteEvents.push({ t: ticksCompleted, level, id: `igneous@${key}`, kind: 'igneous-lava',
+                x: tile.x, y: tile.y, tile: { tx: tile.tx, ty: tile.ty }, becomes: IGNEOUS.becomes });
+        }
+    }
+
+    /**
+     * ⛓ fidelity IGNEOUS: the room's type-31 tiles and their clocks, for the solver — `[{tx, ty, x, y, rect, counter,
+     * breaking, frame, lava}]` in build order; `null` while `CONTACT_FIDELITY.igneousLava` is off (the tiles are then
+     * plain floor to the model, as they always were).
+     */
+    const igneousTilesNow = () => {
+        if (!CONTACT_FIDELITY.igneousLava) return null;
+        const visit = igneousStates.get(level);
+        return igneousTilesOf(worldFor(level)).map((t) => ({
+            tx: t.tx, ty: t.ty, x: t.x, y: t.y, rect: t.rect,
+            ...(visit?.tiles.get(`${t.tx},${t.ty}`) ?? IGNEOUS_FRESH),
+        }));
+    };
+
     /**
      * `Entity.onScreen(20)` for one shot, three-valued.
      *
@@ -14066,6 +14177,8 @@ export function createLevelRun({
         // ceremony. The same argument as `freezeStep` above, one frame higher
         // up.
         stepCameraNow(state, world.world);
+        // ⛓ fidelity IGNEOUS D2: and `render()` runs on a frozen frame — the tiles keep counting (OFF: returns at once).
+        if (!noclip) renderIgneousNow();
         /**
          * ⛓⛓⛓ R9 SLICE 12e‴: AND SO DOES `slash()`'s TIMER, one line ABOVE
          * `super.update()` instead of below it — same flag, same argument,
@@ -15761,6 +15874,7 @@ export function createLevelRun({
         darkTraps: darkTrapsNow,
         bombPushers: bombPushersNow,
         bombs: bombsNow,
+        igneousTiles: igneousTilesNow,
     });
 
     /**
@@ -17724,6 +17838,8 @@ export function createLevelRun({
         get tileWriteEvents() { return tileWriteEvents.map((d) => ({ ...d, tile: { ...d.tile } })); },
         /** ⛓ fidelity-bulb: the tiles the CURRENT visit has written (`"tx,ty"` → t); empty with none. */
         get tileWrites() { return new Map(tileWritesByLevel.get(level) ?? []); },
+        /** ⛓ fidelity IGNEOUS: every Igneous-to-Lava crumble event this run has stepped (copied out). */
+        get igneousEvents() { return igneousEvents.map((e) => ({ ...e })); },
         /**
          * ⛓⛓⛓ R5 SLICE 20 — the ice turrets, as `collidesSolid` sees them.
          *
@@ -17836,6 +17952,7 @@ export function createLevelRun({
         /** ⛓ seedling-fidelity-bombpusher: the lobbers and the bombs in flight (empty while the key is OFF). */
         get bombPushers() { return bombPushersNow(); },
         get bombs() { return bombsNow(); },
+        get igneousTiles() { return igneousTilesNow(); },
         /** ⛓ seedling-fidelity-bombpusher: the bomb ledger — see `stepBombsNow` / `drainBombBlastsNow`. */
         get bombEvents() { return bombEventsNow(); },
         /** ⛓ fidelity BEAMTOWER D1: the towers' stepped `y` per tick (`LEDGER_KINDS.beamTowerTrace`; empty OFF). */
@@ -20884,6 +21001,8 @@ export function createLevelRun({
             // reads, which is the whole mechanism behind the beam's
             // one-frame lag.
             if (!noclip) renderBossesNow();
+            // ⛓ fidelity IGNEOUS D2: and every Igneous-to-Lava tile's render (OFF: returns at once).
+            if (!noclip && !next.transition) renderIgneousNow();
 
             // ── ⛓⛓⛓ R6 SLICE 3: THE DEATH REBOOT, AT END OF TICK ────
             //

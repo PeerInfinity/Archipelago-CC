@@ -24110,3 +24110,42 @@ an honest refusal. Neither leg solves: the hammer wall (H1) is still the wall.
 **Pins moved:** the `contactFidelity.test` defaults; `fidelityL40Guard` "ships ON"; identity **carved pairs c4
 `b9d2185d` → `ebb9e743`** (`spinnerSwingLineOfSight` alone: `winding post-sword seed=7` threw the line-of-sight
 assertion OFF and runs to `SATURATED` ON). No producer names the switches; tapeRunner pairs unmoved.
+
+### Seedling fidelity IGNEOUS — the Igneous-to-Lava tile (type 31), modelled (`igneousLava`, OFF)
+
+⚖ The user (2026-10-20): *"Launch IGNEOUS now"* — planning-9's finding: sweep leg 649 (`level_76 <- in_L71_304_256 ->
+exit:out_teleporter_304_112`) dies on the game at t39 while the model walks on. Base `934f99422b`. The report is
+`CC/docs/cloud-reports/seedling-fidelity-igneous.md`.
+
+**The tile, on the game** (p4g headless, five tapes, `fixtures/igneous-witness/`, every one reproduced by the model ON at
+0 px, the deaths included). `Tile.render`'s case 31 (`Tile.as:390-433`) runs on screen only. The trigger is the player's
+ORIGIN within √512/2 ≈ 11.31 px of the tile's CENTRE (a `Tile`'s `x, y` is `_x + w/2`). The counter falls 8 → 0, and the
+NINTH in-range render breaks the tile (8 do not: the `k8` / `k9` twins differ by one input tick). Once broken, a frame
+steps every 9 renders with nobody near, and the third writes `t = 17` (IgneousLava.png is 48×16, three frames): 36 renders
+from first contact. The counter CARRIES across an absence (`k4-stand` dies at t79; a reset would give t83), and a death
+restart rebuilds the tile (`k9-rebuild`: death t141 = first in-range t105 + 36). Leg 649 itself: in range t3, break t11,
+lava at the t38 render, death on the t39 update, respawn (24,88) t69.
+
+**The model.** `igneousLava.js` is the state machine. `levelRun.renderIgneousNow` runs at the frame's render point
+(beside `renderBossesNow`, and in `runFrozenTick`), asks `onScreen(0)` against the camera, and writes the lava through
+the Bulb's per-visit overlay, so the next update's `getState` reads 17. Refused by name (`IGNEOUS_UNMODELLED`), as an
+interim: a dead span the run does not step while a tile is live, an uncertain shake band, and an arrival within range
+(measured: no teleporter arrival is). New run state `igneousStates` is NOT in `stateDigestParts` (handed to the hammer
+arc). There is a new family, `igneousTiles`.
+
+**The solver.** The OFF plan for survey step 195 (= leg 649's room) waits for `lavachain@128,64`'s phase standing on tile
+(2,5), and L76's route is a type-31 snake between two islands of safe floor. With only the model ON, every rung refuses:
+the tile turns, the path behind is cut. `dangerMap.igneousDanger` prices a breaking tile's lava tick and a WAIT that would
+break one. `igneousWalkDanger` replays the clocks along a previewed walk, and `probeSamples` refuses a walk that stands on
+a tile it turns, naming the tile and its clock. Step 195 ON: SOLVED 496 (OFF 519). The ON walk is witnessed on the game at
+|Δ| 0 with no death (`igneous-l76-survey195-on`).
+
+**Movers ON:** survey 195 (SOLVED 519 → SOLVED 496; the other 14 type-31 steps unchanged); sweep leg 649 in node (583 →
+580 t; the OFF plan dies six times under the ON model, the ON plan never), the other 48 type-31 legs unchanged. No
+tapeRunner pair (638 `17bbc7ff`), identity row or producer `--check` moves OFF. Bounded ON: 0 real reds.
+
+**Trap candidates.**
+- A render-driven timer is not an update-driven one: it runs on frozen frames and the load fade, and stops off screen.
+- A dwell is invisible to a per-box danger query: the player's OWN presence is the hazard's clock, so the check has to
+  replay the walk.
+- A `Tile`'s `x, y` is its centre (`super(_x + w/2, _y + h/2)`), not the `.oel` corner.

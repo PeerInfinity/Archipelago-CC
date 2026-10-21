@@ -125,6 +125,8 @@ export {
     // ⛓⛓⛓ hammer-phase RE: the refuge's best-ETA cut (its switch, the cut and its instrument; ON by default since the user's flip).
     REFUGE_ETA_CUT, REFUGE_ETA_CUT_COUNTS, refugeEtaCut,
 } from './pressKillCost.js';
+// igneousLava.js — dangerMap · seedling 3 (fidelity IGNEOUS: the type-31 tile's render clock)
+export { igneousInRange, igneousRendersToLava, stepIgneousRender } from './igneousLava.js';
 // iceTurret.js — botDriverV2 · seedling 2
 export { ICE_TURRET, ICE_TURRET_PLAN } from './iceTurret.js';
 // ⛓ U15-swim D2: the turret spit's box, for `dangerMap.spitDanger`'s WAIT sweep.
