@@ -1893,7 +1893,7 @@ frontend/modules/seedlingDemo/igneousLava.js|igneousRendersToLava|h05bb1004|0|0,
 frontend/modules/seedlingDemo/igneousLava.js|igneousRendersToLava|h7e2282e5|1|0,structural,,,the reset render counts: counterMax decrements + 1
 frontend/modules/seedlingDemo/igneousLava.js|igneousRendersToLava|h7dc160eb|1|0,structural,,,the reset render counts: counter decrements + 1
 frontend/modules/seedlingDemo/igneousLava.js|igneousRendersToLava|h384e863a|1|0,structural,,,frames left after the current one
-frontend/modules/seedlingDemo/playerPhysicsV2.js|step|hd93e06b5|-1|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked (U11-swim D2: the facing a hit parks; sprites() pins direction to it while >= 0)
+frontend/modules/seedlingDemo/playerPhysicsV2.js|step|ha2374fd8|-1|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked (U11-swim D2: the facing a hit parks; sprites() pins direction to it while >= 0)
 frontend/modules/seedlingDemo/lightBoss.js|LIGHT_BOSS|(module),physics,magnitude,,fidelity LIGHTS: the fight's AS3 numbers — radius 48..64 (an int) on worldFrame(180; 4); the shot frames; spawn y -32; FP.RAD = pi/-180; flier hitbox 12x12/6; steer divisor 20; cap 1.5; lightLength 4; shotSpeed 1; hitsMax 3; i-frames 30; contact force 3; die 9 frames at rate 20; shot 4x4/2 with f 0; intro talkingSpeed 4 / lineLength 34 / talkRange 24
 frontend/modules/seedlingDemo/lightBoss.js|SPEAR_FORCE|(module),physics,magnitude,Player.as:spearForce,fidelity LIGHTS: Player.spearForce 7 — the push a spear thrust hands Enemy.hit
 frontend/modules/seedlingDemo/lightBoss.js|createLightBossFlier|createLightBossFlier|-1,rule,sentinel,Enemies/Enemy.as:maxForce,fidelity LIGHTS: Enemy.maxForce -1 = no force clamp
@@ -1922,6 +1922,45 @@ frontend/modules/seedlingDemo/runtimeLibm.js|*|ksin,physics,derivation,,musl __s
 frontend/modules/seedlingDemo/runtimeLibm.js|*|remPio2,physics,derivation,,"musl __rem_pio2: the |x| bands (3pi/4; 5pi/4; 7pi/4; 9pi/4; 2^20*pi/2), the 16/49-bit second/third rounds, the exponent masks"
 frontend/modules/seedlingDemo/runtimeLibm.js|*|atan,physics,derivation,,musl atan(): the reduction bands (7/16; 11/16; 19/16; 39/16; 2^66) and its constants
 frontend/modules/seedlingDemo/runtimeLibm.js|*|atan2,physics,derivation,,"musl atan2(): the sign/quadrant switch (m), the 2^64 ratio bounds, pi/2 pi/4 3pi/4"
+frontend/modules/seedlingDemo/tentacleBeast.js|stepTentacle|h0b993c8f|0|0,rule,bound,Enemies/Tentacle.as:alpha,the cut's fade floor: Image.alpha clamps to [0 1] so alpha -= 0.01 never reads below 0 (bosskills D3)
+frontend/modules/seedlingDemo/tentacleBeast.js|hitTentacle|h7ba7a4a3|1|0,rule,magnitude,Enemies/Enemy.as:hit,Enemy.hit's default damage d=1 (bosskills D3)
+frontend/modules/seedlingDemo/tentacleBeast.js|hitTentacle|h3272e70d|0|0,rule,sentinel,Enemies/Enemy.as:hitsTimer,hitsTimer <= 0 is the i-frame gate (bosskills D3)
+frontend/modules/seedlingDemo/lavaBoss.js|LAVA_BOSS|(module),rule,magnitude,Enemies/LavaBoss.as:hitsMax,the King of Fire: ctor offsets; hitbox; hits; window; wake; respawn; runner/ball spawn offsets (bosskills D2)
+frontend/modules/seedlingDemo/lavaBoss.js|LAVA_BOSS_ANIMS|(module),rule,magnitude,Enemies/LavaBoss.as:sprLavaBoss,the body's anims [frames; rate]: the 99-update cycle D1 measured (bosskills D2)
+frontend/modules/seedlingDemo/lavaBoss.js|LAVA_BALL|(module),rule,magnitude,Projectiles/LavaBall.as:LavaBall,LavaBall: box; cull margin; reflect factor (bosskills D2)
+frontend/modules/seedlingDemo/lavaBoss.js|LAVA_EXPLOSION|(module),rule,magnitude,Projectiles/Explosion.as:Explosion,the ball's Explosion: radius trunc(16*0.65); force (bosskills D2)
+frontend/modules/seedlingDemo/lavaBoss.js|LAVA_RUNNER|(module),physics,magnitude,Enemies/LavaRunner.as:LavaRunner,LavaRunner jump: vy; gravity; landing drop; run range; ctor offset; friction (bosskills D2)
+frontend/modules/seedlingDemo/lavaBoss.js|LAVA_ARENA_ROCK|(module),rule,magnitude,Game.as:bossrock,L82's arena rock: arm offset; size; fall and dead frames (bosskills D2)
+frontend/modules/seedlingDemo/lavaBoss.js|lavaArenaRockSchedule|lavaArenaRockSchedule,rule,derivation,Game.as:bossrock,the arena rock's schedule arithmetic (bosskills D2)
+frontend/modules/seedlingDemo/lavaBoss.js|createLavaBossFight|createLavaBossFight,structural,,,a fresh fight's zeroed counters (bosskills D2)
+frontend/modules/seedlingDemo/lavaBoss.js|explosionReaches|explosionReaches,rule,derivation,Projectiles/Explosion.as:Explosion,the Explosion's reach test (bosskills D2)
+frontend/modules/seedlingDemo/lavaBoss.js|lavaBossEndAnim|lavaBossEndAnim,rule,magnitude,Enemies/LavaBoss.as:sprLavaBoss,animEnd's transitions: runners; the fan; the sweep shake (bosskills D2)
+frontend/modules/seedlingDemo/lavaBoss.js|lavaBossGraphic|lavaBossGraphic,structural,,net/flashpunk/graphics/Spritemap.as:_timer,the body's Spritemap step (bosskills D2)
+frontend/modules/seedlingDemo/lavaBoss.js|lavaBossHit|lavaBossHit,rule,sentinel,Enemies/LavaBoss.as:hitsTimer,LavaBoss.hit's gate (bosskills D2)
+frontend/modules/seedlingDemo/lavaBoss.js|play|play,structural,,net/flashpunk/graphics/Spritemap.as:_timer,Spritemap.play (bosskills D2)
+frontend/modules/seedlingDemo/lavaBoss.js|renderLavaBoss|renderLavaBoss,rule,bound,Enemies/LavaBoss.as:alpha,the dead fade and its clamp (bosskills D2)
+frontend/modules/seedlingDemo/lavaBoss.js|stepLavaBall|stepLavaBall,rule,magnitude,Projectiles/LavaBall.as:LavaBall,one LavaBall update (bosskills D2)
+frontend/modules/seedlingDemo/lavaBoss.js|stepLavaBoss|stepLavaBoss,rule,magnitude,Enemies/LavaBoss.as:update,one LavaBoss update (bosskills D2)
+frontend/modules/seedlingDemo/lavaBoss.js|stepLavaRunnerAir|stepLavaRunnerAir,physics,magnitude,Enemies/LavaRunner.as:LavaRunner,the runner's airborne step (bosskills D2)
+frontend/modules/seedlingDemo/lavaBoss.js|subStep|subStep,structural,,net/flashpunk/graphics/Spritemap.as:_timer,Spritemap.update's frame advance (bosskills D2)
+frontend/modules/seedlingDemo/tentacleBeast.js|TENTACLE_BEAST|(module),rule,magnitude,Enemies/TentacleBeast.as:maxTentacles,the Tentacled Beast: ctor offsets; spawn rect; margins; wake range; caps; distances (bosskills D3)
+frontend/modules/seedlingDemo/tentacleBeast.js|TENTACLE_BEAST_ANIMS|(module),rule,magnitude,Enemies/TentacleBeast.as:sprTentacleBeast,the beast's anims [frames; rate] (bosskills D3)
+frontend/modules/seedlingDemo/tentacleBeast.js|TENTACLE|(module),rule,magnitude,Enemies/Tentacle.as:hitRect,a Tentacle: hitbox; swipe rect; force; damage; hits; i-frames; fade (bosskills D3)
+frontend/modules/seedlingDemo/tentacleBeast.js|TENTACLE_ANIMS|(module),rule,magnitude,Enemies/Tentacle.as:sprTentacle,a tentacle's anims [frames; rate]: rise 16; sit 37; hit 16; hitting 4; sink 13 (bosskills D3)
+frontend/modules/seedlingDemo/tentacleBeast.js|WHIRLPOOL|(module),rule,magnitude,Puzzlements/Whirlpool.as:spinRate,a Whirlpool: grow/live/die timers; size; pull radius; spin (bosskills D3)
+frontend/modules/seedlingDemo/tentacleBeast.js|TentacleDrawStream|TentacleDrawStream.*,structural,,Rng.as:random,the draw stream's counters (bosskills D3)
+frontend/modules/seedlingDemo/tentacleBeast.js|advance|advance,structural,,net/flashpunk/graphics/Spritemap.as:_timer,Spritemap.update's frame advance (bosskills D3)
+frontend/modules/seedlingDemo/tentacleBeast.js|anim|anim,structural,,net/flashpunk/graphics/Spritemap.as:_timer,Spritemap.play (bosskills D3)
+frontend/modules/seedlingDemo/tentacleBeast.js|createTentacleBeastFight|createTentacleBeastFight,structural,,,a fresh fight's zeroed counters (bosskills D3)
+frontend/modules/seedlingDemo/tentacleBeast.js|spawn|spawn,rule,magnitude,Enemies/TentacleBeast.as:maxTentacles,the spawn loop: draws; tries; counts (bosskills D3)
+frontend/modules/seedlingDemo/tentacleBeast.js|stepTentacle|stepTentacle,rule,sentinel,Enemies/Tentacle.as:canHit,one Tentacle update (bosskills D3)
+frontend/modules/seedlingDemo/tentacleBeast.js|stepTentacleBeast|stepTentacleBeast,rule,sentinel,Enemies/TentacleBeast.as:maxTentacles,one TentacleBeast update (bosskills D3)
+frontend/modules/seedlingDemo/tentacleBeast.js|stepWhirlpool|stepWhirlpool,rule,magnitude,Puzzlements/Whirlpool.as:spinRate,one Whirlpool update: the pull (bosskills D3)
+frontend/modules/seedlingDemo/tentacleBeast.js|stepWhirlpoolTimer|stepWhirlpoolTimer,rule,sentinel,Puzzlements/Whirlpool.as:spinRate,the whirlpool's timer step (bosskills D3)
+frontend/modules/seedlingDemo/tentacleBeast.js|tentacleStreamRefusal|tentacleStreamRefusal,rule,sentinel,Rng.as:random,the stream premises: seed > 0; no re-entry (bosskills D3)
+frontend/modules/seedlingDemo/tentacleBeast.js|tentacleSwipeRect|tentacleSwipeRect,rule,derivation,Enemies/Tentacle.as:hitRect,the swipe rect's arithmetic (bosskills D3)
+frontend/modules/seedlingDemo/tentacleBeast.js|whirlpoolRect|whirlpoolRect,rule,derivation,Puzzlements/Whirlpool.as:spinRate,the whirlpool box arithmetic (bosskills D3)
+frontend/modules/seedlingDemo/levelWorld.js|withRuntimeTeleporters|withRuntimeTeleporters,structural,,,an empty runtime-teleporter list is a no-op (bosskills D3)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,

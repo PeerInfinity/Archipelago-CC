@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 84,
-            "count": 131,
+            "browser": 85,
+            "count": 132,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 437,
-        "browser": 149,
+        "blockStyle": 438,
+        "browser": 150,
         "cited": 230,
-        "files": 450,
+        "files": 451,
         "lineStyle": 13,
-        "withDocblock": 450,
-        "withFlags": 366
+        "withDocblock": 451,
+        "withFlags": 368
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1469,7 +1469,9 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/census-seedling-sites.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "rendered"
+            ],
             "browser": false,
             "category": "census",
             "citedBy": [
@@ -10211,8 +10213,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
-                "arg",
-                "sameTape"
+                "arg"
             ],
             "browser": false,
             "category": "plan",
@@ -10709,6 +10710,61 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-boot-reset — **TWO WINDOWS ON ONE PAGE, AND WHAT THE SECOND ONE INHERITS.**",
             "path": "scripts/procgen/probe-seedling-boot-reset.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-bosskills.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dir"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "file"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "witness"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-bosskills — ⛓⛓⛓ seedling-fidelity-bosskills D1/D2: THE KING OF FIRE (`LavaBoss`, L82) AND THE TENTACLED BEAST (L57), ASKED OF THE GAME TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-bosskills.mjs"
         },
         {
             "argvHelpers": [
@@ -13319,6 +13375,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "only",
                 "record",
                 "win",
@@ -13326,6 +13383,12 @@ export const INSTRUMENTS = frz({
             ],
             "file": "probe-seedling-r5-spinner.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -17740,7 +17803,14 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "stamp-seedling-vanilla-set.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
             "inheritedFlags": [
                 {
                     "from": "argvHelp.js",

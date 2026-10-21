@@ -10,8 +10,14 @@
  * Run:
  *   node scripts/procgen/census-seedling-solver-surface.mjs           # print the tables
  *   node scripts/procgen/census-seedling-solver-surface.mjs --check   # exit 1 if the table is stale
+ *       (stale = a semantic red below, OR the committed bytes differ from what `--write` would write)
  *   node scripts/procgen/census-seedling-solver-surface.mjs --write   # rewrite the table (keeps class/form/why)
  *   ... --json                                                        # the raw census as JSON
+ *
+ * ⛔ `--check` ALSO COMPARES BYTES (slice seedling-js-producer-sweep). The semantic
+ * comparison alone stayed green while the table's own `files` count was stale
+ * (79 vs 80 after 035982f310): a field no semantic red reads is a field no one
+ * checks. The bytes `--write` would write are the contract.
  *
  * ⛔ Named `census-*`, not `check-*`: a `check-*.mjs` enrols in the derived
  * gate roster and owes a standing row. Enrolling it is the coordinator's step.
@@ -21,6 +27,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { argvHelp, isEntryPoint } from './argvHelp.js';
+import { checkFixtureBytes } from './producerFixtureBytes.js';
 import {
     buildTable, census, compareToTable, CORE_FOUR, DOOR, FOLDS, foldKeySites, groupReads,
     staticDrift, surfaceA,
@@ -95,9 +102,11 @@ function main() {
         return;
     }
     const previous = readJson(TABLE);
+    const rendered = () => `${JSON.stringify(buildTable(c, { previous, dynamic: readJson(DYNAMIC) }), null, 2)}\n`;
     if (argv.includes('--write')) {
-        const table = buildTable(c, { previous, dynamic: readJson(DYNAMIC) });
-        fs.writeFileSync(TABLE, `${JSON.stringify(table, null, 2)}\n`);
+        const text = rendered();
+        const table = JSON.parse(text);
+        fs.writeFileSync(TABLE, text);
         const un = table.rows.filter((r) => r.class === 'UNCLASSIFIED').length;
         console.log(`wrote ${path.relative(REPO, TABLE)}: ${table.rows.length} rows`
             + `${un ? ` — ${un} UNCLASSIFIED: read each and fill class/form/why` : ''}`);
@@ -115,8 +124,9 @@ function main() {
         if (cmp.family) console.log(`RED family: closure ${cmp.family.closure.join(' ')} ≠ table ${cmp.family.table.join(' ')}`);
         for (const d of cmp.door) console.log(`RED door: ${d.at} ${d.why}`);
         for (const e of cmp.folds) console.log(`RED fold: ${e.at} ${e.why}`);
+        const bytesOk = checkFixtureBytes(TABLE, rendered());
         const red = cmp.unlisted.length + cmp.retired.length + drift.length + un.length + (cmp.family ? 1 : 0)
-            + cmp.door.length + cmp.folds.length;
+            + cmp.door.length + cmp.folds.length + (bytesOk ? 0 : 1);
         console.log(red ? `RED: ${red} finding(s) — run --write, then classify` : `GREEN: ${previous.rows.length} rows match a fresh census`);
         process.exit(red ? 1 : 0);
     }

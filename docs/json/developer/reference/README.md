@@ -10,6 +10,8 @@ This directory contains detailed technical reference material for specific subsy
 - **[Logging System](./logging-system.md)**: Comprehensive guide to the structured logging system
 - **[URL Parameters](./url-parameters.md)**: All supported URL parameters for configuring the web client
 - **[Rule Types Reference](./rule-types-reference.md)**: Complete catalog of all rule types supported by the rule system
+- **[Rule-Node Kind Registry and Census](./rule-kind-registry.md)**: The registry of rule-node kinds, the CI census that names every cross-layer gap, and the unknown-kind policy
+- **[Rule-Type Dispatch Inventory](./rule-type-dispatch-inventory.md)**: Every site in the repo that dispatches on rule type, and how each treats an unknown one
 - **[Loops Module — Queue States](./loops-module-states.md)**: State machine for the loop-mode action queue (idle/running/paused/completed/waiting), transition triggers, per-state behaviors, known asymmetries
 
 ## Exporter Internals

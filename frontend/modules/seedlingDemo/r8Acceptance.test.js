@@ -114,7 +114,8 @@ describe('R8_NORMALIZE_LIVE_BATCH — the prediction, stated first', () => {
         expect(r.total).toBe(LIVE_GEOMETRY_KEYS.length);
         expect(r.forwarded).toBe(8);
         // ⛓ fidelity BEAMTOWER D1: 6 → 7, `beamTowers` (the planner reads a tower's placement; the run's sweep the drift).
-        expect(r.dropped).toBe(7);
+        // ⛓ seedling-fidelity-bosskills D2: 7 → 8, `lavaBosses` (the planner reads the King of Fire's placement).
+        expect(r.dropped).toBe(8);
     });
 
     /**
@@ -1595,7 +1596,9 @@ describe('R8_STRATEGY_EXECUTORS — ⚖ §11.8a as data, and the checks that kee
         // land, and the as-built quotes it.
         expect([...out.pending].sort()).toEqual(
             Object.keys(R8_STRATEGY_EXECUTORS.executorDerivations)
-                .filter((k) => !(k in STRATEGY_EXECUTORS)).sort());
+                // ⛓ a SWITCH-GATED executor (Lights, the two BOSSKILLS fights) is a non-enumerable own row: `in` sees it, the
+                // registry's enumeration does not, so until its flip it is PENDING — read the running set as enumerated.
+                .filter((k) => !Object.keys(STRATEGY_EXECUTORS).includes(k)).sort());
     });
 
     it('an executor registered with no derivation row is a NAMED failure', () => {
