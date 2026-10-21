@@ -10,6 +10,8 @@ import {
     createWorld, createState, step, whyBlocked, mazeVisitedKey, setTile, setBlock, setButton, setObstacle,
     setItem, TILE_WALL, INPUTS, INPUT_WAIT,
 } from '../mazeRoomEngine.js';
+import { worldInputs, useInput } from '../mazeRoomEngine.js';
+import { itemActionPicture, ROCK_CORRIDOR } from '../mazeItemActions.fixtures.js';
 import { scriptedStep } from './tileStep.js';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
 
@@ -141,5 +143,99 @@ describe('tile-primitives spike — the fixtures DETECT a wrong condition (mutan
         const h = mutate('block_may_enter', { type: 'and', conditions: [attr('floor'), { type: 'not', condition: attr('block') }] });
         expect(disagreements(picture(FIXTURES['a block over an item, pushed through a held door']), h).out.length)
             .toBeGreaterThan(0);
+    });
+});
+
+/* ── ITEM ACTIONS (slice tile-primitives-item-actions): turn / use / strike ─────────────────────── */
+
+const ACTION_FIXTURES = {
+    'the rock corridor (sword off the route)': ROCK_CORRIDOR,
+    // The rock sits before a key door: a strike that ignored `struck_by` would break the DOOR too.
+    'a rock before a door': ['########', '#PS.rRX#', '#.....##', '########'],
+    // The block's lane runs into the rock; it passes only once the rock is struck from below.
+    'a block through a struck rock': ['#######', '#PSB.r#', '#....##', '#######'],
+};
+
+function reachableActions(world, cap = 20000) {
+    const start = createState(world);
+    const seen = new Map([[mazeVisitedKey(start), start]]);
+    const frontier = [start];
+    const inputs = worldInputs(world);
+    while (frontier.length) {
+        const s = frontier.pop();
+        for (const input of inputs) {
+            const n = step(world, s, input);
+            if (n === null || seen.has(mazeVisitedKey(n))) continue;
+            seen.set(mazeVisitedKey(n), n);
+            frontier.push(n);
+        }
+        if (seen.size > cap) throw new Error('exploration truncated');
+    }
+    return [...seen.values()];
+}
+
+function actionDisagreements(world, helpers) {
+    const out = [];
+    let pairs = 0;
+    let strikes = 0;
+    for (const s of reachableActions(world)) {
+        for (const input of [...worldInputs(world), INPUT_WAIT, useInput('bow')]) {
+            pairs += 1;
+            const oracle = step(world, s, input);
+            const { next } = scriptedStep(world, s, input, helpers);
+            const at = `${input}@${mazeVisitedKey(s)}`;
+            if ((oracle === null) !== (next === null)) {
+                out.push(`${at} legality oracle=${oracle !== null} scripted=${next !== null}`);
+            } else if (oracle !== null && (mazeVisitedKey(oracle) !== mazeVisitedKey(next) || oracle.turn !== next.turn)) {
+                out.push(`${at} state oracle=${mazeVisitedKey(oracle)} scripted=${mazeVisitedKey(next)}`);
+            }
+            if (oracle !== null && oracle.broken.length > s.broken.length) strikes += 1;
+        }
+    }
+    return { out, pairs, strikes };
+}
+
+describe('tile-primitives — scripted step ≡ engine step with ITEM ACTIONS', () => {
+    for (const [name, rows] of Object.entries(ACTION_FIXTURES)) {
+        it(`agrees over every reachable (state, input) of ${name}`, () => {
+            const { out, strikes } = actionDisagreements(itemActionPicture(rows), HELPERS);
+            expect(out).toEqual([]);
+            expect(strikes).toBeGreaterThan(0);   // the strike branch really runs
+        });
+    }
+
+    describe('mutants are caught', () => {
+        const mutate = (name, body) => ({ ...HELPERS, [name]: { ...HELPERS[name], body } });
+        const attr = (a) => ({ type: 'attribute', object: { type: 'name', name: 'tile' }, attr: a });
+        const findings = (h, name) => actionDisagreements(itemActionPicture(ACTION_FIXTURES[name]), h).out.length;
+
+        it('the mutant bodies are the real helper minus one conjunct (shape check)', () => {
+            expect(HELPERS.strikes.body.type).toBe('and');
+            expect(HELPERS.strikes.body.conditions).toHaveLength(3);
+        });
+
+        it('strikes that ignores `struck` (breaks ANY obstacle) is caught by "a rock before a door"', () => {
+            const [obstacle, , notBroken] = HELPERS.strikes.body.conditions;
+            const h = mutate('strikes', { type: 'and', conditions: [obstacle, notBroken] });
+            expect(findings(h, 'a rock before a door')).toBeGreaterThan(0);
+        });
+
+        it('strikes that ignores `broken` (re-breaks) is caught by the rock corridor', () => {
+            const [obstacle, struck] = HELPERS.strikes.body.conditions;
+            const h = mutate('strikes', { type: 'and', conditions: [obstacle, struck] });
+            expect(findings(h, 'the rock corridor (sword off the route)')).toBeGreaterThan(0);
+        });
+
+        it('cleared that forgets `broken` is caught by "a block through a struck rock"', () => {
+            const body = HELPERS.cleared.body;
+            expect(body.type).toBe('or');
+            const h = mutate('cleared', { type: 'or', conditions: body.conditions.filter((c) => !(c.type === 'attribute' && c.attr === 'broken')) });
+            expect(h.cleared.body.conditions.length).toBe(body.conditions.length - 1);
+            expect(findings(h, 'a block through a struck rock')).toBeGreaterThan(0);
+        });
+
+        it('(control) the unmutated helpers find nothing on the same three fixtures', () => {
+            for (const name of Object.keys(ACTION_FIXTURES)) expect(findings(HELPERS, name)).toBe(0);
+        });
     });
 });
