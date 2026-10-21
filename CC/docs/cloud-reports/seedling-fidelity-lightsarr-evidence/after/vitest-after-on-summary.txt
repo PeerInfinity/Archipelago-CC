@@ -1,0 +1,7 @@
+[2m      Tests [22m [1m[31m4 failed[39m[22m[2m | [22m[1m[32m2057 passed[39m[22m[90m (2061)[39m
+[2m Test Files [22m [1m[31m4 failed[39m[22m[2m | [22m[1m[32m71 passed[39m[22m[90m (75)[39m
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 4 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/contactFidelity.test.js[2m > [22mcontact witnesses (fixtures/contact-witness)[2m > [22mthe shipped defaults: all three ON
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/enemyDamage.test.js[2m > [22mthe policy — an ENUMERATION, checked against `combat.js`[2m > [22m⛔ every refusal carries its OWN reason, not a shared one
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityApFlip.test.js[2m > [22mAPFLIP D4 — H2: the four boss rooms rebuilt after their kill (AS3 @ccdf189776)[2m > [22mON: the Lights ({69,0}) build with nothing of the fight — the controller is `notSolid`, so the room is unchanged
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/fidelityLights.test.js[2m > [22mfidelity LIGHTS — the switch (OFF: byte-identical)[2m > [22mthe world build: OFF no `lightsControllers` key and no totem; ON the totem, or (cleared) the exit

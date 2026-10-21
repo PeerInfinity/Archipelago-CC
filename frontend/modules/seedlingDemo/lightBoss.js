@@ -38,6 +38,8 @@ import { enemyHit, enemyHitUpdate } from './enemyDamage.js';
 import { atan2 as libmAtan2, cos as libmCos, sin as libmSin } from './runtimeLibm.js';
 import { rect, rectsOverlap } from './levelWorld.js';
 import { LIGHT_BOSS_WORLD, lightsExitRect, lightsWorldRows } from './lightBossWorld.js';
+// ⛓ fidelity LIGHTSARR D2: `Player.shieldBump`'s box and gates, shared with every other family it shoves.
+import { DARK_SHIELD_DAMAGE, SHIELD_FORCE, shieldBumpTouches } from './bobBossFight.js';
 
 export { lightsExitRect, lightsWorldRows };
 
@@ -363,14 +365,61 @@ export function lightBossFlierHit(fight, f, { d, force, t, from, frozen = false 
         f.dieAnim = createSpriteAnim(LIGHT_BOSS.flier.die.frames, LIGHT_BOSS.flier.die.rate);
         removeFlier(fight, f.fid);
         f.dying = true;
-    } else if (verdict.knockedBack && f.dieAnim === null && from) {
-        // `Enemy.knockback`: `a = Math.atan2(y - p.y, x - p.x); v.x += f * Math.cos(a); v.y += f * Math.sin(a)`.
-        const a = libmAtan2(f.y - from.y, f.x - from.x);
-        const k = verdict.force ?? force;
-        f.vx += k * libmCos(a);
-        f.vy += k * libmSin(a);
+    } else if (verdict.knockedBack) {
+        lightBossKnockback(f, verdict.force ?? force, from);
     }
     return verdict;
+}
+
+/**
+ * `Enemy.knockback(f, p)` on a flier (`Enemy.as:247-255`; `LightBoss` overrides none): `if (p && !destroy &&
+ * currentAnim != "die") { a = Math.atan2(y - p.y, x - p.x); v.x += f * Math.cos(a); v.y += f * Math.sin(a) }` — musl
+ * trig. Reached by `Enemy.hit` (above) and by `Player.shieldBump` (`lightsShieldBump`).
+ *
+ * @returns {boolean} whether `v` moved
+ */
+export function lightBossKnockback(f, force, from) {
+    if (!from || f.destroy || f.dieAnim !== null) return false;
+    const a = libmAtan2(f.y - from.y, f.x - from.x);
+    f.vx += force * libmCos(a);
+    f.vy += force * libmSin(a);
+    return true;
+}
+
+/**
+ * ⛓⛓ SEEDLING FIDELITY LIGHTSARR D2 — `Player.shieldBump` (`Player.as:1691-1709`) against the fliers. A `LightBoss` is
+ * an `Enemy`, so a MOVING player's shield box (`collideTypesInto(enemies, …)`) meets it: the plain shield calls
+ * `o.knockback(shieldForce = 5, Point(x, y))` whatever the flier's `hitsTimer` — no damage, no i-frame. It runs at the
+ * top of `Player.update` (the player is last), so the fliers have taken THIS tick's step and the shove is spent by their
+ * next one. MEASURED on the game (leg 608's plan from the L70 pit arrival, and booted at the same staging): flier 0 at
+ * `hits_timer` 16 → v (−2.92, −2.02) at t154, again at t157 and t160, as the player walks left into it; the model
+ * without this arm left it on its steer and the contact at t170 that the game bills was a tick the forecast called safe.
+ *
+ * ⛔ THE DARK SHIELD on a flier whose `hitsTimer <= 0` is `o.hit(5, p, 0.5, "Shield")` — not witnessed on a LightBoss:
+ * refused by name, at the touch.
+ *
+ * @param {object} fight MUTATED (the touched fliers' `v`)
+ * @param {object} ctx
+ * @param {object} ctx.player the LIVE player (`v.length > 0` gate, and the shove's point)
+ * @param {object} ctx.rendered the player as the previous frame's render left it (the shield box's placement)
+ * @param {boolean} ctx.slashing
+ * @param {boolean} ctx.dark `hasDarkShield`
+ * @returns {object[]} one row per touched flier: `{id, shoved, v}`
+ */
+export function lightsShieldBump(fight, { player, rendered = player, slashing = false, dark = false }) {
+    const rows = [];
+    for (const f of fight.bodies) {
+        if (f.removed) continue;
+        if (!shieldBumpTouches(player, slashing, lightBossRect(f), rendered)) continue;
+        if (dark && f.hitsTimer <= 0) {
+            fail(`lightsShieldBump: the dark shield touches ${f.id} (hits_timer ${f.hitsTimer}) — \`Player.shieldBump\` `
+                + `calls \`o.hit(${SHIELD_FORCE}, p, ${DARK_SHIELD_DAMAGE}, "Shield")\` there, which is not witnessed on a `
+                + 'LightBoss (fidelity LIGHTSARR residue). Refused by name.');
+        }
+        const shoved = lightBossKnockback(f, SHIELD_FORCE, { x: player.x, y: player.y });
+        rows.push({ id: f.id, shoved, v: { x: f.vx, y: f.vy } });
+    }
+    return rows;
 }
 
 // ── the shots ──────────────────────────────────────────────────────────────────────────────────────────────────────

@@ -573,3 +573,49 @@ describe('procgenPlayer — retakeStartHop and the startHop mark', () => {
         expect(menu.bus.published.filter((p) => p.event === 'maze:loadRegion').slice(m).map((p) => p.data.startHop ?? false)).toEqual([false]);
     });
 });
+
+describe('procgenPlayer — same-world crossing (tile-primitives Stage 2)', () => {
+    const SHARED_RULES = {
+        start_regions: { 1: ['Menu'] },
+        regions: { 1: {
+            Menu: { exits: [{ name: 'GameStart', connected_region: 'L__a' }] },
+            L__a: { exits: [], locations: [] }, L__b: { exits: [], locations: [] }, other: { exits: [], locations: [] },
+        } },
+        preset_sidecars: { 1: {
+            L__a: { substrate: 'maze', shared_world: 'L', playable_payload: { tag: 'level' } },
+            L__b: { substrate: 'maze', shared_world: 'L' },
+            other: { substrate: 'maze', playable_payload: { tag: 'other' } },
+        } },
+    };
+    let bus;
+    let handler;
+    beforeEach(async () => {
+        _testOnly_resetModuleState();
+        substrateRegistry.clear();
+        substrateRegistry.register(FAKE_MAZE_ENTRY);
+        const reg = makeMockRegistrationApi();
+        register(reg);
+        bus = makeMockEventBus();
+        await initialize('procgenPlayer', 0, makeMockInitApi(bus, makeMockDispatcher()));
+        bus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: SHARED_RULES, selectedPlayerInfo: { playerId: '1' } });
+        handler = reg._calls.dispatcherReceivers[0][2];
+    });
+    const loads = (from) => bus.published.slice(from).filter((p) => p.event === 'maze:loadRegion').map((p) => p.data);
+
+    it('a move between two regions of one level world is marked sameWorld; the world is the same object', () => {
+        const at = bus.published.length;
+        handler({ sourceRegion: 'L__a', targetRegion: 'L__b', exitName: 'L__a -> L__b' });
+        const [load] = loads(at);
+        expect(load.region_id).toBe('L__b');
+        expect(load.sameWorld).toBe(true);
+        expect(load.world).toBe(_testOnly_getWarehouse().get('L__a').world);
+    });
+
+    it('a move into the level from elsewhere, a reset and a restart are NOT same-world', () => {
+        const at = bus.published.length;
+        handler({ sourceRegion: 'other', targetRegion: 'L__b', exitName: 'x' });
+        handler({ sourceRegion: 'L__a', targetRegion: 'L__b', exitName: null, fromReset: true });
+        handler({ sourceRegion: 'L__a', targetRegion: 'L__b', exitName: null, restart: true });
+        expect(loads(at).map((l) => l.sameWorld ?? false)).toEqual([false, false, false]);
+    });
+});

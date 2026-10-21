@@ -198,7 +198,11 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             kingOfFireFight: false, tentacleBeastFight: false,
             // ⛓ fidelity ROPE (wave 22): the `rope` verb ships OFF.
             // ⛓ planning-9's flip (⚖ user "Yes, flip it", 2026-10-21) turns `ropeCutVerb` ON.
-            ropeCutVerb: true });
+            ropeCutVerb: true,
+            // ⛓ fidelity L1516 D2: `chestProbeLineEnd` (a chest's probe line stops at px+11), OFF.
+            chestProbeLineEnd: false,
+            // ⛓ fidelity L1516 D3: `enclosedPitCorner` (an enclosed pit entered across a corner), OFF.
+            enclosedPitCorner: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

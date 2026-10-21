@@ -27,6 +27,7 @@ import {
     isFloor,
     createState,
     hasItemActions,
+    sharedWorldCrossing,
 } from './mazeRoomEngine.js';
 import { PlaybackClock } from '../shared/playbackClock.js';
 import { findPath, stepsToInputs, planItemActions } from './mazeAutopather.js';
@@ -47,8 +48,14 @@ export class MazeRoomVisualizer {
         // tile types, which are NOT AP locations and so must never go
         // through the locationCheck path.
         onConsumableGrant = null, onManaGrant = null,
+        // ⛓ SHARED LEVEL WORLD: called with `{boundary, sourceRegion,
+        // targetRegion, exitName}` when a walk steps onto a cell another AP
+        // region of the same level world owns. The walk does NOT pause — the
+        // world, and so the walk's state, is the same on both sides.
+        onRegionCross = null,
     } = {}) {
         this._eventBus = eventBus;
+        this._onRegionCross = onRegionCross;
         this._onStateChange = onStateChange;
         // Called when the visualizer steps onto an exit tile that has
         // a targetRegion. Caller (the panel) translates this into a
@@ -137,6 +144,15 @@ export class MazeRoomVisualizer {
      * there. Without it, the visualizer notifies the panel back with
      * world.entrance and the arrival position is silently clobbered.
      */
+    /**
+     * ⛓ SHARED LEVEL WORLD: the player crossed into another AP region of the
+     * SAME world. Only the region changes — no state reset, no notify (the
+     * panel is the one telling us).
+     */
+    setRegion(regionId) {
+        this._regionId = regionId ?? null;
+    }
+
     setWorld(world, regionId, { freshStart = false, spawnAt = null } = {}) {
         const same = this._world === world && this._regionId === regionId;
         this._world = world ?? null;
@@ -470,6 +486,20 @@ export class MazeRoomVisualizer {
 
         this._state = next;
         this._planIdx += 1;
+
+        // ⛓ SHARED LEVEL WORLD: arriving on a cell another AP region owns is
+        // a crossing. Region first, so the step's own events (a pickup on the
+        // boundary cell) are filed under the region the player is now in.
+        const crossing = sharedWorldCrossing(this._world, this._regionId, next.player_pos.x, next.player_pos.y);
+        if (crossing) {
+            this._regionId = crossing.targetRegion;
+            this._log.push({
+                type: 'region_cross',
+                ...crossing,
+                description: `Crossed into ${crossing.targetRegion} at (${crossing.boundary}).`,
+            });
+            if (this._onRegionCross) this._onRegionCross(crossing);
+        }
 
         const events = detectStepEvents(this._world, oldPos, next.player_pos, this._inventory);
         const eventDescriptions = [];

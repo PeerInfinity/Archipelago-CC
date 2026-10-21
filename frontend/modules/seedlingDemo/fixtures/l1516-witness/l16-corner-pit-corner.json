@@ -1,0 +1,40 @@
+{
+ "tape": "corner",
+ "set_id": "seedling-vanilla-record-f5bdb07d",
+ "mounted": "seedling-vanilla-record-f5bdb07d",
+ "observations": 61,
+ "game": {
+  "pit": {
+   "tx": 13,
+   "ty": 4,
+   "at": {
+    "x": 215.86816209281662,
+    "y": 71.86816209281665
+   }
+  },
+  "final": {
+   "t": 60,
+   "x": 136,
+   "y": 5.500000000000005,
+   "level": 17
+  }
+ },
+ "model": {
+  "pit": {
+   "tx": 13,
+   "ty": 4,
+   "at": {
+    "x": 215.86816209281662,
+    "y": 71.86816209281665
+   }
+  },
+  "final": {
+   "t": 60,
+   "x": 136,
+   "y": 5.500000000000005,
+   "level": 17
+  },
+  "max": 0,
+  "first": null
+ }
+}
