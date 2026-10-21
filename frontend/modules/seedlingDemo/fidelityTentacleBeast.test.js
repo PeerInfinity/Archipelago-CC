@@ -281,3 +281,32 @@ describe('bossfork D2 — a cleared L57 holds its mouth at the build (`tentacleM
         });
     });
 });
+
+/**
+ * ⛓⛓ fidelity BOSSFORK D1b — A REACH-EXIT AT THE MOUTH, ASKED WHILE THE BEAST IS DYING. The report lands as "dying"
+ * starts and the mouth only when it ends, so a reach-exit asked in between (the JS page's continue request, sweep leg
+ * 505 at t2866) found no teleporter and refused. `awaitTentacleMouth` idles until the run builds it. Staged on
+ * `tb-solve-s2`: the witness's own keys to t789 (the report is t787), then the reach-exit alone: the continuation is the
+ * witness's tape, tick for tick, into L58.
+ *
+ * Mutant (predicted, copy + restore): drop the `awaitTentacleMouth(goal)` call → the row reds with "no teleporter at
+ * (96,64)".
+ */
+describe('bossfork D1b — a reach-exit at the mouth waits out "dying" (`awaitTentacleMouth`)', () => {
+    it('from t789 (report t787, "dying", no mouth yet) the walk idles, then leaves by the mouth: the witness\'s tape', () => {
+        const w = witnesses.find((x) => x.name === 'tb-solve-s2');
+        const staging = stagingFromTape(parseTape(JSON.stringify({ ...w.tape, inputs: [], tick_count: 0 })));
+        const per = Array.from({ length: w.tape.tick_count }, () => new Set());
+        for (const i of w.tape.inputs) for (let t = i.from; t < i.to; t += 1) per[t].add(i.key);
+        withContactFidelity({ tentacleBeastFight: true }, () => {
+            const run = createRunForStaging(staging, SRC);
+            for (let t = 0; t < 789; t += 1) run.advance(per[t]);
+            const f = run.entities('tentacleBeastFight');
+            expect([f.beast.anim, f.mouth, f.report]).toEqual(['dying', null, { tag: 0 }]);
+            const out = solveSegment({ run, goals: [{ kind: 'reach-exit', exit: { x: 96, y: 64 } }], name: 'd1b',
+                boot: staging.boot, prefix: per.slice(0, 789) });
+            expect(run.level).toBe(58);
+            expect(out.perTick.map((k) => [...k].sort().join('+'))).toEqual(per.map((k) => [...k].sort().join('+')));
+        });
+    }, 120000);
+});
