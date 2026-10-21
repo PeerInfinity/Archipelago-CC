@@ -263,7 +263,8 @@ describe('hammer-phase DA — every per-visit map is in the digest, or exempt wi
         expect(c.bothDigestedAndExempt).toEqual([]);
         expect(c.staleExempt).toEqual([]);
         expect(c.badReason).toEqual([]);
-        // the reader sees what it should: the 19 digested per-visit maps sit in `visit`, the clears in `persist`
+        // the reader sees what it should: at DA, 25 per-visit names are digested (22 in `visit`, the clears in
+        // `persist`, `grantsByLevel` in `player`) and 30 are exempt
         expect(c.perVisit.length).toBe(c.perVisit.filter((n) => c.digested.has(n)).length
             + Object.keys(DIGEST_EXEMPT).length);
         expect(c.digested.get('spinnerStates')).toBe('visit');
