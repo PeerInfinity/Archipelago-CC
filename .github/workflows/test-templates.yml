@@ -159,24 +159,54 @@ jobs:
             test-results/
           retention-days: 7
 
-  # The on-push batch list, read off testBatches.js. No submodules and no
-  # npm install: the module has no imports.
+  # The on-push batch list, read off testBatches.js. No submodules.
+  # ⛓ ci-manual-moves (user ruling 2026-10-21): a batch with `pushPaths`
+  # (apworld) runs on a push only when a pushed path hits its filter — its
+  # globs plus a derived import closure, which needs `npm ci` (esbuild).
+  # FAIL-OPEN: a PR, a dispatch, an unreadable or truncated compare runs it.
   batches:
     name: On-push substrate batches
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     outputs:
       list: ${{ steps.list.outputs.list }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6.0.2
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: List the on-push batches
         id: list
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          BEFORE: ${{ github.event.before }}
+          SHA: ${{ github.sha }}
+          REPO: ${{ github.repository }}
         run: |
-          list=$(node scripts/test/list-test-batches.js --on-push)
+          echo ALL > /tmp/changed.txt
+          if [ "$EVENT" = push ]; then
+            base="$BEFORE"
+            case "$base" in ''|0000000000000000000000000000000000000000) base="$SHA~1" ;; esac
+            if files=$(gh api "repos/$REPO/compare/$base...$SHA" --jq '.files[].filename'); then
+              n=$(printf '%s\n' "$files" | grep -c . || true)
+              if [ "$n" -lt 300 ]; then printf '%s\n' "$files" > /tmp/changed.txt; fi
+              echo "$n changed file(s) in $base...$SHA"
+            else
+              echo "could not list the changes ($base...$SHA): every batch runs"
+            fi
+          fi
+          list=$(node scripts/test/list-test-batches.js --on-push --changed=/tmp/changed.txt)
           echo "On-push batches: $list"
-          echo "list=$list" >> "$GITHUB_OUTPUT"
+          echo "list=$list" >> "$GITHUB_OUTPUT""
 
   substrates:
     name: Substrate tests — ${{ matrix.batch }} batch
