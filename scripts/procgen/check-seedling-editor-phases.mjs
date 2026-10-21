@@ -33,6 +33,8 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { closeServer, serveRepoRoot } from './serveRepoRoot.js';
+import { DROPPED_CEILING, DROPPED_GRID, dryGridMessage, findDroppedSubject }
+    from './droppedElementSubject.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
@@ -135,35 +137,31 @@ const json = (v) => JSON.stringify(v);
  * The rule is the one this file has always applied and states above — **the
  * smaller seed** — over the range §21.4 published, and a grid with NO dropped
  * cell REFUSES BY NAME rather than handing CLAIM 5 a subject it cannot use.
+ *
+ * ⛓⛓⛓ **AND THE SEARCH ITSELF RAN DRY — SEEDLING FIDELITY GATESUBJ (D2).** From
+ * `124bd6f6f2` (fidelity F1+F1b+F1c) every post-sword killgate in 1..20
+ * certifies, and with hammer-phase A2's `HAMMER_ESCAPE` on, NONE of 1..1000
+ * drops at the certification (measured at `f1b4f85446`; the only non-placed
+ * cells are `wall-does-not-seal` PLACEMENT refusals). The refusal-by-name above
+ * fired as designed — `NO seed in 1..20` — and nobody read it, because the CI
+ * arm is `continue-on-error` (D4's table is what reads it now).
+ *
+ * ⛓ So the search moved to `droppedElementSubject.js`, shared with the demos
+ * catalogue's `dropped-element` row: the GRID is `pre-sword`/`killgate` (the
+ * boot holds no sword, so the drop is the BIOME's and no solver change can
+ * revoke it), the subject must carry certification GEOMETRY, and the range is
+ * 1..`DROPPED_CEILING`. That module's docblock carries the measurement.
  */
 const SUBJECT = { seed: 2, biome: 'post-sword', elements: 'killgate' };
 const AREAS = { seed: 2, biome: 'pre-sword', skeleton: 'loopy', areas: 1 };
 
-/** The seed range §21.4 measured killgate certification over. */
-const DROPPED_SEEDS = 20;
-/** The grid `DROPPED` is taken from — the family SUBJECT is taken from too. */
-const DROPPED_GRID = { biome: 'post-sword', elements: 'killgate' };
-
 /**
- * ⛓ THE FIRST DROPPED CELL, BY THE SMALLER-SEED RULE.
+ * ⛓ THE FIRST DROPPED CELL, BY THE SMALLER-SEED RULE — `droppedElementSubject.js`.
  *
- * ⛔ It returns the REPORT beside the subject, so the row that announces the
- * search asserts on the very object CLAIM 5 goes on to read — a search whose
- * answer were re-derived at the use site could disagree with its own
- * announcement.
+ * ⛔ It returns the STEP beside the subject, so the row that announces the
+ * search asserts on the very object CLAIM 5 goes on to read.
  */
-function findDroppedSubject() {
-    for (let seed = 1; seed <= DROPPED_SEEDS; seed += 1) {
-        const step = generateStep({ seed, biome: DROPPED_GRID.biome, step: 0,
-            elements: { name: DROPPED_GRID.elements } });
-        const e = step.elements;
-        if (e?.ran === false && e?.certified === false && e?.refused) {
-            return { subject: { seed, ...DROPPED_GRID }, step };
-        }
-    }
-    return { subject: null, step: null };
-}
-const dropped = findDroppedSubject();
+const dropped = findDroppedSubject(generateStep);
 const DROPPED = dropped.subject;
 
 const nodeSubject = generateStep({ seed: SUBJECT.seed, biome: SUBJECT.biome, step: 0,
@@ -409,10 +407,11 @@ const atPhase = async (index) => {
      */
     check(DROPPED !== null,
         `⛓⛓⛓ a DROPPED element SUBJECT still exists to check — searched, not typed `
-        + `(${DROPPED_GRID.biome}/${DROPPED_GRID.elements}, seeds 1..${DROPPED_SEEDS}, `
-        + 'smaller seed wins)',
-        DROPPED ? `seed ${DROPPED.seed} — ${nodeDropped.elements.refused.reason}`
-            : `NO seed in 1..${DROPPED_SEEDS} drops its element; this claim has no subject`);
+        + `(${DROPPED_GRID.biome}/${DROPPED_GRID.elements}, seeds 1..${DROPPED_CEILING}, `
+        + 'smaller seed wins, a CERTIFICATION drop with geometry)',
+        DROPPED ? `seed ${DROPPED.seed} — ${nodeDropped.elements.refused.reason}, `
+            + `${nodeDropped.elements.placed.length} geometry row(s)`
+            : dryGridMessage());
     /**
      * ⛓ AND THE SIBLING SUBJECT IS ASSERTED FOR THE PROPERTY IT WAS CHOSEN FOR.
      * `SUBJECT` is frozen on purpose — re-picking it by the same ascending rule

@@ -59,7 +59,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 4,
+            "count": 5,
             "id": "ci"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 436,
+        "blockStyle": 437,
         "browser": 149,
-        "cited": 228,
-        "files": 449,
+        "cited": 229,
+        "files": 450,
         "lineStyle": 13,
-        "withDocblock": 449,
-        "withFlags": 365
+        "withDocblock": 450,
+        "withFlags": 366
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -5212,6 +5212,35 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-worldgen-package-sidecars — **DOES EVERY WORLDGEN PACKAGE CARRY THE SIDECARS ITS COMMITTED PRESETS CARRY?**",
             "path": "scripts/procgen/check-worldgen-package-sidecars.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "ci",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "table"
+            ],
+            "file": "ci-expected-red.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "table"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "ci-expected-red — **A GATE BATTERY'S RED ARMS, JUDGED AGAINST THE NAMED TABLE OF EXPECTED REDS; EVERY OTHER RED FAILS THE JOB** (Seedling fidelity, slice GATESUBJ — D4).",
+            "path": "scripts/procgen/ci-expected-red.mjs"
         },
         {
             "argvHelpers": [
