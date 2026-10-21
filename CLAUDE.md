@@ -204,7 +204,7 @@ The in-app runner races the whole roster against one wall-clock budget
 npm test -- --mode=test-substrates --batch=fast          # everything no other batch claims (+ the smoke rows)
 npm test -- --mode=test-substrates --batch=seedling-js   # the Seedling JS/wasm runtime rows
 npm test -- --mode=test-substrates --batch=playback-bot  # the Playback Bot rows (generated worlds played to the end, Loop mode too)
-npm test -- --mode=test-substrates --batch=apworld       # the apworld editor rows only
+npm test -- --mode=test-substrates --batch=apworld       # the apworld editor rows only (on push only when its pushPaths hit)
 npm test -- --mode=test-substrates --batch=bot-walks     # MANUAL: the real-time bot legs only
 npm test -- --mode=test-substrates --batch=noiz2sa       # MANUAL: the noiz2sa substrate rows
 npm test -- --mode=test-substrates --batch=runner        # MANUAL: runnerDemo + Runner block modes
@@ -232,6 +232,10 @@ of a manual substrate may carry `"batch": "fast"` in the substrates config, so a
 shared-code change that breaks that substrate's boot is still caught on push.
 `testBatches.js` accepts that override ONLY for a manual category's row moving to an
 on-push batch, and at most one per manual batch; deleting the line drops it.
+A batch with `pushPaths` in `testBatches.js` (today `apworld`) is on push but runs
+only when a pushed path hits its globs or the derived import closure of its rows
+(`list-test-batches.js --on-push --changed=`); `test-substrates-manual.yml` takes it
+by name (`-f batch=apworld`).
 
 **Budget headroom.** After each CI batch, `node scripts/test/check-batch-headroom.js
 --mode=test-substrates --batch=<b>` grades the newest results file of that batch:

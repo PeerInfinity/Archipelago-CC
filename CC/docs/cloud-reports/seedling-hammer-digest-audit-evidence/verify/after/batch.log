@@ -1,0 +1,13 @@
+plan-seedling-hammer-a-escape rc=0 9s
+plan-seedling-hammer-b1-approach rc=0 7s
+plan-seedling-hammer-b2-fight rc=0 9s
+plan-seedling-hammer-bw-bombstand rc=0 18s
+plan-seedling-hammer-c2-ghost rc=0 0s
+plan-seedling-hammer-d-ghostwall rc=0 1s
+plan-seedling-hammer-dd-walkkill rc=0 3s
+plan-seedling-hammer-g1-ghostkill rc=0 88s
+plan-seedling-hammer-sf-strikefloor rc=0 90s
+r9-campaign rc=0 42s
+l18-sweep rc=0 129s
+lights-solves-on rc=0 28s
+BATCH-DONE

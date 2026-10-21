@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
     TEST_BATCHES, assertRowOverrides, batchNeedsWebgpu, batchOfTest, categoryInBatch, getDefaultBatchName,
-    listBatchNames, listManualBatches, listOnPushBatches, testInBatch,
+    listBatchNames, listManualBatches, listOnPushBatches, listPathFilteredBatches, testInBatch,
 } from './testBatches.js';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
@@ -217,5 +217,18 @@ describe('testBatches', () => {
     it('the batch table is frozen', () => {
         expect(Object.isFrozen(TEST_BATCHES)).toBe(true);
         expect(Object.isFrozen(TEST_BATCHES.apworld.categories)).toBe(true);
+    });
+});
+
+describe('ci-manual-moves — a path-filtered on-push batch', () => {
+    it('apworld is the one batch with pushPaths, and it is an on-push batch', () => {
+        expect(listPathFilteredBatches()).toEqual(['apworld']);
+        expect(listOnPushBatches()).toContain('apworld');
+    });
+    it('no manual batch declares pushPaths (a manual batch never runs on push)', () => {
+        for (const name of listManualBatches()) expect(TEST_BATCHES[name].pushPaths, name).toBeUndefined();
+    });
+    it('the default batch is never path-filtered — it is where unclassified categories land', () => {
+        expect(TEST_BATCHES[getDefaultBatchName()].pushPaths).toBeUndefined();
     });
 });

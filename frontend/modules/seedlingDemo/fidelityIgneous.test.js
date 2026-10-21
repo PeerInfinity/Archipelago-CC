@@ -117,9 +117,10 @@ describe('IGNEOUS — the state machine (`Tile.as:390-433`)', () => {
 });
 
 describe('IGNEOUS — the tile on the game (D1) and in the model (D2)', () => {
-    it.skipIf(ENV.some((k) => process.env[k]))('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.igneousLava).toBe(false);
-        expect(CONTACT_FIDELITY.igneousLava).toBe(false);
+    // ⛓ planning-9's flip (⚖ user "Flip igneousLava ON", 2026-10-21): shipped OFF, ON by default since.
+    it.skipIf(ENV.some((k) => process.env[k]))('is ON by default (the flip)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.igneousLava).toBe(true);
+        expect(CONTACT_FIDELITY.igneousLava).toBe(true);
     });
 
     it.each(Object.entries(WITNESSES))('%s — OFF parts from the game at its tick; ON 0 px, the lava death included', (name, [offAt, deaths, lavaAt]) => {

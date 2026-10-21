@@ -23,6 +23,14 @@
           }
         },
         {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "tile"
+          },
+          "attr": "broken"
+        },
+        {
           "type": "any_of",
           "element_rule": {
             "type": "all_of",
@@ -156,6 +164,52 @@
             "name": "tile"
           },
           "attr": "player"
+        }
+      ]
+    }
+  },
+  "strikes": {
+    "params": [
+      "cell",
+      "tile"
+    ],
+    "body": {
+      "type": "and",
+      "conditions": [
+        {
+          "type": "compare",
+          "left": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "tile"
+            },
+            "attr": "obstacle"
+          },
+          "op": "is not",
+          "right": {
+            "type": "constant",
+            "value": null
+          }
+        },
+        {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "tile"
+          },
+          "attr": "struck"
+        },
+        {
+          "type": "not",
+          "condition": {
+            "type": "attribute",
+            "object": {
+              "type": "name",
+              "name": "tile"
+            },
+            "attr": "broken"
+          }
         }
       ]
     }
