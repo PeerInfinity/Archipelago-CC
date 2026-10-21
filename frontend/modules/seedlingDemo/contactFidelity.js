@@ -785,7 +785,7 @@ export const CONTACT_FIDELITY = {
      * prices the tiles' clocks. OFF: no tile is stepped, byte-identical. `SEEDLING_IGNEOUS_LAVA=0|1` for a node
      * measurement.
      */
-    igneousLava: false,
+    igneousLava: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
