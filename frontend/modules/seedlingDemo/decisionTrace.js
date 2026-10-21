@@ -122,6 +122,9 @@ export const KNOWN_STRATEGY_VERBS = Object.freeze([
     // `burnabletree` on the frontier), listed in the slice that first drives
     // it, for `break`'s reason.
     'burn',
+    // ⛓ Seedling fidelity ROPE (planning-9's flip): the `rope` verb (`solverBot.execRope`, a `clear-tag` on a rope's own
+    // tag, or a rope across the frontier), listed at its flip for `break`'s reason.
+    'rope',
     // ⛓ Seedling fidelity WATCHER: the `talk` verb (`solverBot.execTalk`, a
     // speaking watcher's circle on the frontier), listed in the slice that
     // first drives it, for `break`'s reason.
