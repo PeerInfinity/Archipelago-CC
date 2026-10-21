@@ -202,3 +202,62 @@ describe('⛓ EVENT GOALS — served by the GAME\'s flag (the event\'s own, not 
         expect(locationGoalServed(goal, { persistence_cleared: [] })).toBe(false);
     });
 });
+
+/**
+ * ⛓ ROPE GOAL (slice `seedling-js-rope-goal`) — a cut ROPE (`RopeStart.hit()` clears the rope's own tag) is an event
+ * like any other: `atlasEventGoal` → `solverGoalFor`'s event arm → `clear-tag {level, tag} at the pulley, obstacle
+ * rope@x,y`. No rope-specific mapping exists or is needed; the goal BINDS exactly when the solver registers a verb for
+ * `solid:rope` (fidelity ROPE), and until then is refused `no-verb` by name — the text the whole-game walk stopped on
+ * at L16. The ropes are the ROOM SOURCE's own `rope` entities (their `tag` attr), the record the shape the rules mint
+ * for them (`flag:L<level>:<tag>`, the obstacle the pulley cell, the arrival the rope's own level). Nothing is typed.
+ */
+describe('⛓ ROPE GOAL — every rope of the room source is a clear-tag event goal, bound iff its verb is registered', () => {
+    const ROPES = [];
+    for (let level = 0; level < 200; level += 1) {
+        let rec = null;
+        try { rec = SRC(level); } catch { continue; }
+        for (const e of rec?.entities ?? []) {
+            if (e.type === 'rope') ROPES.push({ level, tag: Number(e.attrs?.tag), x: e.x, y: e.y });
+        }
+    }
+    const ropeGoal = (r) => atlasEventGoal({ location: `L${r.level} flag ${r.tag}: rope@${r.x},${r.y} cleared`,
+        eventId: `flag:L${r.level}:${r.tag}`, level: r.level, tag: r.tag,
+        obstacle: { level: r.level, tag: r.tag, class: 'rope', x: r.x, y: r.y } }, r.level);
+
+    it('the room source holds ropes, each with an integer tag (the event\'s flag)', () => {
+        expect(ROPES.length).toBeGreaterThan(0);
+        for (const r of ROPES) expect(Number.isInteger(r.tag) && r.tag >= 0).toBe(true);
+    });
+
+    it('every shipped rope EVENT of the rules is one of the room source\'s ropes, at its pulley', () => {
+        for (const e of EVENTS.filter((x) => x.obstacle?.class === 'rope')) {
+            expect(ROPES).toContainEqual({ level: e.level, tag: e.tag, x: e.obstacle.x, y: e.obstacle.y });
+        }
+    });
+
+    it('registered → the exact clear-tag goal the solver admits; unregistered → no-verb BY NAME (main\'s refusal, byte-identical)', () => {
+        const { verb, registered } = clearTagVerbOf('solid:rope');
+        for (const r of ROPES) {
+            const goal = ropeGoal(r);
+            const mapped = mapIn(goal);
+            if (registered) {
+                expect(mapped).toEqual({ goal: { kind: 'clear-tag', tag: { level: r.level, tag: r.tag },
+                    at: { x: r.x, y: r.y }, obstacle: `rope@${r.x},${r.y}` } });
+                expect(assertGoal({ ...mapped.goal }, 0)).toEqual(mapped.goal);
+            } else {
+                expect(mapped.goal).toBeUndefined();
+                expect(mapped.refusal).toEqual({ kind: 'clear-tag', reason: 'no-verb', flag: { level: r.level, tag: r.tag },
+                    id: `rope@${r.x},${r.y}` });
+                expect(mapped.walker).toBe(EVENT_CLEAR_TAG_REFUSAL(goal, 'no-verb', verb
+                    ? `solid:rope selects '${verb}', which no clear-tag executor is registered for`
+                    : 'no strategy row exists for solid:rope — the catalogue names no verb that clears it'));
+            }
+        }
+    });
+
+    it('`clearTagVerbOf(solid:rope)` is the solver\'s own tables\' answer (row + executor), nothing typed here', () => {
+        const row = OBSTACLE_STRATEGIES['solid:rope'] ?? null;
+        expect(clearTagVerbOf('solid:rope')).toEqual({ verb: row,
+            registered: row !== null && Object.prototype.hasOwnProperty.call(STRATEGY_EXECUTORS, row) });
+    });
+});
