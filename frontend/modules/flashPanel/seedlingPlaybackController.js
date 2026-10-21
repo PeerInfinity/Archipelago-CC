@@ -106,6 +106,9 @@ import { GAME_STATE_EVENT_KIND } from '../procgenCore/eventRoute.js';
 // ⛓ ENCOUNTERS — data, not a model: the playthrough atlas is where an encounter location's tile is written (the
 // survey's `encounterCoords` reads the same document). The same spelling `flashSeedlingLibrary.js` imports it by.
 import SEEDLING_PLAYTHROUGH_ATLAS_DOC from './atlases/seedling-playthrough.json' with { type: 'json' };
+// ⛓ LIGHTS WIRING — import-free (the model's switches as data; the panel's closure already holds it through
+// `seedlingContactSettings.js`): a wired boss fight is walked only while its switch is ON (`BOUND_BOSS_FIGHTS`).
+import { CONTACT_FIDELITY } from '../seedlingDemo/contactFidelity.js';
 
 /** The substrate this controller walks (the default instance; J3 builds a second for the atlas rooms). */
 export const SEEDLING_PLAYBACK_SUBSTRATE = 'flash_seedling_gen';
@@ -183,6 +186,9 @@ export function resolveSeedlingAtlasGoal(target, atlas, { liveLevel = null, regi
             return goal ? { goal } : { refused: EVENT_GOAL_REFUSAL(ev) };
         }
         const e = (atlas?.entries ?? []).find((x) => x.location === name);
+        // ⛓ LIGHTS WIRING — a boss kill whose fight the solver executes (its switch ON) is the fight's `clear-tag`.
+        const boss = !e ? wiredBossOf(atlas, name) : null;
+        if (boss) return { goal: atlasBossGoal(boss, name) };
         if (!e) {
             const why = (atlas?.refused ?? []).find((r) => r.location === name)?.why ?? null;
             // ⛓ VANILLA MAP — the map names its arm (absent = the atlas arm's map, J3's shape).
@@ -340,6 +346,47 @@ export const BOSS_REPORT_REFUSAL = (r) => `"${r.location}" is a BOSS KILL (a ${r
     + 'it and the bot has no fight executor for it — there is no entity to walk onto';
 
 /**
+ * ⛓ LIGHTS WIRING (slice `seedling-js-lights-wiring`) — the boss bodies whose FIGHT the solver executes as a
+ * `clear-tag` on the kill's report address, each with the `CONTACT_FIDELITY` switch that registers its verb
+ * (`solverBot.OBSTACLE_STRATEGIES['solid:<type>']`, a switch-gated row). This file imports no model, so the rows are
+ * restated here and PINNED against the solver's tables (`seedlingBossFightBinding.test.js`: registered with the
+ * switch ON, absent with it OFF). While the switch is OFF the boss stays `BOSS_REPORT_REFUSAL`, byte for byte.
+ * ⚠ Wire only what is listed: a body whose verb is registered by default (`shieldboss` → `fight`) is a separate
+ * wiring, not this table's default.
+ */
+export const BOUND_BOSS_FIGHTS = Object.freeze({ lightbosscontroller: 'lightsBossFight' });
+
+/**
+ * ⛓ LIGHTS WIRING — a boss kill's FIGHT anchor, read off the DELIVERED room: the one entity of the report's
+ * `entityType` in its level (the vanilla arm never rewrites a boss). null when the room holds none or several.
+ */
+export function bossAnchorOf(report, rooms) {
+    const record = rooms.get(report.level)?.source?.record ?? null;
+    const hits = (record?.entities ?? []).filter((x) => x.type === report.entityType);
+    if (hits.length !== 1 || !Number.isFinite(hits[0].x) || !Number.isFinite(hits[0].y)) return null;
+    return { x: hits[0].x, y: hits[0].y };
+}
+
+/** ⛓ LIGHTS WIRING — the map's boss row for `name` whose fight is wired NOW (its switch ON), or null. */
+export function wiredBossOf(atlas, name) {
+    const b = (atlas?.bosses ?? []).find((x) => x.location === name);
+    const sw = b ? BOUND_BOSS_FIGHTS[b.entityType] : undefined;
+    return sw && CONTACT_FIDELITY[sw] === true ? b : null;
+}
+
+/**
+ * ⛓ LIGHTS WIRING — a wired boss kill's walk goal, in the EVENT goal's shape (`atlasEventGoal`): a `location` whose
+ * `event.tag` is the report address — the check the game writes when the fight ends (`locationGoalServed` reads it
+ * off the game) — and whose `event.obstacle` is the body, so the solver mapping hands its `clear-tag`
+ * (`jsRuntimeSolver.solverGoalFor`) and refuses an unregistered verb by the solver's own reason.
+ */
+export function atlasBossGoal(b, name = b.location) {
+    return { kind: 'location', level: b.level, tag: null, entityType: null, name,
+        event: { eventId: null, tag: { level: b.address.level, tag: b.address.tag }, at: { x: b.at.x, y: b.at.y },
+            obstacle: `${b.entityType}@${b.at.x},${b.at.y}` } };
+}
+
+/**
  * ⛓⛓ ENCOUNTERS — the drops the solver has an encounter EXECUTOR for: `solverBot.ENCOUNTER_EXECUTORS`'s keys
  * (L32's Bob Boss → `Fire`, L12's Witch → `Progressive Sword`, the dark sword). This file imports no model, so
  * the list is restated here and PINNED equal to the registry (`seedlingVanillaArmMap.test.js`): a new executor
@@ -405,6 +452,11 @@ export function vanillaArmPlaybackMap({ entries = [], encounters = [], reports =
     const rooms = new Map((set?.rooms ?? []).map((r) => [r.id, r]));
     const bound = [];
     const refused = reports.map((r) => ({ location: r.location, why: BOSS_REPORT_REFUSAL(r) }));
+    // ⛓ LIGHTS WIRING — the listed fights' rows (`BOUND_BOSS_FIGHTS`), each still REFUSED above: the resolve binds
+    // one only while its switch is ON (`wiredBossOf`), so entries + refused + events still account for every location.
+    const bosses = reports.filter((r) => BOUND_BOSS_FIGHTS[r.entityType] !== undefined).map((r) => ({ r, at: bossAnchorOf(r, rooms) }))
+        .filter(({ at }) => at).map(({ r, at }) => ({ location: r.location, level: r.level, entityType: r.entityType,
+            address: { ...r.address }, at }));
     for (const e of encounters) {
         if (!BOUND_ENCOUNTER_DROPS.includes(e.vanillaItem)) {
             refused.push({ location: e.location, why: ENCOUNTER_REFUSAL(e) });
@@ -431,7 +483,7 @@ export function vanillaArmPlaybackMap({ entries = [], encounters = [], reports =
     }
     const ev = runtimeEventsOf(rules);
     return { arm: RANDOMIZER_ARMS.VANILLA, entries: bound, refused: [...refused, ...ev.refused], events: ev.events, regions,
-        links: realRoomLinks(rules, regions) };
+        links: realRoomLinks(rules, regions), ...(bosses.length ? { bosses } : {}) };
 }
 
 /**
