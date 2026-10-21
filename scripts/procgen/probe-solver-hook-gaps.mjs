@@ -218,7 +218,7 @@ async function oneLeg(leg) {
     const { createJsRuntime } = await M('seedlingDemo/jsRuntimeCore.js');
     const { arrivalSolverGoal, arrivalSolveRequest } = await M('seedlingDemo/wasmArrival.js');
     const { wasmGoalRefusal } = await M('seedlingDemo/wasmPlayback.js');
-    const { ANYTIME_PASSES, PASS_STRATEGIES, replayTape, passShouldStop, createWorkClock } = await M('seedlingDemo/jsRuntimeSolver.js');
+    const { ANYTIME_PASSES, PASS_STRATEGIES, replayTape, passShouldStop, createWorkClock, solverGoalsOf } = await M('seedlingDemo/jsRuntimeSolver.js');
     const { solveSegment } = await M('seedlingDemo/solverBot.js');
     const { indexLevels, levelSourceFromAtlas } = await M('seedlingDemo/atlasSource.js');
     const MAP = JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
@@ -255,7 +255,7 @@ async function oneLeg(leg) {
             scratchPersistence: req.scratchPersistence, equips: req.equips });
         const unusable = p.adds ? PASS_STRATEGIES[p.adds](shadow) : null;
         if (unusable) { const e = new Error(`${p.adds} is not available here: ${unusable}`); e.name = 'PassSkipped'; throw e; }
-        const out = solveSegment({ run: shadow, goals: [req.solverGoal], name: req.name, boot: req.staging.boot,
+        const out = solveSegment({ run: shadow, goals: solverGoalsOf(req.solverGoal), name: req.name, boot: req.staging.boot,
             prefix: req.perTick, dashMode: p.dashMode, shouldStop, ...(fine ? { fineCheckpoints: true } : {}) });
         // the plan's keys and its trace, hashed: two configurations that plan alike agree here byte for byte
         const keys = out.perTick.slice(req.perTick.length).map((h) => [...h].sort().join('+')).join('|');
