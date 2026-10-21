@@ -1,0 +1,18 @@
+import { readFileSync } from 'node:fs';
+const R = '/home/user/Archipelago-CC/';
+const { restoreRequest } = await import(R + 'scripts/procgen/seedlingSolveRequestCodec.js');
+const { levelSourceFromAtlas } = await import(R + 'frontend/modules/seedlingDemo/atlasSource.js');
+const { solveAnytime, ANYTIME_PASSES } = await import(R + 'frontend/modules/seedlingDemo/jsRuntimeSolver.js');
+const row = readFileSync(process.argv[2], 'utf8').trim().split('\n').map((l) => JSON.parse(l)).find((r) => r.id === 505);
+const sol = (q) => { const req = restoreRequest(q.request); const { passes = ANYTIME_PASSES, source, ...tape } = req;
+  const a = solveAnytime({ ...tape, source, levelSource: levelSourceFromAtlas(source.records) }, { passes });
+  return { a, prefix: req.perTick.map((k) => [...k].sort().join('+')) }; };
+const A = sol(row.requests[0]); const B = sol(row.requests[1]);
+const a = A.a.plan.solution.map((k) => [...k].sort().join('+'));
+const b = B.a.plan.solution.map((k) => [...k].sort().join('+'));
+console.log('plan0', a.length, 'prefix1', B.prefix.length, 'plan1', b.length, 'verbs1', JSON.stringify(B.a.plan.verbs));
+const pre = B.prefix.every((k, t) => k === a[t]);
+console.log('prefix1 == plan0[0..2866)?', pre);
+const tail = a.slice(B.prefix.length);
+const diff = b.map((k, t) => (k === tail[t] ? null : `${t}:${k}|${tail[t]}`)).filter(Boolean);
+console.log('plan1 vs plan0 tail: len', b.length, tail.length, 'diffs', diff.length, diff.slice(0, 8).join(' '));
