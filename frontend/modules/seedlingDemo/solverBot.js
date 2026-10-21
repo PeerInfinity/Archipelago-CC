@@ -24350,6 +24350,10 @@ function solveSegmentUnder({
         const record = clearTagExecutor(verb)(run, perTick, resolved, {
             maxTicksPerTarget, economies, dashMode, what: `${whatCT} -> ${verb}`,
             before, walkTo, goal, equip, rewind,
+            // ⛓ fidelity BOSSFORK D1: the segment's own fork (`forkRun`, above; null without one), as the frontier arm
+            // passes it — `execLavaBoss` / `execTentacleBeast` try their policy variants on it. No other clear-tag verb
+            // reads `ctx.fork` (`bait` is the frontier's only), so a verb that does not fight a boss is unchanged.
+            fork,
         });
         for (const c of resolved.exempt ?? []) exemptions.add(c);
         // ⛓ fidelity WATCHERTALK D2: the talk is certified by the run's own `watcherTalks` row for this flag.
@@ -24685,6 +24689,8 @@ function solveSegmentUnder({
             const rec = STRATEGY_EXECUTORS[strategy](run, perTick, resolvedBlocker, {
                 maxTicksPerTarget, economies, dashMode, what: `${what} -> ${strategy}`,
                 before: null, walkTo, goal, equip, rewind,
+                // ⛓ fidelity BOSSFORK D1: the segment's fork, as the frontier arm and the clear-tag arm pass it.
+                fork,
             });
             records.push({ goal: goal.kind, strategy, ...rec });
             // ⛓ seedling-fidelity-movingwait: a paced wait is its own decision row (absent on a still one).
