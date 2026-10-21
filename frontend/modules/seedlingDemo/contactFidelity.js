@@ -778,13 +778,13 @@ export const CONTACT_FIDELITY = {
      * `solid:lavaboss` → `lavaboss` strategy executes the fight. OFF: no fight is built, the census body stays the
      * wall it always was, a press on it refuses as before and the strategy refuses by name — byte-identical.
      */
-    kingOfFireFight: false,
+    kingOfFireFight: true,
     /**
      * seedling-fidelity-bosskills D3 — THE TENTACLED BEAST (`tentacleBeast.js`, L57): the wake, the seeded
      * `Math.random` spawns (the run's declared `rng` stream, as the Owl's), the tentacles' sit window and their
      * `hitRect`, the whirlpools, the death's report `{57,0}` and the mouth Teleporter. OFF: byte-identical.
      */
-    tentacleBeastFight: false,
+    tentacleBeastFight: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
