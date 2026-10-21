@@ -8421,9 +8421,17 @@ export const INSTRUMENTS = frz({
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r1-route.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8467,11 +8475,18 @@ export const INSTRUMENTS = frz({
             ],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "clears",
                 "reach"
             ],
             "file": "plan-seedling-r2-route.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8600,10 +8615,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "reach"
             ],
             "file": "plan-seedling-r3-route.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "startsWith"
@@ -8649,11 +8671,18 @@ export const INSTRUMENTS = frz({
             ],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "reach",
                 "survey"
             ],
             "file": "plan-seedling-r4-route.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "startsWith"
@@ -8724,11 +8753,18 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "read",
                 "write"
             ],
             "file": "plan-seedling-r5-bobboss.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8758,10 +8794,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "write"
             ],
             "file": "plan-seedling-r5-bosskey.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8853,10 +8896,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "write"
             ],
             "file": "plan-seedling-r5-karlore.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8880,6 +8930,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "only",
                 "record",
                 "win",
@@ -8887,6 +8938,12 @@ export const INSTRUMENTS = frz({
             ],
             "file": "plan-seedling-r5-l37-burn.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8910,10 +8967,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "write"
             ],
             "file": "plan-seedling-r5-l40-join.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8936,9 +9000,17 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r5-l40-part0.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8962,6 +9034,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "only",
                 "record",
                 "win",
@@ -8969,6 +9042,12 @@ export const INSTRUMENTS = frz({
             ],
             "file": "plan-seedling-r5-l40-part1.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8991,9 +9070,17 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r5-l40-part5.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9016,9 +9103,17 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r5-l41-part3.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9053,9 +9148,17 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r5-l42-part4.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9084,9 +9187,17 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r5-l43-wand.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9110,10 +9221,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "write"
             ],
             "file": "plan-seedling-r5-l60-kill.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9137,10 +9255,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "write"
             ],
             "file": "plan-seedling-r5-shaft.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9164,10 +9289,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "write"
             ],
             "file": "plan-seedling-r5-swim.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9191,10 +9323,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "write"
             ],
             "file": "plan-seedling-r5-totem-entrance.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9218,10 +9357,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "write"
             ],
             "file": "plan-seedling-r5-waterfall.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9278,9 +9424,17 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r6-wblood.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9303,9 +9457,17 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r6-wdoor.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9328,9 +9490,17 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r6-wowl.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9359,9 +9529,17 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r6-wseed.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9384,9 +9562,17 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r6-wtalk.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
