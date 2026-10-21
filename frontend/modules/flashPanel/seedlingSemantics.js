@@ -33,6 +33,7 @@
 
 import { PROFILE } from '../seedlingDemo/seedlingProfile.js';
 import { ENTITY_COLLIDERS } from './seedlingEntityColliders.js';
+import { blockHolderVerdict, selfHoldTiles } from './seedlingBlockPaths.js';
 
 // --- condition algebra -------------------------------------------------------
 //
@@ -935,6 +936,7 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
 
     const unclassified = [];
     const review = [];
+    const tileTypeAt = new Map();
     const inside = (x, y) => x >= 0 && y >= 0 && x < width && y < height;
     const claim = (x, y, semantics, origin) => {
         if (inside(x, y)) claims[y * width + x].push({ semantics, origin });
@@ -956,6 +958,7 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
                 unclassified.push({ tile: [tx, ty], what: `tileset column ${Math.floor(placement[2] / SEEDLING_TILE_SIZE)}` });
                 continue;
             }
+            tileTypeAt.set(y * width + x, t);
             const base = tileSemantics(t);
             const ruled = options.tileOverride ? (options.tileOverride(t, base, level) ?? base) : base;
             claim(x, y, ruled, `tile ${TILE_TYPE_NAMES[t] ?? t}`);
@@ -979,7 +982,11 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
         for (const [tx, ty] of entitySealedTiles(entity, semantics)) {
             claim(tx - bounds.x, ty - bounds.y, semantics, `entity ${entity.type}`);
         }
-        if (semantics.opensFrom) reclosing.push({ tiles: entitySealedTiles(entity, semantics), opensFrom: semantics.opensFrom });
+        if (semantics.opensFrom) {
+            reclosing.push({
+                tiles: entitySealedTiles(entity, semantics), opensFrom: semantics.opensFrom, heldBy: semantics.heldBy ?? null,
+            });
+        }
         for (const [tx, ty] of entityStrandedTiles(entity, semantics)) {
             if (!inside(tx - bounds.x, ty - bounds.y)) continue;
             review.push({
@@ -1054,9 +1061,26 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
         const arrivals = new Set((arrivalTiles ?? []).map(([tx, ty]) => (ty - bounds.y) * width + (tx - bounds.x)));
         const OPP = { N: 'S', S: 'N', E: 'W', W: 'E' };
         const STEPS = [['N', 0, -1], ['E', 1, 0], ['S', 0, 1], ['W', -1, 0]];
-        for (const { tiles, opensFrom } of reclosing) {
+        const closedCells = new Set(reclosing.flatMap(({ tiles }) => tiles
+            .filter(([tx, ty]) => inside(tx - bounds.x, ty - bounds.y))
+            .map(([tx, ty]) => (ty - bounds.y) * width + (tx - bounds.x))));
+        for (const { tiles, opensFrom, heldBy } of reclosing) {
             const lockCells = new Set(tiles.filter(([tx, ty]) => inside(tx - bounds.x, ty - bounds.y))
                 .map(([tx, ty]) => (ty - bounds.y) * width + (tx - bounds.x)));
+            // ⛓ RULES block-path — the button is held by a BODY, not by the
+            // player (`seedlingBlockPaths.js`). Where the room's census decides
+            // it, an entry costs what putting a block on a button costs from
+            // there; otherwise (named in `blockHolderVerdict`) the player-reach
+            // price below stands.
+            const verdict = heldBy ? blockHolderVerdict({ width, height, cells }, {
+                heldBy,
+                holders: opensFrom.map(([tx, ty]) => [tx - bounds.x, ty - bounds.y]),
+                lockCells,
+                closedCells,
+                tileTypes: tileTypeAt,
+                keyOf: conditionKey,
+            }) : null;
+            const selfHold = selfHoldTiles(opensFrom.map(([tx, ty]) => [tx - bounds.x, ty - bounds.y]), lockCells, width);
             const standable = (i) => !lockCells.has(i) && !['wall', 'sink', 'manual'].includes(cells[i].kind);
             const byKey = new Map();
             const keysOf = (conds) => conds.map((c) => {
@@ -1138,7 +1162,19 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
                     const ny = y - dy;
                     const n = ny * width + nx;
                     if (inside(nx, ny) && lockCells.has(n)) continue;
-                    const sets = inside(nx, ny) ? labels.get(n) ?? [] : [];
+                    // Decided: the block paths REPLACE the player-reach labels,
+                    // except from a button beside the lock, which the player
+                    // holds and steps off into it (none = no holder from here,
+                    // priced as below).
+                    const sets = !inside(nx, ny) ? []
+                        : verdict?.decided && !verdict.search.entries(n).refused ? [
+                            ...verdict.search.entries(n).sets.map((set) => set.map((k) => {
+                                byKey.set(k, verdict.search.byKey.get(k));
+                                return k;
+                            })),
+                            ...(selfHold.has(n) ? labels.get(n) ?? [] : []),
+                        ]
+                            : labels.get(n) ?? [];
                     if (sets.some((set) => set.length === 0)) continue;
                     if (sets.length === 0 && inside(nx, ny) && standable(n) && !farSideHasArrival(n)) continue;
                     cell.enter ??= {};

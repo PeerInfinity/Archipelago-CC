@@ -40,7 +40,8 @@
 //
 // Headless-safe: no top-level await, no literal node: imports.
 
-import { allOf, anyOf, flag, key, tileTypeForPlacement } from './seedlingSemantics.js';
+import { allOf, anyOf, entitySealedTiles, entitySemantics, flag, key, tileTypeForPlacement } from './seedlingSemantics.js';
+import { PUSHABLE_KINDS } from './seedlingBlockPaths.js';
 
 /**
  * ⛔ THE WEAPON DISJUNCTION, and it is the ONE conservative approximation in
@@ -166,6 +167,63 @@ export function buildGroupOpeners(mapDoc, tileSize = 16) {
             if (latching) row.latching = true;
             else row.holders.push([Math.floor(e.x / tileSize), Math.floor(e.y / tileSize)]);
         }
+    }
+    return out;
+}
+
+/**
+ * ⛓ RULES block-path — WHO CAN HOLD A RE-CLOSING LOCK'S BUTTON, per level.
+ *
+ * The re-closing ruling below prices an entry at "the player reaches a
+ * button". That is not the game: the player cannot hold a button and cross its
+ * lock (the 4x5 box overlaps no button hitbox and a different 16x16 lock tile
+ * at once — `seedlingBlockPaths.js` has the arithmetic and the citations), so
+ * the holder is another body. ⚖ Enemies are not holders (the user,
+ * 2026-10-20: "Enemies don't count"), so the bodies are the PUSHABLE BLOCKS and the rope-opened FALLING ROCKS:
+ *   `blocks`  — every pushable (`PUSHABLE_KINDS`), with the claim its own start
+ *               cell carries (a fire/spear block is a gated cell);
+ *   `pulser`  — a Pulser stands in the room, a second arm that moves a FIRE
+ *               block with no item (`Pulser.as:100`);
+ *   `fallers` — every `fallrock` opened only by ropes: its landing tile and
+ *               each rope's tiles and cutting condition (`FallRock.as:31-38`).
+ * `buildSeedlingRegionGrid` prices an entry by the block paths where
+ * `blockHolderVerdict` decides it, and keeps the player-reach price, by name,
+ * where it does not.
+ *
+ * @returns {Map<number, {blocks:object[], pulser:boolean, fallers:object[]}>}
+ */
+export function buildBlockHolders(mapDoc, { tileSize = 16 } = {}) {
+    const groups = buildGroupOpeners(mapDoc, tileSize);
+    const out = new Map();
+    for (const level of mapDoc?.levels ?? []) {
+        const entities = level.entities ?? [];
+        const reclosing = entities.some((e) => {
+            const g = groups.get(`${level.level}:${Number(e.attrs?.tset)}`);
+            return RECLOSING_LOCK_CLASSES.has(e.type) && Number(e.attrs?.tset) >= 0 && g && !g.latching && g.holders.length > 0;
+        });
+        if (!reclosing) continue;
+        out.set(level.level, {
+            blocks: entities.filter((e) => PUSHABLE_KINDS[e.type]).map((e) => ({
+                tx: Math.floor(e.x / tileSize),
+                ty: Math.floor(e.y / tileSize),
+                kind: e.type,
+                condition: entitySemantics(e)?.condition ?? null,
+            })),
+            pulser: entities.some((e) => e.type === 'pulser'),
+            fallers: entities.filter((e) => e.type === 'fallrock').flatMap((e) => {
+                const opener = entities.filter((o) => o !== e && Number(o.attrs?.tset) === Number(e.attrs?.tset)
+                    && !RECLOSING_LOCK_CLASSES.has(o.type) && !['fallrock', 'fallrocklarge', 'cover'].includes(o.type));
+                if (opener.length === 0 || !opener.every((o) => o.type === 'rope')) return [];
+                return [{
+                    tx: Math.floor(e.x / tileSize),
+                    ty: Math.floor(e.y / tileSize),
+                    triggers: opener.map((o) => {
+                        const sem = entitySemantics(o);
+                        return { tiles: entitySealedTiles(o, sem), condition: sem?.condition ?? null };
+                    }),
+                }];
+            }),
+        });
     }
     return out;
 }
@@ -513,8 +571,10 @@ function lockRuling(entity, ctx) {
         // reach one of `opensFrom` freely.
         const group = ctx?.groupOpeners?.get(`${ctx.level}:${tSet}`);
         if (RECLOSING_LOCK_CLASSES.has(entity.type) && group && !group.latching && group.holders.length > 0) {
+            const heldBy = ctx?.blockHolders?.get(ctx.level);
             return {
                 kind: 'directional', opensFrom: group.holders, cite: RECLOSING_LOCK.cite, why: RECLOSING_LOCK.why,
+                ...(heldBy ? { heldBy } : {}),
             };
         }
         return OPEN(
