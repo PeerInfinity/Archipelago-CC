@@ -4597,7 +4597,7 @@
       "module": "frontend/modules/seedlingDemo/igneousLava.js",
       "line": 51,
       "class": "seedling",
-      "form": "predicate",
+      "form": "geometry-query",
       "files": {
         "dangerMap.js": 2
       },
