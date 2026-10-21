@@ -235,7 +235,14 @@ describe('⛓ ROPE GOAL — every rope of the room source is a clear-tag event g
         }
     });
 
-    it('registered → the exact clear-tag goal the solver admits; unregistered → no-verb BY NAME (main\'s refusal, byte-identical)', () => {
+    // ⛓ fidelity ROPE: the verb is a `switchGatedRow` of the solver's tables (`CONTACT_FIDELITY.ropeCutVerb`), so
+    // `clearTagVerbOf` reads it with no mirror line — both arms are pinned under the switch, OFF and ON.
+    it.each([false, true])('ropeCutVerb %s: the verb is registered exactly while the switch is ON', (on) => {
+        expect(withContactFidelity({ ropeCutVerb: on }, () => clearTagVerbOf('solid:rope')))
+            .toEqual(on ? { verb: 'rope', registered: true } : { verb: null, registered: false });
+    });
+
+    it.each([false, true])('ropeCutVerb %s: registered → the exact clear-tag goal the solver admits; unregistered → no-verb BY NAME (main\'s refusal, byte-identical)', (on) => withContactFidelity({ ropeCutVerb: on }, () => {
         const { verb, registered } = clearTagVerbOf('solid:rope');
         for (const r of ROPES) {
             const goal = ropeGoal(r);
@@ -253,11 +260,11 @@ describe('⛓ ROPE GOAL — every rope of the room source is a clear-tag event g
                     : 'no strategy row exists for solid:rope — the catalogue names no verb that clears it'));
             }
         }
-    });
+    }));
 
-    it('`clearTagVerbOf(solid:rope)` is the solver\'s own tables\' answer (row + executor), nothing typed here', () => {
+    it.each([false, true])('ropeCutVerb %s: `clearTagVerbOf(solid:rope)` is the solver\'s own tables\' answer (row + executor), nothing typed here', (on) => withContactFidelity({ ropeCutVerb: on }, () => {
         const row = OBSTACLE_STRATEGIES['solid:rope'] ?? null;
         expect(clearTagVerbOf('solid:rope')).toEqual({ verb: row,
-            registered: row !== null && Object.prototype.hasOwnProperty.call(STRATEGY_EXECUTORS, row) });
-    });
+            registered: row !== null && typeof STRATEGY_EXECUTORS[row] === 'function' });
+    }));
 });
