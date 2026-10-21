@@ -49,10 +49,11 @@
 import {
     isFloor, getObstacle, getExitAt, unposKey,
     INPUT_N, INPUT_S, INPUT_E, INPUT_W, INPUT_WAIT,
+    TURN_PREFIX, USE_PREFIX, hasItemActions, mazeVisitedKey, step, worldInputs,
 } from './mazeRoomEngine.js';
 import { isObstacleCleared } from '../shared/procgen/library.js';
 import { validateMove as validateMoveAgainstHazards } from '../shared/procgen/contentModules/hazardRuntime.js';
-import { moveEntry, waitEntry } from './mazeKeys.js';
+import { moveEntry, waitEntry, turnEntry, useEntry } from './mazeKeys.js';
 
 /**
  * @param {Object} world - maze world (width, height, tiles, exits, etc.)
@@ -156,6 +157,89 @@ export function stepsToActions(steps) {
         else if (dx === 0 && dy === 1) dir = 'S';
         else if (dx === 0 && dy === -1) dir = 'N';
         if (dir) out.push(moveEntry(dir));
+    }
+    return out;
+}
+
+/**
+ * ⛓⛓ ITEM ACTIONS — **PLAN STRIKES** (⚖ user, 2026-10-21: the autopather
+ * inserts turn + use to break rocks on its way). The tile BFS above walks a
+ * grid; a rock that a strike opens is not a tile fact but STATE (`facing`,
+ * per-visit `broken`), so this plans over the ENGINE ITSELF: a BFS whose nodes
+ * are `step`'s states (de-duplicated by `mazeVisitedKey`) and whose edges are
+ * `worldInputs(world)` — moves, turns and the world's uses. The plan it
+ * returns is therefore exactly a plan `step` accepts (blocks included), and
+ * the shortest one in inputs.
+ *
+ * ⛔ Item-action worlds only (`null` elsewhere — callers keep `findPath`), and
+ * no hazards: a time-expanded state space is the tile planner's, and an
+ * item-action world with hazards is refused BY NAME rather than planned
+ * blind. Other exits are dead ends when `excludeOtherExits` (as in `findPath`).
+ *
+ * @param {object} world
+ * @param {object} state the state to plan FROM (its facing / broken / blocks count)
+ * @param {object} target any `findPath` target kind but `closestUnexplored`
+ * @param {object} [opts]
+ * @param {*} [opts.inventory] the playback inventory (`step`'s override)
+ * @param {object} [opts.clearanceOpts]
+ * @param {boolean} [opts.excludeOtherExits]
+ * @param {number} [opts.cap] state cap (default 200000) — over it, `null`
+ * @returns {{inputs: string[], length: number, end: {x:number,y:number}}|null}
+ */
+export function planItemActions(world, state, target, opts = {}) {
+    if (!hasItemActions(world) || !state) return null;
+    if (Array.isArray(world.hazards) && world.hazards.length > 0) {
+        throw new Error('planItemActions: this item-action world has hazards; '
+            + 'the engine-state planner does not model hazard timing');
+    }
+    const isGoal = makeGoalPredicate(world, target, opts);
+    if (!isGoal) return null;
+    const { inventory, clearanceOpts, excludeOtherExits = false, cap = 200000 } = opts;
+    const at = state.player_pos;
+    if (isGoal(at.x, at.y)) return { inputs: [], length: 0, end: { x: at.x, y: at.y } };
+    const inputs = worldInputs(world);
+    const startKey = mazeVisitedKey(state);
+    const parent = new Map([[startKey, null]]);
+    const queue = [[startKey, state]];
+    for (let head = 0; head < queue.length; head++) {
+        const [key, s] = queue[head];
+        for (const input of inputs) {
+            const next = step(world, s, input, inventory, clearanceOpts);
+            if (next === null) continue;
+            const k = mazeVisitedKey(next);
+            if (parent.has(k)) continue;
+            parent.set(k, { from: key, input });
+            const p = next.player_pos;
+            if (isGoal(p.x, p.y)) {
+                const plan = [];
+                for (let link = parent.get(k); link !== null; link = parent.get(link.from)) {
+                    plan.push(link.input);
+                }
+                plan.reverse();
+                return { inputs: plan, length: plan.length, end: { x: p.x, y: p.y } };
+            }
+            // A different exit tile ends the walk there (the crossing IS the arrival).
+            if (excludeOtherExits && getExitAt(world, p.x, p.y) !== null) continue;
+            queue.push([k, next]);
+        }
+        if (parent.size > cap) return null;
+    }
+    return null;
+}
+
+/**
+ * Engine inputs → queue entries: the inverse of the executor's mapping, so a
+ * strike plan lands in the queue as the same verbs a player would press.
+ */
+export function inputsToEntries(inputs) {
+    const out = [];
+    for (const input of inputs ?? []) {
+        if (input === INPUT_WAIT) out.push(waitEntry());
+        else if (typeof input === 'string' && input.startsWith(TURN_PREFIX)) {
+            out.push(turnEntry(input.slice(TURN_PREFIX.length)));
+        } else if (typeof input === 'string' && input.startsWith(USE_PREFIX)) {
+            out.push(useEntry(input.slice(USE_PREFIX.length)));
+        } else out.push(moveEntry(input));
     }
     return out;
 }

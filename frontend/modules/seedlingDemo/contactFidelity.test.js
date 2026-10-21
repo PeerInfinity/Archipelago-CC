@@ -189,12 +189,17 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity L40GUARD: `guardApproachStance` (D2), `coveredGoalRefusal` (D3), `shakeBandMoot` and
             // `spinnerSwingLineOfSight` (D4) shipped OFF; ⛓ planning-9's flip (⚖ user "Flip all four", 2026-10-19) turns them ON.
             guardApproachStance: true, coveredGoalRefusal: true, shakeBandMoot: true, spinnerSwingLineOfSight: true,
-            // ⛓ fidelity IGNEOUS D2: `igneousLava` (the type-31 tile crumbles to lava) ships OFF.
-            igneousLava: false,
+            // ⛓ fidelity IGNEOUS D2: `igneousLava` (the type-31 tile crumbles to lava) shipped OFF;
+            // ⛓ planning-9's flip (⚖ user "Flip igneousLava ON", 2026-10-21) turns it ON.
+            igneousLava: true,
             // ⛓ fidelity LIGHTS (wave 20): the L69 fight's model and verb, OFF.
             lightsBossFight: false,
             // ⛓ seedling-fidelity-bosskills: the King of Fire's and the Tentacled Beast's fights ship OFF.
-            kingOfFireFight: false, tentacleBeastFight: false });
+            kingOfFireFight: false, tentacleBeastFight: false,
+            // ⛓ fidelity L1516 D2: `chestProbeLineEnd` (a chest's probe line stops at px+11), OFF.
+            chestProbeLineEnd: false,
+            // ⛓ fidelity L1516 D3: `enclosedPitCorner` (an enclosed pit entered across a corner), OFF.
+            enclosedPitCorner: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

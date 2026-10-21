@@ -59,6 +59,49 @@ export const INPUT_W = 'W';
 export const INPUT_WAIT = 'WAIT';
 export const INPUTS = [INPUT_N, INPUT_S, INPUT_E, INPUT_W];
 
+// ⛓⛓ ITEM ACTIONS (slice tile-primitives-item-actions, ⚖ 2026-10-21). Two
+// input FAMILIES beside the four moves, spelled as strings so every surface
+// that already carries an input (the visualizer's plan, the autopather's
+// output, a recording) carries these unchanged:
+//   `TURN_<dir>` — face <dir> without moving (⚖ "Shift + arrow"); a turn passes.
+//   `USE:<id>`   — use the `action_lib` entry <id> on the FACING cell.
+// ⛔ Both exist ONLY on a world with an `action_lib` (`hasItemActions`). On any
+// other world `step` refuses them as it refuses `'NE'`, and no state there
+// carries `facing` — so visited keys, recordings and queues of every existing
+// world stay byte-identical (the blocks precedent, ⚖ arc 2 ruling 5).
+export const TURN_PREFIX = 'TURN_';
+export const USE_PREFIX = 'USE:';
+/** The default facing of a fresh state on an item-action world. */
+export const DEFAULT_FACING = INPUT_S;
+/** The one primitive an `action_lib` entry may name in v1. */
+export const PRIMITIVE_STRIKE = 'strike';
+
+/** `TURN_<dir>` for one of N/E/S/W. */
+export function turnInput(dir) { return `${TURN_PREFIX}${dir}`; }
+
+/** `USE:<actionId>` for an `action_lib` id. */
+export function useInput(actionId) { return `${USE_PREFIX}${actionId}`; }
+
+/** True iff this world has item actions — the switch for `facing` / `broken`. */
+export function hasItemActions(world) {
+    return !!world?.actionLib && Object.keys(world.actionLib).length > 0;
+}
+
+/**
+ * Every input `step` can accept on this world: the four moves, plus — on an
+ * item-action world only — the four turns and one use per `action_lib` entry
+ * (sorted by id). A search that branches on these is a search over item
+ * actions; on any other world this IS `INPUTS`.
+ */
+export function worldInputs(world) {
+    if (!hasItemActions(world)) return INPUTS;
+    return [
+        ...INPUTS,
+        ...INPUTS.map(turnInput),
+        ...Object.keys(world.actionLib).sort().map(useInput),
+    ];
+}
+
 const DELTAS = {
     [INPUT_N]: { dx: 0, dy: -1 },
     [INPUT_S]: { dx: 0, dy: 1 },
@@ -164,6 +207,9 @@ export function createWorld(width, height, opts = {}) {
         blocks: new Map(),
         buttons: new Map(),
         buttonLib: opts.buttonLib ?? {},
+        // ITEM ACTIONS: `{[actionId]: {item, primitive:'strike', condition, key}}`.
+        // Empty on every world nobody gave one, which keeps item actions off.
+        actionLib: opts.actionLib ?? {},
         itemLib: opts.itemLib ?? DEFAULT_ITEMS,
         obstacleLib: opts.obstacleLib ?? DEFAULT_OBSTACLES,
     };
@@ -265,6 +311,7 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     // Buttons have no shared base library (every id is per-instance), so the
     // sidecar's entries ARE the library unless a caller supplies a base.
     const buttonLib = { ...(opts.baseButtonLib ?? {}), ...(sidecar.buttonLib ?? {}) };
+    const actionLib = checkActionLib(sidecar.action_lib, 'deserializeMazeWorld');
 
     // Multi-exit-aware load with legacy single-exit shorthand.
     let exitsInput;
@@ -297,6 +344,7 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
         itemLib,
         obstacleLib,
         buttonLib,
+        actionLib,
     });
 
     world.tiles.set(tiles);
@@ -446,6 +494,29 @@ export function clearButton(world, x, y) {
 }
 
 /**
+ * ⛓ The `action_lib` sidecar field, CHECKED — the one reader both level
+ * loaders (`deserializeMazeWorld`, procgenMaze's `deserializeMazeLevel`) call.
+ * Absent → `{}` (no item actions). ⛔ An entry naming a primitive other than
+ * `strike` is refused BY NAME rather than loaded as a use that does nothing.
+ */
+export function checkActionLib(lib, who) {
+    if (lib === undefined || lib === null) return {};
+    if (typeof lib !== 'object' || Array.isArray(lib)) {
+        throw new Error(`${who}: "action_lib" must be an object of action entries, got ${JSON.stringify(lib)}`);
+    }
+    for (const [id, entry] of Object.entries(lib)) {
+        if (!entry || typeof entry !== 'object') {
+            throw new Error(`${who}: action_lib.${id} must be an object`);
+        }
+        if (entry.primitive !== PRIMITIVE_STRIKE) {
+            throw new Error(`${who}: action_lib.${id} names primitive ${JSON.stringify(entry.primitive)}; `
+                + `only '${PRIMITIVE_STRIKE}' is modelled`);
+        }
+    }
+    return { ...lib };
+}
+
+/**
  * The sidecar fields for blocks / buttons / the button library — the WRITE
  * side of what deserializeMazeWorld reads back.
  *
@@ -484,6 +555,9 @@ export function serializeMazeEntities(world) {
     }
     if (Object.keys(world.buttonLib ?? {}).length) {
         out.buttonLib = { ...world.buttonLib };
+    }
+    if (hasItemActions(world)) {
+        out.action_lib = { ...world.actionLib };
     }
     return out;
 }
@@ -591,6 +665,14 @@ export function createState(world) {
     if (world.blocks?.size) {
         state.blocks = [...world.blocks.keys()].sort();
     }
+    // ⛓ ITEM ACTIONS — the same "absence is the switch" rule as `blocks`:
+    // `facing` (one of N/E/S/W) and `broken` (a SORTED array of posKeys of the
+    // obstacles struck down THIS VISIT — ⚖ per-visit, like block positions;
+    // persistence is a later per-game knob) exist only on an item-action world.
+    if (hasItemActions(world)) {
+        state.facing = world.startFacing ?? DEFAULT_FACING;
+        state.broken = [];
+    }
     return state;
 }
 
@@ -601,6 +683,64 @@ function cloneState(state) {
         inventory: new Set(state.inventory),
     };
     if (state.blocks !== undefined) next.blocks = state.blocks.slice();
+    if (state.facing !== undefined) next.facing = state.facing;
+    if (state.broken !== undefined) next.broken = state.broken.slice();
+    return next;
+}
+
+/**
+ * The obstacle id standing SHUT at (x, y) for this inventory, or `null` — the
+ * one clearance question `step` and `whyBlocked` both ask. ⛓ An obstacle in
+ * `state.broken` is open whatever its `clear_set` says.
+ */
+function shutObstacleAt(world, state, x, y, inv, clearanceOpts) {
+    const obstacleId = getObstacle(world, x, y);
+    if (!obstacleId) return null;
+    if (state.broken !== undefined && state.broken.includes(posKey(x, y))) return null;
+    return isObstacleCleared(obstacleId, inv, world.obstacleLib, clearanceOpts) ? null : obstacleId;
+}
+
+/** The cell the player faces, or `null` when the state carries no facing. */
+export function facingCell(state) {
+    const d = DELTAS[state?.facing];
+    if (!d) return null;
+    return { x: state.player_pos.x + d.dx, y: state.player_pos.y + d.dy };
+}
+
+/**
+ * ⛓ STRIKE — the posKey a `strike` with `actionId` would break from this
+ * state, or `null` when it hits nothing it breaks (⚖ "use at air" is LEGAL —
+ * a turn passes). It breaks the facing cell's obstacle iff that obstacle's
+ * library entry lists the action in `struck_by` and it is not broken already.
+ *
+ * ⚠ The entry's `condition` names the HELPER the scripted step asks
+ * (`tileSpike/`, ⚖ Q2 iii); this native path is that helper's built-in
+ * default (⚖ Q6 "native default") and the parity suite holds the two equal.
+ */
+export function strikeTarget(world, state, actionId) {
+    const cell = facingCell(state);
+    if (cell === null) return null;
+    const obstacleId = getObstacle(world, cell.x, cell.y);
+    if (!obstacleId) return null;
+    const struckBy = world.obstacleLib?.[obstacleId]?.struck_by;
+    if (!Array.isArray(struckBy) || !struckBy.includes(actionId)) return null;
+    const key = posKey(cell.x, cell.y);
+    if (state.broken?.includes(key)) return null;
+    return key;
+}
+
+/**
+ * ⚖ "Refusal + facing": a MOVE that `step` refused still turns the player to
+ * face it on an item-action world. `step` keeps returning `null` (so
+ * `whyBlocked` ⇔ `step` holds) and this returns the turned state — only
+ * `facing` differs; the turn counter is the refusal's caller's (the panel's
+ * hazard tick), as for every refusal. `null` on a world without item actions
+ * or for an input that is not a move.
+ */
+export function facingAfterBump(state, input) {
+    if (state?.facing === undefined || !DELTAS[input]) return null;
+    const next = cloneState(state);
+    next.facing = input;
     return next;
 }
 
@@ -727,6 +867,32 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
         waited.turn += 1;
         return waited;
     }
+    if (typeof input === 'string' && input.startsWith(TURN_PREFIX)) {
+        const dir = input.slice(TURN_PREFIX.length);
+        if (state.facing === undefined || !DELTAS[dir]) return null;
+        const turned = cloneState(state);
+        turned.facing = dir;
+        turned.turn += 1;
+        return turned;
+    }
+    if (typeof input === 'string' && input.startsWith(USE_PREFIX)) {
+        const actionId = input.slice(USE_PREFIX.length);
+        const entry = state.facing === undefined ? undefined : world.actionLib?.[actionId];
+        if (!entry) return null;
+        if (entry.item) {
+            const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
+            const inv = effectiveInventory(world, carried, state.player_pos, state.blocks);
+            if (!inv.has(entry.item)) return null;
+        }
+        const used = cloneState(state);
+        used.turn += 1;
+        const hit = strikeTarget(world, state, actionId);
+        if (hit !== null) {
+            used.broken.push(hit);
+            used.broken.sort();
+        }
+        return used;
+    }
     const delta = DELTAS[input];
     if (!delta) return null;
     const nx = state.player_pos.x + delta.dx;
@@ -734,8 +900,7 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
     if (!isFloor(world, nx, ny)) return null;
     const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
     const inv = effectiveInventory(world, carried, state.player_pos, state.blocks);
-    const obstacleId = getObstacle(world, nx, ny);
-    if (obstacleId && !isObstacleCleared(obstacleId, inv, world.obstacleLib, clearanceOpts)) {
+    if (shutObstacleAt(world, state, nx, ny, inv, clearanceOpts) !== null) {
         return null;
     }
     let pushedFrom = null;
@@ -748,9 +913,7 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
             if (!isFloor(world, bx, by)) return null;
             const beyondKey = posKey(bx, by);
             if (state.blocks.includes(beyondKey)) return null;
-            const beyondObstacle = getObstacle(world, bx, by);
-            if (beyondObstacle
-                && !isObstacleCleared(beyondObstacle, inv, world.obstacleLib, clearanceOpts)) {
+            if (shutObstacleAt(world, state, bx, by, inv, clearanceOpts) !== null) {
                 return null;
             }
             pushedFrom = targetKey;
@@ -761,6 +924,7 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
     next.player_pos.x = nx;
     next.player_pos.y = ny;
     next.turn += 1;
+    if (next.facing !== undefined) next.facing = input;
     if (pushedFrom !== null) {
         next.blocks[next.blocks.indexOf(pushedFrom)] = pushedTo;
         next.blocks.sort();
@@ -821,7 +985,11 @@ function shutBecause(world, obstacleId, inv) {
         return `${head} — its clear_rule is not satisfied`;
     }
     const combos = entry.clear_set ?? [];
-    if (combos.length === 0) return `${head} — nothing clears it`;
+    if (combos.length === 0) {
+        return Array.isArray(entry.struck_by) && entry.struck_by.length > 0
+            ? `${head} — strike it (${entry.struck_by.join(' or ')})`
+            : `${head} — nothing clears it`;
+    }
     let best = null;
     for (const combo of combos) {
         const missing = combo.filter((id) => !inv.has(id));
@@ -849,6 +1017,27 @@ export function whyBlocked(world, state, input, inventoryOverride, clearanceOpts
     if (!world || !state) return 'no world or state loaded';
     // ⛓ S2a: a WAIT is always legal — the engine owns "a turn passes".
     if (input === INPUT_WAIT) return null;
+    const isTurn = typeof input === 'string' && input.startsWith(TURN_PREFIX);
+    const isUse = typeof input === 'string' && input.startsWith(USE_PREFIX);
+    if ((isTurn || isUse) && state.facing === undefined) {
+        return `'${input}' is not an input on this world — it has no action_lib`;
+    }
+    if (isTurn) {
+        // ⛓ A turn to any of N/E/S/W is always legal (⚖ "Costs a turn").
+        return DELTAS[input.slice(TURN_PREFIX.length)] ? null : `'${input}' is not an input`;
+    }
+    if (isUse) {
+        const actionId = input.slice(USE_PREFIX.length);
+        const entry = world.actionLib?.[actionId];
+        if (!entry) return `no action '${actionId}' in this world's action_lib`;
+        if (entry.item) {
+            const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
+            const inv = effectiveInventory(world, carried, state.player_pos, state.blocks);
+            if (!inv.has(entry.item)) return `use ${actionId} needs ${entry.item}`;
+        }
+        // ⚖ "Use at air" is legal — a swing that hits nothing still passes a turn.
+        return null;
+    }
     const delta = DELTAS[input];
     if (!delta) return `'${input}' is not an input`;
     const nx = state.player_pos.x + delta.dx;
@@ -857,8 +1046,8 @@ export function whyBlocked(world, state, input, inventoryOverride, clearanceOpts
     if (!isFloor(world, nx, ny)) return `wall at (${nx},${ny})`;
     const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
     const inv = effectiveInventory(world, carried, state.player_pos, state.blocks);
-    const obstacleId = getObstacle(world, nx, ny);
-    if (obstacleId && !isObstacleCleared(obstacleId, inv, world.obstacleLib, clearanceOpts)) {
+    const obstacleId = shutObstacleAt(world, state, nx, ny, inv, clearanceOpts);
+    if (obstacleId !== null) {
         return shutBecause(world, obstacleId, inv);
     }
     if (state.blocks !== undefined && state.blocks.includes(posKey(nx, ny))) {
@@ -870,8 +1059,8 @@ export function whyBlocked(world, state, input, inventoryOverride, clearanceOpts
         }
         if (!isFloor(world, bx, by)) return `${cannot}: beyond is a wall`;
         if (state.blocks.includes(posKey(bx, by))) return `${cannot}: beyond is a block`;
-        const beyond = getObstacle(world, bx, by);
-        if (beyond && !isObstacleCleared(beyond, inv, world.obstacleLib, clearanceOpts)) {
+        const beyond = shutObstacleAt(world, state, bx, by, inv, clearanceOpts);
+        if (beyond !== null) {
             return `${cannot}: ${shutBecause(world, beyond, inv)}`;
         }
     }
@@ -1004,7 +1193,12 @@ export function mazeVisitedKey(state) {
     const base = state.inventory.size === 0
         ? `${state.player_pos.x},${state.player_pos.y}|`
         : `${state.player_pos.x},${state.player_pos.y}|${[...state.inventory].sort().join(',')}`;
-    return state.blocks === undefined ? base : `${base}|${state.blocks.join(';')}`;
+    const withBlocks = state.blocks === undefined ? base : `${base}|${state.blocks.join(';')}`;
+    // ⛓ ITEM ACTIONS append `|f<dir>|<broken>` ONLY when the state has a facing,
+    // so a key on any world without an `action_lib` is unchanged, byte for byte.
+    return state.facing === undefined
+        ? withBlocks
+        : `${withBlocks}|f${state.facing}|${state.broken.join(';')}`;
 }
 
 export const bfsSolver = makeBfsSolver({

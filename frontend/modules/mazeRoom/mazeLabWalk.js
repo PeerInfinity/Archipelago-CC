@@ -127,7 +127,10 @@ export function createWalkSession(state) {
         let reason = null;
         const outcome = queue.stepOne((e) => {
             const out = executeMazeEntry(world, engine, e);
-            if (out.next === null) throw new Error(out.reason);
+            if (out.next === null) {
+                if (out.faced) engine = out.faced;   // ⚖ "Refusal + facing"
+                throw new Error(out.reason);
+            }
             engine = out.next;
         });
         if (outcome.state === ActionState.FAILED) {

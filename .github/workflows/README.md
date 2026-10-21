@@ -27,6 +27,17 @@ This document describes the GitHub Actions workflows used for testing and CI/CD 
   `scripts/test/python-tests-needed.py` (pinned by `test/test_python_tests_needed.py`). `main` and pull requests
   always run the matrix, and so does any push whose changed-file list cannot be read.
 
+## Checks moved off push (2026-10-21, the user's ruling; each keeps a manual or scheduled home)
+
+| Check | Was | Now | Run it |
+|---|---|---|---|
+| CodeQL (`codeql-analysis.yml`) | push to `main` + PRs + weekly | weekly cron (Mon 08:44 UTC) + dispatch | `gh workflow run codeql-analysis.yml -R PeerInfinity/Archipelago-CC` |
+| Python Windows 3.11 / Windows 3.13 / macOS 3.13 legs (`unittests.yml`) | every matrix run | pull requests + a `full_matrix` dispatch; pushes run the Linux legs and hosting | `gh workflow run unittests.yml -R PeerInfinity/Archipelago-CC --ref <branch> -f full_matrix=true` |
+| `gate: seedling-wasm-ship` (JSUT browser shard) | every push | its own shard, in the matrix only when a pushed path hits its filter (`@ci-paths` in the gate + `scripts/procgen/ciPathFilter.js`'s derived inputs), and on every dispatch | `gh workflow run unittests_frontend.yml -R PeerInfinity/Archipelago-CC --ref <branch>` |
+| test-substrates `apworld` batch (`test-templates.yml`) | every main push | only when a pushed path hits its `pushPaths` or the derived import closure of its rows (`list-test-batches.js --on-push --changed=`) | `gh workflow run test-substrates-manual.yml -R PeerInfinity/Archipelago-CC --ref <branch> -f batch=apworld` |
+| `identity: empty pairs c3/c6`, `carved pairs c4`; the `solve-seedling-*` chain `--check`s | headless/browser arms | the box (their instruments declare `@ci-box`) | `node scripts/procgen/standing-values.mjs --write --key='<row key>'` |
+| 89 `producer: plan-seedling-* --check` arms, `identity: generated set` | headless/browser arms | deleted as duplicates: the gating `Producer --checks` job and `gate: seedling-generated-set` run the same commands | — |
+
 ## Running Workflows Manually
 
 All test workflows can be triggered manually from the GitHub Actions tab:
@@ -52,7 +63,7 @@ All test workflows can be triggered manually from the GitHub Actions tab:
 **Tests:**
 - ALTTP template generation and spoiler test
 - Regression tests (the ES-module boot, then the bundled boot)
-- Substrate tests: one parallel matrix job per ON-PUSH batch of `frontend/modules/tests/testBatches.js` (every batch not marked `manual: true`, listed by `scripts/test/list-test-batches.js --on-push`), each followed by its budget-headroom check (`scripts/test/check-batch-headroom.js`)
+- Substrate tests: one parallel matrix job per ON-PUSH batch of `frontend/modules/tests/testBatches.js` (every batch not marked `manual: true`, listed by `scripts/test/list-test-batches.js --on-push`; a batch with `pushPaths` — `apworld` — only when a pushed path hits its filter), each followed by its budget-headroom check (`scripts/test/check-batch-headroom.js`)
 
 ---
 
@@ -62,7 +73,7 @@ All test workflows can be triggered manually from the GitHub Actions tab:
 
 **Triggers:** Manual only (`workflow_dispatch`; the user ruled the bot walks manual-only on 2026-09-27, and the noiz2sa and runner rows on 2026-10-09)
 
-**Purpose:** The MANUAL batches of `npm test -- --mode=test-substrates` (`manual: true` in `frontend/modules/tests/testBatches.js`), which `test-templates.yml` never runs. The `batch` input names one manual batch, or `all` (the default) runs every manual batch as parallel jobs; an on-push batch name is refused. One smoke row per manual substrate still runs on push (its config `batch` field).
+**Purpose:** The MANUAL batches of `npm test -- --mode=test-substrates` (`manual: true` in `frontend/modules/tests/testBatches.js`), which `test-templates.yml` never runs. The `batch` input names one manual batch or a path-filtered on-push batch (`apworld`), or `all` (the default) runs every manual batch as parallel jobs; any other on-push batch name is refused. One smoke row per manual substrate still runs on push (its config `batch` field).
 
 ---
 
@@ -191,7 +202,7 @@ All test workflows can be triggered manually from the GitHub Actions tab:
 | Workflow | File | Purpose |
 |----------|------|---------|
 | JavaScript Unit Tests | `unittests_frontend.yml` | Parallel jobs: `JavaScript Unit Tests (Vitest)` (`test:unit` + `test:unit:slow` — `ciSummary.js` finds the suite row by that name), `Headless procgen gates` (`ci-gates.mjs`), and the browser gate shard matrix |
-| CodeQL Analysis | `codeql-analysis.yml` | Security analysis |
+| CodeQL Analysis | `codeql-analysis.yml` | Security analysis (weekly + dispatch; no push trigger since 2026-10-21) |
 | Strict Type Check | `strict-type-check.yml` | TypeScript type checking |
 | Scan Build | `scan-build.yml` | Static analysis |
 

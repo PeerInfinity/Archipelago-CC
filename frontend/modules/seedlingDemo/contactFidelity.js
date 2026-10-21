@@ -784,8 +784,11 @@ export const CONTACT_FIDELITY = {
      * tile overlay (`withTileWrites`); a dead span or an arrival the run does not step refuses by name; the solver
      * prices the tiles' clocks. OFF: no tile is stepped, byte-identical. `SEEDLING_IGNEOUS_LAVA=0|1` for a node
      * measurement.
+     * ⛓ planning-9's flip (⚖ user, 2026-10-21, "Flip igneousLava ON") turns it ON. Measured movers (CI, wave-20 A/B): route
+     * survey step 195 (L76) SOLVED 519 → 496 (the OFF walk dies on the game; the ON walk is witnessed at 0 px) and sweep
+     * leg 649 failed → done (×2); every other survey step and the other 48 type-31 legs unchanged.
      */
-    igneousLava: false,
+    igneousLava: true,
     /**
      * fidelity LIGHTS (wave 20) — THE L69 LIGHTS FIGHT IS STEPPED (`lightBoss.js`, `levelRun.stepLightsNow`): the intro
      * NPC (an X release within 24 px opens it, the pages freeze the room, its removal spawns the six fliers), the
@@ -810,6 +813,28 @@ export const CONTACT_FIDELITY = {
      * `hitRect`, the whirlpools, the death's report `{57,0}` and the mouth Teleporter. OFF: byte-identical.
      */
     tentacleBeastFight: false,
+    /**
+     * fidelity L1516 D2 — A CHEST'S PROBE LINE STOPS ONE PIXEL SHORT OF `toX` (`chest.chestProbeLine`).
+     *
+     *     Chest.as:63      collideLine("Player", x-originX+m, …, x-originX+width-2*m, …)   (m = 2)
+     *     World.as:442     while (x < toX) collidePoint(…)       World.as:514  the end point: `precision > 1` only
+     *
+     * So the integer probes are px+2 .. px+11, not px+12. Witnessed on the game (p4g, `l15-chest-line-edge`): the
+     * player climbing column 9 under L15 `chest@144,96` at x 157.98 (box left 155.98) touched no probe and STOPPED at
+     * y 114.24 under the Solid; the model's px+12 probe opened the chest and walked through it. ON: the line ends at
+     * px+11 (the keyLock's transcription). OFF: px+12, byte-identical. `SEEDLING_CHEST_PROBE_LINE_END=0|1` for a node
+     * measurement.
+     */
+    chestProbeLineEnd: false,
+    /**
+     * fidelity L1516 D3 — AN ENCLOSED PIT IS ENTERED ACROSS A CORNER (`solverBot.enclosedPitCorners`, the reach-pit
+     * executor). `Player.getState` reads one point a tick (`Player.as:679`), so a diagonal step jumps it across the
+     * corner a floor cell shares with a pit whose four neighbours are pits (L16's (13,4), sweep leg 206). Witnessed on
+     * the game (p4g, `l16-corner-pit-corner` / `-control`, 0 px). ON: the executor walks to a stance in a diagonal floor
+     * cell and takes the corner step its preview found. OFF: the plan exemption alone, which cannot reach such a pit
+     * (refused by name), byte-identical. `SEEDLING_ENCLOSED_PIT_CORNER=0|1` for a node measurement.
+     */
+    enclosedPitCorner: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -974,6 +999,12 @@ if (globalThis.process?.env?.SEEDLING_LIGHTS_BOSS_FIGHT === '0') CONTACT_FIDELIT
 // ⛓ seedling-fidelity-bosskills — the two boss fights, for a node measurement (both ship OFF).
 if (globalThis.process?.env?.SEEDLING_KING_OF_FIRE_FIGHT === '1') CONTACT_FIDELITY.kingOfFireFight = true;
 if (globalThis.process?.env?.SEEDLING_TENTACLE_BEAST_FIGHT === '1') CONTACT_FIDELITY.tentacleBeastFight = true;
+// ⛓ fidelity L1516 D2: `SEEDLING_CHEST_PROBE_LINE_END=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_CHEST_PROBE_LINE_END === '1') CONTACT_FIDELITY.chestProbeLineEnd = true;
+if (globalThis.process?.env?.SEEDLING_CHEST_PROBE_LINE_END === '0') CONTACT_FIDELITY.chestProbeLineEnd = false;
+// ⛓ fidelity L1516 D3: `SEEDLING_ENCLOSED_PIT_CORNER=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_ENCLOSED_PIT_CORNER === '1') CONTACT_FIDELITY.enclosedPitCorner = true;
+if (globalThis.process?.env?.SEEDLING_ENCLOSED_PIT_CORNER === '0') CONTACT_FIDELITY.enclosedPitCorner = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
