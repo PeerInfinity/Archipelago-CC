@@ -808,7 +808,7 @@ export const CONTACT_FIDELITY = {
      * px+11 (the keyLock's transcription). OFF: px+12, byte-identical. `SEEDLING_CHEST_PROBE_LINE_END=0|1` for a node
      * measurement.
      */
-    chestProbeLineEnd: false,
+    chestProbeLineEnd: true,
     /**
      * fidelity L1516 D3 — AN ENCLOSED PIT IS ENTERED ACROSS A CORNER (`solverBot.enclosedPitCorners`, the reach-pit
      * executor). `Player.getState` reads one point a tick (`Player.as:679`), so a diagonal step jumps it across the
@@ -817,7 +817,7 @@ export const CONTACT_FIDELITY = {
      * cell and takes the corner step its preview found. OFF: the plan exemption alone, which cannot reach such a pit
      * (refused by name), byte-identical. `SEEDLING_ENCLOSED_PIT_CORNER=0|1` for a node measurement.
      */
-    enclosedPitCorner: false,
+    enclosedPitCorner: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
