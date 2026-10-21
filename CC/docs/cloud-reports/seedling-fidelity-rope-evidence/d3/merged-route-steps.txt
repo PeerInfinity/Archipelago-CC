@@ -1,0 +1,2 @@
+24  L16 visit 1  boot=staged:r8-solve-11  goals: clear-tag(L16 flag 0: rope@32,16 cleared (flag:L16:0) — broken before row 2.1 walks its landing) then reach-pit(pit@192,48 (out_pit_7_2, tile 12,3) → L17)
+26  L16 visit 2  boot=staged:r8-solve-11  goals: reach-exit(stairsup@352,80 → L18)

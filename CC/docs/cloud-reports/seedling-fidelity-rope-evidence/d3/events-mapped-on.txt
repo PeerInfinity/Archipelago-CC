@@ -1,0 +1,8 @@
+{"location":"L16 flag 0: rope@32,16 cleared","eventId":"flag:L16:0","level":16,"tag":0,"obstacle":{"level":16,"tag":0,"class":"rope","x":32,"y":16},"side":"level_16__r1c1","sideLevel":16,"action":{"verb":"cut","item":null,"opens":[{"class":"arrowtrap","x":96,"y":32,"effect":"silences"},{"class":"arrowtrap","x":112,"y":32,"effect":"silences"},{"class":"arrowtrap","x":128,"y":32,"effect":"silences"}]}}
+  side payload keys gameId,atlas_ref,atlas_region,atlas_sub_region,level,tile_size,exits
+  goal {"kind":"location","level":16,"tag":null,"entityType":null,"name":"L16 flag 0: rope@32,16 cleared","event":{"eventId":"flag:L16:0","tag":{"level":16,"tag":0},"at":{"x":32,"y":16},"obstacle":"rope@32,16"}}
+  mapped {"goal":{"kind":"clear-tag","tag":{"level":16,"tag":0},"at":{"x":32,"y":16},"obstacle":"rope@32,16"}}
+{"location":"L28 flag 0: rope@160,64 cleared","eventId":"flag:L28:0","level":28,"tag":0,"obstacle":{"level":28,"tag":0,"class":"rope","x":160,"y":64},"side":"level_28__r0c6","sideLevel":28,"action":{"verb":"cut","item":null,"opens":[{"class":"fallrock","x":112,"y":240,"effect":"holds"}]}}
+  side payload keys gameId,atlas_ref,atlas_region,atlas_sub_region,level,tile_size,exits
+  goal {"kind":"location","level":28,"tag":null,"entityType":null,"name":"L28 flag 0: rope@160,64 cleared","event":{"eventId":"flag:L28:0","tag":{"level":28,"tag":0},"at":{"x":160,"y":64},"obstacle":"rope@160,64"}}
+  mapped {"goal":{"kind":"clear-tag","tag":{"level":28,"tag":0},"at":{"x":160,"y":64},"obstacle":"rope@160,64"}}

@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 85,
-            "count": 132,
+            "browser": 86,
+            "count": 133,
             "id": "probe"
         },
         {
@@ -229,17 +229,23 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 438,
-        "browser": 150,
-        "cited": 229,
-        "files": 451,
+        "blockStyle": 439,
+        "browser": 151,
+        "cited": 230,
+        "files": 452,
         "lineStyle": 13,
-        "withDocblock": 451,
-        "withFlags": 368
+        "withDocblock": 452,
+        "withFlags": 369
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
-    "findings": [],
+    "findings": [
+        {
+            "name": "probe-seedling-rope-events.mjs",
+            "severity": "cited by a doc, NOWHERE in the tree",
+            "what": "`probe-seedling-rope-events.mjs` is named in [docs/json/developer/procgen/seedling-bot-log.md] and there is no such file in `scripts/procgen/`. It is nowhere in this repository: the citation is DEAD — renamed, removed, or never written. ⛔ Reported, not fixed."
+        }
+    ],
     "flagRule": "a flag is counted where the script READS ARGV for it. A `--x=` literal alone is not enough: `--enable-features=` and `--use-angle=` are the two commonest in this directory and both are Chrome launch arguments. What the file's own `Run:` block shows is published separately as `documentedFlags`.",
     "patterns": {
         "cite": "/(?<![\\w/*.-])(?:scripts\\/procgen\\/)?([a-z][a-zA-Z0-9-]*\\.mjs)\\b/g",
@@ -14011,6 +14017,45 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling ROCKMOVE's \"Remove bundle\", ON THE GAME (rules `rules-rock-remove`).",
             "path": "scripts/procgen/probe-seedling-rock-remove.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-rope-verb.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-rope-verb — ⛓⛓⛓ seedling-fidelity-rope: THE SOLVER'S `rope` VERB (`CONTACT_FIDELITY.ropeCutVerb`), ITS PLANS PLAYED ON THE GAME.",
+            "path": "scripts/procgen/probe-seedling-rope-verb.mjs"
         },
         {
             "argvHelpers": [
