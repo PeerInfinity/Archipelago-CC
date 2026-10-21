@@ -24202,3 +24202,46 @@ equals W0's in a pristine worktree, and the new strategy and verb rows are absen
 - The runtime's trig is musl, not V8. A transcription that is exact in V8 can drift by one ulp per call.
 - A key file built with `… ; wc -l` carries a second line, and `--contact-fidelity` refuses it by name.
 - The sweep's default `--host` is :8000.
+
+### Seedling fidelity GATESUBJ — three browser-gate subjects re-pointed by search, and reds that no longer hide
+
+The report is `CC/docs/cloud-reports/seedling-fidelity-gatesubj.md`. Base `f1b4f85446`. No solver, model, tape,
+rules or producer digest moved.
+
+**What was hidden.** At `f1b4f85446` (CI 39540239745) five browser/headless gate arms printed `exit=1` and every job
+was green, because the gate steps are `continue-on-error` (standing-value readers):
+- `procgen-demos 260/1` — demo 9 `dropped-element` typed `seed=3&biome=post-sword`; seed 3 certifies since
+  `e346241d6a` (swim U6b/U9/U10), so `elements.refused.reason = null`.
+- `seedling-editor-phases 90/1` — CLAIM 5's DROPPED search over post-sword/killgate 1..20 ran dry at `124bd6f6f2`
+  (fidelity F1+F1b+F1c).
+- `seedling-editor-refusal 15/5` — row 1's L71 climb past `spinningaxe@256,144` SOLVES since `0fdd9f967f` (fidelity
+  AXE D2's dodge arm).
+- `seedling-hammer-monotonicity` and `seedling-rewind-exactness` `0/0` — a crash on invocation (`--row=null`), not a
+  measurement; the hammer-phase arc's.
+
+**D1+D2 — one search, on a grid that cannot run dry** (`scripts/procgen/droppedElementSubject.js`).
+- Measured through `generateStep`: post-sword/killgate holds NO certification drop in seeds 1..1000 (the 15
+  non-placed cells are all `wall-does-not-seal` placement refusals). No ceiling would have saved that grid.
+- The search is pre-sword/killgate, a CERTIFICATION drop WITH geometry, smaller seed wins, ceiling 200. The boot
+  holds no sword, so the drop is the biome's, and no solver change can revoke it. Today: seed 1.
+- The phases gate uses it (94/0). Demo 9's `url` and `cli` name pre-sword seed 1, and `check-procgen-demos` asserts
+  the literal equals the search, printing the line to paste on a mismatch. The literal stays in `demos.js` because the
+  module is static data read by a browser page and the generated reference.
+
+**D3 — the refusal row walks a candidate list.** `ROW1_CANDIDATES` comes from a Node sweep of `solveForPage` over
+every committed tape's own boot × every usable census goal. The gate solves them in the page, in order, and the first
+that is still the ladder's own refusal with a recorded population wins; the rest are named.
+
+**D4 — `CI_GATE_EXPECTED_RED`** (`scripts/procgen/ciExpectedRed.js`, `ci-expected-red.mjs`). A step after each gate
+shard's "Battery complete?" reads the `## CI-GATE` lines and fails on a red arm the table does not name, on a listed
+arm that is now green, and on a listed key that names no arm. Seeded with the two hammer arms (owner
+`seedling-hammer-phase-planning-2`).
+
+**Trap candidate — the third recurrence.** *A pinned SUBJECT over a property a solver change can revoke* (the phases
+gate's docblock records the first two: seed 1 → 3 in slice 12, L16 → L71 in swim U1). Here it recurred three times at
+once, and a fourth way: a SEARCH over a bounded grid runs dry exactly like a literal goes stale, when the solver
+improvement covers the whole grid. The durable fix is a subject whose property is structural (a biome that cannot
+walk the gadget) or a candidate list the gate walks, not a wider range.
+
+**Trap candidate.** `continue-on-error` hides a red at the job level, and printing the red in a line is not the same as
+someone reading it. Five arms were red for 2–3 weeks. A line-reader that fails the job is what makes the red visible.
