@@ -79,6 +79,12 @@
  * and the Bob Boss (`seedlingRoomBodySkin.js`: `roomBodySkinView` /
  * `stepRoomBodySkin` after every tick, `roomBodyOps` at each paint, Y-sorted
  * with the enemies). `__seedlingJsGraphics.roomBodies` reads them back.
+ * ⛓ G3c — the spinning axes, crushers, lava chains, the Boss Totem and its
+ * shots, the bomb pusher and its bombs, and the placed grenades
+ * (`seedlingHazardSkin.js`: `hazardSkinView` / `stepHazardSkin` after every
+ * tick, `hazardOps` at each paint, Y-sorted with the rest; their static solids
+ * are not painted again, `roomOps`' `drawnObjects`).
+ * `__seedlingJsGraphics.hazards` reads them back.
  *
  * ⛓ KILLLOCK HOOK — `?killLockBodies=<keys>|none` (the `SEEDLING_KILLLOCK_BODIES`
  * grammar) sets this page's `killLockBodies` switches before its first run;
@@ -104,6 +110,7 @@ import { CAMERA_MODES, cameraView, paintOps, roomOps } from './seedlingSkinRende
 import { playerOps, skinView, stepPlayerSkin } from './seedlingPlayerSkin.js';
 import { apItemOps, enemyOps, enemySkinView, stepEnemySkin } from './seedlingEnemySkin.js';
 import { roomBodyOps, roomBodySkinView, stepRoomBodySkin } from './seedlingRoomBodySkin.js';
+import { HAZARD_OBJECT_TAGS, hazardOps, hazardSkinView, stepHazardSkin } from './seedlingHazardSkin.js';
 import { loadPackStack, packsBaseUrl, parseRegistry } from '../contentPacks/contentPacks.js';
 import { browserDecoder, createArtLibrary, loadSheetImages } from '../artLibrary/artLibrary.js';
 
@@ -196,6 +203,8 @@ export function mountJsRuntimePage(win = window) {
         enemySkin: null, enemies: null,
         // ⛓ G3b — the room bodies' pictures and the last paint's ops.
         roomBodySkin: null, roomBodies: null,
+        // ⛓ G3c — the puzzlements' and the last bodies' pictures and the last paint's ops.
+        hazardSkin: null, hazards: null,
     };
     let graphicsLoad = 0;
     function setGraphics({ graphics: stack, camera } = {}) {
@@ -205,7 +214,7 @@ export function mountJsRuntimePage(win = window) {
         }
         if (stack === undefined || stack === graphics.stack) return Promise.resolve(graphics.status);
         const ticket = ++graphicsLoad;
-        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null, enemySkin: null, enemies: null, roomBodySkin: null, roomBodies: null });
+        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null, enemySkin: null, enemies: null, roomBodySkin: null, roomBodies: null, hazardSkin: null, hazards: null });
         if (!stack) { graphics.status = 'off'; return Promise.resolve('off'); }
         graphics.status = 'loading';
         return loadGraphicsStack(stack, { win }).then(({ art, images, failed }) => {
@@ -249,6 +258,7 @@ export function mountJsRuntimePage(win = window) {
         get player() { return graphics.player ? { ...graphics.player } : null; },
         get enemies() { return graphics.enemies ? { ...graphics.enemies, ops: graphics.enemies.ops.map((o) => ({ ...o })) } : null; },
         get roomBodies() { return graphics.roomBodies ? { ...graphics.roomBodies, ops: graphics.roomBodies.ops.map((o) => ({ ...o })) } : null; },
+        get hazards() { return graphics.hazards ? { ...graphics.hazards, ops: graphics.hazards.ops.map((o) => ({ ...o })) } : null; },
         get packsOfKeys() { return graphics.art ? Object.fromEntries(graphics.art.keys().map((k) => [k, graphics.art.packOf(k)])) : null; },
         set: setGraphics,
     };
@@ -293,6 +303,7 @@ export function mountJsRuntimePage(win = window) {
                 graphics.skin = stepPlayerSkin(graphics.skin, skinView(runtime.run), runtime.ticks);
                 graphics.enemySkin = stepEnemySkin(graphics.enemySkin, enemySkinView(runtime.run), runtime.ticks);
                 graphics.roomBodySkin = stepRoomBodySkin(graphics.roomBodySkin, roomBodySkinView(runtime.run), runtime.ticks);
+                graphics.hazardSkin = stepHazardSkin(graphics.hazardSkin, hazardSkinView(runtime.run), runtime.ticks);
             }
             acc -= TICK_MS;
             n += 1;
@@ -377,8 +388,14 @@ export function mountJsRuntimePage(win = window) {
             ? { bodies: graphics.roomBodySkin?.bodies.size ?? 0,
                 ops: bodySprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, tint: o.tint ?? null, pack: o.key ? art.packOf(o.key) : null })) }
             : null;
+        const hv = art ? hazardSkinView(runtime.run) : null;
+        const hazardSprites = hv ? hazardOps(hv, art, { skin: graphics.hazardSkin }) : [];
+        graphics.hazards = hv
+            ? { bodies: graphics.hazardSkin?.bodies.size ?? 0,
+                ops: hazardSprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, rot: o.rot ?? 0, tint: o.tint ?? null, pack: o.key ? art.packOf(o.key) : null })) }
+            : null;
         const enemySprites = ev ? enemyOps(ev, art, { skin: graphics.enemySkin }) : [];
-        const entitySprites = [...enemySprites, ...bodySprites];
+        const entitySprites = [...enemySprites, ...bodySprites, ...hazardSprites];
         const apItemSprites = art ? apItemOps(apItems, art, AP_ITEM_COLOUR) : null;
         graphics.enemies = ev
             ? { bodies: ev.chasers.length + ev.spinners.length + ev.arrows.length, apItems: apItemSprites.length,
@@ -387,7 +404,7 @@ export function mountJsRuntimePage(win = window) {
             : null;
         const ops = roomOps(world, art, {
             level, tick: runtime.ticks, player: playerBoxAt(state.x, state.y), playerSprites, apItems,
-            ...(art ? { apItemSprites, entitySprites } : {}),
+            ...(art ? { apItemSprites, entitySprites, drawnObjects: (o) => HAZARD_OBJECT_TAGS.has(o.tag) } : {}),
         });
         const view = cameraView(graphics.camera, world, state, runtime.run);
         graphics.counts = { ops: ops.length, ...paintOps(ctx, ops, art ? graphics.images : null, view, canvas, { tinted }) };
