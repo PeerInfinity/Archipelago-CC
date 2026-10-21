@@ -493,6 +493,51 @@
       "w": 72,
       "h": 5
     },
+    "SpinningAxe": {
+      "file": "sheets/SpinningAxe.png",
+      "w": 36,
+      "h": 20
+    },
+    "SpinningAxeRed": {
+      "file": "sheets/SpinningAxeRed.png",
+      "w": 36,
+      "h": 20
+    },
+    "Crusher": {
+      "file": "sheets/Crusher.png",
+      "w": 32,
+      "h": 32
+    },
+    "LavaChain": {
+      "file": "sheets/LavaChain.png",
+      "w": 832,
+      "h": 16
+    },
+    "BossTotem": {
+      "file": "sheets/BossTotem.png",
+      "w": 96,
+      "h": 48
+    },
+    "BossTotemShot": {
+      "file": "sheets/BossTotemShot.png",
+      "w": 60,
+      "h": 20
+    },
+    "BombPusher": {
+      "file": "sheets/BombPusher.png",
+      "w": 192,
+      "h": 48
+    },
+    "Bomb": {
+      "file": "sheets/Bomb.png",
+      "w": 16,
+      "h": 16
+    },
+    "Grenade": {
+      "file": "sheets/Grenade.png",
+      "w": 128,
+      "h": 16
+    },
     "Sword": {
       "file": "sheets/Sword.png",
       "w": 48,
@@ -2426,6 +2471,170 @@
         3
       ],
       "as3": "Enemies/BobBoss.as:22-23 Spritemap(24, 5); :53-55 y = -3, originY = 3, frame = the form; BobSoldier.as:187-198 angle = swordSpin deg"
+    },
+    "seedling:puzzlement/spinningaxe": {
+      "sheet": "SpinningAxe",
+      "fw": 36,
+      "fh": 20,
+      "frames": 1,
+      "origin": [
+        4,
+        10
+      ],
+      "as3": "Puzzlements/SpinningAxe.as:15-16,26-35 Image (SpinningAxe.png, _colorType 0); :37-40 originX 4, originY = height / 2; :52 angle += spinRate"
+    },
+    "seedling:puzzlement/spinningaxeRed": {
+      "sheet": "SpinningAxeRed",
+      "fw": 36,
+      "fh": 20,
+      "frames": 1,
+      "origin": [
+        4,
+        10
+      ],
+      "as3": "Puzzlements/SpinningAxe.as:15-16,26-35 Image (SpinningAxeRed.png, _colorType 1); :37-40 originX 4, originY = height / 2; :52 angle += spinRate"
+    },
+    "seedling:puzzlement/crusher": {
+      "sheet": "Crusher",
+      "fw": 32,
+      "fh": 32,
+      "frames": 1,
+      "origin": [
+        16,
+        16
+      ],
+      "as3": "Puzzlements/Crusher.as:18-19 Spritemap(32, 32), no anims (frame 0); :38 centerOO; :109-113 angle += 8 while v ≠ 0, else 0"
+    },
+    "seedling:puzzlement/lavachain": {
+      "sheet": "LavaChain",
+      "fw": 64,
+      "fh": 16,
+      "frames": 13,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Puzzlements/LavaChain.as:18-19 Spritemap(64, 16); :34-37 origin (8, 8); :39-42 sit [0], extend [1,2] fps 15, hit [3,4,5,5,5,5,4,3] fps 15, retract [6..12] fps 25; :52 angle = 90 · direction"
+    },
+    "seedling:enemy/bosstotem": {
+      "sheet": "BossTotem",
+      "fw": 32,
+      "fh": 48,
+      "frames": 3,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "Enemies/BossTotem.as:18-19 Spritemap(32, 48): frame 0 the head, 1 an arm, 2 a leg; :605-640 each part sets its own origin (legs (0,0), arms (armsBase.x · scaleX, 0), head headOrigin (16, 47))"
+    },
+    "seedling:projectile/bosstotemshot": {
+      "sheet": "BossTotemShot",
+      "fw": 20,
+      "fh": 20,
+      "frames": 3,
+      "origin": [
+        10,
+        10
+      ],
+      "anims": {
+        "fly": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            2
+          ],
+          "fps": 10
+        }
+      },
+      "as3": "Projectiles/BossTotemShot.as:17-18 Spritemap(20, 20); :27 centerOO; :28-29 fly [0,1,2] fps 10, played in the ctor"
+    },
+    "seedling:enemy/bombpusher": {
+      "sheet": "BombPusher",
+      "fw": 48,
+      "fh": 48,
+      "frames": 4,
+      "origin": [
+        24,
+        24
+      ],
+      "anims": {
+        "shoot": {
+          "clock": "fps",
+          "frames": [
+            0,
+            2,
+            1,
+            2,
+            3
+          ],
+          "fps": 5
+        },
+        "sit": {
+          "clock": "fps",
+          "frames": [
+            0,
+            3
+          ],
+          "fps": 2
+        }
+      },
+      "as3": "Enemies/BombPusher.as:15-16 Spritemap(48, 48); :27 centerOO; :29-30 shoot [0,2,1,2,3] fps 5, sit [0,3] fps 2"
+    },
+    "seedling:projectile/bomb": {
+      "sheet": "Bomb",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        8,
+        8
+      ],
+      "as3": "Projectiles/Bomb.as:15-16 Spritemap(16, 16), no anims; :29 centerOO; :41-51 scale from t, angle += 15 a tick"
+    },
+    "seedling:enemy/grenade": {
+      "sheet": "Grenade",
+      "fw": 16,
+      "fh": 16,
+      "frames": 8,
+      "origin": [
+        8,
+        8
+      ],
+      "anims": {
+        "explode": {
+          "clock": "fps",
+          "frames": [
+            0,
+            1,
+            0,
+            2,
+            0,
+            3,
+            4,
+            3
+          ],
+          "fps": 12
+        },
+        "hit": {
+          "clock": "fps",
+          "frames": [
+            5,
+            6,
+            7
+          ],
+          "fps": 12
+        },
+        "sit": {
+          "clock": "fps",
+          "frames": [
+            0,
+            4
+          ],
+          "fps": 5
+        }
+      },
+      "as3": "Enemies/Grenade.as:16-17 Spritemap(16, 16); :43 centerOO; :44-47 explode [0,1,0,2,0,3,4,3] fps 12, hit [5,6,7] fps 12, sit [0,4] fps 5 (played in the ctor)"
     },
     "seedling:pickup/sword": {
       "sheet": "Sword",

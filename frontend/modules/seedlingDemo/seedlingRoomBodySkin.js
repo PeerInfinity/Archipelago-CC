@@ -48,8 +48,7 @@
  *
  * ⛔ NOT YET (`ROOM_BODY_COVERAGE.remaining`): the 0.25-alpha `nightBmp`
  * copies (G5), the explosion / slash-hit / coin effects (G4), the BobBossNPC
- * portrait (`BobBossNPC.as:21`, the dialogue box), the boss death's tint and
- * fade of the PLAYER (`BobBoss.as:202-225`, the player skin's), the turret's
+ * portrait (`BobBossNPC.as:21`, the dialogue box), the turret's
  * "die" (its damage is not modelled — `turret.js`), and the corpse turn's
  * off-screen and frozen pauses (`IceTurret.input` runs inside `Enemy.update`'s
  * on-screen gate and `mobileUpdate`'s freeze gate; the renderer turns the
@@ -99,8 +98,10 @@ const WALLFLYER_DIE = Object.freeze([5, 6, 7, 8]);
  */
 export const ROOM_BODY_COVERAGE = Object.freeze({
     drawn: Object.freeze(['WallFlyer', 'Drill', 'IceTurret', 'IceTurretBlast', 'Turret', 'TurretSpit', 'BobBoss']),
-    modelled: Object.freeze(['SpinningAxe', 'Crusher', 'LavaChain', 'BossTotem', 'BombPusher', 'Grenade']),
-    remaining: Object.freeze(['the Turret "die" (damage not modelled)', 'BobBossNPC portrait', 'the boss death\'s player tint/fade', 'nightBmp copies (G5)', 'effects (G4)']),
+    // ⛓ G3c drew the six this list held (SpinningAxe, Crusher, LavaChain, BossTotem, BombPusher, Grenade —
+    // `seedlingHazardSkin.HAZARD_COVERAGE`) and the boss death's player tint/fade (`seedlingPlayerSkin.bossFade`).
+    modelled: Object.freeze([]),
+    remaining: Object.freeze(['the Turret "die" (damage not modelled)', 'BobBossNPC portrait', 'nightBmp copies (G5)', 'effects (G4)']),
 });
 
 /** `FP.angle_difference` — ONE wrap, not a modulo (`iceTurret.js` `angleDifference`, the same transcription). */
