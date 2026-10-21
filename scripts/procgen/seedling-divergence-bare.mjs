@@ -94,7 +94,7 @@ async function oneLeg(leg, dumpPath) {
     const { wasmGoalRefusal } = await M('seedlingDemo/wasmPlayback.js');
     const { createInPlaceProduceService, mountedRecordsOf } = await M('seedlingDemo/wasmWalkTape.js');
     const { ANYTIME_PASSES } = await M('seedlingDemo/jsRuntimeSolver.js');
-    const { atlasEventGoal, atlasLocationGoal } = await M('flashPanel/seedlingPlaybackController.js');
+    const { atlasBossGoal, atlasEventGoal, atlasLocationGoal, wiredBossOf } = await M('flashPanel/seedlingPlaybackController.js');
     const { indexLevels, levelSourceFromAtlas } = await M('seedlingDemo/atlasSource.js');
     const MAP = JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
     const dump = JSON.parse(readFileSync(dumpPath, 'utf8'));
@@ -111,13 +111,16 @@ async function oneLeg(leg, dumpPath) {
             // ⛓ EVENT GOALS — an event location is the controller's `clear-tag` goal (a dump without `events` has none)
             const ev = (dump.events ?? []).find((x) => x.location === leg.goal.name);
             if (ev) goal = atlasEventGoal(ev, ev.sideLevel, leg.goal.name);
+            // ⛓ LIGHTS WIRING — a boss kill whose fight is wired (its switch ON in this process) is the fight's `clear-tag`
+            const boss = !e && !ev ? wiredBossOf(dump, leg.goal.name) : null;
+            if (boss) goal = atlasBossGoal(boss, leg.goal.name);
             if (ev && !goal) {
                 out.outcome = 'unresolved';
                 out.err = 'an event record with no integer flag or no obstacle cell';
                 out.ms = Date.now() - t0;
                 return out;
             }
-            if (!e && !ev) {
+            if (!e && !ev && !boss) {
                 out.outcome = 'unresolved';
                 out.err = dump.refused.find((r) => r.location === leg.goal.name)?.why ?? 'not a bound location';
                 out.ms = Date.now() - t0;
