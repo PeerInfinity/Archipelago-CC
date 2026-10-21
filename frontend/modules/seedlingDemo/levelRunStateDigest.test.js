@@ -186,6 +186,25 @@ describe('each component moves with its own state', () => {
             () => [on.stateDigest({ parts: true }), off.stateDigest({ parts: true })]);
         expect(Object.keys(a.parts).filter((k) => a.parts[k] !== b.parts[k])).toEqual(['visit']);
     });
+    // ⛓ BOSSKILLS harvest (the hammer arc's review row, its STOP): the King of Fire's body and L82's arena rock are run state
+    // the escape reads (`liveSolidOpts.lavaBosses`, `fallenRocksNow`), so they must move `visit`. From the L82 pit arrival,
+    // standing still, a run walked ON and one walked OFF stand on one body for these 20 ticks (no ball or runner reaches
+    // the player yet); only the fight's state differs. Both are digested under ON, so `globals` agrees too.
+    it('the King of Fire\'s fight (`lavaBossFights`, `lavaArenaRocks`) moves `visit` alone', () => {
+        const walk = (on) => withContactFidelity({ kingOfFireFight: on }, () => {
+            const run = createRunForStaging({ ...stagingFromTape(TAPE), boot: { level: 82, x: 160, y: 272 },
+                persistence: [] }, atlasLevelSource());
+            for (let i = 0; i < 20; i += 1) run.advance(new Set());
+            return run;
+        });
+        const on = walk(true);
+        const off = walk(false);
+        expect(withContactFidelity({ kingOfFireFight: true }, () => on.entities('lavaBossFight'))).not.toBeNull();
+        expect(off.state).toEqual(on.state);
+        const [a, b] = withContactFidelity({ kingOfFireFight: true },
+            () => [on.stateDigest({ parts: true }), off.stateDigest({ parts: true })]);
+        expect(Object.keys(a.parts).filter((k) => a.parts[k] !== b.parts[k])).toEqual(['visit']);
+    });
 });
 
 /**
@@ -221,6 +240,10 @@ export const DIGEST_EXEMPT = Object.freeze({
     spitStates: 'UNREAD: read via advance, entities, shooters, spitForecast',
     staticBodyStates: 'UNREAD: read via advance, entities, spitForecast, staticBodies',
     talkerStates: 'UNREAD: read via advance, entities, talkCircles',
+    // ⛓ fidelity BOSSKILLS (1cca4854c9): member-reach on the landed levelRun.js reaches it from NO escape member. Its
+    // siblings `tentacleStreams` (a Map) and `tentacleLevelsBuilt` (a Set) measured the same, but they sit outside the
+    // guard's shapes (`freshVisitState` does not reset them), so a row for either would read `staleExempt`
+    tentacleFights: 'UNREAD: member-reach — no escape member reaches it (bosskills harvest, 2026-10-21)',
     wallFlyerStates: 'UNREAD: read via advance, corridorBodyForecast, wallFlyers',
     wandShotStates: 'UNREAD: read via advance, wandShotsLive',
     watcherStates: 'UNREAD: read via advance, watchers',
@@ -281,9 +304,10 @@ describe('hammer-phase DA — every per-visit map is in the digest, or exempt wi
         expect(c.bothDigestedAndExempt).toEqual([]);
         expect(c.staleExempt).toEqual([]);
         expect(c.badReason).toEqual([]);
-        // the reader sees what it should: at DA's landing, 26 per-visit names are digested (23 in `visit`, the clears in
-        // `persist`, `grantsByLevel` in `player`) and 29 are exempt (`igneousStates` joined `visit` with fidelity's
-        // `dfaa06e240`: DA measured it UNREAD, so it is a superset key that only costs misses)
+        // the reader sees what it should: at DA's landing, 28 per-visit names are digested (25 in `visit`, the clears in
+        // `persist`, `grantsByLevel` in `player`) and 30 are exempt (`igneousStates` joined `visit` with fidelity's
+        // `dfaa06e240`: DA measured it UNREAD, so it is a superset key that only costs misses; BOSSKILLS added
+        // `lavaBossFights` + `lavaArenaRocks` to `visit` and `tentacleFights` to the exemptions)
         expect(c.perVisit.length).toBe(c.perVisit.filter((n) => c.digested.has(n)).length
             + Object.keys(DIGEST_EXEMPT).length);
         expect(c.digested.get('spinnerStates')).toBe('visit');

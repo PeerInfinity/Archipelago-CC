@@ -45,7 +45,9 @@ export const GAMEPLAY_DRAW_CONSUMERS = Object.freeze({
     finalboss: 'FinalBoss.as:142-144,158 — the rockfall spawn decision (1 draw/tick), '
         + 'its aim (2 draws/spawn) and the grenade decision (1 draw/tick while walking)',
     tentaclebeast: 'TentacleBeast.as:138-168 — spawn placement, up to 202 draws/frame '
-        + 'in the whirlpool loop (DEFERRED by name this rung)',
+        + 'in the whirlpool loop (MODELLED by seedling-fidelity-bosskills D3 behind '
+        + '`CONTACT_FIDELITY.tentacleBeastFight`: `tentacleBeast.TentacleDrawStream`, under a declared seed, '
+        + '`split: true` and this room the only one built since the reseed; refused by name otherwise)',
     // ⛓ fidelity LIGHTS: CORRECTED — the draw is `Rng.cos()`, the COSMETIC stream (a sound pick, `Music.playSound("Boss 6
     // Move")`), not `Math.random()`; never modelled (⚖ 2026-10-10). Kept as a row because without `rng.split` the cosmetic
     // draws share the one stream. (The key matches no placed entity type — `lightbosscontroller` is what L69 places.)

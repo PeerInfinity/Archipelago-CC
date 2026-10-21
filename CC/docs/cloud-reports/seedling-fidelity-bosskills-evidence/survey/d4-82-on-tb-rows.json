@@ -1,0 +1,126 @@
+[
+ {
+  "step": 202,
+  "level": 71,
+  "verdict": "SOLVED",
+  "ticks": 193,
+  "goals": [
+   {
+    "kind": "reach-pit",
+    "pit": {
+     "tx": 12,
+     "ty": 13,
+     "x": 192,
+     "y": 208
+    },
+    "why": "pit@192,208 (out_pit_10_17, tile 12,13) \u2192 L82"
+   }
+  ],
+  "refusal": null
+ },
+ {
+  "step": 203,
+  "level": 82,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 144,
+     "y": 0
+    },
+    "why": "teleporter@144,0 \u2192 L96"
+   }
+  ],
+  "refusal": "solverBot(survey-step-203) reach-exit (144,0)->L96 -> lavaboss: lavaboss lavaboss@112,48: the King of Fire's fight is not stepped with `CONTACT_FIDELITY.kingOfFireFight` off \u2014 the body is a wall the model does not fight"
+ },
+ {
+  "step": 204,
+  "level": 96,
+  "verdict": "SOLVED",
+  "ticks": 5,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 32,
+     "y": 32
+    },
+    "why": "stairsup@32,32 \u2192 L97"
+   }
+  ],
+  "refusal": null
+ },
+ {
+  "step": 223,
+  "level": 71,
+  "verdict": "SOLVED",
+  "ticks": 171,
+  "goals": [
+   {
+    "kind": "reach-pit",
+    "pit": {
+     "tx": 12,
+     "ty": 13,
+     "x": 192,
+     "y": 208
+    },
+    "why": "pit@192,208 (out_pit_10_17, tile 12,13) \u2192 L82"
+   }
+  ],
+  "refusal": null
+ },
+ {
+  "step": 224,
+  "level": 82,
+  "verdict": "REFUSED",
+  "ticks": null,
+  "goals": [
+   {
+    "kind": "clear-tag",
+    "tag": {
+     "level": 82,
+     "tag": 0
+    },
+    "at": {
+     "x": 112,
+     "y": 48
+    },
+    "obstacle": "lavaboss@112,48",
+    "report": {
+     "level": 82,
+     "tag": 0
+    },
+    "why": "Level 082 - King of Fire (sphere 10.3) \u2192 Seal \u2014 the kill's report {82,0} (`lavaboss`)",
+    "location": "Level 082 - King of Fire"
+   },
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 144,
+     "y": 0
+    },
+    "why": "teleporter@144,0 \u2192 L96"
+   }
+  ],
+  "refusal": "solverBot(survey-step-224) clear-tag {82,0} lavaboss@112,48: 'lavaboss' cannot act on lavaboss@112,48 with this run's bag \u2014 the King of Fire's fight is not stepped with `CONTACT_FIDELITY.kingOfFireFight` off \u2014 the body is a wall the model does not fight"
+ },
+ {
+  "step": 225,
+  "level": 96,
+  "verdict": "SOLVED",
+  "ticks": 5,
+  "goals": [
+   {
+    "kind": "reach-exit",
+    "exit": {
+     "x": 32,
+     "y": 32
+    },
+    "why": "stairsup@32,32 \u2192 L97"
+   }
+  ],
+  "refusal": null
+ }
+]
