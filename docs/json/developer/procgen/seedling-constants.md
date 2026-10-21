@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**75 files, 6102 literals.** Class × position:
+**76 files, 6137 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
 | physics | 5 | 1572 | 447 | 2024 |
-| rule | 13 | 1067 | 497 | 1577 |
+| rule | 13 | 1070 | 497 | 1580 |
 | cosmetic | 0 | 62 | 14 | 76 |
-| structural | 13 | 377 | 2035 | 2425 |
+| structural | 15 | 385 | 2057 | 2457 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 31 | 3078 | 2993 | 6102 |
+| total | 33 | 3089 | 3015 | 6137 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
 | physics | 1743 | 0 | 97 | 123 | 4 | 57 | 2024 |
-| rule | 506 | 139 | 240 | 22 | 578 | 92 | 1577 |
+| rule | 506 | 139 | 240 | 22 | 581 | 92 | 1580 |
 
 Rows whose note starts `REVIEW:`: **114**.
 
@@ -513,7 +513,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**18 named scalars** are `physics` or `rule` (14 with an AS3 anchor), and **147 small tables** (at most 16 literals) hold at least one (96 with an AS3 reference).
+**18 named scalars** are `physics` or `rule` (14 with an AS3 anchor), and **148 small tables** (at most 16 literals) hold at least one (97 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -685,5 +685,6 @@ None: a name declared in several files now reads one profile key (the table belo
 | `SEEDLING_PLAYER_BOX` | flashPanel/seedlingSemantics.js | 2 | 2 | physics | magnitude | Player.as:normalHitbox |
 | `CLIFFSIDE_FRAME_FACES` | flashPanel/seedlingSemantics.js | 4 | 4 | rule | sentinel | Game.as:2084-2089 Scenery/CliffSide.as:15-34 |
 | `DIRECTIONS` | flashPanel/seedlingSemantics.js | 8 | 8 | rule | sign |  |
+| `BLOCK_FATAL_TILES` | flashPanel/seedlingBlockPaths.js | 3 | 3 | rule | sentinel | Puzzlements/PushableBlock.as:destroy |
 
 <!-- CENSUS:seedling-constants END -->
