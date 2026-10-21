@@ -1074,13 +1074,17 @@ describe('slice 9 — the WORLD-STATE layer', () => {
         expect(first.engine).toEqual([{ id: 'chest@32,48', effect: 'gone', stillThere: null }]);
     });
 
-    it('⛓ L37\'s burnable tree is GONE at tick 119, at the 2x2 box the level built', () => {
+    it('⛓ L37\'s burnable tree is GONE at tick 105, at the 2x2 box the level built', () => {
         const first = firstChange('r5-l37-burn');
         // 118 → 119 (fidelity SLOTS D4, game-witnessed by
         // `slots-l24-burn-fencepost`): the update that enters at `goneAt - 1`
         // is still blocked in the game, so the tree's geometry is asked at
         // `ticksCompleted`, not `+ 1` — the world-state layer reads it a tick later.
-        expect(first.tick).toBe(119);
+        // 119 → 105 (seedling-js-producer-checks-r1r6): the tape was re-derived
+        // 226 → 212 t once fidelity WATCHER D1 (84708dfa9e) made L37's text-less
+        // `watcher@104,264` silent, so the walk no longer steers around it and
+        // reaches the tree 14 ticks sooner. Re-recorded on the game (p4g).
+        expect(first.tick).toBe(105);
         expect(first.level).toBe(37);
         expect(first.got.changes.map((c) => [c.id, c.family, c.effect]))
             .toEqual([['burnabletree@128,192', 'burnedTrees', 'gone']]);
