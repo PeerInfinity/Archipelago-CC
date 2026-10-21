@@ -2067,6 +2067,22 @@ export function createLevelRun({
         return tentacleFights.get(n);
     };
     /**
+     * ⛓⛓ fidelity BOSSFORK D2 (`CONTACT_FIDELITY.tentacleBeastFight`; OFF never asks) — **A CLEARED ROOM'S MOUTH STANDS AT
+     * THE BUILD.** `tentacleFightFor` is lazy: the steppers ask it on the first `advance`, so a run that BUILDS L57 with
+     * its beast's tag cleared held no mouth Teleporter in `run.world` until then, and a solver (or a reader) that asked
+     * the world at the build saw the plain room. The game's ctor builds the beast dead with the mouth already standing
+     * (`TentacleBeast.as:52-60`; BOSSKILLS D1 witnessed the revisit: "built dead with the mouth standing; into L58 at
+     * t162"). So a build (the boot, `enterWorld`) asks the fight at once — ONLY for the cleared arm: a live beast's fight
+     * still opens its draw stream when a step first asks for it, where it always has.
+     */
+    const tentacleMouthAtBuild = () => {
+        if (!CONTACT_FIDELITY.tentacleBeastFight || tentacleFights.has(level)) return;
+        const e = (levelSource(level)?.entities ?? []).filter((x) => x.type === 'tentaclebeast');
+        if (e.length !== 1) return;
+        const tag = Number(e[0].attrs?.tag ?? -1);
+        if (tag >= 0 && (clearedByLevel.get(level) ?? []).includes(tag)) tentacleFightFor(level);
+    };
+    /**
      * The live boxes, for `collidesSolid`'s `shieldBosses` arm and for the
      * press census's.
      *
@@ -5266,6 +5282,8 @@ export function createLevelRun({
         // shield lock earns, which `applyEarnedClears` above has just
         // cashed. Two families, two lifetimes, three lines apart on purpose.
         if (!noclip) freshVisitState(level);
+        // ⛓ fidelity BOSSFORK D2: a cleared Tentacled Beast's mouth is part of the build (ON only).
+        tentacleMouthAtBuild();
         // A thrust cannot outlive its level either: `spear()` collides the
         // rect against `FP.world`, and by the time it fires the world is the
         // destination's.
@@ -17269,6 +17287,9 @@ export function createLevelRun({
                 NEAREST_TILE_INDEX, SOLID_GRID }),
         };
     };
+
+    // ⛓ fidelity BOSSFORK D2: and the boot's build, here because every binding the fight's build reads is now made.
+    tentacleMouthAtBuild();
 
     return {
         get level() { return level; },

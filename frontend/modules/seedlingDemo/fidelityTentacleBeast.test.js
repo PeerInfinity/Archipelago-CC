@@ -131,6 +131,8 @@ function modelSamples(tape) {
                 beast: v ? v.beast.anim : null,
                 tentacles: (v?.tentacles ?? []).map((q) => [q.x, q.y, q.anim, q.index, q.alpha]),
                 rngState: v ? v.rngState : null,
+                // ⛓ BOSSFORK D2: a beast BUILT dead has no draw stream (it owes no draws), so its `rngState` is null
+                dead: v ? v.beast.dead === true : false,
             };
             r = st.next();
         }
@@ -140,8 +142,10 @@ function modelSamples(tape) {
 const rows = (a) => a.map((p) => p.join(',')).sort();
 
 describe('bosskills D3 — the game witnesses, at 0 px (the switch ON)', () => {
-    it('there are four, each recorded on p4g', () => {
-        expect(witnesses.map((w) => w.name)).toEqual(['tb-death-s3', 'tb-idle-s1', 'tb-policy-s2', 'tb-solve-s2']);
+    // ⛓ BOSSFORK D2 added `tb-enter-cleared` (L58 → L57 with {57,0} cleared: the arrival stands on the mouth and stays).
+    it('there are five, each recorded on p4g', () => {
+        expect(witnesses.map((w) => w.name)).toEqual(['tb-death-s3', 'tb-enter-cleared', 'tb-idle-s1', 'tb-policy-s2',
+            'tb-solve-s2']);
         for (const w of witnesses) expect(w.page).toBe('seedling_bot_ap_p4g');
     });
 
@@ -158,6 +162,9 @@ describe('bosskills D3 — the game witnesses, at 0 px (the switch ON)', () => {
                 if (g.level !== 57) continue;
                 if ((g.boss?.anim ?? null) !== s.beast) bad.push(`t ${g.t}: beast game ${g.boss?.anim} model ${s.beast}`);
                 if (rows(g.tentacleRows).join('|') !== rows(s.tentacles).join('|')) bad.push(`t ${g.t}: tentacles differ`);
+                // A beast built dead (BOSSFORK D2's `tb-enter-cleared`) has no stream: the model claims no generator
+                // state there, so there is nothing to compare (the room owes no draw after its build).
+                if (s.rngState === null && s.dead) continue;
                 if (g.rngState !== s.rngState) bad.push(`t ${g.t}: rng game ${g.rngState} model ${s.rngState}`);
             }
             expect(bad.slice(0, 6)).toEqual([]);
@@ -222,4 +229,55 @@ describe('bosskills D3 — the solver (`solid:tentaclebeast` → `tentaclebeast`
         expect(e).toBeInstanceOf(SolverRefusal);
         expect(e.message).toMatch(/split: true/);
     }, 120000);
+});
+
+/**
+ * ⛓⛓ fidelity BOSSFORK D2 — A CLEARED L57 BUILDS WITH THE MOUTH STANDING. The fight is asked lazily (the steppers' first
+ * `advance`), so before D2 a run that BUILT L57 with {57,0} cleared held no mouth Teleporter in `run.world` until then.
+ * The game's ctor builds the beast dead with the mouth standing: BOSSKILLS D1's revisit (seed 1, boot (96,160), {57,0}
+ * cleared, `up` for 162 ticks) reached L58 at t162 at (64,104), and BOSSFORK D2 re-ran it on p4g with the same ticks.
+ * The staging is `tb-idle-s1`'s with that persistence row and that input.
+ *
+ * The other build, `enterWorld`, is the witness `tb-enter-cleared` (p4g, 121 t): from L58 through the door to L57 the
+ * arrival (104,72) stands ON the mouth, and the game keeps the player in L57 for all 120 ticks. Before D2 the model built
+ * the mouth only at the first step, after the arrival's latch was taken, and walked the player back into L58 at t3.
+ *
+ * Mutants (predicted, copy + restore): M-D2a drop the boot's `tentacleMouthAtBuild()` → the "at the build" row reds (no
+ * teleporter at t0); the walk row still passes (the first step asks the fight, as before D2). M-D2b drop the
+ * `enterWorld` call → `tb-enter-cleared` reds at t3 (L58 (64,104) where the game stands in L57 (104,72)).
+ */
+describe('bossfork D2 — a cleared L57 holds its mouth at the build (`tentacleMouthAtBuild`)', () => {
+    const base = witnesses.find((w) => w.name === 'tb-idle-s1').tape;
+    const revisit = { ...base, name: 'revisit-57', persistence: [{ level: 57, tag: 0, note: '' }],
+        inputs: [{ key: 'up', from: 0, to: 162 }], tick_count: 163 };
+    const stagingOf = (t) => stagingFromTape(parseTape(JSON.stringify({ ...t, inputs: [], tick_count: 0 })));
+    const mouths = (run) => run.world.teleporters.filter((t) => t.runtime === 'tentacle_beast_mouth')
+        .map((t) => `${t.x},${t.y}->L${t.to}@${t.playerx},${t.playery}`);
+
+    it('ON, at the build (no advance): the mouth (96,64) → L58 (56,96) stands', () => {
+        withContactFidelity({ tentacleBeastFight: true }, () => {
+            expect(mouths(createRunForStaging(stagingOf(revisit), SRC))).toEqual(['96,64->L58@56,96']);
+        });
+    });
+
+    it('OFF, and ON with the beast alive: no mouth at the build', () => {
+        expect(mouths(createRunForStaging(stagingOf(revisit), SRC))).toEqual([]);
+        withContactFidelity({ tentacleBeastFight: true }, () => {
+            expect(mouths(createRunForStaging(stagingOf(base), SRC))).toEqual([]);
+        });
+    });
+
+    it('ON, the revisit walk: into L58 at t162 at (64,104), as the game', () => {
+        withContactFidelity({ tentacleBeastFight: true }, () => {
+            const st = createTapeStepper(parseTape(JSON.stringify(revisit)), { levelSource: SRC });
+            let first = null;
+            let r = st.next();
+            while (!r.done) {
+                const o = r.value.observation;
+                if (first === null && o.level === 58) first = { t: o.t, x: o.x, y: o.y };
+                r = st.next();
+            }
+            expect(first).toEqual({ t: 162, x: 64, y: 104 });
+        });
+    });
 });
