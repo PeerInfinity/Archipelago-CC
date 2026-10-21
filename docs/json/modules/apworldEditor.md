@@ -45,7 +45,7 @@ document.
 | `rawView.js` | the **Raw JSON** tab's text and its parse (the size limit was RETIRED by measurement — H2b) |
 | `downloadJson.js` | the download exit — the file name and the bytes |
 | `../apworldBuild/apworldBuild.js` | the **`.apworld` exit** — `buildApworld(doc, {gameName, playerId})` (the page side of the worker protocol), `worldGeneratorBaseUrl` (where `world_generator/` is served), `PYODIDE_VERSION` (pinned), `downloadBytes` |
-| `../apworldBuild/apworldBuildWorker.js` | the MODULE WORKER the build runs in — Pyodide from the CDN, booted on the first build and kept; the package files fetched per `worldGeneratorFiles.json`; calls `world_generator.apworld.build_apworld` |
+| `../apworldBuild/apworldBuildWorker.js` | the MODULE WORKER the build runs in — Pyodide from the CDN, booted on the first build and kept; the package files fetched per `worldGeneratorFiles.json` (both via the shared `../pyodideRuntime/pyodideRuntime.js`, which also holds the version pin); calls `world_generator.apworld.build_apworld` |
 | `../apworldBuild/worldGeneratorFiles.json` | GENERATED (`node scripts/build/world-generator-files.mjs --write`, from `git ls-files world_generator`) — the files the worker fetches; `apworldBuild.test.js` fails when it is stale |
 
 ## The `.apworld` button

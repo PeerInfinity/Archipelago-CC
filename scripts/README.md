@@ -217,6 +217,19 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   node scripts/build/world-generator-files.mjs --write   # regenerate
   ```
 
+- **`build/helper-script-files.mjs`** - The SUBSET of `exporter/` the page fetches
+  to run `exporter.script_api` (Python ⇄ the rules.json `helpers` format) under
+  Pyodide (`frontend/modules/helperScript/helperScriptFiles.json`; its `INCLUDE`
+  list names the files, `git ls-files` resolves them). Re-run with `--write` after
+  adding or removing a file there; `helperScriptFiles.test.js` fails while it is
+  stale. `--stage <dir>` copies exactly those files (the Pages deploy does
+  `--stage frontend/exporter`).
+  ```bash
+  node scripts/build/helper-script-files.mjs                          # check
+  node scripts/build/helper-script-files.mjs --write                  # regenerate
+  node scripts/build/helper-script-files.mjs --stage frontend/exporter
+  ```
+
 - **`build/bundle-frontend.js`** - Bundle the frontend for production using esbuild
   ```bash
   node scripts/build/bundle-frontend.js            # Production build
