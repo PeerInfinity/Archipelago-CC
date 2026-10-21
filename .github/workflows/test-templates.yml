@@ -206,7 +206,7 @@ jobs:
           fi
           list=$(node scripts/test/list-test-batches.js --on-push --changed=/tmp/changed.txt)
           echo "On-push batches: $list"
-          echo "list=$list" >> "$GITHUB_OUTPUT""
+          echo "list=$list" >> "$GITHUB_OUTPUT"
 
   substrates:
     name: Substrate tests — ${{ matrix.batch }} batch
