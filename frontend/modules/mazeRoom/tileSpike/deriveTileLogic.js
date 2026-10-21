@@ -1,6 +1,6 @@
 /**
  * Q3 search PROTOTYPE (2026-10-21) — AP logic DERIVED from the tile definition (⚖ Q3 "One def;
- * logic by search"; brief NewDocs/plans/tile-primitives-design-brief.md). Nothing is compiled from
+ * logic by search"; design session tile-primitives-design). Nothing is compiled from
  * the tile scripts: per inventory, a BFS over `scriptedStep` says which targets the player can stand
  * on, and the per-target MINIMAL inventories become an ordinary Or-of-And-of-Has rule.
  *

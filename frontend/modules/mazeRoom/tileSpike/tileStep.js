@@ -1,7 +1,7 @@
 /**
  * Tile-primitives SPIKE (2026-10-21) — the maze's push + button behaviour re-expressed as
  * ENGINE PRIMITIVES configured by a `tile_lib`, with helper scripts for the CONDITIONS only
- * (⚖ Q2 iii; brief NewDocs/plans/tile-primitives-design-brief.md). The real `step` is the oracle.
+ * (⚖ Q2 iii; design session tile-primitives-design). The real `step` is the oracle.
  *
  * Primitives, all native here:
  *   enter — the player moves onto a cell             condition: tileLib.cell.enter
