@@ -80,6 +80,8 @@ Maps every test script and validation tool to the GitHub Actions workflow(s) tha
 
 | Script | Workflow(s) | Notes |
 |--------|-------------|-------|
+| `scripts/rules/ruleKindCensus.test.js` | `unittests_frontend.yml` (vitest) | Cross-layer rule-node kind census: [rule-kind-registry.md](reference/rule-kind-registry.md) |
+| `test/general/test_rule_kind_vocab.py` | `unittests.yml` (pytest) | The census's Python vocabulary snapshot is fresh |
 | `sync-rule-docs.py` | **No workflow** | Rule types documentation coverage |
 | `sync-rule-tests.py` | **No workflow** | Rule types test coverage |
 | `sync-script-docs.py` | **No workflow** | Script documentation coverage |
