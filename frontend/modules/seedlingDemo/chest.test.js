@@ -51,14 +51,17 @@ describe('the chest is in the census where §21.4 said it was', () => {
 });
 
 describe('the probe line, and its ASYMMETRIC inset', () => {
-    it('is one pixel below the box, inset 2 on the left and FOUR on the right', () => {
-        expect(chestProbeLine(144, 112)).toEqual({ x0: 146, x1: 156, y: 129 });
+    // ⛓ fidelity L1516's flip (`chestProbeLineEnd` ON): FlashPunk's `collideLine` at precision 1 never tests `toX`
+    // (`World.as:514`), so the last probe is px+11 — the inset reads FIVE, not four (OFF: x1 156, inset 4).
+    it('is one pixel below the box, inset 2 on the left and FIVE on the right (the end point is never probed)', () => {
+        expect(chestProbeLine(144, 112)).toEqual({ x0: 146, x1: 155, y: 129 });
     });
 
     it('the right inset is `2 * m`, which is what makes it asymmetric', () => {
         const line = chestProbeLine(0, 0);
         expect(line.x0 - 0).toBe(CHEST.m);
-        expect(CHEST.box.w - line.x1).toBe(2 * CHEST.m);
+        // ⛓ + 1 since the flip: `toX` itself (px + w - 2m) is never probed.
+        expect(CHEST.box.w - line.x1).toBe(2 * CHEST.m + 1);
         // The failure this guards: a symmetric reading would put x1 at 14.
         expect(line.x1).not.toBe(CHEST.box.w - CHEST.m);
     });

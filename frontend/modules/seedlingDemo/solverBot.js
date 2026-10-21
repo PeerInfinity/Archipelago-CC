@@ -162,6 +162,8 @@ import {
     createWandShot, stepWandShot, wandShotRect, MAGICAL_LOCK_OPEN_TICK_OFFSET,
     // ⛓⛓⛓ hammer-phase XC: the cross-pass escape cache's key spells its arguments as the digest spells the run.
     canonicalDigestText,
+    // ⛓ fidelity BOSSFORK D1b: the beast's "dying" length bounds the wait for its mouth (`awaitTentacleMouth`).
+    TENTACLE_BEAST_ANIMS, animTicks as tentacleAnimTicks,
 } from './solverView.js';
 import {
     bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
@@ -20016,6 +20018,36 @@ function solveSegmentUnder({
         solverEquips.push({ t: run.ticksCompleted, slot });
     };
     /**
+     * ⛓⛓ fidelity BOSSFORK D1b (`CONTACT_FIDELITY.tentacleBeastFight`; OFF the run has no fight and this returns at
+     * once) — **A MOUTH STILL TO OPEN.** The beast's report lands as its "dying" starts, and the mouth Teleporter only
+     * when "dying" ends (`TentacleBeast.as`; `tentacleBeast.js` pushes `mouth`). The `tentaclebeast` verb itself plays
+     * through it, but a reach-exit at the mouth's cell asked inside that window found no teleporter and refused: the JS
+     * page's continue request after the clear-tag (sweep leg 505, run 39659335148, request 1 at t2866: the report at
+     * t2864). The walk now idles until the run builds the mouth, bounded by the anim, and refuses by name on a crossing,
+     * a hit or the bound (an idle that takes damage is not a plan).
+     */
+    const awaitTentacleMouth = (goal) => {
+        const f = CONTACT_FIDELITY.tentacleBeastFight ? run.entities('tentacleBeastFight') : null;
+        if (!f || f.mouth || !f.beast.dead || f.beast.anim !== 'dying') return;
+        if (goal.exit.x !== f.beast.x - 8 || goal.exit.y !== f.beast.y - 8) return;
+        const what = `solverBot(${name}) reach-exit (${goal.exit.x},${goal.exit.y}): ${f.id}'s mouth`;
+        const bound = tentacleAnimTicks(...TENTACLE_BEAST_ANIMS.dying);
+        const hits = (run.ledger('playerHits') ?? []).length;
+        const idle = new Set();
+        for (let waited = 0; waited <= bound; waited += 1) {
+            if (run.entities('tentacleBeastFight')?.mouth) return;
+            perTick.push(idle);
+            const { transition } = run.advance(idle);
+            if (transition) {
+                refuse(`${what}: the run crossed to level ${transition.to_level} while the beast was dying`, { goal });
+            }
+            if ((run.ledger('playerHits') ?? []).length > hits) {
+                refuse(`${what}: the player was hit while waiting for the mouth (the beast is "dying")`, { goal });
+            }
+        }
+        refuse(`${what} is not open ${bound + 1} ticks into "dying"`, { goal });
+    };
+    /**
      * ⛓ hammer-phase B3c — the replay's two other inputs, shared by the fork and the rewind: this segment's apitem
      * takes (tape index, `apItemsTaken`) and the clock check at the end of the caller's prefix.
      */
@@ -24546,6 +24578,10 @@ function solveSegmentUnder({
         const record = clearTagExecutor(verb)(run, perTick, resolved, {
             maxTicksPerTarget, economies, dashMode, what: `${whatCT} -> ${verb}`,
             before, walkTo, goal, equip, rewind,
+            // ⛓ fidelity BOSSFORK D1: the segment's own fork (`forkRun`, above; null without one), as the frontier arm
+            // passes it — `execLavaBoss` / `execTentacleBeast` try their policy variants on it. No other clear-tag verb
+            // reads `ctx.fork` (`bait` is the frontier's only), so a verb that does not fight a boss is unchanged.
+            fork,
         });
         for (const c of resolved.exempt ?? []) exemptions.add(c);
         // ⛓ fidelity WATCHERTALK D2: the talk is certified by the run's own `watcherTalks` row for this flag.
@@ -24762,6 +24798,7 @@ function solveSegmentUnder({
             continue;
         }
         if (goal.kind === 'reach-exit') {
+            awaitTentacleMouth(goal);
             const { index, teleporter } = findExitNamed(run.world, goal.exit);
             const centre = {
                 x: teleporter.rect.x + TILE_SIZE / 2,
@@ -24940,6 +24977,8 @@ function solveSegmentUnder({
             const rec = STRATEGY_EXECUTORS[strategy](run, perTick, resolvedBlocker, {
                 maxTicksPerTarget, economies, dashMode, what: `${what} -> ${strategy}`,
                 before: null, walkTo, goal, equip, rewind,
+                // ⛓ fidelity BOSSFORK D1: the segment's fork, as the frontier arm and the clear-tag arm pass it.
+                fork,
             });
             records.push({ goal: goal.kind, strategy, ...rec });
             // ⛓ seedling-fidelity-movingwait: a paced wait is its own decision row (absent on a still one).

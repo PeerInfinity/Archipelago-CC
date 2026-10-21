@@ -24398,6 +24398,42 @@ components"), and the component was one tile surrounded by pits.
 **Trap candidate.** *An inclusive integer range transcribed from an exclusive raycast.* `keyLineTouches` reads `x1`
 inclusive; every caller must hand it `toX - 1`. The keyLock did, the chest did not.
 
+### Seedling fidelity BOSSFORK — the two boss fights wired to the solver's fork and the route survey (switches still OFF)
+
+Planner `seedling-fidelity-planning-9`, wave 22. Everything is behind `kingOfFireFight` / `tentacleBeastFight`, both
+still OFF. The report is `CC/docs/cloud-reports/seedling-fidelity-bossfork.md`.
+
+**D1 — the fork.** The frontier arm already handed its executors `fork`; the clear-tag arm and the placement-blocker arm
+did not, so `execLavaBoss` / `execTentacleBeast` played policy variant 0 alone there. Now both arms pass the segment's
+existing fork (the fork itself is unchanged). Sweep leg 665 (`location:Level 082 - King of Fire`, the clear-tag {82,0})
+went from a refusal (variant 0 dies at spent 691) to SOLVED 870 t (variant 2, `standY` 160). The answer was played on
+p4g and holds at 0 px (`fixtures/lavaboss-witness/kof-fork-665`). For L57, seeds 1–8 walk identically with and without
+the fork: variant 0 wins each time.
+
+**D1b — the mouth still to open.** The beast's report lands as "dying" starts, and the mouth Teleporter only appears 61
+updates later. The JS page's continue request after the clear-tag (leg 505, request 1 at t2866) asked a bare reach-exit
+in that window and refused "no teleporter at (96,64)". `awaitTentacleMouth` now idles until the mouth stands. The
+continuation is the first plan's tail tick for tick, so the sweep had already played it on the game.
+
+**D2 — a cleared L57's build.** `tentacleFightFor` is lazy, so a build with {57,0} cleared had no mouth until the first
+step. `tentacleMouthAtBuild` builds the mouth at the boot and in `enterWorld`, for the cleared arm only. This also
+corrects an arrival: from L58 the door lands the player ON the mouth at (104,72). The game keeps them in L57 (new
+witness `tb-enter-cleared`), while the model used to walk them back into L58 at t3.
+
+**D3 — the survey.** `hopEdge` answers `out_tentaclebeast_80_48` from the model's cleared build (ON only, as LIGHTS
+did for L69), and the crossing asks for the fight first. Steps 90/121 (L57) go from NO-EDGE to REFUSED on the stream's
+`split: true` premise; with L57 staged split they SOLVE 2060 t. Steps 91/122 (L58) go from NO-ARRIVAL to REFUSED on
+L58's own `teleporter@80,16` (tag 1), which the staging deactivates.
+
+**D4 — the ~110 s on legs 505/506 is play time, not solve time.** The captured requests solve in about 1 s in node.
+The page then plays 3,124 / 2,924 ticks at the runner's 28.8 ticks/s.
+
+**Trap candidates.**
+- A boss verb that tries variants "on `ctx.fork`" plays only variant 0 at a call site that passes no `fork`, and
+  nothing says so. Grep every `STRATEGY_EXECUTORS[…](` / `clearTagExecutor(…)(` call for the context keys a verb reads.
+- A runtime teleporter built lazily (on the first step) misses the arrival's latch. An arrival that lands on it then
+  teleports straight back. Build what the game's ctor builds at the build.
+
 ### Seedling fidelity ROPE — a `rope` verb that cuts a rope to clear its flag (`ropeCutVerb`, OFF)
 
 Planner `seedling-fidelity-planning-9`, wave 22. rules-2's `rules-rope-events` makes a cut rope a cross-visit EVENT
