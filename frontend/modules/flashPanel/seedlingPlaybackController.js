@@ -354,7 +354,13 @@ export const BOSS_REPORT_REFUSAL = (r) => `"${r.location}" is a BOSS KILL (a ${r
  * ⚠ Wire only what is listed: a body whose verb is registered by default (`shieldboss` → `fight`) is a separate
  * wiring, not this table's default.
  */
-export const BOUND_BOSS_FIGHTS = Object.freeze({ lightbosscontroller: 'lightsBossFight' });
+export const BOUND_BOSS_FIGHTS = Object.freeze({
+    lightbosscontroller: 'lightsBossFight',
+    // ⛓ BOSS WIRING (slice `seedling-js-boss-wiring`) — fidelity BOSSKILLS' two fights (`solid:lavaboss` → `lavaboss`,
+    // `solid:tentaclebeast` → `tentaclebeast`, both switch-gated rows): L82's King of Fire {82,0} and L57's beast {57,0}.
+    lavaboss: 'kingOfFireFight',
+    tentaclebeast: 'tentacleBeastFight',
+});
 
 /**
  * ⛓ LIGHTS WIRING — a boss kill's FIGHT anchor, read off the DELIVERED room: the one entity of the report's
