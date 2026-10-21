@@ -203,13 +203,18 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_15__r1c5 -> level_15__r1c9", player),
+        HasAny('Progressive Sword', 'Ghost Spear', 'Progressive Swim')
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_15__r1c5 -> level_15__r6c8", player),
         Has('Progressive Swim', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("level_15__r1c9 -> level_15__r1c5", player),
-        Has('Progressive Swim', 1)
+        Or(And(HasAny('Progressive Sword', 'Ghost Spear'), Has('Progressive Swim')), Has('Progressive Swim'))
     )
 
     world.set_rule(
@@ -225,6 +230,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("level_15__r6c8 -> level_15__r1c9", player),
         Has('Progressive Swim', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_16__r1c1 -> level_16__r4c21", player),
+        HasAny('Progressive Sword', 'Ghost Spear')
     )
 
     world.set_rule(
@@ -569,7 +579,7 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_41__r4c15 -> level_41__r7c15", player),
-        HasAny('Progressive Sword', 'Ghost Spear')
+        And(HasAny('Progressive Sword', 'Ghost Spear'), Has('Fire'))
     )
 
     world.set_rule(

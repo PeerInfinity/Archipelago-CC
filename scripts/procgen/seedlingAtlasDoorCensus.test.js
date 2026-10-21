@@ -66,7 +66,9 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         //   (64,128) -> (88,128), and Bob's two locations stand on its tile ([4,8] -> [5,8]); no count moves.
         // ⛓ rules-r4b-followup — restamped (0c2152f7 -> 832cd44f): a pit's landing is read off the pit tile's CENTRE
         //   (`Tile.as:103`; witnessed on p4g), so L70's pit lands on L69 (3,8), not (3,7); no count moves.
-        expect(c.atlasId).toBe('seedling-832cd44f');
+        // ⛓ rules-block-path — restamped (832cd44f -> 7660a339): a re-closing lock's entry is priced by the
+        // block paths that hold its button (L15/L16/L41), so three analyzer rows gain a rule.
+        expect(c.atlasId).toBe('seedling-7660a339');
         expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 54, 195, 286, 200]);
         expect(c.swimLevels).toHaveLength(21);
         expect(c.byRule.slice(0, 2)).toEqual([
