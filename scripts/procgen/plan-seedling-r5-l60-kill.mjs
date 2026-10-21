@@ -42,14 +42,15 @@
  * Usage:
  *   node scripts/procgen/plan-seedling-r5-l60-kill.mjs           # plan + report
  *   node scripts/procgen/plan-seedling-r5-l60-kill.mjs --write   # write the tapes
+ *   node scripts/procgen/plan-seedling-r5-l60-kill.mjs --check   # the committed fixtures are byte-identical
  */
 
-import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { emitFixtures } from './producerFixtureBytes.js';
 
 argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -68,6 +69,7 @@ const { playerBoxAt } = await import(join(MODULE, 'playerPhysicsV2.js'));
 
 const LEVEL = 60;
 const WRITE = process.argv.includes('--write');
+const CHECK = process.argv.includes('--check');
 
 /** `Enemy.hitsTimerMax`, and `Lock`'s alpha fade at 0.01/update. */
 const IFRAMES = 30;
@@ -251,7 +253,9 @@ const BOOT = { level: LEVEL, x: STANCE.x - 8, y: STANCE.y - 8 };
 
 const shared = {
     game: 'seedling',
-    tape_version: 3,
+    // v5: the dead-frame LOCKSTEP (`Bot.pinDeadFrames`); `equips: []` is v4's
+    // by-definition value.
+    tape_version: 5,
     boot: BOOT,
     noclip: false,
     // ⚠ `noDamage` is TRUE on BOTH arms, deliberately. The pair's one field
@@ -268,6 +272,8 @@ const shared = {
     noHazards: ['water', 'waterfall'],
     grants: [{ level: LEVEL, items: ['sword'] }],
     persistence: [],
+    equips: [],
+    pins: ['dead_frames'],
     tick_count: TICK_COUNT,
 };
 
@@ -321,13 +327,11 @@ if (rectsOverlap(box, rect(lock.rect.x, lock.rect.y, 16, 16))) {
 }
 console.log(`\n   stance box ${JSON.stringify(box)} — clear of the lock, inside row 5`);
 
-if (WRITE) {
-    const dir = join(MODULE, 'fixtures', 'tapes');
-    for (const t of [control, kill]) {
-        const path = join(dir, `${t.name}.json`);
-        writeFileSync(path, serializeTape(t));
-        console.log(`   wrote ${path}`);
-    }
-} else {
+const dir = join(MODULE, 'fixtures', 'tapes');
+const outputs = [control, kill].map((t) => {
+    const path = join(dir, `${t.name}.json`);
+    return { path, text: serializeTape(t) };
+});
+if (!emitFixtures(outputs, { write: WRITE, check: CHECK })) {
     console.log('\n(dry run — pass --write to emit the two tapes)');
 }
