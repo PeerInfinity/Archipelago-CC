@@ -657,6 +657,12 @@
       "file": "sheets/BossKey4.png",
       "w": 48,
       "h": 16
+    },
+    "SeedlingFont": {
+      "file": "sheets/SeedlingFont.png",
+      "w": 64,
+      "h": 48,
+      "authored": "scripts/procgen/make-seedling-font.mjs — ORIGINAL glyphs (not 04B_03), MIT (the repository licence)"
     }
   },
   "sprites": {
@@ -2945,6 +2951,13 @@
         8
       ],
       "as3": "Game.as:440-441 sprBossKey4; Game.as:444 bossKeys[4]; APItem.as:155-162 \"bosskey4\""
+    },
+    "seedling:font/default": {
+      "sheet": "SeedlingFont",
+      "fw": 4,
+      "fh": 8,
+      "frames": 96,
+      "as3": "Game.as:1677-1757 talk(), Text.size = 8 (04B_03, Preloader.as:30, not shipped); frame = char code − 32"
     }
   }
 }

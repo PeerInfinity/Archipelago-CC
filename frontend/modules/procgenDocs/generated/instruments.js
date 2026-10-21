@@ -104,7 +104,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 10,
+            "count": 11,
             "id": "make"
         },
         {
@@ -232,10 +232,10 @@ export const INSTRUMENTS = frz({
         "blockStyle": 439,
         "browser": 150,
         "cited": 230,
-        "files": 452,
-        "lineStyle": 13,
-        "withDocblock": 452,
-        "withFlags": 369
+        "files": 453,
+        "lineStyle": 14,
+        "withDocblock": 453,
+        "withFlags": 370
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6831,6 +6831,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling entity colliders — the MODEL's hitbox of every entity tag, as a leaf module the traversal transcription can import (`frontend/modules/flashPanel/seedlingEntityColliders.js`).",
             "path": "scripts/procgen/make-seedling-entity-colliders.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "make",
+            "citedBy": [],
+            "docblockStyle": "line",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "make-seedling-font.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling font maker — writes the glyph sheet behind the JS runtime's font seam (`seedlingEffectSkin.KEYS.font` = `seedling:font/default`, frame = char code − 32) from the GLYPHS table below.",
+            "path": "scripts/procgen/make-seedling-font.mjs"
         },
         {
             "argvHelpers": [],

@@ -77,6 +77,7 @@ class RuleBuilderToAST:
             'And': self._convert_and,
             'Or': self._convert_or,
             'AtLeast': self._convert_atleast,
+            'Not': self._convert_not,
 
             # Reachability rules
             'CanReachRegion': self._convert_can_reach_region,
@@ -612,6 +613,22 @@ class RuleBuilderToAST:
             return self._wrap_with_options(converted_inner, options)
 
         return converted_inner
+
+    def _convert_not(self, rule: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Convert Not rule.
+
+        Rule Builder: {"rule": "Not", "child": {...}}  (a WrapperRule: the child sits at the root)
+        AST Format: {"type": "not", "condition": {...}}
+        """
+        child = rule.get('child', (rule.get('args') or {}).get('child'))
+        if not child:
+            self.errors.append("Not rule has no child")
+            return {'type': 'constant', 'value': False}
+        converted = self._convert_rule(child)
+        if converted.get('type') == 'constant' and isinstance(converted.get('value'), bool):
+            return {'type': 'constant', 'value': not converted['value']}
+        return {'type': 'not', 'condition': converted}
 
     def _convert_wrapper(self, rule: Dict[str, Any]) -> Dict[str, Any]:
         """
