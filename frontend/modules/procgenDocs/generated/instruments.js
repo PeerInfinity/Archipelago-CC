@@ -235,7 +235,7 @@ export const INSTRUMENTS = frz({
         "files": 450,
         "lineStyle": 13,
         "withDocblock": 450,
-        "withFlags": 366
+        "withFlags": 367
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -17746,7 +17746,14 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "stamp-seedling-vanilla-set.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
             "inheritedFlags": [
                 {
                     "from": "argvHelp.js",
