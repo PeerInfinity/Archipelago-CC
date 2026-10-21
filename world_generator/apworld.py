@@ -77,6 +77,7 @@ def build_apworld(
     game_name: Optional[str] = None,
     canonical_seed: Optional[int] = None,
     player_id: str = "1",
+    lossy: bool = False,
 ) -> dict:
     """Generate a world from a rules file and pack it, entirely in a temp dir.
 
@@ -103,6 +104,7 @@ def build_apworld(
                 force=True,
                 canonical_seed=canonical_seed,
                 player_id=player_id,
+                lossy=lossy,
             ).generate()
         buffer = io.BytesIO()
         pack_world_dir(world_dir, buffer)

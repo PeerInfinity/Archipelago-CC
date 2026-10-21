@@ -10,6 +10,7 @@ import logging
 from pathlib import Path
 from typing import List, Optional, Dict
 
+from ._unknown_kind import lossy_codegen
 from .extractors import extract_all, apply_name_substitutions, ExtractedData, sanitize_identifier
 from .templates import (
     generate_items_py,
@@ -41,6 +42,7 @@ class WorldGenerator:
         canonical_seed: Optional[int] = None,
         player_id: str = '1',
         apply_name_substitutions: bool = False,
+        lossy: bool = False,
     ):
         """
         Initialize the generator.
@@ -53,6 +55,8 @@ class WorldGenerator:
             canonical_seed: If set, generated world will place items in original locations when seed matches this value
             player_id: Player ID to extract from multiworld rules file (default: '1')
             apply_name_substitutions: If True, apply name_substitutions from the rules file (default: False)
+            lossy: If True, a rule kind with no codegen path becomes an always-true placeholder
+                (recorded in ``lossy_placeholders``) instead of raising UnknownRuleKindError
         """
         self.json_path = Path(json_path)
         self.game_name_override = game_name
@@ -60,6 +64,9 @@ class WorldGenerator:
         self.canonical_seed = canonical_seed
         self.player_id = player_id
         self.apply_name_substitutions = apply_name_substitutions
+        self.lossy = lossy
+        # '<site>:<kind>' -> count of always-true placeholders emitted (lossy mode only)
+        self.lossy_placeholders: Dict[str, int] = {}
         self.data: Optional[ExtractedData] = None
         self._output_dir: Optional[Path] = Path(output_dir) if output_dir else None
 
@@ -186,7 +193,19 @@ class WorldGenerator:
 
         Args:
             dry_run: If True, only show what would be generated without writing
+
+        Raises:
+            UnknownRuleKindError: a rule kind has no codegen path (unless ``lossy``)
         """
+        with lossy_codegen(self.lossy) as record:
+            self._generate(dry_run)
+        self.lossy_placeholders = dict(record)
+        if record:
+            logger.warning(
+                "LOSSY: always-true placeholders for rule kinds with no codegen path: "
+                + ", ".join(f"{k} x{n}" for k, n in sorted(record.items())))
+
+    def _generate(self, dry_run: bool) -> None:
         if self.data is None:
             self.load()
 

@@ -189,8 +189,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity L40GUARD: `guardApproachStance` (D2), `coveredGoalRefusal` (D3), `shakeBandMoot` and
             // `spinnerSwingLineOfSight` (D4) shipped OFF; ⛓ planning-9's flip (⚖ user "Flip all four", 2026-10-19) turns them ON.
             guardApproachStance: true, coveredGoalRefusal: true, shakeBandMoot: true, spinnerSwingLineOfSight: true,
-            // ⛓ fidelity IGNEOUS D2: `igneousLava` (the type-31 tile crumbles to lava) ships OFF.
-            igneousLava: false,
+            // ⛓ fidelity IGNEOUS D2: `igneousLava` (the type-31 tile crumbles to lava) shipped OFF;
+            // ⛓ planning-9's flip (⚖ user "Flip igneousLava ON", 2026-10-21) turns it ON.
+            igneousLava: true,
             // ⛓ fidelity LIGHTS (wave 20): the L69 fight's model and verb, OFF.
             lightsBossFight: false,
             // ⛓ seedling-fidelity-bosskills: the King of Fire's and the Tentacled Beast's fights ship OFF.

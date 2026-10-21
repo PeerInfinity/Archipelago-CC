@@ -195,7 +195,7 @@ describe('1. golden effect ops (frame CHOICE, not pixels)', () => {
 
     it('the coverage table: G4\'s keys reached the pack, and nothing G1–G3c drew is counted again', () => {
         for (const k of [KEYS.explosion, KEYS.slash, KEYS.droplet, KEYS.heart]) expect(art.has(k), k).toBe(true);
-        expect(art.has(KEYS.font), 'no pack names a font yet (⚖ open)').toBe(false);
+        expect(art.has(KEYS.font), 'the seedling pack names the authored font (G4b)').toBe(true);
         const before = new Set([...ENEMY_COVERAGE.drawn, ...ROOM_BODY_COVERAGE.drawn, ...HAZARD_COVERAGE.drawn]);
         for (const c of EFFECT_COVERAGE.drawn) expect(before.has(c), c).toBe(false);
         expect(EFFECT_COVERAGE.modelled).toEqual([]);
@@ -365,17 +365,29 @@ describe('2. the independent stratum (by hand from the AS3)', () => {
         ]);
         const bars = rows[0].screen.filter((o) => o.alpha === 0.8);
         expect(bars.map((o) => [o.rect.x, o.rect.y, o.rect.w, o.rect.h])).toEqual([[0, 0, 160, 26], [0, 133, 160, 27]]);
-        const glyphs = (r, colour = '#ffffff') => r.screen.filter((o) => o.glyph !== undefined && o.colour === colour);
+        // the authored font (G4b): white glyphs, the black outline copies TINTED (`Text.color` is a multiplying `Image.color`)
+        expect(resolveFont(art)).toEqual({ id: KEYS.font, advance: 4, lineHeight: 8, gutter: 4, sprite: true });
+        const glyphs = (r, tint = undefined) => r.screen.filter((o) => o.glyph !== undefined && o.tint === tint);
         expect(glyphs(rows[0]).map((o) => String.fromCharCode(o.glyph)).join('')).toBe('Youg');                // 'You g' typed; a space draws nothing
-        // CENTER: alignOffsetX = int((160 − 8 − t.width) / 2), t.width = 5·4 + 4 with the placeholder
-        const m = measureText('You g', PLACEHOLDER_FONT);
-        expect(m.w).toBe(24);
-        expect(glyphs(rows[0])[0].rect.x).toBe(8 + Math.trunc((160 - 8 - 24) / 2) + 2);
-        const prompt = (r) => r.screen.filter((o) => o.glyph === '<'.charCodeAt(0));
+        // CENTER: alignOffsetX = int((160 − 8 − t.width) / 2), t.width = 5·4 + 4; y = int(160·5.5/6 − (8 + 4)/2 + 1) = 141; the 2 px gutter inside
+        const m = measureText('You g', resolveFont(art));
+        expect([m.w, m.h]).toEqual([24, 12]);
+        const [Y] = glyphs(rows[0]);
+        expect([Y.dx, Y.dy]).toEqual([8 + Math.trunc((160 - 8 - 24) / 2) + 2, 141 + 2]);
+        // frame = code − 32: 'Y' (89) is frame 57, column 57 mod 16 = 9, row 3 of the 16-wide sheet
+        expect([Y.frame, Y.sx, Y.sy, Y.sw, Y.sh]).toEqual([57, 36, 24, 4, 8]);
+        const prompt = (r, tint) => r.screen.filter((o) => o.glyph === '<'.charCodeAt(0) && o.tint === tint);
         expect(prompt(rows[0])).toEqual([]);
-        expect(prompt(rows[1])).toHaveLength(5);                             // four black outline copies + the white one
+        // four black outline copies at ±1 px (Game.as:1760-1774), then the white one; <X> at (160 − w, 160 − 26 − h/2)
+        const white = prompt(rows[1]);
+        expect(white.map((o) => [o.dx, o.dy])).toEqual([[160 - 16 + 2, Math.floor(160 - 26 - 6) + 2]]);
+        expect(prompt(rows[1], '#000000').map((o) => [o.dx - white[0].dx, o.dy - white[0].dy])).toEqual([[-1, 0], [1, 0], [0, -1], [0, 1]]);
         expect(prompt(rows[2])).toEqual([]);
-        expect(resolveFont(art)).toBe(PLACEHOLDER_FONT);
+        // the placeholder still stands in for a stack without a font: the same box, drawn as rectangles
+        expect(resolveFont({ has: () => false })).toBe(PLACEHOLDER_FONT);
+        const boxes = screenOps(V({ dialogue: { text, currentCharacter: 5 } }), art, { skin: rows[0].skin, cam: { x: 0, y: 0 }, font: PLACEHOLDER_FONT })
+            .filter((o) => o.glyph !== undefined);
+        expect(boxes.map((o) => o.rect.x)).toEqual([74, 78, 82, 90]);
     });
 
     it('the camera (Game.as:1966-2010): exact when the model has a point; in a shake band a jiggle inside it (the cosmetic stream), or the middle', () => {
@@ -420,6 +432,7 @@ describe('3. one mutant per family turns a golden red', () => {
         ['Hearts — heartsSample: one hit too many', 'hearts-L30', { rules: { heartsSample: (...a) => { const s = EFFECT_RULES.heartsSample(...a); return { ...s, hits: s.hits + 1 }; } } }],
         ['Fade — fadeCovers: the first dead frame unstepped', 'walk-L59', { rules: { fadeCovers: (n) => [1, ...EFFECT_RULES.fadeCovers(n - 1)] } }],
         ['Talk — typedText: the whole page at once', 'totem-kill-L43', { rules: { typedText: (d) => d.text } }],
+        ['Font — glyphFrame: one frame off (a wrong glyph)', 'totem-kill-L43', { rules: { glyphFrame: (code) => EFFECT_RULES.glyphFrame(code) + 1 } }],
     ];
     for (const [name, tape, opts, over = 5] of MUTANTS) it(name, () => expect(differs(T[tape], opts)).toBeGreaterThan(over), 240_000);
 });

@@ -13,9 +13,16 @@
  * grants nothing; `'in-room'` latches what the player walks over, as the standalone level plays.
  *
  * Exit tiles are dead ends (the player leaves the region there), as in the engine's own floods.
+ *
+ * ITEM ACTIONS (slice tile-primitives-item-actions): on a world with an `action_lib` the search's
+ * state is the engine's (facing + per-visit `broken`), its inputs gain the four turns and the uses
+ * of HELD items, and the item axis gains every action item whose action strikes an obstacle of the
+ * region (a `struck_by` rock names no item in its clear set). Still monotone: more items, more uses.
  */
 
-import { createState, getExitAt, mazeVisitedKey, INPUTS } from '../mazeRoomEngine.js';
+import {
+    createState, getExitAt, mazeVisitedKey, hasItemActions, worldInputs, USE_PREFIX,
+} from '../mazeRoomEngine.js';
 import { MAZE_TILE_LIB, ruleToClearSet, scriptedStep } from './tileStep.js';
 
 /** The region's item axis: every item an obstacle's clear set or rule names, minus held tokens. */
@@ -28,8 +35,28 @@ export function regionItems(world) {
         const sets = (entry.clear_set_type ?? 'combo_list') === 'rule'
             ? ruleToClearSet(entry.clear_rule, id) : (entry.clear_set ?? []);
         for (const combo of sets) for (const item of combo) if (!held.has(item)) out.add(item);
+        for (const actionId of entry.struck_by ?? []) {
+            const item = world.actionLib?.[actionId]?.item;
+            if (item && !held.has(item)) out.add(item);
+        }
     }
     return [...out].sort();
+}
+
+/**
+ * The search's input set: `worldInputs` (moves; turns + uses on an item-action world), minus — in
+ * `'ap'` mode, where the inventory is fixed — the uses of items the inventory does not hold (they
+ * are refusals at every state, so the search never needs to try them).
+ */
+export function searchInputs(world, inventory, pickups) {
+    const all = worldInputs(world);
+    if (!hasItemActions(world) || pickups !== 'ap') return all;
+    const have = new Set(inventory);
+    return all.filter((input) => {
+        if (!input.startsWith(USE_PREFIX)) return true;
+        const item = world.actionLib[input.slice(USE_PREFIX.length)]?.item;
+        return !item || have.has(item);
+    });
 }
 
 /** The targets a region's logic prices: each location (item tile) and each exit, by position. */
@@ -54,12 +81,13 @@ export function reachUnder(world, inventory, helpers, { pickups = 'ap', tileLib 
     const cells = new Map([[`${start.player_pos.x},${start.player_pos.y}`, mazeVisitedKey(start)]]);
     const states = new Map([[mazeVisitedKey(start), start]]);
     const queue = [start];
+    const inputs = searchInputs(world, inventory, pickups);
     for (let head = 0; head < queue.length; head++) {
         const s = queue[head];
         const at = s.player_pos;
         if (head > 0 && getExitAt(world, at.x, at.y) !== null) continue;
         const from = mazeVisitedKey(s);
-        for (const input of INPUTS) {
+        for (const input of inputs) {
             const { next } = scriptedStep(world, s, input, helpers, tileLib, { latch: pickups === 'in-room' });
             if (next === null) continue;
             const k = mazeVisitedKey(next);

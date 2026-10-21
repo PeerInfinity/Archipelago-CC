@@ -8,7 +8,7 @@ The module splits into a headless engine (`mazeRoomEngine.js`, no DOM and no eve
 
 A world is a `width × height` grid of floor/wall tiles (an `Int8Array`), an entrance, and a `Map` of exits (`exit_id → { x, y, side, exitName, targetRegion, … }`). Items, obstacles, blocks, buttons, consumable tiles and mana tiles are overlays on floor tiles; the tile grid itself stays binary.
 
-The inputs are `N`/`S`/`E`/`W` (`INPUTS`) plus `INPUT_WAIT`, which returns a clone with `turn + 1` and nothing else changed. A wait is deliberately not in `INPUTS` or the BFS solver's input list: `mazeVisitedKey` ignores `turn`, so the search would prune it as a self-loop. Feasibility questions go through the shared simulator core's `reach` / `makeBfsSolver` (the engine's instance is `bfsSolver`); see [Playback and Debugging Tools](./playback-and-debugging.md#the-shared-simulator-core-frontendmodulessharedsimulatorcorejs).
+The inputs are `N`/`S`/`E`/`W` (`INPUTS`), on an item-action world also `TURN_<dir>` and `USE:<id>` (see "Item actions" below), plus `INPUT_WAIT`, which returns a clone with `turn + 1` and nothing else changed. A wait is deliberately not in `INPUTS` or the BFS solver's input list: `mazeVisitedKey` ignores `turn`, so the search would prune it as a self-loop. Feasibility questions go through the shared simulator core's `reach` / `makeBfsSolver` (the engine's instance is `bfsSolver`); see [Playback and Debugging Tools](./playback-and-debugging.md#the-shared-simulator-core-frontendmodulessharedsimulatorcorejs).
 
 Region generation (`generateRegionCore`) resolves the biome, runs its wall backend and post-processors, checks feasibility, places obstacles, items and logic gates to satisfy the region's access rules (`placeFromItems` / `placeFromRules`), then extracts paths and obstacles for verification (`extractPathsAndObstacles`). When no reachable floor tile is free for a location, the region grows and placement retries rather than dropping the location.
 
@@ -20,7 +20,7 @@ Region generation (`generateRegionCore`) resolves the biome, runs its wall backe
 
 ### `whyBlocked` — why the engine refused, in one place
 
-`whyBlocked(world, state, input, inventoryOverride, clearanceOpts)` returns `null` for a legal move or a wait, and otherwise one sentence: `wall at (x,y)`, `off the grid`, `door_red is shut — needs key_red`, `door_A0 is shut — nothing on button_A0`, or `block at (x,y) cannot move: …`. It sits beside `step` and checks in the same order, because only the engine's effective inventory can tell a missing item from an unpressed button. `mazeQueueExecutor.refusalReason` delegates to it. Its test is a property: over every reachable `(state, input)` of three fixture worlds, `whyBlocked(...) === null` exactly when `step(...) !== null`.
+`whyBlocked(world, state, input, inventoryOverride, clearanceOpts)` returns `null` for a legal move or a wait, and otherwise one sentence: `wall at (x,y)`, `off the grid`, `door_red is shut — needs key_red`, `door_A0 is shut — nothing on button_A0`, `rock is shut — strike it (sword)`, `use sword needs Progressive Sword`, or `block at (x,y) cannot move: …`. It sits beside `step` and checks in the same order, because only the engine's effective inventory can tell a missing item from an unpressed button. `mazeQueueExecutor.refusalReason` delegates to it. Its test is a property: over every reachable `(state, input)` of three fixture worlds, `whyBlocked(...) === null` exactly when `step(...) !== null`.
 
 ### Concept gates — a skin over the logic gate
 
@@ -176,6 +176,18 @@ The lab page draws the gadget and steps the block through the solve: see [The Ma
 
 A standalone static page that generates, edits, solves and hand-drives maze levels from URL parameters, and edits region libraries and worlds. See [The Maze Lab Page](./maze-lab.md).
 
+## Item actions: facing, turn, use and strike
+
+A world with an `action_lib` (the sidecar field `action_lib`, `world.actionLib`) has item actions. Each entry maps an action id to `{item, primitive: 'strike', condition, key}`; `strike` is the only primitive so far, and a loader refuses any other by name. Every other world is unchanged byte for byte: no `facing` or `broken` in its state, the same visited keys, inputs, recordings and serializations.
+
+- **Facing.** The state gains `facing` (`N`/`E`/`S`/`W`, `S` on a fresh state). A move sets it. `TURN_<dir>` sets it without moving and costs a turn. A move that `step` refuses (a bump) is still a refusal, so `whyBlocked` and `step` still agree; the executor also returns `faced`, the state turned toward the bump, and the panel, the lab and `deriveRequires` adopt it.
+- **Use and strike.** `USE:<id>` needs the entry's `item` in the effective inventory. If the facing cell holds an obstacle whose library entry lists the action in `struck_by` and it is not broken yet, the strike breaks it. The posKey goes into `state.broken`, a sorted list that lasts for this visit only, like block positions. A broken obstacle is open whatever its `clear_set` says, for the player and for a pushed block. A use that hits nothing is legal and passes a turn. A rock only a strike opens has `clear_set: []`; one Swim also passes has `[['Progressive Swim']]`.
+- **The visited key** gains `|f<dir>|<broken>` on these worlds only.
+- **Conditions.** The engine's strike is native: the `struck_by` check. The entry's `condition` names the helper the tile-primitives spike asks (`tileSpike/`, `strikes(cell, tile)`), and a parity suite holds the two equal.
+- **Persistence.** Breaks are per visit. A per-game "break permanently" knob (Seedling's rocks stay broken) is later work.
+
+No generator writes an `action_lib` yet. Test fixtures (`mazeItemActions.fixtures.js`) and any sidecar or lab level record that carries one load it. The shared Seedling level world (Stage 2 of the tile-primitives arc) is the first planned producer.
+
 ## The action queue (`shared/actionQueue` + `mazeKeys.js` + `mazeQueueExecutor.js`)
 
 A tile-level action queue with an icon-row UI, built on the shared `ActionQueue` class (`shared/actionQueue/`) that jta and omsi also use. It backs the maze's `customQueues: true` loop-mode capability. Entries have the shape `{actionType, actionId, substrate: 'maze', loops}`:
@@ -185,14 +197,17 @@ A tile-level action queue with an icon-row UI, built on the shared `ActionQueue`
 | `move` | `N` / `E` / `S` / `W` | One step; block pushes use the same verb |
 | `wait` | — | One turn passes (spacebar) |
 | `locationCheck` | location name | Explicit check at the current tile; used by saved and replayed queues and loops delegation (stepping onto a location already checks it) |
+| `turn` | `N` / `E` / `S` / `W` | Item-action worlds: face that way without moving (Shift+arrow); a turn passes |
+| `use` | `action_lib` id | Item-action worlds: use the action on the facing cell (Z, X, C, V by default). The id is stored, never the key, so rebinding moves no recording |
+| `cross` | `N` / `E` / `S` / `W` | Walk across an in-world region boundary of a shared level world. `params: {boundary, sourceRegion, targetRegion}` carries the regions, so a replay needs no exit lookup. The executor asks its injected `gate` (the loop-mode action gate) before the in-world step, and the result carries `crossing` for the caller to publish. Shape and executor only: the panel refuses it by name until Stage 2 builds the boundary overlay and the same-world region move |
 
 | File | Role |
 |---|---|
-| `mazeKeys.js` | Vocabulary, entry builders, `KEY_MAP` (arrows, WASD, space), `describeMazeAction`; no DOM or engine imports, so the lab's manual arm can use it |
+| `mazeKeys.js` | Vocabulary, entry builders, `KEY_MAP` (arrows, WASD, space), `keyToMazeEntry` (adds Shift+arrow and the `action_lib` keys on item-action worlds; `useKeyBindings` gives an entry its own `key`, else the first free of Z X C V in id order), `describeMazeAction`; no DOM or engine imports, so the lab's manual arm can use it |
 | `mazeQueueExecutor.js` | `executeMazeEntry(world, state, entry, opts) → {next, reason}`, the one place an entry becomes an engine transition; `projectActions` (live queue → recording) and its inverse `expandEntries`. Pure |
 | `mazeRoomUI.js` | Every side effect, plus the edit cursor clamp (`_clampedEditIndex`, since `ActionQueue.add` throws inside the done region) and stopping the driver (`stepOne` advances even on `FAILED`) |
 
-**Live uncompressed, recording compressed.** Each press is one icon; `projectActions` folds identical consecutive entries into `loops: n` (never a `locationCheck`), and replayers expand before adding.
+**Live uncompressed, recording compressed.** Each press is one icon; `projectActions` folds identical consecutive entries into `loops: n` (never a `locationCheck` or a `cross`, which keeps its `params`), and replayers expand before adding. On an item-action world the panel shows a row of turn buttons and one button per `action_lib` entry; a click is the same press as the key.
 
 **A refused entry stops the replay.** It is marked `FAILED` with the reason; the replayer stops, the departure exit is not crossed, and the loops block stays parked in manual mode. A refusal already in the recording (a wall bumped while recording) is stored as `params.refused` and replays as a completion, because it consumed a turn that hazard timing depends on.
 
@@ -214,6 +229,8 @@ Content modules add gameplay content to a region without touching core substrate
 ## The autopather (`mazeAutopather.js`)
 
 BFS pathfinding (`findPath`) used by the playback controller, the queue and the exploration UI. Targets are a tile, an exit, a location, or `closestUnexplored` (nearest walkable unseen tile, given `opts.seenTiles`). It returns `{ steps, length }` including both endpoints, or `null`. Walkability is inventory-aware when an inventory is passed and geometry-only otherwise (the procgen-time mode). `stepsToInputs` / `stepsToActions` convert a path to engine inputs or queue entries.
+
+On an item-action world without hazards, the visualizer, the panel's loops queue mirror, its explore target and its best-exit distance use `planItemActions(world, state, target, opts)` instead. It runs a BFS over the engine's own states (`step` with `worldInputs(world)`, de-duplicated by `mazeVisitedKey`), so a walk may turn and strike a rock on its way, and the plan is one `step` accepts, block pushes included. `inputsToEntries` turns the plan into queue entries. Hazards on such a world are refused by name: this planner does not model hazard timing.
 
 ## Panel and runtime
 

@@ -21,10 +21,14 @@
 //
 // ⛔ LEFT OUT by ruling (the same ruling): the 04B_03 font, the promotional,
 // Newgrounds and tank images, and all music and sound. They are not in the
-// table, so they cannot reach a pack.
+// table, so they cannot reach a pack. The font seam (`seedling:font/default`)
+// is filled instead by an ORIGINAL glyph sheet (G4b, ⚖ the user 2026-10-21):
+// its row carries `authored`, and its bytes come from `make-seedling-font.mjs`
+// (`fontSheetBytes()`), not from the checkout.
 //
 // ── Bytes, not pixels ─────────────────────────────────────────────────
-// A sheet is COPIED, never re-encoded: the PNG in the pack is the PNG in the
+// A sheet is COPIED, never re-encoded (the one AUTHORED sheet, the font, is
+// built in memory by its own producer): the PNG in the pack is the PNG in the
 // checkout, byte for byte, so `--check` is an exact comparison and the pack's
 // provenance is "this file at the pinned submodule commit".
 //
@@ -49,6 +53,7 @@ import { fileURLToPath } from 'node:url';
 import { argvHelp } from './argvHelp.js';
 import { seedlingSourceOrExit } from './seedlingSource.js';
 import { ENEMY_ART } from '../../frontend/modules/seedlingDemo/seedlingEnemyArt.js';
+import { FONT_ART_ROW, fontSheetBytes } from './make-seedling-font.mjs';
 
 argvHelp(import.meta.url);
 const REPO_ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)));
@@ -220,6 +225,9 @@ export const ART_TABLE = Object.freeze([
     //    (`frontend/modules/seedlingDemo/seedlingEnemyArt.js`), so the pack and the per-tick reducer share ONE table ──
     ...ENEMY_ART,
 
+    // ── G4b: the dialogue font — ORIGINAL glyphs authored in `make-seedling-font.mjs` (not 04B_03) ──
+    FONT_ART_ROW,
+
     // ── the fork's AP item:`APItem.as:74` (`look` "ap" → the logo, 0x0 = an Image, centred) ──
     { pack: 'archipelago', key: 'archipelago:pickup/item', file: 'ArchipelagoLogo.png',
         as3: 'Pickups/APItem.as:74 imgAP; APItem(x+8, y+8) with a centred Image', origin: [8, 8] },
@@ -251,11 +259,17 @@ export function buildPacks(source) {
         for (const row of rows) {
             const sheetId = sheetIdOf(row.file);
             if (!sheets[sheetId]) {
-                const path = join(dir, row.file);
-                if (!existsSync(path)) throw new Error(`${row.key}: ${GRAPHICS}/${row.file} is not in ${source}`);
-                const bytes = readFileSync(path);
-                const { w, h } = pngSize(bytes, `${GRAPHICS}/${row.file}`);
+                let bytes;
+                if (row.authored) {
+                    bytes = fontSheetBytes();
+                } else {
+                    const path = join(dir, row.file);
+                    if (!existsSync(path)) throw new Error(`${row.key}: ${GRAPHICS}/${row.file} is not in ${source}`);
+                    bytes = readFileSync(path);
+                }
+                const { w, h } = pngSize(bytes, row.authored ? row.file : `${GRAPHICS}/${row.file}`);
                 sheets[sheetId] = { file: `sheets/${row.file}`, w, h };
+                if (row.authored) sheets[sheetId].authored = row.authored;
                 files.set(`art/sheets/${row.file}`, bytes);
             }
             const sheet = sheets[sheetId];

@@ -1338,11 +1338,12 @@ export function framesForActions(state, entries) {
     let s = startStateFor(world, state.palette?.items ?? null);
     const frames = [frameOf(s, null)];
     for (const entry of expanded) {
-        const { next } = executeMazeEntry(world, s, entry);
+        const { next, faced } = executeMazeEntry(world, s, entry);
         if (next === null) {
             // ⛔ A refusal the entry ALREADY CARRIES is a completion; any other
             //   refusal means this walk does not replay through this world.
             if (!isRefused(entry)) return null;
+            if (faced) s = faced;   // ⚖ "Refusal + facing"
         } else {
             s = next;
         }
@@ -1371,6 +1372,11 @@ export function frameOf(t, input = null) {
         inventory: Object.freeze([...t.inventory].sort()),
         turn: t.turn ?? 0,
         input: input === null || input === undefined ? null : Object.freeze({ ...input }),
+        // ⛓ ITEM ACTIONS: present ONLY on an item-action world's frames, so
+        // every other frame (and every frame-hash row) is unchanged.
+        ...(t.facing !== undefined
+            ? { facing: t.facing, broken: Object.freeze([...t.broken]) }
+            : {}),
     });
 }
 
