@@ -81,6 +81,33 @@ function runTape(rules) {
     }
     return rows;
 }
+/**
+ * ⛓ G3b — A DEATH AND ITS RESPAWN IN THE SAME LEVEL: stand still in L26 until
+ * the puncher kills the player. The run and `run.world` are the SAME objects
+ * across the restart (measured: the level's memoised build), and the body
+ * stands facing down on both sides of it, so only a VISIT epoch gives the
+ * respawned `Player` a fresh "down-stand" (`Player.as:388`) instead of the dead
+ * one's running clock.
+ */
+export const DEATH_TAPE = Object.freeze({ level: 26, at: [48, 160], n: 200 });
+/** `epochOf(run, view)` replaces the adapter's epoch — the G2 mutant hands back `run.world`. */
+function runDeathTape(epochOf = null) {
+    const rt = createJsRuntime({ onStateChanged: () => {}, log: () => {} });
+    rt.game.configure(JSON.stringify({ classes: GAME.classes, state_properties: GAME.state_properties }));
+    rt.setVanilla(MAP);
+    rt.queueItems([{ class: 'game', property: 'menu', value: false }, { class: 'Main', property: 'hasSword', value: true },
+        { invocation: 'new_instance', className: 'Game', args: [DEATH_TAPE.level, ...DEATH_TAPE.at] }]);
+    const rows = [];
+    let skin = null;
+    for (let i = 0; i < DEATH_TAPE.n; i += 1) {
+        rt.tick(new Set());
+        const v = skinView(rt.run);
+        const view = epochOf ? { ...v, epoch: epochOf(rt.run, v) } : v;
+        skin = stepPlayerSkin(skin, view, rt.ticks);
+        rows.push({ tick: rt.ticks, view, skin, ops: playerOps(view, art, { tick: rt.ticks, skin }), deaths: rt.deaths.length, run: rt.run, world: rt.run.world });
+    }
+    return rows;
+}
 const lineOf = (r) => `t=${r.tick} ${r.skin.anim} | ${r.ops.map((o) => formatPlayerOp(o, formatOp)).join(' ; ')}`;
 
 /** Synthetic views: one `skinView`-shaped object per tick. */
@@ -132,6 +159,27 @@ describe('1–2. golden player ops (frame CHOICE, not pixels)', () => {
         expect(rows.some((r) => r.view.slash?.anim === 'slashnarrow')).toBe(true);
         expect(rows.at(-1).deaths).toBe(1);
         expect(rows.every((r) => r.ops.length > 0)).toBe(true);
+    });
+
+    it('⛓ G3b: a death and the respawn in the SAME level start a fresh Player — not the dead one\'s running clock (the epoch is the visit, not `run.world`)', () => {
+        const rows = runDeathTape();
+        expect(rows.map(lineOf)).toEqual(golden('player-L26-death.txt', rows.map(lineOf)));
+        const at = rows.findIndex((r) => r.deaths === 1);
+        expect(at, 'the puncher kills the player').toBeGreaterThan(0);
+        expect(rows.at(-1).deaths).toBe(1);
+        expect(rows.every((r) => r.view.level === DEATH_TAPE.level)).toBe(true);
+        // the premise, measured: the SAME run and the SAME world object across the restart
+        expect(rows[at].run).toBe(rows[at - 1].run);
+        expect(rows[at].world).toBe(rows[at - 1].world);
+        // "down-stand" on both sides; the respawned body's Spritemap is born on the respawn tick, frame 0
+        expect([rows[at - 1].skin.anim, rows[at].skin.anim]).toEqual(['down-stand', 'down-stand']);
+        expect(rows[at].skin.born).toBe(rows[at].tick);
+        expect(rows[at].ops.at(-1).frame).toBe(0);
+        // ⛔ the G2 epoch (`run.world`) keeps the dead body's clock running through the respawn — the bug this pins
+        const old = runDeathTape((run) => run.world);
+        expect(old[at].skin.born).toBe(old[0].skin.born);
+        expect(old[at].ops.at(-1).frame).not.toBe(0);
+        expect(old.map(lineOf).filter((l, i) => l !== rows.map(lineOf)[i]).length).toBeGreaterThan(5);
     });
 
     it('the synthetic views: hit flash, freeze, pit, descent, ghost sword, dark suit + dark-sword dash', () => {
@@ -289,7 +337,7 @@ describe('5. the adapter reads the run and writes nothing', () => {
         });
         const v = skinView(run);
         expect(v).toEqual({
-            epoch: world, level: 7, x: 10, y: 20, vx: -1, vy: 0, direction: 2, directionFace: 3, terrain: 1, hitsTimer: 12, frozenTimer: 4,
+            epoch: { run, key: '7|0|0' }, level: 7, x: 10, y: 20, vx: -1, vy: 0, direction: 2, directionFace: 3, terrain: 1, hitsTimer: 12, frozenTimer: 4,
             suit: 'dark', sword: 'dark', slash: { anim: 'slashnarrow', endsAt: 33 }, fall: { kind: 'pit', alpha: 0.5, target: { x: 8, y: 24 } },
         });
         expect(skinView(null)).toBe(null);

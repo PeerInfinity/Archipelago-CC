@@ -113,7 +113,9 @@ const porcelain = () => spawnSync('git', ['status', '--porcelain'],
 
 function firstFailingLine(text) {
     const lines = text.split('\n');
-    const hit = lines.find((l) => /\b(FAIL|Error|DIFFERS|DRIFT|BROKEN)\b|⛔/.test(l));
+    // A producer's own verdict line first: many print `⛔` headings on a GREEN run.
+    const hit = lines.find((l) => /^(?:DIFFERS|FAIL) [^\s:]+:/.test(l))
+        ?? lines.find((l) => /\b(FAIL|Error|DIFFERS|DRIFT|BROKEN)\b|⛔/.test(l));
     return (hit ?? lines.filter((l) => l.trim()).at(-1) ?? '').trim().slice(0, 200);
 }
 

@@ -24,6 +24,7 @@ import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
 import { LoopModeRunner } from './loopModeRunner.js';
 import { DEFAULT_MANA_STRATEGY, MANA_STRATEGIES, MANA_STRATEGY_LABELS } from './loopDriver.js';
+import { WALK_ORDERS, WALK_ORDER_LABELS, chooseWalkTarget, frozenFindPath, rowMetaOf } from './walkOrder.js';
 
 const DEFAULT_RATE_HZ = 4;
 // LS key for the click-intercept toggle. Persisted separately from
@@ -50,6 +51,10 @@ const TARGET_SOURCE_LABELS = Object.freeze({
     sphere: 'Sphere log, in order',
     reachable: 'Any reachable location (timer)',
 });
+// ⛓ WALK ORDER (bot-route-chooser) — which sphere-log row the WALK loop goes to next (walkOrder.js): the listed order
+// (default — the walk loop's old code path, untouched), or the cheapest route by Restarts then region transitions.
+const LS_WALK_ORDER_KEY = 'playbackBot_walkOrder';
+export { WALK_ORDERS };
 const COLLECT_NEVER = 'never';
 const COLLECT_ALWAYS = 'always';
 // Cap on how many dispatcher events to keep in the event log so the
@@ -193,6 +198,12 @@ export class PlaybackBotUI {
         // click intercept never swallows them.
         this._timer = timer;
         this._targetSource = loadTargetSourceFromLS();
+        this._walkOrder = loadWalkOrderFromLS();
+        // ⛓ WALK ORDER — the row a non-default order chose, kept until it is checked (the measured replay is sticky);
+        // and the run's route metrics, shown on their own line (never in the transition log).
+        this._chosen = null;
+        this._routeStats = { restarts: 0, transitions: 0, legs: 0 };
+        this._statsHead = null;
         this._offTimerRunning = timer?.onRunningChanged?.((running) => this._onTimerRunningChanged(running)) ?? null;
         // ⛓ LOOP MODE (loop-mode-bot S3) — in loop mode the bot plays by AUTHORING THE LOOPS QUEUE, one loop at a
         // time (LoopModeRunner over loopDriver.js); `loopRunnerDeps` is what the runner reads from the live game.
@@ -433,6 +444,9 @@ export class PlaybackBotUI {
         this._walkNote = null;
         this._log = [];                 // start a fresh transition history
         this._pendingManualTarget = null;
+        this._chosen = null;
+        this._routeStats = { restarts: 0, transitions: 0, legs: 0 };
+        this._statsHead = null;
         this._restartPending = null;
         this._dropRestartDeferral();
         this._restartDeferrals = [];
@@ -486,6 +500,7 @@ export class PlaybackBotUI {
     isInterceptEnabled() { return this._interceptEnabled; }
     getDispatcherLog() { return this._dispatcherLog.slice(); }
     getCurrentHead() {
+        if (this._ordersByCost()) return this._chosen && !this._checkedSoFar.has(this._chosen.locationName) ? { ...this._chosen } : null;
         if (!this._queue || this._cursor >= this._queue.length) return null;
         return { ...this._queue[this._cursor] };
     }
@@ -776,6 +791,7 @@ export class PlaybackBotUI {
             // events tell it to stop). Explicitly stop it on the way
             // out so the only running clock is the active substrate's.
             const prevSubstrate = this._resolveSubstrateId(this._currentRegion);
+            if (this._walking() && this._currentRegion && target !== this._currentRegion) this._routeStats.transitions += 1;
             this._currentRegion = target;
             this._lastArrivalExit = typeof data?.exitName === 'string' && data.exitName ? data.exitName : null;
             const newSubstrate = this._resolveSubstrateId(target);
@@ -817,6 +833,8 @@ export class PlaybackBotUI {
         const events = new Set(gameStateEventsOf(this._getRulesJson?.() ?? null, String(this._getPlayerId?.() ?? '1'))
             .map((e) => e.name));
         this._queue = buildSphereQueue(sphereData, idx, { exclude: events });
+        this._rowMeta = null;
+        this._chosen = null;
         this._leftToGame = sphereData.flatMap((e) => (e?.locations ?? []).filter((n) => events.has(n)));
         this._cursor = 0;
         this._lastPublishedTarget = null;
@@ -858,11 +876,88 @@ export class PlaybackBotUI {
         this._targetSource = source;
         saveTargetSourceToLS(source);
         if (this._targetSourceSelect) this._targetSourceSelect.value = source;
+        if (this._walkOrderSelect) this._walkOrderSelect.disabled = source !== TARGET_SOURCES.sphere;
         this._status = 'idle';
         this._render();
     }
 
+    getWalkOrder() { return this._walkOrder; }
+
+    /**
+     * ⛓ WALK ORDER — which sphere-log row the walk loop goes to next (`walkOrder.js`). A running walk stops first, as
+     * `setTargetSource` does; the next Play chooses afresh. Loop mode keeps the sphere order whatever this says.
+     */
+    setWalkOrder(order) {
+        if (!Object.values(WALK_ORDERS).includes(order) || order === this._walkOrder) return;
+        if (this._isActive && !this._loopRunner?.isActive()) this.stop();
+        this._walkOrder = order;
+        this._chosen = null;
+        saveWalkOrderToLS(order);
+        if (this._walkOrderSelect) this._walkOrderSelect.value = order;
+        this._render();
+    }
+
+    /** The run's route metrics: Restarts taken, region transitions walked, legs (targets) begun. */
+    getRouteStats() { return { ...this._routeStats }; }
+
+    /** A non-default walk order is in force (the walk loop's sphere source only). */
+    _ordersByCost() {
+        return this._walkOrder !== WALK_ORDERS.inOrder && this._targetSource === TARGET_SOURCES.sphere;
+    }
+
+    /**
+     * ⛓ WALK ORDER — the next target by route cost: the row chosen earlier while it is unchecked (sticky), else
+     * `chooseWalkTarget` over the queue, priced by `planRoute` on ONE accessibility map of the flushed snapshot.
+     */
+    _chooseByCost() {
+        if (this._chosen && !this._checkedSoFar.has(this._chosen.locationName)) return this._chosen;
+        this._chosen = null;
+        if (!this._queue.some((e) => !this._checkedSoFar.has(e.locationName))) return null;
+        const rules = this._getRulesJson?.() ?? null;
+        const playerId = String(this._getPlayerId?.() ?? '1');
+        const staticData = this._getStaticData?.() ?? null;
+        const snapshot = this._stateManagerProxy?.getLatestStateSnapshot?.() ?? null;
+        let snapshotInterface = null;
+        try { snapshotInterface = snapshot && staticData ? createSnapshotInterface(snapshot, staticData) : null; } catch { snapshotInterface = null; }
+        const findPath = frozenFindPath(this._pathFinder, { staticData, snapshot, snapshotInterface });
+        if (!this._rowMeta) this._rowMeta = rowMetaOf(rules, playerId);
+        const here = this._currentRegion;
+        const price = (entry) => {
+            if (!here) return { hops: 0, restart: false };
+            if (entry.regionName === here) return { hops: 0, restart: false };
+            const { route, kind } = this._planRoute(here, entry.regionName, findPath);
+            return route ? { hops: route.length, restart: kind === 'restart' } : null;
+        };
+        const home = returnToMenu(rules, playerId) ? this._restartHome(rules, playerId) : null;
+        const { entry, swept } = chooseWalkTarget({
+            order: this._walkOrder,
+            queue: this._queue,
+            checked: this._checkedSoFar,
+            isAccessible: snapshotInterface ? (name) => {
+                try { return snapshotInterface.isLocationAccessible(name) === true; } catch { return false; }
+            } : null,
+            meta: this._rowMeta,
+            price,
+            inPocket: () => !!home && !!here && here !== home && !findPath(here, home),
+        });
+        if (swept && entry) this._log.push(`sweeping "${entry.locationName}" before the Restart out of ${here}`);
+        this._chosen = entry;
+        return entry;
+    }
+
+    /** Where a Restart walks on from: the restart target's `GameStart` exit (its first exit), or null. */
+    _restartHome(rules, playerId) {
+        const target = restartTargetFor(rules, playerId);
+        const exits = rules?.regions?.[playerId]?.[target]?.exits ?? [];
+        return (exits.find((e) => e?.name === 'GameStart') ?? exits[0])?.connected_region ?? null;
+    }
+
     /** The 'reachable' source, and the panel wired a timer. */
+    /** The panel wired a timer: the 'reachable' source is available. */
+    hasTimer() {
+        return !!this._timer;
+    }
+
     _usesTimer() {
         return this._targetSource === TARGET_SOURCES.reachable && !!this._timer;
     }
@@ -1125,21 +1220,34 @@ export class PlaybackBotUI {
             await flush;
             if (!this._queue) return;
         }
-        this._advanceCursor();
-        const head = this._queue[this._cursor];
+        const byCost = this._ordersByCost();
+        let head;
+        if (byCost) {
+            head = this._chooseByCost();
+        } else {
+            this._advanceCursor();
+            head = this._queue[this._cursor];
+        }
+        if (head && head.locationName !== this._statsHead) {
+            this._statsHead = head.locationName;
+            this._routeStats.legs += 1;
+        }
         if (!head) {
             // Queue drained — terminate cleanly. The bot publishes a
             // single 'stop' so the visualizer halts; no greedy
             // fallback runs because controlled mode is sticky on the
             // visualizer side.
-            this._setStatus(`finished — ${this._cursor} location${this._cursor === 1 ? '' : 's'} visited`);
+            const visited = byCost ? this._queue.length : this._cursor;
+            this._setStatus(`finished — ${visited} location${visited === 1 ? '' : 's'} visited`);
             this._isActive = false;
             this._lastPublishedTarget = null;
             this._dispatch('stop');
             this._render();
             return;
         }
-        const progress = `(${this._cursor + 1}/${this._queue.length})`;
+        const progress = byCost
+            ? `(${this._queue.filter((e) => this._checkedSoFar.has(e.locationName)).length + 1}/${this._queue.length})`
+            : `(${this._cursor + 1}/${this._queue.length})`;
         const sphereTag = formatSphereTag(head);
         if (!this._currentRegion) {
             // First user:regionMove hasn't arrived yet — wait for it.
@@ -1214,14 +1322,15 @@ export class PlaybackBotUI {
      * when the slot declares `return_to_menu` and no walk exists, a route that begins with RESTART. Without the
      * flag the refusal is today's `no path from <from> to <to>`.
      */
-    _planRoute(from, to) {
+    _planRoute(from, to, findPath = null) {
         const rules = this._getRulesJson?.() ?? null;
         const playerId = String(this._getPlayerId?.() ?? '1');
         const eventPath = this._eventPath(rules, playerId);
         return planRoute({
             from,
             to,
-            findPath: (a, b) => this._pathFinder?.findPathWithExits?.(a, b) ?? null,
+            // ⛓ WALK ORDER — a choice prices every candidate over one frozen map (`walkOrder.frozenFindPath`).
+            findPath: findPath ?? ((a, b) => this._pathFinder?.findPathWithExits?.(a, b) ?? null),
             rules,
             playerId,
             // ⛓ WAVE-6 CONSUMER — never back through an entrance that landed inside a solid.
@@ -1367,6 +1476,7 @@ export class PlaybackBotUI {
             this._setStatus(`error: ${from ?? '?'}: Restart answered mode "${result.mode}", which does not return to the menu`);
             return false;
         }
+        this._routeStats.restarts += 1;
         return true;
     }
 
@@ -1633,6 +1743,7 @@ export class PlaybackBotUI {
         // is consulted by the dispatcher receivers in
         // playbackBot/index.js via isInterceptEnabled().
         root.appendChild(this._mountTargetSource());
+        root.appendChild(this._mountWalkOrder());
         root.appendChild(this._mountInterceptToggle());
         root.appendChild(this._mountManaStrategy());
 
@@ -1644,6 +1755,12 @@ export class PlaybackBotUI {
         targetEl.className = 'playback-bot-target';
         root.appendChild(targetEl);
         this._targetEl = targetEl;
+
+        // ⛓ WALK ORDER — the run's route metrics, on their own line (the transition log stays as it was).
+        const statsEl = document.createElement('div');
+        statsEl.className = 'playback-bot-route-stats';
+        root.appendChild(statsEl);
+        this._routeStatsEl = statsEl;
 
         // Phase 2 — manual walkTo input. Region picker + (x, y)
         // coords + Go button. Disabled while the sphere queue is
@@ -1707,6 +1824,28 @@ export class PlaybackBotUI {
         select.addEventListener('change', () => this.setTargetSource(select.value));
         wrap.appendChild(select);
         this._targetSourceSelect = select;
+        return wrap;
+    }
+
+    _mountWalkOrder() {
+        const wrap = document.createElement('label');
+        wrap.className = 'playback-bot-walk-order';
+        wrap.title = 'Which sphere-log location the bot walks to next. Loop mode keeps the sphere order.';
+        const text = document.createElement('span');
+        text.textContent = 'Walk order: ';
+        wrap.appendChild(text);
+        const select = document.createElement('select');
+        for (const value of Object.values(WALK_ORDERS)) {
+            const opt = document.createElement('option');
+            opt.value = value;
+            opt.textContent = WALK_ORDER_LABELS[value];
+            select.appendChild(opt);
+        }
+        select.value = this._walkOrder;
+        select.disabled = this._targetSource !== TARGET_SOURCES.sphere;
+        select.addEventListener('change', () => this.setWalkOrder(select.value));
+        wrap.appendChild(select);
+        this._walkOrderSelect = select;
         return wrap;
     }
 
@@ -1862,6 +2001,7 @@ export class PlaybackBotUI {
                     ? `Sphere log loaded: ${total} entries.`
                     : 'No sphere log loaded.';
             }
+            this._statusEl.title = this._statusEl.textContent;   // the mini view cuts the line short
         }
 
         // Phase 2 — current target line.
@@ -1874,6 +2014,13 @@ export class PlaybackBotUI {
             } else {
                 this._targetEl.textContent = 'Target: —';
             }
+        }
+
+        if (this._routeStatsEl) {
+            const st = this._routeStats;
+            this._routeStatsEl.textContent = `Walk order: ${WALK_ORDER_LABELS[this._walkOrder]}`
+                + (this._inLoopMode() ? ' (loop mode: sphere order)' : '')
+                + ` — restarts ${st.restarts}, region transitions ${st.transitions}, legs ${st.legs}`;
         }
 
         // Phase 2 — intercept toggle stays in sync with model state
@@ -1989,6 +2136,21 @@ function loadTargetSourceFromLS() {
 function saveTargetSourceToLS(source) {
     try {
         if (typeof localStorage !== 'undefined') localStorage.setItem(LS_TARGET_SOURCE_KEY, source);
+    } catch (_e) { /* storage unavailable */ }
+}
+
+function loadWalkOrderFromLS() {
+    try {
+        const v = typeof localStorage === 'undefined' ? null : localStorage.getItem(LS_WALK_ORDER_KEY);
+        return Object.values(WALK_ORDERS).includes(v) ? v : WALK_ORDERS.inOrder;
+    } catch (_e) {
+        return WALK_ORDERS.inOrder;
+    }
+}
+
+function saveWalkOrderToLS(order) {
+    try {
+        if (typeof localStorage !== 'undefined') localStorage.setItem(LS_WALK_ORDER_KEY, order);
     } catch (_e) { /* storage unavailable */ }
 }
 

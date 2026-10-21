@@ -74,6 +74,12 @@
  * AP items are drawn as their looks (`apItemOps`). `__seedlingJsGraphics.enemies`
  * reads back what was drawn, body by body. With no stack nothing here runs.
  *
+ * ⛓ GRAPHICS G3b — and so are the room bodies that are not chasers: the
+ * wallflyers, drills, ice turrets and their blasts, turrets and their spits,
+ * and the Bob Boss (`seedlingRoomBodySkin.js`: `roomBodySkinView` /
+ * `stepRoomBodySkin` after every tick, `roomBodyOps` at each paint, Y-sorted
+ * with the enemies). `__seedlingJsGraphics.roomBodies` reads them back.
+ *
  * ⛓ KILLLOCK HOOK — `?killLockBodies=<keys>|none` (the `SEEDLING_KILLLOCK_BODIES`
  * grammar) sets this page's `killLockBodies` switches before its first run;
  * absent = the defaults. The panel adds it only when its settings are
@@ -97,6 +103,7 @@ import {
 import { CAMERA_MODES, cameraView, paintOps, roomOps } from './seedlingSkinRenderer.js';
 import { playerOps, skinView, stepPlayerSkin } from './seedlingPlayerSkin.js';
 import { apItemOps, enemyOps, enemySkinView, stepEnemySkin } from './seedlingEnemySkin.js';
+import { roomBodyOps, roomBodySkinView, stepRoomBodySkin } from './seedlingRoomBodySkin.js';
 import { loadPackStack, packsBaseUrl, parseRegistry } from '../contentPacks/contentPacks.js';
 import { browserDecoder, createArtLibrary, loadSheetImages } from '../artLibrary/artLibrary.js';
 
@@ -187,6 +194,8 @@ export function mountJsRuntimePage(win = window) {
         skin: null, player: null,
         // ⛓ G3 — the bodies' pictures (one step per game tick) and the last paint's body ops.
         enemySkin: null, enemies: null,
+        // ⛓ G3b — the room bodies' pictures and the last paint's ops.
+        roomBodySkin: null, roomBodies: null,
     };
     let graphicsLoad = 0;
     function setGraphics({ graphics: stack, camera } = {}) {
@@ -196,7 +205,7 @@ export function mountJsRuntimePage(win = window) {
         }
         if (stack === undefined || stack === graphics.stack) return Promise.resolve(graphics.status);
         const ticket = ++graphicsLoad;
-        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null, enemySkin: null, enemies: null });
+        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null, enemySkin: null, enemies: null, roomBodySkin: null, roomBodies: null });
         if (!stack) { graphics.status = 'off'; return Promise.resolve('off'); }
         graphics.status = 'loading';
         return loadGraphicsStack(stack, { win }).then(({ art, images, failed }) => {
@@ -239,6 +248,7 @@ export function mountJsRuntimePage(win = window) {
         get paintMs() { return { ...graphics.paintMs }; },
         get player() { return graphics.player ? { ...graphics.player } : null; },
         get enemies() { return graphics.enemies ? { ...graphics.enemies, ops: graphics.enemies.ops.map((o) => ({ ...o })) } : null; },
+        get roomBodies() { return graphics.roomBodies ? { ...graphics.roomBodies, ops: graphics.roomBodies.ops.map((o) => ({ ...o })) } : null; },
         get packsOfKeys() { return graphics.art ? Object.fromEntries(graphics.art.keys().map((k) => [k, graphics.art.packOf(k)])) : null; },
         set: setGraphics,
     };
@@ -282,6 +292,7 @@ export function mountJsRuntimePage(win = window) {
             if (graphics.stack) {
                 graphics.skin = stepPlayerSkin(graphics.skin, skinView(runtime.run), runtime.ticks);
                 graphics.enemySkin = stepEnemySkin(graphics.enemySkin, enemySkinView(runtime.run), runtime.ticks);
+                graphics.roomBodySkin = stepRoomBodySkin(graphics.roomBodySkin, roomBodySkinView(runtime.run), runtime.ticks);
             }
             acc -= TICK_MS;
             n += 1;
@@ -360,11 +371,18 @@ export function mountJsRuntimePage(win = window) {
             ? { anim: graphics.skin?.anim ?? null, ops: playerSprites.map((o) => ({ key: o.key, frame: o.frame, flipX: o.flipX, tint: o.tint ?? null, pack: art.packOf(o.key) })) }
             : null;
         const ev = art ? enemySkinView(runtime.run) : null;
-        const entitySprites = ev ? enemyOps(ev, art, { skin: graphics.enemySkin }) : [];
+        const rv = art ? roomBodySkinView(runtime.run) : null;
+        const bodySprites = rv ? roomBodyOps(rv, art, { skin: graphics.roomBodySkin }) : [];
+        graphics.roomBodies = rv
+            ? { bodies: graphics.roomBodySkin?.bodies.size ?? 0,
+                ops: bodySprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, tint: o.tint ?? null, pack: o.key ? art.packOf(o.key) : null })) }
+            : null;
+        const enemySprites = ev ? enemyOps(ev, art, { skin: graphics.enemySkin }) : [];
+        const entitySprites = [...enemySprites, ...bodySprites];
         const apItemSprites = art ? apItemOps(apItems, art, AP_ITEM_COLOUR) : null;
         graphics.enemies = ev
             ? { bodies: ev.chasers.length + ev.spinners.length + ev.arrows.length, apItems: apItemSprites.length,
-                ops: [...entitySprites, ...apItemSprites].map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, tint: o.tint ?? null,
+                ops: [...enemySprites, ...apItemSprites].map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, tint: o.tint ?? null,
                     pack: o.key ? art.packOf(o.key) : null })) }
             : null;
         const ops = roomOps(world, art, {

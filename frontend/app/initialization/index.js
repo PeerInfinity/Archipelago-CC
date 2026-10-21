@@ -839,8 +839,13 @@ function createModuleManagerApi(options) {
         // Use window.location.href (page URL) as base so this works in both bundled and
         // unbundled modes. Using import.meta.url breaks in bundled mode because the bundle
         // is at frontend/dist/bundle.js — two levels up lands at the repo root, not frontend/.
+        // ⛔ BUNDLED MODE: take the module's copy from the bundle, as moduleLoader.js does at boot. A dynamic
+        // import of its file here loaded a SECOND copy of everything it imports — a fresh stateManager proxy
+        // with no snapshot, its own eventBus — so a panel enabled after boot (not imported then: disabled in
+        // the module config) showed nothing (measured: the Checks panel read "Checked: ?/?" on ?bundled=true).
+        const bundledModules = typeof window !== 'undefined' && window.__BUNDLED_MODULES__;
         const resolvedPath = new URL(moduleDefinition.path, window.location.href).href;
-        const moduleInstance = await import(resolvedPath);
+        const moduleInstance = bundledModules?.[moduleId] ?? await import(resolvedPath);
         const moduleFileName = moduleDefinition.path.split('/').pop() || moduleDefinition.path;
         incrementFileCounter(`${moduleId} (${moduleFileName})`);
         actualModuleObject = moduleInstance.default || moduleInstance;

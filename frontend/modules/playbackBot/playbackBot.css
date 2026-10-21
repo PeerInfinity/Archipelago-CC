@@ -293,3 +293,92 @@
 .playback-bot-dispatcher-log-propagated {
     color: #888;
 }
+
+/* ⛓ MINI VIEW (modules/miniPanels) — one row, wrapping only when the column is narrow: the five buttons,
+   the status line (cut short; its tooltip holds all of it), the checks line when Checks rides here, ⤢. */
+.pb-mini-extras {
+    display: none;
+}
+.playback-bot-panel.pb-mini {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 3px 8px;
+    height: auto;
+    padding: 3px 6px;
+    overflow: hidden;
+}
+.playback-bot-panel.pb-mini > .playback-bot-empty-state {
+    display: none;
+}
+.playback-bot-panel.pb-mini > .playback-bot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 3px 8px;
+    flex: 1 1 260px;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+}
+.playback-bot-panel.pb-mini > .playback-bot > * {
+    display: none;
+}
+.playback-bot-panel.pb-mini > .playback-bot > .playback-control-bar {
+    display: flex;
+    flex-direction: row;
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+}
+.playback-bot-panel.pb-mini .playback-control-bar > :not(.playback-control-bar-buttons) {
+    display: none;
+}
+.playback-bot-panel.pb-mini .playback-control-bar-button {
+    padding: 2px 8px;
+}
+.playback-bot-panel.pb-mini > .playback-bot > .playback-bot-status {
+    display: block;
+    flex: 1 1 120px;
+    min-width: 0;
+    margin: 0;
+    padding: 2px 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.playback-bot-panel.pb-mini > .pb-mini-extras {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 1 auto;
+    min-width: 0;
+    margin-left: auto;
+}
+.pb-mini-checks {
+    font-size: 12px;
+    color: #cecece;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+.pb-mini-checks[hidden] {
+    display: none;
+}
+.pb-mini-expand {
+    flex: 0 0 auto;
+    padding: 2px 8px;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 3px;
+    color: #ddd;
+    cursor: pointer;
+}
+.pb-mini-expand:hover {
+    background: #3a3a3a;
+}

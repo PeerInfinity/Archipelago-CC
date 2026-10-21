@@ -109,7 +109,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 7,
+            "count": 8,
             "id": "measure"
         },
         {
@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 81,
-            "count": 128,
+            "browser": 82,
+            "count": 129,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 432,
-        "browser": 146,
-        "cited": 226,
-        "files": 445,
+        "blockStyle": 434,
+        "browser": 147,
+        "cited": 227,
+        "files": 447,
         "lineStyle": 13,
-        "withDocblock": 445,
-        "withFlags": 361
+        "withDocblock": 447,
+        "withFlags": 363
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -5314,7 +5314,8 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
-                "arg"
+                "arg",
+                "porcelain"
             ],
             "browser": false,
             "category": "ci",
@@ -7055,6 +7056,73 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/measure-apworld-raw-view.mjs"
         },
         {
+            "argvHelpers": [
+                "argOf",
+                "seedDir"
+            ],
+            "browser": false,
+            "category": "measure",
+            "citedBy": [
+                "docs/json/developer/procgen/playback-and-debugging.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json",
+                "legs",
+                "log",
+                "penalties",
+                "preset",
+                "rules"
+            ],
+            "file": "measure-bot-route-orders.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "legs"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "log"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "penalties"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "preset"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "rules"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "measure-bot-route-orders — **WHAT ORDER SHOULD THE PLAYBACK BOT VISIT LOCATIONS IN?** Prices the bot's walk route under several orderings of the same sphere log, offline: no browser, no game.",
+            "path": "scripts/procgen/measure-bot-route-orders.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": false,
             "category": "measure",
@@ -8717,10 +8785,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "write"
             ],
             "file": "plan-seedling-r5-conch.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8744,10 +8819,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "write"
             ],
             "file": "plan-seedling-r5-feather.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9162,9 +9244,18 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check",
+                "write"
+            ],
             "file": "plan-seedling-r6-shieldboss.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -14314,6 +14405,81 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-v8-seam — does the GAME honour a tape v8 `seam` block, and does its latch report back what the block declared?",
             "path": "scripts/procgen/probe-seedling-v8-seam.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "budget-s",
+                "expect",
+                "host",
+                "max-restarts",
+                "only",
+                "order",
+                "until"
+            ],
+            "file": "probe-seedling-walk-order.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "budget-s"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "expect"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "max-restarts"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "order"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "until"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling WALK ORDER (slice `bot-route-chooser`, ⚖ the user 2026-10-20: *\"the playback bot restarts the second dungeon twice because the sphere order says to collect some seals elsewhere first\"*) — the Playback Bot plays `seedling_playthrough` from the new game under a walk order (`playbackBot/walkOrder.js`) on the r…",
+            "path": "scripts/procgen/probe-seedling-walk-order.mjs"
         },
         {
             "argvHelpers": [
