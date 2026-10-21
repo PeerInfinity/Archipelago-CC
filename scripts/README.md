@@ -117,6 +117,18 @@ See [World Generator Test Guide](../docs/json/developer/tests/test-world-generat
   python scripts/test/test-json-world-builder.py
   ```
 
+- **`test/check-helper-script-pyodide.mjs`** - The helper-script converter
+  (`exporter/script_api.py`, Python ⇄ the rules.json `helpers` format) in a REAL
+  Pyodide from Node: the two manifests' files plus `helperScriptCore.js`'s
+  `convertInPyodide`, the function the page's worker calls. Round-trips a
+  hand-written script and the alttp_worldgen preset's helpers, and fails if
+  anything outside the served files was imported. Needs the pinned `pyodide`
+  package, which is not a repo dependency (exit 2 without it).
+  ```bash
+  npm i --no-save pyodide@0.28.3
+  node scripts/test/check-helper-script-pyodide.mjs
+  ```
+
 #### Integration Tests
 
 - **`test/run_multiclient_test.py`** - Orchestrate multiclient integration tests
