@@ -2072,11 +2072,12 @@ class TestASTRule(RuleBuilderTestCase):
         self.world = self.multiworld.worlds[1]
         self.state = self.multiworld.state
 
-    def test_always_returns_true(self) -> None:
-        """ASTRule is a fallback that always returns True."""
+    def test_evaluation_raises_naming_the_type(self) -> None:
+        """ASTRule cannot evaluate: it raises by name, never a silent True (⚖ D3, rule-kind R2a)."""
         rule = ASTRule(rule_data={"type": "some_unknown_type", "args": []})
         resolved = rule.resolve(self.world)
-        self.assertTrue(resolved(self.state))
+        with self.assertRaisesRegex(NotImplementedError, "some_unknown_type"):
+            resolved(self.state)
 
     def test_explain_str(self) -> None:
         rule = ASTRule(rule_data={"type": "custom_check"})

@@ -63,19 +63,21 @@
  *   node scripts/procgen/ci-gates.mjs --set=browser      every browser arm
  *   node scripts/procgen/ci-gates.mjs --set=browser --shard=1 --host=http://localhost:8000
  *   node scripts/procgen/ci-gates.mjs --plan [--json]    the shard partition
+ *   node scripts/procgen/ci-gates.mjs --plan --json --changed=<file>  …less the path-filtered
+ *        shards no pushed path hits (`<file>`: one path per line, or `ALL`)
  *   node scripts/procgen/ci-gates.mjs --audit --run=<id>  did the partition HOLD?
  *   node scripts/procgen/ci-gates.mjs --write-costs [--runs=3]  re-price the arms
- *   --set=headless|browser|all   --json   --wait-for-box=<sec>   --run=<id>
+ *   --set=headless|browser|all   --json   --wait-for-box=<sec>   --run=<id>   --changed=<file>
  */
 
 import { execFile } from 'node:child_process';
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { promisify } from 'node:util';
 
 import { releaseBoxLock, takeBoxLock } from './boxLock.js';
-import { CI_ARM_COSTS_FILE, CI_FIXED_SHARD_LIMIT_MS, CI_SHARD_BUDGET_MS, auditRunShards, ciGatePlanFor, ciRunnable,
-    ciUnrunnableIdentityRows, readCiArmCosts } from './ciGatePlan.js';
+import { CI_ARM_COSTS_FILE, CI_FIXED_SHARD_LIMIT_MS, CI_SHARD_BUDGET_MS, auditRunShards, ciArmlessIdentityRows,
+    ciGateArms, ciGatePlanFor, ciRunnable, readCiArmCosts } from './ciGatePlan.js';
 import { CI_DONE_MARK, CI_PLANNED_MARK, HEADROOM_WARN_FRACTION, recentRuns, runById,
     runShardCosts } from './ciSummary.js';
 import { LOCAL_HOST, REPO, gateRoster } from './gateRoster.js';
@@ -125,9 +127,50 @@ const { arms, shards, budgetMs, measuredAt, pricedFrom } = ciGatePlanFor({
  * committed to the workflow would be stale the day a gate is added — and
  * stale in the direction that drops one silently.
  */
+/**
+ * ⛓⛓ ci-manual-moves — `--changed=<file>`: the pushed paths, one per line, or
+ * the single word `ALL` (a dispatch, a PR, an unreadable or truncated list).
+ * A path-filtered shard (`@ci-paths`) is kept only when a path hits its filter
+ * (`ciPathFilter.js`); without `--changed` every shard is kept. ⛔ FAIL-OPEN: a
+ * filter that cannot be derived keeps the shard and says why.
+ */
+const CHANGED = arg('changed');
+async function keptShards() {
+    if (CHANGED === null || !shards.some((s) => s.pathFiltered)) return shards;
+    let changed = null;
+    try {
+        const text = readFileSync(CHANGED, 'utf8');
+        if (text.trim() !== 'ALL') changed = text.split('\n').filter((l) => l.trim());
+    } catch (e) {
+        console.error(`# path filter: --changed=${CHANGED} unreadable (${e.message}) — every shard kept`);
+    }
+    if (changed === null) {
+        console.error('# path filter: ALL — every path-filtered shard kept (a dispatch, PR or unknown change list)');
+        return shards;
+    }
+    const { ciPathFilterFor, pathFilterHits } = await import('./ciPathFilter.js');
+    const roster = gateRoster({ repo: REPO });
+    return shards.filter((s) => {
+        if (!s.pathFiltered) return true;
+        try {
+            const gate = roster.find((g) => g.file === s.pathFiltered);
+            const hits = pathFilterHits({ filter: ciPathFilterFor({ gate, repo: REPO }), changed });
+            console.error(`# path filter: ${s.pathFiltered} — ${hits.length ? `RUNS: ${hits.length} of `
+                + `${changed.length} changed path(s) hit it (${hits.slice(0, 5).join(', ')}`
+                + `${hits.length > 5 ? ', …' : ''})` : `SKIPPED: none of ${changed.length} changed path(s) `
+                + 'is in its @ci-paths or its derived inputs'}`);
+            return hits.length > 0;
+        } catch (e) {
+            console.error(`# path filter: ${s.pathFiltered} — filter not derivable (${e.message}); kept`);
+            return true;
+        }
+    });
+}
+
 if (flag('plan')) {
+    const kept = await keptShards();
     if (JSON_OUT) {
-        console.log(JSON.stringify(shards.map((s) => ({
+        console.log(JSON.stringify(kept.map((s) => ({
             id: s.id, name: s.name, arms: s.keys.length, ms: s.ms,
         }))));
         process.exit(0);
@@ -137,6 +180,13 @@ if (flag('plan')) {
         + `priced from ${pricedFrom.length} run(s) at `
         + `${measuredAt ? measuredAt.slice(0, 10) : '(NO COSTS FILE — every arm lands alone)'}`);
     for (const s of shards) {
+        if (s.pathFiltered) {
+            console.log(`\n## shard ${s.id} — ${(s.ms / 1000).toFixed(1)}s measured in CI, PATH-FILTERED `
+                + `(${s.pathFiltered} declares @ci-paths): in the matrix only when a pushed path hits `
+                + `its filter, and on every dispatch${kept.includes(s) ? '' : ' — NOT in this matrix'}`);
+            for (const k of s.keys) console.log(`     ${k}`);
+            continue;
+        }
         if (s.fixed) {
             console.log(`\n## shard ${s.id} of ${shards.length} (fixed count) — `
                 + `${(s.ms / 1000).toFixed(1)}s measured in CI, ${s.keys.length} arm(s)`
@@ -206,7 +256,13 @@ if (flag('write-costs')) {
             }
         }
     }
-    const kept = () => Object.fromEntries(Object.entries(banked).filter(([k]) => !(k in armsOut)));
+    /** ⛓ ci-manual-moves — …but only for a key some CI arm still publishes: a
+     *  price kept for a deleted or moved arm is a number nothing reads that a
+     *  reader of the table would trust. */
+    const live = new Set(ciGateArms({ repo: REPO, host: HOST, set: 'all' }).map((a) => a.key));
+    const dropped = Object.keys(banked).filter((k) => !live.has(k) && !(k in armsOut));
+    const kept = () => Object.fromEntries(Object.entries(banked)
+        .filter(([k]) => !(k in armsOut) && live.has(k)));
     const doc = {
         why: 'What each CI arm COST THE RUNNER, keyed by the CI key its `##   ms | … | here=` '
             + 'line is printed under. `planCiShards` prices the shard partition off THIS and '
@@ -235,7 +291,8 @@ if (flag('write-costs')) {
     }
     if (SET_NAMED) {
         console.log(`\n⛓ --set=${SET}: ${Object.keys(armsOut).length} arm(s) re-priced; `
-            + `${Object.keys(kept()).length} other arm(s) kept at their banked price`);
+            + `${Object.keys(kept()).length} other arm(s) kept at their banked price; `
+            + `${dropped.length} price(s) dropped — no CI arm publishes that key any more`);
     }
     console.log(`\n${Object.keys(doc.arms).length} arm(s) priced from ${seen.length} run(s), `
         + `${(total / 1000).toFixed(1)}s total ⇒ ${CI_ARM_COSTS_FILE}`);
@@ -321,10 +378,11 @@ const roster = gateRoster({ repo: REPO });
 /** ⛔ The gates CI cannot run AT ALL — named in every job's own log, so no
  *  log is a partial picture and nothing reads as green that never ran. */
 const unrunnable = roster.filter((g) => !ciRunnable(g));
-/** ⛓⛓ S4c — …AND THE IDENTITY ROWS ⚖ 72 (a) KEEPS ON THE BOX, by the same
- *  rule and for the same reason. Four of them hold `/mnt/c/Windows/py.exe`;
- *  a runner cannot resolve it, so they get no arm and are named instead. */
-const unrunnableRows = ciUnrunnableIdentityRows({ repo: REPO });
+/** ⛓⛓ S4c — …AND THE IDENTITY ROWS CI RUNS NO ARM FOR, by the same rule
+ *  and for the same reason: the ⚖ 72 (a) Windows rows, and since
+ *  ci-manual-moves the `@ci-box` rows and the ones another arm or the
+ *  `Producer --checks` job already runs (`ciGatePlan.noArmReason`). */
+const unrunnableRows = ciArmlessIdentityRows({ repo: REPO });
 /** ⛓ …and the arms this RUN answers that this JOB does not — a sibling
  *  shard's, not a skip. The distinction is the whole point of naming both. */
 const elsewhereInRun = arms.filter((a) => !selected.includes(a));
@@ -333,8 +391,8 @@ console.log(`# ci-gates — the ${SET} procgen gates, on this pushed head\n`);
 console.log(`## ${selected.length} arm(s) run here, out of ${arms.length} the `
     + `\`${SET}\` set holds and ${roster.length} gate(s) on the roster. `
     + `${unrunnable.length} gate(s) and ${unrunnableRows.length} identity row(s) need the `
-    + 'Windows driver or declare `@ci-box`, and are SKIPPED BY NAME below with their own '
-    + 'reason — never counted, never implied green.');
+    + 'Windows driver, declare `@ci-box`, or are run by another arm or job, and are SKIPPED '
+    + 'BY NAME below with their own reason — never counted, never implied green.');
 if (shardNote) console.log(`## ${shardNote}`);
 /**
  * ⛓⛓ ci-jsut-split (fidelity-9's ask (b)) — **A BATTERY SAYS WHAT IT PLANNED, AND
@@ -465,8 +523,7 @@ for (const g of unrunnable) {
         : 'needs a Windows GPU'} — not run here, and NOT green`);
 }
 for (const r of unrunnableRows) {
-    console.log(`## CI-SKIPPED | ${r.key} | its instrument holds the Windows Python driver `
-        + '(⚖ 72 (a)) — not run here, and NOT green');
+    console.log(`## CI-SKIPPED | ${r.row.key} | ${r.why} — not run here, and NOT green`);
 }
 for (const a of elsewhereInRun) {
     console.log(`## CI-ELSEWHERE | ${a.key} | a sibling shard of THIS run answers it — `

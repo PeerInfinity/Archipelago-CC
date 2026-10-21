@@ -5,6 +5,8 @@ Helper statement mixin — statement generators, expression dispatcher, and _ind
 import sys
 from typing import Any, Dict, Set, Optional
 
+from ._unknown_kind import unknown_kind
+
 from .constants import BOOLEAN_RULE_TYPES
 from ._codegen_utils import (
     ANALYZER_BOOL_TYPES,
@@ -319,6 +321,7 @@ class HelperStatementMixin:
             'map': self._expr_map,
             'lambda': self._expr_lambda,
             'dict_lambda_lookup': self._expr_dict_lambda_lookup,
+            'weighted_count_true': self._expr_weighted_count_true,
         }
 
         handler = handlers.get(expr_type)
@@ -750,6 +753,18 @@ class HelperStatementMixin:
                     return f'state.can_reach({entrance_expr}, "Entrance", player)'
                 return f'state.can_reach({repr(entrance)}, "Entrance", player)'
 
+            # Handle HasGroup / HasGroupUnique rules (Rule Builder format)
+            if rule_type in ('HasGroup', 'HasGroupUnique'):
+                args = expr.get('args', {})
+                group = args.get('item_name_group', args.get('group', ''))
+                group_expr = self._generate_expression(group) if isinstance(group, dict) else repr(group)
+                count = args.get('count', 1)
+                count_expr = self._generate_expression(count) if isinstance(count, dict) else str(count)
+                method = 'has_group' if rule_type == 'HasGroup' else 'has_group_unique'
+                if count_expr == '1':
+                    return f'state.{method}({group_expr}, player)'
+                return f'state.{method}({group_expr}, player, {count_expr})'
+
             # Handle AST_group_count rules (Rule Builder format for count_group)
             # These come from state.count_group() calls in access rules
             if rule_type == 'AST_group_count':
@@ -769,8 +784,5 @@ class HelperStatementMixin:
                     return f'state.count_group({group_expr}, player)'
                 return f'state.count_group({repr(group)}, player)'
 
-        # Unknown type - return True as placeholder
-        # Returning True makes locations more accessible, which is appropriate for worldgen
-        # since unknown types are typically progression checks that evaluate to true
-        # under default/normal game settings
-        return 'True'
+        # Unknown type: loud (⚖ D3); lossy mode keeps the always-true placeholder
+        return unknown_kind('helper body', expr.get('type') or expr.get('rule') or repr(expr)[:60], 'True')

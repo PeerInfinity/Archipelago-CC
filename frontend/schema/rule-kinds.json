@@ -621,7 +621,6 @@
    "unknown_capability"
   ],
   "js.rb": [
-   "ASTRule",
    "AST_enemy_requirement",
    "AST_error",
    "AST_formatted_value",
@@ -631,16 +630,11 @@
    "AST_setting_in",
    "AST_starred",
    "AST_unknown",
-   "AST_unknown_capability",
-   "EntranceAccessRuleCall",
-   "NestedRule",
-   "WrapperRule",
-   "bool"
+   "AST_unknown_capability"
   ],
   "world_generator.rb": [
    "ASTRule",
    "AST_call",
-   "AST_count_item",
    "AST_counts",
    "AST_enemy_requirement",
    "AST_error",
@@ -652,7 +646,6 @@
    "AST_generic_rule",
    "AST_lambda",
    "AST_map",
-   "AST_max",
    "AST_method_call",
    "AST_negate",
    "AST_player_id",
@@ -667,18 +660,12 @@
    "AST_sum_of",
    "AST_unknown",
    "AST_unknown_capability",
-   "AST_weighted_count_true",
    "Attribute",
    "CountCheck",
-   "CountFromList",
    "CountGroup",
    "CountGroupUnique",
-   "EntranceAccessRuleCall",
    "Filtered",
-   "HasAnyCount",
    "ItemCheck",
-   "MaxValue",
-   "MinValue",
    "NestedRule",
    "Tuple",
    "WrapperRule",
@@ -686,9 +673,7 @@
    "unique_count",
    "weighted_sum"
   ],
-  "world_generator.rb_map_without_handler": [
-   "group_count"
-  ],
+  "world_generator.rb_map_without_handler": [],
   "helper_codegen.ast": [
    "capability",
    "count_true",
@@ -706,8 +691,7 @@
    "slice",
    "starred",
    "unknown",
-   "unknown_capability",
-   "weighted_count_true"
+   "unknown_capability"
   ],
   "helper_codegen.rb": [
    "ASTRule",
@@ -758,8 +742,6 @@
    "Filtered",
    "HasAllCounts",
    "HasAnyCount",
-   "HasGroup",
-   "HasGroupUnique",
    "ItemCheck",
    "MaxValue",
    "MinValue",
@@ -789,7 +771,6 @@
    "MinValue",
    "Name",
    "NestedRule",
-   "Not",
    "OptionValue",
    "StateMethod",
    "Tuple",
@@ -799,5 +780,5 @@
    "weighted_sum"
   ]
  },
- "gap_ceiling": 177
+ "gap_ceiling": 159
 }

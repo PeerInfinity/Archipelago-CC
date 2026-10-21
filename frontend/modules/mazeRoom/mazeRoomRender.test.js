@@ -246,6 +246,8 @@ describe('mazeRoomRender — the extraction is behaviour-preserving', () => {
                 isLocationVisible: (n) => panel._isLocationVisibleToUI(n),
                 isConsumableCollected: (x, y) => panel._visualizer
                     ?.isConsumableCollected?.(panel.currentRegionId, x, y),
+                broken: panel.state?.broken ?? null,
+                facing: panel.state?.facing ?? null,
             });
             expect(hashOf(ctx.__log), `${name}: direct drawWorld`).toBe(BEFORE[name].hash);
         });
@@ -272,7 +274,7 @@ describe('mazeRoomRender — the view is the WHOLE input', () => {
         expect([...VIEW_FIELDS]).toEqual([
             'tilePx', 'playerPos', 'inventory', 'isPlayback', 'checkedLocations',
             'ruleEvaluator', 'fogEnabled', 'isTileVisible', 'seenTiles', 'isExitVisible',
-            'isLocationVisible', 'isConsumableCollected',
+            'isLocationVisible', 'isConsumableCollected', 'broken', 'facing',
         ]);
     });
 

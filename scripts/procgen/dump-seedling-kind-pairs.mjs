@@ -4,6 +4,8 @@
  * TEXT DUMP, so a slice can say "byte-identical" about them rather than about
  * a suite that happens to pass.
  *
+ * @ci-box the user moved the kind-pair censuses off push (⚖ 2026-10-21, 0/72 red in CI): the box answers these rows (`node scripts/procgen/standing-values.mjs --write --only=pairs`), and CI runs no arm for them.
+ *
  * CONSTRUCTIVE-MODE arc, slice 7. Slice 6 (kickoff §13.8) ran exactly this
  * comparison from a scratch file — 80 rows, `empty` x seeds 1..40 x both
  * palettes, md5 `a9d9d2f84112686a09436b4fc9b1bb30` — and the next slice had to

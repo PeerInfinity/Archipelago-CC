@@ -1190,6 +1190,350 @@ class OptionValue(Rule[TWorld], game=GAME_NAME):
             return f"OptionValue({self.option_name})"
 
 
+@dataclasses.dataclass()
+class MinValue(Rule[TWorld], game=GAME_NAME):
+    """
+    Returns the minimum of two numeric values/rules.
+
+    Used in arithmetic expressions where a cap is needed.
+    Returns the minimum value via get_value().
+
+    Usage:
+        # Cap item contribution at 9
+        rule = MinValue(CountItem("Orichalcum"), 9)
+
+        # Combined with Arithmetic for complex rules
+        rule = Compare(
+            Arithmetic(MinValue(CountItem("Orichalcum"), 9), "+", MinValue(CountItem("Mythril"), 9)),
+            ">=", 15
+        )
+    """
+    left: "Rule[TWorld] | int | float" = dataclasses.field(default=0)
+    right: "Rule[TWorld] | int | float" = dataclasses.field(default=0)
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        resolved_left: Any
+        resolved_right: Any
+
+        if isinstance(self.left, Rule):
+            resolved_left = self.left._instantiate(world)
+        else:
+            resolved_left = self.left
+
+        if isinstance(self.right, Rule):
+            resolved_right = self.right._instantiate(world)
+        else:
+            resolved_right = self.right
+
+        return self.Resolved(
+            resolved_left,
+            resolved_right,
+            player=world.player,
+            caching_enabled=False,
+        )
+
+    @override
+    def __str__(self) -> str:
+        return f"min({self.left}, {self.right})"
+
+    class Resolved(Rule.Resolved):
+        left: Any  # Rule.Resolved or literal value
+        right: Any  # Rule.Resolved or literal value
+        skip_cache: ClassVar[bool] = True
+
+        def _get_operand_value(self, operand: Any, state: CollectionState) -> float | int:
+            """Get the numeric value of an operand."""
+            if isinstance(operand, Rule.Resolved):
+                if hasattr(operand, 'get_value'):
+                    return operand.get_value(state)
+                if hasattr(operand, 'get_count'):
+                    return operand.get_count(state)
+                # Boolean rules: True=1, False=0
+                return 1 if operand(state) else 0
+            return operand
+
+        @override
+        def get_value(self, state: CollectionState) -> float | int:
+            """Get the minimum of the two operands."""
+            left_val = self._get_operand_value(self.left, state)
+            right_val = self._get_operand_value(self.right, state)
+            return min(left_val, right_val)
+
+        # Alias for Compare compatibility
+        get_count = get_value
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            # When used as boolean, true if value is truthy (non-zero)
+            return bool(self.get_value(state))
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            deps: dict[str, set[int]] = {}
+            if isinstance(self.left, Rule.Resolved):
+                for name, ids in self.left.item_dependencies().items():
+                    deps.setdefault(name, set()).update(ids)
+            if isinstance(self.right, Rule.Resolved):
+                for name, ids in self.right.item_dependencies().items():
+                    deps.setdefault(name, set()).update(ids)
+            return deps
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            messages: list[JSONMessagePart] = [{"type": "text", "text": "min("}]
+
+            if isinstance(self.left, Rule.Resolved):
+                messages.extend(self.left.explain_json(state))
+            else:
+                messages.append({"type": "text", "text": str(self.left)})
+
+            messages.append({"type": "text", "text": ", "})
+
+            if isinstance(self.right, Rule.Resolved):
+                messages.extend(self.right.explain_json(state))
+            else:
+                messages.append({"type": "text", "text": str(self.right)})
+
+            messages.append({"type": "text", "text": ")"})
+
+            if state is not None:
+                value = self.get_value(state)
+                messages.append({"type": "text", "text": f" = {value}"})
+
+            return messages
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            left_str = self.left.explain_str(state) if isinstance(self.left, Rule.Resolved) else str(self.left)
+            right_str = self.right.explain_str(state) if isinstance(self.right, Rule.Resolved) else str(self.right)
+            result = f"min({left_str}, {right_str})"
+            if state is not None:
+                result += f" = {self.get_value(state)}"
+            return result
+
+        @override
+        def __str__(self) -> str:
+            return f"min({self.left}, {self.right})"
+
+
+@dataclasses.dataclass()
+class MaxValue(Rule[TWorld], game=GAME_NAME):
+    """
+    Returns the maximum of two numeric values/rules.
+
+    Used in arithmetic expressions where the largest value is needed.
+    Returns the maximum value via get_value().
+
+    Usage:
+        # Get maximum depth from multiple sources
+        rule = MaxValue(seamoth_depth, cyclops_depth)
+
+        # Combined with Arithmetic for complex rules
+        rule = Compare(
+            Arithmetic(swim_depth, "+", MaxValue(seamoth_depth, cyclops_depth)),
+            ">=", 1444
+        )
+    """
+    left: "Rule[TWorld] | int | float" = dataclasses.field(default=0)
+    right: "Rule[TWorld] | int | float" = dataclasses.field(default=0)
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        resolved_left: Any
+        resolved_right: Any
+
+        if isinstance(self.left, Rule):
+            resolved_left = self.left._instantiate(world)
+        else:
+            resolved_left = self.left
+
+        if isinstance(self.right, Rule):
+            resolved_right = self.right._instantiate(world)
+        else:
+            resolved_right = self.right
+
+        return self.Resolved(
+            resolved_left,
+            resolved_right,
+            player=world.player,
+            caching_enabled=False,
+        )
+
+    @override
+    def __str__(self) -> str:
+        return f"max({self.left}, {self.right})"
+
+    class Resolved(Rule.Resolved):
+        left: Any  # Rule.Resolved or literal value
+        right: Any  # Rule.Resolved or literal value
+        skip_cache: ClassVar[bool] = True
+
+        def _get_operand_value(self, operand: Any, state: CollectionState) -> float | int:
+            """Get the numeric value of an operand."""
+            if isinstance(operand, Rule.Resolved):
+                if hasattr(operand, 'get_value'):
+                    return operand.get_value(state)
+                if hasattr(operand, 'get_count'):
+                    return operand.get_count(state)
+                # Boolean rules: True=1, False=0
+                return 1 if operand(state) else 0
+            return operand
+
+        @override
+        def get_value(self, state: CollectionState) -> float | int:
+            """Get the maximum of the two operands."""
+            left_val = self._get_operand_value(self.left, state)
+            right_val = self._get_operand_value(self.right, state)
+            return max(left_val, right_val)
+
+        # Alias for Compare compatibility
+        get_count = get_value
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            # When used as boolean, true if value is truthy (non-zero)
+            return bool(self.get_value(state))
+
+        @override
+        def item_dependencies(self) -> dict[str, set[int]]:
+            deps: dict[str, set[int]] = {}
+            if isinstance(self.left, Rule.Resolved):
+                for name, ids in self.left.item_dependencies().items():
+                    deps.setdefault(name, set()).update(ids)
+            if isinstance(self.right, Rule.Resolved):
+                for name, ids in self.right.item_dependencies().items():
+                    deps.setdefault(name, set()).update(ids)
+            return deps
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            messages: list[JSONMessagePart] = [{"type": "text", "text": "max("}]
+
+            if isinstance(self.left, Rule.Resolved):
+                messages.extend(self.left.explain_json(state))
+            else:
+                messages.append({"type": "text", "text": str(self.left)})
+
+            messages.append({"type": "text", "text": ", "})
+
+            if isinstance(self.right, Rule.Resolved):
+                messages.extend(self.right.explain_json(state))
+            else:
+                messages.append({"type": "text", "text": str(self.right)})
+
+            messages.append({"type": "text", "text": ")"})
+
+            if state is not None:
+                value = self.get_value(state)
+                messages.append({"type": "text", "text": f" = {value}"})
+
+            return messages
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            left_str = self.left.explain_str(state) if isinstance(self.left, Rule.Resolved) else str(self.left)
+            right_str = self.right.explain_str(state) if isinstance(self.right, Rule.Resolved) else str(self.right)
+            result = f"max({left_str}, {right_str})"
+            if state is not None:
+                result += f" = {self.get_value(state)}"
+            return result
+
+        @override
+        def __str__(self) -> str:
+            return f"max({self.left}, {self.right})"
+
+
+@dataclasses.dataclass()
+class EntranceAccessRuleCall(Rule[TWorld], game=GAME_NAME):
+    """A rule that evaluates an entrance's access_rule.
+
+    This is used for ALttP underworld glitch rules where dungeon_entrance.access_rule()
+    is called, potentially with a fake pearl state. The entrance is looked up by name
+    and its access_rule is evaluated.
+
+    When fake_pearl is True, Moon Pearl is temporarily added to the state before
+    evaluating the access rule. This simulates the "fake_pearl_state" function from
+    ALttP UnderworldGlitchRules.py.
+    """
+
+    entrance_name: str
+    """The name of the entrance whose access_rule to evaluate"""
+
+    fake_pearl: bool = False
+    """If True, evaluate the rule as if the player has Moon Pearl"""
+
+    @override
+    def _instantiate(self, world: TWorld) -> Rule.Resolved:
+        return self.Resolved(
+            self.entrance_name,
+            self.fake_pearl,
+            player=world.player,
+            multiworld=world.multiworld,
+            caching_enabled=getattr(world, "rule_caching_enabled", False),
+        )
+
+    @override
+    def __str__(self) -> str:
+        fp = ", fake_pearl=True" if self.fake_pearl else ""
+        return f"{self.__class__.__name__}({self.entrance_name!r}{fp})"
+
+    class Resolved(Rule.Resolved):
+        entrance_name: str
+        fake_pearl: bool
+        multiworld: Any  # MultiWorld
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            try:
+                entrance = self.multiworld.get_entrance(self.entrance_name, self.player)
+            except KeyError:
+                # Entrance not found - conservatively return True
+                return True
+
+            eval_state = state
+            if self.fake_pearl:
+                # Create a fake state with Moon Pearl
+                if not state.has('Moon Pearl', self.player):
+                    eval_state = state.copy()
+                    eval_state.prog_items[self.player]['Moon Pearl'] += 1
+
+            # Evaluate the entrance's access_rule
+            return entrance.access_rule(eval_state)
+
+        @override
+        def entrance_dependencies(self) -> dict[str, set[int]]:
+            return {self.entrance_name: {id(self)}}
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            fp_text = " (with fake pearl)" if self.fake_pearl else ""
+            if state is None:
+                verb = "Can access"
+            elif self(state):
+                verb = "Can access"
+            else:
+                verb = "Cannot access"
+            return [
+                {"type": "text", "text": f"{verb} entrance "},
+                {"type": "entrance_name", "text": self.entrance_name, "player": self.player},
+                {"type": "text", "text": f" access rule{fp_text}"},
+            ]
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            fp_text = " (with fake pearl)" if self.fake_pearl else ""
+            if state is None:
+                return str(self)
+            prefix = "Can access" if self(state) else "Cannot access"
+            return f"{prefix} entrance {self.entrance_name} access rule{fp_text}"
+
+        @override
+        def __str__(self) -> str:
+            fp_text = " (with fake pearl)" if self.fake_pearl else ""
+            return f"Entrance {self.entrance_name} access rule{fp_text}"
+
+
 # Rule types that produce boolean expressions (as opposed to numeric values).
 # Mirrors the fork's rule_builder.extra_rules.BOOLEAN_RULE_TYPES.
 BOOLEAN_RULE_TYPES: frozenset[str] = frozenset({
@@ -1237,6 +1581,7 @@ def _create_ext_hash_fn(resolved_rule_cls: type) -> Callable[..., int]:
 for _rule_cls in (
     AtLeast, Not, CountItem, CountFromList, CountGroup,
     Compare, Arithmetic, Conditional, HelperCall, WeightedSum, OptionValue,
+    MinValue, MaxValue, EntranceAccessRuleCall,
 ):
     _rule_cls.Resolved.__hash__ = _create_ext_hash_fn(_rule_cls.Resolved)
 del _rule_cls

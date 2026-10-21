@@ -28,6 +28,15 @@ on:
       - '!.dockerignore'
       - '!.github/workflows/**'
       - '.github/workflows/unittests.yml'
+  # Fork addition (ci-manual-moves, user ruling 2026-10-21): the Windows and
+  # macOS legs run only on a pull request or on this dispatch with
+  # `full_matrix`; pushes run the Linux legs and hosting.
+  workflow_dispatch:
+    inputs:
+      full_matrix:
+        description: 'Also run the Windows 3.11 / Windows 3.13 / macOS 3.13 legs'
+        type: boolean
+        default: true
 
 permissions: {}
 
@@ -127,13 +136,11 @@ jobs:
           - {version: '3.11.2'} # Change to '3.11' around 2026-06-10
           - {version: '3.12'}
           - {version: '3.13'}
-        include:
-          - python: {version: '3.11'}  # old compat
-            os: windows-latest
-          - python: {version: '3.13'}  # current
-            os: windows-latest
-          - python: {version: '3.13'}  # current
-            os: macos-latest
+        # Fork change (ci-manual-moves): upstream's three include legs —
+        # Windows 3.11 (old compat), Windows 3.13 and macOS 3.13 (current) —
+        # are added only on a pull request or a `full_matrix` dispatch:
+        #   gh workflow run unittests.yml -R PeerInfinity/Archipelago-CC --ref <branch> -f full_matrix=true
+        include: ${{ fromJSON((github.event_name == 'pull_request' || inputs.full_matrix) && '[{"python":{"version":"3.11"},"os":"windows-latest"},{"python":{"version":"3.13"},"os":"windows-latest"},{"python":{"version":"3.13"},"os":"macos-latest"}]' || '[]') }}
 
     steps:
     - uses: actions/checkout@v6.0.2
