@@ -2699,7 +2699,7 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
             'brokenRocks', 'crushersParked', 'pushesSettled', 'openBridges', 'arrowsInFlight',
             'burnedTrees', 'latchedGroups', 'pulledRopes', 'turretDamage', 'turretsSettled',
             'arrowFlights', 'bosses', 'talkCircles', 'bobBoss', 'pulls', 'shooters', 'staticBodies',
-            'darkTraps', 'bombPushers', 'bombs', 'igneousTiles',
+            'darkTraps', 'bombPushers', 'bombs', 'igneousTiles', 'lightsFight',
         ]);
         expect(Object.isFrozen(ENTITY_FAMILY_NAMES)).toBe(true);
         for (const f of ENTITY_FAMILY_NAMES) {
@@ -2806,6 +2806,18 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
         expect(bad).toEqual([]);
         expect(run.entities('pushables')).toBe(null);
         expect(run.entities('pushesSettled')).toBe(true);
+    });
+
+    it('L69\'s Lights fight (fidelity LIGHTS, the switch ON, from the L70 pit landing): lightsFight, through the query', () => {
+        withContactFidelity({ lightsBossFight: true }, () => {
+            // the controller steps on `Game.worldFrame`, so the boot declares its clock (a seam time and the dead-frame pin)
+            const run = createLevelRun({ levelSource, boot: { level: 69, x: 48, y: 128 }, roles: ROLES, noDamage: true,
+                seam: { time: 8586 }, pins: ['dead_frames'] });
+            const { bad, seen } = compareEveryTick(run, 20, () => new Set());
+            expect(bad).toEqual([]);
+            expect(seen.has('lightsFight')).toBe(true);
+            for (const f of seen) witnessed.add(f);
+        });
     });
 
     it('every family was witnessed NON-TRIVIALLY by the rows above', () => {

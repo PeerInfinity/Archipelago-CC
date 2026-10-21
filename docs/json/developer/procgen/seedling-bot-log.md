@@ -24149,3 +24149,56 @@ tapeRunner pair (638 `17bbc7ff`), identity row or producer `--check` moves OFF. 
 - A dwell is invisible to a per-box danger query: the player's OWN presence is the hazard's clock, so the check has to
   replay the walk.
 - A `Tile`'s `x, y` is its centre (`super(_x + w/2, _y + h/2)`), not the `.oel` corner.
+
+### Seedling fidelity LIGHTS — the L69 Lights fight, modelled and solved (`lightsBossFight`, OFF)
+
+The report is `CC/docs/cloud-reports/seedling-fidelity-lights.md`. Everything is behind
+`CONTACT_FIDELITY.lightsBossFight` (OFF; `SEEDLING_LIGHTS_BOSS_FIGHT=0|1`). OFF is byte-identical: the identity block
+equals W0's in a pristine worktree, and the new strategy and verb rows are absent and non-enumerable.
+
+**D1 — the fight on the game** (`probe-seedling-lights.mjs`, p4g headless; `fixtures/lights-witness/`):
+- The intro NPC does not run on its own. It opens on an X release within 24 px of (80,80), and its two pages are tape
+  ticks. Its removal nulls `myText`, and the six fliers spawn on the next controller update at (80,−32).
+- `FP.RAD` is π/−180, so the spin decreases. The runtime's trig is musl's, which is one ulp off V8 on about 1% of
+  arguments. `runtimeLibm.js` transcribes it.
+- `endState()` writes `{69,0}` on the tick after the last flier leaves the world. It adds the exit Teleporter
+  (72,72) → L36 (112,96), live from the next tick, and the totem's type becomes `""`.
+
+**D2 — the model** (`lightBoss.js`, `lightBossWorld.js`, stepped by `levelRun.stepLightsNow`; family `lightsFight`):
+- What it covers: the controller, the fliers, the shots as player hits, and the totem as a Solid.
+- How fliers take damage: the fliers' sword/spear hits (the spear's T+3/T+5 repeats included), and the dark suit's
+  retaliation.
+- The kill arm: the `anim` corpse.
+- The write: the `{69,0}` write through `apReportWrite`.
+- What it reproduces: four game witnesses at 0 px (stand 701, revisit 81, solve-sword 560, solve-spear 362 ticks).
+
+**D3 — the solver.**
+- `solid:lightbosscontroller → lights` (`lightsVerb.execLights`): the intro paged, then sorties and dodges chosen on an
+  exact forecast of a cloned fight, sword or spear only.
+- Refusals: `cannot-act` (another primary weapon) and `unresolved` (the forecast leaves the live fight, a hit, or the
+  bound).
+- Both solves are game witnesses at 0 px and end in L36.
+
+**D4 — movers.**
+- The local survey ON solves 163 (L69, 559 t; OFF: NO-EDGE, the survey's atlas lookup) and 164 (L36, 50 t; OFF:
+  NO-ARRIVAL). The full route ON reads 196 / 54 / 2 / 2 of 254, against CI 39496129402's 194 / 54 / 3 / 3. The remaining
+  NO-EDGE pair is L57's `tentaclebeast` (steps 94/95, 125/126).
+- The bounded set ON (125 files) has 4 reds, all of them pins the flip must move:
+  - the `contactFidelity.test` defaults;
+  - `fidelityLights`' OFF-default row;
+  - `enemyDamage.test`'s `refused > 15` floor (LightBoss is now modelled: 15);
+  - `fidelityApFlip`'s "Lights … room unchanged". That row was written without the fight; the totem is a 16×16 Solid
+    on the game until `endState`.
+- The keyed L69 sweep does not move. Both legs are refused before any model tick, in the JS arc's goal resolver:
+  `jsRuntimeSolver.solverGoalFor` finds no live exit teleporter, and the controller's `BOSS_REPORT_REFUSAL` has no fight
+  executor. Both are hand-overs.
+
+**STOP (the hammer arc's region).** The danger map does not see the fliers or the shots. Pricing them would need
+`stateDigest` to cover `lightsFights`, `lightsExits` and `lightsSpearRepeats`.
+
+**Trap candidates.**
+- `playerPhysicsV2.step` rebuilds its own live bag, so a new live-geometry key is silently dropped unless `step`
+  carries it: the totem stayed solid after `endState`.
+- The runtime's trig is musl, not V8. A transcription that is exact in V8 can drift by one ulp per call.
+- A key file built with `… ; wc -l` carries a second line, and `--contact-fidelity` refuses it by name.
+- The sweep's default `--host` is :8000.

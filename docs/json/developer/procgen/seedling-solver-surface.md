@@ -262,6 +262,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `bombPushers` | `stationary`, `emitter`, `proximity` | `dangerMap`, `solverBot` |
 | `bombs` | `explode` | `dangerMap`, `solverBot` |
 | `igneousTiles` | `stationary`, `proximity` | `dangerMap` |
+| `lightsFight` | `hp`, `emitter`, `contact` | `lightsVerb` |
 | `volume:crusher` | `lane-charge`, `contact` | `encounters` |
 | `volume:spinningaxe` | `stationary`, `sweep` | `dangerMap`, `encounters` |
 | `volume:pulser` | `stationary`, `pulse` | `dangerMap`, `encounters` |
@@ -272,7 +273,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `volume:pull` | `stationary` | `dangerMap`, `encounters` |
 | `volume:pod` | `stationary`, `contact` | `dangerMap`, `encounters` |
 
-**Modelled.** A block counts as modelled when some `run.entities` family that a solver-family file reads realises it. These blocks are modelled, with the families behind each: `stationary` (`armedArrowTraps`, `armedPulsers`, `turrets`, `pulls`, `shooters`, `staticBodies`, `darkTraps`, `bombPushers`, `igneousTiles`), `chase` (`chasers`, `bobBoss`), `rebound` (`spinnerBodies`), `pushable` (`pushables`, `turrets`, `pushesSettled`, `turretsSettled`), `lane-charge` (`crushers`, `crushersParked`), `contact` (`crushers`, `spinnerBodies`, `chasers`, `bobBoss`), `emitter` (`armedArrowTraps`, `arrowsInFlight`, `turretDamage`, `arrowFlights`, `shooters`, `bombPushers`), `sweep` (`spinnerBodies`), `pulse` (`armedPulsers`), `explode` (`bombs`), `hp` (`strikeBodies`, `spinnerBodies`, `turretDamage`, `bobBoss`, `staticBodies`), `proximity` (`bombPushers`, `igneousTiles`), `channel` (`openActivators`, `armedArrowTraps`, `armedPulsers`, `latchedGroups`), `light` (`darkTraps`).
+**Modelled.** A block counts as modelled when some `run.entities` family that a solver-family file reads realises it. These blocks are modelled, with the families behind each: `stationary` (`armedArrowTraps`, `armedPulsers`, `turrets`, `pulls`, `shooters`, `staticBodies`, `darkTraps`, `bombPushers`, `igneousTiles`), `chase` (`chasers`, `bobBoss`), `rebound` (`spinnerBodies`), `pushable` (`pushables`, `turrets`, `pushesSettled`, `turretsSettled`), `lane-charge` (`crushers`, `crushersParked`), `contact` (`crushers`, `spinnerBodies`, `chasers`, `bobBoss`, `lightsFight`), `emitter` (`armedArrowTraps`, `arrowsInFlight`, `turretDamage`, `arrowFlights`, `shooters`, `bombPushers`, `lightsFight`), `sweep` (`spinnerBodies`), `pulse` (`armedPulsers`), `explode` (`bombs`), `hp` (`strikeBodies`, `spinnerBodies`, `turretDamage`, `bobBoss`, `staticBodies`, `lightsFight`), `proximity` (`bombPushers`, `igneousTiles`), `channel` (`openActivators`, `armedArrowTraps`, `armedPulsers`, `latchedGroups`), `light` (`darkTraps`).
 
 **Only avoided.** These blocks reach the solver only as an avoid volume: `beam` (`volume:beamtower`), `tether` (`volume:lavachain`).
 

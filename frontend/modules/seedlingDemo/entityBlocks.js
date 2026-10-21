@@ -315,6 +315,9 @@ export const FAMILY_BLOCKS = deepFreeze([
     { family: 'igneousTiles', kind: RUN_ENTITIES, blocks: ['stationary', 'proximity'],
         solverReads: ['dangerMap'], strategies: [],
         why: 'the room\'s Igneous-to-Lava tiles (type 31) with their render-driven clocks — `igneousCounter`, `igneousBreakApart`, `igneousFrame` and whether the tile has turned to lava (fidelity IGNEOUS: `levelRun.igneousTilesNow`, `igneousLava.js`); `null` while `CONTACT_FIDELITY.igneousLava` is off.' },
+    { family: 'lightsFight', kind: RUN_ENTITIES, blocks: ['hp', 'emitter', 'contact'],
+        solverReads: ['lightsVerb'], strategies: [],
+        why: 'L69\'s fight (fidelity LIGHTS: `levelRun.lightsFightNow`, `lightBoss.js`): the intro, the controller\'s `worldFrame` pattern (spin, radius, state), the six `LightBoss` fliers (contact, `hits`, the die anim) and their `LightBossShot`s; the `lights` verb forecasts a clone of it. `null` while `CONTACT_FIDELITY.lightsBossFight` is off.' },
 
     /* ── the hazard volumes (`hazards.hazardVolume`, avoid volumes, unions over phase) ── */
     { family: 'volume:crusher', kind: VOLUME, blocks: ['lane-charge', 'contact'],
