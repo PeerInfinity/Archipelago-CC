@@ -27,6 +27,23 @@
 > `false` for a Rule Builder name the switch does not handle (`ruleEvaluator.js` `executeHelper`), and
 > world_generator's helper codegen writes `'True'`.
 
+> **2026-10-21 (R2b) — the sites that re-audit found outside this list, brought into line with the
+> unknown-kind policy:**
+> - **apworld editor rename cascades** (`apworldEditor/rulesUtils.js` `rename{Item,Region,Location}InRules`,
+>   reached from `rulesDocOps.js`) and **`regionContent.js` `referencesTo`** now find a name by its ARG
+>   (`RULE_NAME_ARGS` / `ownRuleNames`), as the validator already did for items. Keyed on six kinds,
+>   they left stale names in `HasFromListUnique`, `AST_region_check`, `AST_location_rule_ref`,
+>   `AST_placement_lookup` and typed `item_check` / `region_check` nodes. `validateRules` reads region
+>   and location names the same way.
+> - **`scripts/procgen/seedling-divergence-legs.mjs` `requiredEvents` / `goalEventsHeld`** (a decider): a
+>   kind they do not know still needs no event when it names no event item; one that does is refused by
+>   name. It used to read as "needs none". Today only `And`/`Or`/`Has`/`True_` reach them.
+> - **`procgenPipeline/regionAtlasPool.js` `requirementDnf`**: unchanged. An out-of-vocabulary rule is
+>   `null`, which `entryRequirement` declines with a reason. `sphereAtlasSorter` `envelopeFor` gives it
+>   `gate: []` but `wave: null`, and the engine never hosts a child on a null-wave door. It is not free.
+> - **`playbackBot/walkOrder.js` `goalItemOf`** reads a Rule Builder `Has` of one copy (apquest,
+>   toem_rule_builder). Several copies (musedash) or any other shape still name no goal row.
+
 ---
 
 ## 0. What `AtLeast` looks like

@@ -44,6 +44,13 @@ describe('requiredEvents — the game_state events a door edge cannot hold witho
         expect(ids(requiredEvents({ rule: 'Or', children: [has(E1.item), { rule: 'And', children: [has('Red'), has(E2.item)] }] }, byItem)))
             .toEqual(['flag:L9:1', 'flag:L9:2']);
     });
+    it('⚖ D3: another kind needs none only when it names no event item; one that does is refused by name', () => {
+        expect(requiredEvents({ rule: 'HasAny', args: { item_names: ['Sword', 'Wand'] } }, byItem)).toEqual([]);
+        const gated = { rule: 'Not', child: { rule: 'HasAny', args: { item_names: ['Sword', E1.item] } } };
+        expect(() => requiredEvents(gated, byItem)).toThrow('rule kind "Not" names event item(s) ["L9 flag 1: rock cleared"]');
+        expect(() => goalEventsHeld(gated, byItem, () => true)).toThrow(/goalEventsHeld: rule kind "Not"/);
+        expect(goalEventsHeld({ rule: 'True_' }, byItem, () => true)).toEqual([]);
+    });
 });
 
 describe('arrivalEventNeeds — an arrival needs an event only when EVERY door into its spawn does', () => {

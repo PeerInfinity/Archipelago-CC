@@ -67,6 +67,7 @@ import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { compileRegion } from '../shared/procgen/pathsAndObstaclesCompiler.js';
 import { makeLocationName } from '../procgenCore/apLocationNaming.js';
 import { walkRuleTrees } from '../procgenCore/rulesGraph.js';
+import { ownRuleNames } from './rulesUtils.js';
 import { sidecarFieldsOf } from '../procgenCore/sidecarFields.js';
 import { recordedConfigOf } from '../procgenCore/substrateConfigRecord.js';
 import { strandedReferences } from './regionRegenerate.js';
@@ -635,13 +636,13 @@ function hostedFields(doc, player, entry) {
     return [...fields].filter((f) => isObj(pay[f]));
 }
 
-/** ⛓ Every `CanReachLocation` outside `region` that names one of `names`. */
+/** ⛓ Every location reference (by arg — `ownRuleNames`) outside `region` that names one of `names`. */
 function referencesTo(doc, player, region, names) {
     const out = [];
     walkRuleTrees(doc, player, (node, ctx) => {
-        if (node?.rule === 'CanReachLocation' && names.has(node.args?.location_name)
-            && ctx.regionName !== region) {
-            out.push({ region: ctx.regionName, at: ctx.exitName ?? ctx.locationName, location: node.args.location_name });
+        if (ctx.regionName === region) return;
+        for (const location of ownRuleNames(node, 'location')) {
+            if (names.has(location)) out.push({ region: ctx.regionName, at: ctx.exitName ?? ctx.locationName, location });
         }
     });
     return out;

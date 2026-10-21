@@ -267,6 +267,8 @@ export function sortAtlasRegionsIntoSpheres(plan, pool, opts = {}) {
         const claimed = new Set(ent ? [`${ent.x},${ent.y}`] : []);
         return (entry.exits ?? []).map((ex) => {
             const dnf = ex.access_rule == null ? [[]] : requirementDnf(ex.access_rule);
+            // A rule outside the DNF vocabulary (dnf null) is NOT free: its `wave` is null, and the
+            // engine's gateChoicesFor never hosts a child on a null-wave door, so its empty gate is inert.
             const chosen = dnf ? schedulingDisjunct(dnf) : [];
             const key = ex.tile ? `${ex.tile.x},${ex.tile.y}` : null;
             const hostable = !(key !== null && claimed.has(key));
