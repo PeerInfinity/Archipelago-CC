@@ -18,6 +18,15 @@
 > Verification: **[V]** = read & confirmed in source for this audit; **[A]** =
 > agent-reported, line may drift.
 
+> **2026-10-21 — the vocabulary half of this checklist is now a CI gate.** Which layers must handle
+> a kind, and which kinds each layer emits or handles, is checked by the census in
+> [rule-kind-registry.md](rule-kind-registry.md), which also states the ruled unknown-kind policy. This
+> inventory remains the list of dispatch SITES. A re-audit at main 8bff230abf found the `AtLeast` work
+> done at #1, #3, #4b, #8, #11, #12 and #13 (several lines have moved). It also found silent fallbacks
+> this list lacks, recorded as the census's known gaps. In particular, the stateManager worker answers
+> `false` for a Rule Builder name the switch does not handle (`ruleEvaluator.js` `executeHelper`), and
+> world_generator's helper codegen writes `'True'`.
+
 ---
 
 ## 0. What `AtLeast` looks like

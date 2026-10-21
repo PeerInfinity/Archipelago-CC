@@ -42,21 +42,9 @@ import { CI_GATE_MARK, parseGateLines } from './ciSummary.js';
  * owner; delete it in the commit that turns the arm green.
  */
 export const CI_GATE_EXPECTED_RED = Object.freeze({
-    'gate: seedling-hammer-monotonicity': Object.freeze({
-        owner: 'seedling-hammer-phase-planning-2',
-        why: 'CRASH ON INVOCATION, not a measured red: the roster runs the gate bare and it '
-            + 'requires `--row=` (`Error: --row=null: not a row (--rows lists them)`, 0.0 s, '
-            + 'no verdict line). Either the gate takes a default row set under the battery or '
-            + 'the roster passes one.',
-        since: '014fc135 (2026-10-17, the introducing commit)',
-    }),
-    'gate: seedling-rewind-exactness': Object.freeze({
-        owner: 'seedling-hammer-phase-planning-2',
-        why: 'CRASH ON INVOCATION, not a measured red: the roster runs the gate bare and it '
-            + 'requires `--row=` or `--script` (`Error: --row=null: not a row (--rows lists '
-            + 'them), and no --script`, 0.0 s, no verdict line).',
-        since: '014fc135 (2026-10-17, the introducing commit)',
-    }),
+    /* ⛓ EMPTY since seedling-hammer-gate-rows: `seedling-hammer-monotonicity` and
+     * `seedling-rewind-exactness` declare `@ci-box … positional \`--row=<row>\``, so the
+     * roster derives no bare arm for them and their two rows would read STALE. */
 });
 
 /** The marker every line this judge prints carries — ONE spelling. */
