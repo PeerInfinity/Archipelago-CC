@@ -20,6 +20,10 @@ import { atlasLevelSource } from './levelSource.js';
 import { PENDING_AT } from './solverBot.js';
 import { heldKeysAt } from './tapeFormat.js';
 import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { parseTape } from './tapeFormat.js';
 
 const TAPE = loadTape('r9-solve-18');
 const STAGING = stagingFromTape(TAPE);
@@ -159,5 +163,27 @@ describe('each component moves with its own state', () => {
         expect(moved).toEqual(expect.arrayContaining(['place', 'clock', 'player']));
         expect(moved).not.toContain('staging');
         expect(moved).not.toContain('globals');
+    });
+    // ⛓ fidelity IGNEOUS follow-up (the hammer arc's review row): a type-31 tile's unturned clock is run state the escape
+    // replays, so it must move `visit`. `igneous-l76-k4-stand` puts the player in range for 4 renders (t5..t8: the counter
+    // 8 → 4, no break) and dies only at t79, so at t30 a run walked ON and one walked OFF stand on one tick, one body and
+    // one world; only the tile's clock differs. Both are digested under ON, so `globals` (the switch) agrees too.
+    it('a type-31 tile\'s unturned clock (`igneousStates`) moves `visit` alone', () => {
+        const here = dirname(fileURLToPath(import.meta.url));
+        const t = parseTape(readFileSync(join(here, 'fixtures', 'igneous-witness', 'igneous-l76-k4-stand.tape.json'), 'utf8'));
+        const walk = (on) => withContactFidelity({ igneousLava: on }, () => {
+            const run = createRunForStaging(stagingFromTape(t), atlasLevelSource());
+            for (let i = 0; i < 30; i += 1) run.advance(new Set(heldKeysAt(t, i)));
+            return run;
+        });
+        const on = walk(true);
+        const off = walk(false);
+        const counted = withContactFidelity({ igneousLava: true }, () => on.entities('igneousTiles'))
+            .filter((x) => x.counter < 8 && !x.breaking && !x.lava);
+        expect(counted.length).toBeGreaterThan(0);
+        expect(off.state).toEqual(on.state);
+        const [a, b] = withContactFidelity({ igneousLava: true },
+            () => [on.stateDigest({ parts: true }), off.stateDigest({ parts: true })]);
+        expect(Object.keys(a.parts).filter((k) => a.parts[k] !== b.parts[k])).toEqual(['visit']);
     });
 });
