@@ -810,6 +810,15 @@ export const CONTACT_FIDELITY = {
      * `hitRect`, the whirlpools, the death's report `{57,0}` and the mouth Teleporter. OFF: byte-identical.
      */
     tentacleBeastFight: false,
+    /**
+     * fidelity ROPE (wave 22) — A ROPE IS CUT ON PURPOSE (`solverBot.resolveRopeStrategy` / `execRope`): the solver's
+     * `solid:rope` row (`rope`), the PULL rung's swing stance and `execPull` asked by a `clear-tag` on the rope's own
+     * tag (`{16,0}` `rope@32,16`, `{28,0}` `rope@160,64`) or by a rope across a frontier corridor (L39's
+     * `rope@96,384`). The cut itself is the run's (`levelRun.pullRope`, R5 slice 10), witnessed on the game by
+     * `probe-seedling-rope-events.mjs`. OFF: no row, no verb — byte-identical (the survey's L39 steps keep "No
+     * strategy row exists"). `SEEDLING_ROPE_CUT_VERB=0|1` for a node measurement.
+     */
+    ropeCutVerb: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -974,6 +983,9 @@ if (globalThis.process?.env?.SEEDLING_LIGHTS_BOSS_FIGHT === '0') CONTACT_FIDELIT
 // ⛓ seedling-fidelity-bosskills — the two boss fights, for a node measurement (both ship OFF).
 if (globalThis.process?.env?.SEEDLING_KING_OF_FIRE_FIGHT === '1') CONTACT_FIDELITY.kingOfFireFight = true;
 if (globalThis.process?.env?.SEEDLING_TENTACLE_BEAST_FIGHT === '1') CONTACT_FIDELITY.tentacleBeastFight = true;
+// ⛓ fidelity ROPE: `SEEDLING_ROPE_CUT_VERB=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_ROPE_CUT_VERB === '1') CONTACT_FIDELITY.ropeCutVerb = true;
+if (globalThis.process?.env?.SEEDLING_ROPE_CUT_VERB === '0') CONTACT_FIDELITY.ropeCutVerb = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
