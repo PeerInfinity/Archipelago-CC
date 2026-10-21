@@ -6885,8 +6885,20 @@ export const INSTRUMENTS = frz({
             ],
             "inheritedFlags": [
                 {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "charge-crossings"
+                },
+                {
                     "from": "argvHelp.js",
                     "name": "help"
+                },
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "masks"
+                },
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "no-directional-locks"
                 }
             ],
             "oneLiner": "The `seedling_playthrough_maze` preset: Seedling's PLAYTHROUGH atlas, restricted to a growing list of levels, projected into the MAZE substrate (tile-primitives Stage 2, session tile-primitives-stage2-l15).",
