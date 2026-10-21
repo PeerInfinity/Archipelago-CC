@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 82,
-            "count": 129,
+            "browser": 83,
+            "count": 130,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 434,
-        "browser": 147,
+        "blockStyle": 435,
+        "browser": 148,
         "cited": 227,
-        "files": 447,
+        "files": 448,
         "lineStyle": 13,
-        "withDocblock": 447,
-        "withFlags": 363
+        "withDocblock": 448,
+        "withFlags": 364
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -11910,6 +11910,53 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-l14-swordless — ⛓ SEEDLING FIDELITY L14 D1: IS A 0-HIT SWORDLESS CROSSING OF L14 POSSIBLE AT ALL?",
             "path": "scripts/procgen/probe-seedling-l14-swordless.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "out"
+            ],
+            "file": "probe-seedling-l15-block-path.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L15 BLOCK PATH, ON THE GAME (rules `rules-block-path`).",
+            "path": "scripts/procgen/probe-seedling-l15-block-path.mjs"
         },
         {
             "argvHelpers": [
