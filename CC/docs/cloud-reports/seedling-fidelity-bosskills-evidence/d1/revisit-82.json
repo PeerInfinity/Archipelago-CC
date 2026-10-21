@@ -1,0 +1,186 @@
+{
+ "game": "seedling",
+ "name": "revisit-82",
+ "boot": {
+  "level": 82,
+  "x": 160,
+  "y": 272
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [
+  {
+   "level": 5,
+   "tag": 0,
+   "note": ""
+  },
+  {
+   "level": 8,
+   "tag": 0,
+   "note": ""
+  },
+  {
+   "level": 8,
+   "tag": 1,
+   "note": ""
+  },
+  {
+   "level": 10,
+   "tag": 0,
+   "note": ""
+  },
+  {
+   "level": 0,
+   "tag": 1
+  },
+  {
+   "level": 19,
+   "tag": 1
+  },
+  {
+   "level": 31,
+   "tag": 0
+  },
+  {
+   "level": 30,
+   "tag": 2
+  },
+  {
+   "level": 30,
+   "tag": 0
+  },
+  {
+   "level": 12,
+   "tag": 3
+  },
+  {
+   "level": 39,
+   "tag": 8
+  },
+  {
+   "level": 40,
+   "tag": 8
+  },
+  {
+   "level": 62,
+   "tag": 0
+  },
+  {
+   "level": 68,
+   "tag": 0
+  },
+  {
+   "level": 71,
+   "tag": 2
+  },
+  {
+   "level": 82,
+   "tag": 0,
+   "note": ""
+  }
+ ],
+ "equips": [],
+ "pins": [
+  "sound",
+  "dead_frames"
+ ],
+ "save": {
+  "totem_parts": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "keys": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "seal_parts": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15
+  ]
+ },
+ "rng": {
+  "seed": 418414780,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 1763053598
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasFire": true,
+   "hasWand": true,
+   "hasFireWand": false,
+   "canSwim": true,
+   "hasSpear": true,
+   "hasDarkShield": true,
+   "hasDarkSuit": true,
+   "hasDarkSword": true,
+   "hasFeather": true,
+   "hasTorch": true
+  },
+  "beam": false,
+  "rock_set": false,
+  "hits_max": 3,
+  "first_use": false,
+  "extended": false,
+  "time": 8586,
+  "primary": 0,
+  "secondary": 0,
+  "grass_cut": 0,
+  "cutscene": [
+   false,
+   false,
+   false,
+   false
+  ],
+  "menu_state": 0,
+  "music": {
+   "set": "Room",
+   "index": 1
+  }
+ },
+ "tick_count": 366,
+ "inputs": [
+  {
+   "key": "up",
+   "from": 0,
+   "to": 365
+  },
+  {
+   "key": "left",
+   "from": 0,
+   "to": 13
+  },
+  {
+   "key": "right",
+   "from": 16,
+   "to": 17
+  }
+ ],
+ "tape_version": 8,
+ "description": "bosskills D1: L82 revisited with {82,0} cleared"
+}

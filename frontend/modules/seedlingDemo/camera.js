@@ -285,6 +285,22 @@ export const SHAKE_WRITERS = Object.freeze({
         op: '=', value: 15, src: 'Puzzlements/BeamTower.as:89-94',
         who: 'every update a BeamTower\'s beam touches the player',
     }),
+    /**
+     * ⛓ seedling-fidelity-bosskills D2 — the King of Fire's sweep (`lavaBoss.js`, under
+     * `CONTACT_FIDELITY.kingOfFireFight`): `Game.shake = 15` as the five-ball fan leaves, once a 99-update cycle.
+     */
+    lavaBossSweep: Object.freeze({
+        op: '=', value: 15, src: 'Enemies/LavaBoss.as:246',
+        who: 'every sweep of the King of Fire (L82), once a cycle',
+    }),
+    /**
+     * ⛓ seedling-fidelity-bosskills D3 — the Tentacled Beast rising (`tentacleBeast.js`, under
+     * `CONTACT_FIDELITY.tentacleBeastFight`): `Game.shake = 5` every update its "rise" plays.
+     */
+    tentacleRise: Object.freeze({
+        op: '=', value: 5, src: 'Enemies/TentacleBeast.as:89-92',
+        who: 'every update the Tentacled Beast (L57) plays its rise',
+    }),
 });
 
 /**
