@@ -267,11 +267,15 @@ executors throw before reading `ctx.fork`). No committed tape or producer digest
 - witnesses: lavaboss 7 (+ `kof-fork-665` 870 t, `kof-fork-667` 865 t); tentaclebeast 5 (+ `tb-enter-cleared` 121 t); all 0 px.
 - survey local: OFF 189/55/3/3 = base; ON (both switches) 191/57/1/1.
 - node: leg 665 SOLVED 870 t; leg 505 request 1 SOLVED 258 t (= request 0's tail).
-- CI (`JavaScript Unit Tests`) at `4be48a0e`: see the last section.
+- CI (`JavaScript Unit Tests`) at `4be48a0e`, run 39671333564: 21,786 / 21,786, slow 261 / 261.
 
 ## CI at the last code head
 
-CI_PLACEHOLDER
+`node scripts/procgen/ci-vitest-summary.mjs 4be48a0e`, run **39671333564**: all four jobs succeeded.
+- **suite: vitest (unfiltered) 21,786 / 21,786** (0 skipped, 0 failed), across shards 7,509 / 7,417 / 6,860.
+- **slow battery 261 / 261**.
+
+Earlier heads' runs were cancelled by the next push.
 
 Not run: `standing-values --write`, `pytest`, the unfiltered local vitest (⚖ 52). No `git stash`, rebase or
 force-push; no AS3, wasm, gitlink or rules edit.
