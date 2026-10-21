@@ -225,7 +225,7 @@ describe('⛓ ROPE GOAL — every rope of the room source is a clear-tag event g
         obstacle: { level: r.level, tag: r.tag, class: 'rope', x: r.x, y: r.y } }, r.level);
 
     it('the room source holds ropes, each with an integer tag (the event\'s flag)', () => {
-        expect(ROPES.length).toBeGreaterThan(0);
+        expect(ROPES).not.toEqual([]);
         for (const r of ROPES) expect(Number.isInteger(r.tag) && r.tag >= 0).toBe(true);
     });
 
