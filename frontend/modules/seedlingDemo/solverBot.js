@@ -129,7 +129,7 @@ import {
     // ⛓⛓⛓ hammer-phase RE: the refuge's best-ETA cut (behind `REFUGE_ETA_CUT`, ON by default since the user's flip; a behaviour switch, see its file).
     REFUGE_ETA_CUT, REFUGE_ETA_CUT_COUNTS, refugeEtaCut,
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
-    fallDestination, PhysicsV2Error, playerBoxAt,
+    fallDestination, PhysicsV2Error, playerBoxAt, terrainProbeRect,
     HITBOX, WALK_SPEED,
     // ⛓⛓⛓ hammer-phase SF: the admissible strike floor's terrain read (`strikeEtaFloorOf`, behind `STRIKE_ETA_FLOOR`, OFF).
     SLIDING_SPEED, hazardFlagsFor,
@@ -6621,6 +6621,80 @@ function dashRejectionSummary(dash) {
         }));
     if (dash.why) rows.push({ option: 'sword-dash', why: dash.why });
     return rows;
+}
+
+/**
+ * ⛓⛓ fidelity L1516 D3 — **AN ENCLOSED PIT IS ENTERED ACROSS A CORNER** (`CONTACT_FIDELITY.enclosedPitCorner`).
+ *
+ * `Player.getState` samples ONE point a tick, the cell holding (x, y + checkOffsetY) (`Player.as:679`), and the fall
+ * starts on the first tick it reads Pit (`set state`, `:720-724`; the lerp aims at THAT cell's centre). A pit whose four
+ * orthogonal neighbours are all pits (L16's (13,4), sweep leg 206's `out_pit_8_3`) is therefore entered only by a
+ * diagonal step that jumps the probe point across a corner it shares with a floor cell — between two ticks, both axes
+ * at once. Witnessed on the game (`probe-seedling-l16-corner-pit.mjs`, `fixtures/l1516-witness/`): from (240,96) the
+ * held up+left falls into (13,4) and lands in L17 at (136, …); 8 ticks of up first falls into (14,4) instead.
+ *
+ * `null` when the pit is not enclosed (every other pit: the goal's plan exemption already reaches it). Otherwise the
+ * diagonal floor cells (not pit, water or lava, and walkable), each with the move's two keys (toward the pit) and a
+ * stance on the probe's diagonal through the shared corner, 6 px inside the cell.
+ */
+export function enclosedPitCorners(world, pit) {
+    const pits = new Set((world.pitTiles ?? []).map((p) => `${p.tx},${p.ty}`));
+    const { tx, ty } = pit;
+    if (![[1, 0], [-1, 0], [0, 1], [0, -1]].every(([dx, dy]) => pits.has(`${tx + dx},${ty + dy}`))) return null;
+    const floor = new Map((world.walkableTiles ?? []).map((t) => [`${t.tx},${t.ty}`, t]));
+    const out = [];
+    for (const [dx, dy] of [[1, 1], [-1, 1], [1, -1], [-1, -1]]) {
+        const cell = floor.get(`${tx + dx},${ty + dy}`);
+        if (!cell || cell.t === 6 || cell.t === 1 || cell.t === 17) continue;
+        const corner = { x: dx > 0 ? pit.rect.right : pit.rect.x, y: dy > 0 ? pit.rect.bottom : pit.rect.y };
+        out.push({
+            dx, dy, cell: { tx: cell.tx, ty: cell.ty }, corner,
+            keys: [dx > 0 ? 'left' : 'right', dy > 0 ? 'up' : 'down'],
+            // the probe point is (x, y + 1): the stance's probe sits on the diagonal through the corner
+            stance: { x: corner.x + dx * 6, y: corner.y - 1 + dy * 6 },
+        });
+    }
+    return out;
+}
+
+/** The corner step's exact search bound: a pre-step of up to this many ticks on one axis, then the diagonal. */
+export const ENCLOSED_PIT_CORNER = Object.freeze({ maxPre: 12, maxDiagonal: 40 });
+
+/**
+ * The corner step, previewed with the run's own stepper (`run.previewStepper`): the held sets that make the FIRST fall
+ * aim at `pit`'s centre, or `null`. Pre-steps first (none, then 1..`maxPre` ticks of either key, then of nothing), the
+ * diagonal after, the shortest first. A preview that crosses a level, falls elsewhere or dies is not a candidate.
+ */
+export function enclosedPitCornerKeys(run, pit, cand) {
+    const centre = { x: pit.rect.x + pit.rect.w / 2, y: pit.rect.y + pit.rect.h / 2 };
+    const diag = new Set(cand.keys);
+    const pres = [[]];
+    for (let j = 1; j <= ENCLOSED_PIT_CORNER.maxPre; j += 1) {
+        for (const k of [...cand.keys, null]) pres.push(Array.from({ length: j }, () => (k ? new Set([k]) : new Set())));
+    }
+    for (const pre of pres) {
+        const step = run.previewStepper();
+        let st = { ...run.state };
+        const held = [];
+        let ok = null;
+        try {
+            for (let i = 0; i < pre.length + ENCLOSED_PIT_CORNER.maxDiagonal && ok === null; i += 1) {
+                const h = i < pre.length ? pre[i] : diag;
+                st = step(st, h);
+                held.push(h);
+                if (st.transition) break;
+                if (st.fall) {
+                    ok = st.fall.target.x === centre.x && st.fall.target.y === centre.y;
+                    break;
+                }
+            }
+        } catch (e) {
+            if (!(e instanceof PhysicsV2Error)) throw e;
+            continue;
+        }
+        if (ok) return { held, pre: pre.length };
+    }
+    return null;
 }
 
 /** The walk's own keys during a standing tail — empty, and named as such. */
@@ -24421,6 +24495,65 @@ function solveSegmentUnder({
                 });
             }
             const crossTo = { level: fall.to_level, pit, arrival: { ...fall.ctor } };
+            // ⛓⛓ fidelity L1516 D3: an ENCLOSED pit (`enclosedPitCorners`) is entered across a corner. OFF, or any
+            // pit with a non-pit orthogonal neighbour: the walk below, byte-identical.
+            // ⚠ Only with a diagonal floor cell, and only from OUTSIDE the pit's cell: a fall that lands the player in
+            // the pit already (L84 (2,2), sweep leg 671, from the L83 pit) is the walk's, as before.
+            const corners = CONTACT_FIDELITY.enclosedPitCorner ? enclosedPitCorners(run.world, pit) : null;
+            const inPit = rectsOverlap(terrainProbeRect(run.state.x, run.state.y), pit.rect);
+            if (corners && corners.length > 0 && !inPit) {
+                const near = corners.slice().sort((a, b) => Math.hypot(a.stance.x - run.state.x, a.stance.y - run.state.y)
+                    - Math.hypot(b.stance.x - run.state.x, b.stance.y - run.state.y));
+                const cand = near[0];
+                walkTo(goal, cand.stance, { what: `${whatPit} corner (${cand.cell.tx},${cand.cell.ty}) stance` });
+                const plan = enclosedPitCornerKeys(run, pit, cand);
+                if (!plan) {
+                    refuse(`${whatPit}: from the corner stance (${run.state.x},${run.state.y}) in (${cand.cell.tx},`
+                        + `${cand.cell.ty}) no pre-step of <= ${ENCLOSED_PIT_CORNER.maxPre} ticks and diagonal `
+                        + `[${cand.keys.join('+')}] falls into the pit before a neighbour.`,
+                    { goal, obstacle: { kind: 'enclosed-pit', id: `pit@${tx},${ty}` } });
+                }
+                const hits0 = (run.ledger('playerHits') ?? []).length;
+                let edge = null;
+                for (const h of plan.held) {
+                    perTick.push(h);
+                    const r = run.advance(h);
+                    if (r.transition) { edge = r.transition; break; }
+                    if (run.state.fall) break;
+                }
+                const fellAt = run.state.fall?.target ?? null;
+                if (!edge && !(fellAt && fellAt.x === pit.rect.x + pit.rect.w / 2 && fellAt.y === pit.rect.y + pit.rect.h / 2)) {
+                    fail(`${whatPit}: the corner step previewed a fall into the pit and the run did not take it `
+                        + `(fall ${JSON.stringify(fellAt)}) — the preview is not this run.`);
+                }
+                if ((run.ledger('playerHits') ?? []).length !== hits0) {
+                    refuse(`${whatPit}: the corner step took a hit the preview did not price.`,
+                        { goal, obstacle: { kind: 'enclosed-pit', id: `pit@${tx},${ty}` } });
+                }
+                // the fall-out: no input reaches the player (`checkFallingInPit`), so nothing is pressed
+                while (!edge && run.state.fall) {
+                    perTick.push(NO_HELD_PREVIEW);
+                    const r = run.advance(NO_HELD_PREVIEW);
+                    if (r.transition) edge = r.transition;
+                }
+                if (!edge || edge.to_level !== fall.to_level) {
+                    fail(`${whatPit}: the corner fall did not cross to level ${fall.to_level} (${JSON.stringify(edge)}).`);
+                }
+                const swapsBefore = run.transitions.length;
+                const coast = coastThroughTransport(run, perTick, maxTicksPerTarget, `${whatPit}->L${fall.to_level}`);
+                const swaps = run.transitions.slice(swapsBefore);
+                records.push({
+                    goal: 'reach-pit', to: fall.to_level, t: edge.t, coast,
+                    corner: { cell: cand.cell, keys: cand.keys, pre: plan.pre, ticks: plan.held.length },
+                    ...(swaps.length > 0 ? {
+                        chained: {
+                            via: swaps.map((sw) => ({ t: sw.t, from_level: sw.from_level, to_level: sw.to_level })),
+                            ends: { level: run.level, x: run.state.x, y: run.state.y },
+                        },
+                    } : {}),
+                });
+                return;
+            }
             goalPlanExtra = { allowPit: { tx, ty } };
             goalRides = pitRides(tx, ty);
             const t = walkTo(goal, {
