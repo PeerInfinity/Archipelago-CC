@@ -271,6 +271,19 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
 
 Headless CLI drivers and verification harnesses for the procedural-generation substrates. See **[scripts/procgen/README.md](./procgen/README.md)** for full usage.
 
+### Rule-Kind Census (scripts/rules/)
+
+The cross-layer rule-node kind census. See **[rule-kind-registry.md](../docs/json/developer/reference/rule-kind-registry.md)**.
+
+- **`rules/ruleKindCensus.js`** - Print every layer's gaps against the registry `frontend/schema/rule-kinds.json`. The gate is `rules/ruleKindCensus.test.js` (vitest)
+  ```bash
+  node scripts/rules/ruleKindCensus.js [--json]
+  ```
+- **`rules/rule_kind_vocab.py`** - Regenerate the Python layers' vocabulary snapshot `frontend/schema/rule-kinds.python-vocab.json` (pytest checks it is fresh)
+  ```bash
+  python scripts/rules/rule_kind_vocab.py --write   # or --check
+  ```
+
 ### Documentation and Reporting Scripts (scripts/docs/)
 
 - **`docs/generate-test-chart.py`** - Generate markdown test result charts

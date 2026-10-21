@@ -22,8 +22,12 @@
  *
  * Run:
  *   node scripts/procgen/plan-seedling-wand-witness.mjs --out=<dir>   write both tapes to <dir> (then probe + record)
- *   node scripts/procgen/plan-seedling-wand-witness.mjs --check       exit 1 unless each re-derived tape is the one
- *                                                                     its witness fixture embeds
+ *   node scripts/procgen/plan-seedling-wand-witness.mjs --check       exit 1 unless each re-derived tape is, byte for
+ *                                                                     byte, the one its witness fixture embeds
+ *
+ * ⛔ `--check` compares the WHOLE embedded tape, `description` included (slice seedling-js-producer-sweep): it
+ * used to skip the free text, so a drift there was invisible. The rest of the witness file is the game's
+ * recording, which this script does not produce, so the embedded `.tape` is exactly what it owns.
  */
 
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -148,8 +152,6 @@ export async function wandWitnessTape(w) {
     return { tape: { ...built, description: w.description }, records };
 }
 
-/** Game-visible equality: everything but the free-text `description`. */
-const sameTape = (a, b) => JSON.stringify({ ...a, description: null }) === JSON.stringify({ ...b, description: null });
 
 // ⚠ A bare import does nothing (`check-procgen-help`'s import door): the work is `main()`'s.
 async function main() {
@@ -166,9 +168,15 @@ async function main() {
         if (records) console.log(`${w.name}: records ${JSON.stringify(records)}`);
         if (CHECK) {
             const path = join(WITNESS_DIR, `${w.name}.json`);
-            const ok = existsSync(path) && sameTape(JSON.parse(readFileSync(path, 'utf8')).tape, tape);
-            if (!ok) failures += 1;
-            console.log(`${ok ? 'PASS' : 'FAIL'}: the tape ${w.name}'s witness embeds is what this script derives today`);
+            const have = existsSync(path) ? JSON.stringify(JSON.parse(readFileSync(path, 'utf8')).tape) : null;
+            const want = JSON.stringify(tape);
+            if (have === want) {
+                console.log(`same ${w.name}: the embedded tape is what this script derives today (${want.length} bytes)`);
+            } else {
+                failures += 1;
+                console.log(`DIFFERS ${w.name}: ${have === null ? 'the witness file does not exist'
+                    : `${have.length} bytes embedded vs ${want.length} derived`} — re-author, then re-record`);
+            }
         } else {
             const path = join(OUT, `${w.name}.json`);
             writeFileSync(path, `${JSON.stringify(tape, null, 4)}\n`);
