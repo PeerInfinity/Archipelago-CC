@@ -1,0 +1,66 @@
+L63: 370 walkable tile(s)
+  boot(176,96) tap up: first diff at tick 41: OFF {jellyfish@160,64:0 jellyfish@192,56:2 P0} ON {jellyfish@160,64:2 jellyfish@192,56:2 P0}
+    OFF f39[jellyfish@192,56] f47[jellyfish@160,64] f63[jellyfish@160,64(no),jellyfish@192,56(no)] f71[jellyfish@160,64(no),jellyfish@192,56] f79[jellyfish@192,56(no)] f87[jellyfish@192,56(no)] f95[jellyfish@192,56(no)]
+    ON  f39[jellyfish@192,56] f41+r2[jellyfish@160,64] f57+r2[jellyfish@192,56(no)] f59+r4[jellyfish@192,56(no)] f63[jellyfish@192,56(no)] f65+r2[jellyfish@160,64(no),jellyfish@192,56(no)] f67+r4[jellyfish@160,64(no),jellyfish@192,56(no)] f71[jellyfish@160,64,jellyfish@192,56] f73+r2[jellyfish@160,64(no),jellyfish@192,56(no)] f75+r4[jellyfish@160,64(no),jellyfish@192,56(no)] f79[jellyfish@160,64(no),jellyfish@192,56(no)] f81+r2[jellyfish@160,64(no),jellyfish@192,56(no)] f83+r4[jellyfish@160,64(no),jellyfish@192,56(no)] f87[jellyfish@160,64(no),jellyfish@192,56(no)] f89+r2[jellyfish@160,64(no),jellyfish@192,56(no)] f91+r4[jellyfish@160,64(no),jellyfish@192,56(no)] f95[jellyfish@160,64(no),jellyfish@192,56(no)]
+  boot(192,96) tap up: first diff at tick 7: OFF {jellyfish@160,64:0 jellyfish@192,56:0 P0} ON {jellyfish@160,64:0 jellyfish@192,56:2 P0}
+    OFF f7[jellyfish@192,56(no)] f15[jellyfish@192,56(no)] f23[jellyfish@192,56(no)] f31[jellyfish@192,56(no)] f39[jellyfish@192,56] f47[jellyfish@192,56(no)] f55[jellyfish@192,56(no)] f63[jellyfish@192,56(no)] f71[jellyfish@192,56(no)] f79[jellyfish@192,56(no)]
+    ON  f7[jellyfish@192,56] f31[jellyfish@192,56(no)] f33+r2[jellyfish@192,56(no)] f35+r4[jellyfish@192,56(no)] f39[jellyfish@192,56] f41+r2[jellyfish@192,56(no)] f43+r4[jellyfish@192,56(no)] f47[jellyfish@192,56(no)] f49+r2[jellyfish@192,56(no)] f51+r4[jellyfish@192,56(no)] f55[jellyfish@192,56(no)] f57+r2[jellyfish@192,56(no)] f59+r4[jellyfish@192,56(no)] f63[jellyfish@192,56(no)] f65+r2[jellyfish@192,56(no)] f79[jellyfish@160,64] f95[jellyfish@160,64(no)]
+  boot(160,48) tap right: first diff at tick 7: OFF {jellyfish@160,64:2 jellyfish@192,56:0 P1} ON {jellyfish@160,64:2 jellyfish@192,56:2 P1}
+    OFF f7[jellyfish@160,64,jellyfish@192,56(no)] f15[jellyfish@160,64(no)] f39[jellyfish@160,64] f47[jellyfish@160,64(no)] f71[jellyfish@160,64] f79[jellyfish@160,64(no)]
+    ON  f7[jellyfish@160,64,jellyfish@192,56] f9+r2[jellyfish@160,64(no),jellyfish@192,56(no)] f11+r4[jellyfish@160,64(no),jellyfish@192,56(no)] f15[jellyfish@160,64(no)] f39[jellyfish@160,64] f41+r2[jellyfish@160,64(no)] f43+r4[jellyfish@160,64(no)] f47[jellyfish@160,64(no)] f49+r2[jellyfish@160,64(no)] f71[jellyfish@160,64] f73+r2[jellyfish@160,64(no)] f75+r4[jellyfish@160,64(no)] f79[jellyfish@160,64(no)]
+  boot(192,128) tap up: first diff at tick 71: OFF {jellyfish@160,64:0 jellyfish@192,56:0 P0} ON {jellyfish@160,64:0 jellyfish@192,56:2 P0}
+    OFF f71[jellyfish@192,56(no)] f79[jellyfish@192,56(no)] f87[jellyfish@192,56(no)] f95[jellyfish@192,56(no)]
+    ON  f71[jellyfish@192,56] f95[jellyfish@192,56(no)]
+L98: 88 walkable tile(s)
+  boot(64,48) tap right: first diff at tick 47: OFF {jellyfish@56,48:2 jellyfish@176,72:0 jellyfish@72,104:0 P2} ON {jellyfish@56,48:2 jellyfish@176,72:0 jellyfish@72,104:2 P2}
+    OFF f15[jellyfish@56,48] f47[jellyfish@72,104(no)] f55[jellyfish@72,104(no)] f63[jellyfish@72,104] f71[jellyfish@72,104(no)] f79[jellyfish@72,104(no)] f87[jellyfish@72,104(no)] f95[jellyfish@72,104]
+    ON  f15[jellyfish@56,48] f47[jellyfish@72,104] f49+r2[jellyfish@72,104(no)] f51+r4[jellyfish@72,104(no)] f55[jellyfish@72,104(no)] f57+r2[jellyfish@72,104(no)] f59+r4[jellyfish@72,104(no)] f63[jellyfish@72,104(no)] f65+r2[jellyfish@72,104(no)] f67+r4[jellyfish@72,104(no)] f71[jellyfish@72,104(no)] f73+r2[jellyfish@72,104(no)] f75+r4[jellyfish@72,104(no)] f79[jellyfish@72,104] f81+r2[jellyfish@72,104(no)] f83+r4[jellyfish@72,104(no)] f87[jellyfish@72,104(no)] f89+r2[jellyfish@72,104(no)] f91+r4[jellyfish@72,104(no)] f95[jellyfish@72,104(no)]
+  boot(112,96) tap left: first diff at tick 7: OFF {jellyfish@56,48:0 jellyfish@176,72:0 jellyfish@72,104:0 P0} ON {jellyfish@56,48:0 jellyfish@176,72:0 jellyfish@72,104:2 P0}
+    OFF f7[jellyfish@72,104(no)] f15[jellyfish@72,104(no)] f23[jellyfish@72,104(no)] f31[jellyfish@72,104(no)] f39[jellyfish@72,104] f47[jellyfish@72,104(no)] f55[jellyfish@72,104(no)] f63[jellyfish@72,104(no)] f71[jellyfish@72,104] f79[jellyfish@72,104(no)] f87[jellyfish@72,104(no)] f95[jellyfish@72,104(no)]
+    ON  f7[jellyfish@72,104] f25+r2[jellyfish@72,104(no)] f27+r4[jellyfish@72,104(no)] f31[jellyfish@72,104(no)] f33+r2[jellyfish@72,104(no)] f35+r4[jellyfish@72,104(no)] f39[jellyfish@72,104] f41+r2[jellyfish@72,104(no)] f43+r4[jellyfish@72,104(no)] f47[jellyfish@72,104(no)] f49+r2[jellyfish@72,104(no)] f51+r4[jellyfish@72,104(no)] f55[jellyfish@72,104(no)] f57+r2[jellyfish@72,104(no)] f59+r4[jellyfish@72,104(no)] f63[jellyfish@72,104(no)] f65+r2[jellyfish@72,104(no)] f67+r4[jellyfish@72,104(no)] f71[jellyfish@72,104(no)] f73+r2[jellyfish@72,104(no)] f75+r4[jellyfish@72,104(no)] f79[jellyfish@72,104(no)] f81+r2[jellyfish@72,104(no)] f83+r4[jellyfish@72,104(no)]
+  boot(112,112) tap left: first diff at tick 41: OFF {jellyfish@56,48:0 jellyfish@176,72:0 jellyfish@72,104:0 P0} ON {jellyfish@56,48:0 jellyfish@176,72:0 jellyfish@72,104:2 P0}
+    OFF f47[jellyfish@72,104] f63[jellyfish@72,104(no)] f71[jellyfish@72,104(no)] f79[jellyfish@72,104] f87[jellyfish@72,104(no)] f95[jellyfish@72,104(no)]
+    ON  f41+r2[jellyfish@72,104] f65+r2[jellyfish@72,104(no)] f67+r4[jellyfish@72,104(no)] f71[jellyfish@72,104] f73+r2[jellyfish@72,104(no)] f75+r4[jellyfish@72,104(no)] f79[jellyfish@72,104(no)] f81+r2[jellyfish@72,104(no)] f83+r4[jellyfish@72,104(no)] f87[jellyfish@72,104(no)] f89+r2[jellyfish@72,104(no)] f91+r4[jellyfish@72,104(no)] f95[jellyfish@72,104(no)]
+  boot(128,112) tap right: first diff at tick 89: OFF {jellyfish@56,48:0 jellyfish@176,72:0 jellyfish@72,104:0 P0} ON {jellyfish@56,48:0 jellyfish@176,72:2 jellyfish@72,104:0 P0}
+    OFF f95[jellyfish@176,72]
+    ON  f89+r2[jellyfish@176,72]
+L91: 95 walkable tile(s)
+  boot(128,112) tap up: first diff at tick 55: OFF {bob@128,64:0 bob@160,96:0 bob@192,80:0 P0} ON {bob@128,64:2 bob@160,96:0 bob@192,80:0 P0}
+    OFF f63[bob@128,64(no)] f71[bob@128,64(no)] f79[bob@128,64(no)] f87[bob@128,64(no)] f95[bob@128,64(no)]
+    ON  f55[bob@128,64]
+  boot(144,112) tap up: first diff at tick 43: OFF {bob@128,64:0 bob@160,96:0 bob@192,80:0 P0} ON {bob@128,64:0 bob@160,96:2 bob@192,80:0 P0}
+    OFF f47[bob@160,96] f87[bob@160,96] f95[bob@160,96(no)]
+    ON  f43+r4[bob@160,96] f87[bob@160,96] f89+r2[bob@160,96(no)] f91+r4[bob@160,96(no)] f95[bob@160,96(no)]
+  boot(144,128) tap up: first diff at tick 55: OFF {bob@128,64:0 bob@160,96:0 bob@192,80:0 P0} ON {bob@128,64:0 bob@160,96:2 bob@192,80:0 P0}
+    OFF f55[bob@160,96(no)] f63[bob@160,96(no)] f71[bob@160,96(no)] f79[bob@160,96(no)] f87[bob@160,96(no)] f95[bob@160,96(no)]
+    ON  f55[bob@160,96]
+  boot(192,96) tap right: first diff at tick 71: OFF {bob@128,64:0 bob@160,96:0 bob@192,80:0 P2} ON {bob@128,64:0 bob@160,96:0 bob@192,80:2 P2}
+    OFF f79[bob@192,80]
+    ON  f71[bob@192,80]
+L28: 220 walkable tile(s)
+  boot(288,144) tap down: first diff at tick 79: OFF {bobsoldier@264,168:0 P2} ON {bobsoldier@264,168:2 P2}
+    OFF 
+    ON  f79[bobsoldier@264,168] f95[bobsoldier@264,168(no)]
+  boot(256,144) tap right: first diff at tick 65: OFF {bobsoldier@264,168:0 P2} ON {bobsoldier@264,168:2 P2}
+    OFF f95[bobsoldier@264,168]
+    ON  f65+r2[bobsoldier@264,168] f95[bobsoldier@264,168]
+  boot(224,160) tap right: first diff at tick 71: OFF {bobsoldier@264,168:2 P1} ON {bobsoldier@264,168:4 P1}
+    OFF f39[bobsoldier@264,168] f63[bobsoldier@264,168(no)] f71[bobsoldier@264,168(no)] f79[bobsoldier@264,168(no)] f87[bobsoldier@264,168(no)] f95[bobsoldier@264,168]
+    ON  f39[bobsoldier@264,168] f59+r4[bobsoldier@264,168(no)] f63[bobsoldier@264,168(no)] f65+r2[bobsoldier@264,168(no)] f67+r4[bobsoldier@264,168(no)] f71[bobsoldier@264,168] f73+r2[bobsoldier@264,168(no)] f75+r4[bobsoldier@264,168(no)] f79[bobsoldier@264,168(no)] f81+r2[bobsoldier@264,168(no)]
+  boot(240,160) tap right: first diff at tick 15: OFF {bobsoldier@264,168:0 P1} ON {bobsoldier@264,168:2 P1}
+    OFF f15[bobsoldier@264,168(no)] f23[bobsoldier@264,168(no)] f31[bobsoldier@264,168(no)] f39[bobsoldier@264,168] f55[bobsoldier@264,168(no)] f63[bobsoldier@264,168(no)] f71[bobsoldier@264,168(no)] f79[bobsoldier@264,168(no)] f87[bobsoldier@264,168(no)] f95[bobsoldier@264,168]
+    ON  f15[bobsoldier@264,168] f27+r4[bobsoldier@264,168(no)] f31[bobsoldier@264,168(no)] f33+r2[bobsoldier@264,168(no)] f35+r4[bobsoldier@264,168(no)] f39[bobsoldier@264,168(no)] f41+r2[bobsoldier@264,168(no)] f43+r4[bobsoldier@264,168(no)] f47[bobsoldier@264,168] f49+r2[bobsoldier@264,168(no)] f51+r4[bobsoldier@264,168(no)] f55[bobsoldier@264,168(no)] f57+r2[bobsoldier@264,168(no)]
+L12: 2365 walkable tile(s)
+  boot(368,240) tap down: first diff at tick 65: OFF {puncher@416,256:0 P0} ON {puncher@416,256:2 P0}
+    OFF f71[puncher@416,256] f79[puncher@416,256(no)] f87[puncher@416,256(no)] f95[puncher@416,256(no)]
+    ON  f65+r2[puncher@416,256] f67+r4[puncher@416,256(no)] f71[puncher@416,256(no)] f73+r2[puncher@416,256(no)] f75+r4[puncher@416,256(no)] f79[puncher@416,256(no)] f81+r2[puncher@416,256(no)] f83+r4[puncher@416,256(no)] f87[puncher@416,256(no)] f89+r2[puncher@416,256(no)] f91+r4[puncher@416,256(no)] f95[puncher@416,256]
+  boot(384,256) tap right: first diff at tick 7: OFF {puncher@416,256:0 P0} ON {puncher@416,256:2 P0}
+    OFF f7[puncher@416,256(no)] f15[puncher@416,256] f23[puncher@416,256(no)] f31[puncher@416,256(no)] f39[puncher@416,256(no)] f47[puncher@416,256] f55[puncher@416,256(no)] f63[puncher@416,256(no)] f71[puncher@416,256(no)] f79[puncher@416,256(no)] f87[puncher@416,256(no)]
+    ON  f7[puncher@416,256] f9+r2[puncher@416,256(no)] f11+r4[puncher@416,256(no)] f15[puncher@416,256(no)] f17+r2[puncher@416,256(no)] f19+r4[puncher@416,256(no)] f23[puncher@416,256(no)] f25+r2[puncher@416,256(no)] f27+r4[puncher@416,256(no)] f31[puncher@416,256(no)] f33+r2[puncher@416,256(no)] f35+r4[puncher@416,256(no)] f39[puncher@416,256] f41+r2[puncher@416,256(no)] f43+r4[puncher@416,256(no)] f47[puncher@416,256(no)] f49+r2[puncher@416,256(no)] f51+r4[puncher@416,256(no)] f55[puncher@416,256(no)] f57+r2[puncher@416,256(no)] f59+r4[puncher@416,256(no)] f63[puncher@416,256(no)] f65+r2[puncher@416,256(no)] f67+r4[puncher@416,256(no)] f71[puncher@416,256(no)] f73+r2[puncher@416,256(no)] f75+r4[puncher@416,256(no)] f79[puncher@416,256(no)]
+  boot(368,272) tap right: first diff at tick 43: OFF {puncher@416,256:0 P0} ON {puncher@416,256:2 P0}
+    OFF f47[puncher@416,256] f55[puncher@416,256(no)] f63[puncher@416,256(no)] f71[puncher@416,256(no)] f79[puncher@416,256] f87[puncher@416,256(no)] f95[puncher@416,256(no)]
+    ON  f43+r4[puncher@416,256] f47[puncher@416,256(no)] f49+r2[puncher@416,256(no)] f51+r4[puncher@416,256(no)] f55[puncher@416,256(no)] f57+r2[puncher@416,256(no)] f59+r4[puncher@416,256(no)] f63[puncher@416,256(no)] f65+r2[puncher@416,256(no)] f67+r4[puncher@416,256(no)] f71[puncher@416,256(no)] f73+r2[puncher@416,256] f75+r4[puncher@416,256(no)] f79[puncher@416,256(no)] f81+r2[puncher@416,256(no)] f83+r4[puncher@416,256(no)] f87[puncher@416,256(no)] f89+r2[puncher@416,256(no)] f91+r4[puncher@416,256(no)] f95[puncher@416,256(no)]
+  boot(384,272) tap right: first diff at tick 27: OFF {puncher@416,256:0 P0} ON {puncher@416,256:2 P0}
+    OFF f31[puncher@416,256] f39[puncher@416,256(no)] f47[puncher@416,256(no)] f55[puncher@416,256(no)] f63[puncher@416,256] f71[puncher@416,256(no)] f79[puncher@416,256(no)] f87[puncher@416,256(no)] f95[puncher@416,256(no)]
+    ON  f27+r4[puncher@416,256] f31[puncher@416,256(no)] f33+r2[puncher@416,256(no)] f35+r4[puncher@416,256(no)] f39[puncher@416,256(no)] f41+r2[puncher@416,256(no)] f43+r4[puncher@416,256(no)] f47[puncher@416,256(no)] f49+r2[puncher@416,256(no)] f51+r4[puncher@416,256(no)] f55[puncher@416,256(no)] f57+r2[puncher@416,256] f59+r4[puncher@416,256(no)] f63[puncher@416,256(no)] f65+r2[puncher@416,256(no)] f67+r4[puncher@416,256(no)] f71[puncher@416,256(no)] f73+r2[puncher@416,256(no)] f75+r4[puncher@416,256(no)] f79[puncher@416,256(no)] f81+r2[puncher@416,256(no)] f83+r4[puncher@416,256(no)] f87[puncher@416,256(no)] f89+r2[puncher@416,256(no)] f91+r4[puncher@416,256(no)] f95[puncher@416,256(no)]
+L24: 100 walkable tile(s)
