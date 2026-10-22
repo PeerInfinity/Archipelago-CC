@@ -119,30 +119,24 @@ describe('Q3 search — the generated guard room', () => {
     });
 
     /**
-     * Today's logic (`extractPathsAndObstacles` → `compileRegion`) differs at two targets, both
-     * DEFECTS in today's logic, not in the search (the engine checks below arbitrate):
-     *  (1) flag_K0 needs `sw_A0` — a HELD TOKEN, never an AP item: the ghost path annotates the
-     *      guard door like any door, so the rule is unsatisfiable in AP play;
-     *  (2) flag_K0 and key_red@7,3 need `key_red` — the ONE geometric path crosses door_red (7,1),
-     *      but another route avoids it (the derived witness walks it on the engine with no key).
-     * Both rocks join that one path's conjunction — the `lane` one because the player crosses it,
-     * the `button` one only by the ghost BFS's tie-break (today's logic never asks about a block's
-     * path; here it happens to walk the button cell). Only the search prices the block.
+     * The path-extracted logic (`extractPathsAndObstacles` → `compileRegion`) used to differ at two
+     * targets, both DEFECTS of that logic (the engine checks below arbitrated): (T1) flag_K0 needed
+     * the HELD token `sw_A0`, never an AP item; (T2) flag_K0 and key_red@7,3 needed `key_red` — the
+     * ONE ghost path crossed door_red (7,1) though another route avoids it. Fixed by slice
+     * maze-logic-t1t2-fix (all-routes minimal sets; a block world priced by the engine), which
+     * uses THIS search as its oracle: on all three variants the two now agree target for target.
      */
-    it('differs from today\'s path-extracted logic exactly where today\'s logic is wrong', () => {
-        const w = guardRoom();
-        const today = compileRegion(extractPathsAndObstacles(w), { obstacleLib: w.obstacleLib });
-        const at = (x, y) => today.locations.find((l) => l.position.x === x && l.position.y === y).rule;
-        expect(at(5, 3)).toEqual({ rule: 'And', children: [has('key_red'), has('sw_A0')] });
-        expect(at(7, 3)).toEqual(has('key_red'));
-        expect([at(5, 12), at(8, 12), at(0, 4)]).toEqual([{ rule: 'False_' }, { rule: 'False_' }, { rule: 'True_' }]);
-        expect(today.exits[0].rule).toEqual(has('flag_K0'));
-        const pathTo = (room) => extractPathsAndObstacles(room).locations
-            .find((l) => l.position.x === 5 && l.position.y === 3).paths[0].obstacles;
-        expect(pathTo(guardRoom({ rock: 'lane' }))).toEqual(['door_red', 'rock', 'door_A0']);
-        // ⛔ COINCIDENCE, not modelling: the ghost BFS reaches (7,3) through (8,3) before (7,4)
-        // (N before W), so its one path happens to step on the button-cell rock.
-        expect(pathTo(guardRoom({ rock: 'button' }))).toEqual(['door_red', 'rock', 'door_A0']);
+    it('the path-extracted logic agrees with the derived logic (T1/T2 fixed)', () => {
+        for (const rock of [null, 'lane', 'button']) {
+            const w = guardRoom({ rock });
+            const extracted = compileRegion(extractPathsAndObstacles(w), { obstacleLib: w.obstacleLib });
+            const derived = rulesById(deriveRegionLogic(w, HELPERS));
+            const byId = {
+                ...Object.fromEntries(extracted.locations.map((l) => [`${l.item}@${l.position.x},${l.position.y}`, l.rule])),
+                ...Object.fromEntries(extracted.exits.map((e) => [`exit:${e.id}`, e.rule])),
+            };
+            expect(byId).toEqual(derived);
+        }
     });
 
     for (const pickups of ['ap', 'in-room']) {

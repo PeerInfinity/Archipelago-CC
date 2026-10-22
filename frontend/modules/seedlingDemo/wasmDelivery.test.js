@@ -13,7 +13,8 @@ import { fileURLToPath } from 'node:url';
 
 import {
     DELIVERY_CLAUSES, deliveredItems, deliveredSaveArrays, deliveryRefusal, firstTickSlotRefusal, itemDelta, itemsAfterWrites, liveSaveArrays, mergeSaveArrays,
-    SAVE_ARRAY_MERGE, SAVE_ARRAYS, saveArraysOfWrites, saveDelta, slotItemAt, slotsAfterDelivery, stageItems, stageSaveArrays, UNION_SAVE_ARRAYS,
+    REPLAYED_SLOT_KEYS, SAVE_ARRAY_MERGE, SAVE_ARRAYS, saveArraysOfWrites, saveDelta, slotItemAt, slotsAfterDelivery, stageItems, stageSaveArrays,
+    UNION_SAVE_ARRAYS, weaponWitness,
 } from './wasmDelivery.js';
 import { SAVE_ARRAY_RULES } from './saveArrayRules.js';
 import { stagingFromWasmArrival } from './wasmArrival.js';
@@ -109,13 +110,53 @@ describe('wasmDelivery — deliveryRefusal, clause by clause', () => {
         expect(deliveryRefusal({ staging, shipped: walk, items: { ...HOUSE.status.items, hasSword: true }, status: status(), levelSource: SRC })).toBeNull();
     });
 
-    it('slot-use: the prefix pressed X while the game had no sword — the swing state is not in the digest', () => {
+    it('slot-use: the prefix pressed X while the game had no sword — staged, the sword would have swung (the weapon witness differs)', () => {
         const staging = houseStaging();
         const r = deliveryRefusal({ staging, shipped: [['primary'], [], []], items: { ...HOUSE.status.items, hasSword: true }, status: status(), levelSource: SRC });
         expect(r).toMatchObject({ clause: 'slot-use' });
-        expect(r.why).toMatch(/tick 1/);
+        expect(r.why).toMatch(/weapon state .* elsewhere at tick 1 of 3/);
         // a PASSIVE item is not refused for the same press
         expect(deliveryRefusal({ staging, shipped: [['primary'], [], []], items: { ...HOUSE.status.items, hasShield: true }, status: status(), levelSource: SRC })).toBeNull();
+    });
+
+    it('⛓ DELIVERY DEFERRAL — Fire into a sword-held room whose prefix SWUNG: the replay carries the swing, so it is taken (L32\'s Bob fight)', () => {
+        const sword = status({ hasSword: true });
+        const staging = stageItems(houseStaging(), sword.items, { slots: sword.inventory_slots });
+        const swing = [['primary'], [], [], [], ['up'], ['up'], ...Array(30).fill([])];
+        const items = { ...sword.items, hasFire: true };
+        // the swing really is in the witness: the run that pressed is not the run that did not, from tick 1
+        const pressed = createRunForStaging(staging, SRC, { scratchPersistence: true });
+        const idle = createRunForStaging(staging, SRC, { scratchPersistence: true });
+        pressed.advance(new Set(['primary']));
+        idle.advance(new Set());
+        expect(weaponWitness(pressed)).not.toBe(weaponWitness(idle));
+        expect(deliveryRefusal({ staging, shipped: swing, items, status: sword, levelSource: SRC })).toBeNull();
+        expect(REPLAYED_SLOT_KEYS).toEqual(['primary']);
+    });
+
+    it('⛓ DELIVERY DEFERRAL — the sword delivered while Fire is the primary slot and the prefix FIRED: the witness reads what the press left, not the inventory', () => {
+        const fire = status({ hasFire: true }, { inventory_slots: [1] });
+        const staging = stageItems(houseStaging(), fire.items, { slots: [1] });
+        const shot = [['primary'], ...Array(30).fill([])];
+        const items = { ...fire.items, hasSword: true };
+        const pressed = createRunForStaging(staging, SRC, { scratchPersistence: true });
+        const idle = createRunForStaging(staging, SRC, { scratchPersistence: true });
+        pressed.advance(new Set(['primary']));
+        idle.advance(new Set());
+        expect(weaponWitness(pressed)).not.toBe(weaponWitness(idle));
+        expect(pressed.progress('slashInfo').openUntil.firing).toBeGreaterThan(0);
+        expect(deliveryRefusal({ staging, shipped: shot, items, status: fire, levelSource: SRC })).toBeNull();
+    });
+
+    it('⛓ DELIVERY DEFERRAL — a secondary or menu press is NOT replayed (the model has no `Main.secondary`): still slot-use, by key', () => {
+        const sword = status({ hasSword: true });
+        const staging = stageItems(houseStaging(), sword.items, { slots: sword.inventory_slots });
+        const items = { ...sword.items, hasFire: true };
+        for (const key of ['secondary', 'inventory', 'inventory2']) {
+            const r = deliveryRefusal({ staging, shipped: [[], [], [key], []], items, status: sword, levelSource: SRC });
+            expect(r).toMatchObject({ clause: 'slot-use' });
+            expect(r.why).toContain(`pressed ${key} at tick 3`);
+        }
     });
 
     it('⛓ SLOTS CONSUMER — a LATE slot (Fire held, the sword delivered) is taken: re-staged over the game\'s array, the model appends it as the game does', () => {

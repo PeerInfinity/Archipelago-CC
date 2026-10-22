@@ -982,7 +982,10 @@ describe('extractPathsAndObstacles', () => {
     });
 
     it('lists obstacles along a gated path', () => {
+        // (2,1) walled: the door is the only way to the exit (since slice maze-logic-t1t2-fix an
+        // open second row is a route AROUND it, and the exit's one path would cross nothing).
         const w = createWorld(4, 2, { entrance: { x: 0, y: 0 }, exit: { x: 3, y: 0 } });
+        setTile(w, 2, 1, TILE_WALL);
         setItem(w, 1, 0, 'key_red');
         setObstacle(w, 2, 0, 'door_red');
         const result = extractPathsAndObstacles(w);
@@ -997,6 +1000,7 @@ describe('extractPathsAndObstacles', () => {
         // The generated paths-and-obstacles form reflects geometry, not
         // solvability under the current inventory.
         const w = createWorld(4, 2, { entrance: { x: 0, y: 0 }, exit: { x: 3, y: 0 } });
+        setTile(w, 2, 1, TILE_WALL);
         setObstacle(w, 2, 0, 'door_red');
         const result = extractPathsAndObstacles(w);
         const exit = result.exits.find((e) => e.id === 'exit');

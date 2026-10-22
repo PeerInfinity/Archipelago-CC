@@ -24354,6 +24354,44 @@ Measured:
   of a captured request reproduces the sweep's game rows; a pit-fall witness is a different arrival.
 - `replay-seedling-solve-request.mjs --seam-time-sweep` prints `error` as the kind of a successful PLAN (`kind ?? 'error'`).
 
+### Seedling hammer-phase LD — the Lights fight in the danger map
+
+⚖ The user approved the slice on 2026-10-21. The report is `CC/docs/cloud-reports/seedling-hammer-lights-danger.md`.
+It takes fidelity LIGHTSARR's hand-over 1. Everything it adds is read only while `CONTACT_FIDELITY.lightsBossFight` is
+ON (still OFF); no switch moved.
+
+**The base.** LIGHTSARR (`origin/claude/lightsarr-lights-arrival-zpv7ou`) was not on main. Survey step 159 ON at main
+`2408fc5a` is SOLVED 559 t with 0 hits. The 1-hit victim exists only with LIGHTSARR's shield shove, so the branch merges
+it (`21d539b8`). The 823 t / 1 hit victim reproduces there.
+
+**The victim, measured.** The kill ends at t806. `LightBossShot` #75 was fired at t784 from (56,60) and hits the
+reach-exit walk at update t811.
+
+**The pricing.** `dangerMap.lightsDanger` is in `dangerAt`'s union.
+- It copies `run.entities('lightsFight')` and steps the copy forward with `lightBoss.js`'s own functions, with no
+  player in it: the shots (the margin-0 cull against the resting 160x160 screen), the fliers, and the controller on
+  `Game.worldFrame`.
+- A shot is a `spit` source (`lights: true`), because a `LightBossShot` is a `TurretSpit`. So the ladder's existing
+  DODGE rung answers it.
+- A flier's contact gate (not dying, `hitsTimer <= 0`) is a `lightBoss` source.
+- TRANSIT prices frames h and h+1: update T+1 moves the shot, then tests the box left at T. WAIT prices the union of
+  0 … h+1.
+- `TRANSIT_INGREDIENTS` gains an autonomous `lights` row.
+
+**After.** Step 159 ON is SOLVED **826 t, 0 hits**: a 1-tick stall at t807, then a different line to the Teleporter.
+
+**The digest.** DA's `escape-reach` is unchanged with `dangerMap.js` in its file set (61 functions, 9 run members):
+the hammer escape reaches no danger-map function. `member-reach` gives `lightsExits` → advance / entities /
+tentacleBeastFight, and `lightsSpearRepeats` → advance. Neither reaches one of the escape's eight members, so no map
+moves IN. XC verify: hammer-a / b1 / b2 hit and verify 2160 / 1654 / 1030 entries with 0 mismatches; the two ON Lights
+solves and step 159 make 0 lookups.
+
+**Fixtures.** None moved. The two ON Lights solves re-solve their witnesses key for key (sword 559 t, spear 361 t). The
+producer roster is 93 / 0 red, before and after.
+
+**Trap candidate.** *A mutant predicted from the victim alone can pass.* "Price frame h only" was predicted to miss the
+t810 box, and it did not: a 4x4 shot under 1 px/t overlaps the box on both frames. The frame is pinned by a constructed
+row (`dangerMap.test.js`: frame 17 is the first that meets the box, so horizon 16 sees it only through h+1).
 ### Seedling fidelity L1516 — L15's chest is a Solid, L16's enclosed pit, leg 209's hit (`chestProbeLineEnd`, `enclosedPitCorner`, OFF)
 
 The report is `CC/docs/cloud-reports/seedling-fidelity-l1516.md`. Base `98689e2e3c`. Two `CONTACT_FIDELITY` switches,
