@@ -168,6 +168,8 @@ import {
     canonicalDigestText,
     // ⛓ fidelity BOSSFORK D1b: the beast's "dying" length bounds the wait for its mouth (`awaitTentacleMouth`).
     TENTACLE_BEAST_ANIMS, animTicks as tentacleAnimTicks,
+    // ⛓ fidelity YETI D3: the second tag `Yeti.doneTalking()` clears (L58's portal).
+    YETI_PORTAL_TAG,
 } from './solverView.js';
 import {
     bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
@@ -1604,6 +1606,95 @@ function execWitchEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, ref
     }
     records.push({ goal: 'encounter', leg: 'drop', t: perTick.length });
     return { records };
+}
+
+/**
+ * ⛓⛓⛓ fidelity YETI D3 (behind `CONTACT_FIDELITY.yetiTalk`) — THE YETI'S TALK, the clear-tag's verb for
+ * `{58,1}` (the DeadBoss portal, `teleporter@80,16` → L46) and `{58,0}` (the Yeti's own tag), both written by
+ * `Yeti.doneTalking()` (`NPCs/Yeti.as:40-50`; `levelRun`'s talker arm, `yetiEvents`).
+ *
+ * The Yeti is a KEYED talker (`keyNeeded` true — `NPC.as:41`, assigned elsewhere only by `Watcher.as:46`), so the
+ * dialogue opens on an X RELEASE inside its 24 px circle, never on proximity: the Witch's shape, not the Watcher's.
+ *   (a) STANCE — the walkable tile centre nearest the player inside the circle (`TALK_RANGE - YETI_STANCE_MARGIN`
+ *       from its ENTITY point), walked to and settled. The walker's strike policy keeps out of talk circles
+ *       (`talkGuard`), so the walk itself opens nothing.
+ *   (b) TALK — the ceremony cadence (`ceremonyCadenceStep`): its first release OPENS the dialogue, the rest page it,
+ *       standing still so the circle is never left. Done when `yetiEvents` holds `yeti-close` with `wrote`.
+ *   (c) SETTLE — the freeze kept the velocity; the walk comes to rest.
+ * The FINISH is the clear-tag's (`waitForWrite` on `earnedClears`). Every refusal is the clear-tag's own
+ * (`refuseCT(reason, why)`).
+ */
+const YETI_STANCE_MARGIN = 2;
+const YETI_SETTLE_MAX = 60;
+const YETI_TALK_MAX = 1200;
+
+function execYetiTalk(run, perTick, yeti, { walkTo, goal, what, refuse }) {
+    const tick = (keys) => {
+        const held = new Set(keys);
+        perTick.push(held);
+        const r = run.advance(held);
+        if (r.transition) refuse('not-written', `the run left level ${r.transition.from_level} during ${what}.`);
+        return r;
+    };
+    const closed = () => (run.ledger('yetiEvents') ?? []).find((r) => r.what === 'yeti-close' && r.id === yeti.id);
+    const from = perTick.length;
+    let stance = null;
+    const inCircle = (x, y) => Math.hypot(x - yeti.ex, y - yeti.ey) <= TALK_RANGE;
+    if (!inCircle(run.state.x, run.state.y)) {
+        const r = TALK_RANGE - YETI_STANCE_MARGIN;
+        const cells = [];
+        for (let ty = Math.floor((yeti.ey - r) / TILE_SIZE); ty <= Math.floor((yeti.ey + r) / TILE_SIZE); ty += 1) {
+            for (let tx = Math.floor((yeti.ex - r) / TILE_SIZE); tx <= Math.floor((yeti.ex + r) / TILE_SIZE); tx += 1) {
+                const cx = tx * TILE_SIZE + TILE_SIZE / 2;
+                const cy = ty * TILE_SIZE + TILE_SIZE / 2;
+                if (Math.hypot(cx - yeti.ex, cy - yeti.ey) > r) continue;
+                if (plannerObstacleAt(run.world, cx, cy, null, solverPlanOpts(run, new Set(), {})) !== null) continue;
+                cells.push({ x: cx, y: cy, d: Math.hypot(cx - run.state.x, cy - run.state.y) });
+            }
+        }
+        cells.sort((a, b) => a.d - b.d);
+        if (cells.length === 0) {
+            refuse('unresolved', `no walkable tile centre lies inside ${yeti.id}'s talk circle (${TALK_RANGE} px).`);
+        }
+        stance = { x: cells[0].x, y: cells[0].y };
+        walkTo(goal, stance, { what: `${what} -> talk stance (${yeti.id})` });
+    }
+    for (let i = 0; run.state.vx !== 0 || run.state.vy !== 0; i += 1) {
+        if (i > YETI_SETTLE_MAX) refuse('unresolved', 'the talk stance never came to rest.');
+        tick([]);
+    }
+    if (!inCircle(run.state.x, run.state.y)) {
+        refuse('unresolved', `the walk rests at (${run.state.x},${run.state.y}), outside ${yeti.id}'s talk circle.`);
+    }
+    let c = CEREMONY_CADENCE_START;
+    const talkFrom = perTick.length;
+    while (!closed()) {
+        if (perTick.length - talkFrom > YETI_TALK_MAX) {
+            refuse('not-written', `${YETI_TALK_MAX} ticks of the talk cadence and ${yeti.id}'s dialogue never closed `
+                + `(${(run.ledger('yetiEvents') ?? []).map((r) => r.what).join(', ') || 'no Yeti event'}).`);
+        }
+        const step = ceremonyCadenceStep(c);
+        c = step.next;
+        tick([...step.held]);
+    }
+    const close = closed();
+    if (!close.wrote) {
+        refuse('not-written', `${yeti.id}'s dialogue closed (${close.cause}) and wrote nothing: \`createdPortal\` already `
+            + 'held this visit.');
+    }
+    // The closing release is the frame's last X; a press still down would swing on the first live frame.
+    while (c.pressing) {
+        const step = ceremonyCadenceStep(c);
+        c = step.next;
+        tick([...step.held]);
+    }
+    for (let i = 0; run.state.vx !== 0 || run.state.vy !== 0; i += 1) {
+        if (i > YETI_SETTLE_MAX) refuse('unresolved', `the walk never came to rest after ${yeti.id}'s dialogue.`);
+        tick([]);
+    }
+    const opened = (run.ledger('yetiEvents') ?? []).find((r) => r.what === 'yeti-open' && r.id === yeti.id);
+    return { verb: 'talk', target: yeti.id, from, ticks: perTick.length - from, stance,
+        openedAt: opened?.t ?? null, closedAt: close.t, cause: close.cause };
 }
 
 /** `Entity.collideRect`'s inclusive overlap, for a burn's fire rect and a tree. */
@@ -25071,6 +25162,47 @@ function solveSegmentUnder({
                 { walkTo, goal, what: `${whatCT} -> ${verb}`, refuse: (reason, why) => refuseCT(reason, why) });
             const waited = waitForWrite(`'${verb}' ran (${JSON.stringify(record).slice(0, 160)})`);
             done('verb', { strategy: verb, waited, ...record });
+            return;
+        }
+        /**
+         * ⛓⛓⛓ fidelity YETI D3 (behind `CONTACT_FIDELITY.yetiTalk`) — **THE YETI'S TWO FLAGS ARE WRITTEN BY TALKING.**
+         * `Yeti.doneTalking()` clears its own tag and tag 1 (`NPCs/Yeti.as:40-50`), so a clear-tag on either that names
+         * the Yeti (`yeti@56,56`; `{58,1}` is L58's `teleporter@80,16` → L46, shut on a fresh room) is the dialogue,
+         * driven by `execYetiTalk`. The Yeti IS a Solid (`NPC.as:59`), so OFF the generic arm below finds it and refuses
+         * `no-verb` (no `solid:yeti` row), byte-identical. ON its states, read off the run:
+         *   · no Yeti in the live world: its own tag is cleared, so `NPC.check()` removed it at the build — the game's
+         *     `already-clear` for both flags when the portal reads open too, else `cannot-act` (nothing else writes it);
+         *   · a goal flag already off at the build (the portal live): `already-clear`.
+         */
+        const yetiRow = CONTACT_FIDELITY.yetiTalk && cls === 'yeti'
+            ? { talker: (run.entities('talkCircles') ?? []).find((c) => c.id === id) ?? null } : null;
+        if (yetiRow) {
+            const portalLive = (run.world.teleporters ?? []).some((tp) => tp.tag === YETI_PORTAL_TAG && !tp.deactivated);
+            const flagOpenAtBuild = flag.tag === YETI_PORTAL_TAG ? portalLive : !solid;
+            if (flagOpenAtBuild) {
+                done('already-clear', { why: `{${flag.level},${flag.tag}} is cleared at the build — `
+                    + (flag.tag === YETI_PORTAL_TAG ? `the tag-${YETI_PORTAL_TAG} portal reads it live`
+                        : `\`NPC.check()\` removed ${id}`) + ': the boot\'s persistence holds it' });
+                return;
+            }
+            if (!yetiRow.talker) {
+                refuseCT('cannot-act', `${id} is not a speaking talker in level ${run.level}'s live world (its own tag `
+                    + 'cleared, or no text), so no `doneTalking()` can write '
+                    + `{${flag.level},${flag.tag}}`);
+            }
+            seeRow({
+                tick: perTick.length,
+                saw: saw(),
+                goal: { kind: goal.kind, tag: { ...flag }, at: { x: goal.at.x, y: goal.at.y } },
+                obstacle: { kind: 'solid', id },
+                strategy: { verb: 'talk' },
+                rejected: [],
+                keys: [],
+            });
+            const record = execYetiTalk(run, perTick, yetiRow.talker,
+                { walkTo, goal, what: `${whatCT} -> talk`, refuse: (reason, why) => refuseCT(reason, why) });
+            const waited = waitForWrite(`'talk' ran (${JSON.stringify(record).slice(0, 160)})`);
+            done('verb', { strategy: 'talk', waited, ...record });
             return;
         }
         /**
