@@ -445,8 +445,8 @@ export class SeedlingRegionGlue {
         // so nothing the gate held back waits on a room the player has left. The Playback Bot re-plans from the
         // start on the region move that follows.
         const stopped = this.stopBotWalks();
-        // ⛓ WALK IDENTITY — the stopped engines watch for the hop's arrival BEFORE it is queued (its landing is held).
-        const watching = this.expectBotArrivals();
+        // MUTANT (§5.125 bite test, never merged): the Restart's start hop is NOT expected (the restart hold dropped).
+        const watching = 0;
         const r = procgen?.retakeStartHop?.() ?? { taken: false, why: 'procgenPlayer has no retakeStartHop' };
         if (r.taken) this.stats.restarts += 1;
         // ⛓ WALK IDENTITY — the stop above released the room BEFORE the hop queued its teleport, so nothing pushed it:
