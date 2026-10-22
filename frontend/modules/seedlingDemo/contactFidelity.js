@@ -918,7 +918,7 @@ export const CONTACT_FIDELITY = {
      * and every "Player"-type line (a spinner's hammer, a wallflyer's ray, the BobBoss swords, a chest's probe), which
      * never meets a mask. No crusher shares a level with a mask (`assertCrusherSolidsBound` still refuses that case).
      */
-    pixelMaskSightLines: false,
+    pixelMaskSightLines: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
