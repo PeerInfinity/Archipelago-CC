@@ -1,0 +1,56 @@
+# census-seedling-killgate-clears — what opens the kill gate's lock
+
+kinds empty, seeds 2..2, post-sword, bounds obstacleTarget=6, budget maxTicksPerTarget=400, walk 400 ticks
+
+| kind | arm | seed | head | placed | cert | final | cleared | cause | lethal | inReach | reach | painters |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| empty | DEFAULT | 2 | roam | false | - | not-a-killgate | - | - | - | - | - | - |
+| empty | killgate | 2 | killgate | true | true | SOLVED | true | sword | 21 | 0 | 16 | - |
+
+## THE TWO DEMANDS — REGION (shipped) vs STEPPED (exact), per placed gate
+
+| kind | arm | seed | cand | region | stepped | region-only | stepped-outside | demand rows | lethal∈region | lethal∈stepped | false-pos | cross-check |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| empty | killgate | 2 | 6 | 16 | 16 | 0 | 0 | 15 | 0 | 0 | 0 | ok |
+
+## ROLL-UP
+placed kill gates: 1 of 2 cells
+certified: 1
+locks that CLEARED at all: 1
+causes: {"sword":1}
+gates whose reachable set holds LETHAL terrain: 0
+  ... of those, cause=sword: 0
+Chebyshev distance pocket -> lethal-in-reach: none
+reachable-set size: min 16 max 16 median 16
+boundary (must stay WALL) size: 7
+
+## THE TWO DEMANDS — ROLL-UP
+gates measured: 1
+REGION size (shipped): min 16 max 16 median 16
+STEPPED size (exact):  min 16 max 16 median 16
+REGION-ONLY cells (what the exact demand would stop claiming): min 0 max 0 median 0, total 0
+STEPPED cells OUTSIDE the region: 0 (gates with any: 0 of 1)
+region == stepped exactly: 1 of 1
+⛓ CROSS-CHECK — bodyRegion reproduces the SHIPPED demand rows on 1 of 1
+lethal terrain inside the REGION on the shipped corpus: 0 (0 is BY CONSTRUCTION — the demand forbids it)
+
+## THE REGION'S FALSE POSITIVES — measured where NO element demand shaped pass 2
+unconstrained cells: 1 of 2; of those, 1 offer a kill-gate candidate at all (6 candidates in total)
+candidates whose REGION holds lethal terrain:  6
+candidates whose STEPPED path holds it:        6
+⛓⛓⛓ FALSE POSITIVES (lethal in REGION, not in STEPPED): 0
+  as a share of all candidates:            0/6 = 0.000
+  as a share of REGION-refused candidates: 0/6 = 0.000
+  as a share of ROOMS offering a candidate:  0/1 = 0.000
+
+⛓ THE SAME QUESTION AT CELL GRANULARITY — a candidate-level 0 cannot tell
+  "the region adds nothing" from "the region adds cells nothing is painted in"
+  cells the REGION demands that the STEPPED set does not: 10
+  LETHAL cells inside the region:                        29
+  LETHAL cells inside the stepped path:                  24
+  ⛓⛓⛓ LETHAL cells the region forbids and the body NEVER REACHES: 5
+
+counterfactual candidates whose stepped set ESCAPES its region: 0
+rooms offering no candidate, by refusal: {}
+
+md5(rows) = 660869bc33bb02649707718df0ffefe5
