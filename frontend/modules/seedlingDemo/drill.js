@@ -31,6 +31,8 @@
  * ⛓ The player is read where the PREVIOUS tick left it: `loadlevel` adds the drills (`Game.as:2290`) before the
  * Player, and `addUpdate` prepends. ⛓ `solids` is `Mobile.solids` + "Enemy" (`Drill.as:35`); `levelRun` admits a
  * room only when the drill is its ONLY census enemy, so the "Enemy" term meets nothing (L88).
+ * ⛓ fidelity DRILL (`CONTACT_FIDELITY.drillMixedRooms`): with the key ON every drill of L28 and L91 is stepped too, and
+ * `ctx.collides` / `ctx.lineBlocked` carry the "Enemy" bodies and the pixelmasks (`levelRun.stepDrillsNow`).
  */
 
 import { createSpriteAnim, stepSpriteAnim } from './chasers.js';

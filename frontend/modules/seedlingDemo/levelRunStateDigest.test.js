@@ -250,6 +250,9 @@ export const DIGEST_EXEMPT = Object.freeze({
     lightsExits: 'UNREAD: read via advance only (visitWorld, stepLightsNow); the exit reaches the escape only as the '
         + 'written `world` (place)',
     lightsSpearRepeats: 'UNREAD: read via advance only (lightsSpearRepeatsNow, lightsSlashNow)',
+    // ⛓ fidelity DRILL D2: member-reach (`--members-of=drillSpearRepeats`) — readers freshVisitState, applyThrust,
+    // drillSpearRepeatsNow; members [advance].
+    drillSpearRepeats: 'UNREAD: read via advance only (drillSpearRepeatsNow, applyThrust)',
     owlRocks: 'UNREAD: read via advance only (stepOwlNow)',
     owlGrenades: 'UNREAD: read via advance only (stepOwlNow)',
     owlPendingRocks: 'UNREAD: read via advance only (stepOwlNow)',

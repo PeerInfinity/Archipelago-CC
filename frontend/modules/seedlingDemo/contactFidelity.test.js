@@ -205,7 +205,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             chestProbeLineEnd: true,
             enclosedPitCorner: true,
             // ⛓ fidelity ROPESTANCE (wave 23): the spear / fire rope cut ships OFF.
-            ropeCutAnyWeapon: false });
+            ropeCutAnyWeapon: false,
+            // ⛓ fidelity DRILL (wave 24): every drill of a mixed room stepped ships OFF.
+            drillMixedRooms: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
