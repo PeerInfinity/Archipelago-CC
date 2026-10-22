@@ -587,6 +587,13 @@ export const PLACED_NPC_TALK = Object.freeze({
 });
 
 /**
+ * ⛓ fidelity YETI (`CONTACT_FIDELITY.yetiTalk`): the SECOND tag `Yeti.doneTalking()` clears, hardcoded —
+ * `Game.setPersistence(1, false)` (`NPCs/Yeti.as:48`, "the portal in DeadBoss.oel must have tag 1"): L58's
+ * `teleporter@80,16` (→ L46). The first is the Yeti's own `tag` (`{58,0}` in DeadBoss.oel).
+ */
+export const YETI_PORTAL_TAG = 1;
+
+/**
  * `watcher` is deliberately ABSENT from `PLACED_NPC_TALK`, and this names it.
  *
  * `NPCs/Watcher.as:46` `keyNeeded = !Game.checkPersistence(tag)` is the only

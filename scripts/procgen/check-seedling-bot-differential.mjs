@@ -1956,6 +1956,34 @@ function checkReadout(name, tape, status, stream, seam) {
                 + 'earns the flag for nothing (trap 102)');
     }
 
+    // ── ⛓⛓ fidelity YETI D2: THE YETI'S TWO — A DIALOGUE THAT OPENS A DOOR ──
+    //
+    // `Yeti.doneTalking()` writes `setPersistence(tag, false)` AND `setPersistence(1, false)` (`NPCs/Yeti.as:43-49`),
+    // so `{58,0}` and `{58,1}` land in `persistence_cleared` together, on either cause (the pages exhausted, or the
+    // circle left). ⛔ TWO-SIDED, and the negative arm is read off the YETI IN THE ROOM (a talk circle the model
+    // stood in, or a dialogue it opened) rather than off "the model wrote nothing".
+    const yetiWrites = (expected.yetiFlags ?? []).filter((f) => !f.bootCleared);
+    const yetiEvents = expected.yetiEvents ?? [];
+    if (yetiWrites.length > 0) {
+        const missing = yetiWrites
+            .filter((f) => !clearedInGame.has(`${f.level}:${f.tag}`))
+            .map((f) => `${f.id} (${f.level}:${f.tag})`);
+        const close = yetiEvents.find((e) => e.what === 'yeti-close' && e.wrote);
+        check(`${name}: every flag the Yeti's doneTalking() wrote is off in the game`,
+            missing.length === 0,
+            missing.length === 0
+                ? `${yetiWrites.map((f) => `${f.level}:${f.tag}`).join(' + ')} off (the model's close at tick `
+                    + `${close?.t}, cause ${close?.cause})`
+                : `${missing.join(', ')} still SET — the model ran the Yeti's doneTalking() and the game did not`);
+    } else if (yetiEvents.length > 0) {
+        const wronglyCleared = [...clearedInGame].filter((k) => k === '58:0' || k === '58:1');
+        check(`${name}: the Yeti the run did NOT talk out kept both flags`,
+            wronglyCleared.length === 0,
+            wronglyCleared.length === 0
+                ? '{58,0} and {58,1} still set, with the dialogue opened and unfinished'
+                : `${wronglyCleared.join(', ')} CLEARED by a run whose model never closed the Yeti's dialogue`);
+    }
+
     // ── ⛓⛓⛓ R6 SLICE 6c: THE FINAL DOOR'S ROW ────────────────────────
     //
     // `FinalDoor.removed()` is `Game.setPersistence(tag, false)` and
