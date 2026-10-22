@@ -903,6 +903,22 @@ export const CONTACT_FIDELITY = {
      * verify 0 mismatches on the hammer producers ON).
      */
     drillMixedRooms: true,
+    /**
+     * fidelity MASKS (wave 25) — THE RUN'S `collideLine("Solid", …)` SAMPLES THE "Solid" PIXELMASKS, AND THE SWING AT A
+     * CHASER ASKS IT (`levelRun.collideLineSolid`'s `{masks}`, DRILL's sampler). FlashPunk's `World.collideLine` asks
+     * `collidePoint` per sample, and an entity with a `Pixelmask` answers from its opaque pixels: a `CliffSide`, a
+     * `Building`, a `TreeLarge`, a `SnowHill` and the `TentacleBeast` body are type "Solid" (an `OpenTree` is NOT: it
+     * extends `Tree`, type "Tree" — measured on p4g). ON: the lone drill's trigger (`Drill.as:86`) and the swing's line
+     * at a drill, a wallflyer, a tentacle (the beast's by-name interim retires) and in the corridor body forecast sample
+     * the masks, as the solver's chaser / drill mirrors do; and the chaser arm of `applyThrust` (bob, jellyfish,
+     * bobsoldier, puncher, lavarunner…) gains `Player.slash`'s line (`Player.as:917`), boxes and masks, which it never
+     * asked (measured on p4g: `mask-l65-wall`). OFF: byte-identical. `SEEDLING_PIXEL_MASK_SIGHT_LINES=0|1` for a node
+     * measurement. NOT here: the spinner family (the hammer arc's forecast and strike line and the executor that must
+     * agree with them; L92 holds a spinner beside CliffSides — handed over), the other boss arms (no mask in their rooms),
+     * and every "Player"-type line (a spinner's hammer, a wallflyer's ray, the BobBoss swords, a chest's probe), which
+     * never meets a mask. No crusher shares a level with a mask (`assertCrusherSolidsBound` still refuses that case).
+     */
+    pixelMaskSightLines: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1085,6 +1101,9 @@ if (globalThis.process?.env?.SEEDLING_ROPE_CUT_ANY_WEAPON === '0') CONTACT_FIDEL
 // ⛓ fidelity DRILL: `SEEDLING_DRILL_MIXED_ROOMS=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '1') CONTACT_FIDELITY.drillMixedRooms = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '0') CONTACT_FIDELITY.drillMixedRooms = false;
+// ⛓ fidelity MASKS: `SEEDLING_PIXEL_MASK_SIGHT_LINES=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PIXEL_MASK_SIGHT_LINES === '1') CONTACT_FIDELITY.pixelMaskSightLines = true;
+if (globalThis.process?.env?.SEEDLING_PIXEL_MASK_SIGHT_LINES === '0') CONTACT_FIDELITY.pixelMaskSightLines = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
