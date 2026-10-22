@@ -851,6 +851,21 @@ export const CONTACT_FIDELITY = {
      * A/B): sweep leg 206 failed → done ×2; the route survey (full) and the 236 chest-level legs: 0 movers (crossed↔done noise).
      */
     enclosedPitCorner: true,
+    /**
+     * fidelity IGFADE (wave 23) — THE IGNEOUS-TO-LAVA TILES COUNT THE DEAD FRAMES' RENDERS (`levelRun.renderIgneousStepped`).
+     *
+     *     Engine.as:69-93,155-177  `update(); render();` — a frame the bot counts DEAD still renders
+     *     Engine.as:77,242-252     the world swap lands at the END of an update, so that frame's render is the NEW world's
+     *     Game.as:880-889          the fade's 20 dead updates skip `super.update()` but run `view()`
+     *
+     * So a visit's tiles take 1 + `LOAD_FADE_FRAMES` = 21 renders at the arrival before its first live one, and a
+     * freeze, a pickup's phase A or a Help renders them once per dead frame at the frozen position. Witnessed on the
+     * game (p4g, `igneous-l76-fade-stand` / `-86`, `igneous-l74-phase-a`). ON: those renders are stepped and the two
+     * interim refusals (an arrival in range, a dead span while a tile counts) go, except for the spans that move the
+     * player, which still refuse by name. OFF: the `igneousLava` interim, byte-identical.
+     * `SEEDLING_IGNEOUS_DEAD_FRAMES=0|1` for a node measurement.
+     */
+    igneousDeadFrames: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1024,6 +1039,9 @@ if (globalThis.process?.env?.SEEDLING_CHEST_PROBE_LINE_END === '0') CONTACT_FIDE
 // ⛓ fidelity L1516 D3: `SEEDLING_ENCLOSED_PIT_CORNER=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_ENCLOSED_PIT_CORNER === '1') CONTACT_FIDELITY.enclosedPitCorner = true;
 if (globalThis.process?.env?.SEEDLING_ENCLOSED_PIT_CORNER === '0') CONTACT_FIDELITY.enclosedPitCorner = false;
+// ⛓ fidelity IGFADE: `SEEDLING_IGNEOUS_DEAD_FRAMES=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_IGNEOUS_DEAD_FRAMES === '1') CONTACT_FIDELITY.igneousDeadFrames = true;
+if (globalThis.process?.env?.SEEDLING_IGNEOUS_DEAD_FRAMES === '0') CONTACT_FIDELITY.igneousDeadFrames = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
