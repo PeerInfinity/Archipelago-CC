@@ -817,7 +817,7 @@ export const CONTACT_FIDELITY = {
      * `Math.random` spawns (the run's declared `rng` stream, as the Owl's), the tentacles' sit window and their
      * `hitRect`, the whirlpools, the death's report `{57,0}` and the mouth Teleporter. OFF: byte-identical.
      */
-    tentacleBeastFight: false,
+    tentacleBeastFight: true,
     /**
      * fidelity ROPE (wave 22) — A ROPE IS CUT ON PURPOSE (`solverBot.resolveRopeStrategy` / `execRope`): the solver's
      * `solid:rope` row (`rope`), the PULL rung's swing stance and `execPull` asked by a `clear-tag` on the rope's own
