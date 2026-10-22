@@ -1,0 +1,1 @@
+level_76 <- in_L71_304_256 -> exit:out_teleporter_0_80|level_76 <- in_L71_304_256 -> exit:out_teleporter_304_112|level_76 <- in_L77_0_32 -> exit:out_teleporter_0_80|level_76 <- in_L77_0_32 -> exit:out_teleporter_304_112

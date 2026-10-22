@@ -156,19 +156,33 @@ export function analyzeSeedlingAtlas(atlas, deps) {
  * (the projection then leaves it graph-only and names it) rather than throwing,
  * because a partial atlas grown region by region is the normal state.
  *
- * @param {{ mapDoc:object, gameConfig:object }} deps
+ * ⛓ `analysis` (optional) — THE GRID THE ATLAS WAS ANALYSED ON (tile-primitives levels-gap3). An atlas
+ * whose producer analyses through its own overlay (the playthrough generator: overlay semantics on the
+ * delivered, set-patched rooms) hands the projection that same `{gridForLevel(level), conditionKey,
+ * resolveCondition}`, so the projection's recompute IS the atlas's analysis and its stale check is a real
+ * one. Without it the transcription alone is used — byte-identical to before (the starter atlas).
+ * `mapDoc` is then the map that analysis read (the delivered set), for the entity rows too.
+ *
+ * @param {{ mapDoc:object, gameConfig:object, levelWorlds?:object, analysis?:object }} deps
  * @returns {{ gridFor:Function, conditionKey:Function, resolveCondition:Function, unresolved:string[] }}
  */
-export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = null }) {
+export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = null, analysis = null }) {
     const levels = indexSeedlingLevels(mapDoc);
     const options = seedlingAnalyzerOptions(gameConfig);
     return {
-        conditionKey: options.conditionKey,
-        resolveCondition: options.resolveCondition,
+        conditionKey: analysis?.conditionKey ?? options.conditionKey,
+        resolveCondition: analysis?.resolveCondition ?? options.resolveCondition,
         unresolved: options.unresolved,
         gridFor: (region) => {
             const level = levels.get(levelKeyOf(region.map_ref));
-            return level ? buildSeedlingRegionGrid(region.bounds, level) : null;
+            if (!level) return null;
+            if (!analysis) return buildSeedlingRegionGrid(region.bounds, level);
+            const b = region.bounds;
+            if (b.x !== 0 || b.y !== 0 || b.w !== level.width || b.h !== level.height) {
+                throw new Error(`region "${region.region_id}" bounds ${JSON.stringify(b)} are not the whole level `
+                    + `${level.level} (${level.width}x${level.height}) — the atlas's own grid covers a whole level`);
+            }
+            return analysis.gridForLevel(level);
         },
         // ⛓ SHARED LEVEL WORLDS (tile-primitives Stage 2) — OPT-IN. Only a
         // compile that passes `levelWorlds: {partition}` (the atlas's entry of

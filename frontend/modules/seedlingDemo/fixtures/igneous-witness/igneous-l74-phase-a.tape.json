@@ -1,0 +1,176 @@
+{
+ "tape_version": 8,
+ "game": "seedling",
+ "boot": {
+  "level": 74,
+  "x": 64,
+  "y": 48
+ },
+ "noclip": false,
+ "noDamage": true,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [],
+ "despawn": [],
+ "equips": [],
+ "pins": [
+  "sound",
+  "dead_frames"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 418414780,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 1763053598
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasFire": true,
+   "hasWand": true,
+   "hasFireWand": false,
+   "canSwim": true,
+   "hasSpear": true,
+   "hasDarkShield": false,
+   "hasDarkSuit": false,
+   "hasDarkSword": true,
+   "hasFeather": true,
+   "hasTorch": true
+  },
+  "beam": false,
+  "rock_set": false,
+  "hits_max": 4,
+  "first_use": false,
+  "extended": false,
+  "time": 5790,
+  "primary": 0,
+  "secondary": 0,
+  "grass_cut": 0,
+  "cutscene": [
+   false,
+   false,
+   false,
+   false
+  ],
+  "menu_state": 0,
+  "music": {
+   "set": "Room",
+   "index": 1
+  }
+ },
+ "tick0": null,
+ "hold": false,
+ "tick_count": 150,
+ "inputs": [
+  {
+   "key": "right",
+   "from": 0,
+   "to": 4
+  },
+  {
+   "key": "left",
+   "from": 13,
+   "to": 22
+  },
+  {
+   "key": "up",
+   "from": 16,
+   "to": 34
+  },
+  {
+   "key": "primary",
+   "from": 32,
+   "to": 33
+  },
+  {
+   "key": "primary",
+   "from": 34,
+   "to": 35
+  },
+  {
+   "key": "primary",
+   "from": 36,
+   "to": 37
+  },
+  {
+   "key": "primary",
+   "from": 38,
+   "to": 39
+  },
+  {
+   "key": "primary",
+   "from": 40,
+   "to": 41
+  },
+  {
+   "key": "primary",
+   "from": 42,
+   "to": 43
+  },
+  {
+   "key": "primary",
+   "from": 44,
+   "to": 45
+  },
+  {
+   "key": "primary",
+   "from": 46,
+   "to": 47
+  },
+  {
+   "key": "primary",
+   "from": 48,
+   "to": 49
+  },
+  {
+   "key": "primary",
+   "from": 50,
+   "to": 51
+  },
+  {
+   "key": "primary",
+   "from": 52,
+   "to": 53
+  },
+  {
+   "key": "primary",
+   "from": 54,
+   "to": 55
+  },
+  {
+   "key": "primary",
+   "from": 56,
+   "to": 57
+  },
+  {
+   "key": "primary",
+   "from": 58,
+   "to": 59
+  },
+  {
+   "key": "primary",
+   "from": 60,
+   "to": 61
+  },
+  {
+   "key": "down",
+   "from": 62,
+   "to": 80
+  },
+  {
+   "key": "right",
+   "from": 70,
+   "to": 110
+  }
+ ],
+ "name": "igneous-l74-phase-a",
+ "description": "\u26d3 fidelity IGFADE D2 (STAGED) \u2014 L74: (5,3) broken at t13, the Dark Shield touched at t30, its phase A (150 dead frames, the player frozen at (60.25,45.28)) renders the breaking tile to lava; the walk back steps on it at t95, respawn t126. Recorded on p4g headless (probe-igfade.mjs).",
+ "note": ""
+}

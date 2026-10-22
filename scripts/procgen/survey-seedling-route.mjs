@@ -195,6 +195,11 @@ const argOf = (k, dflt) => {
 };
 const STEP = argOf('step', null);
 const ONLY = argOf('only', null);
+/** ⛔ An ABSENT `--only` is every step; a PRESENT-but-empty one is a caller's lost list, never "everything". */
+if (ONLY !== null && !ONLY.split(',').some((s) => s.trim())) {
+    console.error('ERROR: --only= names no step — omit --only to survey every step; an empty list is refused, never read as all');
+    process.exit(2);
+}
 const THROUGH = argOf('through', null);
 const OUT_FILE = argOf('out', null);
 /** ⛓ FRONTIER2 — which legs: `full` (every sphere row) or `route-only` (the progression pickups). */
@@ -1963,7 +1968,7 @@ if (process.argv.includes('--views')) {
 }
 
 // ── the solves, one child each ───────────────────────────────────────
-const wanted = ONLY ? new Set(ONLY.split(',').map((s) => s.trim())) : null;
+const wanted = ONLY !== null ? new Set(ONLY.split(',').map((s) => s.trim()).filter(Boolean)) : null;
 /** Where the rows go: `survey.json`, or `--out=` under `--through` (S2 D5). */
 const SURVEY_FILE = OUT_FILE ? resolvePath(OUT_FILE) : join(OUT_DIR, 'survey.json');
 

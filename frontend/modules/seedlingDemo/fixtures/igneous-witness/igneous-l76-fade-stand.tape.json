@@ -1,0 +1,75 @@
+{
+ "tape_version": 8,
+ "game": "seedling",
+ "boot": {
+  "level": 76,
+  "x": 152,
+  "y": 92
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [],
+ "despawn": [],
+ "equips": [],
+ "pins": [
+  "sound",
+  "dead_frames"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 418414780,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 1763053598
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasFire": true,
+   "hasWand": true,
+   "hasFireWand": false,
+   "canSwim": true,
+   "hasSpear": true,
+   "hasDarkShield": true,
+   "hasDarkSuit": false,
+   "hasDarkSword": true,
+   "hasFeather": true,
+   "hasTorch": true
+  },
+  "beam": false,
+  "rock_set": false,
+  "hits_max": 4,
+  "first_use": false,
+  "extended": false,
+  "time": 5790,
+  "primary": 0,
+  "secondary": 0,
+  "grass_cut": 0,
+  "cutscene": [
+   false,
+   false,
+   false,
+   false
+  ],
+  "menu_state": 0,
+  "music": {
+   "set": "Room",
+   "index": 1
+  }
+ },
+ "tick0": null,
+ "hold": false,
+ "tick_count": 100,
+ "inputs": [],
+ "name": "igneous-l76-fade-stand",
+ "description": "\u26d3 fidelity IGFADE D1 \u2014 a boot (152,92) \u2192 (160,100), 8.94 px from L76 tile (10,6), standing: the load fade's 21 renders break it, lava at the t15 render, death t16, respawn t46; the restart's own fade again, lava t61, respawn t92. Recorded on p4g headless (CC/docs/cloud-reports/seedling-fidelity-igfade-evidence/drivers/probe-igfade.mjs --tape-file --out).",
+ "note": ""
+}

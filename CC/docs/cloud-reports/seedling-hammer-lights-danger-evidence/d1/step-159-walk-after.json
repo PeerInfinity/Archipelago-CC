@@ -1,0 +1,521 @@
+{
+    "game": "seedling",
+    "name": "survey-step-159",
+    "boot": {
+        "level": 69,
+        "x": 48,
+        "y": 128
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 0,
+            "tag": 1
+        },
+        {
+            "level": 19,
+            "tag": 1
+        },
+        {
+            "level": 31,
+            "tag": 0
+        },
+        {
+            "level": 30,
+            "tag": 2
+        },
+        {
+            "level": 30,
+            "tag": 0
+        },
+        {
+            "level": 12,
+            "tag": 3
+        },
+        {
+            "level": 39,
+            "tag": 8
+        },
+        {
+            "level": 40,
+            "tag": 8
+        },
+        {
+            "level": 62,
+            "tag": 0
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "keys": [
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "seal_parts": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14
+        ]
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": true,
+            "hasWand": true,
+            "hasFireWand": false,
+            "canSwim": true,
+            "hasSpear": true,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": true,
+            "hasTorch": true
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 826,
+    "inputs": [
+        {
+            "key": "primary",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "primary",
+            "from": 2,
+            "to": 3
+        },
+        {
+            "key": "right",
+            "from": 0,
+            "to": 9
+        },
+        {
+            "key": "up",
+            "from": 0,
+            "to": 9
+        },
+        {
+            "key": "primary",
+            "from": 8,
+            "to": 9
+        },
+        {
+            "key": "down",
+            "from": 9,
+            "to": 10
+        },
+        {
+            "key": "left",
+            "from": 9,
+            "to": 12
+        },
+        {
+            "key": "right",
+            "from": 12,
+            "to": 13
+        },
+        {
+            "key": "left",
+            "from": 13,
+            "to": 14
+        },
+        {
+            "key": "up",
+            "from": 10,
+            "to": 15
+        },
+        {
+            "key": "right",
+            "from": 14,
+            "to": 15
+        },
+        {
+            "key": "primary",
+            "from": 14,
+            "to": 15
+        },
+        {
+            "key": "down",
+            "from": 15,
+            "to": 17
+        },
+        {
+            "key": "left",
+            "from": 16,
+            "to": 20
+        },
+        {
+            "key": "up",
+            "from": 17,
+            "to": 20
+        },
+        {
+            "key": "right",
+            "from": 20,
+            "to": 21
+        },
+        {
+            "key": "down",
+            "from": 20,
+            "to": 21
+        },
+        {
+            "key": "primary",
+            "from": 24,
+            "to": 25
+        },
+        {
+            "key": "primary",
+            "from": 28,
+            "to": 29
+        },
+        {
+            "key": "primary",
+            "from": 32,
+            "to": 33
+        },
+        {
+            "key": "primary",
+            "from": 36,
+            "to": 37
+        },
+        {
+            "key": "primary",
+            "from": 40,
+            "to": 41
+        },
+        {
+            "key": "left",
+            "from": 122,
+            "to": 132
+        },
+        {
+            "key": "primary",
+            "from": 132,
+            "to": 133
+        },
+        {
+            "key": "up",
+            "from": 144,
+            "to": 153
+        },
+        {
+            "key": "primary",
+            "from": 153,
+            "to": 154
+        },
+        {
+            "key": "down",
+            "from": 154,
+            "to": 163
+        },
+        {
+            "key": "left",
+            "from": 167,
+            "to": 174
+        },
+        {
+            "key": "primary",
+            "from": 174,
+            "to": 175
+        },
+        {
+            "key": "right",
+            "from": 186,
+            "to": 195
+        },
+        {
+            "key": "primary",
+            "from": 195,
+            "to": 196
+        },
+        {
+            "key": "down",
+            "from": 207,
+            "to": 217
+        },
+        {
+            "key": "primary",
+            "from": 217,
+            "to": 218
+        },
+        {
+            "key": "left",
+            "from": 237,
+            "to": 247
+        },
+        {
+            "key": "primary",
+            "from": 247,
+            "to": 248
+        },
+        {
+            "key": "left",
+            "from": 267,
+            "to": 277
+        },
+        {
+            "key": "primary",
+            "from": 277,
+            "to": 278
+        },
+        {
+            "key": "left",
+            "from": 289,
+            "to": 298
+        },
+        {
+            "key": "primary",
+            "from": 298,
+            "to": 299
+        },
+        {
+            "key": "right",
+            "from": 299,
+            "to": 308
+        },
+        {
+            "key": "up",
+            "from": 312,
+            "to": 320
+        },
+        {
+            "key": "primary",
+            "from": 320,
+            "to": 321
+        },
+        {
+            "key": "right",
+            "from": 332,
+            "to": 341
+        },
+        {
+            "key": "primary",
+            "from": 341,
+            "to": 342
+        },
+        {
+            "key": "left",
+            "from": 353,
+            "to": 362
+        },
+        {
+            "key": "primary",
+            "from": 362,
+            "to": 363
+        },
+        {
+            "key": "left",
+            "from": 432,
+            "to": 442
+        },
+        {
+            "key": "primary",
+            "from": 442,
+            "to": 443
+        },
+        {
+            "key": "right",
+            "from": 456,
+            "to": 463
+        },
+        {
+            "key": "primary",
+            "from": 463,
+            "to": 464
+        },
+        {
+            "key": "left",
+            "from": 464,
+            "to": 471
+        },
+        {
+            "key": "left",
+            "from": 477,
+            "to": 484
+        },
+        {
+            "key": "primary",
+            "from": 484,
+            "to": 485
+        },
+        {
+            "key": "up",
+            "from": 725,
+            "to": 735
+        },
+        {
+            "key": "primary",
+            "from": 735,
+            "to": 736
+        },
+        {
+            "key": "right",
+            "from": 742,
+            "to": 748
+        },
+        {
+            "key": "up",
+            "from": 776,
+            "to": 785
+        },
+        {
+            "key": "primary",
+            "from": 785,
+            "to": 786
+        },
+        {
+            "key": "up",
+            "from": 792,
+            "to": 798
+        },
+        {
+            "key": "primary",
+            "from": 809,
+            "to": 810
+        },
+        {
+            "key": "down",
+            "from": 808,
+            "to": 812
+        },
+        {
+            "key": "primary",
+            "from": 811,
+            "to": 812
+        },
+        {
+            "key": "up",
+            "from": 812,
+            "to": 814
+        },
+        {
+            "key": "down",
+            "from": 814,
+            "to": 815
+        },
+        {
+            "key": "up",
+            "from": 815,
+            "to": 816
+        },
+        {
+            "key": "down",
+            "from": 816,
+            "to": 817
+        },
+        {
+            "key": "up",
+            "from": 817,
+            "to": 818
+        },
+        {
+            "key": "primary",
+            "from": 817,
+            "to": 818
+        },
+        {
+            "key": "down",
+            "from": 818,
+            "to": 819
+        },
+        {
+            "key": "up",
+            "from": 821,
+            "to": 823
+        },
+        {
+            "key": "right",
+            "from": 808,
+            "to": 824
+        },
+        {
+            "key": "primary",
+            "from": 823,
+            "to": 824
+        },
+        {
+            "key": "left",
+            "from": 824,
+            "to": 826
+        }
+    ],
+    "tape_version": 8
+}

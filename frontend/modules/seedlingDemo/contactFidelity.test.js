@@ -194,8 +194,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             igneousLava: true,
             // ⛓ fidelity LIGHTS (wave 20): the L69 fight's model and verb, OFF.
             lightsBossFight: false,
-            // ⛓ seedling-fidelity-bosskills: the King of Fire's and the Tentacled Beast's fights ship OFF.
-            kingOfFireFight: false, tentacleBeastFight: false,
+            // ⛓ seedling-fidelity-bosskills: the King of Fire's and the Tentacled Beast's fights ship OFF;
+            // ⛓ planning-10's flip (⚖ user "Flip kingOfFireFight", 2026-10-21) turns `kingOfFireFight` ON.
+            kingOfFireFight: true, tentacleBeastFight: false,
             // ⛓ fidelity ROPE (wave 22): the `rope` verb ships OFF.
             // ⛓ planning-9's flip (⚖ user "Yes, flip it", 2026-10-21) turns `ropeCutVerb` ON.
             ropeCutVerb: true,
@@ -204,8 +205,12 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ planning-9's flip (⚖ user "Flip chest / pit switches", 2026-10-21) turns both ON.
             chestProbeLineEnd: true,
             enclosedPitCorner: true,
-            // ⛓ fidelity ROPESTANCE (wave 23): the spear / fire rope cut ships OFF.
-            ropeCutAnyWeapon: false,
+            // ⛓ fidelity IGFADE (wave 23): `igneousDeadFrames` (the type-31 tiles count the dead frames' renders) shipped OFF;
+            // ⛓ planning-10's flip (⚖ user "Harvest + flip ON", 2026-10-21) turns it ON.
+            igneousDeadFrames: true,
+            // ⛓ fidelity ROPESTANCE (wave 23): the spear / fire rope cut shipped OFF;
+            // ⛓ planning-10's flip (⚖ user "Harvest + flip ON", 2026-10-21) turns it ON.
+            ropeCutAnyWeapon: true,
             // ⛓ fidelity DRILL (wave 24): every drill of a mixed room stepped ships OFF.
             drillMixedRooms: false });
     });

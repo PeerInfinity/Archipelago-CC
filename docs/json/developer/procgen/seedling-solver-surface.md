@@ -262,7 +262,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `bombPushers` | `stationary`, `emitter`, `proximity` | `dangerMap`, `solverBot` |
 | `bombs` | `explode` | `dangerMap`, `solverBot` |
 | `igneousTiles` | `stationary`, `proximity` | `dangerMap` |
-| `lightsFight` | `hp`, `emitter`, `contact` | `lightsVerb` |
+| `lightsFight` | `hp`, `emitter`, `contact` | `dangerMap`, `lightsVerb` |
 | `lavaBossFight` | — | `solverBot` |
 | `tentacleBeastFight` | — | `solverBot` |
 | `drillBodies` | `contact`, `proximity` | `dangerMap` |

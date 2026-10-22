@@ -1,0 +1,41 @@
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/entityBlocks.test.js[2m > [22mD2 — FAMILY_BLOCKS: the run's families and the hazard volumes[2m > [22man entity family's solverReads is the
+[31m[1mAssertionError[22m: lightsFight: expected [ 'lightsVerb' ] to deeply equal [ 'dangerMap', 'lightsVerb' ][39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  [[22m
+[32m-   "dangerMap",[39m
+[2m    "lightsVerb",[22m
+[2m  ][22m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/entityBlocks.test.js:[2m158:45[22m[39m
+    [90m156| [39m        const col = SURFACE.rows.find((r) => r.surface === 'run' && r.…
+    [90m157| [39m        [35mfor[39m ([35mconst[39m f [35mof[39m entityRows) {
+    [90m158| [39m            expect(f.solverReads, f.family).toEqual(sorted(Object.keys…
+    [90m   | [39m                                            [31m^[39m
+    [90m159| [39m        }
+    [90m160| [39m    })[33m;[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m296 passed[39m[22m[90m (297)[39m
+[41m[1m FAIL [22m[49m frontend/modules/seedlingDemo/entityBlocks.test.js[2m > [22mD2 — FAMILY_BLOCKS: the run's families and the hazard volumes[2m > [22m…and a grep of `entities('<family>'
+[31m[1mAssertionError[22m: lightsFight: expected [ 'dangerMap', 'lightsVerb' ] to deeply equal [ 'lightsVerb' ][39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  [[22m
+[31m+   "dangerMap",[39m
+[2m    "lightsVerb",[22m
+[2m  ][22m
+
+[36m [2m❯[22m frontend/modules/seedlingDemo/entityBlocks.test.js:[2m166:44[22m[39m
+    [90m164| [39m            const re = new RegExp(`entities\\(\\s*'${f.family}'\\s*\\)…
+    [90m165| [39m            const hits = familyFiles.filter((file) => re.test(read(`${…
+    [90m166| [39m            [34mexpect[39m([34msorted[39m(hits)[33m,[39m f[33m.[39mfamily)[33m.[39m[34mtoEqual[39m(f[33m.[39msolverReads)[33m;[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m7512 passed[39m[22m[90m (7514)[39m

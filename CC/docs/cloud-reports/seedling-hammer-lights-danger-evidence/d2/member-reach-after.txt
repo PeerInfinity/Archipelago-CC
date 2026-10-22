@@ -1,0 +1,60 @@
+=== lightsExits
+{
+ "lightsExits": {
+  "readers": [
+   "visitWorld",
+   "freshVisitState",
+   "stepLightsNow"
+  ],
+  "members": [
+   "advance",
+   "entities",
+   "tentacleBeastFight"
+  ]
+ }
+}
+=== lightsSpearRepeats
+{
+ "lightsSpearRepeats": {
+  "readers": [
+   "freshVisitState",
+   "lightsSpearRepeatsNow",
+   "lightsSlashNow"
+  ],
+  "members": [
+   "advance"
+  ]
+ }
+}
+=== lightsFights
+   "collideLineSolid",
+   "corridorBodyForecast",
+   "crusherScans",
+   "entities",
+   "lightsFight",
+   "liveGeometryOpts",
+   "previewStepper",
+   "spinnerFightForecast",
+   "spinnerForecast",
+   "spinnerForecastWithPress",
+   "spitForecast",
+   "stateDigest"
+  ]
+ }
+}
+=== lightsEvents
+{
+ "lightsEvents": {
+  "readers": [
+   "lightsShieldBumpNow",
+   "lightsFightNow",
+   "stepLightsNow",
+   "lightsSlashNow"
+  ],
+  "members": [
+   "advance",
+   "entities",
+   "lightsFight"
+  ]
+ }
+}

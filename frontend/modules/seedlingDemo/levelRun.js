@@ -9801,6 +9801,11 @@ export function createLevelRun({
         if (!CONTACT_FIDELITY.igneousLava) return;
         const tiles = igneousTilesOf(worldFor(level));
         if (tiles.length === 0) return;
+        // ⛓ fidelity IGFADE: the dead frames are stepped, not refused (`renderIgneousStepped`; OFF: the interim below).
+        if (CONTACT_FIDELITY.igneousDeadFrames === true) {
+            renderIgneousStepped(tiles);
+            return;
+        }
         const dead = clock.deadFrames;
         let visit = igneousStates.get(level);
         if (!visit) {
@@ -9851,6 +9856,154 @@ export function createLevelRun({
             tileWriteEvents.push({ t: ticksCompleted, level, id: `igneous@${key}`, kind: 'igneous-lava',
                 x: tile.x, y: tile.y, tile: { tx: tile.tx, ty: tile.ty }, becomes: IGNEOUS.becomes });
         }
+    }
+
+    /**
+     * ⛓⛓⛓ fidelity IGFADE — THE DEAD FRAMES' RENDERS, STEPPED (behind `CONTACT_FIDELITY.igneousDeadFrames`, OFF).
+     *
+     * `Main.update` is `Bot.update(); super.update();` and `Engine.onEnterFrame` is `update(); render();`, so a frame
+     * the bot counts DEAD still renders, and `Tile.render`'s case 31 counts on it like any other. Two kinds:
+     *
+     *   THE LOAD FADE (D1). `FP.world = new Game(…)` only writes `_goto`; `Engine.checkWorld` swaps at the END of that
+     *     frame's update (`Engine.as:77,242-252`), so the SAME frame's render is the new world's — under the camera
+     *     `loadlevel` wrote raw (`Game.as:2251-2252`, `initialCamera`). Then `LOAD_FADE_FRAMES` (20) dead updates, each
+     *     ending in `view()` (`Game.as:888-889`, outside the gate) and a render. ⇒ 1 + 20 = **21 renders** before the
+     *     visit's first live one, every one at the arrival (the Player is built there and nothing updates it), under
+     *     the settle's own cameras (`settleCameraForLoad`'s loop). Witnessed on p4g (`igneous-l76-fade-stand`, boot
+     *     (160,100) in range of (10,6)): lava at the t15 render (36 − 21) and again at t61 after the restart (respawn
+     *     obs t46: its own 21), the game's restarts at t46 / t92.
+     *   THE SPANS (D2) — `clock.spans` since the last render. `help` is drained at the TOP of its tick (the Help's
+     *     frame precedes that tick's update), so it renders BEFORE this render, at the previous render's position;
+     *     the rest are spent inside this tick's update and render AFTER it, at this tick's position. On every dead
+     *     frame `view()` still runs (`Game.as:889`), so the camera is stepped toward the frozen player per frame.
+     *
+     * ⛔ STILL REFUSED BY NAME (each a named residue): a span that moves the player inside it (a fall rock's snap, a
+     * moonrock's / arena rock's release frame, a door's or a seal's ceremony — not transcribed here), a dead render
+     * under a shaking or banded camera (⚖ the cosmetic RNG is never modelled), and a room load inside a visit.
+     * Each refusal fires only when some tile is breaking or in range, i.e. when the render would change something.
+     */
+    const IGNEOUS_FROZEN_SPAN = (s) => s.kind === 'help'
+        || (s.kind === 'ceremony' && /^pickup phase A/.test(s.why ?? ''))
+        || (s.kind === 'freeze' && /^(wand-approach-fade|seed-cover-fade)\b/.test(s.why ?? ''));
+    const igneousStepRefusal = (msg) => Object.assign(new Error(`levelRun: ${msg} — not modelled; refused by name `
+        + '(fidelity IGFADE).'), { code: 'IGNEOUS_UNMODELLED' });
+    const igneousRelevantAt = (visit, tiles, px, py) => tiles.find((t) => {
+        const s = visit.tiles.get(`${t.tx},${t.ty}`) ?? IGNEOUS_FRESH;
+        return !s.lava && (s.breaking || igneousInRange(t, px, py));
+    }) ?? null;
+    const writeIgneousLava = (tile, key) => {
+        const writes = new Map(tileWritesByLevel.get(level) ?? []);
+        writes.set(key, IGNEOUS.becomes);
+        tileWritesByLevel.set(level, writes);
+        world = visitWorld(level);
+        tileWriteEvents.push({ t: ticksCompleted, level, id: `igneous@${key}`, kind: 'igneous-lava',
+            x: tile.x, y: tile.y, tile: { tx: tile.tx, ty: tile.ty }, becomes: IGNEOUS.becomes });
+    };
+    /** One DEAD render of every type-31 tile: the player frozen at (px, py), the point camera `c`. */
+    const renderIgneousDead = (visit, tiles, px, py, c, why) => {
+        for (const tile of tiles) {
+            const key = `${tile.tx},${tile.ty}`;
+            const s = visit.tiles.get(key) ?? IGNEOUS_FRESH;
+            if (s.lava) continue;
+            const inRange = igneousInRange(tile, px, py);
+            if (!inRange && !s.breaking) continue;
+            if (!camOnScreen(tile.rect, c, 0)) continue;
+            const r = stepIgneousRender(s, inRange);
+            visit.tiles.set(key, r.state);
+            if (r.event === null) continue;
+            igneousEvents.push({ t: ticksCompleted, level, tile: key, event: r.event, dead: why });
+            if (r.event === 'lava') writeIgneousLava(tile, key);
+        }
+    };
+    /** A span's `frames` dead renders at `at` ({x, y, cam}); returns the camera its last `view()` left. */
+    const stepIgneousSpan = (visit, tiles, span, at) => {
+        const near = igneousRelevantAt(visit, tiles, at.x, at.y);
+        const what = `${span.frames} dead frame(s) (${span.kind}${span.why ? `: ${span.why}` : ''}) before tick `
+            + `${ticksCompleted} in level ${level}`;
+        if (span.kind === 'load') {
+            if (near) throw igneousStepRefusal(`${what} are a room load inside one visit`);
+            return at?.cam ?? null;
+        }
+        if (!IGNEOUS_FROZEN_SPAN(span)) {
+            if (near) {
+                throw igneousStepRefusal(`${what} move the player inside the span, while Igneous-to-Lava tile `
+                    + `(${near.tx},${near.ty}) is breaking or in range`);
+            }
+            return null;
+        }
+        if (!near) return at?.cam ?? null;
+        if (at === null || !at.cam || camBand !== null || shake !== 0) {
+            throw igneousStepRefusal(`${what} render Igneous-to-Lava tile (${near.tx},${near.ty}) under a camera this run `
+                + `does not hold as a point (${camBand !== null || shake !== 0 ? 'a shake band'
+                    : 'unknown after an untranscribed span'})`);
+        }
+        let c = at.cam;
+        const w = worldFor(level).world;
+        for (let i = 0; i < span.frames; i += 1) {
+            c = stepCamera(c, at, w, { cameraTarget: bossCameraTarget });
+            renderIgneousDead(visit, tiles, at.x, at.y, c, span.kind);
+        }
+        return c;
+    };
+    function renderIgneousStepped(tiles) {
+        let visit = igneousStates.get(level);
+        if (!visit) {
+            // The visit's ledger starts after its own build (the fade is D1's, below).
+            const all = clock.spans;
+            let from = 0;
+            for (let i = all.length - 1; i >= 0; i -= 1) if (all[i].kind === 'load') { from = i + 1; break; }
+            visit = { tiles: new Map(), dead: clock.deadFrames, spans: from, last: null };
+            igneousStates.set(level, visit);
+            const a = spawnFromBoot(worldCtor);
+            const near = tiles.find((t) => igneousInRange(t, a.x, a.y));
+            if (near && camBand !== null) {
+                throw igneousStepRefusal(`the load fade at (${a.x}, ${a.y}) in level ${level} renders `
+                    + `Igneous-to-Lava tile (${near.tx},${near.ty}) under a shaken settle (a shake band)`);
+            }
+            // Every tile is fresh, so only a tile in range of the arrival can count; the cameras are walked either
+            // way, because the fade's last one is where a `help` span's dead render would start.
+            const w = worldFor(level).world;
+            let c = initialCamera(a.x, a.y);
+            if (near) renderIgneousDead(visit, tiles, a.x, a.y, c, 'load');
+            for (let i = 0; i < LOAD_FADE_FRAMES; i += 1) {
+                c = stepCamera(c, a, w);
+                if (near) renderIgneousDead(visit, tiles, a.x, a.y, c, 'load');
+            }
+            visit.last = { x: a.x, y: a.y, cam: camBand === null ? c : null };
+        }
+        const all = clock.spans;
+        const fresh = all.slice(visit.spans);
+        visit.spans = all.length;
+        visit.dead = clock.deadFrames;
+        for (const s of fresh) {
+            if (s.kind === 'help') visit.last = { ...visit.last, cam: stepIgneousSpan(visit, tiles, s, visit.last) };
+        }
+        for (const tile of tiles) {
+            const key = `${tile.tx},${tile.ty}`;
+            const s = visit.tiles.get(key) ?? IGNEOUS_FRESH;
+            if (s.lava) continue;
+            const inRange = igneousInRange(tile, state.x, state.y);
+            if (!inRange && !s.breaking) continue;
+            const vis = camBand === null ? (camOnScreen(tile.rect, cam, 0) ? 'on' : 'off')
+                : onScreenUnderShake(tile.rect, camBand, 0);
+            if (vis === 'uncertain') {
+                throw Object.assign(new Error(`levelRun: at tick ${ticksCompleted} Igneous-to-Lava tile (${key}) in level `
+                    + `${level} is on screen for some cameras of the shake band and off for others, and its render `
+                    + 'would change it — the jiggle is not modelled; refused by name (fidelity IGNEOUS).'),
+                { code: 'IGNEOUS_UNMODELLED' });
+            }
+            if (vis === 'off') continue;
+            const r = stepIgneousRender(s, inRange);
+            visit.tiles.set(key, r.state);
+            if (r.event === null) continue;
+            igneousEvents.push({ t: ticksCompleted, level, tile: key, event: r.event });
+            if (r.event === 'lava') writeIgneousLava(tile, key);
+        }
+        let here = { x: state.x, y: state.y, cam: camBand === null && cam ? { x: cam.x, y: cam.y } : null };
+        for (const s of fresh) {
+            if (s.kind !== 'help') here = { ...here, cam: stepIgneousSpan(visit, tiles, s, here) };
+        }
+        visit.last = here;
     }
 
     /**

@@ -77,6 +77,9 @@ import {
     // ⛓ fidelity IGNEOUS D3: the rect `getState` compares a tile against, and the type-31 tile's clock (pure; the
     // run's state comes through `entities('igneousTiles')`).
     terrainProbeRect, igneousInRange, igneousRendersToLava, stepIgneousRender,
+    // ⛓ hammer LD: the L69 Lights fight's shots and fliers, stepped forward by the model's own functions.
+    LIGHT_BOSS, SCREEN_H, SCREEN_W, cloneLightsFight, lightBossRect, stepLightBossFlier, stepLightBossFlierGraphic,
+    stepLightBossShot, stepLightsController,
     // ⛓ fidelity DRILL D2: a stepped drill is priced at its live box.
     CONTACT_FIDELITY,
 } from './solverView.js';
@@ -421,6 +424,124 @@ export function spitDanger(run, box, horizon, spits = null, mode = 'wait') {
     }
     // ⛓ seedling-fidelity-bombpusher D3: a WAIT only — a transit caller with no walk has no standing player.
     if (mode !== 'transit') out.push(...lobberWaitDanger(run, box, horizon));
+    return out;
+}
+
+/**
+ * ⛓⛓⛓ hammer-phase LD — THE L69 LIGHTS FIGHT, PRICED (`run.entities('lightsFight')`; `null` — so nothing — in every
+ * other room and while `CONTACT_FIDELITY.lightsBossFight` is OFF).
+ *
+ * The victim (fidelity LIGHTSARR's hand-over 1): survey step 159's reach-exit walk to the Teleporter took a hit at
+ * t811 from a `LightBossShot` fired before the kill (t806). Nothing here saw the fight.
+ *
+ * ⛔ STEPPED, NOT SWEPT — `predictArrows`' doctrine. A shot is autonomous: `TurretSpit.update` moves it by its own `v`
+ * (friction 0), tests the Player only, and `LightBossShot.update` culls it at `onScreen()` margin 0. So where it is in
+ * `k` ticks is the model's own stepper run `k` times on a COPY (`cloneLightsFight`, `stepLightBossShot`), with the cull
+ * against the camera at rest (L69 is the 160x160 screen, so `view()` clamps it to (0,0) — `lightsVerb.js`'s
+ * `restingOnScreen`). The fliers ride the controller's `goto`, written on `Game.worldFrame` (the verb's `time + 1` per
+ * tick), so they are stepped too and shoot where the model says they shoot.
+ *
+ * ⚠ The copy is stepped with NO player (`playerBox: null`): a shot that would hit the walk earlier stays in the air
+ * and a flier is neither struck nor shoved. Both only make the forecast hold MORE danger, never less — the
+ * `predictArrows` direction (it excludes the bodies that might eat an arrow for the same reason).
+ *
+ * ⚠ THE FRAME. Update `T + 1` steps each shot and flier and then tests the box the player left at `T`, so the box
+ * of a cell at horizon `h` meets the frame `h + 1`. Both `h` and `h + 1` are priced (one tick of a 1 px/t shot), so
+ * the tick a sample means is not a question this arm has to settle. TRANSIT prices those two frames; WAIT the union
+ * of `0 … h + 1`.
+ *
+ * A shot is reported as kind `spit` — a `LightBossShot` IS a `TurretSpit` (`LightBossShot.as`), and the ladder's DODGE
+ * rung is the one that answers a projectile on the walk's timing (`lights: true` marks the arm). A flier's contact
+ * (`Enemy.hitPlayer`: not dying, `hitsTimer <= 0` after its `hitUpdate`) is kind `lightBoss`.
+ */
+const lightsForecasts = new WeakMap();
+const restingOnScreen = (b) => !(b.right < 0 || b.bottom < 0 || b.x > SCREEN_W || b.y > SCREEN_H);
+const lightsShotRect = (s) => {
+    const b = LIGHT_BOSS.shot.hitbox;
+    return rect(s.x - b.originX, s.y - b.originY, b.w, b.h);
+};
+
+/** One frame: the shots in the air and the fliers in the world, as the copy stands. */
+function lightsFrame(F) {
+    return {
+        shots: F.shots.filter((s) => !s.removed).map((s) => ({ id: s.id, x: s.x, y: s.y, rect: lightsShotRect(s) })),
+        fliers: F.bodies.filter((b) => !b.removed).map((b) => ({ id: b.id, x: b.x, y: b.y, rect: lightBossRect(b),
+            armed: b.dieAnim === null && b.hitsTimer <= 0 })),
+    };
+}
+
+/**
+ * Nothing more can enter the air: no shot, no flier, and the controller either spent its spawn or is held by the
+ * intro (whose removal is the player's, and the copy has none) — or it has no `Game.time` to step on.
+ */
+const lightsQuiet = (F, time) => F.shots.every((s) => s.removed) && F.bodies.every((b) => b.removed)
+    && (F.madeFliers || F.introUp || time === null);
+
+/** One tick of the copy, in `lightsVerb.forecastTick`'s order without the player. */
+function stepLightsCopy(m) {
+    const F = m.fight;
+    for (let i = F.shots.length - 1; i >= 0; i -= 1) {
+        if (!F.shots[i].removed) stepLightBossShot(F.shots[i], { playerBox: null, onScreen: restingOnScreen });
+    }
+    F.shots = F.shots.filter((s) => !s.removed);
+    for (let i = F.bodies.length - 1; i >= 0; i -= 1) {
+        const b = F.bodies[i];
+        if (b.removed) continue;
+        stepLightBossFlier(b, { playerBox: null });
+        if (stepLightBossFlierGraphic(b)) b.removing = true;
+    }
+    if (m.time !== null) {
+        m.time += 1;
+        stepLightsController(F, { time: m.time });
+    }
+    for (const b of F.bodies) if (b.removing) { b.removing = false; b.removed = true; }
+}
+
+/**
+ * The frames `0 … k` of this run's fight, memoised per run on the tick and the fight's own state (a walk's probe asks
+ * one cell per sample, each a horizon further on). `null`: no fight in this room.
+ */
+function lightsFramesTo(run, k) {
+    const fight = run.entities('lightsFight')?.[0] ?? null;
+    if (!fight) return null;
+    const { events: _events, ...state } = fight;
+    const sig = `${run.ticksCompleted}|${JSON.stringify(state)}`;
+    let m = lightsForecasts.get(run);
+    if (!m || m.sig !== sig) {
+        m = { sig, fight: cloneLightsFight(fight), time: fight.time, frames: [lightsFrame(fight)], quietAt: null };
+        if (lightsQuiet(m.fight, m.time)) m.quietAt = 0;
+        lightsForecasts.set(run, m);
+    }
+    while (m.quietAt === null && m.frames.length <= k) {
+        stepLightsCopy(m);
+        m.frames.push(lightsFrame(m.fight));
+        if (lightsQuiet(m.fight, m.time)) m.quietAt = m.frames.length - 1;
+    }
+    return m;
+}
+
+export function lightsDanger(run, box, horizon, mode = 'wait') {
+    const m = lightsFramesTo(run, horizon + 1);
+    if (!m) return [];
+    const out = [];
+    const seen = new Set();
+    for (let k = mode === 'transit' ? horizon : 0; k <= horizon + 1; k += 1) {
+        if (m.quietAt !== null && k >= m.quietAt) break;
+        const fr = m.frames[k];
+        for (const s of fr.shots) {
+            if (seen.has(s.id) || !rectsOverlap(box, s.rect)) continue;
+            seen.add(s.id);
+            out.push({ kind: 'spit', id: s.id, lights: true, why: `a LightBossShot AT (${s.x.toFixed(1)},${s.y.toFixed(1)}) `
+                + `${k} tick(s) on, stepped by \`stepLightBossShot\` on a copy of the fight (the 4x4 box, Player only, `
+                + 'culled at onScreen margin 0)' });
+        }
+        for (const f of fr.fliers) {
+            if (!f.armed || seen.has(f.id) || !rectsOverlap(box, f.rect)) continue;
+            seen.add(f.id);
+            out.push({ kind: 'lightBoss', id: f.id, why: `a LightBoss flier's contact AT (${f.x.toFixed(1)},`
+                + `${f.y.toFixed(1)}) ${k} tick(s) on, stepped on the controller's \`Game.worldFrame\` pattern` });
+        }
+    }
     return out;
 }
 
@@ -1709,6 +1830,19 @@ export const TRANSIT_INGREDIENTS = Object.freeze({
             + '`run.spitForecast()` per tick and each sample carries the spits as of its '
             + 'own tick',
     }),
+    /**
+     * ⛓ hammer LD — the L69 Lights fight (`lightsDanger`). A shot never reads the player once fired, and a flier
+     * steers on the controller's `goto` (written on `Game.worldFrame`), so both are carried to the cell's own ETA by
+     * the model's own steppers on a copy. ⚠ The player CAN reach a flier (the sword, the shield's shove): the copy
+     * leaves that out, which keeps every body and shot in the air longer — more danger, never less.
+     */
+    lights: Object.freeze({
+        coupling: 'autonomous',
+        atEta: true,
+        why: 'a `LightBossShot` moves by its own `v` (friction 0) and is culled at `onScreen` margin 0; a flier steers '
+            + 'on the `goto` the controller writes on `Game.worldFrame`. Both are stepped forward on a copy of '
+            + '`run.entities(\'lightsFight\')` by `lightBoss.js`\'s own functions, with no player in it',
+    }),
     crushers: Object.freeze({
         coupling: 'snapshot', atEta: false,
         why: 'a charging crusher does not re-derive `v`; the run\'s own getter says the '
@@ -1809,6 +1943,8 @@ export function dangerAt(run, tick, box, {
         ...(mode === 'transit' && corridorBodies ? corridorBodyDanger(corridorBodies) : []),
         // ⛓ fidelity IGNEOUS D3: the type-31 tiles' clocks (OFF: the family is null, so nothing).
         ...igneousDanger(run, box, tick, mode),
+        // ⛓ hammer LD: the L69 Lights fight's shots and fliers, stepped on a copy (OFF / any other room: nothing).
+        ...lightsDanger(run, box, horizon, mode),
     ];
     return { danger: sources.length > 0, horizon, mode, sources };
 }
