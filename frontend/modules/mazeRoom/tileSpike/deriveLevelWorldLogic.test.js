@@ -12,6 +12,8 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { deserializeMazeWorld, createState, step, sharedWorldOwnerAt } from '../mazeRoomEngine.js';
 import { nativeReachUnder, enteredAt } from './deriveLevelWorldLogic.js';
+import { certifyPlaythroughMaze } from './certifyPlaythroughMaze.js';
+import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
 import { evaluateRuleAgainstInventory } from '../../shared/procgen/library.js';
 
 const RULES = JSON.parse(readFileSync(
@@ -145,6 +147,20 @@ describe('L13–L17 — the doors and the second level world', () => {
         expect(plan).not.toBeNull();
         expect(plan).toContain('USE:fire');
         expect(crosses(l16(), 'level_16__r1c1', 'level_16__r3c7', ['Progressive Swim'])).toBeNull();
+    });
+
+    // ⚖ The same rule at the CROSSING (asked by seedling-js-planning-8): the certifier prices L17's stairs down as taken
+    // only when the arrival in L16 is not a hit, so `level_17 -> level_16__r3c7` derives as exactly the cut — no walk
+    // through the armed lane at any inventory of real items. Mutant: an AP rule of True_ there is caught as stricter.
+    it('⚖ the L17 → L16 crossing derives as the cut alone; an AP rule that lets it through armed is caught', () => {
+        const L17 = { native: true, regions: ['level_17'] };
+        const { problems, lines } = certifyPlaythroughMaze(RULES, HELPERS, L17);
+        expect(problems).toEqual([]);
+        expect(lines).toContain(`level_17->level_16__r3c7=${JSON.stringify([[ROPE]])}`);
+        const loose = structuredClone(RULES);
+        loose.regions['1'].level_17.exits.find((e) => e.connected_region === 'level_16__r3c7').access_rule = { rule: 'True_' };
+        expect(certifyPlaythroughMaze(loose, HELPERS, L17).problems)
+            .toEqual(['level_17 → level_16__r3c7 holding []: derived false, atlas true']);
     });
 
     it('every wired door is reached empty-handed from its region\'s arrival (the atlas: True_)', () => {
