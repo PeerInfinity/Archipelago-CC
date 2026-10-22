@@ -144,7 +144,7 @@
       "surface": "run",
       "name": "advance",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19828,
+      "line": 19981,
       "class": "physics",
       "form": "stepper",
       "files": {
@@ -172,7 +172,7 @@
       "surface": "run",
       "name": "apReportSlotHeld",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 18383,
+      "line": 18536,
       "class": "seedling",
       "form": "live-state",
       "files": {
@@ -190,7 +190,7 @@
       "surface": "run",
       "name": "arrowCoverAt",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19347,
+      "line": 19500,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -208,7 +208,7 @@
       "surface": "run",
       "name": "arrowForecast",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19228,
+      "line": 19381,
       "class": "seedling",
       "form": "forecast",
       "files": {
@@ -232,7 +232,7 @@
       "surface": "run",
       "name": "bobBossForecast",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19245,
+      "line": 19398,
       "class": "seedling",
       "form": "forecast",
       "files": {
@@ -250,7 +250,7 @@
       "surface": "run",
       "name": "ceremonyStepsDeadFrames",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19704,
+      "line": 19857,
       "class": "seedling",
       "form": "forecast",
       "files": {
@@ -268,7 +268,7 @@
       "surface": "run",
       "name": "chaserForecast",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19288,
+      "line": 19441,
       "class": "seedling",
       "form": "forecast",
       "files": {
@@ -292,7 +292,7 @@
       "surface": "run",
       "name": "chaserRoomVerdict",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 18781,
+      "line": 18934,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -318,7 +318,7 @@
       "surface": "run",
       "name": "collideLineSolid",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19362,
+      "line": 19515,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -336,7 +336,7 @@
       "surface": "run",
       "name": "corridorBodyForecast",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19295,
+      "line": 19448,
       "class": "seedling",
       "form": "forecast",
       "files": {
@@ -354,7 +354,7 @@
       "surface": "run",
       "name": "damage",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 18499,
+      "line": 18652,
       "class": "physics",
       "form": "live-state",
       "files": {
@@ -372,7 +372,7 @@
       "surface": "run",
       "name": "deadFrameSpans",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 18128,
+      "line": 18281,
       "class": "physics",
       "form": "event-ledger",
       "files": {
@@ -390,7 +390,7 @@
       "surface": "run",
       "name": "direction",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 17425,
+      "line": 17578,
       "class": "physics",
       "form": "live-state",
       "files": {
@@ -414,7 +414,7 @@
       "surface": "run",
       "name": "doorCeremonies",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19744,
+      "line": 19897,
       "class": "seedling",
       "form": "event-ledger",
       "files": {
@@ -432,7 +432,7 @@
       "surface": "run",
       "name": "doorEvents",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19746,
+      "line": 19899,
       "class": "seedling",
       "form": "event-ledger",
       "files": {
@@ -450,7 +450,7 @@
       "surface": "run",
       "name": "endingReboots",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19713,
+      "line": 19866,
       "class": "seedling",
       "form": "event-ledger",
       "files": {
@@ -468,7 +468,7 @@
       "surface": "run",
       "name": "entities",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 17326,
+      "line": 17479,
       "class": "seedling",
       "form": "live-state",
       "files": {
@@ -630,7 +630,7 @@
       "surface": "run",
       "name": "equipNow",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 18145,
+      "line": 18298,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -655,7 +655,7 @@
       "surface": "run",
       "name": "finalDoorGate",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19753,
+      "line": 19906,
       "class": "seedling",
       "form": "live-state",
       "files": {
@@ -673,7 +673,7 @@
       "surface": "run",
       "name": "finalDoors",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19755,
+      "line": 19908,
       "class": "seedling",
       "form": "live-state",
       "files": {
@@ -691,7 +691,7 @@
       "surface": "run",
       "name": "gameTime",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 18064,
+      "line": 18217,
       "class": "physics",
       "form": "live-state",
       "files": {
@@ -709,7 +709,7 @@
       "surface": "run",
       "name": "gameTimeAt",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 18088,
+      "line": 18241,
       "class": "physics",
       "form": "forecast",
       "files": {
@@ -735,7 +735,7 @@
       "surface": "run",
       "name": "grenadeForecast",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19313,
+      "line": 19466,
       "class": "seedling",
       "form": "forecast",
       "files": {
@@ -753,7 +753,7 @@
       "surface": "run",
       "name": "ledger",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 17355,
+      "line": 17508,
       "class": "seedling",
       "form": "event-ledger",
       "files": {
@@ -891,7 +891,7 @@
       "surface": "run",
       "name": "level",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 17315,
+      "line": 17468,
       "class": "physics",
       "form": "live-state",
       "files": {
@@ -924,7 +924,7 @@
       "surface": "run",
       "name": "liveGeometryOpts",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 18589,
+      "line": 18742,
       "class": "physics",
       "form": "geometry-query",
       "files": {
@@ -950,7 +950,7 @@
       "surface": "run",
       "name": "magicalLocksOpened",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19510,
+      "line": 19663,
       "class": "seedling",
       "form": "event-ledger",
       "files": {
@@ -968,7 +968,7 @@
       "surface": "run",
       "name": "noHazards",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 18563,
+      "line": 18716,
       "class": "physics",
       "form": "constant",
       "files": {
@@ -994,7 +994,7 @@
       "surface": "run",
       "name": "placedGrenades",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19587,
+      "line": 19740,
       "class": "seedling",
       "form": "live-state",
       "files": {
@@ -1012,7 +1012,7 @@
       "surface": "run",
       "name": "previewStepper",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19115,
+      "line": 19268,
       "class": "physics",
       "form": "stepper",
       "files": {
@@ -1039,7 +1039,7 @@
       "surface": "run",
       "name": "progress",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 17341,
+      "line": 17494,
       "class": "seedling",
       "form": "live-state",
       "files": {
@@ -1121,7 +1121,7 @@
       "surface": "run",
       "name": "shakeWritersHere",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 18544,
+      "line": 18697,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -1145,7 +1145,7 @@
       "surface": "run",
       "name": "spinnerFightForecast",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 17856,
+      "line": 18009,
       "class": "seedling",
       "form": "forecast",
       "files": {
@@ -1163,7 +1163,7 @@
       "surface": "run",
       "name": "spinnerForecast",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 17615,
+      "line": 17768,
       "class": "seedling",
       "form": "forecast",
       "files": {
@@ -1190,7 +1190,7 @@
       "surface": "run",
       "name": "spinnerForecastWithPress",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 17733,
+      "line": 17886,
       "class": "seedling",
       "form": "forecast",
       "files": {
@@ -1208,7 +1208,7 @@
       "surface": "run",
       "name": "spitForecast",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19302,
+      "line": 19455,
       "class": "seedling",
       "form": "forecast",
       "files": {
@@ -1226,7 +1226,7 @@
       "surface": "run",
       "name": "stagedDamage",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 18501,
+      "line": 18654,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -1244,7 +1244,7 @@
       "surface": "run",
       "name": "state",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 17317,
+      "line": 17470,
       "class": "physics",
       "form": "live-state",
       "files": {
@@ -1275,7 +1275,7 @@
       "surface": "run",
       "name": "stateDigest",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 17827,
+      "line": 17980,
       "class": "seedling",
       "form": "live-state",
       "files": {
@@ -1293,7 +1293,7 @@
       "surface": "run",
       "name": "takeApItem",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19793,
+      "line": 19946,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -1311,7 +1311,7 @@
       "surface": "run",
       "name": "ticksCompleted",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 17387,
+      "line": 17540,
       "class": "physics",
       "form": "live-state",
       "files": {
@@ -1341,7 +1341,7 @@
       "surface": "run",
       "name": "tileWrites",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 18790,
+      "line": 18943,
       "class": "seedling",
       "form": "live-state",
       "files": {
@@ -1359,7 +1359,7 @@
       "surface": "run",
       "name": "transitions",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 17384,
+      "line": 17537,
       "class": "physics",
       "form": "event-ledger",
       "files": {
@@ -1388,7 +1388,7 @@
       "surface": "run",
       "name": "wandShotHits",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19459,
+      "line": 19612,
       "class": "seedling",
       "form": "event-ledger",
       "files": {
@@ -1406,7 +1406,7 @@
       "surface": "run",
       "name": "watchers",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19653,
+      "line": 19806,
       "class": "seedling",
       "form": "live-state",
       "files": {
@@ -1424,7 +1424,7 @@
       "surface": "run",
       "name": "watcherTalks",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19640,
+      "line": 19793,
       "class": "seedling",
       "form": "event-ledger",
       "files": {
@@ -1442,7 +1442,7 @@
       "surface": "run",
       "name": "world",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 17316,
+      "line": 17469,
       "class": "physics",
       "form": "live-state",
       "files": {
@@ -1475,7 +1475,7 @@
       "surface": "run",
       "name": "worldCtor",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 17383,
+      "line": 17536,
       "class": "physics",
       "form": "live-state",
       "files": {
@@ -1493,7 +1493,7 @@
       "surface": "run",
       "name": "worldFor",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 19771,
+      "line": 19924,
       "class": "physics",
       "form": "function",
       "files": {
