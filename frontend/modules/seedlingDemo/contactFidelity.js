@@ -912,8 +912,11 @@ export const CONTACT_FIDELITY = {
      * arms, and tested once (fidelity DRILL and LIGHTS modelled the game's rule for the drills and the fliers alone).
      * ON: `levelRun.applyThrust` tests a spear thrust by the game's rect for every arm, waives the reach and the line
      * for the spear (the hammer arc's static arm keeps its call site — a hand-over), and re-runs the whole thrust on
-     * T+3 / T+5 from the live position in the latched direction (DRILL's and LIGHTS' own repeat lists stay empty); the
-     * solver's spear stances (the block push, `runSpear`, the rope, the light pole, the turret) ask the same rect.
+     * T+3 / T+5 from the live position in the latched direction (DRILL's and LIGHTS' own repeat lists stay empty), and
+     * hands `genericHit` the spear's own `spearForce` 7 (every arm passed `swordForce` 5; the tentacle arm the sword's
+     * damage too); the solver's spear stances (the block push, `runSpear`, the rope, the light pole, the turret) ask the
+     * same rect. Witnessed on p4g at 0 px (`fixtures/spearrect-witness/`: a T+3 hit, a hit past 16 px, a corner touch,
+     * a far edge, a truncated origin).
      * OFF: byte-identical. `SEEDLING_SPEAR_GAME_TEST=0|1` for a node measurement.
      */
     spearGameTest: false,

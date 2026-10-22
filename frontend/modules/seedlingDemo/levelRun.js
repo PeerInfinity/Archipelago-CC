@@ -6359,12 +6359,16 @@ export function createLevelRun({
          * ⛓⛓ fidelity SPEARRECT (`CONTACT_FIDELITY.spearGameTest`): `Player.spear()` as the game runs it — the rect from
          * the `int` origin with inclusive edges (`presses.spearGameRect`, read by the audit through `pressRectTouches`),
          * NO reach gate and NO line test (`spearReach` / `lineWaived` below, for every arm this slice owns), and the
-         * T+3 / T+5 tests (`spearRepeatsNow`, scheduled at the end of the first). OFF: `spearRect`, `slash()`'s gates
-         * and one test, byte-identical. ⛔ The hammer arc's static arm keeps `reachLimit` (a hand-over).
+         * T+3 / T+5 tests (`spearRepeatsNow`, scheduled at the end of the first), with `spearForce` (`hitForce`). OFF:
+         * `spearRect`, `slash()`'s gates, `swordForce` and one test, byte-identical. ⛔ The hammer arc's static arm keeps
+         * `reachLimit` and `SWORD_FORCE` (a hand-over).
          */
         const gameSpear = weapon === 'spear' && CONTACT_FIDELITY.spearGameTest;
         const spearReach = gameSpear ? Infinity : reachLimit;
         const lineWaived = ghost || gameSpear;
+        // `spear()`'s `genericHit(v[i], "Spear", spearForce, spearDamage)` — `spearForce` 7 (`Player.as:145`); OFF every arm
+        // passed `swordForce` 5 (witnessed: `spearrect-l63-jelly-reach`, the jellyfish's knockback).
+        const hitForce = gameSpear ? LIGHTS_SPEAR_FORCE : SWORD_FORCE;
         const rect = ghost ? ghostSlashRect(state.x, state.y, direction)
             : (weapon === 'sword'
                 ? slashRect(state.x, state.y, direction, scale)
@@ -6660,7 +6664,7 @@ export function createLevelRun({
                     // `Enemy.hit` clamps it against `maxForce` and a model
                     // that dropped the argument would be wrong for the first
                     // class that reads it.
-                    f: SWORD_FORCE,
+                    f: hitForce,
                     t: type,
                     // ⛔ `Enemy.hit` carries `!Game.freezeObjects` INSIDE its
                     // own gate, so a press during a ceremony damages nothing
@@ -6802,7 +6806,7 @@ export function createLevelRun({
                     const before = { hits: b.hits, activated: b.activated, anim: b.anim };
                     const verdict = shieldBossTakesHit(b, {
                         d: pressHitDamage(weapon),
-                        f: SWORD_FORCE,
+                        f: hitForce,
                         t: type,
                         // `Enemy.hit` carries `!Game.freezeObjects` inside
                         // its own gate — but ⛔ `ShieldBoss.hit`'s SWALLOW
@@ -6942,7 +6946,7 @@ export function createLevelRun({
                     const before = { hits: sp.hits, hitsTimer: sp.hitsTimer,
                         destroy: sp.destroy };
                     const after = hitSpinner(sp, {
-                        force: SWORD_FORCE,
+                        force: hitForce,
                         from: { x: state.x, y: state.y },
                         damage: pressHitDamage(weapon),
                         t: pressHitType(weapon),
@@ -7054,7 +7058,7 @@ export function createLevelRun({
                     if (!lineWaived) assertFinalBossLineOfSight(b);
                     const before = { x: b.x, y: b.y, vx: b.vx, vy: b.vy, hits: b.hits };
                     const verdict = finalBossHit(b, {
-                        force: SWORD_FORCE,
+                        force: hitForce,
                         fromX: state.x,
                         fromY: state.y,
                         // ⛓ NOT "Lava" — a sword press can never be. The type
@@ -7351,7 +7355,7 @@ export function createLevelRun({
                     const verdict = enemyHit(c, {
                         d: pressHitDamage(weapon),
                         // `Player.as:116` — `swordForce = 5`.
-                        f: SWORD_FORCE,
+                        f: hitForce,
                         t: pressHitType(weapon),
                         // ⛔ `Enemy.hit` carries `!Game.freezeObjects` INSIDE
                         // its own gate, so a press during a ceremony damages
@@ -7483,7 +7487,7 @@ export function createLevelRun({
         // ⛓ bosskills D2: the King of Fire's balls and body (no-op OFF).
         lavaBossSlashNow({ rect, reachLimit: spearReach, weapon, ghost, pressTick, hits, lineWaived });
         // ⛓ bosskills D3: the Tentacled Beast's tentacles (no-op OFF).
-        tentacleSlashNow({ rect, reachLimit: spearReach, weapon, ghost, pressTick, hits, lineWaived });
+        tentacleSlashNow({ rect, reachLimit: spearReach, weapon, ghost, pressTick, hits, lineWaived, gameSpear });
         // ⛓ fidelity SPEARRECT: the first test schedules the thrust's T+3 / T+5 tests, the whole thrust re-run.
         if (gameSpear && (thrust.repeat ?? null) === null) {
             for (const k of SPEAR_REPEAT_OFFSETS) {
@@ -16743,11 +16747,14 @@ export function createLevelRun({
         }
     }
 
-    function tentacleSlashNow({ rect: r, reachLimit, weapon, ghost, pressTick, hits, lineWaived = ghost }) {
+    function tentacleSlashNow({ rect: r, reachLimit, weapon, ghost, pressTick, hits, lineWaived = ghost, gameSpear = false }) {
         const f = tentacleFightFor(level);
         if (f === null || noclip) return;
         const t0 = (weapon === 'sword' && !ghost) ? 'Sword' : 'Spear';
-        const d = ghost ? 2 : (weapon === 'sword' && inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE);
+        // ⛓ fidelity SPEARRECT: the spear's `spearDamage` 2 (`pressHitDamage`), as every other arm hands it — unwitnessed
+        // here (the fight ships OFF); OFF the spear's tentacle hit stays `SWORD_DAMAGE`.
+        const d = ghost ? 2 : (gameSpear ? pressHitDamage('spear')
+            : (weapon === 'sword' && inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE));
         const maskBox = { x: f.beast.x - 23, y: f.beast.y - 22, right: f.beast.x + 23, bottom: f.beast.y + 22 };
         for (const body of f.runtime) {
             if (body.kind !== 'tentacle' || body.body.pendingRemove) continue;
