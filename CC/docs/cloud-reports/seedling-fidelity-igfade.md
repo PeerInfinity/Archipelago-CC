@@ -6,7 +6,7 @@
 | Start SHA | `eaf8cc4597` (js's `rope-land` = main 83861d68fa + the ROPE verb and its flip) |
 | Code head | `c909d2da` (this report is the commit after it) |
 | Harness branch | `claude/igneous-load-fade-q7wean` (local `seedling-fidelity-igfade`) |
-| CI | `JavaScript Unit Tests` **green at `03dc6388`** (the code head before the docs commit): vitest 21,985 / 21,985, slow 263 / 263. The docs and report commits change no JS; read the run at the final head before harvesting |
+| CI | `JavaScript Unit Tests` **green at `c909d2da`** (and at `03dc6388`): vitest 21,985 / 21,985, slow 263 / 263. The two later commits touch only `CC/` and trigger no run (the path filter) |
 | Switch | `CONTACT_FIDELITY.igneousDeadFrames`, **OFF**, under `igneousLava` (ON). OFF is byte-identical |
 | Verdicts | **W0 PASS · D1 PASS · D2 PASS (staged witness, see its limit) · D3 STOP (the pins stay OFF, reason measured)** · switch movers measured, flip licence asked |
 
