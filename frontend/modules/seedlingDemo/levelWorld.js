@@ -3042,10 +3042,24 @@ export const AP_BOSS_PERSISTENCE_RESPONSE = Object.freeze({
     lightbosscontroller: 'end-state',
 });
 
-/** `PERSISTENCE_RESPONSE`, plus `AP_BOSS_PERSISTENCE_RESPONSE` under `CONTACT_FIDELITY.apReportBosses`. */
+/**
+ * ⛓ fidelity YETI (`CONTACT_FIDELITY.yetiTalk`): `NPCs/NPC.as:119-126` `check()` — `if (!Game.menu && tag >= 0 &&
+ * !Game.checkPersistence(tag)) FP.world.remove(this)` — so a Yeti whose own tag its `doneTalking()` cleared
+ * (`NPCs/Yeti.as:46`, `{58,0}` in DeadBoss.oel) is GONE from the next `Game`: no Solid, no talk circle. OFF the
+ * response is undeclared and a build handed `{58,0}` throws by name, as before.
+ */
+export const YETI_PERSISTENCE_RESPONSE = Object.freeze({
+    yeti: 'despawn',
+});
+
+/**
+ * `PERSISTENCE_RESPONSE`, plus `AP_BOSS_PERSISTENCE_RESPONSE` under `CONTACT_FIDELITY.apReportBosses`, plus
+ * `YETI_PERSISTENCE_RESPONSE` under `CONTACT_FIDELITY.yetiTalk`.
+ */
 export function persistenceResponseOf(type) {
     return PERSISTENCE_RESPONSE[type]
-        ?? (CONTACT_FIDELITY.apReportBosses === true ? AP_BOSS_PERSISTENCE_RESPONSE[type] : undefined);
+        ?? (CONTACT_FIDELITY.apReportBosses === true ? AP_BOSS_PERSISTENCE_RESPONSE[type] : undefined)
+        ?? (CONTACT_FIDELITY.yetiTalk === true ? YETI_PERSISTENCE_RESPONSE[type] : undefined);
 }
 
 /**

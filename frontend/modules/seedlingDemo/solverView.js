@@ -91,6 +91,8 @@ export {
 export { collideLineSolid, CRUSHER, crusherRect, DIRECTIONS, scanCrusher } from './crusher.js';
 // endingChain.js — strikePolicy · seedling 1
 export { TALK_RANGE } from './endingChain.js';
+// dialogue.js — solverBot · fidelity YETI D3 (the Yeti's second tag, L58's portal)
+export { YETI_PORTAL_TAG } from './dialogue.js';
 // enemyDamage.js — solverBot, strikePolicy · seedling 3
 export { DARKTRAP_LIGHT_DEATH, KILL_ARM_POLICY, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH, killArmModelled,
     removalTicksAfterHit } from './enemyDamage.js';

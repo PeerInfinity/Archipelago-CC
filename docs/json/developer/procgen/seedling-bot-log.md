@@ -17669,12 +17669,12 @@ its byte-frozen free oracle is compared against.
 | 29 | `r9-solve-30` | L30 → L32 | 210 | — |
 | 30 | `r9-solve-32` | L32 → END | 839 | — |
 
-**ROUTE COMPLETE** — the chain walks all 30 route steps, from the true start to route step 30 in L32 (Level 032 - Bob Boss (sphere 3.1) → Fire); there is no next room on this route.
+**ROUTE COMPLETE** — the chain walks all 30 route steps, from the true start to route step 30 in L32 (Level 032 - Bob Boss (sphere 4.2) → Fire); there is no next room on this route.
 
 **COVERAGE, BY ROUTE MODE** (`campaign-frontier.json` `coverage`; `route-only` is the route the chain was recorded on):
 
-- `route-only` through 3.1: **30/30** route steps — COMPLETE
-- `full` through 3.1: **13/47** route steps — the chain leaves this route at segment 14: `r9-solve-0` arrives in L13, route step 14 crosses to L86
+- `route-only` through 4.2: **30/30** route steps — COMPLETE
+- `full` through 4.2: **13/40** route steps — the chain leaves this route at segment 14: `r9-solve-0` arrives in L13, route step 14 crosses to L86
 
 <!-- GENERATED:campaign-chain END -->
 
@@ -24660,40 +24660,82 @@ refused, `drill@128,96` at run tick 59 — the game's tick. OFF: the interim, by
 - An AS3 getter typed `int` truncates: a rect built from it is not the float rect, and FlashPunk's `collideRect` is
   inclusive where `collide` is strict.
 
-### Seedling fidelity SPEARRECT — the spear's test as the game runs it, for every spear arm (`spearGameTest`, OFF)
+### Seedling fidelity YETI — the Yeti's `doneTalking()` opens L58's tag-1 door (`yetiTalk`, OFF)
 
-Planner `seedling-fidelity-planning-10`, wave 25 (⚖ the user picked "SPEAR-RECT slice" from DRILL's hand-over). The
-report is `CC/docs/cloud-reports/seedling-fidelity-spearrect.md`.
+Planner `seedling-fidelity-planning-10`, wave 25 (⚖ the user picked "YETI talk cloud slice" after rules-2's diagnosis
+of the tentacle survey). The report is `CC/docs/cloud-reports/seedling-fidelity-yeti.md`.
 
-**The game's rule** (`Player.spear()`, `Player.as:954-992`): every hitable under a 32x5 rect from the `int` origin
-(`spearX`/`spearY` are `int` getters, `Player.as:1341-1348`), collected by `collideRectInto` → `Entity.collideRect`,
-whose edges are INCLUSIVE (`Entity.as:263`); `genericHit(v[i], "Spear", spearForce 7, spearDamage 2)` with no reach gate
-and no line test; and again on T+3 and T+5 (`spearDelayMax` 1). The model's spear used the float `spearRect` with strict
-edges, borrowed `slash()`'s 16 px `distanceRectPoint` gate and its line of sight in most arms, handed `genericHit` the
-sword's force 5, and tested once (DRILL and LIGHTS had the game's rule for the drills and the fliers alone).
+**W0.** L58 (`DeadBoss.oel`) holds `yeti@56,56` (tag 0, five pages, `frames="3"`; centre (64,64)) and
+`teleporter@80,16` → L46 (tag 1). The tick chain on the game:
+- `Teleporter.checkDeactivated()` is `tag >= 0 && (!checkPersistence(tag) == invert)`, and `update()` runs it EVERY
+  frame (`Teleporter.as:89-94`), so a fresh room's door is shut and a clear opens it in the same visit.
+- The Yeti is a KEYED talker (`keyNeeded` true: the Witch's shape, not the Watcher's): an X release inside 24 px of its
+  centre opens the dialogue (`NPC.as:225`), and the `talking` setter's false branch runs `doneTalking()` on both causes,
+  the pages exhausted (`:207-214`) or the circle left (`:230-236`).
+- `Yeti.doneTalking()` (`NPCs/Yeti.as:40-50`): `if (!createdPortal) { createdPortal = true; setPersistence(tag, false);
+  setPersistence(1, false); }`. `createdPortal` is an instance field (once per visit). The Yeti is added after the
+  teleporters (`Game.as:2274`) and `addUpdate` prepends, so the door re-reads on the closing frame itself.
+- `NPC.check()` removes an NPC whose tag is cleared, on a new `Game` only: the Yeti stays for the rest of the visit.
+- The room is water except a four-tile island under the Yeti and the door's ledge (Swim needed). The door's tile is a
+  **Pit**.
 
-**The model (switch ON).** One rule in `presses.js`: `spearGameRect` (the int origin, `inclusive: true`),
-`pressRectTouches` (inclusive for a rect that says so, strict otherwise — `pressRespondersIn` asks it), `spearHitRect`
-(the switch) and `SPEAR_REPEAT_OFFSETS` [2, 4]. `levelRun.applyThrust` tests a spear thrust by it for every arm it owns,
-waives the reach and the line for the spear, hands the spear's force, and re-runs the whole thrust on T+3 / T+5
-(`spearRepeats`, from the live position in the latched direction); an arm the game refuses inside five ticks refuses by
-its own state (an i-frame, a moving block, a pole's `hitsTimer`, the bridge's `bridges.has(id)`). DRILL's
-`spearTouchesDrill` is the shared rule now; the drills' and fliers' own repeat lists stay empty ON. The solver's spear
-stances (the block push, runSpear's L0 check, the turret, the rope, the light pole, the lights forecast) aim with
-`spearHitRect` + `pressRectTouches`, and C3's `spearRepeatReaches` guard stands down ON. OFF: byte-identical.
+**The model (switch ON).** `levelRun`'s talker arm runs `yetiDoneTalking`: `{58,1}` goes through `applyClearNow` (the
+door opens mid-visit) and `{58,0}` is banked for the next build (`pendingEarnedClears`). `YETI_PERSISTENCE_RESPONSE`
+(`yeti: 'despawn'`) lets a build with `{58,0}` cleared drop the Yeti. New: the ledger `yetiEvents`, the run field
+`yetiFlags`, an `earnedClears` arm filtered on `bootCleared` (`{58,1}` lands in `clearedByLevel` mid-visit). OFF:
+`PLACED_NPC_TALK.yeti` stays REFUSED, byte-identical.
 
-**Witnesses (p4g, 0 px; `probe-seedling-spearrect.mjs`, `fixtures/spearrect-witness/`).** A T+3 hit on a jellyfish that
-walked into the rect after the first test (`spearrect-l98-jelly-repeat`, hammer C3's L98 tape replayed on p4g); a hit
-~32 px up the rect that `slash()`'s reach refused, with the spear's knockback (`spearrect-l63-jelly-reach`); a corner
-touch on both inclusive edges against an ice turret resting a half pixel off its cell (`spearrect-l40-turret-corner`);
-a block caught by the far edge `int(80) + 32 = 112` (`spearrect-l63-block-far-edge`); and the other way, a block the
-float rect reaches and the truncated origin does not (`spearrect-l63-block-truncated-y`). OFF parts from the game in
-all five. The line waiver has no witness (no witnessed arm tests a line; m5 survives, named).
+**The verb.** `execClearTag`'s `yeti` arm: a clear-tag `{58,1}` (or `{58,0}`) naming `yeti@56,56` runs `execYetiTalk`
+(a stance inside the circle, the ceremony cadence until `yeti-close`, settle). Either flag cleared at the boot is
+`already-clear`; no Yeti with the door shut is `cannot-act`. From the mouth's arrival: 145 t, open t54, close t144.
+
+**Witnesses (p4g, `probe-seedling-yeti.mjs`, `fixtures/yeti-witness/`, all 0 px every tick):** `talk` (both flags off;
+crosses to L46 at t202, in the same visit), `control` (dialogue left open: both flags set), `shut` (no talk: the Pit takes
+the player, respawn at (64,104), no crossing), `revisit` (both flags cleared at the boot: walks through the Yeti's old
+Solid, crosses at t98).
+
+**The next gap.** After the talk, the solver's `reach-exit` to the door refuses `unmodelled-pit-teleporter` (housekeep
+D1's named refusal, now a third room after L43 and L100). The `talk` and `shut` witnesses are the game's answer for
+this door: on the straight approach the teleporter wins while it is live, and the Pit wins while it is shut.
 
 **Trap candidates.**
-- A weapon's ARGUMENTS are part of its test: the spear's `genericHit` carries `spearForce` 7, and a model that reused
-  the sword's 5 lands the hit on the right tick and the knockback 4 px short.
-- A body that rests on half pixels (an ice turret's rest cycle) meets an `int`-origined rect's `.5` edges exactly:
-  inclusivity decides the hit, and the strict comparison misses it on alternate ticks.
-- A probe that measured ONE effect per press (R4's bridge: one decrement) does not prove one TEST per press; two game
-  witnesses show the T+3 test landing on a mover. The bridge's single decrement stays an open question.
+- A door's ledger flag can be written by a dialogue in the same room. A clear that `applyEarnedClears` banks for the
+  next build is a different fact from one a per-frame reader (a `Teleporter`) sees at once: the Yeti's two writes have
+  two readers and land at two times.
+- An `earnedClears` arm filtered on `clearedByLevel` hides a clear that the run itself applied mid-visit.
+
+### Seedling fidelity MASKS — the swing's line samples the "Solid" pixelmasks, and the chaser arm asks it (`pixelMaskSightLines`, OFF)
+
+Planner `seedling-fidelity-planning-10`, wave 25 (⚖ the user picked "Pixel-mask sight lines" from DRILL's hand-over). The
+report is `CC/docs/cloud-reports/seedling-fidelity-masks.md`.
+
+**W0.** The game's `collideLine("Solid", …)` tests are five: `Player.slash` (`Player.as:917`, every swing target but a
+Solid / Rope / Flyer, waived for the ghost sword), `Crusher.as:58`, `Drill.as:86`, `Spinner.as:82` (`runRange` 0: moot) and
+`LavaTrap.as:88` (no model reader). Every other line the brief listed — a spinner's hammer, a wallflyer's ray, the BobBoss
+swords, a chest's probe, a spinning axe — is `collideLine("Player", …)`, which no mask can block. No crusher shares a level
+with a mask. A swing at a Tree does nothing (`Tree.hit` is empty), at a LightPole only on "Spear", at a text-less Watcher
+nothing (L94's watcher behind the TreeLarge is moot). Masks lie on swing lines beside the MOVERS of L12, L28, L88, L91, L92
+(with a spinner), L99, L100, and on L57's tentacles (the beast's own body).
+
+**The model (switch ON).** `collideLineSolid`'s `{masks}` (DRILL's sampler, plus an exact bounding prefilter) is passed by
+the lone drill's trigger, the swing at a drill / wallflyer / tentacle (the bosskills D3 by-name interim retires), the
+corridor body forecast, and the solver's chaser and drill mirrors. Two things the witnesses found:
+- **the chaser arm of `applyThrust` asked NO line at all** — not even the boxes. A bob behind a wall tile was knocked back in
+  the model and untouched on the game (`mask-l65-wall`). ON, the arm asks `Player.slash`'s line, boxes and masks.
+- **an `OpenTree` is not "Solid"**: it extends `Tree`, whose ctor writes `type = "Tree"`. The first cut sampled it and
+  refused a swing the game lands (`mask-l65-opentree`, now a control). The line excludes it; `ENTITY_CLASSES.opentree`'s
+  "Solid" is handed over (the row has other readers).
+The spinner family (the hammer arc's forecast and strike line, and the executor that must agree with them) stays on the
+boxes — handed over.
+
+**Witnesses (p4g, 0 px; `probe-seedling-mask-lines.mjs`, `fixtures/mask-witness/`).** `mask-l65-wall`, `mask-l65-opentree`.
+No CliffSide-on-a-chaser-line case was found by search (idle and walk-then-swing, L12/L28/L91/L92/L99/L100): a chaser closes
+on a clear line, so a mask between them is rarely within reach.
+
+**Movers (ON).** Route survey full: 0 (250 rows identical). Bounded vitest: `seedlingRobust`'s L16 `{sword}` pin 878 → 882 t
+(swings at `bob@224,96` through a Stone tile and a pushable block, t587-591 — the box half of the chaser line), plus the
+defaults table and dashShape's stamp row.
+
+**Trap candidates.**
+- A collider's TYPE comes from the constructor chain, not the asset: an `OpenTree` draws a mask and is still a "Tree".
+- A gate the game runs on every target of a swing can be missing from ONE arm of the model's dispatch: read every arm.

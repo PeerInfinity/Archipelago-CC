@@ -77,6 +77,19 @@ export const DEFAULT_FACING = INPUT_S;
 /** The one primitive an `action_lib` entry may name in v1. */
 export const PRIMITIVE_STRIKE = 'strike';
 
+// ⛓⛓ ARROW TRAPS + ROPES (slice tile-primitives-arrow-rope, ⚖ 2026-10-22 "New
+// `traps` primitive"). A trap guards a LANE of cells; a lane cell refuses the
+// player while its trap is ARMED. Armed = its group is active XOR the trap's
+// default — `fires: 'unless_active'` (Seedling `shoot="1"`: fires from the first
+// tick, a cut rope or a held button silences it) or `'while_active'` (`shoot="0"`:
+// fires only while its group is pressed). The group is active when its TOKEN is
+// in the effective inventory: a held button derives it (`heldTokens`) and so does
+// a CUT ROPE (`ropeTokens`) — an obstacle whose library entry `activates` the
+// token, cut this visit (`state.broken`) or cut on an earlier one (its `event`
+// item carried). ⛔ Absent `traps` and no `activates` entry = nothing below runs.
+/** The two ways a trap's group arms it (`trapLib.<id>.fires`). */
+export const TRAP_FIRES = Object.freeze(['unless_active', 'while_active']);
+
 /** `TURN_<dir>` for one of N/E/S/W. */
 export function turnInput(dir) { return `${TURN_PREFIX}${dir}`; }
 
@@ -421,6 +434,11 @@ export function deserializeMazeWorld(sidecar, opts = {}) {
     if (sidecar.shared_world !== undefined) {
         world.sharedWorld = checkSharedWorld(sidecar.shared_world, width, height, 'deserializeMazeWorld');
     }
+    // ⛓ ARROW TRAPS: absent on every other sidecar, so `world.traps` stays
+    // undefined and `armedTrapAt` answers null without looking.
+    if (sidecar.traps !== undefined) {
+        Object.assign(world, checkTraps(sidecar.traps, sidecar.trapLib, width, height, 'deserializeMazeWorld'));
+    }
 
     // Hazards (maze content modules Phase 2). Each sidecar entry is the
     // immutable shape (tiles + cycleLength + length + shape); phase
@@ -521,6 +539,40 @@ export function checkActionLib(lib, who) {
         }
     }
     return { ...lib };
+}
+
+/**
+ * ⛓ The `traps` + `trapLib` sidecar fields, CHECKED: `traps` = `[{x, y, id,
+ * label?, lane: [{x, y}…]}]` (the trap's cell and the cells its lane covers),
+ * `trapLib` = `{[id]: {kind, name?, active: <token>, fires}}`. Returns the world
+ * fields `{traps, trapLib, trapLanes}` (`trapLanes`: posKey → trap indices).
+ * ⛔ An unknown `fires`, a missing entry or a lane cell off the grid is refused BY NAME.
+ */
+export function checkTraps(traps, lib, width, height, who) {
+    if (!Array.isArray(traps)) throw new Error(`${who}: "traps" must be an array, got ${JSON.stringify(traps)}`);
+    const trapLib = { ...(lib ?? {}) };
+    for (const [id, entry] of Object.entries(trapLib)) {
+        if (!TRAP_FIRES.includes(entry?.fires)) {
+            throw new Error(`${who}: trapLib.${id}.fires is ${JSON.stringify(entry?.fires)}; one of ${TRAP_FIRES.join(', ')}`);
+        }
+        if (typeof entry.active !== 'string' || entry.active === '') {
+            throw new Error(`${who}: trapLib.${id} names no group token (\`active\`)`);
+        }
+    }
+    const trapLanes = new Map();
+    const out = traps.map((t, i) => {
+        if (!trapLib[t?.id]) throw new Error(`${who}: traps[${i}] names "${t?.id}", which trapLib does not define`);
+        const lane = (t.lane ?? []).map((c) => {
+            assertInBounds(width, height, c, `traps[${i}] lane cell`);
+            return posKey(c.x, c.y);
+        });
+        for (const key of lane) {
+            if (!trapLanes.has(key)) trapLanes.set(key, []);
+            trapLanes.get(key).push(i);
+        }
+        return { x: t.x, y: t.y, id: t.id, label: t.label ?? t.id, lane };
+    });
+    return { traps: out, trapLib, trapLanes };
 }
 
 /** The ownership alphabet (the projection's `SHARED_WORLD_ALPHABET` — kept in sync by test). */
@@ -638,6 +690,12 @@ export function serializeMazeEntities(world) {
     }
     if (hasItemActions(world)) {
         out.action_lib = { ...world.actionLib };
+    }
+    if (world.traps?.length) {
+        out.traps = world.traps.map((t) => ({
+            x: t.x, y: t.y, id: t.id, label: t.label, lane: t.lane.map(unposKey),
+        }));
+        out.trapLib = { ...world.trapLib };
     }
     return out;
 }
@@ -883,12 +941,96 @@ function heldTokens(world, playerPos, blocks) {
  * of `heldTokens` outside this file would answer that question differently the
  * next time a gadget lands — the same argument that put `whyBlocked` here.
  */
-export function effectiveInventory(world, inventory, playerPos, blocks) {
+export function effectiveInventory(world, inventory, playerPos, blocks, broken) {
     const held = heldTokens(world, playerPos, blocks);
-    if (held === null) return inventory;
+    const cut = ropeTokens(world, inventory, broken);
+    if (held === null && cut === null) return inventory;
     const out = new Set(inventory);
-    for (const token of held) out.add(token);
+    for (const token of held ?? []) out.add(token);
+    for (const token of cut ?? []) out.add(token);
     return out;
+}
+
+/**
+ * ⛓ ROPES — the tokens the CUT ropes activate: an obstacle whose library entry
+ * `activates` a token is cut when its cell is in `broken` (this visit — the
+ * strike that cut it) or when the `event` item it names is carried (cut on an
+ * earlier visit: ⚖ "Both: this visit + event item"; the game re-hits a cut
+ * rope on every entry). A LATCH, unlike a hold: nothing un-cuts a rope.
+ * `null` when the world has no rope, so the common case allocates nothing.
+ * Pass the caller's `broken` — without it only the carried event counts.
+ */
+export function ropeTokens(world, inventory, broken) {
+    const ropes = ropesOf(world);
+    if (ropes.length === 0) return null;
+    let out = null;
+    for (const { key, entry } of ropes) {
+        if (!(broken?.includes(key) || (entry.event && inventory.has(entry.event)))) continue;
+        if (out === null) out = [];
+        out.push(entry.activates);
+    }
+    return out;
+}
+
+/**
+ * The world's placed ropes `[{key, entry}]` — CACHED per (obstacle map, library) and rebuilt when either
+ * object or the obstacle count changes (an edit), because `step` asks on every move of every search.
+ */
+const ROPE_CACHE = new WeakMap();
+function ropesOf(world) {
+    const lib = world.obstacleLib;
+    if (!lib || !world.obstacles) return [];
+    const hit = ROPE_CACHE.get(world.obstacles);
+    if (hit && hit.lib === lib && hit.size === world.obstacles.size) return hit.ropes;
+    const ropes = [];
+    for (const [key, id] of world.obstacles) if (lib[id]?.activates) ropes.push({ key, entry: lib[id] });
+    ROPE_CACHE.set(world.obstacles, { lib, size: world.obstacles.size, ropes });
+    return ropes;
+}
+
+/**
+ * ⛓ ARROW TRAPS — the trap whose lane holds (x, y) and is ARMED for the
+ * effective inventory `inv` (its group token present = active), or `null`.
+ * `step` asks it of the player's cell AFTER a move (the stance the arrows
+ * see: stepping off the button that silenced a lane re-arms it at once).
+ */
+export function armedTrapAt(world, inv, x, y) {
+    const hits = world.trapLanes?.get(posKey(x, y));
+    if (!hits) return null;
+    for (const i of hits) {
+        const trap = world.traps[i];
+        const entry = world.trapLib[trap.id];
+        const active = inv.has(entry.active);
+        if (entry.fires === 'unless_active' ? !active : active) return trap;
+    }
+    return null;
+}
+
+/**
+ * Per trap of the world (in `world.traps` order), is it ARMED for this state —
+ * its lane live right now (the panel's lane tint). `null` on a world with no traps.
+ */
+export function armedTraps(world, state, inventoryOverride) {
+    if (!world?.traps?.length || !state) return null;
+    const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
+    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
+    return world.traps.map((trap) => {
+        const entry = world.trapLib[trap.id];
+        const active = inv.has(entry.active);
+        return entry.fires === 'unless_active' ? !active : active;
+    });
+}
+
+/**
+ * True when the state's player stands in an ARMED lane — the arrival a search
+ * must not count on (⚖ "never expect tanking a hit": a landing in a live lane
+ * is a hit, so nothing is reached from it).
+ */
+export function standsInArmedLane(world, state, inventoryOverride) {
+    if (!world.trapLanes) return false;
+    const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
+    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
+    return armedTrapAt(world, inv, state.player_pos.x, state.player_pos.y) !== null;
 }
 
 // --- step ---
@@ -961,7 +1103,7 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
         if (!entry) return null;
         if (entry.item) {
             const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
-            const inv = effectiveInventory(world, carried, state.player_pos, state.blocks);
+            const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
             if (!inv.has(entry.item)) return null;
         }
         const used = cloneState(state);
@@ -979,7 +1121,7 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
     const ny = state.player_pos.y + delta.dy;
     if (!isFloor(world, nx, ny)) return null;
     const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
-    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks);
+    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
     if (shutObstacleAt(world, state, nx, ny, inv, clearanceOpts) !== null) {
         return null;
     }
@@ -1008,6 +1150,11 @@ export function step(world, state, input, inventoryOverride, clearanceOpts) {
     if (pushedFrom !== null) {
         next.blocks[next.blocks.indexOf(pushedFrom)] = pushedTo;
         next.blocks.sort();
+    }
+    // ⛓ ARROW TRAPS — LAST, on the stance AFTER the move (see `armedTrapAt`).
+    if (world.trapLanes && armedTrapAt(world,
+        effectiveInventory(world, carried, next.player_pos, next.blocks, next.broken), nx, ny) !== null) {
+        return null;
     }
     if (inventoryOverride === undefined) {
         const itemId = getItem(world, nx, ny);
@@ -1112,7 +1259,7 @@ export function whyBlocked(world, state, input, inventoryOverride, clearanceOpts
         if (!entry) return `no action '${actionId}' in this world's action_lib`;
         if (entry.item) {
             const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
-            const inv = effectiveInventory(world, carried, state.player_pos, state.blocks);
+            const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
             if (!inv.has(entry.item)) return `use ${actionId} needs ${entry.item}`;
         }
         // ⚖ "Use at air" is legal — a swing that hits nothing still passes a turn.
@@ -1125,7 +1272,7 @@ export function whyBlocked(world, state, input, inventoryOverride, clearanceOpts
     if (nx < 0 || nx >= world.width || ny < 0 || ny >= world.height) return 'off the grid';
     if (!isFloor(world, nx, ny)) return `wall at (${nx},${ny})`;
     const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
-    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks);
+    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
     const obstacleId = shutObstacleAt(world, state, nx, ny, inv, clearanceOpts);
     if (obstacleId !== null) {
         return shutBecause(world, obstacleId, inv);
@@ -1144,7 +1291,43 @@ export function whyBlocked(world, state, input, inventoryOverride, clearanceOpts
             return `${cannot}: ${shutBecause(world, beyond, inv)}`;
         }
     }
+    if (world.trapLanes) {
+        // `step`'s last guard, on the stance after the move (a push moves the block too).
+        let blocks = state.blocks;
+        if (blocks !== undefined && blocks.includes(posKey(nx, ny))) {
+            blocks = blocks.map((k) => (k === posKey(nx, ny) ? posKey(nx + delta.dx, ny + delta.dy) : k));
+        }
+        const after = effectiveInventory(world, carried, { x: nx, y: ny }, blocks, state.broken);
+        const trap = armedTrapAt(world, after, nx, ny);
+        if (trap !== null) return armedBecause(world, trap);
+    }
     return null;
+}
+
+/**
+ * The sentence for a lane cell whose trap is armed: the trap, its group, and
+ * what silences it in the vocabulary of the thing the player must do — cut a
+ * rope (by its strikes), hold a button, or get off one.
+ */
+function armedBecause(world, trap) {
+    const entry = world.trapLib[trap.id];
+    const head = `arrow lane of ${trap.label} is armed`;
+    // Only a button that is PLACED can be held (a library may define more).
+    const placed = new Set(world.buttons?.values() ?? []);
+    const held = buttonHolding(world, entry.active);
+    const button = held !== null && placed.has(held) ? held : null;
+    if (entry.fires === 'while_active') {
+        return `${head} — ${button === null ? `its group (${entry.active}) is active` : `nothing may stand on ${button}`}`;
+    }
+    const ways = [];
+    for (const [key, id] of world.obstacles) {
+        const rope = world.obstacleLib?.[id];
+        if (rope?.activates !== entry.active) continue;
+        const { x, y } = unposKey(key);
+        ways.push(`cut ${rope.name ?? id} at (${x},${y})${rope.struck_by?.length ? ` (${rope.struck_by.join(', ')})` : ''}`);
+    }
+    if (button !== null) ways.push(`hold ${button}`);
+    return `${head} — ${ways.length ? ways.join(' or ') : `nothing silences it (${entry.active})`}`;
 }
 
 // --- Goal predicates ---

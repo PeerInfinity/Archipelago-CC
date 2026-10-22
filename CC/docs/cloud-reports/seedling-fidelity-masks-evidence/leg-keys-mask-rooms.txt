@@ -1,0 +1,121 @@
+level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_80
+level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_352
+level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_0_368
+level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_112_96
+level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_168_368
+level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_304_0
+level_12__r0c19 <- in_L0_304_176 -> exit:out_teleporter_432_352
+level_12__r0c19 <- in_L0_304_176 -> location:Level 012 - Witch
+level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 4: bosslock@416,240 cleared
+level_12__r0c19 <- in_L0_304_176 -> location:L12 flag 5: bosslock@432,240 cleared
+level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_80
+level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_352
+level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_0_368
+level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_112_96
+level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_168_368
+level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_304_0
+level_12__r0c19 <- in_L33_32_64 -> exit:out_teleporter_432_352
+level_12__r0c19 <- in_L33_32_64 -> location:Level 012 - Witch
+level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 4: bosslock@416,240 cleared
+level_12__r0c19 <- in_L33_32_64 -> location:L12 flag 5: bosslock@432,240 cleared
+level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_80
+level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_352
+level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_0_368
+level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_112_96
+level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_168_368
+level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_304_0
+level_12__r0c19 <- in_L35_32_64 -> exit:out_teleporter_432_352
+level_12__r0c19 <- in_L35_32_64 -> location:Level 012 - Witch
+level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 4: bosslock@416,240 cleared
+level_12__r0c19 <- in_L35_32_64 -> location:L12 flag 5: bosslock@432,240 cleared
+level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_80
+level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_352
+level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_0_368
+level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_112_96
+level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_168_368
+level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_304_0
+level_12__r0c19 <- in_L36_32_128 -> exit:out_teleporter_432_352
+level_12__r0c19 <- in_L36_32_128 -> location:Level 012 - Witch
+level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 4: bosslock@416,240 cleared
+level_12__r0c19 <- in_L36_32_128 -> location:L12 flag 5: bosslock@432,240 cleared
+level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_80
+level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_352
+level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_0_368
+level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_112_96
+level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_168_368
+level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_304_0
+level_12__r0c19 <- in_L88_96_304 -> exit:out_teleporter_432_352
+level_12__r0c19 <- in_L88_96_304 -> location:Level 012 - Witch
+level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 4: bosslock@416,240 cleared
+level_12__r0c19 <- in_L88_96_304 -> location:L12 flag 5: bosslock@432,240 cleared
+level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_80
+level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_352
+level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_0_368
+level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_112_96
+level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_168_368
+level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_304_0
+level_12__r0c19 <- in_L95_624_64 -> exit:out_teleporter_432_352
+level_12__r0c19 <- in_L95_624_64 -> location:Level 012 - Witch
+level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 4: bosslock@416,240 cleared
+level_12__r0c19 <- in_L95_624_64 -> location:L12 flag 5: bosslock@432,240 cleared
+level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_80
+level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_352
+level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_0_368
+level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_112_96
+level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_168_368
+level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_304_0
+level_12__r0c19 <- in_L95_624_80 -> exit:out_teleporter_432_352
+level_12__r0c19 <- in_L95_624_80 -> location:Level 012 - Witch
+level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 4: bosslock@416,240 cleared
+level_12__r0c19 <- in_L95_624_80 -> location:L12 flag 5: bosslock@432,240 cleared
+level_12__r0c37 <- in_L34_128_0 -> exit:out_teleporter_592_0
+level_12__r0c37 <- in_L34_128_0 -> exit:out_pit_5_5
+level_12__r0c37 <- in_L37_32_304 -> exit:out_teleporter_592_0
+level_12__r0c37 <- in_L37_32_304 -> exit:out_pit_5_5
+level_12__r13c6 <- in_L5_16_16 -> exit:out_stairsdown_96_240
+level_12__r13c6 <- in_L5_16_16 -> location:L12 flag 11: bosslock@112,192 cleared
+level_12__r40c4 <- in_L24_32_144 -> exit:out_teleporter_40_688
+level_12__r40c4 <- in_L24_32_144 -> location:L12 flag 3: bosslock@80,656 cleared
+level_12__r42c29 <- in_L83_32_64 -> exit:out_teleporter_32_848
+level_12__r42c29 <- in_L83_32_64 -> location:Level 012 - Chest
+level_12__r42c29 <- in_L83_32_64 -> location:L12 flag 7: magicallock@32,864 cleared
+level_12__r42c29 <- in_L83_32_64 -> location:L12 flag 12: bosslock@32,864 cleared
+level_12__r44c19 <- in_L34_32_144 -> exit:out_teleporter_336_688
+level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_0_96
+level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_96_0
+level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_0_96
+level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_96_0
+level_28__r1c18 <- in_L30_0_128 -> exit:out_teleporter_304_16
+level_28__r11c4 <- in_L27_168_16 -> exit:out_teleporter_128_304
+level_57 <- in_pit_L56_6_10 -> exit:out_tentaclebeast_80_48
+level_57 <- in_pit_L56_6_10 -> location:Level 057 - Tentacled Beast
+level_57 <- in_L58_48_112 -> exit:out_tentaclebeast_80_48
+level_57 <- in_L58_48_112 -> location:Level 057 - Tentacled Beast
+level_65__r0c2 <- in_L63_32_304 -> exit:out_teleporter_0_128
+level_65__r0c2 <- in_L63_32_304 -> exit:out_teleporter_32_0
+level_65__r0c2 <- in_L66_144_144 -> exit:out_teleporter_0_128
+level_65__r0c2 <- in_L66_144_144 -> exit:out_teleporter_32_0
+level_65__r0c8 <- in_L63_128_304 -> exit:out_teleporter_128_0
+level_65__r4c13 <- in_L68_16_80 -> exit:out_teleporter_184_64
+level_88 <- in_L12_304_0 -> exit:out_teleporter_32_0
+level_88 <- in_L12_304_0 -> exit:out_teleporter_96_304
+level_88 <- in_L12_304_0 -> exit:out_teleporter_192_0
+level_88 <- in_L87_272_304 -> exit:out_teleporter_32_0
+level_88 <- in_L87_272_304 -> exit:out_teleporter_96_304
+level_88 <- in_L87_272_304 -> exit:out_teleporter_192_0
+level_88 <- in_L87_432_304 -> exit:out_teleporter_32_0
+level_88 <- in_L87_432_304 -> exit:out_teleporter_96_304
+level_88 <- in_L87_432_304 -> exit:out_teleporter_192_0
+level_91 <- in_L89_208_0 -> exit:out_teleporter_16_144
+level_91 <- in_L89_208_0 -> exit:out_teleporter_240_48
+level_91 <- in_L92_32_144 -> exit:out_teleporter_16_144
+level_91 <- in_L92_32_144 -> exit:out_teleporter_240_48
+level_92__r4c2 <- in_L91_240_48 -> exit:out_teleporter_32_144
+level_92__r7c17 <- in_L87_16_32 -> exit:out_teleporter_272_144
+level_94__r2c16 <- in_L0_0_128 -> exit:out_teleporter_304_160
+level_94__r2c16 <- in_L0_0_128 -> exit:out_teleporter_304_176
+level_94__r2c16 <- in_L0_0_144 -> exit:out_teleporter_304_160
+level_94__r2c16 <- in_L0_0_144 -> exit:out_teleporter_304_176
+level_99__r2c4 <- in_L100_48_96 -> exit:out_stairsup_48_96
+level_99__r2c7 <- in_L98_112_112 -> exit:out_stairsdown_112_112
+level_100__r2c3 <- in_L99_48_96 -> exit:out_stairsdown_48_96

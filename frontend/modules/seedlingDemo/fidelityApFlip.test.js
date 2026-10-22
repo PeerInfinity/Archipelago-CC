@@ -159,8 +159,10 @@ describe('APFLIP D4 — H2: the four boss rooms rebuilt after their kill (AS3 @c
             expect(Boolean(dead.collidesSolid({ x: 80, y: 48, w: 8, h: 8, right: 88, bottom: 56 }))).toBe(true);
         });
     });
-    it('ON: the Lights ({69,0}) build with nothing of the fight — the controller is `notSolid`, so the room is unchanged', () => {
-        withContactFidelity(ON, () => {
+    // ⛓ planning-10's lightsBossFight flip (2026-10-22): with the fight ON the UNcleared room carries the LightBossTotem
+    //   Solid and the cleared one does not (fidelityLights' world-build row), so this row reads the fight OFF.
+    it('ON: the Lights ({69,0}) build with nothing of the fight — the controller is `notSolid`, so the room is unchanged (lightsBossFight OFF)', () => {
+        withContactFidelity({ ...ON, lightsBossFight: false }, () => {
             expect(geometryOf(build(69, [0]))).toBe(geometryOf(build(69)));
         });
     });

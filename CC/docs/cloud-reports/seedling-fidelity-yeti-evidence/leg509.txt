@@ -1,0 +1,4 @@
+s509-off {"id":509,"key":"level_58__r4c1 <- in_tentacle_beast_mouth_L57_56_96 -> exit:out_teleporter_48_112","end":"done","producer":"solver","level":57,"x":104,"y":72,"seamTime":5272,"planTicks":7,"yetiTalkStamped":false}
+s509-off {"id":509,"key":"level_58__r4c1 <- in_tentacle_beast_mouth_L57_56_96 -> exit:out_teleporter_48_112","end":"done","producer":"solver","level":57,"x":104,"y":72,"seamTime":5259,"planTicks":7,"yetiTalkStamped":false}
+s509-on {"id":509,"key":"level_58__r4c1 <- in_tentacle_beast_mouth_L57_56_96 -> exit:out_teleporter_48_112","end":"done","producer":"solver","level":57,"x":104,"y":72,"seamTime":5279,"planTicks":7,"yetiTalkStamped":true}
+s509-on {"id":509,"key":"level_58__r4c1 <- in_tentacle_beast_mouth_L57_56_96 -> exit:out_teleporter_48_112","end":"done","producer":"solver","level":57,"x":104,"y":72,"seamTime":5294,"planTicks":7,"yetiTalkStamped":true}

@@ -481,6 +481,7 @@ describe('who takes the box', () => {
          * `probe-seedling-l15-chest-line.mjs`;
          * fidelity L1516 L16's enclosed pit entered across a corner (and the solver's leg-206 solve),
          * `probe-seedling-l16-corner-pit.mjs`;
+         * fidelity YETI the Yeti's talk and L58's tag-1 door (talk, control, shut, revisit), `probe-seedling-yeti.mjs`;
          * hammer-phase C1 the static sword-kill witness, `probe-seedling-static-sword-mobiles.mjs`;
          * RULES l38-button-event the cross-room ButtonRoom write witness, `probe-seedling-cross-room-button.mjs`;
          * fidelity ENCOUNTERS2 the encounter per-tick witness, `probe-seedling-encounter-ticks.mjs`;
@@ -490,6 +491,7 @@ describe('who takes the box', () => {
          * RULES rock-remove the delivered set's open L74 / L39 / L29 rock rooms, `probe-seedling-rock-remove.mjs`;
          * RULES l32-rock-move the delivered set's moved L32 Bob-arena rock (walk-out without Fire, the pit with it), `probe-seedling-l32-rock-move.mjs`;
          * RULES block-path L15's lock held by the block (Sword), shut without a weapon, the diagonal button, the swim, `probe-seedling-l15-block-path.mjs`;
+         * RULES rope-events the rope cuts: L16's from the L15 side, L28's rock holding its lock on a later visit (+ the controls), `probe-seedling-rope-events.mjs`;
          * fidelity BOMBPUSHER the lobber/Bomb witness, `probe-seedling-bombpusher.mjs` (its `--reuse` arm runs no browser);
          * fidelity BOMBBLAST the blast-on-a-body witness, `probe-seedling-bomb-blast-body.mjs` (its `--reuse` arm, likewise);
          * ci-skip-rules RULE 3 the full-tier differential, `check-seedling-bot-differential.mjs`, whose
@@ -500,7 +502,8 @@ describe('who takes the box', () => {
          * `probe-seedling-u7-puncher-mobiles.mjs` and `probe-seedling-u9-shield-mobiles.mjs`;
          * fidelity ROPE the `rope` verb's plans on the game, `probe-seedling-rope-verb.mjs`;
          * fidelity ROPESTANCE its spear and fire plans, `probe-seedling-rope-stance.mjs`;
-         * fidelity DRILL the mixed-room drill witnesses, `probe-seedling-drill-mixed.mjs`.)
+         * fidelity DRILL the mixed-room drill witnesses, `probe-seedling-drill-mixed.mjs`; fidelity MASKS the swing-line
+         * witnesses, `probe-seedling-mask-lines.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -526,6 +529,7 @@ describe('who takes the box', () => {
             'probe-seedling-obstacle-events.mjs', 'probe-seedling-lethal-landings.mjs', 'probe-seedling-tentacle-mouth.mjs', 'probe-seedling-loop-restart.mjs', 'probe-seedling-bosslock-latch.mjs', 'probe-seedling-persistence-rebuild.mjs', 'probe-seedling-killlock.mjs', 'probe-seedling-iceturret-spear.mjs', 'probe-seedling-cleartag.mjs', 'probe-seedling-ladder2-phase.mjs', 'probe-seedling-bobsoldier-mobiles.mjs', 'probe-seedling-wallflyer-mobiles.mjs', 'probe-seedling-darktrap-mobiles.mjs', 'probe-seedling-chaser-mobiles.mjs', 'probe-seedling-static-sword-mobiles.mjs', 'probe-seedling-cross-room-button.mjs',
             'probe-seedling-encounter-ticks.mjs',
             'probe-seedling-wand-mobiles.mjs', 'probe-seedling-l37-fallrock.mjs', 'probe-seedling-rock-remove.mjs', 'probe-seedling-l32-rock-move.mjs', 'probe-seedling-l15-block-path.mjs',
+            'probe-seedling-rope-events.mjs',
             'probe-seedling-bombpusher.mjs', 'probe-seedling-staged-hits.mjs', 'probe-seedling-seal-delivery.mjs',
             'probe-seedling-bomb-blast-body.mjs',
             'probe-seedling-lights.mjs',
@@ -535,6 +539,8 @@ describe('who takes the box', () => {
             'probe-seedling-u7-puncher-mobiles.mjs', 'probe-seedling-u9-shield-mobiles.mjs',
             'probe-seedling-bosskills.mjs',
             'probe-seedling-rope-verb.mjs', 'probe-seedling-rope-stance.mjs', 'probe-seedling-drill-mixed.mjs',
+            'probe-seedling-yeti.mjs',
+            'probe-seedling-mask-lines.mjs',
             'probe-seedling-spearrect.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');

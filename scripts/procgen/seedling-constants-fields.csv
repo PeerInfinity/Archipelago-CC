@@ -1230,6 +1230,7 @@ frontend/modules/seedlingDemo/dialogue.js|stepDialogue|hdcbc59fe|0|0,rule,bound,
 frontend/modules/seedlingDemo/dialogue.js|PICKUP_CEREMONY_BY_KEYTYPE|(module),rule,sentinel,,bosskey keyType 0
 frontend/modules/seedlingDemo/dialogue.js|autoAdvanceArrivals|autoAdvanceArrivals,structural,,,
 frontend/modules/seedlingDemo/dialogue.js|PLACED_NPC_TALK|(module),rule,bound,,REVIEW: Statue _lineLength 34; wrap decides dialogue ticks
+frontend/modules/seedlingDemo/dialogue.js|(module)|h2d93617b|1|0,rule,sentinel,NPCs/Yeti.as:createdPortal,the persistence tag Yeti.doneTalking() clears second (setPersistence(1 false)): the DeadBoss portal teleporter@80;16 in L58
 frontend/modules/seedlingDemo/finalBossRng.js|OWL_DRAW_SITES|(module),rule,count,,Math.random draws per site
 frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream|OwlDrawStream.constructor,structural,,,per-site counter init
 frontend/modules/seedlingDemo/finalBossRng.js|shakeJiggle|shakeJiggle,cosmetic,,Game.as:shakeJiggle,3′c deterministic camera jiggle hash (2531/1777/4093): a render offset that takes no draw

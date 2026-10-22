@@ -1,0 +1,12 @@
+PAGE: seedling_bot_ap_p4g · delivered seedling-vanilla-record-f5bdb07d
+PASS: talk: the game ran the tape to its end on the delivered set — 213 obs, seedling-vanilla-record-f5bdb07d
+PASS: talk: the game cleared BOTH {58,0} and {58,1} — ["58:0","58:1"]
+PASS: talk: the game crosses the tag-1 door to L46 in the SAME visit — crossed at t202
+PASS: talk: the model (yetiTalk ON) reproduces the game at 0 px — {"max":0,"first":null}
+PASS: control: the game ran the tape to its end on the delivered set — 84 obs, seedling-vanilla-record-f5bdb07d
+PASS: control: with the dialogue still open, the game kept {58,0} and {58,1} — []
+PASS: control: the model (yetiTalk ON) reproduces the game at 0 px — {"max":0,"first":null}
+PASS: revisit: the game ran the tape to its end on the delivered set — 109 obs, seedling-vanilla-record-f5bdb07d
+PASS: revisit: with both flags cleared at the boot, the game walks through the Yeti's cell and crosses the door — crossed at t98
+PASS: revisit: the model (yetiTalk ON) reproduces the game at 0 px — {"max":0,"first":null}
+ALL CHECKS PASSED
