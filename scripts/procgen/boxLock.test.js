@@ -499,7 +499,8 @@ describe('who takes the box', () => {
          * `probe-seedling-pushblock-weapon.mjs`, `probe-seedling-u15-turret-mobiles.mjs`,
          * `probe-seedling-u7-puncher-mobiles.mjs` and `probe-seedling-u9-shield-mobiles.mjs`;
          * fidelity ROPE the `rope` verb's plans on the game, `probe-seedling-rope-verb.mjs`;
-         * fidelity ROPESTANCE its spear and fire plans, `probe-seedling-rope-stance.mjs`.)
+         * fidelity ROPESTANCE its spear and fire plans, `probe-seedling-rope-stance.mjs`;
+         * fidelity DRILL the mixed-room drill witnesses, `probe-seedling-drill-mixed.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -533,7 +534,7 @@ describe('who takes the box', () => {
             'probe-seedling-hold.mjs', 'probe-seedling-pushblock-weapon.mjs', 'probe-seedling-u15-turret-mobiles.mjs',
             'probe-seedling-u7-puncher-mobiles.mjs', 'probe-seedling-u9-shield-mobiles.mjs',
             'probe-seedling-bosskills.mjs',
-            'probe-seedling-rope-verb.mjs', 'probe-seedling-rope-stance.mjs'];
+            'probe-seedling-rope-verb.mjs', 'probe-seedling-rope-stance.mjs', 'probe-seedling-drill-mixed.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')
