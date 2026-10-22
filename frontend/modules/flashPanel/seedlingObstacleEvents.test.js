@@ -10,7 +10,9 @@ import { describe, expect, it } from 'vitest';
 import {
     crossRoomButtonsOf, crossRoomPrerequisitesOf, deriveButtonEvents, deriveLockEvents, deriveTalkEvents, deriveObstacleEvents, persistenceEffect, OBSTACLE_EVENT_KIND, obstacleEventId, obstacleEventName, parseObstacleEventId,
     parseSolidId, poleKillsOf, poleLightReaches, POLE_LIGHT_ARM, rowVerdict, ruleItemNames,
+    deriveRopeEvents, ropeEventCondition, ropeEventName, ropeLaneCharges, ropePeerEffect, ropesOf, ropeVerdict,
 } from './seedlingObstacleEvents.js';
+import { patchedMapDocument } from '../seedlingDemo/seedlingSetPatches.js';
 import { buildLevelWorld, combatCensusOf } from '../seedlingDemo/levelWorld.js';
 import { contactRect } from '../seedlingDemo/combat.js';
 import { DARKTRAP_LIGHT_DEATH } from '../seedlingDemo/enemyDamage.js';
@@ -386,5 +388,79 @@ describe('a cross-room press that LIGHTS a pole (deriveButtonEvents ctx.kills / 
         const inverted = { ...L, entities: L.entities.map((e) => (e.type === 'lightpole' ? { ...e, attrs: { ...e.attrs, invert: '1' } } : e)) };
         expect(poleKillsOf(inverted, { x: 120, y: 200 }, MODEL)).toBeNull();
         expect(POLE_LIGHT_ARM.item).toBe('hasSpear');
+    });
+});
+
+describe('rope cuts as events (ropesOf / ropePeerEffect / deriveRopeEvents / ropeLaneCharges) — RULES rope-events', () => {
+    const MAP = JSON.parse(readFileSync(new URL('./atlases/seedling-map.json', import.meta.url), 'utf8'));
+    const DELIVERED = patchedMapDocument(MAP);
+    const levelOf = (doc, n) => doc.levels.find((l) => l.level === n);
+    const ctxOf = (doc) => ({
+        level: (n) => levelOf(doc, n),
+        place: (row) => ({ region_id: `level_${row.level}`, side: `level_${row.level}` }),
+        rule: () => ({ rule: 'Has', args: { item_name: 'Progressive Sword' } }),
+    });
+
+    it('the vanilla map holds three ropes, each with its tset group', () => {
+        expect(ropesOf(MAP).map((r) => [r.level, `rope@${r.x},${r.y}`, r.tag, r.tset, r.peers.map((p) => `${p.type}@${p.x},${p.y}`)])).toEqual([
+            [16, 'rope@32,16', 0, 0, ['arrowtrap@96,32', 'arrowtrap@112,32', 'arrowtrap@128,32']],
+            [28, 'rope@160,64', 0, 1, ['fallrock@112,240']],
+            [39, 'rope@96,384', 9, 6, ['fallrock@144,624', 'pulser@64,96']],
+        ]);
+    });
+
+    it('a peer\'s effect: shoot=1 SILENCES, shoot=0 ARMS, a rock on a button HOLDS, a rock on a door CLOSES, a pulser ARMS', () => {
+        const effect = (n, type, x, y) => ropePeerEffect({ ...levelOf(MAP, n).entities.find((e) => e.type === type && e.x === x && e.y === y) }, levelOf(MAP, n)).effect;
+        expect(effect(16, 'arrowtrap', 112, 32)).toBe('silences');
+        expect(effect(4, 'arrowtrap', 48, 16)).toBe('arms');
+        expect(effect(28, 'fallrock', 112, 240)).toBe('holds');
+        expect(effect(39, 'fallrock', 144, 624)).toBe('closes');
+        expect(effect(39, 'pulser', 64, 96)).toBe('arms');
+        expect(ropePeerEffect({ type: 'torch', x: 0, y: 0, attrs: {} }, levelOf(MAP, 16)).effect).toBe('unknown');
+    });
+
+    it('L16 and L28 are minted, one event each keyed on the ROPE\'s own tag; L39 is refused by name', () => {
+        const { events, refused } = deriveRopeEvents(ropesOf(MAP), ctxOf(MAP));
+        expect(events.map((e) => [e.fields.event_id, e.name])).toEqual([
+            ['flag:L16:0', 'L16 flag 0: rope@32,16 cleared'],
+            ['flag:L28:0', 'L28 flag 0: rope@160,64 cleared'],
+        ]);
+        expect(events[0]).toMatchObject({ region_id: 'level_16', fields: { event_kind: OBSTACLE_EVENT_KIND, across: [],
+            obstacle: { level: 16, tag: 0, class: 'rope', x: 32, y: 16 }, action: { verb: 'cut', item: null } } });
+        expect(events[1].fields.action.opens).toEqual([{ class: 'fallrock', x: 112, y: 240, effect: 'holds' }]);
+        // VANILLA: the rock lands on the L38 teleporter AND the pulser arms — both named
+        expect(refused).toHaveLength(1);
+        expect(refused[0]).toMatch(/^L39 rope@96,384 \{39,9\}: fallrock@144,624 closes .*teleporter@144,624.*; pulser@64,96 arms/);
+        // DELIVERED (`l39-fallrock-removed`): the pulser alone
+        const delivered = deriveRopeEvents(ropesOf(DELIVERED), ctxOf(DELIVERED));
+        expect(delivered.events.map((e) => e.fields.event_id)).toEqual(['flag:L16:0', 'flag:L28:0']);
+        expect(delivered.refused).toEqual([expect.stringMatching(/^L39 rope@96,384 \{39,9\}: pulser@64,96 arms \(/)]);
+    });
+
+    it('the CONTROL: a rope with no tag, or with no peer, is refused; the event condition names the event', () => {
+        expect(ropeVerdict({ level: 1, x: 0, y: 0, tag: -1, tset: 0, peers: [] }, { entities: [] }).refuse).toMatch(/no persistence tag/);
+        expect(ropeVerdict({ level: 1, x: 0, y: 0, tag: 3, tset: 0, peers: [] }, { entities: [] }).refuse).toMatch(/no other entity/);
+        expect(ropeEventCondition({ level: 16, tag: 0, x: 32, y: 16 })).toEqual({ event: ropeEventName({ level: 16, tag: 0, x: 32, y: 16 }) });
+    });
+
+    // a hand-built room: '#' wall, '.' floor, 'R' a gated rock; the lane is column 2 from row 0.
+    const grid = (rows) => ({
+        width: rows[0].length, height: rows.length,
+        cells: rows.join('').split('').map((ch) => ({ kind: ch === '#' ? 'wall' : ch === 'R' ? 'gated' : 'open' })),
+    });
+    const LANE = [{ x0: 34, x1: 46, fromY: 0 }];
+    const C = { event: 'E' };
+
+    it('the lane runs down its column through a breakable rock to the first wall; a door in it stays open', () => {
+        const g = grid(['#...#', '#...#', '#.R.#', '#...#', '##.##', '#####']);
+        expect(ropeLaneCharges(g, LANE, C, new Set(), 16).map((c) => `${c.tile}${c.open ? ' open' : ''}`))
+            .toEqual(['2,0', '2,1', '2,2', '2,3', '2,4']);
+        // a door at the lane's foot, walled round: kept open (its own pocket)
+        expect(ropeLaneCharges(g, LANE, C, new Set(['2,4']), 16).filter((c) => c.open).map((c) => String(c.tile))).toEqual(['2,4']);
+    });
+
+    it('…but a door in the lane with a neighbour OUTSIDE it is refused by name (the pocket would leak)', () => {
+        const g = grid(['#...#', '#...#', '#.R.#', '#...#', '##.##', '#####']);
+        expect(() => ropeLaneCharges(g, LANE, C, new Set(['2,1']), 16)).toThrow(/the door \[2,1\] stands in a lane, but its neighbour \[3,1\]/);
     });
 });

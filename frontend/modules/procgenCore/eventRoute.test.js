@@ -279,7 +279,8 @@ describe('the committed playthrough — sphere legs 1.2 and 2.1', () => {
     it('…and WITH leg 1.2\'s credit held, the walk takes the landing the rock gated', () => {
         const r = planEventRoute({ from: 'level_36', to: SHIELD, regions, events, ruleHolds: ruleHolds([L0.item]), held: [L0.item] });
         expect(r).not.toBeNull();
-        expect(r.breaks).toEqual([]);
+        // ⛓ RULES rope-events: the way to the Shield crosses L16's lanes, so the walk cuts L16's rope first.
+        expect(r.breaks.map((b) => b.eventId)).toEqual(['flag:L16:0']);
         expect(r.steps.map((s) => s.exitUsed)).toContain('level_12__r0c19 -> level_0__r11c19');
         expect(r.steps.at(-1).region).toBe(SHIELD);
     });

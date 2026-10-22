@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import {
-    buildPlaythroughAtlas, playthroughButtonEvents, playthroughLockEvents, playthroughObstacleEvents, playthroughTalkEvents, pocketDoorsCharged,
+    buildPlaythroughAtlas, playthroughButtonEvents, playthroughLockEvents, playthroughObstacleEvents, playthroughRopeEvents, playthroughTalkEvents, pocketDoorsCharged,
     withEventGates,
 } from './make-seedling-playthrough-rules.mjs';
 
@@ -38,6 +38,7 @@ let derived;
 let locks;
 let buttons;
 let talks;
+let ropes;
 beforeAll(() => {
     atlas = buildPlaythroughAtlas();
     derived = playthroughObstacleEvents(atlas);
@@ -47,6 +48,8 @@ beforeAll(() => {
     buttons = playthroughButtonEvents(atlas, { existing: [...derived.events, ...locks.events] });
     // ⛓ RULES watcher-event: and the cross-room prerequisites (the Watcher's talk)
     talks = playthroughTalkEvents(atlas, { existing: [...derived.events, ...locks.events, ...buttons.events] });
+    // ⛓ RULES rope-events: and the rope cuts
+    ropes = playthroughRopeEvents(atlas);
 }, 180_000);
 
 describe('the playthrough\'s obstacle events', () => {
@@ -59,7 +62,8 @@ describe('the playthrough\'s obstacle events', () => {
 
     it('the committed rules carry exactly the fresh derivation\'s events, each an AP event in the open side', () => {
         const committed = eventsOf(RULES);
-        const all = [...withEventGates([...derived.events, ...locks.events, ...buttons.events], talks.eventGates), ...talks.events];
+        const all = [...withEventGates([...derived.events, ...locks.events, ...buttons.events], talks.eventGates), ...talks.events,
+            ...ropes.events];
         expect(committed.map((e) => e.name).sort()).toEqual(all.map((e) => e.name).sort());
         for (const ev of all) {
             const c = committed.find((x) => x.name === ev.name);
@@ -69,6 +73,37 @@ describe('the playthrough\'s obstacle events', () => {
             expect(RULES.items['1'][ev.name]).toMatchObject({ id: null, event: true, groups: ['Event'] });
             expect(c.access_rule).toEqual(ev.access_rule ?? { rule: 'True_' });
         }
+    });
+
+    // ⛓ RULES rope-events — one event per MINTED rope, in the sub-region its own tile borders, at the cut's price;
+    // L39's rope is refused by name (in the delivered set its group is the Pulser alone: `l39-fallrock-removed`).
+    it('the rope cuts: L16 (silences three arrow traps) and L28 (drops the rock that holds the button); L39 refused', () => {
+        expect(ropes.events.map((e) => [e.fields.event_id, e.name, e.fields.side])).toEqual([
+            ['flag:L16:0', 'L16 flag 0: rope@32,16 cleared', 'level_16__r1c1'],
+            ['flag:L28:0', 'L28 flag 0: rope@160,64 cleared', 'level_28__r0c6'],
+        ]);
+        expect(ropes.events[0].fields.action.opens.map((o) => `${o.class}@${o.x},${o.y} ${o.effect}`))
+            .toEqual(['arrowtrap@96,32 silences', 'arrowtrap@112,32 silences', 'arrowtrap@128,32 silences']);
+        expect(ropes.events[1].fields.action.opens).toEqual([{ class: 'fallrock', x: 112, y: 240, effect: 'holds' }]);
+        const cut = { rule: 'Or', children: ['Progressive Sword', 'Ghost Spear', 'Fire'].map((n) => ({ rule: 'Has', args: { item_name: n } })) };
+        for (const e of ropes.events) expect(e.access_rule).toEqual(cut);
+        expect(ropes.refused).toHaveLength(1);
+        expect(ropes.refused[0]).toMatch(/^L39 rope@96,384 \{39,9\}: pulser@64,96 arms/);
+    });
+
+    it('the L16 lanes gate every way out of the L17 arrival\'s pocket, and west <-> east, on the cut', () => {
+        const regions = RULES.regions['1'];
+        const has = { rule: 'Has', args: { item_name: 'L16 flag 0: rope@32,16 cleared' } };
+        // L17's stairs land IN the lane: the departure costs the cut (no tank-a-hit, ⚖ 2026-10-21)
+        expect(regions.level_17.exits.find((x) => x.connected_region === 'level_16__r3c7').access_rule).toEqual(has);
+        expect(ropes.exitGates).toEqual([{ region_id: 'level_17', exit_id: 'out_stairsup_32_48', rule: has }]);
+        for (const to of ['level_16__r1c1', 'level_16__r1c9']) {
+            expect(regions.level_16__r3c7.exits.find((x) => x.connected_region === to).access_rule, to).toEqual(has);
+        }
+        expect(regions.level_16__r1c1.exits.find((x) => x.connected_region === 'level_16__r1c9').access_rule).toEqual(has);
+        expect(regions.level_16__r1c9.exits.find((x) => x.connected_region === 'level_16__r1c1').access_rule).toEqual(has);
+        // the control: the L15 arrival's own side is not charged
+        expect(regions.level_16__r1c1.exits.find((x) => x.connected_region === 'level_15__r1c9').access_rule).toEqual({ rule: 'True_' });
     });
 
     it('every census landing edge is gated (stacked: both events; moot edges too), and nothing else is', () => {

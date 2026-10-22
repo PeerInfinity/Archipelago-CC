@@ -231,7 +231,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 445,
         "browser": 156,
-        "cited": 238,
+        "cited": 237,
         "files": 459,
         "lineStyle": 14,
         "withDocblock": 459,
@@ -14251,6 +14251,59 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "out"
+            ],
+            "file": "probe-seedling-rope-events.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's ROPE CUTS, ON THE GAME (rules `rules-rope-events`).",
+            "path": "scripts/procgen/probe-seedling-rope-events.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
             "citedBy": [
                 "docs/json/developer/procgen/seedling-bot-log.md"
             ],
@@ -15899,59 +15952,6 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-watch-page — does `watch.html` actually DRAW a tape, all the way through, without dying?",
             "path": "scripts/procgen/probe-seedling-watch-page.mjs"
-        },
-        {
-            "argvHelpers": [
-                "arg"
-            ],
-            "browser": true,
-            "category": "probe",
-            "citedBy": [
-                "docs/json/developer/procgen/seedling-bot-log.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "host",
-                "only",
-                "out"
-            ],
-            "file": "probe-seedling-yeti.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "host"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "only"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "out"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "plan-seedling-watcher-witness.mjs",
-                    "name": "check"
-                },
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "Seedling's YETI, ON THE GAME (fidelity YETI D1; `CONTACT_FIDELITY.yetiTalk`).",
-            "path": "scripts/procgen/probe-seedling-yeti.mjs"
         },
         {
             "argvHelpers": [

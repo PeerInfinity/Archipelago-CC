@@ -375,8 +375,11 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         // ⛓ rules-block-path (bdcc2651… -> 63fa26d6): a re-closing lock's entry is priced by the block paths that
         //   hold its button, so L15 r1c5->r1c9, L16 r1c1->r4c21 and L41 r4c15->r7c15 gain rules. No name, exit or
         //   location moves (the overlay fixture rewrites byte-identical).
+        // ⛓ rules-rope-events (63fa26d6… -> 1c38afee): a rope cut is an event; L16 splits at its silenced lanes
+        //   (r1c9, r3c7, r6c8) and L28's lock is entered from both sides once the rope's rock holds the button; a rope
+        //   is cut by Fire too (⚖ 2026-10-21). No location moves (the overlay fixture rewrites byte-identical).
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('63fa26d64389feb3b54ea9f770b54a94');
+            .toBe('1c38afee9b0ee1bf1e0370879c85f3c4');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
