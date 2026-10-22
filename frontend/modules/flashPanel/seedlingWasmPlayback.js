@@ -988,7 +988,7 @@ export function createWasmPlayback({
                 stats.holdBlocked.push({ level, why: blocked });
                 pushQueuedSwap(sw, se, level);
             } else if (!records.has(level)) stats.holdBlocked.push({ level, why: 'the vanilla map has no such level' });
-            else if (holdArrival(se)) return;
+            else if (!expecting && holdArrival(se)) return; // MUTANT (§5.125 bite test, never merged): an expected arrival is never held
         }
         if (phase === 'await-arrival' && now() > deadline) {
             const live = readState();
