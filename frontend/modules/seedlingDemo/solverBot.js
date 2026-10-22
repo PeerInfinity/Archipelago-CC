@@ -14149,7 +14149,8 @@ function guardedChaserDwell(run, perTick, { id, bound, strike, contacts, what, c
      */
     const b = (run.entities('chasers') ?? []).find((c) => c.id === id);
     const blocker = b && typeof run.collideLineSolid === 'function'
-        ? run.collideLineSolid(b.x, b.y, run.state.x, run.state.y) : null;
+        // ⛓ fidelity MASKS D2: a CliffSide pins a chaser too — the diagnosis names a mask with `pixelMaskSightLines` ON
+        ? run.collideLineSolid(b.x, b.y, run.state.x, run.state.y, { masks: CONTACT_FIDELITY.pixelMaskSightLines }) : null;
     const blockerId = blocker ? (blocker.id ?? blocker.tag ?? JSON.stringify(blocker).slice(0, 60)) : null;
     throw new SolverRefusal(`${what}: ${id} is still in the world after the whole ${bound}-tick bound `
         + `(${guardSteps} guard step(s)); it stands at (${b ? `${b.x.toFixed(1)},${b.y.toFixed(1)}` : '?'}), `
@@ -17714,7 +17715,8 @@ const ropeStanceAdmit = (run) => {
     if (CONTACT_FIDELITY.drillLive && CONTACT_FIDELITY.drillMixedRooms) return base;
     const drills = unsteppedDrills(run);
     return (c) => base(c) && !drills.some((e) => Math.hypot(c.x - (e.x + DRILL.dx), c.y - (e.y + DRILL.dy))
-        <= DRILL.runRange && !run.collideLineSolid(e.x + DRILL.dx, e.y + DRILL.dy, c.x, c.y));
+        <= DRILL.runRange && !run.collideLineSolid(e.x + DRILL.dx, e.y + DRILL.dy, c.x, c.y,
+        { masks: CONTACT_FIDELITY.pixelMaskSightLines }));
 };
 
 /** The rope's OEL coordinates, from its id (`rope@x,y`) — the spelling `runSpear` / `runFire` name a rope by. */
@@ -17805,7 +17807,7 @@ function rankRopeStances(run, viable, contacts, blocked) {
             const dx = e.x + DRILL.dx;
             const dy = e.y + DRILL.dy;
             return Math.hypot(x - dx, y - dy) <= DRILL.runRange - ROPE_DRILL_PLAN_SLACK
-                && !run.collideLineSolid(dx, dy, x, y);
+                && !run.collideLineSolid(dx, dy, x, y, { masks: CONTACT_FIDELITY.pixelMaskSightLines });
         });
         for (let i = 1; i < pts.length; i += 1) {
             const n = Math.max(1, Math.ceil(Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y) / 2));
