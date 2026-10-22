@@ -18,6 +18,9 @@ import { OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS } from './solverBot.js';
 import { CORPSE_COUNTING, KILL_ARM_POLICY, killArmModelled } from './enemyDamage.js';
 import { createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner.js';
 import { twoPassSolve } from './twoPassSolve.js';
+import { createTapeStepper } from './tapeRunner.js';
+import { dangerAt } from './dangerMap.js';
+import { playerBoxAt } from './solverView.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const witness = (name) => JSON.parse(readFileSync(join(HERE, 'fixtures', 'lights-witness', `${name}.json`), 'utf8'));
@@ -160,4 +163,52 @@ describe('fidelity LIGHTS D3 — the clear-tag arm\'s other answers (ON)', () =>
         await expect(solveFrom((st) => ({ ...st, seam: { ...st.seam, items: { ...st.seam.items, hasSword: false, hasWand: true },
             primary: 0 } }))).rejects.toThrow(/cannot act|primary weapon/);
     });
+});
+
+/**
+ * ⛓⛓⛓ hammer-phase LD — THE VICTIM, PRICED. Route survey step 159 as it was solved before the danger map saw the
+ * fight (`fixtures/hammer-ld-lights/step159-walk.json`, a MODEL tape): the kill ends at t806 and LightBossShot #75
+ * (fired t784 at (56,60)) hits the reach-exit walk at update t811. Asked at t806, the danger map prices that shot on the
+ * box the player left at t810 — the box update t811 tests.
+ */
+describe('hammer LD — the step-159 victim\'s shot, priced at the kill (lightsBossFight ON)', () => {
+    const tape = parseTape(JSON.stringify(JSON.parse(readFileSync(join(HERE, 'fixtures', 'hammer-ld-lights',
+        'step159-walk.json'), 'utf8')).tape));
+    const replay = (onTick) => {
+        let run = null;
+        const st = createTapeStepper(tape, { levelSource, onTick: (t, s, h, rn) => { run = rn; } });
+        for (let r = st.next(); !r.done; r = st.next()) onTick(r.value.observation, run);
+    };
+    const SHOT = 'lightbosscontroller@72,72#75';
+
+    it('the tape takes the hit: t811, shot #75, after the kill at t806', () => withContactFidelity({ lightsBossFight: true }, () => {
+        let fight = null;
+        replay((o, run) => { fight = run?.entities('lightsFight')?.[0] ?? fight; });
+        expect(fight.endedAt).toBe(806);
+        const hits = fight.events.filter((e) => e.what === 'shot-hit' || e.what === 'contact');
+        expect(hits.map((e) => [e.t, e.what, e.id])).toEqual([[811, 'shot-hit', SHOT]]);
+        expect(fight.events.find((e) => e.what === 'shot' && e.id === SHOT)).toMatchObject({ t: 784, x: 56, y: 60 });
+    }));
+
+    it('asked at t806, `dangerAt` (transit) names shot #75 on the box at t810, and nothing else on the walk', () => withContactFidelity(
+        { lightsBossFight: true }, () => {
+            const at = [];
+            replay((o) => { at[o.t] = o; });
+            const rows = [];
+            replay((o, run) => {
+                if (o.t !== 806) return;
+                for (let t = 806; at[t]?.level === 69; t += 1) {
+                    const d = dangerAt(run, t, playerBoxAt(at[t].x, at[t].y), { mode: 'transit' });
+                    if (d.danger) rows.push([t, d.sources.map((x) => `${x.kind}:${x.id}`)]);
+                }
+            });
+            expect(rows).toEqual([[810, [`spit:${SHOT}`]]]);
+        }));
+
+    it('CONTROL: OFF, no fight is stepped and no Lights source exists', () => withContactFidelity({ lightsBossFight: false }, () => {
+        replay((o, run) => {
+            if (o.t !== 806) return;
+            expect(run.entities('lightsFight')).toBe(null);
+        });
+    }));
 });

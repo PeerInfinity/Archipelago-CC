@@ -13,7 +13,7 @@
  * exit tiles stay dead ends.
  */
 
-import { regionItems, reachUnder } from './deriveTileLogic.js';
+import { regionItems, reachUnder, regionTargets } from './deriveTileLogic.js';
 import { MAZE_TILE_LIB } from './tileStep.js';
 import {
     createState, step, getExitAt, mazeVisitedKey, worldInputs, sharedWorldOwnerAt, USE_PREFIX,
@@ -132,4 +132,60 @@ export function deriveLevelWorldLogic(world, helpers, { tileLib = MAZE_TILE_LIB,
         }
     }
     return { items, pairs, searched, states };
+}
+
+/**
+ * Per-TARGET minimal inventories for one AP region of a maze world (session tile-primitives-levels-gap3):
+ * from the region's arrival (its `shared_world.entrances` cell in a level world, else the world's own
+ * entrance), the inventories with which the player can stand on each location tile and each OUTBOUND
+ * boundary exit (`targetRegion` set — an arrival-only exit has no AP rule) the region owns. The certifier's
+ * second half: `deriveLevelWorldLogic` prices the crossings INSIDE a level world, this prices what leaves
+ * one (and a plain world's whole logic). Same lattice, same reach, the same `native` switch.
+ *
+ * @returns {{ items: string[], targets: Array<{id, kind, x, y, exitName?, locationName?, minimal: string[][],
+ *   witnesses: Array<{inventory, plan}>, unreachable: boolean}>, searched: number, states: number }}
+ */
+export function deriveEntryLogic(world, region, helpers, { tileLib = MAZE_TILE_LIB, maxItems = 12, native = false } = {}) {
+    const shared = Boolean(world.sharedWorld);
+    const entered = shared ? enteredAt(world, region) : world;
+    const items = regionItems(world);
+    if (items.length > maxItems) {
+        throw new Error(`entry logic: ${items.length} items exceed the lattice cap ${maxItems}: ${items.join(', ')}`);
+    }
+    const owns = (x, y) => !shared || sharedWorldOwnerAt(world, x, y) === region;
+    const exitAt = new Map([...world.exits.values()].map((e) => [`${e.x},${e.y}`, e]));
+    const targets = regionTargets(world).filter((t) => owns(t.x, t.y)).flatMap((t) => {
+        if (t.kind === 'exit') {
+            const exit = exitAt.get(`${t.x},${t.y}`);
+            return exit?.targetRegion ? [{ ...t, exitName: exit.exitName ?? exit.exit_id }] : [];
+        }
+        return [{ ...t, locationName: world.itemLocationNames?.get?.(`${t.x},${t.y}`) ?? null }];
+    });
+    const reachOf = (set) => (native ? nativeReachUnder(entered, set)
+        : reachUnder(entered, set, helpers, { pickups: 'ap', tileLib }));
+    const full = reachOf(items);
+    let searched = 1;
+    let states = full.states;
+    for (const t of targets) {
+        t.minimal = [];
+        t.witnesses = [];
+        t.unreachable = !full.cells.has(`${t.x},${t.y}`);
+    }
+    const live = targets.filter((t) => !t.unreachable);
+    const covered = (t, set) => t.minimal.some((m) => m.every((i) => set.includes(i)));
+    for (let k = 0; k <= items.length; k++) {
+        for (const set of subsetsOfSize(items, k)) {
+            if (live.every((t) => covered(t, set))) continue;
+            const reach = reachOf(set);
+            searched += 1;
+            states += reach.states;
+            for (const t of live) {
+                const cell = `${t.x},${t.y}`;
+                if (covered(t, set) || !reach.cells.has(cell)) continue;
+                t.minimal.push(set);
+                t.witnesses.push({ inventory: set, plan: reach.planTo(cell) });
+            }
+        }
+    }
+    return { items, targets, searched, states };
 }
