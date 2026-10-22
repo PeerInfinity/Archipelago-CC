@@ -192,8 +192,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity IGNEOUS D2: `igneousLava` (the type-31 tile crumbles to lava) shipped OFF;
             // ⛓ planning-9's flip (⚖ user "Flip igneousLava ON", 2026-10-21) turns it ON.
             igneousLava: true,
-            // ⛓ fidelity LIGHTS (wave 20): the L69 fight's model and verb, OFF.
-            lightsBossFight: false,
+            // ⛓ fidelity LIGHTS (wave 20): the L69 fight's model and verb, OFF;
+            // ⛓ planning-10's flip (⚖ user "Flip lightsBossFight", 2026-10-22) turns it ON.
+            lightsBossFight: true,
             // ⛓ seedling-fidelity-bosskills: the King of Fire's and the Tentacled Beast's fights ship OFF;
             // ⛓ planning-10's flip (⚖ user "Flip kingOfFireFight", 2026-10-21) turns `kingOfFireFight` ON.
             kingOfFireFight: true, tentacleBeastFight: false,
