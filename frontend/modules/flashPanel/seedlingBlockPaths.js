@@ -53,8 +53,11 @@
 // price is the player reaching a cell beside one of its group's ROPES with the
 // rope's own condition held (`RopeStart.as:40-46`: a hit cuts it and publishes
 // the group). Only a rope-opened rock is read (`fallers`); L28's is the one,
-// and its rope stands on a cliff plateau neither side of the lock walks to: an
-// entry no rope cut from there decides is refused `faller-cross-visit`.
+// and its rope stands on a cliff plateau neither side of the lock walks to. A
+// faller carrying its rope's cut EVENT (`event`, RULES rope-events: the cut is
+// saved and the rock rebuilt fallen on every later visit) is down under any
+// condition set holding that event; a faller with no event, that no rope cut
+// from the entry drops, is still refused `faller-cross-visit`.
 //
 // The answer, per entry into the lock: the Pareto-minimal condition SETS
 // under which the player, starting there, can put a block on a holder tile and
@@ -157,8 +160,12 @@ export function blockHolderSearch(grid, {
     for (const b of blocks) { const k = pushKey(b); if (k) universe.add(k); }
     const fallerKeys = fallers.map((f) => f.triggers.map((t) => [...new Set(keysOf(t.condition ? [t.condition] : []))]));
     for (const ks of fallerKeys) for (const k of ks.flat()) universe.add(k);
-    const keys = [...universe].sort();
     const holderSet = new Set(holders.filter(([x, y]) => inside(x, y)).map(([x, y]) => y * width + x));
+    // ⛓ RULES rope-events — a rock on a holder is down, on THIS visit, once its
+    // rope's cut event is held, whichever visit cut it (`FallRock.as:42-47`).
+    const fallerEventKeys = fallers.map((f) => (f.event && holderSet.has(f.ty * width + f.tx) ? keysOf([f.event])[0] : null));
+    for (const k of fallerEventKeys) if (k) universe.add(k);
+    const keys = [...universe].sort();
     const lockAdjacent = new Set();
     for (const li of lockCells) {
         const x = li % width;
@@ -211,10 +218,11 @@ export function blockHolderSearch(grid, {
         for (const [fi, f] of fallers.entries()) {
             const landing = f.ty * width + f.tx;
             if (!holderSet.has(landing)) continue;
-            const cut = f.triggers.some((t, ti) => has(fallerKeys[fi][ti]) && t.tiles.some(([x, y]) => STEPS.some(([, dx, dy]) => {
-                if (!inside(x + dx, y + dy)) return false;
-                return here.has((y + dy) * width + x + dx);
-            })));
+            const cut = (fallerEventKeys[fi] && held.has(fallerEventKeys[fi]))
+                || f.triggers.some((t, ti) => has(fallerKeys[fi][ti]) && t.tiles.some(([x, y]) => STEPS.some(([, dx, dy]) => {
+                    if (!inside(x + dx, y + dy)) return false;
+                    return here.has((y + dy) * width + x + dx);
+                })));
             if (!cut) continue;
             const after = reach(start, new Set([...startBlocks, landing]));
             if ([...after].some((i) => lockAdjacent.has(i))) return { ok: true, states: 1 };
@@ -277,9 +285,10 @@ export function blockHolderSearch(grid, {
         }
         // ⛔ A rock on a holder that no rope cut from HERE drops is still the
         // room's designed holder: its rope may be cut on another visit (the
-        // rock persists fallen). That is a cross-visit event this search does
-        // not price, so the entry is UNDECIDED rather than closed.
-        const fallerElsewhere = found.length === 0 && fallers.some((f) => holderSet.has(f.ty * width + f.tx));
+        // rock persists fallen). With the cut's EVENT (RULES rope-events) the
+        // search prices that itself; without one it is UNDECIDED, not closed.
+        const fallerElsewhere = found.length === 0
+            && fallers.some((f, fi) => holderSet.has(f.ty * width + f.tx) && !fallerEventKeys[fi]);
         return { sets: found, refused: overflow ?? (fallerElsewhere ? 'faller-cross-visit' : null) };
     };
     return { universe: keys, byKey, refused, entries };

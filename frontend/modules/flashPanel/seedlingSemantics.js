@@ -366,10 +366,15 @@ const TRANSCRIBED_ENTITY_SEMANTICS = Object.freeze({
     pushableblockspear: G(flag('hasSpear'), { class: 'PushableBlockSpear' }),
 
     // RopeStart (Puzzlements/RopeStart.as:25 type "Rope" — in Mobile.solids, so
-    // it blocks). Cut by genericHit with no type test, so either weapon works.
+    // it blocks). Cut by genericHit with no type test (`Player.as:1095-1097`),
+    // so every arm that reaches genericHit cuts it: the Sword's slash (`:917`),
+    // the Spear's thrust (`:989`) and Fire (`:1032`) — ⚖ the user, 2026-10-21:
+    // "Yes, fire should count too" (RULES rope-events).
     // Constructed specially at Game.as:2201-2209 with the rope's far end, and
-    // its hitbox spans that whole run; the extract keeps the `xend` attribute.
-    rope: G(anyOf(flag('hasSword'), flag('hasSpear')), { class: 'RopeStart', spanAttr: 'xend' }),
+    // its hitbox spans that whole run. ⚠ The extract carries the far end in
+    // `nodes[]`, not as an `xend` attribute, so `spanAttr` finds nothing and
+    // every rope is ONE tile here (rules-rope-events F1, named, not fixed).
+    rope: G(anyOf(flag('hasSword'), flag('hasSpear'), flag('hasFire')), { class: 'RopeStart', spanAttr: 'xend' }),
 
     // --- puzzle-state blockers: solid until a protocol is satisfied ----------
     // Activators subclasses that start `type = normType` ("Solid") and clear to
@@ -822,6 +827,7 @@ export function conditionKey(condition) {
     if (condition == null) return 'none';
     if (condition.flag !== undefined) return `flag:${condition.flag}`;
     if (condition.key !== undefined) return `key:${condition.key}`;
+    if (condition.event !== undefined) return `event:${condition.event}`;
     if (Array.isArray(condition.any)) return `any(${condition.any.map(conditionKey).sort().join('|')})`;
     if (Array.isArray(condition.all)) return `all(${condition.all.map(conditionKey).sort().join('&')})`;
     return `unknown:${JSON.stringify(condition)}`;
@@ -929,6 +935,9 @@ export { DIRECTIONS as SEEDLING_DIRECTIONS };
  *   to keep what the tables say. Both see the BASE ruling, so an overlay can
  *   refine rather than restate, and omitting both reproduces the previous
  *   behaviour byte for byte.
+ *   `cellCharges` (RULES rope-events) — `{tile, condition, open}` rows the caller
+ *   charges on cells (a silenced trap's lane costs its rope's event): an open
+ *   cell becomes gated material; omitted, nothing changes.
  */
 export function buildSeedlingRegionGrid(bounds, level, options = {}) {
     const { w: width, h: height } = bounds;
@@ -1044,6 +1053,20 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
             if (semantics.kind === 'sink') sinks.push({ tile: [x + bounds.x, y + bounds.y], label: semantics.label ?? null });
         }
         cells[i] = cell;
+    }
+
+    // ⛓ RULES rope-events — conditions the CALLER charges on cells
+    // (`cellCharges`: a silenced trap's lane costs its rope's event,
+    // `seedlingObstacleEvents.ropeLaneCharges`). An open cell becomes gated
+    // material; a cell marked `open` (a door in the lane) is left as it is.
+    for (const { tile: [tx, ty], condition, open } of options.cellCharges ?? []) {
+        const x = tx - bounds.x;
+        const y = ty - bounds.y;
+        if (open || !inside(x, y)) continue;
+        const cell = cells[y * width + x];
+        if (cell.kind === 'wall') continue;
+        if (cell.kind === 'open') cell.kind = 'gated';
+        cell.conditions.push(condition);
     }
 
     // ⛓ RULES re-closing locks — a lock the game rebuilds CLOSED on every
