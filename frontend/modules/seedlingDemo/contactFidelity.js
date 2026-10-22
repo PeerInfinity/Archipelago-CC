@@ -919,7 +919,7 @@ export const CONTACT_FIDELITY = {
      * `PLACED_NPC_TALK.yeti` stays REFUSED and every build/run is byte-identical. `SEEDLING_YETI_TALK=0|1` for a node
      * measurement.
      */
-    yetiTalk: false,
+    yetiTalk: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
