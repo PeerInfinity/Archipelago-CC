@@ -17,6 +17,8 @@
  *   drill-l91-bob           L91 (`drill@64,80` and three bobs; Bob's `solids` carry "Enemy" too): the player stands
  *                           at (128,80) (boot (120,72), idle): from t49 `drill@64,80`'s x-hop is refused by `bob@128,64`
  *                           where the previous tick left it
+ *   drill-l91-bob-wall      the same room, the player at (120,88) (boot (112,80), idle): at t41 a bob's sweep stops
+ *                           against the live drill (Bob's "Enemy" wall, `levelRun.drillWallsNow`)
  *   drill-l28-spear-l25     ROPESTANCE's failing run, re-pointed at the L25 arrival: the spear stance (136,72) the
  *                           solver planned with the drills UNSTEPPED (the interim off) — the game hit the player at
  *                           t59 at (129.34,72.02); the model with the key ON must say the same
@@ -49,6 +51,8 @@ export const DRILL_WITNESSES = Object.freeze([
         persistence: [], script: { walkTo: [176, 88], ticks: 264, tail: 0 } }),
     Object.freeze({ name: 'drill-l91-bob', boot: { level: 91, x: 120, y: 72 }, items: ['hasSpear'], persistence: [],
         script: { idle: 80 } }),
+    Object.freeze({ name: 'drill-l91-bob-wall', boot: { level: 91, x: 112, y: 80 }, items: ['hasSpear'], persistence: [],
+        script: { idle: 70 } }),
     Object.freeze({ name: 'drill-l28-spear-l25', boot: { level: 28, x: 96, y: 16 }, items: ['hasSpear'],
         persistence: [], script: { plan: 'ropestance-l28-spear', goals: [L28_CUT] } }),
 ]);

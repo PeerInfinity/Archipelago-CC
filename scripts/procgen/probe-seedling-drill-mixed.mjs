@@ -12,6 +12,7 @@
  *   drill-l28-cliffside     boot (240,192), the greedy walk toward (176,88): the drills never hop — at t65 the player
  *                           is 46.9 px from `drill@128,96` and its sight line crosses the CliffSide pixelmask at (160,112)
  *   drill-l91-bob           L91, boot (120,72), idle: from t49 `drill@64,80`'s x-hop refused by `bob@128,64`
+ *   drill-l91-bob-wall      L91, boot (112,80), idle: at t41 a bob's sweep stops against the live drill
  *   drill-l28-spear-l25     ROPESTANCE's failing run (the spear stance (136,72) from the L25 arrival, planned with the
  *                           drills unstepped): the game's hit at t59. Its keys come from `--plan=<tape.json>` (the plan
  *                           as ROPESTANCE made it) or from the recorded fixture.
