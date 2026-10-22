@@ -207,8 +207,9 @@ describe('the atlas\'s own grid — every playthrough region, compiled alone', (
         const p = rules.preset_sidecars['1'].level_16__r1c1.playable_payload;
         const pits = p.exits.filter((e) => e.atlas_exit_id.startsWith('out_pit_'));
         expect(pits).toHaveLength(7);
-        const r1c1 = SHARED_WORLD_ALPHABET[p.shared_world.regions.indexOf('level_16__r1c1')];
-        for (const e of pits) expect(p.shared_world.rows[e.y][e.x], `pit ${e.atlas_exit_id}`).toBe(r1c1);
+        // ⛓ rules-rope-events: the L16 rope lane splits the level, and the atlas binds the pits to r1c9 (past the lane).
+        const r1c9 = SHARED_WORLD_ALPHABET[p.shared_world.regions.indexOf('level_16__r1c9')];
+        for (const e of pits) expect(p.shared_world.rows[e.y][e.x], `pit ${e.atlas_exit_id}`).toBe(r1c9);
     });
 
     it('CONTROL: the raw transcription is refused where the overlay moves a tile (L12\'s chest), by the partition check', () => {
