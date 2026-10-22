@@ -1007,6 +1007,21 @@ export function armedTrapAt(world, inv, x, y) {
 }
 
 /**
+ * Per trap of the world (in `world.traps` order), is it ARMED for this state —
+ * its lane live right now (the panel's lane tint). `null` on a world with no traps.
+ */
+export function armedTraps(world, state, inventoryOverride) {
+    if (!world?.traps?.length || !state) return null;
+    const carried = inventoryOverride !== undefined ? inventoryOverride : state.inventory;
+    const inv = effectiveInventory(world, carried, state.player_pos, state.blocks, state.broken);
+    return world.traps.map((trap) => {
+        const entry = world.trapLib[trap.id];
+        const active = inv.has(entry.active);
+        return entry.fires === 'unless_active' ? !active : active;
+    });
+}
+
+/**
  * True when the state's player stands in an ARMED lane — the arrival a search
  * must not count on (⚖ "never expect tanking a hit": a landing in a live lane
  * is a hit, so nothing is reached from it).
