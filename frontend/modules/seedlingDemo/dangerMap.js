@@ -1204,7 +1204,9 @@ export function staticEnemyDanger(run, box) {
             out.push({
                 kind: 'enemy',
                 id: `${inst.tag}@${inst.x},${inst.y}`,
-                why: `a static "Enemy" body at its ${stepped ? 'placement (this room is '
+                why: liveDrill ? `a stepped drill, priced as a static box where it stands now (${liveDrill.x},${liveDrill.y}) `
+                    + '(`drillMixedRooms`: it hops only when the player is in its run range with a clear line)'
+                    : `a static "Enemy" body at its ${stepped ? 'placement (this room is '
                     + 'stepped, so this class is unbridged and does not move)'
                     : 'PLACEMENT — this room\'s chaser roster is REFUSED, so the model has '
                         + 'no live position for it'}, priced "${pricing.kind}" by `
