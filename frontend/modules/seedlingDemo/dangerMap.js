@@ -77,6 +77,8 @@ import {
     // ⛓ fidelity IGNEOUS D3: the rect `getState` compares a tile against, and the type-31 tile's clock (pure; the
     // run's state comes through `entities('igneousTiles')`).
     terrainProbeRect, igneousInRange, igneousRendersToLava, stepIgneousRender,
+    // ⛓ fidelity DRILL D2: a stepped drill is priced at its live box.
+    CONTACT_FIDELITY,
 } from './solverView.js';
 import {
     hazardVolume, volumeHitsBox, axeHitsPlayer, SPINNING_AXE,
@@ -1179,6 +1181,13 @@ export function staticEnemyDanger(run, box) {
      */
     const live = spinnersTheRunSteps(run);
     const harmless = darkTrapsHarmless(run);
+    /**
+     * ⛓ fidelity DRILL D2 (`drillMixedRooms`): a drill the run STEPS is not at its placement once it has hopped — the
+     * spinners' trap 157 one class over. It sits between hops, so it is priced as a static box at its LIVE position
+     * (`run.drills`), and a removed one not at all. OFF: every drill at its placement, as before.
+     */
+    const liveDrills = CONTACT_FIDELITY.drillMixedRooms
+        ? new Map((run.drills?.bodies ?? []).map((d) => [d.id, d])) : null;
     for (const inst of (world.combat?.enemies ?? [])) {
         if (stepped && isBridgedChaser(inst.tag)) continue;
         if (live.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;
@@ -1187,7 +1196,9 @@ export function staticEnemyDanger(run, box) {
         if (pricing.kind === 'boss') continue;
         // ⛓ LADDER2: a placed grenade has no contact — its blast is ingredient (g).
         if (pricing.pricedBy === 'stepPlacedGrenadesNow') continue;
-        const r = contactRect(inst);
+        const liveDrill = liveDrills?.get(`${inst.tag}@${inst.x},${inst.y}`) ?? null;
+        if (liveDrill?.removed) continue;
+        const r = liveDrill ? liveDrill.rect : contactRect(inst);
         if (!r) continue;
         if (rectsOverlap(box, r)) {
             out.push({

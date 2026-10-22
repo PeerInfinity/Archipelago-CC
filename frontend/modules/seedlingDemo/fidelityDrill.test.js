@@ -27,10 +27,10 @@
  *   m6 `drillEnemyBodiesTest` skips the chasers
  *        -> `drill-l91-bob` reds: `drill@64,80`'s x-hop lands on `bob@128,64`.
  *   m7 `drillWallsNow` returns [] (a bob walks through a live drill)
- *        -> predicted: may stay green — no witness has a bob meet a drill. MEASURED green: the term is unwitnessed
- *           (the report's residue).
+ *        -> `drill-l91-bob-wall` reds at t41 (the first run of m7, before that witness existed, stayed green: the term
+ *           was unwitnessed, and a search of L91 boots with m7 against the key found the case).
  * Measured: all red as predicted (m1 also reds `drill-l28-spear-l25`, m2 also the refusal row — the first drill to ask
- * its hop test is the other one), m7 green.
+ * its hop test is the other one).
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync, readdirSync } from 'node:fs';
@@ -42,6 +42,7 @@ import { arrivalStaging } from './fidelityArrival.js';
 import { CONTACT_FIDELITY, CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
 import { combatCensusOf } from './levelWorld.js';
 import { solveSegment, SolverRefusal } from './solverBot.js';
+import { staticEnemyDanger } from './dangerMap.js';
 import { DRILL_WITNESS_DIR, DRILL_WITNESSES, compareDrillWitness, drillModelSamples } from './fidelityDrill.js';
 
 const SRC = atlasLevelSource();
@@ -97,6 +98,23 @@ describe('fidelity DRILL — the switch', () => {
         });
         expect(err?.message).toMatch(/drill@128,96 in level 28 asks its hop test/);
         expect(err?.message).toMatch(/\[bobsoldier@264,168\]/);
+    });
+});
+
+describe('fidelity DRILL — D2: the danger map prices a stepped drill where it stands', () => {
+    // L28, the player at (104,72): on t1 `drill@128,96` hops (136,104) -> (120,88), `drill@80,96` (88,104) -> (104,88)
+    const box = (cx, cy) => ({ x: cx - 4, y: cy - 4, right: cx + 4, bottom: cy + 4 });
+    const after1 = (fn) => fn(() => {
+        const run = createRunForStaging(arrivalStaging({ level: 28, x: 96, y: 64 }, { items: ['hasSpear'] }), SRC);
+        run.advance(new Set());
+        return { atPlacement: staticEnemyDanger(run, box(136, 104)).map((d) => d.id),
+            atLive: staticEnemyDanger(run, box(120, 88)).map((d) => d.id) };
+    });
+    it('OFF: at its placement (byte-identical)', () => {
+        expect(after1(OFF)).toEqual({ atPlacement: ['drill@128,96'], atLive: [] });
+    });
+    it('ON: at its live box, and no longer at the placement it left', () => {
+        expect(after1(ON)).toEqual({ atPlacement: [], atLive: ['drill@128,96'] });
     });
 });
 
