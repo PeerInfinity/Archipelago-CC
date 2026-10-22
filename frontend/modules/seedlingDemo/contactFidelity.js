@@ -865,7 +865,7 @@ export const CONTACT_FIDELITY = {
      * player, which still refuse by name. OFF: the `igneousLava` interim, byte-identical.
      * `SEEDLING_IGNEOUS_DEAD_FRAMES=0|1` for a node measurement.
      */
-    igneousDeadFrames: false,
+    igneousDeadFrames: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
