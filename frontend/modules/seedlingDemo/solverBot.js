@@ -140,8 +140,8 @@ import {
     MOVE_SPEEDS, SLASH_DASH_FORCE,
     chestStanceBand,
     fireRect, INVENTORY_ITEM_IDS, auditFire,
-    // ⛓ fidelity ROPESTANCE: a fire cut's wait is the press window (`execRopeCut`).
-    FIRE_WINDOW,
+    // ⛓ fidelity ROPESTANCE: a fire cut's wait is the press window (`execRopeCut`); an unstepped drill's run range.
+    FIRE_WINDOW, DRILL,
     pullModelled, pullsDrainingInto,
     PULSER, pulsePushes, pulserCycle, newPushable,
     KILLLOCK_BODIES,
@@ -17583,6 +17583,44 @@ function ropeCutWeapons(run) {
     return out;
 }
 
+/**
+ * ⛓ INTERIM (named; the modelling is queued — the report's hand-over): the drills the run does NOT step. `levelRun`'s
+ * `drillStateFor` admits a drill only in a room whose ONLY census enemy it is (with `drillLive`), so in L28 (two drills
+ * and a bobsoldier) neither drill moves in the model — while the game's `Drill.update` hops one onto a player inside
+ * `runRange` with a clear line and its contact knocks them back. Measured on p4g: the spear stance (136,72) beside
+ * `drill@128,96` took a hit at t59 that the model never saw (probe-seedling-rope-stance, `ropestance-l28-spear`).
+ * A rope stance therefore keeps every candidate's point, and the walk to it, from giving such a drill its trigger:
+ * within `runRange` of its body centre (`DRILL.dx/dy` in from the placement) with a clear "Solid" line. Rooms whose drill IS stepped are priced by the model and need nothing here.
+ */
+/**
+ * The interim's allowance for a PLANNED corridor (waypoints, not the driven walk): L28's fire walk from the L25 arrival
+ * plans through (136,56), exactly `runRange` (48.0 px) from `drill@128,96`'s centre, and the game played it with no hop
+ * (`ropestance-l28-fire`, 0 px); the spear's walk to (184,88) passed ~24 px from it and was hit. 2 px separates them.
+ */
+const ROPE_DRILL_PLAN_SLACK = 2;
+
+function unsteppedDrills(run) {
+    const enemies = run.world.combat?.enemies ?? [];
+    const stepped = CONTACT_FIDELITY.drillLive && enemies.length === 1 && enemies[0].tag === 'drill';
+    return stepped ? [] : enemies.filter((e) => e.tag === 'drill' && !e.removed);
+}
+
+/** The refusal's clause for the interim: which unstepped drills a stance and its walk keep out of, or nothing. */
+function unsteppedDrillNote(run) {
+    const drills = unsteppedDrills(run);
+    return drills.length === 0 ? '' : ` or within the ${DRILL.runRange} px run range of an UNSTEPPED drill `
+        + `([${drills.map((e) => `${e.tag}@${e.x},${e.y}`).join(', ')}]: \`levelRun\` steps a drill only in a room whose `
+        + 'only census enemy it is, so the model cannot price its hop — the ropestance interim)';
+}
+
+/** `pullStanceAdmit`, and (the interim above) out of every unstepped drill's run range. */
+const ropeStanceAdmit = (run) => {
+    const base = pullStanceAdmit(run);
+    const drills = unsteppedDrills(run);
+    return (c) => base(c) && !drills.some((e) => Math.hypot(c.x - (e.x + DRILL.dx), c.y - (e.y + DRILL.dy))
+        <= DRILL.runRange && !run.collideLineSolid(e.x + DRILL.dx, e.y + DRILL.dy, c.x, c.y));
+};
+
 /** The rope's OEL coordinates, from its id (`rope@x,y`) — the spelling `runSpear` / `runFire` name a rope by. */
 function ropeOel(ropeId) {
     const m = /@(-?\d+),(-?\d+)$/.exec(ropeId);
@@ -17650,6 +17688,38 @@ const ROPE_STANCE_TRIES = 3;
  */
 function rankRopeStances(run, viable, contacts, blocked) {
     const vols = dangerVolumes(run, 0);
+    const drills = unsteppedDrills(run);
+    /**
+     * ⛓ The drill INTERIM (`unsteppedDrills`): the walk's own pricing cannot see such a body, so in a room that holds
+     * one a stance is kept only when the corridor the walk will plan to it (`planWaypoints`, the walk's options) never
+     * gives such a drill its trigger (in `runRange` with a clear line), sampled every 2 px. No such room: never asked.
+     */
+    const clearOfDrills = (c) => {
+        if (drills.length === 0) return true;
+        let wps;
+        try {
+            wps = planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null, solverPlanOpts(run, contacts));
+        } catch (e) {
+            if (!(e instanceof BotDriverV2Error)) throw e;
+            return false;
+        }
+        const pts = [{ x: run.state.x, y: run.state.y }, ...wps.map((w) => ({ x: w.x, y: w.y })), { x: c.x, y: c.y }];
+        // `Drill.update`'s own trigger: within `runRange` AND no "Solid" on the line (the run's `collideLineSolid`).
+        const inRange = (x, y) => drills.some((e) => {
+            const dx = e.x + DRILL.dx;
+            const dy = e.y + DRILL.dy;
+            return Math.hypot(x - dx, y - dy) <= DRILL.runRange - ROPE_DRILL_PLAN_SLACK
+                && !run.collideLineSolid(dx, dy, x, y);
+        });
+        for (let i = 1; i < pts.length; i += 1) {
+            const n = Math.max(1, Math.ceil(Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y) / 2));
+            for (let k = 0; k <= n; k += 1) {
+                if (inRange(pts[i - 1].x + (pts[i].x - pts[i - 1].x) * k / n,
+                    pts[i - 1].y + (pts[i].y - pts[i - 1].y) * k / n)) return false;
+            }
+        }
+        return true;
+    };
     const avoids = (c) => {
         try {
             planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null,
@@ -17664,12 +17734,12 @@ function rankRopeStances(run, viable, contacts, blocked) {
     const taken = new Set();
     for (const c of viable) {
         if (out.length >= ROPE_STANCE_TRIES) return out;
-        if (avoids(c)) { out.push({ c, reached: { discharged: [] } }); taken.add(c); }
+        if (avoids(c) && clearOfDrills(c)) { out.push({ c, reached: { discharged: [] } }); taken.add(c); }
     }
     const hypothesis = lazyStanceHypothesis(run, blocked, contacts);
     for (const c of viable) {
         if (out.length >= ROPE_STANCE_TRIES) return out;
-        if (taken.has(c)) continue;
+        if (taken.has(c) || !clearOfDrills(c)) continue;
         const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
         if (reached) out.push({ c, reached });
     }
@@ -17683,7 +17753,7 @@ function rankRopeStances(run, viable, contacts, blocked) {
  * @returns `{approach: [{x, y, at, lean}], discharged}` (`approach` empty: the live position is the stance).
  */
 function ropeFireStance(run, rope, contacts, blocked) {
-    const admit = pullStanceAdmit(run);
+    const admit = ropeStanceAdmit(run);
     const here = { x: run.state.x, y: run.state.y };
     const live = ropeFireReach(run, here, rope.ropeId);
     if (live.hit && live.others.length === 0 && admit(here)) return { approach: [], discharged: [] };
@@ -17718,8 +17788,9 @@ function ropeFireStance(run, rope, contacts, blocked) {
     throw new SolverRefusal(`solverBot: no REACHABLE stance for a fire press at ${rope.ropeId} in level ${run.level} — `
         + `${candidates.length} walkable cell(s) put \`fireRect\` on the rope; ${missed} were cut by the 16 px radius `
         + `(from the cell centre and from a lean against the rope), ${crowded} also reached another fire responder, `
-        + `${unsafe} stand inside a danger volume, and ${viable.length} plan no corridor from `
-        + `(${run.state.x},${run.state.y}).`, { obstacle: { kind: 'solid', id: rope.ropeId } });
+        + `${unsafe} stand inside a danger volume${unsteppedDrillNote(run)}, and ${viable.length} plan no corridor from `
+        + `(${run.state.x},${run.state.y})${unsteppedDrills(run).length ? ' clear of it' : ''}.`,
+    { obstacle: { kind: 'solid', id: rope.ropeId } });
 }
 
 /**
@@ -17730,7 +17801,7 @@ function ropeFireStance(run, rope, contacts, blocked) {
  *   stance, facing `dir`).
  */
 function ropeSpearStance(run, rope, contacts, blocked) {
-    const admit = pullStanceAdmit(run);
+    const admit = ropeStanceAdmit(run);
     const here = { x: run.state.x, y: run.state.y };
     for (const dir of [RIGHT, UP, LEFT, DOWN]) {
         const tapped = run.state.direction === dir ? here : previewFaceTap(run, here, dir);
@@ -17777,8 +17848,9 @@ function ropeSpearStance(run, rope, contacts, blocked) {
     }
     throw new SolverRefusal(`solverBot: no REACHABLE stance for a spear thrust at ${rope.ropeId} in level `
         + `${run.level} — ${candidates} walkable cell(s) within ${ROPE_SPEAR_RING} tiles have a facing whose 32x5 rect `
-        + `cuts the rope and nothing else (from the cell and after the face tap); ${unsafe} stand inside a danger volume `
-        + `and ${viable.length} plan no corridor from (${run.state.x},${run.state.y}).`,
+        + `cuts the rope and nothing else (from the cell and after the face tap); ${unsafe} stand inside a danger volume`
+        + `${unsteppedDrillNote(run)} and ${viable.length} plan no corridor from (${run.state.x},${run.state.y})`
+        + `${unsteppedDrills(run).length ? ' clear of it' : ''}.`,
     { obstacle: { kind: 'solid', id: rope.ropeId } });
 }
 

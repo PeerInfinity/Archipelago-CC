@@ -57,6 +57,8 @@ export {
 } from './burnableTree.js';
 // camera.js — encounters · physics 2
 export { SCREEN_H, SCREEN_W } from './camera.js';
+// ⛓ fidelity ROPESTANCE: a rope stance keeps out of an UNSTEPPED drill's run range (`solverBot.ropeStanceAdmit`).
+export { DRILL } from './drill.js';
 // chasers.js — dangerMap, solverBot · seedling 4
 export { bridgedChaserTags, chaserBoxAt, chaserHasSword, deathTicks, isBridgedChaser, killWindowTicks, CHASERS } from './chasers.js';
 // ⛓ CEREMONYSHOVE D3: which class a shield's bump moves (`ceremonyBesideLiveBody`'s priced question).
