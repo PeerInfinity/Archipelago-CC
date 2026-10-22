@@ -1,0 +1,2 @@
+{"ticks":823,"endedAt":806,"hitEvents":[{"t":811,"level":69,"what":"shot-hit","id":"lightbosscontroller@72,72#75","x":34.9776165578201,"y":76.94282722599613}],"fired":[{"t":784,"level":69,"what":"shot","id":"lightbosscontroller@72,72#75","x":56,"y":60,"vx":-0.7786067941548139,"vy":0.6275121194813397}],"hitTicks":[[811,0,1],[823,1,0]]}
+{"askedAt":806,"ticksCompleted":806,"dangerRows":[[810,38.09,72.92,"spit:lightbosscontroller@72,72#75"]]}
