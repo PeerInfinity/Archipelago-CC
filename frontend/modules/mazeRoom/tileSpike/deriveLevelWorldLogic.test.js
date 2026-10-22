@@ -11,9 +11,8 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { deserializeMazeWorld, createState, step, sharedWorldOwnerAt } from '../mazeRoomEngine.js';
-import { nativeReachUnder, enteredAt, deriveEntryLogic } from './deriveLevelWorldLogic.js';
+import { nativeReachUnder, enteredAt } from './deriveLevelWorldLogic.js';
 import { evaluateRuleAgainstInventory } from '../../shared/procgen/library.js';
-import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
 
 const RULES = JSON.parse(readFileSync(
     new URL('../../../presets/seedling_playthrough_maze/AP_1/AP_1_rules.json', import.meta.url), 'utf8'));
@@ -80,62 +79,99 @@ describe('L13–L17 — the doors and the second level world', () => {
         expect(crosses(l16(), 'level_16__r1c9', 'level_16__r4c21', ['Ghost Spear'])).not.toBeNull();
     });
 
-    // ⛓ NAMED GAP "the missing rope event location" (maze.md § The preset): the projection emits no event location
-    // for the atlas's game_state events, so nothing in this preset grants 'L16 flag 0: rope@32,16 cleared'. Every
-    // way past L16's rope lane needs it, and L17 is entered only through it (r1c9's pits, r3c7's stairs), so from
-    // the start, holding every real item, exactly these regions and this location are cut off (on main 313562ed6e
-    // every region and location is reached). The completion condition is constant, so the goal is untouched.
-    // This FAILS once the arrow-lane slice emits the cut as an event location — delete it then.
-    it('the missing rope event location: from the start, with every real item, exactly this is cut off', () => {
+    // ⛓ The rope cut is an EVENT LOCATION (slice tile-primitives-arrow-rope, ⚖ 2026-10-22 "Both: this visit + event
+    // item"), which restores what the named gap "the missing rope event location" (rules-rope-events) cut off: from
+    // the start, holding every real item, L16's four rope-gated sub-regions, L17 and its placed Seal were
+    // unreachable. Now everything is — and the gate is real: without Sword, Spear or Fire exactly that set stays cut
+    // off. The completion condition is constant, so the goal is untouched.
+    const RESTORED_REGIONS = ['level_16__r1c9', 'level_16__r3c7', 'level_16__r4c21', 'level_16__r6c8', 'level_17'];
+    const reachFromStart = (items) => {
         const REGIONS = RULES.regions['1'];
-        const ruleItems = (rule, out) => {
-            if (rule?.rule === 'Has') out.add(rule.args.item_name);
-            for (const c of rule?.children ?? []) ruleItems(c, out);
-            return out;
-        };
-        const locations = Object.values(REGIONS).flatMap((r) => r.locations ?? []);
-        expect(locations.some((l) => l.name === ROPE)).toBe(false);
-        // Every item the preset's rules ask for, but the rope's event (no location grants it), plus the pool.
-        const asked = new Set(Object.keys(RULES.itempool_counts['1']));
-        for (const r of Object.values(REGIONS)) for (const e of r.exits) ruleItems(e.access_rule, asked);
-        for (const l of locations) ruleItems(l.access_rule, asked);
-        const real = new Set([...asked].filter((i) => i !== ROPE));
-        const holds = (rule) => evaluateRuleAgainstInventory(rule ?? { rule: 'True_' }, real);
+        const inv = new Set(items);
+        const holds = (rule) => evaluateRuleAgainstInventory(rule ?? { rule: 'True_' }, inv);
         const seen = new Set(['Menu']);
+        const got = new Set();
         for (let grew = true; grew;) {
             grew = false;
             for (const from of [...seen]) {
                 for (const e of REGIONS[from].exits) {
                     if (!seen.has(e.connected_region) && holds(e.access_rule)) { seen.add(e.connected_region); grew = true; }
                 }
+                for (const l of REGIONS[from].locations ?? []) {
+                    if (got.has(l.name) || !holds(l.access_rule)) continue;
+                    got.add(l.name);
+                    if (l.event) { inv.add(l.item.name); grew = true; }
+                }
             }
         }
-        expect(Object.keys(REGIONS).filter((r) => !seen.has(r)).sort()).toEqual(
-            ['level_16__r1c9', 'level_16__r3c7', 'level_16__r4c21', 'level_16__r6c8', 'level_17']);
-        expect(Object.entries(REGIONS).flatMap(([name, r]) => (r.locations ?? [])
-            .filter((l) => !seen.has(name) || !holds(l.access_rule)).map((l) => l.name))).toEqual(['Level 017 - Chest']);
+        const allLocations = Object.values(REGIONS).flatMap((r) => (r.locations ?? []).map((l) => l.name));
+        return {
+            unreached: Object.keys(REGIONS).filter((r) => !seen.has(r)).sort(),
+            unchecked: allLocations.filter((l) => !got.has(l)).sort(),
+        };
+    };
+    it('the rope cut is an event location in r1c1 (Sword | Spear | Fire), and it restores L17 and its Seal', () => {
+        const event = RULES.regions['1'].level_16__r1c1.locations.find((l) => l.name === ROPE);
+        expect(event).toMatchObject({ event: true, locked: true, item: { name: ROPE } });
+        expect(event.access_rule.children.map((c) => c.args.item_name).sort()).toEqual(['Fire', 'Ghost Spear', 'Progressive Sword']);
+        // Every item the preset's rules ask for, but the rope's event (its location grants it), plus the pool.
+        const ruleItems = (rule, out) => {
+            if (rule?.rule === 'Has') out.add(rule.args.item_name);
+            for (const c of rule?.children ?? []) ruleItems(c, out);
+            return out;
+        };
+        const asked = new Set(Object.keys(RULES.itempool_counts['1']));
+        for (const r of Object.values(RULES.regions['1'])) {
+            for (const e of r.exits) ruleItems(e.access_rule, asked);
+            for (const l of r.locations ?? []) ruleItems(l.access_rule, asked);
+        }
+        const REAL = [...asked].filter((i) => i !== ROPE);
+        expect(reachFromStart(REAL)).toEqual({ unreached: [], unchecked: [] });
+        expect(reachFromStart(REAL.filter((i) => !['Progressive Sword', 'Ghost Spear', 'Fire'].includes(i))))
+            .toEqual({ unreached: RESTORED_REGIONS, unchecked: [ROPE, 'Level 017 - Chest'] });
         expect(RULES.game_info['1'].completion_condition).toEqual({ type: 'constant', value: true });
+    });
+
+    // ⚖ user 2026-10-21 (memory feedback_l16_arrowtrap_from_l17_refusal_is_correct): L16 from L17 with the arrow trap
+    // ARMED must refuse — it is silenced only from the L15 side; logic never expects tanking a hit. Held by MECHANICS:
+    // L17's stairs land in the lane (r3c7), so that arrival reaches nothing whatever the player carries but the cut,
+    // while from r1c1 any of the three strikes cuts the rope and opens the lane.
+    it('⚖ L16 from L17 refuses while the trap is armed; from the L15 side any strike opens it', () => {
+        const EVERY = ['Progressive Sword', 'Ghost Spear', 'Fire', 'Progressive Swim'];
+        expect(nativeReachUnder(enteredAt(l16(), 'level_16__r3c7'), EVERY).cells.size).toBe(0);
+        expect(nativeReachUnder(enteredAt(l16(), 'level_16__r3c7'), [ROPE]).cells.size).toBeGreaterThan(0);
+        // Fire, the action the rope added (Sword and Spear: the slow tier's full lattice, every witness replayed).
+        const plan = crosses(l16(), 'level_16__r1c1', 'level_16__r3c7', ['Fire']);
+        expect(plan).not.toBeNull();
+        expect(plan).toContain('USE:fire');
+        expect(crosses(l16(), 'level_16__r1c1', 'level_16__r3c7', ['Progressive Swim'])).toBeNull();
     });
 
     it('every wired door is reached empty-handed from its region\'s arrival (the atlas: True_)', () => {
         const own = (name) => deserializeMazeWorld(RULES.preset_sidecars['1'][name].playable_payload);
+        // One reach per region at a FIXED inventory (the full lattice over L16's five items is the slow tier's).
+        const doorsAt = (world, region, inventory) => {
+            const entered = world.sharedWorld ? enteredAt(world, region) : world;
+            const reach = nativeReachUnder(entered, inventory);
+            return [...world.exits.values()].filter((e) => e.targetRegion
+                && (!world.sharedWorld || sharedWorldOwnerAt(world, e.x, e.y) === region))
+                .map((e) => [e.exitName, reach.cells.has(`${e.x},${e.y}`), `${e.x},${e.y}`]);
+        };
         const doors = [
             [own('level_13'), 'level_13'], [own('level_14'), 'level_14'],
-            [l15(), R1C5], [l15(), R1C9], [l16(), 'level_16__r1c1'], [l16(), 'level_16__r1c9'], [l16(), 'level_16__r3c7'],
+            [l15(), R1C5], [l15(), R1C9], [l16(), 'level_16__r1c1'], [l16(), 'level_16__r1c9'],
             [own('level_17'), 'level_17'],
         ];
-        const priced = doors.flatMap(([world, region]) => deriveEntryLogic(world, region, HELPERS, { native: true })
-            .targets.filter((t) => t.kind === 'exit').map((t) => [t.exitName, t.minimal, `${t.x},${t.y}`]));
+        const priced = doors.flatMap(([world, region]) => doorsAt(world, region, []));
         const pit = ([name]) => name.startsWith('level_16__r1c9 -> level_17');
-        expect(priced.filter((d) => !pit(d)).map(([name, minimal]) => [name, minimal])).toEqual([
-            ['level_13 -> level_14', [[]]],
-            ['level_14 -> level_15__r1c5', [[]]],
-            ['level_14 -> level_13', [[]]],
-            ['level_15__r1c5 -> level_14', [[]]],
-            ['level_15__r1c9 -> level_16__r1c1', [[]]],
-            ['level_16__r1c1 -> level_15__r1c9', [[]]],
-            ['level_16__r3c7 -> level_17', [[]]],
-            ['level_17 -> level_16__r3c7', [[]]],
+        expect(priced.filter((d) => !pit(d)).map(([name, free]) => [name, free])).toEqual([
+            ['level_13 -> level_14', true],
+            ['level_14 -> level_15__r1c5', true],
+            ['level_14 -> level_13', true],
+            ['level_15__r1c5 -> level_14', true],
+            ['level_15__r1c9 -> level_16__r1c1', true],
+            ['level_16__r1c1 -> level_15__r1c9', true],
+            ['level_17 -> level_16__r3c7', true],
         ]);
         // ⛓ L16's ways down to L17 (session tile-primitives-grow-levels): every one is free but the pit at (13,4),
         // which the other pits wall in — an exit tile ends a walk. The AP destination is one, and the certifier
@@ -143,7 +179,10 @@ describe('L13–L17 — the doors and the second level world', () => {
         // stairs (7,4) r3c7's, and L17's stairs land in r3c7.
         const pits = priced.filter(pit);
         expect(pits).toHaveLength(7);
-        expect(pits.filter(([, minimal]) => minimal.length === 0).map(([, , at]) => at)).toEqual(['13,4']);
-        for (const [, minimal, at] of pits) if (at !== '13,4') expect(minimal, at).toEqual([[]]);
+        expect(pits.filter(([, free]) => !free).map(([, , at]) => at)).toEqual(['13,4']);
+        // ⛓ The stairs stand in the lane (slice tile-primitives-arrow-rope): from r3c7's own arrival — L17's landing —
+        // they are taken only with the cut (the lane's arrival reaches nothing while armed).
+        expect(doorsAt(l16(), 'level_16__r3c7', []).map(([n, free]) => [n, free])).toEqual([['level_16__r3c7 -> level_17', false]]);
+        expect(doorsAt(l16(), 'level_16__r3c7', [ROPE]).map(([n, free]) => [n, free])).toEqual([['level_16__r3c7 -> level_17', true]]);
     });
 });

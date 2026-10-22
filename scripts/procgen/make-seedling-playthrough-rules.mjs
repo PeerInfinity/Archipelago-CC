@@ -1426,13 +1426,17 @@ export function playthroughTalkEvents(doc, { existing = [] } = {}) {
  * arrival, so its departure costs the cut too (`exitGates`, as a landing inside an obstacle costs its event) — ⚖ the
  * user 2026-10-21: logic never expects tanking a hit. (L17's stairs land on L16's (7,3), in `arrowtrap@112,32`'s lane.)
  * Refused ropes are printed by name; a rope event NAME in the rules that this mints nowhere is refused (`main`).
+ *
+ * `place` (optional) answers PLACE without this run's analysis (`regionAnalyses`, filled by `buildPlaythroughAtlas`):
+ * the maze preset (`make-seedling-playthrough-maze.mjs`, session tile-primitives-arrow-rope) places the rope by the
+ * atlas's PERSISTED partition instead — the same rule, the one sub-region the rope's tile borders.
  */
-export function playthroughRopeEvents(doc) {
+export function playthroughRopeEvents(doc, { place = null } = {}) {
     const regionOf = (id) => doc.regions.find((r) => r.region_id === id);
     const conns = doc.vanilla_layout?.connections ?? [];
     const derived = deriveRopeEvents(ROPES, {
         level: (n) => levelOf(n),
-        place: (row) => {
+        place: place ?? ((row) => {
             const regionId = regionIdFor(row.level);
             const region = regionOf(regionId);
             if (!region) throw new Error(`rope events: ${regionId} is not in the atlas`);
@@ -1453,7 +1457,7 @@ export function playthroughRopeEvents(doc) {
             }
             const [c] = beside;
             return { region_id: regionId, sub_region: c, side: apRegionName(regionId, c) };
-        },
+        }),
         rule: (row) => {
             const entity = levelOf(row.level).entities.find((e) => e.type === 'rope' && e.x === row.x && e.y === row.y);
             const rule = analyzerOptions.resolveCondition(SEM.entitySemantics(entity)?.condition);

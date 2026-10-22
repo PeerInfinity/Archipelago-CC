@@ -26,7 +26,7 @@
  */
 
 import {
-    createState, getExitAt, mazeVisitedKey, hasItemActions, worldInputs, USE_PREFIX,
+    createState, getExitAt, getObstacle, mazeVisitedKey, hasItemActions, worldInputs, USE_PREFIX, TURN_PREFIX, INPUTS, turnInput,
 } from '../mazeRoomEngine.js';
 import { MAZE_TILE_LIB, ruleToClearSet, scriptedStep, scriptedStandsInArmedLane } from './tileStep.js';
 
@@ -92,6 +92,34 @@ export function searchInputs(world, inventory, pickups) {
 }
 
 /**
+ * ⛓ FACING-FREE SEARCH (slice tile-primitives-arrow-rope). A turn is always legal and changes nothing but
+ * `facing`, so two states that differ only in facing reach exactly the same cells and cuts: a search keys
+ * its states WITHOUT facing (`reachKey`) and branches on the four moves plus, per use, the macro
+ * `[TURN_<d>, USE:<id>]` for each direction (`reachInputs`) — the witness plan is still a sequence of
+ * engine inputs.
+ */
+export function reachKey(state) {
+    return state.facing === undefined ? mazeVisitedKey(state) : mazeVisitedKey({ ...state, facing: '' });
+}
+
+const DIRS = { N: [0, -1], S: [0, 1], E: [1, 0], W: [-1, 0] };
+/** Does the cell a `TURN_<d>` faces from `at` hold an obstacle (what a use there could break)? */
+function obstacleToward(world, at, turn) {
+    const [dx, dy] = DIRS[turn.slice(TURN_PREFIX.length)];
+    return Boolean(getObstacle(world, at.x + dx, at.y + dy));
+}
+
+/** A search's branches: the moves, and each use input as `[TURN_<d>, use]` for the four directions. */
+export function reachInputs(inputs) {
+    const out = [];
+    for (const input of inputs) {
+        if (input.startsWith(USE_PREFIX)) for (const d of INPUTS) out.push([turnInput(d), input]);
+        else if (!input.startsWith('TURN_')) out.push([input]);
+    }
+    return out;
+}
+
+/**
  * The targets a region's logic prices: each location (item tile), each rope EVENT (`event` set: reached
  * by cutting the rope at x, y) and each exit, by position.
  */
@@ -118,23 +146,28 @@ export function reachUnder(world, inventory, helpers, { pickups = 'ap', tileLib 
     if (scriptedStandsInArmedLane(world, start, helpers, tileLib)) return NOTHING_REACHED;
     const ropes = ropeEvents(world);
     const cuts = new Map();
-    const seen = new Map([[mazeVisitedKey(start), null]]);
-    const cells = new Map([[`${start.player_pos.x},${start.player_pos.y}`, mazeVisitedKey(start)]]);
-    const states = new Map([[mazeVisitedKey(start), start]]);
+    const seen = new Map([[reachKey(start), null]]);
+    const cells = new Map([[`${start.player_pos.x},${start.player_pos.y}`, reachKey(start)]]);
     const queue = [start];
-    const inputs = searchInputs(world, inventory, pickups);
+    const inputs = reachInputs(searchInputs(world, inventory, pickups));
+    const latch = pickups === 'in-room';
     for (let head = 0; head < queue.length; head++) {
         const s = queue[head];
         const at = s.player_pos;
         if (head > 0 && getExitAt(world, at.x, at.y) !== null) continue;
-        const from = mazeVisitedKey(s);
-        for (const input of inputs) {
-            const { next } = scriptedStep(world, s, input, helpers, tileLib, { latch: pickups === 'in-room' });
+        const from = reachKey(s);
+        for (const macro of inputs) {
+            // A use at a cell holding no obstacle breaks nothing — it only turns: the same facing-free state.
+            if (macro.length === 2 && !obstacleToward(world, at, macro[0])) continue;
+            let next = s;
+            for (const input of macro) {
+                next = scriptedStep(world, next, input, helpers, tileLib, { latch }).next;
+                if (next === null) break;
+            }
             if (next === null) continue;
-            const k = mazeVisitedKey(next);
+            const k = reachKey(next);
             if (seen.has(k)) continue;
-            seen.set(k, { from, input });
-            states.set(k, next);
+            seen.set(k, { from, input: macro });
             queue.push(next);
             noteCuts(world, ropes, cuts, next, k);
             const cell = `${next.player_pos.x},${next.player_pos.y}`;
@@ -146,7 +179,7 @@ export function reachUnder(world, inventory, helpers, { pickups = 'ap', tileLib 
         if (k === undefined) return null;
         const plan = [];
         for (let link = seen.get(k); link !== null; link = seen.get(k)) { plan.push(link.input); k = link.from; }
-        return plan.reverse();
+        return plan.reverse().flat();
     };
     return {
         cells, cuts, states: seen.size, planTo: (cell) => planFrom(cells.get(cell)), planToCut: (key) => planFrom(cuts.get(key)),

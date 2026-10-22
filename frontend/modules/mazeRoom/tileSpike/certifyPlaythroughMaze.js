@@ -19,11 +19,17 @@
  * ⛓ AP EVENTS (slice tile-primitives-arrow-rope): the in-world closure GRANTS an event location's item once
  * its region is reached and its rule holds (L16's rope cut, in r1c1, is what opens the lane for r1c1 → r3c7),
  * and an event location is priced by CUTTING its rope (`deriveEntryLogic`), its witness replayed to the cut.
+ * A crossing whose arrival stands in an armed lane is not taken (`arrivalBlocked`, ⚖ never tank a hit) — and an
+ * inventory at which a region's OWN arrival stands in one cannot be in that region at all: it is skipped when a
+ * region's way OUT is compared (L16 r3c7 → L17: the atlas's True_, the world's Has(cut)), but only after
+ * checking that no AP exit INTO the region admits that inventory — else that entry is the problem.
  *
  * ⛔ A counted Has (count ≥ 2) in an AP rule is a PROBLEM by name: the truth table enumerates SETS, which
  * cannot hold two of anything, so it would certify the rule vacuously (⚖ "Refuse counted rules").
  */
-import { deserializeMazeWorld, createState, step } from '../mazeRoomEngine.js';
+import { deserializeMazeWorld, createState, step, standsInArmedLane } from '../mazeRoomEngine.js';
+import { resolveMazeArrival } from '../mazeArrival.js';
+import { ropeEvents } from './deriveTileLogic.js';
 import { evaluateRuleAgainstInventory } from '../../shared/procgen/library.js';
 import { deriveLevelWorldLogic, deriveEntryLogic, enteredAt } from './deriveLevelWorldLogic.js';
 import { ruleFromMinimalSets } from './deriveTileLogic.js';
@@ -58,10 +64,43 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions } = {})
             : Object.values(SIDECARS).find((s) => s.playable_payload && s.shared_world === own.shared_world);
         return deserializeMazeWorld(carrier.playable_payload);
     };
-    const agree = (label, atlas, minimal, items) => {
+    /**
+     * ⛓ A crossing out of `source` is a HIT when its arrival (`resolveMazeArrival` by source region, else the
+     * target's own entrance) stands in an ARMED lane of the target world for that inventory. The items it
+     * reads (the target's rope events — what silences a lane from afar) join the source's lattice axis.
+     */
+    const arrivalBlockedFrom = (source) => {
+        const cache = new Map();
+        const arrivalOf = (exit) => {
+            if (cache.has(exit.targetRegion)) return cache.get(exit.targetRegion);
+            let found = null;
+            if (SIDECARS[exit.targetRegion]) {
+                const tw = worldOf(exit.targetRegion);
+                if (tw.trapLanes) {
+                    const into = tw.sharedWorld ? enteredAt(tw, exit.targetRegion) : tw;
+                    const at = resolveMazeArrival(into, { source_region: source, exit_id: exit.targetExitId ?? null });
+                    found = { world: into, at: at ? { x: at.x, y: at.y } : into.entrance, items: ropeEvents(tw).map((r) => r.event) };
+                }
+            }
+            cache.set(exit.targetRegion, found);
+            return found;
+        };
+        const blocked = (exit, inv) => {
+            const a = arrivalOf(exit);
+            if (!a) return false;
+            const s = createState(a.world);
+            s.player_pos = { ...a.at };
+            return standsInArmedLane(a.world, s, new Set(inv));
+        };
+        const exits = [...worldOf(source).exits.values()].filter((e) => e.targetRegion);
+        blocked.items = [...new Set(exits.flatMap((e) => arrivalOf(e)?.items ?? []))];
+        return blocked;
+    };
+    const agree = (label, atlas, minimal, items, { notHere = null } = {}) => {
         if (counted(atlas)) { problems.push(`${label}: the AP rule counts an item — a set truth table cannot certify it`); return; }
         const derived = ruleFromMinimalSets(minimal);
         for (const inv of subsets([...new Set([...items, ...ruleItems(atlas)])].sort())) {
+            if (notHere?.(inv)) continue;
             if (holds(derived, inv) !== holds(atlas, inv)) {
                 problems.push(`${label} holding [${inv}]: derived ${holds(derived, inv)}, atlas ${holds(atlas, inv)}`);
                 return;
@@ -118,12 +157,19 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions } = {})
     };
 
     const sample = new Set(regions ?? Object.keys(SIDECARS));
+    // One reach cache per world (a shared world's key, else the region): pairs and entries share reaches.
+    const caches = new Map();
+    const cacheOf = (world, name) => {
+        const key = world.sharedWorld?.key ?? name;
+        if (!caches.has(key)) caches.set(key, new Map());
+        return caches.get(key);
+    };
     const sharedDone = new Set();
     for (const name of Object.keys(SIDECARS).filter((n) => sample.has(n))) {
         const world = worldOf(name);
         if (world.sharedWorld && !sharedDone.has(world.sharedWorld.key)) {
             sharedDone.add(world.sharedWorld.key);
-            const out = deriveLevelWorldLogic(world, helpers, { native });
+            const out = deriveLevelWorldLogic(world, helpers, { native, cache: cacheOf(world, name) });
             const closure = inWorldClosure(world.sharedWorld.regions);
             for (const p of out.pairs) {
                 agreeWithClosure(`${p.from} → ${p.to}`, closure, p, out.items);
@@ -131,8 +177,20 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions } = {})
                 lines.push(`${p.from}>${p.to}=${JSON.stringify(p.minimal)}`);
             }
         }
-        const out = deriveEntryLogic(world, name, helpers, { native });
+        const out = deriveEntryLogic(world, name, helpers, {
+            native, arrivalBlocked: arrivalBlockedFrom(name), cache: cacheOf(world, name),
+        });
         const entered = world.sharedWorld ? enteredAt(world, name) : world;
+        // ⛓ An inventory whose arrival here is a hit cannot be here — checked against every AP way in.
+        const inbound = Object.entries(REGIONS).flatMap(([from, r]) => r.exits.filter((e) => e.connected_region === name)
+            .map((e) => ({ from, rule: e.access_rule ?? { rule: 'True_' } })));
+        const notHere = entered.trapLanes ? (inv) => {
+            if (!standsInArmedLane(entered, createState(entered), new Set(inv))) return false;
+            for (const e of inbound) {
+                if (holds(e.rule, inv)) problems.push(`${e.from} → ${name} holding [${inv}]: AP enters, but the arrival stands in an armed lane`);
+            }
+            return true;
+        } : null;
         const exitTo = new Map(REGIONS[name].exits.map((e) => [e.name, e.connected_region]));
         const byTarget = new Map();
         for (const t of out.targets) {
@@ -155,7 +213,7 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions } = {})
             if (inWorld.has(to)) continue;
             if (!byTarget.has(to)) { problems.push(`${name}: its exit(s) to ${to} are not priced`); continue; }
             const atlas = anyOf(REGIONS[name].exits.filter((e) => e.connected_region === to).map((e) => e.access_rule ?? { rule: 'True_' }));
-            agree(`${name} → ${to}`, atlas, byTarget.get(to), out.items);
+            agree(`${name} → ${to}`, atlas, byTarget.get(to), out.items, { notHere });
             lines.push(`${name}->${to}=${JSON.stringify(byTarget.get(to))}`);
         }
         const priced = new Set(out.targets.map((t) => t.locationName).filter(Boolean));

@@ -122,8 +122,18 @@ export function ruleToClearSet(rule, obstacle = '?') {
  * The HOLD primitive: carried ∪ the token of every button whose `pressed` condition holds — and the CUT
  * primitive: ∪ the token every rope `activates` whose `cut` condition holds (`broken` = this visit's).
  */
-export function scriptedEffectiveInventory(world, carried, playerPos, blocks, tileLib, helpers, broken = undefined) {
+const ROPES = new WeakMap();
+/** The world's rope cells `[[posKey, id]]`, cached per obstacle map (rebuilt when it changes size). */
+function ropeCells(world) {
+    const hit = ROPES.get(world.obstacles);
+    if (hit && hit.size === world.obstacles.size && hit.lib === world.obstacleLib) return hit.ropes;
     const ropes = [...world.obstacles].filter(([, id]) => world.obstacleLib?.[id]?.activates);
+    ROPES.set(world.obstacles, { size: world.obstacles.size, lib: world.obstacleLib, ropes });
+    return ropes;
+}
+
+export function scriptedEffectiveInventory(world, carried, playerPos, blocks, tileLib, helpers, broken = undefined) {
+    const ropes = ropeCells(world);
     if ((!world.buttons || world.buttons.size === 0) && ropes.length === 0) return carried;
     const out = new Set(carried);
     const ctx = makeContext(helpers, carried);
@@ -142,10 +152,13 @@ export function scriptedEffectiveInventory(world, carried, playerPos, blocks, ti
     return out;
 }
 
-/** The LANE condition at the player's cell of `state` (a search's arrival in a live lane reaches nothing). */
+/**
+ * The LANE condition at the player's cell of `state` (a search's arrival in a live lane reaches nothing).
+ * The primitive covers LANE cells only: elsewhere no trap aims, and the helper is not asked.
+ */
 export function scriptedStandsInArmedLane(world, state, helpers, tileLib = MAZE_TILE_LIB) {
-    if (!world.trapLanes) return false;
     const { x, y } = state.player_pos;
+    if (!world.trapLanes?.has(posKey(x, y))) return false;
     const inv = scriptedEffectiveInventory(world, state.inventory, state.player_pos, state.blocks, tileLib, helpers, state.broken);
     return callHelper(makeContext(helpers, inv), tileLib.trap.armed, { x, y },
         tileAt(world, x, y, state.blocks, state.player_pos, state.broken));

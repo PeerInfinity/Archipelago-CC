@@ -14,11 +14,11 @@
  */
 
 import {
-    regionItems, reachUnder, regionTargets, ropeEvents, NOTHING_REACHED, reachedTarget, planToTarget,
+    regionItems, reachUnder, regionTargets, ropeEvents, NOTHING_REACHED, reachedTarget, planToTarget, reachKey, reachInputs,
 } from './deriveTileLogic.js';
 import { MAZE_TILE_LIB } from './tileStep.js';
 import {
-    createState, step, getExitAt, mazeVisitedKey, worldInputs, sharedWorldOwnerAt, standsInArmedLane, USE_PREFIX,
+    createState, step, getExitAt, worldInputs, sharedWorldOwnerAt, standsInArmedLane, strikeTarget, USE_PREFIX, TURN_PREFIX,
 } from '../mazeRoomEngine.js';
 
 /**
@@ -35,24 +35,31 @@ export function nativeReachUnder(world, inventory, { cap = 400000 } = {}) {
     const ropes = ropeEvents(w);
     const cuts = new Map();
     const have = start.inventory;
-    const inputs = worldInputs(w).filter((input) => {
+    const inputs = reachInputs(worldInputs(w).filter((input) => {
         if (!input.startsWith(USE_PREFIX)) return true;
         const item = w.actionLib[input.slice(USE_PREFIX.length)]?.item;
         return !item || have.has(item);
-    });
-    const seen = new Map([[mazeVisitedKey(start), null]]);
-    const cells = new Map([[`${start.player_pos.x},${start.player_pos.y}`, mazeVisitedKey(start)]]);
+    }));
+    const seen = new Map([[reachKey(start), null]]);
+    const cells = new Map([[`${start.player_pos.x},${start.player_pos.y}`, reachKey(start)]]);
     const queue = [start];
     for (let head = 0; head < queue.length; head++) {
         const s = queue[head];
         if (head > 0 && getExitAt(w, s.player_pos.x, s.player_pos.y) !== null) continue;
-        const from = mazeVisitedKey(s);
-        for (const input of inputs) {
-            const next = step(w, s, input);
+        const from = reachKey(s);
+        for (const macro of inputs) {
+            // A use that strikes nothing only turns the player — the same facing-free state: skip it.
+            if (macro.length === 2 && strikeTarget(w, { ...s, facing: macro[0].slice(TURN_PREFIX.length) },
+                macro[1].slice(USE_PREFIX.length)) === null) continue;
+            let next = s;
+            for (const input of macro) {
+                next = step(w, next, input);
+                if (next === null) break;
+            }
             if (next === null) continue;
-            const k = mazeVisitedKey(next);
+            const k = reachKey(next);
             if (seen.has(k)) continue;
-            seen.set(k, { from, input });
+            seen.set(k, { from, input: macro });
             queue.push(next);
             const cell = `${next.player_pos.x},${next.player_pos.y}`;
             if (!cells.has(cell)) cells.set(cell, k);
@@ -64,7 +71,7 @@ export function nativeReachUnder(world, inventory, { cap = 400000 } = {}) {
         if (k === undefined) return null;
         const plan = [];
         for (let link = seen.get(k); link !== null; link = seen.get(k)) { plan.push(link.input); k = link.from; }
-        return plan.reverse();
+        return plan.reverse().flat();
     };
     return {
         cells, cuts, states: seen.size, planTo: (cell) => planFrom(cells.get(cell)), planToCut: (key) => planFrom(cuts.get(key)),
@@ -80,6 +87,19 @@ function* subsetsOfSize(items, k, from = 0, acc = []) {
     }
 }
 
+/**
+ * `reach(set)` through an optional CACHE (a Map the caller owns, one per world and engine): the pairs and
+ * the entry pricing of one region ask the same (arrival, inventory) reach — the certifier shares it.
+ */
+function cachedReach(cache, entered, reach) {
+    if (!cache) return reach;
+    return (set) => {
+        const key = `${entered.entrance.x},${entered.entrance.y}|${[...set].sort().join('\u0001')}`;
+        if (!cache.has(key)) cache.set(key, reach(set));
+        return cache.get(key);
+    };
+}
+
 /** The same world, entered at `region`'s arrival cell. */
 export function enteredAt(world, region) {
     const at = world.sharedWorld?.entrances?.[region];
@@ -93,7 +113,7 @@ export function enteredAt(world, region) {
  * @returns {{ items: string[], pairs: Array<{from, to, minimal: string[][], witnesses: Array<{inventory,
  *   plan, cell}>, unreachable: boolean}>, searched: number, states: number }}
  */
-export function deriveLevelWorldLogic(world, helpers, { tileLib = MAZE_TILE_LIB, maxItems = 12, native = false } = {}) {
+export function deriveLevelWorldLogic(world, helpers, { tileLib = MAZE_TILE_LIB, maxItems = 12, native = false, cache = null } = {}) {
     const sw = world.sharedWorld;
     if (!sw) throw new Error('level-world logic: the world is not a shared level world');
     const items = regionItems(world);
@@ -112,8 +132,8 @@ export function deriveLevelWorldLogic(world, helpers, { tileLib = MAZE_TILE_LIB,
     let states = 0;
     for (const from of sw.regions) {
         const entered = enteredAt(world, from);
-        const reachOf = (set) => (native ? nativeReachUnder(entered, set)
-            : reachUnder(entered, set, helpers, { pickups: 'ap', tileLib }));
+        const reachOf = cachedReach(cache, entered, (set) => (native ? nativeReachUnder(entered, set)
+            : reachUnder(entered, set, helpers, { pickups: 'ap', tileLib })));
         const full = reachOf(items);
         searched += 1;
         states += full.states;
@@ -150,34 +170,42 @@ export function deriveLevelWorldLogic(world, helpers, { tileLib = MAZE_TILE_LIB,
  * second half: `deriveLevelWorldLogic` prices the crossings INSIDE a level world, this prices what leaves
  * one (and a plain world's whole logic). Same lattice, same reach, the same `native` switch.
  *
+ * ⛓ `arrivalBlocked(exit, inventory)` (slice tile-primitives-arrow-rope): a boundary exit is TAKEN only
+ * when the caller says its ARRIVAL is not a hit — the arrival cell, in the target world, standing in an
+ * armed arrow lane (⚖ user 2026-10-21: L16 from L17 with the trap armed must refuse; never tank a hit).
+ * The search over this world cannot see the target's lanes, so the certifier answers from the target's.
+ *
  * @returns {{ items: string[], targets: Array<{id, kind, x, y, exitName?, locationName?, minimal: string[][],
  *   witnesses: Array<{inventory, plan}>, unreachable: boolean}>, searched: number, states: number }}
  */
-export function deriveEntryLogic(world, region, helpers, { tileLib = MAZE_TILE_LIB, maxItems = 12, native = false } = {}) {
+export function deriveEntryLogic(world, region, helpers, {
+    tileLib = MAZE_TILE_LIB, maxItems = 12, native = false, arrivalBlocked = null, cache = null,
+} = {}) {
     const shared = Boolean(world.sharedWorld);
     const entered = shared ? enteredAt(world, region) : world;
-    const items = regionItems(world);
+    const items = [...new Set([...regionItems(world), ...(arrivalBlocked?.items ?? [])])].sort();
     if (items.length > maxItems) {
         throw new Error(`entry logic: ${items.length} items exceed the lattice cap ${maxItems}: ${items.join(', ')}`);
     }
+    const taken = (reach, t, set) => reachedTarget(reach, t) && !(t.exit && arrivalBlocked?.(t.exit, set));
     const owns = (x, y) => !shared || sharedWorldOwnerAt(world, x, y) === region;
     const exitAt = new Map([...world.exits.values()].map((e) => [`${e.x},${e.y}`, e]));
     const targets = regionTargets(world).filter((t) => owns(t.x, t.y)).flatMap((t) => {
         if (t.kind === 'exit') {
             const exit = exitAt.get(`${t.x},${t.y}`);
-            return exit?.targetRegion ? [{ ...t, exitName: exit.exitName ?? exit.exit_id }] : [];
+            return exit?.targetRegion ? [{ ...t, exitName: exit.exitName ?? exit.exit_id, exit }] : [];
         }
         return [{ ...t, locationName: t.locationName ?? world.itemLocationNames?.get?.(`${t.x},${t.y}`) ?? null }];
     });
-    const reachOf = (set) => (native ? nativeReachUnder(entered, set)
-        : reachUnder(entered, set, helpers, { pickups: 'ap', tileLib }));
+    const reachOf = cachedReach(cache, entered, (set) => (native ? nativeReachUnder(entered, set)
+        : reachUnder(entered, set, helpers, { pickups: 'ap', tileLib })));
     const full = reachOf(items);
     let searched = 1;
     let states = full.states;
     for (const t of targets) {
         t.minimal = [];
         t.witnesses = [];
-        t.unreachable = !reachedTarget(full, t);
+        t.unreachable = !taken(full, t, items);
     }
     const live = targets.filter((t) => !t.unreachable);
     const covered = (t, set) => t.minimal.some((m) => m.every((i) => set.includes(i)));
@@ -188,11 +216,12 @@ export function deriveEntryLogic(world, region, helpers, { tileLib = MAZE_TILE_L
             searched += 1;
             states += reach.states;
             for (const t of live) {
-                if (covered(t, set) || !reachedTarget(reach, t)) continue;
+                if (covered(t, set) || !taken(reach, t, set)) continue;
                 t.minimal.push(set);
                 t.witnesses.push({ inventory: set, plan: planToTarget(reach, t) });
             }
         }
     }
+    for (const t of targets) delete t.exit;
     return { items, targets, searched, states };
 }

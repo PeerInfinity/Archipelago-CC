@@ -961,17 +961,31 @@ export function effectiveInventory(world, inventory, playerPos, blocks, broken) 
  * Pass the caller's `broken` — without it only the carried event counts.
  */
 export function ropeTokens(world, inventory, broken) {
-    const lib = world.obstacleLib;
-    if (!lib || !Object.values(lib).some((e) => e?.activates)) return null;
+    const ropes = ropesOf(world);
+    if (ropes.length === 0) return null;
     let out = null;
-    for (const [key, id] of world.obstacles) {
-        const entry = lib[id];
-        if (!entry?.activates) continue;
+    for (const { key, entry } of ropes) {
         if (!(broken?.includes(key) || (entry.event && inventory.has(entry.event)))) continue;
         if (out === null) out = [];
         out.push(entry.activates);
     }
     return out;
+}
+
+/**
+ * The world's placed ropes `[{key, entry}]` — CACHED per (obstacle map, library) and rebuilt when either
+ * object or the obstacle count changes (an edit), because `step` asks on every move of every search.
+ */
+const ROPE_CACHE = new WeakMap();
+function ropesOf(world) {
+    const lib = world.obstacleLib;
+    if (!lib || !world.obstacles) return [];
+    const hit = ROPE_CACHE.get(world.obstacles);
+    if (hit && hit.lib === lib && hit.size === world.obstacles.size) return hit.ropes;
+    const ropes = [];
+    for (const [key, id] of world.obstacles) if (lib[id]?.activates) ropes.push({ key, entry: lib[id] });
+    ROPE_CACHE.set(world.obstacles, { lib, size: world.obstacles.size, ropes });
+    return ropes;
 }
 
 /**
