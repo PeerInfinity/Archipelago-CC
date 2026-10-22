@@ -9,8 +9,8 @@
  *     stance would wake is killed: a pre-stance 48 px out on one axis, a creep until it hops, a press each time its
  *     `hitsTimer` runs out, its removal waited out. A Fire-only run keeps the cut's own refusal, which now says Fire
  *     cannot kill a drill.
- *   · D1 (the game): `fixtures/drillkill-witness/` (`probe-seedling-drill-kill.mjs --record`, p4g), replayed in
- *     `fidelityDrillKill.witness.test.js`.
+ *   · D1 (the game): `fixtures/drillkill-witness/` (`probe-seedling-drill-kill.mjs --record`, p4g, headless), replayed
+ *     here against the model at 0 px — the player, every drill (position, anim, `hits`, `hitsTimer`), the bobsoldier.
  *
  * rules-2's measurement (`ropeCutAnyWeapon` + `drillLive` + `drillMixedRooms` ON) is the acceptance: Sword SOLVED from
  * both arrivals; Spear REFUSED from both; Fire SOLVED from L25 and REFUSED from L26. ON: the Spear solves from both; Fire
@@ -22,11 +22,15 @@
  *   k3 press without the `hitsTimer <= 1` gate               -> the Sword rows red: a press inside the i-frame does
  *                                                               not land, the miss refusal fires
  *   k4 `preStance` 56                                         -> the L25 rows red: no kill stance above the drills
+ *   d1 `stepDrillGraphic`'s "die" case keeps the anim name (no `play("")`) -> the four kill witnesses red from the tick
+ *      the death anim ends (the game's row reads anim "" through the fade)
  * Measured: all red. k1 as predicted (and the Fire+Spear row); k2 a superset — the L25 rows and the Fire+Spear row
  * too (the north stances' walk also ends facing across the axis); k3 as predicted (and the Fire+Spear row); k4 a
  * superset — the L26 rows too (a 56 px stance west of `drill@128,96` is where `drill@80,96` stood) and the pin.
  */
 import { describe, expect, it } from 'vitest';
+import { readFileSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
 
 import { atlasLevelSource } from './levelSource.js';
 import { createRunForStaging } from './tapeRunner.js';
@@ -34,6 +38,8 @@ import { arrivalStaging } from './fidelityArrival.js';
 import { CONTACT_FIDELITY, CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
 import { solveSegment, SolverRefusal, DRILL_KILL } from './solverBot.js';
 import { hitDrill, newDrill } from './drill.js';
+import { DRILLKILL_WITNESS_DIR, DRILLKILL_WITNESSES, compareDrillKillWitness, drillKillModelSamples, drillKillTape }
+    from './fidelityDrillKill.js';
 
 const SRC = atlasLevelSource();
 const L28_CUT = Object.freeze({ kind: 'clear-tag', tag: { level: 28, tag: 0 }, at: { x: 160, y: 64 },
@@ -141,4 +147,47 @@ describe('fidelity DRILLKILL — D2: L28\'s rope cut from both arrivals (rules-2
         if (ticks === null) expect(refusal.message).toMatch(refused);
         else expect(out.perTick.length).toBe(ticks);
     }), 120000);
+});
+
+describe('fidelity DRILLKILL — D1: the game witnesses (p4g), replayed against the model at 0 px', () => {
+    const load = (name) => JSON.parse(readFileSync(join(DRILLKILL_WITNESS_DIR, `${name}.json`), 'utf8'));
+    it('every witness is recorded, on the default build', () => {
+        const files = readdirSync(DRILLKILL_WITNESS_DIR).filter((f) => f.endsWith('.json')).sort();
+        expect(files).toEqual(DRILLKILL_WITNESSES.map((w) => `${w.name}.json`).sort());
+        for (const w of DRILLKILL_WITNESSES) expect(load(w.name).page).toBe('seedling_bot_ap_p4g');
+    });
+    it.each(DRILLKILL_WITNESSES.map((w) => [w.name]))('%s: the model reproduces the game on every sampled tick', async (name) => {
+        const rec = load(name);
+        const model = await drillKillModelSamples(rec.tape);
+        expect(model.error).toBeNull();
+        expect(compareDrillKillWitness(rec.samples, model.samples, rec.tape.boot.level)).toEqual([]);
+        expect(rec.samples.every((g) => g.hits === 0)).toBe(true);
+    }, 120000);
+    it.each(DRILLKILL_WITNESSES.filter((w) => w.script.goals).map((w) => [w.name]))(
+        '%s: the drills die on the game, the rope is cut, and the solver still makes the recorded plan', async (name) => {
+            const rec = load(name);
+            const w = DRILLKILL_WITNESSES.find((x) => x.name === name);
+            const { tape } = await drillKillTape(w);
+            expect(tape.inputs).toEqual(rec.tape.inputs);
+            const killed = w.boot.x === 16 ? 2 : 1;
+            expect(rec.samples.at(-1).drills.length).toBe(2 - killed);
+            const model = await drillKillModelSamples(rec.tape);
+            expect(model.pulls.map((p) => p.id)).toEqual(['rope@160,64']);
+        }, 120000);
+    it('drillkill-l28-fire-l26: burned point-blank, the drill\'s hits never move on the game (`hitByFire` false)', () => {
+        const rec = load('drillkill-l28-fire-l26');
+        // the flame is `sprFire` (32x32, centred) cut to 16 px of the player's box (hit frames 3-6 of 9 at 25 fps, ~7-17
+        // ticks after a press); the presses of tape ticks 31 and 42 find the drill 8.05 px in front, then 7.95 px behind
+        const at = (t) => rec.samples.find((g) => g.t === t);
+        for (const t of [38, 41, 44, 47, 50]) {
+            const g = at(t);
+            expect(g.drills.some((d) => Math.abs(d.x - g.x) < 9 && d.y === g.y)).toBe(true);
+        }
+        for (const g of rec.samples) {
+            for (const d of g.drills) {
+                expect(d.hits).toBe(0);
+                expect(d.hitByFire).toBe(false);
+            }
+        }
+    });
 });

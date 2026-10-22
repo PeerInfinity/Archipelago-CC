@@ -158,7 +158,9 @@ export function stepDrillGraphic(s) {
             const a = DRILL.anims.hit;
             return { ...d, sprite: createSpriteAnim(a.frames, a.rate) };
         }
-        case 'die': d = { ...d, destroy: true, sprite: null }; return d;
+        // ⛓ fidelity DRILLKILL D1: `endAnim`'s "die" case is `destroy = true; sprDrill.play("")` — the game's row reads
+        // anim "" through the fade (measured on p4g: `drillkill-l28-sword-l25` t141-151); nothing gates on the name.
+        case 'die': d = { ...d, destroy: true, anim: '', sprite: null }; return d;
         default: return play(d, 'sit');
     }
 }
