@@ -17600,6 +17600,9 @@ function ropeCutWeapons(run) {
 const ROPE_DRILL_PLAN_SLACK = 2;
 
 function unsteppedDrills(run) {
+    // ⛓ fidelity DRILL D3: with `drillMixedRooms` ON every drill of a room is stepped (`levelRun.drillStateFor`), so the
+    // run prices each hop and contact and there is no unstepped drill to keep out of — the interim retires.
+    if (CONTACT_FIDELITY.drillLive && CONTACT_FIDELITY.drillMixedRooms) return [];
     const enemies = run.world.combat?.enemies ?? [];
     const stepped = CONTACT_FIDELITY.drillLive && enemies.length === 1 && enemies[0].tag === 'drill';
     return stepped ? [] : enemies.filter((e) => e.tag === 'drill' && !e.removed);
@@ -17616,6 +17619,8 @@ function unsteppedDrillNote(run) {
 /** `pullStanceAdmit`, and (the interim above) out of every unstepped drill's run range. */
 const ropeStanceAdmit = (run) => {
     const base = pullStanceAdmit(run);
+    // ⛓ fidelity DRILL D3: no unstepped drill — the stance's admission is `pullStanceAdmit` alone.
+    if (CONTACT_FIDELITY.drillLive && CONTACT_FIDELITY.drillMixedRooms) return base;
     const drills = unsteppedDrills(run);
     return (c) => base(c) && !drills.some((e) => Math.hypot(c.x - (e.x + DRILL.dx), c.y - (e.y + DRILL.dy))
         <= DRILL.runRange && !run.collideLineSolid(e.x + DRILL.dx, e.y + DRILL.dy, c.x, c.y));
@@ -17924,6 +17929,28 @@ function ropeCutOrder(run, rope, cut) {
  * The post-condition is the run's own `ropePulls` row (`execRope` asserts it).
  */
 function execRopeCut(run, perTick, resolved, ctx) {
+    if (!(CONTACT_FIDELITY.drillLive && CONTACT_FIDELITY.drillMixedRooms)) return execRopeCutOnce(run, perTick, resolved, ctx);
+    /**
+     * ⛓ fidelity DRILL D3: the interim's avoidance is gone (every drill is stepped), so a stance whose walk or press a
+     * drill reaches is met in the run — and a cut that then fails is refused NAMING THAT DRILL, at the tick its contact
+     * landed. Measured on p4g (`drill-witness/drill-l28-spear-l25`): the spear stance (136,72) from the L25 arrival is hit
+     * at t59 by `drill@128,96`, the model's tick and point.
+     */
+    const hitsBefore = (run.ledger('playerHits') ?? []).length;
+    try {
+        return execRopeCutOnce(run, perTick, resolved, ctx);
+    } catch (e) {
+        if (!(e instanceof SolverRefusal)) throw e;
+        const hit = (run.ledger('playerHits') ?? []).slice(hitsBefore).find((h) => h.source === 'drill');
+        if (!hit) throw e;
+        throw new SolverRefusal(`${ctx.what}: cutting ${resolved.rope} with the ${resolved.weapon} — the stepped `
+            + `${hit.id} hopped onto the player at run tick ${hit.t ?? '?'} on the way to (or at) the stance, and the cut `
+            + `failed after it: ${e.message.split('\n')[0].slice(0, 240)}`,
+        { obstacle: { kind: 'solid', id: resolved.rope, drill: hit.id }, perTick: e.perTick });
+    }
+}
+
+function execRopeCutOnce(run, perTick, resolved, ctx) {
     const refuse = (why) => {
         throw new SolverRefusal(why, { obstacle: { kind: 'solid', id: resolved.rope } });
     };
