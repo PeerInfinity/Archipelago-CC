@@ -2886,7 +2886,8 @@ describe('engine-prep C4: run.progress(field) and run.ledger(kind) are the gette
         // ⛓ fidelity CROSSROOM D2: 35 — `unreadRoomWrites`, a cross-room write no entity of its level reads.
         // ⛓ fidelity BOMBPUSHER D2: 36 — `bombEvents`, the lobber's bombs spawned and their Explosions.
         // ⛓ fidelity BEAMTOWER D1: 37 — `beamTowerTrace`, the towers' stepped `y` (the switch ON).
-        { query: 'ledger', names: LEDGER_KIND_NAMES, count: 37, noun: 'ledger kind', plural: 'kinds' },
+        // ⛓ fidelity YETI D2: 38 — `yetiEvents`, L58's Yeti talked out (the switch ON).
+        { query: 'ledger', names: LEDGER_KIND_NAMES, count: 38, noun: 'ledger kind', plural: 'kinds' },
     ];
     const ALL = [...PROGRESS_FIELD_NAMES, ...LEDGER_KIND_NAMES];
     const queryOf = new Map(FOLDS.flatMap((f) => f.names.map((n) => [n, f.query])));
@@ -3035,6 +3036,18 @@ describe('engine-prep C4: run.progress(field) and run.ledger(kind) are the gette
             expect(bad).toEqual([]);
             expect(run.ledger('beamTowerTrace').map((e) => e.id)).toContain('beamtower@48,40');
             expect(seen.has('beamTowerTrace')).toBe(true);
+            for (const m of seen) witnessed.add(m);
+        });
+    });
+
+    it('L58\'s Yeti (YETI D2, the switch ON): a yetiEvents entry, through the query', () => {
+        // The game-witnessed `talk` tape (`fixtures/yeti-witness/`, `probe-seedling-yeti.mjs`): open t54, close t144.
+        const tape = parseTape(JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)),
+            'fixtures', 'yeti-witness', 'yeti-l58-talk.json'), 'utf8')).tape);
+        withContactFidelity({ yetiTalk: true }, () => {
+            const { bad, seen } = compareEveryTick(runFor(tape), 150, (t) => heldKeysAt(tape, t));
+            expect(bad).toEqual([]);
+            expect(seen.has('yetiEvents')).toBe(true);
             for (const m of seen) witnessed.add(m);
         });
     });

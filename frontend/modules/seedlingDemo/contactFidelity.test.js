@@ -214,7 +214,10 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             ropeCutAnyWeapon: true,
             // ⛓ fidelity DRILL (wave 24): every drill of a mixed room stepped shipped OFF;
             // ⛓ planning-10's flip (⚖ user "Harvest + flip ON", 2026-10-21) turns it ON.
-            drillMixedRooms: true });
+            drillMixedRooms: true,
+            // ⛓ fidelity YETI (wave 25): the Yeti's talk and its {58,1} teleporter shipped OFF;
+            // ⛓ planning-10's flip (⚖ user "Yes, please do the flip", 2026-10-22) turns it ON.
+            yetiTalk: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
