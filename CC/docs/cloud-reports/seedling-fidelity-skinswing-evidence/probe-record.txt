@@ -1,0 +1,39 @@
+# box lock: TAKEN by probe-seedling-skin-swing.mjs (browser, pid 2493) — head 3ac4f7751, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+      skinswing-l71-lavarunner: game hits (none)
+      skinswing-l71-lavarunner: model ON hits (none)
+      skinswing-l71-lavarunner: model OFF hits t3:lavarunner@72,208=1 t21:lavarunner@64,192=1 t21:lavarunner@80,224=1 t65:lavarunner@64,224=1 t65:lavarunner@64,192=2 t65:lavarunner@80,224=2 t109:lavarunner@64,224=2 t109:lavarunner@72,208=2 t153:lavarunner@48,200=1 t197:lavarunner@48,200=2 [OFF error: levelRun: the removal of lavarunner@48,200 at tick 227 (a press kill) OPENS 1 kill lock(s) in level 71 [{71,0}] (1 kill ]
+      skinswing-l71-lavarunner: game 'die'-anim body-ticks 0; game slash {"hits":370,"tests":93}; end level 71 tick 300
+      skinswing-l71-lavarunner: ON first divergence (none) (0 row(s))
+      skinswing-l71-lavarunner: OFF first divergence t 3 lavarunner@72,208: hits game 0 model 1 (910 row(s))
+PASS: skinswing-l71-lavarunner: the game played 300 sampled tick(s)
+recorded frontend/modules/seedlingDemo/fixtures/skinswing-witness/skinswing-l71-lavarunner.json — 300 tick(s)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+      skinswing-l74-bulb: game hits (none)
+      skinswing-l74-bulb: model ON hits (none)
+      skinswing-l74-bulb: model OFF hits t21:bulb@48,112=1 t46:lavarunner@24,56=1 t90:lavarunner@24,56=2
+      skinswing-l74-bulb: game 'die'-anim body-ticks 0; game slash {"hits":235,"tests":93}; end level 74 tick 300
+      skinswing-l74-bulb: ON first divergence (none) (0 row(s))
+      skinswing-l74-bulb: OFF first divergence t 21 bulb@48,112: hits game 0 model 1 (658 row(s))
+PASS: skinswing-l74-bulb: the game played 300 sampled tick(s)
+recorded frontend/modules/seedlingDemo/fixtures/skinswing-witness/skinswing-l74-bulb.json — 300 tick(s)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+      skinswing-l71-resite: game hits t2:lavarunner#0=1 t2:lavarunner#2=1 t2:lavarunner#4=1 t33:lavarunner#0=2 t33:lavarunner#1=1 t33:lavarunner#2=2 t33:lavarunner#4=2 t65:lavarunner#0=2 t65:lavarunner#1=1 t109:lavarunner#0=1 t109:lavarunner#2=1 t109:lavarunner#4=1 t134:lavarunner#1=1 t153:lavarunner#0=2 t153:lavarunner#2=2 t153:lavarunner#3=1 t165:lavarunner#1=2 t165:lavarunner#4=2 t197:lavarunner#0=1 t197:lavarunner#2=1 t197:lavarunner#4=1 t222:lavarunner#1=1 t241:lavarunner#0=2 t241:lavarunner#2=2 t241:lavarunner#3=1 t253:lavarunner#1=2 t253:lavarunner#4=2 t285:lavarunner#0=2
+      skinswing-l71-resite: model ON hits t2:lavarunner@64,224=1 t2:lavarunner@72,208=1 t2:lavarunner@80,224=1 t33:lavarunner@64,224=2 t33:lavarunner@72,208=2 t33:lavarunner@48,200=1 t33:lavarunner@80,224=2 t65:lavarunner@64,192=1 t65:lavarunner@48,200=2 t109:lavarunner@64,224=1 t109:lavarunner@72,208=1 t109:lavarunner@80,224=1 t134:lavarunner@48,200=1 t153:lavarunner@64,192=1 t153:lavarunner@72,208=2 t153:lavarunner@80,224=2 t165:lavarunner@64,224=2 t165:lavarunner@48,200=2 t197:lavarunner@64,224=1 t197:lavarunner@72,208=1 t197:lavarunner@80,224=1 t222:lavarunner@48,200=1 t241:lavarunner@64,192=1 t241:lavarunner@72,208=2 t241:lavarunner@80,224=2 t253:lavarunner@64,224=2 t253:lavarunner@48,200=2 t285:lavarunner@64,192=2
+      skinswing-l71-resite: model OFF hits t2:lavarunner@64,224=1 t2:lavarunner@72,208=1 t2:lavarunner@80,224=1 t33:lavarunner@64,224=2 t33:lavarunner@72,208=2 t33:lavarunner@48,200=1 t33:lavarunner@80,224=2 t65:lavarunner@64,192=1 t65:lavarunner@48,200=2 t109:lavarunner@64,224=1 t109:lavarunner@72,208=1 t109:lavarunner@80,224=1 t134:lavarunner@48,200=1 t153:lavarunner@64,192=1 t153:lavarunner@72,208=2 t153:lavarunner@80,224=2 t165:lavarunner@64,224=2 t165:lavarunner@48,200=2 t197:lavarunner@64,224=1 t197:lavarunner@72,208=1 t197:lavarunner@80,224=1 t222:lavarunner@48,200=1 t241:lavarunner@64,192=1 t241:lavarunner@72,208=2 t241:lavarunner@80,224=2 t253:lavarunner@64,224=2 t253:lavarunner@48,200=2 t285:lavarunner@64,192=2
+      skinswing-l71-resite: game 'die'-anim body-ticks 243; game slash {"hits":431,"tests":94}; end level 71 tick 300
+      skinswing-l71-resite: ON first divergence t 63 lavarunner@64,192: game (89.99974125240814, 203.3031481193856) model (89.99974125240814, 204.46697188284412) (50 row(s))
+      skinswing-l71-resite: OFF first divergence t 63 lavarunner@64,192: game (89.99974125240814, 203.3031481193856) model (89.99974125240814, 204.46697188284412) (50 row(s))
+PASS: skinswing-l71-resite: the game played 300 sampled tick(s)
+recorded frontend/modules/seedlingDemo/fixtures/skinswing-witness/skinswing-l71-resite.json — 300 tick(s)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+      skinswing-l74-resite: game hits t2:bulb#0=1 t47:lavarunner#1=1 t77:lavarunner#1=2
+      skinswing-l74-resite: model ON hits t2:bulb@48,112=1 t47:lavarunner@24,56=1 t77:lavarunner@24,56=2
+      skinswing-l74-resite: model OFF hits t2:bulb@48,112=1 t47:lavarunner@24,56=1 t77:lavarunner@24,56=2
+      skinswing-l74-resite: game 'die'-anim body-ticks 46; game slash {"hits":241,"tests":93}; end level 74 tick 300
+      skinswing-l74-resite: ON first divergence (none) (0 row(s))
+      skinswing-l74-resite: OFF first divergence (none) (0 row(s))
+PASS: skinswing-l74-resite: the game played 298 sampled tick(s)
+recorded frontend/modules/seedlingDemo/fixtures/skinswing-witness/skinswing-l74-resite.json — 298 tick(s)
+
+ALL CHECKS PASSED

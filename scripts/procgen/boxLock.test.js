@@ -503,7 +503,8 @@ describe('who takes the box', () => {
          * fidelity ROPE the `rope` verb's plans on the game, `probe-seedling-rope-verb.mjs`;
          * fidelity ROPESTANCE its spear and fire plans, `probe-seedling-rope-stance.mjs`;
          * fidelity DRILL the mixed-room drill witnesses, `probe-seedling-drill-mixed.mjs`; fidelity MASKS the swing-line
-         * witnesses, `probe-seedling-mask-lines.mjs`.)
+         * witnesses, `probe-seedling-mask-lines.mjs`; fidelity SKINSWING the art-stand swing witnesses,
+         * `probe-seedling-skin-swing.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -540,7 +541,8 @@ describe('who takes the box', () => {
             'probe-seedling-bosskills.mjs',
             'probe-seedling-rope-verb.mjs', 'probe-seedling-rope-stance.mjs', 'probe-seedling-drill-mixed.mjs',
             'probe-seedling-yeti.mjs',
-            'probe-seedling-mask-lines.mjs'];
+            'probe-seedling-mask-lines.mjs',
+            'probe-seedling-skin-swing.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')
