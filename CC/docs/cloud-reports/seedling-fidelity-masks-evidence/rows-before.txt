@@ -1,0 +1,287 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90m/tmp/claude-0/-home-user-Archipelago-CC/6e3cc81d-f678-5556-8954-807b08991eb8/scratchpad/base[39m
+
+ [32m✓[39m frontend/modules/seedlingDemo/solveProgress.test.js [2m([22m[2m57 tests[22m[2m)[22m[33m 162420[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L18 hammer room (residue 21): no hook, a peeking hook, a silent hook and a throwing hook give the same bytes [33m 27038[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L6 ladder climb: no hook, a peeking hook, a silent hook and a throwing hook give the same bytes [33m 552[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ under a deadline that never trips (the page's budgeted pass), the hook changes nothing either, and work.shouldStop IS the caller's count [33m 11958[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ L18 hammer room (residue 21): keys are role paths, stable across the stream; counts never fall [33m 5959[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ L18 hammer room (residue 21): a tile's count never falls and its firstTick never rises [33m 1036[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L18 hammer room (residue 21): the answer, the shouldStop total and the asks are W0's, hooked and unhooked; unhooked, no kind is looked up [33m 9737[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, the shouldStop total and the asks are W0's, hooked and unhooked; unhooked, no kind is looked up [33m 24476[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ lastWhy is the thrown why VERBATIM: L18's first pass refuses, and its last why is the error's message [33m 3150[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L18 hammer room (residue 21): the answer, shouldStop, the asks and the work are W0's, hooked and unhooked; unhooked, no frame is read [33m 10733[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, shouldStop, the asks and the work are W0's, hooked and unhooked; unhooked, no frame is read [33m 13230[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L18 hammer room (residue 21): the answer, shouldStop and the asks are W0's hooked and unhooked; unhooked, no cache count is read [33m 11909[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, shouldStop and the asks are W0's hooked and unhooked; unhooked, no cache count is read [33m 16993[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ non-vacuous, the cross-pass escape cache ON (the test only, wired by its hook): L18's segments report the solve's own hits and misses [33m 10230[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ the solver wires the escape member: counted with the switch ON and no installer, null with it OFF; a null hand-in is null [33m 13178[2mms[22m[39m
+[90mstderr[2m | frontend/modules/seedlingDemo/dashShape.test.js
+[22m[39m[centralRegistry] CentralRegistry initialized
+
+[90mstderr[2m | frontend/modules/seedlingDemo/dashShape.test.js
+[22m[39m[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker [90m(/tmp/claude-0/-home-user-Archipelago-CC/6e3cc81d-f678-5556-8954-807b08991eb8/scratchpad/base/[39mfrontend/modules/stateManager/stateManagerProxy.js:244:25[90m)[39m
+    at new StateManagerProxy [90m(/tmp/claude-0/-home-user-Archipelago-CC/6e3cc81d-f678-5556-8954-807b08991eb8/scratchpad/base/[39mfrontend/modules/stateManager/stateManagerProxy.js:112:10[90m)[39m
+    at [90m/tmp/claude-0/-home-user-Archipelago-CC/6e3cc81d-f678-5556-8954-807b08991eb8/scratchpad/base/[39mfrontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+[90m    at processTicksAndRejections (node:internal/process/task_queues:105:5)[39m
+    at VitestModuleEvaluator._runInlinedModule (file:///home/user/Archipelago-CC/node_modules/[4mvitest[24m/dist/module-evaluator.js:205:4)
+    at VitestModuleRunner.directRequest (file:///home/user/Archipelago-CC/node_modules/[4mvite[24m/dist/node/module-runner.js:1146:59)
+    at VitestModuleRunner.cachedRequest (file:///home/user/Archipelago-CC/node_modules/[4mvite[24m/dist/node/module-runner.js:1053:73)
+    at [90m/tmp/claude-0/-home-user-Archipelago-CC/6e3cc81d-f678-5556-8954-807b08991eb8/scratchpad/base/[39mfrontend/modules/stateManager/index.js:85:1
+    at VitestModuleEvaluator._runInlinedModule (file:///home/user/Archipelago-CC/node_modules/[4mvitest[24m/dist/module-evaluator.js:205:4)
+    at VitestModuleRunner.directRequest (file:///home/user/Archipelago-CC/node_modules/[4mvite[24m/dist/node/module-runner.js:1146:59)
+
+[90mstdout[2m | frontend/modules/seedlingDemo/dashShape.test.js[2m > [22m[2mthe hook, the settings and the page query[2m > [22m[2mthe switches default to the dash flip's shape (legPrecheck ON, noSwingPrefix OFF, keepPartial ON; no env here), read once at import; three settings, each default | on | off, schema default `default`
+[22m[39m[flashPanelModule] [FlashPanel Module] Registering...
+[flashPanelModule] [FlashPanel Module] Registration complete.
+
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityRopeStance.test.js [2m([22m[2m18 tests[22m[2m)[22m[33m 180986[2mms[22m[39m
+     [33m[2m✓[22m[39m with the SWORD selected, ON plans what OFF plans, tick for tick [33m 8320[2mms[22m[39m
+     [33m[2m✓[22m[39m L16 from the L15 arrival, Fire: (24,40)'s walk refuses at no tick (bob@16,16), (88,40) cuts at t162 [33m 54495[2mms[22m[39m
+     [33m[2m✓[22m[39m Fire alone, OFF: the ladder exhausts (the PULL rung asks only a sword) [33m 5159[2mms[22m[39m
+     [33m[2m✓[22m[39m Fire alone, ON: the rung cuts rope@32,16 with fire from (88,40), the lanes latch, the walk reaches L17 [33m 54207[2mms[22m[39m
+     [33m[2m✓[22m[39m ropestance-l16-fire: the solver plans the recorded tape today, and the model is the game on every tick [33m 57946[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/tapeRunner.test.js [2m([22m[2m635 tests[22m[2m)[22m[33m 77927[2mms[22m[39m
+     [33m[2m✓[22m[39m apb-l12-witch-reported: JS stream matches the real game recording, exactly [33m 372[2mms[22m[39m
+     [33m[2m✓[22m[39m crusher-l42-round-trip: JS stream matches the real game recording, exactly [33m 1079[2mms[22m[39m
+     [33m[2m✓[22m[39m l40button-l41-part0: JS stream matches the real game recording, exactly [33m 743[2mms[22m[39m
+     [33m[2m✓[22m[39m l40button-l42-part0: JS stream matches the real game recording, exactly [33m 683[2mms[22m[39m
+     [33m[2m✓[22m[39m r2-walk-full: JS stream matches the real game recording, exactly [33m 1280[2mms[22m[39m
+     [33m[2m✓[22m[39m r3-walk-full: JS stream matches the real game recording, exactly [33m 1189[2mms[22m[39m
+     [33m[2m✓[22m[39m r4-walk-6-health: JS stream matches the real game recording, exactly [33m 421[2mms[22m[39m
+     [33m[2m✓[22m[39m r4-walk-full: JS stream matches the real game recording, exactly [33m 981[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-l40-join: JS stream matches the real game recording, exactly [33m 331[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-l40-part5: JS stream matches the real game recording, exactly [33m 796[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-l40-part5-control: JS stream matches the real game recording, exactly [33m 423[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-l41-part3: JS stream matches the real game recording, exactly [33m 1068[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-l41-part3-control: JS stream matches the real game recording, exactly [33m 855[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-l42-part4: JS stream matches the real game recording, exactly [33m 1067[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-l42-part4-control: JS stream matches the real game recording, exactly [33m 1122[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-shaft: JS stream matches the real game recording, exactly [33m 552[2mms[22m[39m
+     [33m[2m✓[22m[39m r7-act2-full: JS stream matches the real game recording, exactly [33m 742[2mms[22m[39m
+     [33m[2m✓[22m[39m r9-solve-12: JS stream matches the real game recording, exactly [33m 389[2mms[22m[39m
+     [33m[2m✓[22m[39m every fixture is backed by an ORACLE recording, not a bootstrap [33m 334[2mms[22m[39m
+     [33m[2m✓[22m[39m apb-l12-witch-reported: stepping to completion == runTape, byte for byte [33m 316[2mms[22m[39m
+     [33m[2m✓[22m[39m apb-l12-witch-server-sword: stepping to completion == runTape, byte for byte [33m 316[2mms[22m[39m
+     [33m[2m✓[22m[39m crusher-l42-round-trip: stepping to completion == runTape, byte for byte [33m 2111[2mms[22m[39m
+     [33m[2m✓[22m[39m l40button-l41-part0: stepping to completion == runTape, byte for byte [33m 839[2mms[22m[39m
+     [33m[2m✓[22m[39m l40button-l42-part0: stepping to completion == runTape, byte for byte [33m 1004[2mms[22m[39m
+     [33m[2m✓[22m[39m r1-dark-shield-kill: stepping to completion == runTape, byte for byte [33m 348[2mms[22m[39m
+     [33m[2m✓[22m[39m r2-walk-4-spear: stepping to completion == runTape, byte for byte [33m 412[2mms[22m[39m
+     [33m[2m✓[22m[39m r2-walk-full: stepping to completion == runTape, byte for byte [33m 1623[2mms[22m[39m
+     [33m[2m✓[22m[39m r3-walk-4-spear: stepping to completion == runTape, byte for byte [33m 524[2mms[22m[39m
+     [33m[2m✓[22m[39m r3-walk-full: stepping to completion == runTape, byte for byte [33m 1648[2mms[22m[39m
+     [33m[2m✓[22m[39m r4-walk-3-torch: stepping to completion == runTape, byte for byte [33m 322[2mms[22m[39m
+     [33m[2m✓[22m[39m r4-walk-6-health: stepping to completion == runTape, byte for byte [33m 464[2mms[22m[39m
+     [33m[2m✓[22m[39m r4-walk-full: stepping to completion == runTape, byte for byte [33m 1507[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-l40-join: stepping to completion == runTape, byte for byte [33m 485[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-l40-join-control: stepping to completion == runTape, byte for byte [33m 463[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-l40-part0: stepping to completion == runTape, byte for byte [33m 314[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-l40-part5: stepping to completion == runTape, byte for byte [33m 966[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-l40-part5-control: stepping to completion == runTape, byte for byte [33m 1252[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-l41-part3: stepping to completion == runTape, byte for byte [33m 1772[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-l41-part3-control: stepping to completion == runTape, byte for byte [33m 1302[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-l42-part4: stepping to completion == runTape, byte for byte [33m 2443[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-l42-part4-control: stepping to completion == runTape, byte for byte [33m 1819[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-shaft: stepping to completion == runTape, byte for byte [33m 765[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-shaft-control: stepping to completion == runTape, byte for byte [33m 958[2mms[22m[39m
+     [33m[2m✓[22m[39m r7-act2-5: stepping to completion == runTape, byte for byte [33m 507[2mms[22m[39m
+     [33m[2m✓[22m[39m r7-act2-full: stepping to completion == runTape, byte for byte [33m 1087[2mms[22m[39m
+     [33m[2m✓[22m[39m r8-d2: stepping to completion == runTape, byte for byte [33m 557[2mms[22m[39m
+     [33m[2m✓[22m[39m r8-l18-spinner-press: stepping to completion == runTape, byte for byte [33m 425[2mms[22m[39m
+     [33m[2m✓[22m[39m r9-solve-12: stepping to completion == runTape, byte for byte [33m 513[2mms[22m[39m
+     [33m[2m✓[22m[39m r9-solve-16: stepping to completion == runTape, byte for byte [33m 477[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/dashShape.test.js [2m([22m[2m14 tests[22m[2m)[22m[33m 111547[2mms[22m[39m
+     [33m[2m✓[22m[39m in process: each key has its own witness — noSwingPrefix L4 full pass 57 → 48 units; keepPartial (dash-only window 20) 255 → 235 t; legPrecheck 392:0 the same ticks for less work [33m 65077[2mms[22m[39m
+     [33m[2m✓[22m[39m through a real worker: the posting instance's shape rides on the request; the worker's plan moves as in process and is stamped with what it READ; at the defaults unstamped [33m 46421[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerPressKillGuards.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 283317[2mms[22m[39m
+     [33m[2m✓[22m[39m HO1: at t2439 the strike preview throws OFF; ON the band's candidates are refused by name [33m 7259[2mms[22m[39m
+     [33m[2m✓[22m[39m HO2 OFF: the press kill carries on past the death at t1202 [33m 130764[2mms[22m[39m
+     [33m[2m✓[22m[39m HO2 ON: the press kill is refused by name on the tick of the first death [33m 145281[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityCorridorBody.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 95931[2mms[22m[39m
+     [33m[2m✓[22m[39m ships OFF: no forecast, and a preview carries no `corridorBodies` [33m 302[2mms[22m[39m
+     [33m[2m✓[22m[39m the witness, wallflyers (step 47): the forecast holds every flyer at 0 px and lands at t84, as the game does [33m 356[2mms[22m[39m
+     [33m[2m✓[22m[39m step 53 (L22): OFF the walk dies twice to wallflyers; ON it walks clean [33m 27362[2mms[22m[39m
+     [33m[2m✓[22m[39m step 45 (L22): ON keeps the base's clean 6-window dash chain — certified WHOLE (no 1-window prefix is clean) [33m 19514[2mms[22m[39m
+     [33m[2m✓[22m[39m step 170 (L77): the lavarunner's contact gate reads its own i-frame, not the dark shield's — ON walks clean [33m 48264[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityEncounters.test.js [2m([22m[2m15 tests[22m[2m)[22m[33m 81938[2mms[22m[39m
+     [33m[2m✓[22m[39m fresh (the survey's state): arm, seven landings, drop, burn, pit — 1042 t [33m 13529[2mms[22m[39m
+     [33m[2m✓[22m[39m rock fallen at the door: snapped onto the rock, no arm leg, untouched — 1041 t [33m 13759[2mms[22m[39m
+     [33m[2m✓[22m[39m rock fallen at the respawn (72,104): no snap, the fight — 1034 t [33m 21438[2mms[22m[39m
+     [33m[2m✓[22m[39m mid-fight continuations solve from wherever the prefix stops [33m 29203[2mms[22m[39m
+     [33m[2m✓[22m[39m SOLVES from the survey's step-140 arrival: talk, close, the sword at the feet next frame, hasDarkSword [33m 3734[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityAxePriced.test.js [2m([22m[2m19 tests[22m[2m)[22m[33m 79493[2mms[22m[39m
+     [33m[2m✓[22m[39m axeforcedu-l71-603-member: spinningAxePlayerHit ON replays it at 0 px on every tick, billing the game's hits and the death [33m 302[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the ladder EXHAUSTS on the blade, and the priced crossing is not asked [33m 16560[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: certified (every one of the 52 phases in blade contact), then every member priced dies — the same refusal, one clause longer [33m 18446[2mms[22m[39m
+     [33m[2m✓[22m[39m ON with spinningAxePlayerHit OFF: refused by name before any preview (the run cannot price the blade) [33m 15934[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: still EXHAUSTED (the danger map prices the blade whatever the damage) [33m 10316[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: SOLVED in 359 t through the doorstep stall 2, billing nothing (no forcedHits row) [33m 9617[2mms[22m[39m
+     [33m[2m✓[22m[39m a dash-chain phase crosses free of blade contact: no hit is forced, so nothing is priced [33m 7848[2mms[22m[39m
+ [32m✓[39m scripts/procgen/seedlingSolverSurface.test.js [2m([22m[2m36 tests[22m[2m)[22m[33m 63195[2mms[22m[39m
+     [33m[2m✓[22m[39m (iv) the family file list equals the import closure [33m 1499[2mms[22m[39m
+     [33m[2m✓[22m[39m the import door's closure is the simulation's: solverView.js pulls in no family file [33m 919[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) a run method NO family file reaches (adoptWindowClock), read in dangerMap.js ⇒ RED [33m 2430[2mms[22m[39m
+     [33m[2m✓[22m[39m (a′) run.equipNow (reached by botDriverV2.js and solverBot.js), read in dangerMap.js ⇒ RED through `files` [33m 2843[2mms[22m[39m
+     [33m[2m✓[22m[39m (b) a DIRECT import of a simulation symbol no family file imports (levelWorld.js#blocksMover) in mover.js ⇒ RED twice: not in the table, and around the door [33m 1976[2mms[22m[39m
+     [33m[2m✓[22m[39m (c) the one run.worldCtor read removed from director.js ⇒ RED "RETIRED" [33m 2814[2mms[22m[39m
+     [33m[2m✓[22m[39m (d) a COMMENT mentioning run.notAMember ⇒ GREEN (the census reads code, not comments) [33m 2391[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) dangerMap.js imports SPINNER from spinner.js directly (around the door) ⇒ RED, the door rule [33m 2584[2mms[22m[39m
+     [33m[2m✓[22m[39m (b) solverView.js re-exports a levelWorld symbol no family file imports ⇒ RED "RETIRED" [33m 2564[2mms[22m[39m
+     [33m[2m✓[22m[39m (b′) solverView.js re-exports a name its module does not export (WATER_STATE is levelWorld-private) ⇒ RED twice [33m 2523[2mms[22m[39m
+     [33m[2m✓[22m[39m (c) blocksMover exported by the door AND imported through it in mover.js ⇒ RED "not in the contract table" [33m 2380[2mms[22m[39m
+     [33m[2m✓[22m[39m (d) a COMMENT naming a simulation module in a family file ⇒ GREEN [33m 2335[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) a DIRECT run.pushables read in dangerMap.js ⇒ RED "folded behind run.entities", once [33m 2587[2mms[22m[39m
+     [33m[2m✓[22m[39m (b) run.entities('pushable') — a typo ⇒ RED "unknown entity family" [33m 2224[2mms[22m[39m
+     [33m[2m✓[22m[39m (c) run.entities(name) with a variable ⇒ RED, a named blind spot [33m 2478[2mms[22m[39m
+     [33m[2m✓[22m[39m (d) the pushables entry removed from ENTITY_FAMILIES in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the table [33m 2787[2mms[22m[39m
+     [33m[2m✓[22m[39m (e) a COMMENT naming run.pushables in a family file ⇒ GREEN [33m 2490[2mms[22m[39m
+     [33m[2m✓[22m[39m (a) a DIRECT run.inventory read in dangerMap.js ⇒ RED "folded behind run.progress", once [33m 2137[2mms[22m[39m
+     [33m[2m✓[22m[39m (a′) a DIRECT run.collected read ⇒ RED "folded behind run.ledger", once [33m 2064[2mms[22m[39m
+     [33m[2m✓[22m[39m (b) run.ledger('chestOpen') — a typo ⇒ RED "unknown ledger kind", naming LEDGER_KINDS [33m 2635[2mms[22m[39m
+     [33m[2m✓[22m[39m (c) run.progress(f) with a variable ⇒ RED, a named blind spot (and a file the run:progress row does not name) [33m 2846[2mms[22m[39m
+     [33m[2m✓[22m[39m (d) the inventory entry removed from PROGRESS_FIELDS in levelRun.js ⇒ RED at every site that asks for it, and the name list no longer matches the dispatch table [33m 2455[2mms[22m[39m
+     [33m[2m✓[22m[39m (d′) the collected entry pointed at another arrow (collected: sealCollectionsNow) ⇒ GREEN here — the census sees keys, not values; levelRun.test.js's query-equals-getter rows are what hold the values [33m 2323[2mms[22m[39m
+     [33m[2m✓[22m[39m (e) COMMENTS naming run.inventory and run.collected in a family file ⇒ GREEN [33m 2380[2mms[22m[39m
+     [33m[2m✓[22m[39m (f) a getter listed in two folds (keys added to LEDGER_KIND_NAMES) ⇒ RED "folded behind both" [33m 2469[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityF1c.test.js [2m([22m[2m13 tests[22m[2m)[22m[33m 73157[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ where no corner forms the rung never fires (the residue the window had before F1c) [33m 6683[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ the committed window IS at the chain's residue, and IS the solve, key for key: no stall is needed there, no hit, the crossing to L19 [33m 5567[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ where a corner DOES form (the witness's residue 42, the escape OFF by the switch) the rung solves: a stall meets the line at another phase, no hit, the crossing to L19 [33m 21629[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ with the escape ON (the default) the same two residues solve with NO stall: 42 (the witness's) and 18 (the rebound's), no hit, the crossing to L19 [33m 10806[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ the remainder is NAMED (the escape OFF by the switch): a residue whose corner a landing's rebound makes refuses with the landing in its words [33m 2820[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ the witness walks the rung's solve at its own residue through its declared tick: the solve depends on the residue, not the absolute clock [33m 20493[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ F5: the solver, asked the chain-window staging, DECLARES the game's spelling — its pending row is the ledger's removal + the v9 fade [33m 4981[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityIceTurretSpear.test.js [2m([22m[2m7 tests[22m[2m)[22m[33m 84206[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF the staging refuses with the sweep's words; ON it re-derives the committed tape byte for byte [33m 83851[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solverBot.test.js [2m([22m[2m102 tests[22m[2m)[22m[33m 30584[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ L8: both shoves DERIVED and the room CROSSES, once its clears are declared [33m 404[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ L8 with its clears UNDECLARED solves on the run's own sandtrap deaths (F4) [33m 308[2mms[22m[39m
+     [33m[2m✓[22m[39m ⚠ BOUNDED VACUITY, MEASURED: no battery room exhausts the ladder any more [33m 450[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ F4: undeclared, L8 derives NO second shove — the walk pushes the block once the sandtrap is gone [33m 301[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ derives a stance for the body that CANNOT reach where the walk stands [33m 1429[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ the WAIT refusal for `bob@64,64` is RETIRED by the harmless window — it derives a stance now, and says why [33m 1547[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ takes the BEST stance, not the first viable one — and carries the runners-up [33m 1486[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ the dwell bound is the forecast's own death tick, not a per-class constant [33m 6457[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ the scan is BOUNDED and every rejected window carries a kind and a why [33m 484[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ ⚖ ruling 45(a): a covered body is MODELLED, not refused — no `would-hit` row survives in a room with no boss-class shake writer [33m 354[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ the L20 shield stance is the corridor-side cell, and the north cell is not planned [33m 985[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ L18 spends the fade WALKING, and the wait is the subtraction [33m 2200[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ a walk that beats the fade waits the ARITHMETIC remainder, not a margin [33m 4189[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ the pre-lock stance is a neighbour of the lock's own cell, inside the room [33m 1705[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ ⚖ 46: OFF takes the north cell and is SLOWER; ON takes the corridor cell [33m 1056[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ ⚖ 47: OFF stands through the whole fade and grows no key; ON walks it [33m 3158[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ `economies` DEFAULTS TO the roster-wide flag — the same walk either way [33m 696[2mms[22m[39m
+[90mstdout[2m | frontend/modules/seedlingDemo/observationTolerance.test.js[2m > [22m[2mexact mode IS diffObservationStreams[2m > [22m[2magrees with it on all 289 committed recordings vs the model, and on 3 perturbations of each
+[22m[39mexact-mode equivalence: {"recorded":289,"pass":288,"fail":1,"nudged":289,"late":61,"swapped":289}
+
+ [32m✓[39m frontend/modules/seedlingDemo/observationTolerance.test.js [2m([22m[2m113 tests[22m[2m)[22m[33m 32520[2mms[22m[39m
+     [33m[2m✓[22m[39m agrees with it on all 289 committed recordings vs the model, and on 3 perturbations of each [33m 32434[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/solveProgressHeartbeat.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 87186[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L18 hammer room (residue 21): the digest and the shouldStop count are equal with no hook and under the tap at every rate; the asks are deadline sites only [33m 34649[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the digest and the shouldStop count are equal with no hook and under the tap at every rate; the asks are deadline sites only [33m 51285[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ planWaypoints: the string-pull plan is byte-identical with a hook installed and without; unhooked, no heartbeat path runs [33m 964[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityLapseCost.test.js [2m([22m[2m13 tests[22m[2m)[22m[33m 45724[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: leg 403 solves inside the page budget, with OFF's plan key for key (642 t) [33m 25103[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: a corridor the cheap rungs cross is not shadowed — leg 265 (L22) solves with or without the rung (116 t) [33m 1667[2mms[22m[39m
+     [33m[2m✓[22m[39m MUTANT (the companion off): ON, the same request is refused at the DETOUR rung's budget [33m 16884[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: leg 773's request (its live digest re-derived ON, as a page with the switch sends it) solves in 426 t with no hit [33m 1662[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/pressKillCost.test.js [2m([22m[2m18 tests[22m[2m)[22m[33m 38022[2mms[22m[39m
+     [33m[2m✓[22m[39m a different world under the same run and the same opts re-derives the cells (the world is keyed by identity) [33m 302[2mms[22m[39m
+     [33m[2m✓[22m[39m answers what hammerHitsPlayer answers, every phase, boxes on and off the line [33m 5734[2mms[22m[39m
+     [33m[2m✓[22m[39m r9-solve-18 (presses land, bodies die): every row equal, and the shift is taken [33m 1637[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-press-glide (a block glides while the bodies move): every row equal [33m 5110[2mms[22m[39m
+     [33m[2m✓[22m[39m the kill-start derivation on spinner@880,848, continuation and all: the same strike ON and OFF [33m 2482[2mms[22m[39m
+     [33m[2m✓[22m[39m r9-solve-18 at residue 5: the same keys, records and trace ON and OFF, every cache exercised [33m 10197[2mms[22m[39m
+     [33m[2m✓[22m[39m the kill-start derivation, then two refused ones on the same run (lines carried): the same answers [33m 2964[2mms[22m[39m
+     [33m[2m✓[22m[39m r9-solve-18 at residue 5: the same keys, records and trace with P2 ON and OFF (P1 ON both), the levers exercised [33m 9444[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/levelRun.test.js [2m([22m[2m135 tests[22m[2m)[22m[33m 18626[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ predicts every arrow position of a committed walk, tick for tick [33m 538[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ the second kill takes totalEnemies() to zero and OPENS `lock@144,112` [33m 449[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-l42-part4: the query equals the getter for every family at every tick, and the tape makes crushers, crushersParked, pushables, spinnerBodies, turrets, turretDamage, turretsSettled non-trivial [33m 1149[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-totem-entrance: the query equals the getter for every family at every tick, and the tape makes armedPulsers, latchedGroups, openActivators, openChests, pushesSettled non-trivial [33m 779[2mms[22m[39m
+     [33m[2m✓[22m[39m r9-solve-16: the query equals the getter for every family at every tick, and the tape makes armedArrowTraps, arrowFlights, arrowsInFlight, brokenRocks, chasers, pulledRopes, strikeBodies non-trivial [33m 534[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-bobboss-fire: the query equals the getter for every family at every tick, and the tape makes bobBoss non-trivial [33m 629[2mms[22m[39m
+     [33m[2m✓[22m[39m f4-l8-sandtraps: the query equals the getter for every family at every tick, and the tape makes staticBodies non-trivial [33m 338[2mms[22m[39m
+     [33m[2m✓[22m[39m r8-d2: the query equals the getter for every folded member at every tick, and the tape makes appliedTimedClears, bankedClears, collected, earnedClears, inCeremony, inputRefused, inventory, keyOpens, keys, lockSnaps, presses, roomWrites, saveState, shieldBossKills, shieldBossStabs, slashInfo, spinnerKillLockOpens, spinnerPressHits, spinnerWrites, takenPickups non-trivial [33m 1601[2mms[22m[39m
+     [33m[2m✓[22m[39m r4-walk-5-spear: the query equals the getter for every folded member at every tick, and the tape makes equipsFired, grantsFired, primary, primaryWeapon, unfiredEquipTicks non-trivial [33m 557[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-totem-entrance-control: the query equals the getter for every folded member at every tick, and the tape makes chestOpens, pulserHits, pulserPushes, sealCollections non-trivial [33m 442[2mms[22m[39m
+     [33m[2m✓[22m[39m r9-solve-16: the query equals the getter for every folded member at every tick, and the tape makes arrowVolleys, chaserKillLockOpens, ropePulls non-trivial [33m 520[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-l40-part5-control: the query equals the getter for every folded member at every tick, and the tape makes blastFreezes, frozenTimer, turretKills non-trivial [33m 1598[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-bobboss-fire: the query equals the getter for every folded member at every tick, and the tape makes bobBossEvents non-trivial [33m 1663[2mms[22m[39m
+     [33m[2m✓[22m[39m f4-l8-sandtraps: the query equals the getter for every folded member at every tick, and the tape makes staticBodyDeaths non-trivial [33m 426[2mms[22m[39m
+     [33m[2m✓[22m[39m enc-l12-witch: the query equals the getter for every folded member at every tick, and the tape makes witchEvents non-trivial [33m 326[2mms[22m[39m
+     [33m[2m✓[22m[39m r5-shaft, walked up into its latched pulser after tick 2000: a pulserPlayerHits entry, through the query [33m 1675[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/dialogueAutoAdvance.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 31918[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ the two derivations part on EXACTLY ONE committed tape, and the GAME picked it [33m 31834[2mms[22m[39m
+ [32m✓[39m scripts/procgen/checkProcgenHelp.test.js [2m([22m[2m8 tests[22m[2m)[22m[33m 39155[2mms[22m[39m
+     [33m[2m✓[22m[39m an import door killed at the short ceiling reports timedOut + the ceiling that killed it [33m 2858[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ MUTANT: with `timedOut` off the result, the killed door is indistinguishable from a clean exit [33m 2934[2mms[22m[39m
+     [33m[2m✓[22m[39m two `--write-baseline` runs record the late banner and write the SAME BYTES [33m 10037[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ NOT THE SEED: with `inheritedOutput` seeded EMPTY the FIRST write records the banner anyway [33m 5042[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ MUTANT + THE FALSE RED: the un-completed control records nothing, and `--doors=ci` reds the help door for it [33m 12484[2mms[22m[39m
+     [33m[2m✓[22m[39m a control killed at the LONG ceiling too is named as truncated, not silently recorded [33m 2545[2mms[22m[39m
+     [33m[2m✓[22m[39m the child honours the parent env: TMPDIR stays clean, the parent dir holds the scratch [33m 1541[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔ NOT VACUOUS: without the env the killed child leaks under TMPDIR (the pre-fix shape) [33m 1548[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelitySpinningAxe.test.js [2m([22m[2m15 tests[22m[2m)[22m[33m 28336[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: step 163 solves in 366 t — the plan the game hits at t160 [33m 11407[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: the re-probe meets the axe at its update 160 and the ladder refuses BY NAME [33m 16125[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/dangerMap.test.js [2m([22m[2m62 tests[22m[2m)[22m[33m 13862[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓ the map really constrains the search — the two plans differ [33m 12884[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityCrusher.test.js [2m([22m[2m12 tests[22m[2m)[22m[33m 22360[2mms[22m[39m
+     [33m[2m✓[22m[39m returns R5's nine charges in three chains, and the library holds every chain [33m 4365[2mms[22m[39m
+     [33m[2m✓[22m[39m replays: the part, zero contacts, both top-room parks, the crossing into L40 [33m 496[2mms[22m[39m
+     [33m[2m✓[22m[39m is the solver's own plan with the flag ON, and the flag OFF refuses the same staging [33m 11171[2mms[22m[39m
+     [33m[2m✓[22m[39m L40 from the L41 door [33m 4459[2mms[22m[39m
+     [33m[2m✓[22m[39m L0, featherless, the waterfall live [33m 1822[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/r5Totem.test.js [2m([22m[2m133 tests[22m[2m)[22m[33m 8211[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔⛔ the burn opens its OWN 2x2 — the "door" was the flood's policy [33m 352[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ each bait ends at its declared park, with ZERO contacts [33m 330[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ …and the third park PRESSES `button@248,232` — the cover opens [33m 356[2mms[22m[39m
+     [33m[2m✓[22m[39m drives all three baits, and each starts where the last one ended [33m 900[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ …then six pushes, a fade nobody holds, and the fourth ceremony [33m 709[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛔⛔ …with the crusher still on `button@248,232` and never once touched [33m 1301[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ A's chain goes W then S then E in one bait, 208 px, zero contacts [33m 637[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ walks A and then B to their parks, from the arrival, with zero contacts [33m 463[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓⛓ walks all three chains from the arrival, both bodies into the top room [33m 583[2mms[22m[39m
+     [33m[2m✓[22m[39m ⛓⛓ …and `tapeFormat` HAS a field for it now — checked, not described [33m 447[2mms[22m[39m
+ [32m✓[39m scripts/procgen/arrivalCompositesLegs.test.js [2m([22m[2m19 tests[22m[2m)[22m[33m 30078[2mms[22m[39m
+     [33m[2m✓[22m[39m residue L88 a: the solver refuses the corridor on the stepped drill (drillMixedRooms OFF: the re-planned corridor failed too); drillLive OFF plans it again [33m 480[2mms[22m[39m
+     [33m[2m✓[22m[39m L30 past the BobSoldier: the solver's plan is exactly the pinned 167 t detour to L31; bobSoldierLive OFF plans the old 162 t walk [33m 1529[2mms[22m[39m
+     [33m[2m✓[22m[39m residue L45: the solver refuses BY NAME — no jellyfish bait survives the forecast (baitForecast OFF: the route needs FIRE for the tree at (48,64)); jellyfishLive OFF plans the old 720 t walk [33m 27490[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityStagedHits.test.js [2m([22m[2m26 tests[22m[2m)[22m[33m 16572[2mms[22m[39m
+     [33m[2m✓[22m[39m the proof steps forks that carry the staging: at hitsMax − 1 every leaf is a death [33m 2618[2mms[22m[39m
+     [33m[2m✓[22m[39m staged 0 (= absent): the FORCEDHIT plan, 4 ticks, billing the one hit [33m 5058[2mms[22m[39m
+     [33m[2m✓[22m[39m staged hits 1 of 3: the proof holds, and the budget refuses the crossing BY NAME (hits now 1, margin 1) [33m 4424[2mms[22m[39m
+     [33m[2m✓[22m[39m staged hits 2 of 3 (hitsMax − 1): every proof leaf DIES, so no crossing is planned — never a death [33m 4291[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityAxeTiming.test.js [2m([22m[2m24 tests[22m[2m)[22m[33m 27847[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: the ladder EXHAUSTS on the blade (the AXE arm's stalls are hit at every phase) [33m 6298[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: SOLVED in 227 t — the witnessed plan [33m 1880[2mms[22m[39m
+     [33m[2m✓[22m[39m ON beside spinningAxePlayerHit: the same 227 t (the run bills no hit on the crossing) [33m 1444[2mms[22m[39m
+     [33m[2m✓[22m[39m OFF: refused — the full pass is cut at `axe-dodge` inside the AXE arm's stall search [33m 9640[2mms[22m[39m
+     [33m[2m✓[22m[39m ON: SOLVED 227 t in the full pass, inside its budget [33m 7700[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/levelSetExits.test.js [2m([22m[2m67 tests[22m[2m)[22m[33m 15279[2mms[22m[39m
+     [33m[2m✓[22m[39m the six-seed set the box gate stamps keeps its id — `procgen-roundtrip-6-c75feb6f` [33m 4887[2mms[22m[39m
+     [33m[2m✓[22m[39m vanilla 116: every exit, retargeted, agrees with the text writer [33m 5281[2mms[22m[39m
+     [33m[2m✓[22m[39m vanilla 116: every fallthrough, retargeted, agrees with the text writer (24 edit(s) in this corpus) [33m 345[2mms[22m[39m
+     [33m[2m✓[22m[39m addresses the SAME door as the text writer, exit by exit, over the 116 [33m 884[2mms[22m[39m
+     [33m[2m✓[22m[39m vanilla 116: every exit, unwired, agrees with the text writer [33m 2229[2mms[22m[39m
+     [33m[2m✓[22m[39m vanilla 116: `removed` and `seen` agree with the text writer [33m 1046[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityMovingWait.test.js [2m([22m[2m25 tests[22m[2m)[22m[33m 17026[2mms[22m[39m
+     [33m[2m✓[22m[39m the model reproduces every sampled tick at 0 px — the player, each bomb to the bit, the anim; no hit [33m 1315[2mms[22m[39m
+     [33m[2m✓[22m[39m at t1007 the STILL wait is a bomb hit (why it paces), and the group is latched [33m 884[2mms[22m[39m
+     [33m[2m✓[22m[39m the planner's pacing is the one the tape drove, key for key, back on the stance at each cycle end [33m 1764[2mms[22m[39m
+     [33m[2m✓[22m[39m runHold with the pace: drives it to the cycle end where the lock is open, unhit, back on the stance [33m 1406[2mms[22m[39m
+     [33m[2m✓[22m[39m the model reproduces every sampled tick at 0 px — the player, each bomb to the bit, the anim; no hit [33m 959[2mms[22m[39m
+     [33m[2m✓[22m[39m at t1106 the STILL wait is a bomb hit (why it paces), and the group is latched [33m 635[2mms[22m[39m
+     [33m[2m✓[22m[39m the planner's pacing is the one the tape drove, key for key, back on the stance at each cycle end [33m 924[2mms[22m[39m
+     [33m[2m✓[22m[39m runHold with the pace: drives it to the cycle end where the lock is open, unhit, back on the stance [33m 1086[2mms[22m[39m
+     [33m[2m✓[22m[39m a tick off the previewed path fails "not the previewed" [33m 959[2mms[22m[39m
+     [33m[2m✓[22m[39m a pace with no stopping condition is refused before a tick is spent [33m 768[2mms[22m[39m
+     [33m[2m✓[22m[39m cycles that end before the lock opens fail with the still wait's bound sentence [33m 1166[2mms[22m[39m
+     [33m[2m✓[22m[39m r6-totem-kill: ON the two t387 blasts land at the truncated point with r 15, and nothing else moves [33m 479[2mms[22m[39m
+     [33m[2m✓[22m[39m 'rebootshake-l42-part0-damage' ON: the model reproduces the whole damage walk at 0 px, through the death and the second life [33m 1607[2mms[22m[39m
+     [33m[2m✓[22m[39m 'rebootshake-l41-part0-damage' ON: the model reproduces the whole damage walk at 0 px, through the death and the second life [33m 1121[2mms[22m[39m
+     [33m[2m✓[22m[39m 'rebootshake-l42-part0-damage' OFF: the drained settle is exact and wrong — refused at the respawn by name [33m 1013[2mms[22m[39m
+     [33m[2m✓[22m[39m 'rebootshake-l41-part0-damage' OFF: the drained settle is exact and wrong — refused at the respawn by name [33m 878[2mms[22m[39m

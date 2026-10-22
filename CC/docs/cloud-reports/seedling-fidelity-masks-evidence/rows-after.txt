@@ -773,3 +773,37 @@ Node.js v22.22.0
  [32m✓[39m frontend/modules/seedlingDemo/fidelityIceTurretSpear.test.js [2m([22m[2m7 tests[22m[2m)[22m[33m 96463[2mms[22m[39m
      [33m[2m✓[22m[39m the model's own replay ends in L99 with no player hit [33m 331[2mms[22m[39m
      [33m[2m✓[22m[39m OFF the staging refuses with the sweep's words; ON it re-derives the committed tape byte for byte [33m 96014[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/hammerPressKillGuards.test.js [2m([22m[2m5 tests[22m[2m)[22m[33m 238607[2mms[22m[39m
+     [33m[2m✓[22m[39m HO1: at t2439 the strike preview throws OFF; ON the band's candidates are refused by name [33m 6886[2mms[22m[39m
+     [33m[2m✓[22m[39m HO2 OFF: the press kill carries on past the death at t1202 [33m 157494[2mms[22m[39m
+     [33m[2m✓[22m[39m HO2 ON: the press kill is refused by name on the tick of the first death [33m 74218[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m scripts/procgen/boxLock.test.js[2m > [22mwho takes the box[2m > [22mtakes conditionally exactly where a headless arm would have been queued
+[31m[1mAssertionError[22m: expected [ 'probe-seedling-mask-lines.mjs' ] to deeply equal [][39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "probe-seedling-mask-lines.mjs",[39m
+[31m+ ][39m
+
+[36m [2m❯[22m scripts/procgen/boxLock.test.js:[2m548:24[22m[39m
+    [90m546| [39m            [33m.[39m[34mfilter[39m((f) [33m=>[39m [36m/\.mjs$/[39m[33m.[39m[34mtest[39m(f) [33m&&[39m [33m![39mguarded[33m.[39m[34mincludes[39m(f))
+    [90m547| [39m            [33m.[39m[34mfilter[39m(isGuarded)[33m;[39m
+    [90m548| [39m        [34mexpect[39m(others)[33m.[39m[34mtoEqual[39m([])[33m;[39m
+    [90m   | [39m                       [31m^[39m
+    [90m549| [39m    })[33m;[39m
+    [90m550| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m148 passed[39m[22m[90m (149)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m5254 passed[39m[22m[90m (5255)[39m
+[2m   Start at [22m 16:57:06
+[2m   Duration [22m 1081.58s[2m (transform 30.37s, setup 0ms, import 247.69s, tests 2749.93s, environment 49ms)[22m
+
