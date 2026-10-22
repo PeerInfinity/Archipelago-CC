@@ -862,7 +862,7 @@ export const CONTACT_FIDELITY = {
      * cannot cut. OFF: a swordless run refuses by name, byte-identical. With the SWORD selected nothing changes either
      * way. `SEEDLING_ROPE_CUT_ANY_WEAPON=0|1` for a node measurement.
      */
-    ropeCutAnyWeapon: false,
+    ropeCutAnyWeapon: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
