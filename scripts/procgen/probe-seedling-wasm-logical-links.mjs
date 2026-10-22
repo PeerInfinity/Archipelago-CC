@@ -29,7 +29,8 @@
  *      pass tripped is listed by the site that tripped first and the bound that tripped (`ROW B passes` →
  *      `deadlines`), and checked to play on plan (0 divergences); 0 backstops.
  *      A Restart B takes in its budget is checked as R's is (since rope events it takes none: R is the subject).
- *   R  THE FORCED RESTART (§5.125) — the restart-hold check's GUARANTEED subject: the new game, an AP move into a
+ *   R  THE FORCED RESTART (§5.125) — the restart-hold check's GUARANTEED subject: the new game, a warm-up leg to
+ *      level_2 (the wasm engine is built by the first walk), then an AP move into a
  *      Restart-only pocket (`--pocket=`, default `level_17`, probe-seedling-restart-route.mjs's), the bot plays from
  *      there, its route BEGINS with RESTART, and it walks on from the start. The Restart is TAKEN (else a hard FAIL),
  *      and its start-hop arrival is HELD: ≥ 1 expected arrival, each ends `held`, 0 `no-held-arrival` fallbacks.
@@ -340,7 +341,8 @@ async function main() {
                     const cur = bot._queue?.[bot._cursor] ?? null;
                     await window.stateManagerProxy?.pingWorker?.('probe-logical-links-R');
                     const p = cur && typeof bot._planRoute === 'function' ? bot._planRoute(start, cur.regionName) : null;
-                    plan = { goal: cur?.regionName ?? null, kind: p?.kind ?? null, why: p?.why ?? null, firstSteps: p?.route?.steps?.slice(0, 3) ?? null };
+                    plan = { goal: cur?.regionName ?? null, kind: p?.kind ?? null, why: p?.why ?? null, firstSteps: p?.route?.steps?.slice(0, 3) ?? null,
+                        mountedIn: bot.getCurrentRegion() };
                 }
                 await bot.play();
                 return { ok: true, region: bot.getCurrentRegion(), head: head && { location: head.locationName, region: head.regionName },
@@ -455,9 +457,11 @@ async function main() {
         }
 
         /**
-         * R — THE FORCED RESTART (§5.125): the restart-hold check's GUARANTEED subject. The new game at the start, an AP
-         * move into a Restart-only pocket (`--pocket=`, default `level_17`: probe-seedling-restart-route.mjs's pocket, whose
-         * planner route BEGINS with RESTART on a fresh game), then the bot plays the derived sphere queue from there: it
+         * R — THE FORCED RESTART (§5.125): the restart-hold check's GUARANTEED subject. The new game at the start; the bot
+         * plays the first leg (B's own first move, `START -> level_2`) so the wasm engine EXISTS (it loads on the first walk:
+         * measured, a Restart before it is expected by nobody — `watching: 0`), then stops; an AP move into a Restart-only
+         * pocket (`--pocket=`, default `level_17`: probe-seedling-restart-route.mjs's pocket, whose planner route BEGINS with
+         * RESTART on a fresh game's inventory), then the bot plays the derived sphere queue from there: it
          * takes the Menu panel's Restart (nothing playing, so in that turn), the glue stops the engines and EXPECTS the
          * start hop's arrival, and the bot walks on from the start. Deterministic: a fresh page, a fixed pocket, a fresh
          * game's inventory; no wall-clock trigger. A Restart that is not taken is a hard FAIL, never a skip.
@@ -468,11 +472,27 @@ async function main() {
                 return g.region === START && (await rp.currentRegion()) === START ? g : null;
             }, 60000);
             await page.waitForTimeout(1500);
+            // The warm-up leg: the engine is built by the first walk, and the Restart below must find it.
+            const warm = await startBot();
+            out('R warm-up', warm);
+            const warmed = await rp.waitFor('the warm-up leg reached level_2 (the wasm engine built)', async () => {
+                const b = await botStatus();
+                if (b.status.startsWith('error')) return b;
+                return b.region === 'level_2' && (await engineStats()).engine ? b : null;
+            }, RESTART_BUDGET_MS).catch(() => null);
+            await page.evaluate(async () => {
+                const { getActivePanel } = await import('./modules/playbackBot/index.js');
+                getActivePanel()?.getBot?.()?.stop?.();
+            });
+            await page.waitForTimeout(1500);
+            const from = await rp.currentRegion();
+            check('R: the warm-up leg walked START -> level_2 and the wasm engine exists (then the bot stopped)',
+                !!warmed && !warmed.status.startsWith('error') && from === 'level_2', JSON.stringify({ warmed, from }));
             await page.evaluate(async ({ from, to }) => {
                 const d = (await import('./modules/flashPanel/index.js')).getDispatcher();
                 d.publish('user:regionMove', { sourceRegion: from, targetRegion: to, exitName: null, source: 'probe-logical-links-R' },
                     { initialTarget: 'bottom' });
-            }, { from: START, to: POCKET });
+            }, { from, to: POCKET });
             const inPocket = await rp.waitFor(`the player in ${POCKET}`, async () => {
                 const g = await glue();
                 return g.region === POCKET && (await rp.currentRegion()) === POCKET ? g : null;
@@ -482,7 +502,7 @@ async function main() {
             const booted = await startBot(POCKET);
             out('R boot', booted);
             check(`R: the bot is mounted in ${POCKET} and its route out BEGINS with RESTART (no walk out of the pocket)`,
-                booted.ok && booted.region === POCKET && booted.plan?.kind === 'restart' && booted.plan?.firstSteps?.[1]?.restart === true,
+                booted.ok && booted.plan?.mountedIn === POCKET && booted.plan?.kind === 'restart' && booted.plan?.firstSteps?.[1]?.restart === true,
                 JSON.stringify(booted));
             const t0 = Date.now();
             const walked = await rp.waitFor('the bot walks on from the start after the Restart', async () => {
