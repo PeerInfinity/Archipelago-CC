@@ -13,10 +13,12 @@
  * exit tiles stay dead ends.
  */
 
-import { regionItems, reachUnder, regionTargets } from './deriveTileLogic.js';
+import {
+    regionItems, reachUnder, regionTargets, ropeEvents, NOTHING_REACHED, reachedTarget, planToTarget,
+} from './deriveTileLogic.js';
 import { MAZE_TILE_LIB } from './tileStep.js';
 import {
-    createState, step, getExitAt, mazeVisitedKey, worldInputs, sharedWorldOwnerAt, USE_PREFIX,
+    createState, step, getExitAt, mazeVisitedKey, worldInputs, sharedWorldOwnerAt, standsInArmedLane, USE_PREFIX,
 } from '../mazeRoomEngine.js';
 
 /**
@@ -28,6 +30,10 @@ export function nativeReachUnder(world, inventory, { cap = 400000 } = {}) {
     const w = { ...world, items: new Map() };
     const start = createState(w);
     start.inventory = new Set(inventory);
+    // ⚖ never expect tanking a hit: an arrival in an armed lane reaches nothing.
+    if (standsInArmedLane(w, start)) return NOTHING_REACHED;
+    const ropes = ropeEvents(w);
+    const cuts = new Map();
     const have = start.inventory;
     const inputs = worldInputs(w).filter((input) => {
         if (!input.startsWith(USE_PREFIX)) return true;
@@ -50,17 +56,19 @@ export function nativeReachUnder(world, inventory, { cap = 400000 } = {}) {
             queue.push(next);
             const cell = `${next.player_pos.x},${next.player_pos.y}`;
             if (!cells.has(cell)) cells.set(cell, k);
+            for (const r of ropes) if (!cuts.has(r.key) && next.broken?.includes(r.key)) cuts.set(r.key, k);
         }
         if (seen.size > cap) throw new Error(`level-world logic: native search over ${[...inventory]} exceeded ${cap} states`);
     }
-    const planTo = (cell) => {
-        let k = cells.get(cell);
+    const planFrom = (k) => {
         if (k === undefined) return null;
         const plan = [];
         for (let link = seen.get(k); link !== null; link = seen.get(k)) { plan.push(link.input); k = link.from; }
         return plan.reverse();
     };
-    return { cells, states: seen.size, planTo };
+    return {
+        cells, cuts, states: seen.size, planTo: (cell) => planFrom(cells.get(cell)), planToCut: (key) => planFrom(cuts.get(key)),
+    };
 }
 
 function* subsetsOfSize(items, k, from = 0, acc = []) {
@@ -159,7 +167,7 @@ export function deriveEntryLogic(world, region, helpers, { tileLib = MAZE_TILE_L
             const exit = exitAt.get(`${t.x},${t.y}`);
             return exit?.targetRegion ? [{ ...t, exitName: exit.exitName ?? exit.exit_id }] : [];
         }
-        return [{ ...t, locationName: world.itemLocationNames?.get?.(`${t.x},${t.y}`) ?? null }];
+        return [{ ...t, locationName: t.locationName ?? world.itemLocationNames?.get?.(`${t.x},${t.y}`) ?? null }];
     });
     const reachOf = (set) => (native ? nativeReachUnder(entered, set)
         : reachUnder(entered, set, helpers, { pickups: 'ap', tileLib }));
@@ -169,7 +177,7 @@ export function deriveEntryLogic(world, region, helpers, { tileLib = MAZE_TILE_L
     for (const t of targets) {
         t.minimal = [];
         t.witnesses = [];
-        t.unreachable = !full.cells.has(`${t.x},${t.y}`);
+        t.unreachable = !reachedTarget(full, t);
     }
     const live = targets.filter((t) => !t.unreachable);
     const covered = (t, set) => t.minimal.some((m) => m.every((i) => set.includes(i)));
@@ -180,10 +188,9 @@ export function deriveEntryLogic(world, region, helpers, { tileLib = MAZE_TILE_L
             searched += 1;
             states += reach.states;
             for (const t of live) {
-                const cell = `${t.x},${t.y}`;
-                if (covered(t, set) || !reach.cells.has(cell)) continue;
+                if (covered(t, set) || !reachedTarget(reach, t)) continue;
                 t.minimal.push(set);
-                t.witnesses.push({ inventory: set, plan: reach.planTo(cell) });
+                t.witnesses.push({ inventory: set, plan: planToTarget(reach, t) });
             }
         }
     }

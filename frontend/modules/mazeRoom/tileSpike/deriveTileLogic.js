@@ -18,16 +18,47 @@
  * state is the engine's (facing + per-visit `broken`), its inputs gain the four turns and the uses
  * of HELD items, and the item axis gains every action item whose action strikes an obstacle of the
  * region (a `struck_by` rock names no item in its clear set). Still monotone: more items, more uses.
+ *
+ * ARROW TRAPS + ROPES (slice tile-primitives-arrow-rope): a rope's EVENT joins the item axis (carried, it
+ * silences the lane on a later visit) and is a TARGET of its own — reached when some state has the rope
+ * cut (`cuts`), not when the player stands on its cell. An arrival standing in an armed lane reaches
+ * NOTHING (⚖ never expect tanking a hit). Still monotone: an item only ever silences or opens.
  */
 
 import {
     createState, getExitAt, mazeVisitedKey, hasItemActions, worldInputs, USE_PREFIX,
 } from '../mazeRoomEngine.js';
-import { MAZE_TILE_LIB, ruleToClearSet, scriptedStep } from './tileStep.js';
+import { MAZE_TILE_LIB, ruleToClearSet, scriptedStep, scriptedStandsInArmedLane } from './tileStep.js';
 
-/** The region's item axis: every item an obstacle's clear set or rule names, minus held tokens. */
+/** The rope obstacles that are AP events: `[{key, x, y, event}]` (their `event` named, the cut latches it). */
+export function ropeEvents(world) {
+    const out = [];
+    for (const [key, id] of world.obstacles) {
+        const entry = world.obstacleLib?.[id];
+        if (!entry?.activates || !entry.event) continue;
+        const [x, y] = key.split(',').map(Number);
+        out.push({ key, x, y, event: entry.event });
+    }
+    return out;
+}
+
+/** Per reached state: the rope events it has cut (`cuts`: rope posKey → the first visited key that cut it). */
+function noteCuts(world, ropes, cuts, state, key) {
+    if (ropes.length === 0 || !state.broken) return;
+    for (const r of ropes) if (!cuts.has(r.key) && state.broken.includes(r.key)) cuts.set(r.key, key);
+}
+
+/** The reach of an arrival that stands in an armed lane: nothing (no cell, no cut). */
+export const NOTHING_REACHED = Object.freeze({ cells: new Map(), cuts: new Map(), states: 1, planTo: () => null, planToCut: () => null });
+
+/**
+ * The region's item axis: every item an obstacle's clear set or rule names, plus every rope's event,
+ * minus the tokens buttons hold and ropes activate (derived per step, never carried).
+ */
 export function regionItems(world) {
     const held = new Set(Object.values(world.buttonLib ?? {}).map((b) => b.holds).filter(Boolean));
+    for (const entry of Object.values(world.obstacleLib ?? {})) if (entry?.activates) held.add(entry.activates);
+    for (const r of ropeEvents(world)) held.delete(r.event);
     const out = new Set();
     for (const id of new Set(world.obstacles.values())) {
         const entry = world.obstacleLib?.[id];
@@ -39,6 +70,7 @@ export function regionItems(world) {
             const item = world.actionLib?.[actionId]?.item;
             if (item && !held.has(item)) out.add(item);
         }
+        if (entry.activates && entry.event) out.add(entry.event);
     }
     return [...out].sort();
 }
@@ -59,12 +91,18 @@ export function searchInputs(world, inventory, pickups) {
     });
 }
 
-/** The targets a region's logic prices: each location (item tile) and each exit, by position. */
+/**
+ * The targets a region's logic prices: each location (item tile), each rope EVENT (`event` set: reached
+ * by cutting the rope at x, y) and each exit, by position.
+ */
 export function regionTargets(world) {
     const out = [];
     for (const [key, item] of world.items) {
         const [x, y] = key.split(',').map(Number);
         out.push({ id: `${item}@${key}`, kind: 'location', item, x, y });
+    }
+    for (const r of ropeEvents(world)) {
+        out.push({ id: `event:${r.event}@${r.key}`, kind: 'location', event: r.event, locationName: r.event, x: r.x, y: r.y });
     }
     for (const exit of world.exits.values()) out.push({ id: `exit:${exit.exit_id}`, kind: 'exit', x: exit.x, y: exit.y });
     return out;
@@ -77,6 +115,9 @@ export function regionTargets(world) {
 export function reachUnder(world, inventory, helpers, { pickups = 'ap', tileLib = MAZE_TILE_LIB, cap = 200000 } = {}) {
     const start = createState(world);
     start.inventory = new Set(inventory);
+    if (scriptedStandsInArmedLane(world, start, helpers, tileLib)) return NOTHING_REACHED;
+    const ropes = ropeEvents(world);
+    const cuts = new Map();
     const seen = new Map([[mazeVisitedKey(start), null]]);
     const cells = new Map([[`${start.player_pos.x},${start.player_pos.y}`, mazeVisitedKey(start)]]);
     const states = new Map([[mazeVisitedKey(start), start]]);
@@ -95,19 +136,31 @@ export function reachUnder(world, inventory, helpers, { pickups = 'ap', tileLib 
             seen.set(k, { from, input });
             states.set(k, next);
             queue.push(next);
+            noteCuts(world, ropes, cuts, next, k);
             const cell = `${next.player_pos.x},${next.player_pos.y}`;
             if (!cells.has(cell)) cells.set(cell, k);
         }
         if (seen.size > cap) throw new Error(`tile logic: search over ${[...inventory]} exceeded ${cap} states`);
     }
-    const planTo = (cell) => {
-        let k = cells.get(cell);
+    const planFrom = (k) => {
         if (k === undefined) return null;
         const plan = [];
         for (let link = seen.get(k); link !== null; link = seen.get(k)) { plan.push(link.input); k = link.from; }
         return plan.reverse();
     };
-    return { cells, states: seen.size, planTo };
+    return {
+        cells, cuts, states: seen.size, planTo: (cell) => planFrom(cells.get(cell)), planToCut: (key) => planFrom(cuts.get(key)),
+    };
+}
+
+/** Did `reach` get to target `t`: a rope event by its cut, anything else by standing on its cell. */
+export function reachedTarget(reach, t) {
+    return t.event ? reach.cuts.has(`${t.x},${t.y}`) : reach.cells.has(`${t.x},${t.y}`);
+}
+
+/** The witness plan to target `t` in `reach`. */
+export function planToTarget(reach, t) {
+    return t.event ? reach.planToCut(`${t.x},${t.y}`) : reach.planTo(`${t.x},${t.y}`);
 }
 
 function* subsetsOfSize(items, k, from = 0, acc = []) {
@@ -133,7 +186,7 @@ export function deriveRegionLogic(world, helpers, { pickups = 'ap', tileLib = MA
     // of the covering test, or it would keep every set of the lattice alive.
     const full = reachUnder(world, items, helpers, { pickups, tileLib });
     const targets = regionTargets(world).map((t) => ({
-        ...t, minimal: [], witnesses: [], unreachable: !full.cells.has(`${t.x},${t.y}`),
+        ...t, minimal: [], witnesses: [], unreachable: !reachedTarget(full, t),
     }));
     const live = targets.filter((t) => !t.unreachable);
     const covered = (t, set) => t.minimal.some((m) => m.every((i) => set.includes(i)));
@@ -147,10 +200,9 @@ export function deriveRegionLogic(world, helpers, { pickups = 'ap', tileLib = MA
             searched += 1;
             states += reach.states;
             for (const t of live) {
-                const cell = `${t.x},${t.y}`;
-                if (covered(t, set) || !reach.cells.has(cell)) continue;
+                if (covered(t, set) || !reachedTarget(reach, t)) continue;
                 t.minimal.push(set);
-                t.witnesses.push({ inventory: set, plan: reach.planTo(cell) });
+                t.witnesses.push({ inventory: set, plan: planToTarget(reach, t) });
             }
         }
     }

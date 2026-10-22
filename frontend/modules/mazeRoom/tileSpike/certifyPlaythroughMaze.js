@@ -16,6 +16,10 @@
  * Every witness is replayed on the real `step`. Returns the problems (an empty list certifies) and one line
  * per priced target, which two engines must produce identically.
  *
+ * ⛓ AP EVENTS (slice tile-primitives-arrow-rope): the in-world closure GRANTS an event location's item once
+ * its region is reached and its rule holds (L16's rope cut, in r1c1, is what opens the lane for r1c1 → r3c7),
+ * and an event location is priced by CUTTING its rope (`deriveEntryLogic`), its witness replayed to the cut.
+ *
  * ⛔ A counted Has (count ≥ 2) in an AP rule is a PROBLEM by name: the truth table enumerates SETS, which
  * cannot hold two of anything, so it would certify the rule vacuously (⚖ "Refuse counted rules").
  */
@@ -69,17 +73,23 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions } = {})
         const inWorld = new Set(members);
         const edges = members.flatMap((from) => REGIONS[from].exits.filter((e) => inWorld.has(e.connected_region))
             .map((e) => ({ from, to: e.connected_region, rule: e.access_rule ?? { rule: 'True_' } })));
-        const reaches = (from, to, inv) => {
+        const events = members.flatMap((at) => (REGIONS[at].locations ?? []).filter((l) => l.event)
+            .map((l) => ({ at, item: l.item?.name ?? l.name, rule: l.access_rule ?? { rule: 'True_' } })));
+        const reaches = (from, to, start) => {
             const seen = new Set([from]);
+            const inv = new Set(start);
             for (let grew = true; grew;) {
                 grew = false;
                 for (const e of edges) {
                     if (seen.has(e.from) && !seen.has(e.to) && holds(e.rule, inv)) { seen.add(e.to); grew = true; }
                 }
+                for (const ev of events) {
+                    if (seen.has(ev.at) && !inv.has(ev.item) && holds(ev.rule, inv)) { inv.add(ev.item); grew = true; }
+                }
             }
             return seen.has(to);
         };
-        return { edges, reaches };
+        return { edges: [...edges, ...events], reaches };
     };
     const agreeWithClosure = (label, closure, pair, items) => {
         if (closure.edges.some((e) => counted(e.rule))) { problems.push(`${label}: an in-world AP rule counts an item — a set truth table cannot certify it`); return; }
@@ -94,11 +104,15 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions } = {})
             }
         }
     };
-    const replay = (label, world, inventory, plan, cell) => {
+    const replay = (label, world, inventory, plan, cell, { cut = false } = {}) => {
         const w = { ...world, items: new Map() };
         let s = createState(w);
         s.inventory = new Set(inventory);
         for (const input of plan) s = step(w, s, input);
+        if (cut) {
+            if (!s.broken?.includes(cell)) problems.push(`${label}: witness [${inventory}] does not cut the rope at ${cell}`);
+            return;
+        }
         const at = `${s.player_pos.x},${s.player_pos.y}`;
         if (at !== cell) problems.push(`${label}: witness [${inventory}] replays to ${at}, not ${cell}`);
     };
@@ -123,7 +137,7 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions } = {})
         const byTarget = new Map();
         for (const t of out.targets) {
             const label = `${name} @ ${t.exitName ?? t.locationName}`;
-            for (const w of t.witnesses) replay(label, entered, w.inventory, w.plan, `${t.x},${t.y}`);
+            for (const w of t.witnesses) replay(label, entered, w.inventory, w.plan, `${t.x},${t.y}`, { cut: Boolean(t.event) });
             if (t.kind === 'exit') {
                 const to = exitTo.get(t.exitName);
                 if (to === undefined) { problems.push(`${label}: no AP exit of that name`); continue; }
