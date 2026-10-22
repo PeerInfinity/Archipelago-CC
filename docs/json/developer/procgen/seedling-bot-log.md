@@ -24739,3 +24739,29 @@ defaults table and dashShape's stamp row.
 **Trap candidates.**
 - A collider's TYPE comes from the constructor chain, not the asset: an `OpenTree` draws a mask and is still a "Tree".
 - A gate the game runs on every target of a swing can be missing from ONE arm of the model's dispatch: read every arm.
+
+### Seedling fidelity SKINSWING — the game witnesses the two art-stands' swings: it matches `pixelMaskSightLines` ON
+
+Planner `seedling-fidelity-planning-10`, wave 26 (⚖ the user picked "Skin-stand swing witness", owed from the MASKS flip). A
+WITNESS slice: no model edit. The report is `CC/docs/cloud-reports/seedling-fidelity-skinswing.md`.
+
+**The question.** `seedlingEnemySkin.test.js`'s `lavarunner-L71` ([96,200]) and `bulb-L74` ([80,100]) stands (FIGHT, 300 t)
+run with `pixelMaskSightLines` OFF since the flip, because ON the model lands none of their swings (0 'die' frames).
+
+**The game (p4g, `probe-seedling-skin-swing.mjs`, `fixtures/skinswing-witness/`).** Verdict (a): **the game matches ON.** Both
+stands spawn the player INSIDE a "Dark Stone" tile (L71 (104,208), L74 (88,108)); the player never moves, on the game or in
+the model, and every swing line's FIRST sample is that tile. On the game no body takes a hit and none dies in 300 ticks; ON
+reproduces it at 0 px (the player, every chaser's position and `hits`); OFF leaves it at the first swing that reaches a body
+(L71 t3, L74 t21). The OFF pin in the skin test is a non-game arm; js re-sites the stands and drops it.
+
+**Re-site offers (played on the game; js picks).** L74 (64,100): the game lands and kills; ON = OFF = the game at 0 px. L71
+(80,208) — and every other L71 kill site tried ((72,208), (64,200), (64,192), (80,216)) — lands and kills but leaves the
+model (ON and OFF alike) on a REMOVAL tick: **a new model gap.** `FP.world.remove` only queues the body (`World._remove`,
+processed in `updateLists` after the frame), so a body removed this tick is still an "Enemy" solid (`LavaRunner.solids`
+carries "Enemy") to the bodies that update after it; the model drops it at once. Pinned as a known gap
+(`skinswing-l71-resite`, t63, `lavarunner@64,192` blocked in y toward the three bodies removed that tick).
+
+**Trap candidates.**
+- An art stand whose boot puts the player inside a solid tile pins nothing about combat: check that the player is free
+  before reading a fight off it.
+- `World.remove` is deferred: a body removed mid-update still collides for the rest of that update.
