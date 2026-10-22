@@ -28,14 +28,14 @@
     {
       "tape": "bobsoldier2-l30-torch",
       "property": "hasTorch",
-      "gameObs": 226,
+      "gameObs": 169,
       "sampled": [
-        225,
-        226
+        168,
+        169
       ],
-      "page": "seedling_bot_ap_p4f",
+      "page": "seedling_bot_ap_p4g",
       "streamWorst": 0,
-      "observations": 461
+      "observations": 396
     },
     {
       "tape": "r8-solve-10",

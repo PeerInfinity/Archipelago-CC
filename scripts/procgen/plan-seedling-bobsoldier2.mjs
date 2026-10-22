@@ -128,7 +128,8 @@ const PINNED_FIDELITY = Object.freeze({ strikeIframeLapse: false });
  *     and its replay does not read the switch. It stays byte-identical.
  * `SEEDLING_BS2_LAPSE_RETIRED=1` measures the retired arm before the licence (pair it with `--out=`).
  */
-const LAPSE_PIN_RETIRED = process.env.SEEDLING_BS2_LAPSE_RETIRED === '1';
+// ⚖ LICENSED (the user, 2026-10-21, to planning-10: "Licence BS2FIX re-record"): retired by default; `SEEDLING_BS2_LAPSE_RETIRED=0` runs the old pinned arm.
+const LAPSE_PIN_RETIRED = process.env.SEEDLING_BS2_LAPSE_RETIRED !== '0';
 const CONTROL_FIDELITY = Object.freeze({ strikeIframeLapse: false });
 
 // ⚠ A bare import does nothing (`check-procgen-help`'s import door): the work is `main()`'s.

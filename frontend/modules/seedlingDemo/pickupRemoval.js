@@ -22,7 +22,7 @@
  * `botStatus().items` beside the model's `run.inventory` at the same
  * observation): `hasDarkSword` turns true at obs 378 on `enc-l12-witch` (the
  * model: 377), `hasFire` at obs 833 on `enc-l32-live-arrival` (832), and
- * `hasTorch` at obs 226 on `bobsoldier2-l30-torch` (225) — a PLACED pickup too,
+ * `hasTorch` at obs 169 on `bobsoldier2-l30-torch` (168; p4g, BS2FIX) — a PLACED pickup too,
  * so it is the ceremony, not the runtime add. The recording is
  * `fixtures/pickup-removal-witness.json`; `fidelityEncounters2.test.js` holds
  * the model to it. Every recorded x/y stream agrees
