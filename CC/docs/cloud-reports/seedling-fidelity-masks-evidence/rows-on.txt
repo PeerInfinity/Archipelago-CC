@@ -270,3 +270,30 @@
      [33m[2m✓[22m[39m residue L88 b: the solver refuses the corridor on the stepped drill (drillMixedRooms OFF: the re-planned corridor failed too); drillLive OFF plans it again [33m 567[2mms[22m[39m
      [33m[2m✓[22m[39m L30 past the BobSoldier: the solver's plan is exactly the pinned 167 t detour to L31; bobSoldierLive OFF plans the old 162 t walk [33m 2194[2mms[22m[39m
      [33m[2m✓[22m[39m residue L45: the solver refuses BY NAME — no jellyfish bait survives the forecast (baitForecast OFF: the route needs FIRE for the tree at (48,64)); jellyfishLive OFF plans the old 720 t walk [33m 28102[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityStagedHits.test.js [2m([22m[2m26 tests[22m[2m)[22m[33m 18329[2mms[22m[39m
+     [33m[2m✓[22m[39m the proof steps forks that carry the staging: at hitsMax − 1 every leaf is a death [33m 3104[2mms[22m[39m
+     [33m[2m✓[22m[39m staged 0 (= absent): the FORCEDHIT plan, 4 ticks, billing the one hit [33m 6540[2mms[22m[39m
+     [33m[2m✓[22m[39m staged hits 1 of 3: the proof holds, and the budget refuses the crossing BY NAME (hits now 1, margin 1) [33m 4832[2mms[22m[39m
+     [33m[2m✓[22m[39m staged hits 2 of 3 (hitsMax − 1): every proof leaf DIES, so no crossing is planned — never a death [33m 3645[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/levelSetExits.test.js [2m([22m[2m67 tests[22m[2m)[22m[33m 15266[2mms[22m[39m
+     [33m[2m✓[22m[39m the six-seed set the box gate stamps keeps its id — `procgen-roundtrip-6-c75feb6f` [33m 5348[2mms[22m[39m
+     [33m[2m✓[22m[39m vanilla 116: every exit, retargeted, agrees with the text writer [33m 5114[2mms[22m[39m
+     [33m[2m✓[22m[39m addresses the SAME door as the text writer, exit by exit, over the 116 [33m 1000[2mms[22m[39m
+     [33m[2m✓[22m[39m vanilla 116: every exit, unwired, agrees with the text writer [33m 1869[2mms[22m[39m
+     [33m[2m✓[22m[39m vanilla 116: `removed` and `seen` agree with the text writer [33m 1011[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/fidelityMovingWait.test.js [2m([22m[2m25 tests[22m[2m)[22m[33m 15898[2mms[22m[39m
+     [33m[2m✓[22m[39m the model reproduces every sampled tick at 0 px — the player, each bomb to the bit, the anim; no hit [33m 1791[2mms[22m[39m
+     [33m[2m✓[22m[39m at t1007 the STILL wait is a bomb hit (why it paces), and the group is latched [33m 1158[2mms[22m[39m
+     [33m[2m✓[22m[39m the planner's pacing is the one the tape drove, key for key, back on the stance at each cycle end [33m 1996[2mms[22m[39m
+     [33m[2m✓[22m[39m runHold with the pace: drives it to the cycle end where the lock is open, unhit, back on the stance [33m 1345[2mms[22m[39m
+     [33m[2m✓[22m[39m the model reproduces every sampled tick at 0 px — the player, each bomb to the bit, the anim; no hit [33m 1016[2mms[22m[39m
+     [33m[2m✓[22m[39m at t1106 the STILL wait is a bomb hit (why it paces), and the group is latched [33m 701[2mms[22m[39m
+     [33m[2m✓[22m[39m the planner's pacing is the one the tape drove, key for key, back on the stance at each cycle end [33m 644[2mms[22m[39m
+     [33m[2m✓[22m[39m runHold with the pace: drives it to the cycle end where the lock is open, unhit, back on the stance [33m 740[2mms[22m[39m
+     [33m[2m✓[22m[39m a tick off the previewed path fails "not the previewed" [33m 933[2mms[22m[39m
+     [33m[2m✓[22m[39m a pace with no stopping condition is refused before a tick is spent [33m 626[2mms[22m[39m
+     [33m[2m✓[22m[39m cycles that end before the lock opens fail with the still wait's bound sentence [33m 1027[2mms[22m[39m
+     [33m[2m✓[22m[39m 'rebootshake-l42-part0-damage' ON: the model reproduces the whole damage walk at 0 px, through the death and the second life [33m 1079[2mms[22m[39m
+     [33m[2m✓[22m[39m 'rebootshake-l41-part0-damage' ON: the model reproduces the whole damage walk at 0 px, through the death and the second life [33m 1186[2mms[22m[39m
+     [33m[2m✓[22m[39m 'rebootshake-l42-part0-damage' OFF: the drained settle is exact and wrong — refused at the respawn by name [33m 544[2mms[22m[39m
+     [33m[2m✓[22m[39m 'rebootshake-l41-part0-damage' OFF: the drained settle is exact and wrong — refused at the respawn by name [33m 847[2mms[22m[39m

@@ -285,3 +285,13 @@
      [33m[2m✓[22m[39m 'rebootshake-l41-part0-damage' ON: the model reproduces the whole damage walk at 0 px, through the death and the second life [33m 1121[2mms[22m[39m
      [33m[2m✓[22m[39m 'rebootshake-l42-part0-damage' OFF: the drained settle is exact and wrong — refused at the respawn by name [33m 1013[2mms[22m[39m
      [33m[2m✓[22m[39m 'rebootshake-l41-part0-damage' OFF: the drained settle is exact and wrong — refused at the respawn by name [33m 878[2mms[22m[39m
+ [32m✓[39m frontend/modules/seedlingDemo/seedlingCanCross.test.js [2m([22m[2m17 tests[22m[2m)[22m[33m 25202[2mms[22m[39m
+     [33m[2m✓[22m[39m L87 standing on its door to L88: can — the solver steps off and back on; L3's pocket: cannot, closed by name [33m 354[2mms[22m[39m
+     [33m[2m✓[22m[39m can: swordless L14 from the captured arrival, and the witness is the committed tape's keys [33m 2710[2mms[22m[39m
+     [33m[2m✓[22m[39m cannot: L22 from L25 toward L29, bare — the re-planned corridor stalls short of (88,88), a true refusal [33m 710[2mms[22m[39m
+     [33m[2m✓[22m[39m undecided: a budget of 0 consults trips at the first site — never `cannot` [33m 2651[2mms[22m[39m
+     [33m[2m✓[22m[39m fresh-built and captured L14 arrivals give the same verdict and the same plan [33m 4037[2mms[22m[39m
+     [33m[2m✓[22m[39m the same call twice is the same verdict, plan and work; no hook at all is the same plan [33m 5311[2mms[22m[39m
+     [33m[2m✓[22m[39m L16 → L18 from L15 over {sword, conch}: {sword} is minimal but unproved, and {sword, conch} also CAN (ROBUST D3) [33m 5006[2mms[22m[39m
+     [33m[2m✓[22m[39m `cancross-l16-sword-none` IS canCross's `none` witness for L16 → L17 with the Sword, byte for byte [33m 362[2mms[22m[39m
+     [33m[2m✓[22m[39m the default dash mode is the solver's, and its L16 → L17 plan IS `dash-l16-sword-all`, every field but its prose [33m 3533[2mms[22m[39m
