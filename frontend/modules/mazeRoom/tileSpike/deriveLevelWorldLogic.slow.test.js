@@ -26,8 +26,9 @@ const SAMPLE = ['level_14', 'level_15__r1c5', 'level_15__r1c9', 'level_15__r6c8'
  * exemptions"; session rules-rope-events; maze.md § The preset). The atlas charges every L16 rope-lane cell with
  * the rope's event, rocks included (a lane rock costs weapon AND the cut); the projection makes the lane's rocks
  * (6,4), (6,5), (7,5) plain sword/spear rocks, so from r1c1 a weapon alone breaks (6,4) onto the lane's stairs.
- * The maze is LOOSER than the atlas there, and nowhere else. This is the exact problem list; it FAILS once the
- * arrow-lane slice models the lane as a hazard and the cut as an in-world action — delete it then.
+ * The maze is LOOSER than the atlas there, and nowhere else. This is the exact problem list (the certifier names
+ * the FIRST differing item subset of a pair, so each pair appears once); it FAILS once the arrow-lane slice models
+ * the lane as a hazard and the cut as an in-world action — delete it then.
  */
 const ARROW_LANE_NOT_MODELLED = [
     'level_16__r1c1 → level_16__r3c7 holding [Ghost Spear]: derived true, atlas false',
