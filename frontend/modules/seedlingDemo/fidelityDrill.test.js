@@ -71,9 +71,10 @@ describe('fidelity DRILL — W0: the drill rooms', () => {
 });
 
 describe('fidelity DRILL — the switch', () => {
-    it('is OFF by default', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.drillMixedRooms).toBe(false);
-        expect(CONTACT_FIDELITY.drillMixedRooms).toBe(false);
+    // ⛓ shipped OFF; planning-10's flip (⚖ user "Harvest + flip ON", 2026-10-21) turns it ON.
+    it('is ON by default (flipped)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.drillMixedRooms).toBe(true);
+        expect(CONTACT_FIDELITY.drillMixedRooms).toBe(true);
     });
     it.each([[28, { x: 96, y: 64 }, ['drill@80,96', 'drill@128,96']], [91, { x: 64, y: 48 }, ['drill@64,80']]])(
         'L%i: OFF no drill is stepped; ON every drill is', (level, at, ids) => {

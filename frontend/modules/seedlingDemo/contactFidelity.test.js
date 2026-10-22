@@ -211,8 +211,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity ROPESTANCE (wave 23): the spear / fire rope cut shipped OFF;
             // ⛓ planning-10's flip (⚖ user "Harvest + flip ON", 2026-10-21) turns it ON.
             ropeCutAnyWeapon: true,
-            // ⛓ fidelity DRILL (wave 24): every drill of a mixed room stepped ships OFF.
-            drillMixedRooms: false });
+            // ⛓ fidelity DRILL (wave 24): every drill of a mixed room stepped shipped OFF;
+            // ⛓ planning-10's flip (⚖ user "Harvest + flip ON", 2026-10-21) turns it ON.
+            drillMixedRooms: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

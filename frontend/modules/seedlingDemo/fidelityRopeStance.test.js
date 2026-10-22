@@ -104,11 +104,13 @@ describe('fidelity ROPESTANCE — D2: the clear-tag on a rope\'s own tag, no swo
         expect(cutRow(out)).toMatchObject({ weapon: 'fire', stance: { x: 152, y: 56 }, pulledAt: 82 });
         expect(run.damage.hits).toBe(0);
     }));
-    it('L28 from the L25 arrival, the Spear: refused by name — every stance is in the UNSTEPPED drill\'s trigger', () => ON(() => {
+    // ⛓ planning-10's DRILL flip: with `drillMixedRooms` ON (the default) no drill is unstepped and the refusal names the
+    //   drill's t59 hit instead (fidelityDrill's D3 row); this row is the interim's control, read with the key OFF.
+    it('L28 from the L25 arrival, the Spear: refused by name — every stance is in the UNSTEPPED drill\'s trigger (drillMixedRooms OFF)', () => ON(() => withContactFidelity({ drillMixedRooms: false }, () => {
         const { refusal } = solve(FROM_L25, L28, ['hasSpear']);
         expect(refusal.obstacle).toMatchObject({ kind: 'clear-tag', id: 'rope@160,64', reason: 'unresolved' });
         expect(refusal.message).toMatch(/UNSTEPPED drill \(\[drill@80,96, drill@128,96\]/);
-    }));
+    })));
     it('the Wand alone: `cannot-act`, naming the three weapons that cut', () => ON(() => {
         const { refusal } = solve(FROM_L15, L16, ['hasWand']);
         expect(refusal.obstacle).toMatchObject({ reason: 'cannot-act' });

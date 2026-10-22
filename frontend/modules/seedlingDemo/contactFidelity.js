@@ -897,8 +897,12 @@ export const CONTACT_FIDELITY = {
      * previous tick did, the static census boxes); a census body the run does not step is refused by name when a hop
      * asks for it. A chaser whose list carries "Enemy" (the bobs) meets the live drills too. `solverBot.unsteppedDrills`
      * (ROPESTANCE's interim) returns none. OFF: byte-identical. `SEEDLING_DRILL_MIXED_ROOMS=0|1` for a node measurement.
+     * ⛓ planning-10's flip (⚖ user, 2026-10-21, DRILL "Harvest + flip ON") turns it ON. Measured movers (CI, wave-24
+     * A/B): the route survey (full) only step 127 (L88)'s refusal WORDING (REFUSED → REFUSED, now naming the drill); the
+     * 19 drill-room sweep legs ×2: 0 verdict movers. The escape cache needs no digest move (hammer's reach analysis; XC
+     * verify 0 mismatches on the hammer producers ON).
      */
-    drillMixedRooms: false,
+    drillMixedRooms: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
