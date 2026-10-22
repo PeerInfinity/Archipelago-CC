@@ -183,7 +183,70 @@
         "name": "level_16__r1c1",
         "exits": [
           {
-            "name": "level_16__r1c1 -> level_16__r4c21",
+            "name": "level_16__r1c1 -> level_16__r1c9",
+            "connected_region": "level_16__r1c9",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "L16 flag 0: rope@32,16 cleared"
+              }
+            }
+          },
+          {
+            "name": "level_16__r1c1 -> level_16__r3c7",
+            "connected_region": "level_16__r3c7",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "L16 flag 0: rope@32,16 cleared"
+              }
+            }
+          },
+          {
+            "name": "level_16__r1c1 -> level_16__r6c8",
+            "connected_region": "level_16__r6c8",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "L16 flag 0: rope@32,16 cleared"
+              }
+            }
+          },
+          {
+            "name": "level_16__r1c1 -> level_15__r1c9",
+            "connected_region": "level_15__r1c9",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_16__r1c9": {
+        "name": "level_16__r1c9",
+        "exits": [
+          {
+            "name": "level_16__r1c9 -> level_16__r1c1",
+            "connected_region": "level_16__r1c1",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "L16 flag 0: rope@32,16 cleared"
+              }
+            }
+          },
+          {
+            "name": "level_16__r1c9 -> level_16__r3c7",
+            "connected_region": "level_16__r3c7",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "L16 flag 0: rope@32,16 cleared"
+              }
+            }
+          },
+          {
+            "name": "level_16__r1c9 -> level_16__r4c21",
             "connected_region": "level_16__r4c21",
             "access_rule": {
               "rule": "Or",
@@ -204,10 +267,93 @@
             }
           },
           {
-            "name": "level_16__r1c1 -> level_15__r1c9",
-            "connected_region": "level_15__r1c9",
+            "name": "level_16__r1c9 -> level_16__r6c8",
+            "connected_region": "level_16__r6c8",
             "access_rule": {
-              "rule": "True_"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L16 flag 0: rope@32,16 cleared"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_16__r3c7": {
+        "name": "level_16__r3c7",
+        "exits": [
+          {
+            "name": "level_16__r3c7 -> level_16__r1c1",
+            "connected_region": "level_16__r1c1",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "L16 flag 0: rope@32,16 cleared"
+              }
+            }
+          },
+          {
+            "name": "level_16__r3c7 -> level_16__r1c9",
+            "connected_region": "level_16__r1c9",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "L16 flag 0: rope@32,16 cleared"
+              }
+            }
+          },
+          {
+            "name": "level_16__r3c7 -> level_16__r6c8",
+            "connected_region": "level_16__r6c8",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L16 flag 0: rope@32,16 cleared"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           }
         ],
@@ -216,6 +362,86 @@
       "level_16__r4c21": {
         "name": "level_16__r4c21",
         "exits": [],
+        "locations": []
+      },
+      "level_16__r6c8": {
+        "name": "level_16__r6c8",
+        "exits": [
+          {
+            "name": "level_16__r6c8 -> level_16__r1c1",
+            "connected_region": "level_16__r1c1",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "L16 flag 0: rope@32,16 cleared"
+              }
+            }
+          },
+          {
+            "name": "level_16__r6c8 -> level_16__r1c9",
+            "connected_region": "level_16__r1c9",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L16 flag 0: rope@32,16 cleared"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_16__r6c8 -> level_16__r3c7",
+            "connected_region": "level_16__r3c7",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "L16 flag 0: rope@32,16 cleared"
+                  }
+                },
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Progressive Sword"
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Ghost Spear"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
         "locations": []
       },
       "Menu": {
@@ -290,7 +516,7 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-485b7686",
+      "atlas_id": "seedling-41254255",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
@@ -684,9 +910,34 @@
               "id": "atlas_gate_1"
             },
             {
+              "x": 6,
+              "y": 2,
+              "id": "atlas_gate_2"
+            },
+            {
+              "x": 7,
+              "y": 2,
+              "id": "atlas_gate_2"
+            },
+            {
+              "x": 8,
+              "y": 2,
+              "id": "atlas_gate_2"
+            },
+            {
               "x": 4,
               "y": 3,
               "id": "atlas_gate_1"
+            },
+            {
+              "x": 6,
+              "y": 3,
+              "id": "atlas_gate_2"
+            },
+            {
+              "x": 8,
+              "y": 3,
+              "id": "atlas_gate_2"
             },
             {
               "x": 4,
@@ -724,6 +975,26 @@
               "id": "atlas_gate_1"
             },
             {
+              "x": 6,
+              "y": 6,
+              "id": "atlas_gate_2"
+            },
+            {
+              "x": 7,
+              "y": 6,
+              "id": "atlas_gate_2"
+            },
+            {
+              "x": 6,
+              "y": 7,
+              "id": "atlas_gate_2"
+            },
+            {
+              "x": 7,
+              "y": 7,
+              "id": "atlas_gate_2"
+            },
+            {
               "x": 20,
               "y": 7,
               "id": "lock_1"
@@ -755,7 +1026,7 @@
             },
             "atlas_gate_0": {
               "id": "atlas_gate_0",
-              "name": "(Progressive Sword OR Ghost Spear)",
+              "name": "(Progressive Sword OR Ghost Spear OR Fire)",
               "clear_set_type": "rule",
               "clear_rule": {
                 "rule": "Or",
@@ -770,6 +1041,12 @@
                     "rule": "Has",
                     "args": {
                       "item_name": "Ghost Spear"
+                    }
+                  },
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Fire"
                     }
                   }
                 ]
@@ -787,6 +1064,21 @@
                 "rule": "Has",
                 "args": {
                   "item_name": "Progressive Swim"
+                }
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_2": {
+              "id": "atlas_gate_2",
+              "name": "L16 flag 0: rope@32,16 cleared",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "L16 flag 0: rope@32,16 cleared"
                 }
               },
               "color": "#b06eb8",
@@ -832,17 +1124,20 @@
             "key": "level_16",
             "regions": [
               "level_16__r1c1",
-              "level_16__r4c21"
+              "level_16__r1c9",
+              "level_16__r3c7",
+              "level_16__r4c21",
+              "level_16__r6c8"
             ],
             "rows": [
               ".........................",
-              ".A.A.A...AAAAAAA.........",
-              ".AAA.AAAAAAAAAAA.........",
-              ".AAA.AAAA.AA...A.AAA.....",
-              ".AAA.A.A..AA...AAAA..BBB.",
-              ".AAA.A....AAA.AAAA.A.BBB.",
-              ".AAA.AAAA.AAAAAA.A.A.BBB.",
-              ".AAAAAAAA.AAAAAA.AAA.BBB.",
+              ".A.A.A...BBBBBBB.........",
+              ".AAA.A...BBBBBBB.........",
+              ".AAA.A.C..BB...B.BBB.....",
+              ".AAA.A.C..BB...BBBB..DDD.",
+              ".AAA.A....BBB.BBBB.B.DDD.",
+              ".AAA.A..E.BBBBBB.B.B.DDD.",
+              ".AAAAA..E.BBBBBB.BBB.DDD.",
               "........................."
             ],
             "entrances": {
@@ -850,13 +1145,37 @@
                 "x": 2,
                 "y": 4
               },
+              "level_16__r1c9": {
+                "x": 12,
+                "y": 3
+              },
+              "level_16__r3c7": {
+                "x": 7,
+                "y": 4
+              },
               "level_16__r4c21": {
                 "x": 22,
                 "y": 5
+              },
+              "level_16__r6c8": {
+                "x": 8,
+                "y": 6
               }
             },
             "links": {
-              "level_16__r1c1>level_16__r4c21": "level_16__r1c1 -> level_16__r4c21"
+              "level_16__r1c1>level_16__r1c9": "level_16__r1c1 -> level_16__r1c9",
+              "level_16__r1c9>level_16__r1c1": "level_16__r1c9 -> level_16__r1c1",
+              "level_16__r1c1>level_16__r3c7": "level_16__r1c1 -> level_16__r3c7",
+              "level_16__r3c7>level_16__r1c1": "level_16__r3c7 -> level_16__r1c1",
+              "level_16__r1c1>level_16__r6c8": "level_16__r1c1 -> level_16__r6c8",
+              "level_16__r6c8>level_16__r1c1": "level_16__r6c8 -> level_16__r1c1",
+              "level_16__r1c9>level_16__r3c7": "level_16__r1c9 -> level_16__r3c7",
+              "level_16__r3c7>level_16__r1c9": "level_16__r3c7 -> level_16__r1c9",
+              "level_16__r1c9>level_16__r4c21": "level_16__r1c9 -> level_16__r4c21",
+              "level_16__r1c9>level_16__r6c8": "level_16__r1c9 -> level_16__r6c8",
+              "level_16__r6c8>level_16__r1c9": "level_16__r6c8 -> level_16__r1c9",
+              "level_16__r3c7>level_16__r6c8": "level_16__r3c7 -> level_16__r6c8",
+              "level_16__r6c8>level_16__r3c7": "level_16__r6c8 -> level_16__r3c7"
             }
           },
           "atlas_region": "level_16",
@@ -868,7 +1187,19 @@
           }
         }
       },
+      "level_16__r1c9": {
+        "substrate": "maze",
+        "shared_world": "level_16"
+      },
+      "level_16__r3c7": {
+        "substrate": "maze",
+        "shared_world": "level_16"
+      },
       "level_16__r4c21": {
+        "substrate": "maze",
+        "shared_world": "level_16"
+      },
+      "level_16__r6c8": {
         "substrate": "maze",
         "shared_world": "level_16"
       }
