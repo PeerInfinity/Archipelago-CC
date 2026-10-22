@@ -876,7 +876,11 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         note({ kind: 'opened_solid', tile: [x + ox, y + oy], label, message: `${label} at [${x + ox},${y + oy}] sits on a cell the level world walls — opened, because that is where the atlas puts it` });
     };
 
-    // --- exits: every wired boundary exit of every sub-region ---------------
+    // ⛓ A cell the partition does not own but an exit or a location was OPENED on
+    // (L16's pit cells, sinks in the atlas grid) belongs to the sub-region the
+    // atlas binds that exit / location to (session tile-primitives-grow-levels;
+    // ⚖ "Own opened exit cells") — else no AP region owns the crossing.
+    const boundAt = new Map();
     const exits = [];
     const exitAt = new Set();
     for (const exit of region.exits ?? []) {
@@ -905,6 +909,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
                 + `but its tile is owned by "${bindings[owner].sub}" — the partition is stale`);
         }
         openAt([x, y], `exit "${exit.exit_id}"`);
+        if (owner === -1 && bound !== -1) boundAt.set(keyOf(x, y), bound);
         if (exit.access_rule) builder.gate(x, y, exit.access_rule);
         exitAt.add(keyOf(x, y));
         exits.push({
@@ -930,6 +935,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
                 + `but its tile is owned by "${bindings[owner].sub}" — the partition is stale`);
         }
         openAt([x, y], `location "${loc.name}"`);
+        if (owner === -1 && bound !== -1) boundAt.set(keyOf(x, y), bound);
         if (loc.access_rule) builder.gate(x, y, loc.access_rule);
         builder.items.set(keyOf(x, y), {
             id: typeof loc.vanilla_item === 'string' && loc.vanilla_item.length > 0
@@ -944,7 +950,8 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         let row = '';
         for (let x = 0; x < grid.width; x += 1) {
             const owner = builder.isFloor(x, y) ? ownerOf([x + ox, y + oy]) : -1;
-            row += owner === -1 ? '.' : SHARED_WORLD_ALPHABET[owner];
+            const own = owner === -1 ? (boundAt.get(keyOf(x, y)) ?? -1) : owner;
+            row += own === -1 ? '.' : SHARED_WORLD_ALPHABET[own];
         }
         rows.push(row);
     }

@@ -84,13 +84,20 @@ function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = n
  * A `clear_set_type: 'rule'` obstacle's rule as the combo list the `cleared` helper reads, so the
  * condition is answered against THIS step's effective inventory (held tokens and a search's
  * hypothetical inventory included) — not a stateManager snapshot (brief, spike finding F2).
- * Has / And / Or / True_ / False_ only; any other kind is refused BY NAME (registry D3).
+ * Has / And / Or / True_ / False_ only; any other kind — and a Has with a count — is refused BY NAME (registry D3).
  */
 export function ruleToClearSet(rule, obstacle = '?') {
     switch (rule?.rule) {
         case 'True_': return [[]];
         case 'False_': return [];
-        case 'Has': return [[rule.args.item_name]];
+        case 'Has':
+            // ⛔ A count the set inventory cannot hold (session tile-primitives-grow-levels; the
+            // extractor's twin refusal in mazeRoomEngine `clearRuleItems`).
+            if ((rule.args.count ?? 1) > 1) {
+                throw new Error(`tile logic: obstacle ${obstacle}'s clear_rule needs ${rule.args.count}× '${rule.args.item_name}' `
+                    + '— the search holds a SET inventory and cannot price a count');
+            }
+            return [[rule.args.item_name]];
         case 'Or': return (rule.children ?? []).flatMap((c) => ruleToClearSet(c, obstacle));
         case 'And': return (rule.children ?? []).reduce(
             (acc, c) => acc.flatMap((a) => ruleToClearSet(c, obstacle).map((b) => [...a, ...b])), [[]]);

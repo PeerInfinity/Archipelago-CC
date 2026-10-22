@@ -10,12 +10,32 @@
   },
   "regions": {
     "1": {
+      "level_13": {
+        "name": "level_13",
+        "exits": [
+          {
+            "name": "level_13 -> level_14",
+            "connected_region": "level_14",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
       "level_14": {
         "name": "level_14",
         "exits": [
           {
             "name": "level_14 -> level_15__r1c5",
             "connected_region": "level_15__r1c5",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_14 -> level_13",
+            "connected_region": "level_13",
             "access_rule": {
               "rule": "True_"
             }
@@ -209,6 +229,62 @@
             "access_rule": {
               "rule": "True_"
             }
+          },
+          {
+            "name": "level_16__r1c1 -> level_17",
+            "connected_region": "level_17",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_16__r1c1 -> level_17 #2",
+            "connected_region": "level_17",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_16__r1c1 -> level_17 #3",
+            "connected_region": "level_17",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_16__r1c1 -> level_17 #4",
+            "connected_region": "level_17",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_16__r1c1 -> level_17 #5",
+            "connected_region": "level_17",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_16__r1c1 -> level_17 #6",
+            "connected_region": "level_17",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_16__r1c1 -> level_17 #7",
+            "connected_region": "level_17",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_16__r1c1 -> level_17 #8",
+            "connected_region": "level_17",
+            "access_rule": {
+              "rule": "True_"
+            }
           }
         ],
         "locations": []
@@ -217,6 +293,33 @@
         "name": "level_16__r4c21",
         "exits": [],
         "locations": []
+      },
+      "level_17": {
+        "name": "level_17",
+        "exits": [
+          {
+            "name": "level_17 -> level_16__r1c1",
+            "connected_region": "level_16__r1c1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level 017 - Chest",
+            "id": 30000001,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Seal",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
       },
       "Menu": {
         "name": "Menu",
@@ -249,7 +352,7 @@
         "groups": [],
         "classification": "progression",
         "type": null,
-        "max_count": 1
+        "max_count": 2
       }
     }
   },
@@ -258,7 +361,7 @@
   },
   "itempool_counts": {
     "1": {
-      "Seal": 1
+      "Seal": 2
     }
   },
   "world": {
@@ -290,13 +393,48 @@
   },
   "region_atlas": {
     "1": {
-      "atlas_id": "seedling-485b7686",
+      "atlas_id": "seedling-1bba0db2",
       "game": "seedling",
       "map_document": "seedling-map.json"
     }
   },
   "preset_sidecars": {
     "1": {
+      "level_13": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 9,
+          "height": 10,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,1,0,1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,1,1,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1,1,1,1,0,1,1,1,1],
+          "entrance": {
+            "x": 1,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "level_13 -> level_14",
+              "x": 2,
+              "y": 2,
+              "side": null,
+              "exitName": "level_13 -> level_14",
+              "targetRegion": "level_14",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsdown_32_32"
+            }
+          ],
+          "obstacles": [],
+          "items": [],
+          "obstacleLib": {},
+          "atlas_region": "level_13",
+          "level": 13,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
       "level_14": {
         "substrate": "maze",
         "playable_payload": {
@@ -318,6 +456,17 @@
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_stairsdown_32_64"
+            },
+            {
+              "exit_id": "level_14 -> level_13",
+              "x": 11,
+              "y": 4,
+              "side": null,
+              "exitName": "level_14 -> level_13",
+              "targetRegion": "level_13",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsup_176_64"
             }
           ],
           "obstacles": [],
@@ -638,7 +787,7 @@
         "playable_payload": {
           "width": 25,
           "height": 9,
-          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,0,0,1,1,1,0,1,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,0,0,1,1,1,0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,1,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,1,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,1,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
           "entrance": {
             "x": 2,
             "y": 4
@@ -654,6 +803,94 @@
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_stairsup_16_64"
+            },
+            {
+              "exit_id": "level_16__r1c1 -> level_17",
+              "x": 7,
+              "y": 4,
+              "side": null,
+              "exitName": "level_16__r1c1 -> level_17",
+              "targetRegion": "level_17",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsdown_112_64"
+            },
+            {
+              "exit_id": "level_16__r1c1 -> level_17 #2",
+              "x": 12,
+              "y": 3,
+              "side": null,
+              "exitName": "level_16__r1c1 -> level_17 #2",
+              "targetRegion": "level_17",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_pit_7_2"
+            },
+            {
+              "exit_id": "level_16__r1c1 -> level_17 #3",
+              "x": 13,
+              "y": 3,
+              "side": null,
+              "exitName": "level_16__r1c1 -> level_17 #3",
+              "targetRegion": "level_17",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_pit_8_2"
+            },
+            {
+              "exit_id": "level_16__r1c1 -> level_17 #4",
+              "x": 14,
+              "y": 3,
+              "side": null,
+              "exitName": "level_16__r1c1 -> level_17 #4",
+              "targetRegion": "level_17",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_pit_9_2"
+            },
+            {
+              "exit_id": "level_16__r1c1 -> level_17 #5",
+              "x": 12,
+              "y": 4,
+              "side": null,
+              "exitName": "level_16__r1c1 -> level_17 #5",
+              "targetRegion": "level_17",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_pit_7_3"
+            },
+            {
+              "exit_id": "level_16__r1c1 -> level_17 #6",
+              "x": 13,
+              "y": 4,
+              "side": null,
+              "exitName": "level_16__r1c1 -> level_17 #6",
+              "targetRegion": "level_17",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_pit_8_3"
+            },
+            {
+              "exit_id": "level_16__r1c1 -> level_17 #7",
+              "x": 14,
+              "y": 4,
+              "side": null,
+              "exitName": "level_16__r1c1 -> level_17 #7",
+              "targetRegion": "level_17",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_pit_9_3"
+            },
+            {
+              "exit_id": "level_16__r1c1 -> level_17 #8",
+              "x": 13,
+              "y": 5,
+              "side": null,
+              "exitName": "level_16__r1c1 -> level_17 #8",
+              "targetRegion": "level_17",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_pit_8_4"
             }
           ],
           "obstacles": [
@@ -827,9 +1064,9 @@
               ".........................",
               ".A.A.A...AAAAAAA.........",
               ".AAA.AAAAAAAAAAA.........",
-              ".AAA.AAAA.AA...A.AAA.....",
-              ".AAA.A.A..AA...AAAA..BBB.",
-              ".AAA.A....AAA.AAAA.A.BBB.",
+              ".AAA.AAAA.AAAAAA.AAA.....",
+              ".AAA.A.A..AAAAAAAAA..BBB.",
+              ".AAA.A....AAAAAAAA.A.BBB.",
               ".AAA.AAAA.AAAAAA.A.A.BBB.",
               ".AAAAAAAA.AAAAAA.AAA.BBB.",
               "........................."
@@ -860,6 +1097,48 @@
       "level_16__r4c21": {
         "substrate": "maze",
         "shared_world": "level_16"
+      },
+      "level_17": {
+        "substrate": "maze",
+        "playable_payload": {
+          "width": 12,
+          "height": 7,
+          "tiles": [1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
+          "entrance": {
+            "x": 1,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "level_17 -> level_16__r1c1",
+              "x": 2,
+              "y": 3,
+              "side": null,
+              "exitName": "level_17 -> level_16__r1c1",
+              "targetRegion": "level_16__r1c1",
+              "targetExitId": null,
+              "isTeleporter": true,
+              "atlas_exit_id": "out_stairsup_32_48"
+            }
+          ],
+          "obstacles": [],
+          "items": [
+            {
+              "x": 8,
+              "y": 1,
+              "id": "Seal",
+              "locationName": "Level 017 - Chest"
+            }
+          ],
+          "obstacleLib": {},
+          "atlas_region": "level_17",
+          "level": 17,
+          "tile_size": 16,
+          "origin": {
+            "x": 0,
+            "y": 0
+          }
+        }
       }
     }
   },
@@ -882,6 +1161,7 @@
           },
           "new_accessible_locations": [],
           "new_accessible_regions": [
+            "level_13",
             "level_14",
             "level_15__r1c5",
             "Menu"

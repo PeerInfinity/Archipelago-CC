@@ -5,7 +5,9 @@
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { projectRegionToMaze, projectLevelWorld, levelHasInteraction, MAZE_TILE_FLOOR } from './regionAtlasMazeProjection.js';
+import {
+    projectRegionToMaze, projectLevelWorld, levelHasInteraction, MAZE_TILE_FLOOR, SHARED_WORLD_ALPHABET,
+} from './regionAtlasMazeProjection.js';
 import { seedlingMazeProjectionDeps, seedlingLevelEntities } from '../flashPanel/seedlingAtlasAnalysis.js';
 import {
     buildPlaythroughMaze, OUT_FILE, LEVELS, restrictAtlas,
@@ -191,6 +193,22 @@ describe('the atlas\'s own grid — every playthrough region, compiled alone', (
         const back = p.exits.find((e) => e.targetRegion === 'level_9');
         expect(reach.cells.has(`${sword.x},${sword.y}`)).toBe(true);
         expect(reach.cells.has(`${back.x},${back.y}`)).toBe(true);
+    });
+
+    /**
+     * ⚖ "Own opened exit cells" (session tile-primitives-grow-levels). L16's seven pits to L17 stand on sink
+     * cells the atlas's partition does not own; opened as exits they had NO owner, so no AP region held the
+     * crossing (the certifier priced 1 of 8). Each now belongs to the sub-region the atlas binds it to.
+     */
+    it('a level-world exit on a cell the partition does not own belongs to its bound sub-region (L16\'s pits)', () => {
+        const { rules } = compileRegionAtlas(restrictAtlas(ATLAS, ['level_16', 'level_17']), {
+            mapDoc: MAP, embedSphereLog: true, sidecarFlavor: 'maze', mazeProjection: deps,
+        });
+        const p = rules.preset_sidecars['1'].level_16__r1c1.playable_payload;
+        const pits = p.exits.filter((e) => e.atlas_exit_id.startsWith('out_pit_'));
+        expect(pits).toHaveLength(7);
+        const r1c1 = SHARED_WORLD_ALPHABET[p.shared_world.regions.indexOf('level_16__r1c1')];
+        for (const e of pits) expect(p.shared_world.rows[e.y][e.x], `pit ${e.atlas_exit_id}`).toBe(r1c1);
     });
 
     it('CONTROL: the raw transcription is refused where the overlay moves a tile (L12\'s chest), by the partition check', () => {

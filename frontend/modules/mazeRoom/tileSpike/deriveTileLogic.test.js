@@ -191,6 +191,18 @@ describe('Q3 search — refusals are BY NAME', () => {
         expect(() => deriveRegionLogic(w, HELPERS)).toThrow(/odd's clear_rule kind CountItem is not modelled/);
     });
 
+    /**
+     * ⛔ A COUNTED Has (session tile-primitives-grow-levels; ⚖ "Refuse counted rules"). The search holds a SET
+     * inventory: the scripted step read `Has(Shield, count 2)` as one Shield (L18 crossed with 1 where the atlas
+     * needs 2), and a set can never hold two, so a truth table over sets certified it vacuously.
+     */
+    it('a counted Has (count ≥ 2): a set inventory cannot price it', () => {
+        const w = guardRoom();
+        w.obstacleLib = { ...w.obstacleLib, two: { id: 'two', clear_set_type: 'rule', clear_rule: { rule: 'Has', args: { item_name: 'Progressive Shield', count: 2 } } } };
+        setObstacle(w, 8, 4, 'two');
+        expect(() => deriveRegionLogic(w, HELPERS)).toThrow(/two's clear_rule needs 2× 'Progressive Shield' — the search holds a SET inventory and cannot price a count/);
+    });
+
     it('a region whose item axis exceeds the lattice cap', () => {
         expect(() => deriveRegionLogic(guardRoom({ rock: 'lane' }), HELPERS, { maxItems: 3 }))
             .toThrow(/4 region items exceed the lattice cap 3/);

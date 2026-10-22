@@ -13,7 +13,8 @@
  *     compile's maze flavour is the default);
  *   - only the vanilla connections between listed regions (the others are UNWIRED and omitted, which the
  *     compile report names);
- *   - the playthrough's start when its region is listed, else the first listed region's first sub-region;
+ *   - the playthrough's start when its region is listed, else `START_LEVEL` (else the first listed region),
+ *     at its first sub-region;
  *   - its identity restamped (a different document must not keep the source's content hash).
  * The shared-world ownership comes from the playthrough atlas's OWN persisted partition
  * (`atlases/seedling-subregion-partition.json`, keyed by the SOURCE atlas id).
@@ -48,12 +49,19 @@ const ATLAS_DIR = resolve(REPO, 'frontend/modules/flashPanel/atlases');
 export const OUT_FILE = resolve(REPO, 'frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json');
 
 /** ⚖ The levels this preset carries, in atlas order. It GROWS (the user's ruling above). */
-export const LEVELS = Object.freeze(['level_14', 'level_15', 'level_16']);
+export const LEVELS = Object.freeze(['level_13', 'level_14', 'level_15', 'level_16', 'level_17']);
+
+/**
+ * Where the preset starts while the playthrough's own start (level_0) is not listed. Pinned rather than "the
+ * first listed": growing LEVELS outward (⚖ "L13 + L17", session tile-primitives-grow-levels) put L13 first in
+ * atlas order, and the start is what the in-app row and the sphere log are measured from.
+ */
+export const START_LEVEL = 'level_14';
 
 const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
 
 /** The playthrough atlas cut down to `levels`, restamped. Pure. */
-export function restrictAtlas(atlas, levels) {
+export function restrictAtlas(atlas, levels, { start: fallback } = {}) {
     const keep = new Set(levels);
     const missing = levels.filter((id) => !atlas.regions.some((r) => r.region_id === id));
     if (missing.length > 0) throw new Error(`the playthrough atlas has no region(s) ${missing.join(', ')}`);
@@ -62,8 +70,9 @@ export function restrictAtlas(atlas, levels) {
         .map(({ substrate, ...rest }) => rest);
     const layout = atlas.vanilla_layout ?? {};
     const startKept = keep.has(layout.start_region);
-    const start = startKept ? layout.start_region : regions[0].region_id;
-    const startSub = startKept ? layout.start_sub_region : regions[0].subgraph?.sub_regions?.[0];
+    const startRegion = regions.find((r) => r.region_id === fallback) ?? regions[0];
+    const start = startKept ? layout.start_region : startRegion.region_id;
+    const startSub = startKept ? layout.start_sub_region : startRegion.subgraph?.sub_regions?.[0];
     const restricted = {
         ...atlas,
         regions,
@@ -98,7 +107,7 @@ export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
             resolveCondition: playthroughAnalyzerOptions.resolveCondition,
         },
     });
-    const { rules, report } = compileRegionAtlas(restrictAtlas(atlas, levels), {
+    const { rules, report } = compileRegionAtlas(restrictAtlas(atlas, levels, { start: START_LEVEL }), {
         mapDoc,
         embedSphereLog: true,
         sidecarFlavor: 'maze',
