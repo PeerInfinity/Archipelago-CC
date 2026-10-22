@@ -24470,3 +24470,41 @@ cut and the crossing to L18 with 0 hits, the verb's own swing (`execPull` presse
 **Hand-overs.** The Spear's thrust and Fire also cut (`Player.as:989,1032`; rules-2's `l28-fire` tape), and this verb
 drives only the sword: a Spear-only or Fire-only bag refuses `cannot-act` by name. The L39 frontier cut is ON-only and
 stalls next at `wandlock@144,64`; its Pulser (the rope's group) is the next question there.
+
+### Seedling fidelity ROPESTANCE — the `rope` verb and the PULL rung cut with the Spear and with Fire (`ropeCutAnyWeapon`, OFF)
+
+Planner `seedling-fidelity-planning-10`, wave 23 (⚖ the user picked "Spear/Fire rope stances"; rules-2's rules take a rope
+cut as `Sword | Spear | Fire`). The report is `CC/docs/cloud-reports/seedling-fidelity-ropestance.md`.
+
+**The game.** `RopeStart` is in the player's `hitables` and `genericHit` calls `hit()` with no `t`, so every weapon cuts
+it, each through its own filter: the slash (reach gate, the line test waived for a Rope), the spear's 32x5 rect
+(`spear()`: NO reach gate and NO line test at all) and fire's 32x32 area with its 16 px radius cut. W0 measured the run
+cutting both ropes with the Spear's thrust and with Fire (and publishing the group): the gap was the solver's only.
+
+**The verb (switch ON, the sword selected = unchanged either way).** `ropeCutWeapons`: the selected Spear/Fire, then
+held weapons by slot (sword, fire, spear; no sword slot while the ghost-sword flag is up), selected by `equip` and the
+old slot restored. Stances: fire from `burnStanceCandidates` + `auditFire` (the rope and nothing else, the burn verb's
+lean); spear from tile centres within 3 tiles whose thrust cuts cleanly from the cell and after `faceTowards`' tap
+(previewed, with its terrain test). Ranked (a plan with the static danger volumes forbidden first, then
+`stanceReaches`), at most 3, and the EXECUTOR walks them in order — a walk refused at no tick tries the next. The acts
+are `runFire`'s `rope` target and a new `runSpear` `rope` target. The PULL rung takes the same arms; its post-condition
+stays the silencer's latch.
+
+**Witnesses (p4g, 0 px; `probe-seedling-rope-stance.mjs`, `fixtures/ropestance-witness/`).** L16 from the L15 arrival
+with the Spear (thrust north from (40,56)) and with Fire ((24,40) refused at no tick, (88,40) pressed); L28 from the L25
+arrival with Fire ((152,56)); L28 from a stand east of the rope with the Spear, and with the Wand selected (the spear's
+slot equipped for the thrust).
+
+**Measured model gap (handed over).** `levelRun.drillStateFor` steps a drill only in a room whose ONLY census enemy it
+is; L28 holds two drills and a bobsoldier, so its drills never move in the model. On the game, the spear plan from the
+L25 side was hit at t59 by `drill@128,96`'s hop. Named INTERIM behind the switch: a rope stance and the walk the solver
+plans to it never give an unstepped drill its trigger (`runRange` with a clear line; 2 px slack for a planned corridor).
+The L28 spear cut from the L25 side therefore refuses by name until the drills are stepped.
+
+**Trap candidates.**
+- A stance that `stanceReaches` plans can still be a walk the ladder refuses (a chaser's leash beside it): a verb with
+  many equivalent stances should hand the executor a ranked list, not one cell.
+- A room's census can hold an enemy class the model steps only alone (`drillStateFor`): a "modelled class" is not a
+  modelled ROOM. Ask whether the run steps the body in THIS room before trusting a 0-hit plan near it.
+- A spear stance's face tap can nudge the player a fraction of a pixel into water; preview the tap with the executor's
+  own terrain test.
