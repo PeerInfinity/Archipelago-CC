@@ -70,8 +70,19 @@ export function stepCosts(steps, prior) {
 
 /**
  * Longest-processing-time first: steps by price descending (ties: lower step
- * first), each onto the least-loaded shard (ties: the lower shard). Never more
- * shards than steps; each shard's steps come back in route order.
+ * first), each onto the least-loaded shard (ties: the one carrying FEWER
+ * steps, then the lower shard). Never more shards than steps, and never an
+ * empty shard; each shard's steps come back in route order.
+ *
+ * ⛔ The step-count tie-break is what keeps every shard non-empty. Zero-cost
+ * steps (a prior survey's `ms: 0`, or the median of such) leave the load
+ * where it was, so on load alone they all tie onto the first zero-load shard
+ * and a later shard is planned with `steps []` — which the shard job used to
+ * read as EVERY step (runs 39658737187/39658741693, 2026-10-21). An empty
+ * shard always sits at the minimum load (prices are clamped to >= 0), so it
+ * wins every tie it is in; priced steps still go by load, so the balance of
+ * a priced plan is unchanged — the tie-break only decides between shards of
+ * EQUAL load.
  *
  * @param {Array<string|number>} ids step ids, in route order
  * @param {number} n shards asked for
@@ -87,10 +98,14 @@ export function partitionSteps(ids, n, costs) {
     const byPrice = [...order.keys()].sort((a, b) => (costs.get(b) ?? 0) - (costs.get(a) ?? 0) || order.get(a) - order.get(b));
     for (const id of byPrice) {
         let best = shards[0];
-        for (const s of shards) if (s.cost < best.cost) best = s;
+        for (const s of shards) {
+            if (s.cost < best.cost || (s.cost === best.cost && s.steps.length < best.steps.length)) best = s;
+        }
         best.steps.push(id);
-        best.cost += costs.get(id) ?? 0;
+        best.cost += Math.max(0, costs.get(id) ?? 0);
     }
+    const empty = shards.filter((s) => !s.steps.length);
+    if (empty.length) throw new Error(`partitionSteps: planned ${empty.length} empty shard(s) (${empty.map((s) => s.shard).join(',')}) — a shard with no steps must never run`);
     for (const s of shards) s.steps.sort((a, b) => order.get(a) - order.get(b));
     return shards;
 }
