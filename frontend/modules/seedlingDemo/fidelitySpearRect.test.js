@@ -72,3 +72,50 @@ describe('fidelity SPEARRECT D2 — the rule', () => {
         expect(SPEAR_REPEAT_OFFSETS).toEqual([2, 4]);
     });
 });
+
+/**
+ * D1 — the game witnesses (`fixtures/spearrect-witness/`, recorded on p4g headless by
+ * `scripts/procgen/probe-seedling-spearrect.mjs --record`), replayed against the model in node: ON it reproduces each
+ * recording at 0 px (the player on every observation, every sampled row of the witnessed class); OFF it does not, at the
+ * named tick.
+ */
+describe('fidelity SPEARRECT D1 — the game witnesses', async () => {
+    const { readFileSync } = await import('node:fs');
+    const { join } = await import('node:path');
+    const { SPEARRECT_WITNESS_DIR, SPEARRECT_WITNESSES, compareSpearRectWitness, spearRectModel } = await import('./fidelitySpearRect.js');
+    const load = (w) => JSON.parse(readFileSync(join(SPEARRECT_WITNESS_DIR, `${w.name}.json`), 'utf8'));
+    /**
+     * OFF's first disagreement with the game, per witness: the tick, the class, the game's facts and the old model's
+     * (a jellyfish's `hits/hitsTimer`, its position dropped here; the ON rows compare the positions too).
+     */
+    const OFF_FIRST = {
+        'spearrect-l98-jelly-repeat': { t: 39, cls: 'Jellyfish', game: ['0/0', '0/0', '3/30'], model: ['0/0', '0/0', '1/19'] },
+        'spearrect-l63-jelly-reach': { t: 9, cls: 'Jellyfish', game: ['0/0', '2/28'], model: ['0/0', '0/0'] },
+        'spearrect-l40-turret-corner': { t: 8, cls: 'IceTurret', game: ['2/30'], model: ['0/0'] },
+        'spearrect-l63-block-far-edge': { t: 15, cls: 'PushableBlockSpear', game: ['112.5,96'], model: ['112,96'] },
+        'spearrect-l63-block-truncated-y': { t: 16, cls: 'PushableBlockSpear', game: ['112,96'], model: ['113,96'] },
+    };
+    it('every witness is recorded on p4g, the default build', () => {
+        expect(SPEARRECT_WITNESSES.map((w) => w.name)).toEqual(Object.keys(OFF_FIRST));
+        for (const w of SPEARRECT_WITNESSES) expect(load(w).game.build).toBe('seedling_bot_ap_p4g');
+    });
+    for (const w of SPEARRECT_WITNESSES) {
+        it(`${w.name}: ON, the model reproduces the game at 0 px (the player, every ${w.classes.join('/')} row)`, async () => {
+            const rec = load(w);
+            const m = await spearRectModel(rec.tape, { killLock: w.killLock });
+            expect(m.error).toBe(null);
+            const c = compareSpearRectWitness(rec.game, m, w.classes);
+            expect(c.player).toEqual([]);
+            expect(c.bodies).toEqual([]);
+            expect(c.compared).toBeGreaterThan(20);
+        });
+        it(`${w.name}: OFF, the model parts from the game at t${OFF_FIRST[w.name].t} (the witness for the key)`, async () => {
+            const rec = load(w);
+            const m = await spearRectModel(rec.tape, { over: { spearGameTest: false }, killLock: w.killLock });
+            const c = compareSpearRectWitness(rec.game, m, w.classes);
+            const facts = (xs) => xs.map((f) => f.split('@')[0]);
+            const first = c.bodies[0];
+            expect({ ...first, game: facts(first.game), model: facts(first.model) }).toEqual(OFF_FIRST[w.name]);
+        });
+    }
+});
