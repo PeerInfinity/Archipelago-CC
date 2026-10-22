@@ -17602,11 +17602,12 @@ export function createLevelRun({
         spitEvents: spitEventsNow,
         staticBodyDeaths: staticBodyDeathsNow,
         witchEvents: witchEventsNow,
-        yetiEvents: yetiEventsNow,
         unreadRoomWrites: unreadRoomWritesNow,
         bombEvents: bombEventsNow,
         // ⛓ fidelity BEAMTOWER D1: the towers' stepped `y`, ON only (empty OFF).
         beamTowerTrace: () => beamTowerTrace.map((r) => ({ ...r })),
+        // ⛓ fidelity YETI D2: the Yeti's rows (ON only).
+        yetiEvents: yetiEventsNow,
     });
 
     /**

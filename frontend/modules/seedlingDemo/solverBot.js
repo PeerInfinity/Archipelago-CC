@@ -64,8 +64,6 @@
 import {
     DEFAULT_TOLERANCE, DEFAULT_MAX_TICKS_PER_TARGET, chooseHeld, hasArrived,
 } from './botDriverV1.js';
-// ⛓ fidelity YETI D3: the second tag `Yeti.doneTalking()` clears (L58's portal).
-import { YETI_PORTAL_TAG } from './dialogue.js';
 import {
     BotDriverV2Error, DEFAULT_LATTICE, coastThroughTransport, contactsAt, drive, findExit, waypointReached,
     holdOneAxis, isWalkableTile, nodeCentre, nodeAt, plannerObstacleAt, planWaypoints, plansReach, runChest, runCollect,
@@ -170,6 +168,8 @@ import {
     canonicalDigestText,
     // ⛓ fidelity BOSSFORK D1b: the beast's "dying" length bounds the wait for its mouth (`awaitTentacleMouth`).
     TENTACLE_BEAST_ANIMS, animTicks as tentacleAnimTicks,
+    // ⛓ fidelity YETI D3: the second tag `Yeti.doneTalking()` clears (L58's portal).
+    YETI_PORTAL_TAG,
 } from './solverView.js';
 import {
     bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,

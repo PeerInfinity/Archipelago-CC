@@ -85,6 +85,8 @@ describe('YETI D2 — the switch and the model', () => {
                         [1, close.t, false]]);
                     expect(run.ledger('earnedClears').filter((c) => c.level === 58).map((c) => c.tag).sort())
                         .toEqual([0, 1]);
+                    // `{58,0}` waits for the next `Game` (`NPC.check()`); `{58,1}` is already in the room's build.
+                    expect(run.ledger('bankedClears').filter((c) => c.level === 58)).toEqual([{ level: 58, tag: 0 }]);
                 }
             }
             expect(closedAt).toBe(144);
