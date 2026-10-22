@@ -31,7 +31,7 @@ import { ATLAS_CHECK_PLAYER, ATLAS_ROOM_SUBSTRATE_ID } from '../seedlingDemo/see
 import { AP_ITEM_TYPE } from '../seedlingDemo/apPlacementRewriter.js';
 import { R7_GOAL_LEDGER } from '../seedlingDemo/r7Acceptance.js';
 import { loadWasmPlaybackEngine } from './seedlingWasmPlayback.js';
-import { withContactFidelity } from '../seedlingDemo/contactFidelity.js';
+import { CONTACT_FIDELITY, withContactFidelity } from '../seedlingDemo/contactFidelity.js';
 import { clearTagVerbOf, solverGoalFor } from '../seedlingDemo/jsRuntimeSolver.js';
 
 const abs = (rel) => fileURLToPath(new URL(rel, import.meta.url));
@@ -99,10 +99,14 @@ describe('the vanilla arm\'s map — seedling_playthrough, every name accounted 
         expect(events.length).toBe([...locations.values()].filter((l) => l.id === null).length);
         expect(goals.length + refused.length + events.length).toBe(locations.size);
         // ⛓ ENCOUNTERS — the table's entries AND both encounter rows (each has an executor).
+        // ⛓ planning-10's kingOfFireFight flip (⚖ user, 2026-10-21): a boss whose BOUND_BOSS_FIGHTS switch is ON by
+        //   default is a GOAL (the BOSS WIRING rows below pin each one ON and OFF); the rest stay refused.
+        const wired = (r) => CONTACT_FIDELITY[BOUND_BOSS_FIGHTS[r.entityType]] === true;
+        expect(LOADED.reports.filter(wired).map((r) => r.entityType)).toEqual(['lavaboss']);
         expect(goals.map((g) => g.name).sort())
-            .toEqual([...LOADED.entries, ...LOADED.encounters].map((e) => e.location).sort());
-        // ⛓ R4b (rules-boss-locations) — the seven boss kills are REFUSED BY NAME (no fight executor yet), never dropped.
-        expect(refused.map((r) => r.name).sort()).toEqual(LOADED.reports.map((r) => r.location).sort());
+            .toEqual([...LOADED.entries, ...LOADED.encounters, ...LOADED.reports.filter(wired)].map((e) => e.location).sort());
+        // ⛓ R4b (rules-boss-locations) — the boss kills with no default-ON fight are REFUSED BY NAME, never dropped.
+        expect(refused.map((r) => r.name).sort()).toEqual(LOADED.reports.filter((r) => !wired(r)).map((r) => r.location).sort());
         expect(LOADED.reports.map((r) => r.ledgerId).sort())
             .toEqual(R7_GOAL_LEDGER.filter((r) => r.kind === 'boss').map((r) => r.id).sort());
         for (const r of refused) expect(r.refused, r.name).toContain('is a BOSS KILL');
