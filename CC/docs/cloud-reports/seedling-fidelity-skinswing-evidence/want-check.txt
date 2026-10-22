@@ -1,0 +1,4 @@
+lavarunner-L71 (96,200) die-frames 0 {"anims":"walk:true die:false","tint":false,"mirror":false,"art":true}
+L71 resite (80,208) die-frames 244 {"anims":"walk:true die:true","tint":true,"mirror":true,"art":true}
+bulb-L74 (80,100) die-frames 0 {"anims":"walk:true drop:false die:false","tint":false,"mirror":false,"art":true}
+L74 resite (64,100) die-frames 47 {"anims":"walk:true drop:true die:true","tint":true,"mirror":true,"art":true}
