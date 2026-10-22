@@ -184,7 +184,8 @@ export function buildGroupOpeners(mapDoc, tileSize = 16) {
  *   `blocks`  — every pushable (`PUSHABLE_KINDS`), with the claim its own start
  *               cell carries (a fire/spear block is a gated cell);
  *   `pulser`  — a Pulser stands in the room, a second arm that moves a FIRE
- *               block with no item (`Pulser.as:100`);
+ *               block with no item (`Pulser.as:100`); `pulsers` — their tiles
+ *               (the reach `blockHolderVerdict` reads, rules-l39);
  *   `fallers` — every `fallrock` opened only by ropes: its landing tile and
  *               each rope's tiles and cutting condition (`FallRock.as:31-38`),
  *               plus `event` — ⛓ RULES rope-events: the cut as a cross-visit
@@ -194,7 +195,7 @@ export function buildGroupOpeners(mapDoc, tileSize = 16) {
  * `blockHolderVerdict` decides it, and keeps the player-reach price, by name,
  * where it does not.
  *
- * @returns {Map<number, {blocks:object[], pulser:boolean, fallers:object[]}>}
+ * @returns {Map<number, {blocks:object[], pulser:boolean, pulsers:object[], fallers:object[]}>}
  */
 export function buildBlockHolders(mapDoc, { tileSize = 16 } = {}) {
     const groups = buildGroupOpeners(mapDoc, tileSize);
@@ -214,6 +215,8 @@ export function buildBlockHolders(mapDoc, { tileSize = 16 } = {}) {
                 condition: entitySemantics(e)?.condition ?? null,
             })),
             pulser: entities.some((e) => e.type === 'pulser'),
+            pulsers: entities.filter((e) => e.type === 'pulser')
+                .map((e) => ({ tx: Math.floor(e.x / tileSize), ty: Math.floor(e.y / tileSize) })),
             fallers: entities.filter((e) => e.type === 'fallrock').flatMap((e) => {
                 const opener = entities.filter((o) => o !== e && Number(o.attrs?.tset) === Number(e.attrs?.tset)
                     && !RECLOSING_LOCK_CLASSES.has(o.type) && !['fallrock', 'fallrocklarge', 'cover'].includes(o.type));
@@ -614,7 +617,9 @@ export const PLAYTHROUGH_ENTITY_OVERLAY = Object.freeze({
 
     // --- moving solids: they move, so the cell is not permanently blocked -----
     crusher: OPEN('Puzzlements/Crusher.as', 'a moving hazard sweeps and returns; timing is the tape generator\'s burden, not a wall.'),
-    pulser: OPEN('Puzzlements/Pulser.as', 'a moving hazard, as Crusher.'),
+    // ⛓ RULES rules-l39: a Pulser never moves (`Pulser.as:47-48`: `setHitbox(16, 16, 8, 8)`, `type = "Solid"`);
+    // only its pulse grows and shrinks round it, so its own tile is a wall, as BeamTower's.
+    pulser: WALL('Puzzlements/Pulser.as:47-48', 'the PULSER itself is a stationary Solid; only its pulse moves.'),
     spinningaxe: OPEN('Puzzlements/SpinningAxe.as', 'a moving hazard, as Crusher.'),
     lavachain: OPEN('Puzzlements/LavaChain.as', 'a moving hazard, as Crusher.'),
     bombpusher: OPEN('Puzzlements/BombPusher.as', 'a moving hazard, as Crusher.'),
