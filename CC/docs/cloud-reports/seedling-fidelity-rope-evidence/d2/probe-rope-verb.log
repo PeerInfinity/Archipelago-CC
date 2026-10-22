@@ -1,0 +1,25 @@
+# box lock: TAKEN by probe-seedling-rope-verb.mjs (browser, pid 2917) — head 85a5c1a25, 2 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+PASS: rope-l16-cut-cross: the plan cuts it (cleared-in-passing) — 655 t, ledgerAt 90, confirmedAt 112
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: rope-l16-cut-cross: the game reproduces the model at 0 px on all 659 sampled tick(s)
+PASS: rope-l16-cut-cross: the walk ends in L18 — game ends level 18
+PASS: rope-l16-cut-cross: the game writes {16,0} at the model's pull + 1 (t91) — game first holds it at t91
+PASS: rope-l16-cut-cross: no hit on the game — max hits 0
+recorded frontend/modules/seedlingDemo/fixtures/rope-witness/rope-l16-cut-cross.json — 659 tick(s)
+PASS: rope-l16-verb: the plan cuts it (verb) — 28 t, ledgerAt 27, confirmedAt 28
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: rope-l16-verb: the game reproduces the model at 0 px on all 32 sampled tick(s)
+PASS: rope-l16-verb: the walk ends in L16 — game ends level 16
+PASS: rope-l16-verb: the game writes {16,0} at the model's pull + 1 (t28) — game first holds it at t28
+PASS: rope-l16-verb: no hit on the game — max hits 0
+recorded frontend/modules/seedlingDemo/fixtures/rope-witness/rope-l16-verb.json — 32 tick(s)
+PASS: rope-l28-cut: the plan cuts it (cleared-in-passing) — 52 t, ledgerAt 44, confirmedAt 52
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: rope-l28-cut: the game reproduces the model at 0 px on all 56 sampled tick(s)
+PASS: rope-l28-cut: the walk ends in L28 — game ends level 28
+PASS: rope-l28-cut: the game writes {28,0} at the model's pull + 1 (t45) — game first holds it at t45
+PASS: rope-l28-cut: the game writes {28,1} — game first holds it at t45
+PASS: rope-l28-cut: no hit on the game — max hits 0
+recorded frontend/modules/seedlingDemo/fixtures/rope-witness/rope-l28-cut.json — 56 tick(s)
+
+ALL CHECKS PASSED

@@ -29,6 +29,28 @@ describe('partitionSteps — longest first onto the least-loaded shard', () => {
         expect(p).toHaveLength(3);
         expect(p.flatMap((s) => s.steps).sort()).toEqual(ids);
     });
+    it('never plans an EMPTY shard: the 3-steps/3-shards repro with two zero-cost steps (runs 39658737187/39658741693)', () => {
+        // the plan job's own shape: 158 priced, 159/160 at 0 ms — strict `<` alone gave [158], [159,160], []
+        const p = partitionSteps(['158', '159', '160'], 3, new Map([['158', 1200], ['159', 0], ['160', 0]]));
+        expect(p.map((s) => s.steps)).toEqual([['158'], ['159'], ['160']]);
+    });
+    it('never plans an empty shard when every step costs 0', () => {
+        const ids = ['1', '2', '3', '4', '5'];
+        const p = partitionSteps(ids, 5, new Map(ids.map((i) => [i, 0])));
+        expect(p.map((s) => s.steps)).toEqual(ids.map((i) => [i]));
+        const q = partitionSteps(ids, 3, new Map());
+        expect(q.every((s) => s.steps.length)).toBe(true);
+        expect(q.map((s) => s.steps.length)).toEqual([2, 2, 1]);
+    });
+    it('never plans an empty shard for mixed priced/zero steps, and n > ids caps at the step count', () => {
+        const costs = new Map([['1', 0], ['2', 500], ['3', 0], ['4', 300], ['5', 0], ['6', 0]]);
+        for (const n of [2, 3, 4, 5, 6, 9]) {
+            const p = partitionSteps(['1', '2', '3', '4', '5', '6'], n, costs);
+            expect(p).toHaveLength(Math.min(n, 6));
+            expect(p.every((s) => s.steps.length)).toBe(true);
+            expect(p.flatMap((s) => s.steps).sort()).toEqual(['1', '2', '3', '4', '5', '6']);
+        }
+    });
     it('refuses a non-positive shard count and a repeated id', () => {
         expect(() => partitionSteps(['1'], 0, new Map())).toThrow(/positive integer/);
         expect(() => partitionSteps(['1', '1'], 2, new Map())).toThrow(/repeats/);

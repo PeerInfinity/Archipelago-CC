@@ -497,7 +497,8 @@ describe('who takes the box', () => {
          * seedling-js IMPORT GUARD five browser probes the full `check-procgen-help.mjs` failed on the
          * import door, whose work (the take included) moved into `main()`: `probe-seedling-hold.mjs`,
          * `probe-seedling-pushblock-weapon.mjs`, `probe-seedling-u15-turret-mobiles.mjs`,
-         * `probe-seedling-u7-puncher-mobiles.mjs` and `probe-seedling-u9-shield-mobiles.mjs`.)
+         * `probe-seedling-u7-puncher-mobiles.mjs` and `probe-seedling-u9-shield-mobiles.mjs`;
+         * fidelity ROPE the `rope` verb's plans on the game, `probe-seedling-rope-verb.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -530,7 +531,8 @@ describe('who takes the box', () => {
             'check-seedling-bot-differential.mjs',
             'probe-seedling-hold.mjs', 'probe-seedling-pushblock-weapon.mjs', 'probe-seedling-u15-turret-mobiles.mjs',
             'probe-seedling-u7-puncher-mobiles.mjs', 'probe-seedling-u9-shield-mobiles.mjs',
-            'probe-seedling-bosskills.mjs'];
+            'probe-seedling-bosskills.mjs',
+            'probe-seedling-rope-verb.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')
