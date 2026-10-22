@@ -109,9 +109,10 @@ describe('composites probe D — L3\'s pocket with the Sword (STEPOFF2 D3: a bre
 
 describe('composites probe X — L88 declines BY NAME beside the live drill (fidelity TERRAIN W3, wave 6)', () => {
     const DECLINED = LEGS.X.filter((l) => l.expect === 'declined');
-    it('the X legs: L28 the exact repeat, L30 crosses (wave 8), L45 and the two L88 legs decline', () => {
+    // ⛓ planning-10's DRILL flip (⚖ user licence 2026-10-22): L28 crosses with its drills stepped (was the exact repeat).
+    it('the X legs: L28 crosses (DRILL), L30 crosses (wave 8), L45 and the two L88 legs decline', () => {
         expect(LEGS.X.map((l) => [l.name, l.expect])).toEqual([
-            ['residue L28', 'repeat'], ['L30 past the BobSoldier', 'cross'], ['residue L45', 'declined'],
+            ['residue L28', 'cross'], ['L30 past the BobSoldier', 'cross'], ['residue L45', 'declined'],
             ['residue L88 a', 'declined'], ['residue L88 b', 'declined'],
         ]);
     });
@@ -133,9 +134,11 @@ describe('composites probe X — L88 declines BY NAME beside the live drill (fid
     }
     const leg = DECLINED.find((l) => l.name === 'residue L88 a');
     const named = `the solver declined ${leg.goal.name} in level 88 (refusal): solverBot(wasm-exit-88) reach-exit (32,0)->L87: `
-        + 'the re-planned corridor failed too — …';
+        + 'the danger map forbids (104,205.69999999999985) — enemy:drill@128,160 (a stepped drill, priced as a static box where '
+        + 'it stands now (104,200) (`drillMixedRooms`: …';
     const base = { answer: { ok: true, action: 'force-re-arrival' }, end: 'failed', level: 88, failed: named, legs: [{ outcome: 'failed' }] };
-    it('the verdict holds on the live run\'s shape (CI seedling-probe at 0fdd9f967f)', () => {
+    // ⛓ planning-10's DRILL flip: the live shape is CI seedling-probe 39731170050 (fidelity-harvest/drill 479ff5678c).
+    it('the verdict holds on the live run\'s shape (CI seedling-probe at 479ff5678c)', () => {
         expect(declinedHolds(leg, base)).toBe(true);
     });
     it('a silent success reds (crossed or done, a played plan, out of the level)', () => {
