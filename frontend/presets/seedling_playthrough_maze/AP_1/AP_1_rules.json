@@ -318,17 +318,6 @@
               "targetExitId": null,
               "isTeleporter": true,
               "atlas_exit_id": "out_stairsdown_32_64"
-            },
-            {
-              "exit_id": "in_L15_32_64",
-              "x": 3,
-              "y": 4,
-              "side": null,
-              "exitName": null,
-              "targetRegion": null,
-              "targetExitId": "level_15__r1c5 -> level_14",
-              "isTeleporter": true,
-              "atlas_exit_id": "in_L15_32_64"
             }
           ],
           "obstacles": [],

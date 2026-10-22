@@ -519,6 +519,16 @@ export function projectRegionToMaze(region, grid, ctx) {
             if (!boundTo(exit, sub)) continue;
             const wired = wiredExit(region.region_id, exit.exit_id);
             if (!wired) continue; // unwired: omitted from the AP graph, so no crossing here either
+            // ⛓ NOR AN ARRIVAL-ONLY ONE (session tile-primitives-grow-levels) —
+            // the level world's rule below, for the same reason: an exit tile is
+            // a dead end (`isDeadEndExit`), so a landing spot in a corridor cut
+            // it. Measured over the whole playthrough: 5 seals (L1, L6, L9, L10
+            // — the Sword chest too — and L11). It never landed anything: a
+            // one-way arrival names the SOURCE exit, which no tile here carries.
+            if (!wired.targetApRegion) {
+                note({ kind: 'arrival_only_not_emitted', tile: exit.entrance_tile, message: `arrival-only exit "${exit.exit_id}" at [${exit.entrance_tile}] is a landing spot, not a trigger — not emitted (a return lands by its source region)` });
+                continue;
+            }
             const [x, y] = local(exit.entrance_tile);
             for (const n of openTileTowards(builder, grid, component, [x, y], `exit "${exit.exit_id}"`, resolveCondition)) note(n);
             if (exit.access_rule) builder.gate(x, y, exit.access_rule);

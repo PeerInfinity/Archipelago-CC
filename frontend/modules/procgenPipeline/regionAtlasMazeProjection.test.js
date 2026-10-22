@@ -636,12 +636,15 @@ describe('refusals and collisions', () => {
             internalExitName: (regionId, from, to) => `${regionId}: ${from} -> ${to}`,
         });
         const p = sidecars.vault__r1c0.playable_payload;
-        // the boundary exit is planned FIRST and still loses the tile
+        // the boundary exit is planned FIRST and still never takes the tile
         expect(p.exits).toHaveLength(1);
         expect(p.exits[0].targetRegion).toBe('vault__r1c2');
-        const collision = notes.find((n) => n.kind === 'exit_tile_collision');
-        expect(collision.message).toMatch(/"arrival_only" is ARRIVAL-ONLY/);
-        expect(collision.message).toMatch(/DROPPED/);
+        // ⛓ since session tile-primitives-grow-levels an arrival-only exit is not
+        // emitted at all (an exit tile is a dead end), so there is no collision
+        // to evict from — and the omission is NAMED instead.
+        expect(noteKinds(notes)).not.toContain('exit_tile_collision');
+        const omitted = notes.find((n) => n.kind === 'arrival_only_not_emitted');
+        expect(omitted.message).toMatch(/arrival-only exit "arrival_only" at \[1,1\]/);
     });
 
     /**
@@ -918,10 +921,16 @@ describe('⛓⛓⛓ M2 — the generated 2-room ring survives its own tile colli
 
     const payload = (name) => RING.rules.preset_sidecars['1'][name].playable_payload;
 
-    it('the collision is REAL and still NAMED — both rooms, one tile, two doors', () => {
-        const collisions = (RING.report.maze_notes ?? []).filter((n) => n.kind === 'exit_tile_collision');
-        expect(collisions.map((n) => n.region_id).sort()).toEqual(['level_0', 'level_1']);
-        // ⛔ NOT VACUOUS — the two exits really do want the same tile.
+    /**
+     * ⛓ Since session tile-primitives-grow-levels the arrival-only twin is not EMITTED (an exit tile is a dead
+     * end), so the tile is never contested: the omission is named instead of a collision.
+     */
+    it('the arrival-only twin is NOT EMITTED and NAMED — both rooms, one tile, one door', () => {
+        const notes = RING.report.maze_notes ?? [];
+        expect(notes.filter((n) => n.kind === 'exit_tile_collision')).toEqual([]);
+        const omitted = notes.filter((n) => n.kind === 'arrival_only_not_emitted');
+        expect(omitted.map((n) => n.region_id).sort()).toEqual(['level_0', 'level_1']);
+        // ⛔ NOT VACUOUS — the twin really does stand on the door's tile.
         for (const name of ['level_0', 'level_1']) {
             expect(payload(name).exits).toHaveLength(1);
             expect(payload(name).exits[0]).toMatchObject({ x: 8, y: 8 });

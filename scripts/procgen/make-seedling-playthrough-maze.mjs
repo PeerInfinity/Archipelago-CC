@@ -78,8 +78,8 @@ export function restrictAtlas(atlas, levels) {
     return stampAtlasIdentity(restricted, 'seedling');
 }
 
-/** Compile the preset. Returns `{text, report}`. */
-export function buildPlaythroughMaze() {
+/** Compile the preset (or, for a measurement, the playthrough restricted to `levels`). Returns `{text, report}`. */
+export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
     const atlas = readJson(resolve(ATLAS_DIR, 'seedling-playthrough.json'));
     const mapDoc = readJson(resolve(ATLAS_DIR, atlas.tile_space.map_document));
     const gameConfig = readJson(resolve(REPO, 'frontend/modules/flashPanel/games/seedling.json'));
@@ -98,7 +98,7 @@ export function buildPlaythroughMaze() {
             resolveCondition: playthroughAnalyzerOptions.resolveCondition,
         },
     });
-    const { rules, report } = compileRegionAtlas(restrictAtlas(atlas, LEVELS), {
+    const { rules, report } = compileRegionAtlas(restrictAtlas(atlas, levels), {
         mapDoc,
         embedSphereLog: true,
         sidecarFlavor: 'maze',

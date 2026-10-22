@@ -14,6 +14,9 @@ import {
     PLAYTHROUGH_MAP, playthroughGridFor, playthroughAnalyzerOptions,
 } from '../../../scripts/procgen/make-seedling-playthrough-rules.mjs';
 import { compileRegionAtlas } from './regionAtlasCompiler.js';
+import { deserializeMazeWorld } from '../mazeRoom/mazeRoomEngine.js';
+import { nativeReachUnder } from '../mazeRoom/tileSpike/deriveLevelWorldLogic.js';
+import { regionItems } from '../mazeRoom/tileSpike/deriveTileLogic.js';
 
 const J = (rel) => JSON.parse(readFileSync(new URL(rel, import.meta.url), 'utf8'));
 const ATLAS = J('../flashPanel/atlases/seedling-playthrough.json');
@@ -165,6 +168,29 @@ describe('the atlas\'s own grid — every playthrough region, compiled alone', (
         expect(p.exits.map((e) => e.atlas_exit_id)).toEqual(['out_stairsdown_144_16']);
         expect(p.exits.every((e) => e.exit_id && e.targetRegion)).toBe(true);
         expect(JSON.stringify(report)).toMatch(/arrival_only_not_emitted/);
+    });
+
+    /**
+     * …nor does a PER-SUB-REGION world (session tile-primitives-grow-levels). L10 is no level world, and its
+     * arrival from L9 (`in_L9_16_0`, (3,5)) sits in the only corridor to the Sword chest and the stairs back
+     * to L9: emitted as an exit tile it was a dead end, and with L9 wired the engine's walk never passed it —
+     * measured on the whole playthrough, 5 such seals (L1, L6, L9, L10, L11), here the Sword location too.
+     */
+    it('a per-sub-region world emits no ARRIVAL-ONLY exit either: L10\'s landing from L9 sealed the Sword', () => {
+        const { rules, report } = compileRegionAtlas(restrictAtlas(ATLAS, ['level_9', 'level_10', 'level_11']), {
+            mapDoc: MAP, embedSphereLog: true, sidecarFlavor: 'maze', mazeProjection: deps,
+        });
+        const p = rules.preset_sidecars['1'].level_10.playable_payload;
+        expect(p.shared_world).toBeUndefined();
+        expect(p.exits.every((e) => e.exit_id && e.targetRegion)).toBe(true);
+        expect(report.maze_notes.filter((n) => n.region_id === 'level_10' && n.kind === 'arrival_only_not_emitted')
+            .map((n) => n.tile)).toEqual([[3, 5], [3, 2]]);
+        const world = deserializeMazeWorld(p);
+        const reach = nativeReachUnder(world, regionItems(world));
+        const sword = p.items.find((i) => i.locationName === 'Level 010 - Sword');
+        const back = p.exits.find((e) => e.targetRegion === 'level_9');
+        expect(reach.cells.has(`${sword.x},${sword.y}`)).toBe(true);
+        expect(reach.cells.has(`${back.x},${back.y}`)).toBe(true);
     });
 
     it('CONTROL: the raw transcription is refused where the overlay moves a tile (L12\'s chest), by the partition check', () => {
