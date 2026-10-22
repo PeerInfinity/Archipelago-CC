@@ -1,0 +1,6 @@
+ [31m❯[39m frontend/modules/seedlingDemo/fidelityLights.test.js [2m([22m[2m20 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 1113[2mms[22m[39m
+[31m     [31m×[31m asked at t806, `dangerAt` (transit) names shot #75 on the box at t810, and nothing else on the walk[39m[32m 192[2mms[22m[39m
+ [31m❯[39m frontend/modules/seedlingDemo/dangerMap.test.js [2m([22m[2m62 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 9167[2mms[22m[39m
+[31m     [31m×[31m OFF, and in every room without a fight, the arm is empty — and the union is unchanged[39m[32m 25[2mms[22m[39m
+[2m Test Files [22m [1m[31m2 failed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m80 passed[39m[22m[90m (82)[39m

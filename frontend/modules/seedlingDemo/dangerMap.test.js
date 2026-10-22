@@ -10,8 +10,10 @@ import {
     crusherDanger, crusherVolumesAt, dangerAt, dangerDuringTransit, dangerVolumes,
     dangerWhileWaiting, forbiddenByDanger, hazardDanger, predictArrows,
     staticEnemyDanger, spinnerDanger, DANGER_MODES, HAZARDS_PRICED_LIVE,
-    TRANSIT_INGREDIENTS,
+    TRANSIT_INGREDIENTS, lightsDanger,
 } from './dangerMap.js';
+import { LIGHT_BOSS, createLightBossFlier, createLightsFight, lightsFightView } from './lightBoss.js';
+import { createSpriteAnim } from './chasers.js';
 import { SPINNER } from './spinner.js';
 import { withCrusherBait } from './crusherBait.js';
 import { readFileSync } from 'node:fs';
@@ -900,7 +902,7 @@ describe('⚖ §13.10a — the ETA-aware transit probe, against its two oracles'
     it('⛓ every ingredient of the union is classified by coupling', () => {
         const keys = Object.keys(TRANSIT_INGREDIENTS).sort();
         expect(keys).toEqual(['armedLanes', 'arrows', 'chasers', 'crushers',
-            'hazards', 'spinners', 'spits', 'staticEnemies']);
+            'hazards', 'lights', 'spinners', 'spits', 'staticEnemies']);
         /**
          * ⛔ EVERY `atEta: true` ROW IS AUTONOMOUS, AND THE TWO SETS ARE
          * ASSERTED EQUAL rather than a count being asserted.
@@ -950,8 +952,9 @@ describe('⚖ §13.10a — the ETA-aware transit probe, against its two oracles'
          * range, so its spits are forecast against the candidate path exactly
          * as a bob is (`run.spitForecast()`, stepped by `previewWalk`).
          */
-        expect(atEta).toEqual(['arrows', 'chasers', 'spinners', 'spits']);
-        expect(autonomous).toEqual(['arrows', 'spinners']);
+        // ⛓ hammer LD: the L69 Lights fight is the third autonomous row (`lightsDanger`, stepped on a copy).
+        expect(atEta).toEqual(['arrows', 'chasers', 'lights', 'spinners', 'spits']);
+        expect(autonomous).toEqual(['arrows', 'lights', 'spinners']);
         expect(atEta.filter((k) => !autonomous.includes(k))).toEqual(['chasers', 'spits']);
         // …and every autonomous arm is still carried to the ETA: the widening
         // added a case, it did not drop one.
@@ -1198,5 +1201,96 @@ describe('the BOB FORECAST — chasers stepped against the CANDIDATE PATH', () =
         expect(row.atEta).toBe(true);
         expect(row.why).not.toContain('next-cell check');
         expect(row.why).toContain('CANDIDATE PATH');
+    });
+});
+
+/**
+ * ⛓⛓⛓ hammer-phase LD — THE L69 LIGHTS FIGHT, PRICED (`lightsDanger`). The fight is a constructed one (the module's
+ * own `createLightsFight`, shown through `lightsFightView` as `run.entities('lightsFight')` shows it); the victim it
+ * was written for is `fidelityLights.test.js`'s step-159 row.
+ */
+describe('hammer LD — the Lights fight\'s shots and fliers (`lightsDanger`)', () => {
+    /** A fight past its intro and its spawn, holding the given shots and fliers, at `Game.time` `time`. */
+    const fightWith = ({ shots = [], fliers = [], time = 1000 } = {}) => {
+        const f = createLightsFight({ x: 72, y: 72, flierNum: 6, tag: 0 });
+        f.introUp = false;
+        f.madeFliers = true;
+        f.intro = { talking: false, talked: true, d: null, removedPending: false };
+        f.time = time;
+        f.shots = shots.map((s, i) => ({ id: `shot#${i}`, removed: false, removedBy: null, ...s }));
+        f.fliers = fliers;
+        f.bodies = [...fliers];
+        return f;
+    };
+    const runOf = (fight, ticksCompleted = 500) => ({
+        ticksCompleted,
+        entities: (fam) => {
+            if (fam !== 'lightsFight') throw new Error(`unexpected family ${fam}`);
+            return fight ? [lightsFightView(fight)] : null;
+        },
+    });
+    // a player box whose 8x8-ish rect sits at (x, y)
+    const boxAt = (x, y) => playerBoxAt(x, y);
+
+    it('a shot in flight is priced where `stepLightBossShot` puts it — TRANSIT at the box\'s own frame', () => {
+        // 1 px/t to the right from (40,40): at frame k the 4x4 box is x 38+k … 42+k
+        const run = runOf(fightWith({ shots: [{ x: 40, y: 40, vx: 1, vy: 0 }] }));
+        const at = (h) => lightsDanger(run, boxAt(40 + 20, 40), h, 'transit');
+        // far from the box at horizons 0..8, met around horizon 20
+        expect(at(0)).toEqual([]);
+        const hit = at(19);
+        expect(hit.map((s) => [s.kind, s.id, s.lights])).toEqual([['spit', 'shot#0', true]]);
+        expect(hit[0].why).toMatch(/LightBossShot/);
+        // ⛔ THE FRAME: update `T + 1` moves the shot and THEN tests the box left at `T`, so the box at horizon h
+        // meets frame h + 1. Frame 17 is the first whose 4x4 box touches this one; horizon 16 sees it only that way.
+        expect(at(15)).toEqual([]);
+        expect(at(16).map((s) => s.id)).toEqual(['shot#0']);
+        // ⛔ TRANSIT is the box's own frames (h, h+1) only: long after it has passed, nothing
+        expect(at(60)).toEqual([]);
+        // WAIT is the union 0 … h + 1: standing there for 60 ticks meets it
+        expect(lightsDanger(run, boxAt(60, 40), 60, 'wait').map((s) => s.id)).toEqual(['shot#0']);
+    });
+
+    it('⛔ the margin-0 cull is honoured: a shot whose box leaves the 160x160 screen is gone', () => {
+        // x 158 moving right: its box is past x 160 from x 163 on (`onScreen()` margin 0), so it never reaches 170
+        const run = runOf(fightWith({ shots: [{ x: 158, y: 40, vx: 1, vy: 0 }] }));
+        const beyond = { x: 165, y: 36, w: 10, h: 8, right: 175, bottom: 44 };
+        for (let h = 0; h <= 20; h += 1) expect(lightsDanger(run, beyond, h, 'transit')).toEqual([]);
+        // CONTROL: the same box nearer the edge is met while the shot is still on screen
+        const edge = { x: 159, y: 36, w: 4, h: 8, right: 163, bottom: 44 };
+        expect(lightsDanger(run, edge, 1, 'transit').map((s) => s.id)).toEqual(['shot#0']);
+    });
+
+    it('a flier is priced at its contact gate: not while dying, not inside its `hitsTimer`', () => {
+        const live = createLightBossFlier(100, 100, 0);
+        const run = runOf(fightWith({ fliers: [live] }));
+        // the flier steers to the controller's `goto`, so the box ON it is met at horizon 0 (frames 0 and 1)
+        const on = boxAt(100, 100);
+        expect(lightsDanger(run, on, 0, 'transit').map((s) => [s.kind, s.id])).toEqual([['lightBoss', live.id]]);
+        const dying = { ...createLightBossFlier(100, 100, 0), dieAnim: createSpriteAnim(LIGHT_BOSS.flier.die.frames,
+            LIGHT_BOSS.flier.die.rate) };
+        expect(lightsDanger(runOf(fightWith({ fliers: [dying] })), on, 0, 'transit')).toEqual([]);
+        const struck = { ...createLightBossFlier(100, 100, 0), hitsTimer: 30 };
+        expect(lightsDanger(runOf(fightWith({ fliers: [struck] })), on, 0, 'transit')).toEqual([]);
+    });
+
+    it('OFF, and in every room without a fight, the arm is empty — and the union is unchanged', () => {
+        expect(lightsDanger(runOf(null), boxAt(40, 40), 30, 'wait')).toEqual([]);
+        // a real room (L6): `entities('lightsFight')` is null while the switch is OFF
+        const run = runIn(6, { level: 6, x: 80, y: 48 }, [], 2);
+        expect(run.entities('lightsFight')).toBe(null);
+        expect(lightsDanger(run, playerBoxAt(run.state.x, run.state.y), 30, 'transit')).toEqual([]);
+        // and through the union: a fight handed in is a source of `dangerAt`
+        const withShot = withFamilies(run, { lightsFight: [lightsFightView(fightWith({
+            shots: [{ x: run.state.x, y: run.state.y, vx: 0.5, vy: 0 }] }))] });
+        const d = dangerAt(withShot, run.ticksCompleted, playerBoxAt(run.state.x, run.state.y), { mode: 'transit' });
+        expect(d.sources.filter((s) => s.lights).map((s) => s.id)).toEqual(['shot#0']);
+    });
+
+    it('the forecast is the copy\'s: asking does not move the run\'s own fight', () => {
+        const fight = fightWith({ shots: [{ x: 40, y: 40, vx: 1, vy: 0 }], fliers: [createLightBossFlier(100, 100, 0)] });
+        const before = JSON.stringify(fight);
+        lightsDanger(runOf(fight), boxAt(60, 40), 90, 'wait');
+        expect(JSON.stringify(fight)).toBe(before);
     });
 });
