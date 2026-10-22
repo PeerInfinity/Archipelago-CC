@@ -22247,7 +22247,9 @@ function solveSegmentUnder({
          * swing; a swordless climb keeps its words) and only in a room with a
          * silencer at all (`roomHasLaneSilencer`: L16 alone in the atlas).
          */
-        if (!silencer && corridor && run.progress('primaryWeapon') === 'sword'
+        // ⛓ fidelity ROPESTANCE (`ropeCutAnyWeapon`, OFF): or with any weapon that cuts a rope (`ropeCutWeapons`).
+        if (!silencer && corridor && (run.progress('primaryWeapon') === 'sword'
+            || (CONTACT_FIDELITY.ropeCutAnyWeapon && ropeCutWeapons(run).length > 0))
             && roomHasLaneSilencer(run)) {
             const passed = new Set(dangerExcept ?? []);
             for (let next = hit, n = 0; next && !silencer && n < LATER_LANE_PROBES; n += 1) {
@@ -22260,8 +22262,26 @@ function solveSegmentUnder({
             const ropeId = silencer.rope.ropeId;
             let pull = null;
             let pullWhy = null;
+            // ⛓ fidelity ROPESTANCE: a swordless cut's order (`resolveRopeCut`), switch ON only.
+            let cut = null;
             const weapon = run.progress('primaryWeapon');
-            if (weapon !== 'sword') {
+            if (weapon !== 'sword' && CONTACT_FIDELITY.ropeCutAnyWeapon) {
+                try {
+                    const answer = resolveRopeCut(run, silencer.rope, contacts, []);
+                    if (answer === null) {
+                        pullWhy = `${ropeId} silences [${silencer.traps.join(', ')}] (group t=${silencer.group}), but `
+                            + `the run's \`primary\` slot ${weapon === null ? 'holds NOTHING' : `fires \`${weapon}\``} `
+                            + 'and no slot holds a Sword, Fire or Spear — the weapons whose press cuts a rope. The '
+                            + 'weapon is a SUB-ORDER the macro layer owes.';
+                    } else {
+                        cut = ropeCutOrder(run, silencer.rope, answer);
+                    }
+                } catch (e) {
+                    if (!(e instanceof SolverRefusal)) throw e;
+                    pullWhy = `${ropeId} silences [${silencer.traps.join(', ')}] (group `
+                        + `t=${silencer.group}), but ${e.message}`;
+                }
+            } else if (weapon !== 'sword') {
                 // ⛔ `break`'s own gate: the pull this rung derives is a SWORD swing.
                 pullWhy = `${ropeId} silences [${silencer.traps.join(', ')}] (group `
                     + `t=${silencer.group}), but the run's \`primary\` slot `
@@ -22287,6 +22307,30 @@ function solveSegmentUnder({
                     pullWhy = `${ropeId} silences [${silencer.traps.join(', ')}] (group `
                         + `t=${silencer.group}), but ${e.message}`;
                 }
+            }
+            if (cut) {
+                // ⛓ fidelity ROPESTANCE — the same rung row, the weapon named; the executor walks the ranked
+                // approach (a sword selected by `equip` keeps the rung's own stance walk). The post-condition is the
+                // rung's: the silencer's group LATCHED on the live run (`execPull`'s, asked of a spear or fire cut).
+                rowFor('pull', refused, { target: ropeId, group: silencer.group,
+                    stance: cut.stance ?? cut.approach?.[0] ?? null, weapon: cut.weapon });
+                pullingRopes.add(ropeId);
+                let record;
+                try {
+                    if (cut.stance) walkTo(goal, cut.stance, { what: `${what} -> pull (${ropeId}) stance` });
+                    record = execRopeCut(run, perTick, { ...cut, traps: silencer.traps },
+                        { what: `${what} -> pull (${ropeId})`, walkTo, goal, equip });
+                } finally {
+                    pullingRopes.delete(ropeId);
+                }
+                if (!(run.entities('latchedGroups') ?? new Set()).has(silencer.group)) {
+                    throw new SolverRefusal(`${what} -> pull (${ropeId}): cut with the ${cut.weapon} and group `
+                        + `t=${silencer.group} is NOT latched in the live run — the rope's \`set activate\` publishes `
+                        + `its group on the hit that lands, so [${silencer.traps.join(', ')}] still fire.`,
+                    { obstacle: { kind: 'solid', id: ropeId } });
+                }
+                records.push({ goal: goal.kind, strategy: 'pull', ...record, silenced: silencer.traps });
+                return { escalations };
             }
             if (pull) {
                 rowFor('pull', refused, { target: ropeId, group: silencer.group,
