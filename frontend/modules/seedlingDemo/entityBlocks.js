@@ -274,7 +274,9 @@ export const FAMILY_BLOCKS = deepFreeze([
         solverReads: ['solverBot'], strategies: [],
         why: 'the Activators groups a `room = -1` press latched open (`levelRun.js:10718`).' },
     { family: 'pulledRopes', kind: RUN_ENTITIES, blocks: [],
-        solverReads: ['botDriverV2'], strategies: [],
+        // ⛓ fidelity ROPE: `solverBot.resolveRopeStrategy` reads it (a rope already pulled is no work order). The
+        // `rope` row is switch-gated (non-enumerable), so `strategies` stays the enumerated table's answer.
+        solverReads: ['botDriverV2', 'solverBot'], strategies: [],
         why: 'pulled rope ids (`levelRun.js:10582`) — an obstacle\'s state, not a block.' },
     { family: 'turretDamage', kind: RUN_ENTITIES, blocks: ['hp', 'emitter'],
         solverReads: ['botDriverV2'], strategies: [],

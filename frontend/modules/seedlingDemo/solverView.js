@@ -196,6 +196,9 @@ export { createWandShot, stepWandShot, wandShotRect } from './wandShot.js';
 export { MAGICAL_LOCK_OPEN_TICK_OFFSET } from './magicalLock.js';
 // ⛓ seedling-fidelity-bosskills D3: the tentacle's body and its swipe, for `tentacleBeastPolicy`.
 export { tentacleRect, tentacleSwipeRect } from './tentacleBeast.js';
+// ⛓ fidelity BOSSFORK D1b: the beast's anims and their length, for the wait on the mouth (`awaitTentacleMouth`).
+export { TENTACLE_BEAST_ANIMS } from './tentacleBeast.js';
+export { animTicks } from './chasers.js';
 // spinner.js — botDriverV2, dangerMap, solverBot · seedling 5
 export {
     enemiesUnseenByBlockSweep, hammerHitsPlayer, MODELLED_ENEMY_CLASSES, SPINNER, spinnerRect,
