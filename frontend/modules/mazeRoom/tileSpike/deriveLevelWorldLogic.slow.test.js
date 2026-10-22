@@ -10,7 +10,9 @@
  * The sample: both shared level worlds the parity was built on (L15, L16) and one per-sub-region level (L14).
  *
  * Slow tier: ~35 s native (every region, then the sample again for its lines) + ~86 s scripted sample on one
- * core (measured 2026-10-21, L13–L17).
+ * core (measured 2026-10-21, L13–L17). Since the arrow trap + rope (session tile-primitives-arrow-rope, 2026-10-22)
+ * L16's cut doubles its state space; with the facing-free search: native every region 43.5 s, native sample 21.5 s,
+ * scripted sample 146 s. No exemption: every region agrees, the rope gate derived from the lane and the cut.
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -20,6 +22,15 @@ import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
 const RULES = JSON.parse(readFileSync(
     new URL('../../../presets/seedling_playthrough_maze/AP_1/AP_1_rules.json', import.meta.url), 'utf8'));
 const SAMPLE = ['level_14', 'level_15__r1c5', 'level_15__r1c9', 'level_15__r6c8', 'level_16__r1c1', 'level_16__r4c21'];
+
+/** A copy of the preset with one AP exit's rule replaced — the closure comparison's mutant controls. */
+const withExitRule = (from, to, rule) => {
+    const copy = structuredClone(RULES);
+    const exit = copy.regions['1'][from].exits.find((e) => e.connected_region === to);
+    expect(exit, `${from} -> ${to}`).toBeDefined();
+    exit.access_rule = rule;
+    return copy;
+};
 
 describe('seedling_playthrough_maze — every region certified against the atlas at every subset', () => {
     let sampleLines;
@@ -35,4 +46,19 @@ describe('seedling_playthrough_maze — every region certified against the atlas
         expect(problems).toEqual([]);
         expect(lines).toEqual(sampleLines);
     }, 600_000);
+    // ⛓ The in-world CLOSURE comparison is two-sided: a mutated in-world AP row that makes the atlas stricter than
+    // the world (the world LOOSER), or looser than it, is still caught (rules-rope-events; asked by
+    // tile-primitives-design). L15 alone: its world is certified when any member is in the sample.
+    it('the closure comparison still catches an in-world row the world disagrees with, both ways', () => {
+        const L15 = { native: true, regions: ['level_15__r1c5'] };
+        expect(certifyPlaythroughMaze(RULES, HELPERS, L15).problems).toEqual([]);
+        const looser = certifyPlaythroughMaze(withExitRule('level_15__r1c5', 'level_15__r1c9',
+            { rule: 'Has', args: { item_name: 'Progressive Swim' } }), HELPERS, L15).problems;
+        expect(looser.some((p) => p.startsWith('level_15__r1c5 → level_15__r1c9 holding') && p.endsWith('derived true, atlas false')),
+            JSON.stringify(looser)).toBe(true);
+        const stricter = certifyPlaythroughMaze(withExitRule('level_15__r1c5', 'level_15__r1c9', { rule: 'True_' }),
+            HELPERS, L15).problems;
+        expect(stricter.some((p) => p.startsWith('level_15__r1c5 → level_15__r1c9 holding') && p.endsWith('derived false, atlas true')),
+            JSON.stringify(stricter)).toBe(true);
+    }, 300_000);
 });

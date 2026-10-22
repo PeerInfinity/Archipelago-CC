@@ -232,3 +232,23 @@ export function tapeCoversVisit(grant, tapeKeys = []) {
     ];
     return { covers: beyond.length === 0, beyond };
 }
+
+/**
+ * ⛓ RULES survey-tentacle-staging — **A STAGED ROOM RUNS THE GAME'S `Rng.split`.** A staged row re-points
+ * `STAGED_BASE`'s block at another level, and that block's `rng` is the base tape's OWN declaration (`r8-solve-11`:
+ * `split: false`, recorded before 3′b). The game the route plays has the split ON: `Rng.split` defaults to `true`
+ * (`Rng.as:68`) and `Bot.as:3009` puts it back after every tape (⚖ 3′b, 2026-10-04); the JS runtime stages the shipped
+ * tape's `split: true` (`wasmArrival.SHIPPED_RNG`), and every campaign segment declares it (⚖ 68). Unsplit, the L57
+ * tentacle stream refused (`tentacleBeast.tentacleStreamRefusal`).
+ *
+ * `shipped` is the runtime's block (`SHIPPED_RNG`). Only `split` is taken from it, and `cosmetic` when the base did not
+ * split (an unsplit block's `cosmetic` is unread): the cosmetic VALUE is never modelled, and 0 is the build's own boot
+ * state. `seed` and `fp` stay the base's. ⚠ So the gameplay seed is still the L11 latch's, not the route's stream
+ * position at the staged room. A committed or true-start row keeps its tape's block and never comes here.
+ *
+ * @returns {object|null} a new block; `rng` itself when it already declares the shipped split (or is null)
+ */
+export function stagedRng(rng, shipped) {
+    if (rng === null || rng === undefined || rng.split === shipped.split) return rng ?? null;
+    return { ...rng, split: shipped.split, cosmetic: rng.split ? rng.cosmetic : shipped.cosmetic };
+}

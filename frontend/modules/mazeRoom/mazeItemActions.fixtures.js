@@ -12,7 +12,7 @@
  */
 
 import {
-    createWorld, setTile, TILE_WALL, setObstacle, setItem, setBlock, setButton,
+    createWorld, setTile, TILE_WALL, setObstacle, setItem, setBlock, setButton, checkTraps,
 } from './mazeRoomEngine.js';
 
 export const SWORD = 'Progressive Sword';
@@ -86,4 +86,51 @@ export const ACTION_GADGETS = Object.freeze([
     '#..b#D#R#',
     '#.K.#..X#',
     '#########',
+]);
+
+// ⛓⛓ ARROW TRAPS + ROPES (slice tile-primitives-arrow-rope, ⚖ 2026-10-22). Two more
+// glyphs over `itemActionPicture`'s:
+//   T  an arrow trap of group A (`trap_A`, token sw_A): its LANE is its column from
+//      the trap's row DOWN to the first wall (the game's `ropeLaneCharges` rule)
+//   c  a rope: obstacle `rope`, `struck_by: ['sword']`, `activates: 'sw_A'`, `event: ROPE_EVENT`
+
+export const ROPE_EVENT = 'rope cut';
+
+export const ROPE_ENTRY = Object.freeze({
+    kind: 'rope', name: 'rope@c', clear_set: [], struck_by: ['sword'], activates: 'sw_A', event: ROPE_EVENT, color: '#b08a4a',
+});
+
+export function arrowTrapPicture(rows, { fires = 'unless_active', actionLib = SWORD_ACTION_LIB } = {}) {
+    const w = itemActionPicture(rows.map((r) => r.replace(/[Tc]/g, '.')), { actionLib });
+    w.obstacleLib = { ...w.obstacleLib, rope: ROPE_ENTRY };
+    const traps = [];
+    for (let y = 0; y < rows.length; y++) {
+        for (let x = 0; x < rows[0].length; x++) {
+            if (rows[y][x] === 'c') setObstacle(w, x, y, 'rope');
+            if (rows[y][x] !== 'T') continue;
+            const lane = [];
+            for (let ly = y; ly < rows.length && rows[ly][x] !== '#'; ly++) lane.push({ x, y: ly });
+            traps.push({ x, y, id: 'trap_A', label: `trap@${x},${y}`, lane });
+        }
+    }
+    const trapLib = { trap_A: { kind: 'arrow_trap', active: 'sw_A', fires } };
+    return Object.assign(w, checkTraps(traps, trapLib, w.width, w.height, 'arrowTrapPicture'));
+}
+
+/** L16's shape: a lane between the start and the exit, silenced by a rope cut from the start side. */
+export const ARROW_ROPE = Object.freeze([
+    '#######',
+    '#c.T..#',
+    '#P....X',
+    '#.....#',
+    '#######',
+]);
+
+/** L67's shape (and L4/5/8's with `while_active`): a lane beside a button a block can hold. */
+export const ARROW_BUTTON = Object.freeze([
+    '########',
+    '#P...T.#',
+    '#.Bb...X',
+    '#......#',
+    '########',
 ]);

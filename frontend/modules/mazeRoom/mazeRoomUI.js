@@ -13,6 +13,7 @@ import {
     extractPathsAndObstacles,
     isExit,
     hasItemActions,
+    armedTraps,
     sharedWorldCrossing,
 } from './mazeRoomEngine.js';
 import {
@@ -3717,6 +3718,7 @@ export class MazeRoomUI {
                 ?.isConsumableCollected?.(this.currentRegionId, x, y),
             broken: this.state?.broken ?? null,
             facing: this.state?.facing ?? null,
+            armedTraps: this.state ? armedTraps(this.world, this.state, this.externalInventory ?? undefined) : null,
         });
     }
 
@@ -4360,8 +4362,19 @@ export class MazeRoomUI {
             return reason;
         }
         const struck = next.broken?.length !== this.state.broken?.length;
+        const hit = struck ? next.broken.find((k) => !this.state.broken.includes(k)) : null;
         this.state = next;
-        if (struck) this.message = `Struck the rock with ${entry.actionId}.`;
+        if (struck) {
+            // ⛓ A ROPE is cut, not struck down: its group's traps fall silent this visit, and its `event` is the
+            // AP event location the cut checks (⚖ "Both: this visit + event item", session tile-primitives-arrow-rope).
+            const entryOf = this.world.obstacleLib?.[this.world.obstacles.get(hit)];
+            if (entryOf?.activates) {
+                this.message = `Cut ${entryOf.name ?? 'the rope'} with ${entry.actionId}.`;
+                if (entryOf.event) this._executeLocationCheckAction(entryOf.event);
+            } else {
+                this.message = `Struck the rock with ${entry.actionId}.`;
+            }
+        }
         const pos = this.state.player_pos;
         const hazardAllowed = validateMoveAgainstHazards(this.world.hazards, pos, pos);
         if (hazardAllowed && this.externalInventory !== null && this._shouldDeductMazeMana()) {

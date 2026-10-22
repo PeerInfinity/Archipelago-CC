@@ -907,7 +907,8 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
         // ⛓ RULES burnable-trees: 289 -> 295, the burnable trees' 2x2 footprints split L12/L37/L40/L44.
         // ⛓ RULES re-closing locks: 295 -> 304, the crossings through the six button-only locks that split a level.
         // ⛓ RULES footprints: 304 -> 286, L94's 20 swim rows to the pockets behind TreeLarge go, L43 and L94 gain one.
-        expect(committed.regions.flatMap((r) => r.subgraph?.internal_exits ?? [])).toHaveLength(286);
+        // ⛓ RULES rope-events: 286 -> 292, L16 split at its rope-silenced arrow lanes, L28's lock entered from r1c18.
+        expect(committed.regions.flatMap((r) => r.subgraph?.internal_exits ?? [])).toHaveLength(292);
         expect(fromXml.atlas.regions.filter((r) => r.subgraph)).toHaveLength(0);
         const exitKeys = new Set(committed.regions.flatMap((r) => (r.exits ?? [])
             .flatMap((e) => Object.keys(e))));
@@ -917,7 +918,7 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
             .flatMap((e) => Object.keys(e))));
         expect([...derivedExitKeys].sort()).toEqual(
             ['entrance_tile', 'exit_id', 'exit_tiles', 'kind']);
-        expect(committed.atlas_id).toBe('seedling-7660a339');   // ⛓ RULES (A)+(B) + logical-links + burnable-trees + patched-set + re-closing-locks + footprints + obstacle-events + kill-locks + game-truth-gaps (L57) + R4b boss locations (L69) + L32 rock move (Bob's location tile [4,8] -> [5,8]) + r4b pit centre + block-path (L15/L16/L41 lock entries) restamps
+        expect(committed.atlas_id).toBe('seedling-78124631');   // ⛓ RULES (A)+(B) + logical-links + burnable-trees + patched-set + re-closing-locks + footprints + obstacle-events + kill-locks + game-truth-gaps (L57) + R4b boss locations (L69) + L32 rock move (Bob's location tile [4,8] -> [5,8]) + r4b pit centre + block-path (L15/L16/L41 lock entries) + rope-events (L16 lanes, L28 lock, Fire cuts) restamps
         expect(fromXml.atlas.atlas_id).toBe('seedling');   // D1 §20.6: DELIBERATELY unstamped
     }, 60000);
 

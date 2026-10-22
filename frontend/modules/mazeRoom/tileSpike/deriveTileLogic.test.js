@@ -20,10 +20,13 @@ import { parseElementSpec } from '../../procgenCore/elementSpec.js';
 import { parseSkeleton } from '../../procgenCore/skeletonKinds.js';
 import { compileRegion } from '../../shared/procgen/pathsAndObstaclesCompiler.js';
 import { evaluateRuleAgainstInventory } from '../../shared/procgen/library.js';
-import { deriveRegionLogic, regionItems, ruleFromMinimalSets } from './deriveTileLogic.js';
+import { deriveRegionLogic, regionItems, ruleFromMinimalSets, reachUnder } from './deriveTileLogic.js';
+import { deriveEntryLogic, nativeReachUnder } from './deriveLevelWorldLogic.js';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
 import { setTile, TILE_WALL, useInput } from '../mazeRoomEngine.js';
-import { itemActionPicture, SWORD } from '../mazeItemActions.fixtures.js';
+import {
+    itemActionPicture, SWORD, arrowTrapPicture, ARROW_ROPE, ROPE_EVENT,
+} from '../mazeItemActions.fixtures.js';
 
 const has = (item) => ({ rule: 'Has', args: { item_name: item } });
 const WEAPON_OR_SWIM = { rule: 'Or', children: [has('Progressive Swim'), has('Progressive Sword')] };
@@ -273,5 +276,44 @@ describe('Q3 search — a strike-gated location', () => {
         w.actionLib = {};
         const rules = rulesById(deriveRegionLogic(w, HELPERS, { pickups: 'ap' }));
         expect(rules['flag_B@5,1']).toEqual({ rule: 'False_' });
+    });
+});
+
+// ⛓⛓ ARROW TRAPS + ROPES (slice tile-primitives-arrow-rope): the ROPE GATE is DERIVED from the mechanics —
+// nothing in the fixture names the event on a cell, the lane refuses while armed and the cut silences it.
+describe('the rope gate is derived from the lane + the cut (native ≡ scripted)', () => {
+    const world = arrowTrapPicture(ARROW_ROPE);
+    const exitRule = (out) => ruleFromMinimalSets(out.targets.find((t) => t.kind === 'exit').minimal);
+
+    for (const native of [false, true]) {
+        it(`${native ? 'native' : 'scripted'}: exit = Or(event, Sword); the event = Sword (by the cut)`, () => {
+            // deriveEntryLogic prices an exit with a target region (an AP exit), so give the fixture's one.
+            const priced = { ...world, exits: new Map([...world.exits].map(([k, e]) => [k, { ...e, targetRegion: 'beyond' }])) };
+            const out = native ? deriveEntryLogic(priced, null, HELPERS, { native: true })
+                : deriveRegionLogic(world, HELPERS);
+            expect(out.items).toEqual([SWORD, ROPE_EVENT].sort());
+            expect(exitRule(out)).toEqual({ rule: 'Or', children: [has(SWORD), has(ROPE_EVENT)] });
+            const ev = out.targets.find((t) => t.event === ROPE_EVENT);
+            expect(ev.locationName).toBe(ROPE_EVENT);
+            expect(ev.minimal).toEqual([[SWORD]]);
+            // The cut's witness really cuts it on the engine.
+            let s = createState(world);
+            s.inventory = new Set(ev.witnesses[0].inventory);
+            for (const input of ev.witnesses[0].plan) s = step(world, s, input);
+            expect(s.broken).toContain('1,1');
+        });
+    }
+
+    it('an ARRIVAL in the armed lane reaches nothing; with the event it walks (⚖ never tank a hit)', () => {
+        const inLane = { ...world, entrance: { x: 3, y: 2 } };
+        expect(nativeReachUnder(inLane, []).cells.size).toBe(0);
+        expect(reachUnder(inLane, [], HELPERS).cells.size).toBe(0);
+        expect(nativeReachUnder(inLane, [ROPE_EVENT]).cells.has('6,2')).toBe(true);
+        expect(reachUnder(inLane, [ROPE_EVENT], HELPERS).cells.has('6,2')).toBe(true);
+    });
+
+    it('(control) without the trap the exit is free — the gate is the lane, not the fixture', () => {
+        const open = { ...world, traps: undefined, trapLib: undefined, trapLanes: undefined };
+        expect(exitRule(deriveRegionLogic(open, HELPERS))).toEqual({ rule: 'True_' });
     });
 });
