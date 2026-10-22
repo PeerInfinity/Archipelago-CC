@@ -13,7 +13,8 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import { blockHolderSearch, blockHolderVerdict, selfHoldTiles } from './seedlingBlockPaths.js';
-import { anyOf, buildSeedlingRegionGrid, conditionKey, flag } from './seedlingSemantics.js';
+import { anyOf, buildSeedlingRegionGrid, conditionKey, entitySemantics, flag } from './seedlingSemantics.js';
+import { ropeEventCondition } from './seedlingObstacleEvents.js';
 import {
     A_WEAPON,
     buildBlockHolders,
@@ -125,6 +126,23 @@ describe('the verdict: who holds (⚖ enemies are not holders)', () => {
         const v = blockHolderVerdict(r.grid, { ...base, heldBy: { blocks: [], pulser: false, fallers: [{ tx: 4, ty: 2, triggers: [rope] }] } });
         expect(v.search.entries(r.at(1, 2))).toEqual({ sets: [], refused: 'faller-cross-visit' });
     });
+
+    // ⛓ RULES rope-events — the same rock, carrying its rope's cut EVENT: down on THIS visit whenever the event is
+    // held, whichever visit cut it, so the entry is DECIDED at the event's price.
+    it('…and with the rope\'s cut EVENT the same entry is decided: it costs the event', () => {
+        const rope = { tiles: [[7, 1]], condition: ROCK };
+        const event = ropeEventCondition({ level: 99, tag: 0, x: 112, y: 16 });
+        const v = blockHolderVerdict(r.grid, { ...base, heldBy: { blocks: [], pulser: false, fallers: [{ tx: 4, ty: 2, event, triggers: [rope] }] } });
+        expect(v.decided).toBe(true);
+        expect(v.search.entries(r.at(1, 2))).toEqual({ sets: [[conditionKey(event)]], refused: null });
+    });
+
+    it('…an event on a rock that lands on NO holder is not a key at all (it opens nothing)', () => {
+        const rope = { tiles: [[7, 1]], condition: ROCK };
+        const event = ropeEventCondition({ level: 99, tag: 0, x: 112, y: 16 });
+        const s2 = blockHolderSearch(r.grid, { ...base, blocks: [BLOCK], fallers: [{ tx: 1, ty: 1, event, triggers: [rope] }] });
+        expect(s2.universe).not.toContain(conditionKey(event));
+    });
 });
 
 describe('selfHoldTiles — the player holds a button ORTHOGONALLY beside the lock and steps in', () => {
@@ -201,14 +219,21 @@ describe('L71 — the button is SOUTH of the lock, so the player holds it and st
 describe('L28 — the designed holder is a falling rock, its rope on a plateau neither side reaches', () => {
     // fallrock@112,240 {tset 1} lands on button@112,240; its only opener is
     // rope@160,64 (10,4), behind cliff faces from both sides of grasslock@176,208.
-    it('the census reads the rock and its rope', () => {
+    // ⛓ RULES rope-events: the cut is saved ({28,0}, and the rock's own {28,1} the same frame), and the rock is
+    // rebuilt fallen on every later visit — game-witnessed (`probe-seedling-rope-events.mjs` l28-cross / -control /
+    // -rock-only) — so the rock carries its rope's cut EVENT.
+    const EVENT = ropeEventCondition({ level: 28, tag: 0, x: 160, y: 64 });
+    it('the census reads the rock, its rope and the cut\'s event', () => {
+        const rope = MAP.levels.find((l) => l.level === 28).entities.find((e) => e.type === 'rope');
         expect(buildBlockHolders(MAP).get(28).fallers).toEqual([
-            { tx: 7, ty: 15, triggers: [{ tiles: [[10, 4]], condition: A_WEAPON }] },
+            { tx: 7, ty: 15, event: EVENT, triggers: [{ tiles: [[10, 4]], condition: entitySemantics(rope).condition }] },
         ]);
+        expect(EVENT).toEqual({ event: 'L28 flag 0: rope@160,64 cleared' });
     });
 
-    it('so the entry is UNDECIDED and keeps the player-reach price (free from the button side)', () => {
-        expect(cellAt(gridOf(MAP, 28), 11, 13).enter?.N).toBeUndefined();
+    it('so the lock is entered at the EVENT\'s price, from the button side (moving N) and from r1c18 (moving S)', () => {
+        const gates = cellAt(gridOf(MAP, 28), 11, 13).enter;
+        expect([keyOfEntry(gates.N), keyOfEntry(gates.S)]).toEqual([conditionKey(EVENT), conditionKey(EVENT)]);
     });
 });
 

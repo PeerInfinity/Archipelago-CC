@@ -37,6 +37,7 @@ Level 012 - Chest: Seal
 L12 flag 7: magicallock@32,864 cleared: L12 flag 7: magicallock@32,864 cleared
 L12 flag 12: bosslock@32,864 cleared: L12 flag 12: bosslock@32,864 cleared
 Level 015 - Chest: Seal
+L16 flag 0: rope@32,16 cleared: L16 flag 0: rope@32,16 cleared
 Level 017 - Chest: Seal
 Level 019 - Shieldspire: Seal
 L19 flag 1: bosslock@48,32 cleared: L19 flag 1: bosslock@48,32 cleared
@@ -44,6 +45,7 @@ Level 019 - Boss Key 0: Red Key
 Level 020 - Shield: Progressive Shield
 L24 flag 0: burnabletree@32,128 cleared: L24 flag 0: burnabletree@32,128 cleared
 Level 025 - Chest: Seal
+L28 flag 0: rope@160,64 cleared: L28 flag 0: rope@160,64 cleared
 Level 029 - Boss Key 1: Green Key
 Level 030 - Torchpickup: Light
 L30 flag 0: bosslock@64,32 cleared: L30 flag 0: bosslock@64,32 cleared
@@ -109,28 +111,32 @@ Playthrough:
 2: {
   L0 flag 1: breakablerock@288,176 cleared: L0 flag 1: breakablerock@288,176 cleared
   L0 flag 4: breakablerock@80,112 cleared: L0 flag 4: breakablerock@80,112 cleared
-  Level 017 - Chest: Seal
-  Level 019 - Boss Key 0: Red Key
-  Level 019 - Shieldspire: Seal
+  L16 flag 0: rope@32,16 cleared: L16 flag 0: rope@32,16 cleared
   Level 036 - Chest: Seal
 }
 3: {
+  Level 017 - Chest: Seal
+  Level 019 - Boss Key 0: Red Key
+  Level 019 - Shieldspire: Seal
+}
+4: {
   L12 flag 4: bosslock@416,240 cleared: L12 flag 4: bosslock@416,240 cleared
   L12 flag 5: bosslock@432,240 cleared: L12 flag 5: bosslock@432,240 cleared
   L19 flag 1: bosslock@48,32 cleared: L19 flag 1: bosslock@48,32 cleared
+  L28 flag 0: rope@160,64 cleared: L28 flag 0: rope@160,64 cleared
   Level 020 - Shield: Progressive Shield
   Level 025 - Chest: Seal
   Level 029 - Boss Key 1: Green Key
-  Level 030 - Torchpickup: Light
 }
-4: {
+5: {
   L30 flag 0: bosslock@64,32 cleared: L30 flag 0: bosslock@64,32 cleared
   L30 flag 2: bosslock@224,208 cleared: L30 flag 2: bosslock@224,208 cleared
   L31 flag 0: bosslock@192,432 cleared: L31 flag 0: bosslock@192,432 cleared
+  Level 030 - Torchpickup: Light
   Level 032 - Bob Boss: Fire
   Level 032 - Times: Seal
 }
-5: {
+6: {
   L12 flag 3: bosslock@80,656 cleared: L12 flag 3: bosslock@80,656 cleared
   L24 flag 0: burnabletree@32,128 cleared: L24 flag 0: burnabletree@32,128 cleared
   L39 flag 8: wandlock@144,592 cleared: L39 flag 8: wandlock@144,592 cleared
@@ -138,7 +144,7 @@ Playthrough:
   Level 038 - Chest: Seal
   Level 049 - Conch: Progressive Swim
 }
-6: {
+7: {
   L62 flag 0: lightpole@120,200 cleared: L62 flag 0: lightpole@120,200 cleared
   L63 flag 1: lightpole@64,88 cleared: L63 flag 1: lightpole@64,88 cleared
   Level 015 - Chest: Seal
@@ -152,7 +158,7 @@ Playthrough:
   Level 089 - Feather: Progressive Swim
   Level 090 - Chest: Seal
 }
-7: {
+8: {
   L40 flag 8: bosslock@480,352 cleared: L40 flag 8: bosslock@480,352 cleared
   L48 flag 1: bosslock@48,144 cleared: L48 flag 1: bosslock@48,144 cleared
   Level 040 - Totem Part 64,144: Totem Shard
@@ -161,12 +167,12 @@ Playthrough:
   Level 057 - Tentacled Beast: Seal
   Level 064 - Ghostspear: Ghost Spear
 }
-8: {
+9: {
   Level 043 - Wand: Wand
   Level 067 - Boss Key 4: Yellow Key
   Level 069 - Lights: Seal
 }
-9: {
+10: {
   L12 flag 11: bosslock@112,192 cleared: L12 flag 11: bosslock@112,192 cleared
   L12 flag 12: bosslock@32,864 cleared: L12 flag 12: bosslock@32,864 cleared
   L12 flag 7: magicallock@32,864 cleared: L12 flag 7: magicallock@32,864 cleared
@@ -177,24 +183,24 @@ Playthrough:
   Level 071 - Chest: Seal
   Level 074 - Darkshield: Progressive Shield
 }
-10: {
+11: {
   L71 flag 2: shieldlock@288,256 cleared: L71 flag 2: shieldlock@288,256 cleared
   Level 079 - Darksuit: Dark Suit
 }
-11: {
+12: {
   Level 063 - Chest: Seal
   Level 080 - Chest: Seal
   Level 082 - King of Fire: Seal
   Level 098 - Chest: Seal
   Level 106 - Ghostsword: Ghost Sword Fusion
 }
-12: {
+13: {
   L112 flag 1: rocklock@112,16 cleared: L112 flag 1: rocklock@112,16 cleared
   L114 flag 0: watcher@72,72 cleared: L114 flag 0: watcher@72,72 cleared
   Level 109 - Firewand: Fire Wand Fusion
   Level 112 - Owl: Seal
 }
-13: {
+14: {
   L113 flag 0: finaldoor@112,0 cleared: L113 flag 0: finaldoor@112,0 cleared
   Level 115 - The Seed: The Seed
 }

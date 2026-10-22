@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 90,
-            "count": 137,
+            "browser": 91,
+            "count": 138,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 444,
-        "browser": 155,
+        "blockStyle": 445,
+        "browser": 156,
         "cited": 237,
-        "files": 458,
+        "files": 459,
         "lineStyle": 14,
-        "withDocblock": 458,
-        "withFlags": 375
+        "withDocblock": 459,
+        "withFlags": 376
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -14244,6 +14244,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling ROCKMOVE's \"Remove bundle\", ON THE GAME (rules `rules-rock-remove`).",
             "path": "scripts/procgen/probe-seedling-rock-remove.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "out"
+            ],
+            "file": "probe-seedling-rope-events.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's ROPE CUTS, ON THE GAME (rules `rules-rope-events`).",
+            "path": "scripts/procgen/probe-seedling-rope-events.mjs"
         },
         {
             "argvHelpers": [
