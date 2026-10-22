@@ -861,8 +861,11 @@ export const CONTACT_FIDELITY = {
      * press through the existing executors (`runSpear` / `runFire`), selecting a held weapon's slot when the selected one
      * cannot cut. OFF: a swordless run refuses by name, byte-identical. With the SWORD selected nothing changes either
      * way. `SEEDLING_ROPE_CUT_ANY_WEAPON=0|1` for a node measurement.
+     * ⛓ planning-10's flip (⚖ user, 2026-10-21, ROPESTANCE "Harvest + flip ON") turns it ON. Measured movers (CI, wave-23
+     * A/B): the route survey (full) 0; the 28 rope-level sweep legs ×2: 0. The L28 Spear from the L25 side still refuses
+     * by name on the unstepped-drill INTERIM (`unsteppedDrills`) until fidelity DRILL models mixed-room drills.
      */
-    ropeCutAnyWeapon: false,
+    ropeCutAnyWeapon: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

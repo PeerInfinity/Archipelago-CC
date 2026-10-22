@@ -204,8 +204,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ planning-9's flip (⚖ user "Flip chest / pit switches", 2026-10-21) turns both ON.
             chestProbeLineEnd: true,
             enclosedPitCorner: true,
-            // ⛓ fidelity ROPESTANCE (wave 23): the spear / fire rope cut ships OFF.
-            ropeCutAnyWeapon: false });
+            // ⛓ fidelity ROPESTANCE (wave 23): the spear / fire rope cut shipped OFF;
+            // ⛓ planning-10's flip (⚖ user "Harvest + flip ON", 2026-10-21) turns it ON.
+            ropeCutAnyWeapon: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

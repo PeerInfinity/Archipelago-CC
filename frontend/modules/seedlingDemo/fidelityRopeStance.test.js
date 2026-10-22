@@ -57,9 +57,10 @@ const OFF = (fn) => withContactFidelity({ ropeCutAnyWeapon: false }, fn);
 const cutRow = (out) => out.records.find((r) => r.goal === 'clear-tag');
 
 describe('fidelity ROPESTANCE — the switch', () => {
-    it('is OFF by default', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.ropeCutAnyWeapon).toBe(false);
-        expect(CONTACT_FIDELITY.ropeCutAnyWeapon).toBe(false);
+    // ⛓ shipped OFF; planning-10's flip (⚖ user "Harvest + flip ON", 2026-10-21) turns it ON.
+    it('is ON by default (flipped)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.ropeCutAnyWeapon).toBe(true);
+        expect(CONTACT_FIDELITY.ropeCutAnyWeapon).toBe(true);
     });
     it.each([['the Spear', ['hasSpear'], /fires `spear`/], ['Fire', ['hasFire'], /fires `fire`/]])(
         'OFF: %s alone refuses `cannot-act`, naming the sword swing (byte-identical)', (_, items, why) => OFF(() => {
