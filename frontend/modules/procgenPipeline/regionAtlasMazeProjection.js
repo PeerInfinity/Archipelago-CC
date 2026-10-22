@@ -14,7 +14,11 @@
 // while the RULES and the sub-region identities come from the atlas, which also
 // holds the hand-authored rows the analyzer cannot write. A recomputed partition
 // that disagrees with the atlas's `sub_regions` is therefore a hard error: the
-// atlas is stale against the terrain it describes.
+// atlas is stale against the terrain it describes. Disagreement is not mere
+// inequality — a producer may prune a door-less pocket, so the atlas may keep a
+// subset (see `projectRegionToMaze`) — and a game whose atlas was analysed on its
+// OWN grid (an overlay) must hand the projection that grid, or the recompute
+// answers a different question.
 //
 // GAME-AGNOSTIC, like the analyzer core: the caller supplies `gridFor(region)`
 // (the game's semantics module builds it) plus `conditionKey` /
@@ -344,30 +348,101 @@ export function projectRegionToMaze(region, grid, ctx) {
 
     // The atlas and the terrain have to agree about what the pieces ARE before
     // anything is projected onto them. Disagreement means the atlas is stale.
+    //
+    // ⛓ AGREEMENT IS NOT EQUALITY (tile-primitives levels-gap3, measured over
+    // all 115 playthrough regions). A producer may PRUNE a component nothing
+    // enters and nothing stands in (the playthrough generator's
+    // `pruneUnreachableSubRegions`): the atlas then declares a SUBSET, and a
+    // region pruned to one piece declares none. So the check is: every
+    // declared sub-region is a computed component, and every component the
+    // atlas did not keep binds no exit and no location — a pruned pocket,
+    // walled here and named. When the game also supplies the atlas's persisted
+    // partition, each declared component must hold exactly the partition's
+    // tiles too: a recompute on a grid the atlas was NOT analysed on fails
+    // there, by name.
     const declared = bindings.map((b) => b.sub).filter((s) => s !== null).sort();
     const computed = components.map((c) => c.id).sort();
+    const boundIds = new Set(analysis.bindings.filter((b) => b.component).map((b) => b.component.id));
+    let soleId = null;
     if (declared.length === 0) {
-        if (components.length !== 1) {
+        if (boundIds.size > 1) {
             throw new Error(
-                `atlas region "${region.region_id}" declares no subgraph, but its tile map splits into `
-                + `${components.length} components (${computed.join(', ')}) — re-analyze the atlas`,
+                `atlas region "${region.region_id}" declares no subgraph, but its exits and locations stand in `
+                + `${boundIds.size} components (${[...boundIds].sort().join(', ')}) — re-analyze the atlas`,
             );
         }
-    } else if (declared.join('|') !== computed.join('|')) {
+        if (boundIds.size === 1) soleId = [...boundIds][0];
+        else if (components.length === 1) soleId = components[0].id;
+        else {
+            // ⛓ No dry floor holds anything: every exit and location stands on
+            // gated terrain (Seedling's all-water levels). The region IS that
+            // terrain, which only a level world carries (every non-wall cell
+            // floor, a gated one its own rule obstacle).
+            if (typeof ctx.levelEntitiesFor === 'function') {
+                return projectLevelWorld(region, grid, ctx, entities ?? []);
+            }
+            throw new Error(
+                `atlas region "${region.region_id}" declares no subgraph, and none of its ${components.length} `
+                + 'walkable component(s) holds an exit or a location — every one stands on gated terrain, which '
+                + 'only a level world (`levelEntitiesFor`) projects',
+            );
+        }
+    } else {
+        const missing = declared.filter((d) => !computed.includes(d));
+        if (missing.length > 0) {
+            throw new Error(
+                `atlas region "${region.region_id}" declares sub_regions [${declared.join(', ')}] but its tile map `
+                + `computes [${computed.join(', ')}] — the atlas is stale against the map document; re-analyze it`,
+            );
+        }
+    }
+    const kept = new Set(declared.length === 0 ? [soleId] : declared);
+    const pockets = components.filter((c) => !kept.has(c.id));
+    const boundPocket = pockets.filter((c) => boundIds.has(c.id)).map((c) => c.id);
+    if (declared.length > 0 && boundPocket.length > 0) {
         throw new Error(
-            `atlas region "${region.region_id}" declares sub_regions [${declared.join(', ')}] but its tile map `
-            + `computes [${computed.join(', ')}] — the atlas is stale against the map document; re-analyze it`,
+            `atlas region "${region.region_id}" does not declare [${boundPocket.join(', ')}], but an exit or a `
+            + 'location stands in it — the atlas is stale against the map document; re-analyze it',
         );
+    }
+    const partition = declared.length > 0 && typeof ctx.partitionFor === 'function' ? ctx.partitionFor(region) : null;
+    if (partition) {
+        const [px, py] = partition.origin ?? [0, 0];
+        const ox = grid.origin?.x ?? 0;
+        const oy = grid.origin?.y ?? 0;
+        for (const c of components.filter((k) => kept.has(k.id))) {
+            const ch = SHARED_WORLD_ALPHABET[partition.sub_regions.indexOf(c.id)];
+            const mine = new Set(c.tiles.map(([x, y]) => `${x + ox - px},${y + oy - py}`));
+            let held = 0;
+            partition.rows.forEach((row, y) => [...row].forEach((k, x) => { if (k === ch) held += 1; }));
+            const agree = c.tiles.length === held
+                && [...mine].every((t) => { const [x, y] = t.split(',').map(Number); return partition.rows[y]?.[x] === ch; });
+            if (!agree) {
+                throw new Error(
+                    `atlas region "${region.region_id}": sub-region "${c.id}" computes ${c.tiles.length} tile(s) but `
+                    + `the persisted partition holds ${held} — the projection's grid is not the one the atlas was `
+                    + 'analysed on (or the partition is stale); regenerate the partition',
+                );
+            }
+        }
     }
 
     const componentById = new Map(components.map((c) => [c.id, c]));
     const { planned, notes: crossingNotes } = planCrossings(region, analysis.crossings);
     const notes = crossingNotes.map((n) => ({ region_id: region.region_id, ...n }));
+    for (const c of pockets) {
+        notes.push({
+            region_id: region.region_id,
+            kind: 'pruned_pocket',
+            message: `component "${c.id}" (${c.tiles.length} tile(s)) is not an AP region of the atlas and holds no `
+                + 'exit or location — WALLED',
+        });
+    }
     const local = (tile) => [tile[0] - (grid.origin?.x ?? 0), tile[1] - (grid.origin?.y ?? 0)];
 
     const sidecars = {};
     for (const { sub, apName } of bindings) {
-        const component = sub === null ? components[0] : componentById.get(sub);
+        const component = componentById.get(sub === null ? soleId : sub);
         const builder = createWorldBuilder(grid);
         for (const [x, y] of component.tiles) builder.floor(x, y);
 
@@ -797,6 +872,17 @@ export function projectLevelWorld(region, grid, ctx, entities) {
     for (const exit of region.exits ?? []) {
         const wired = wiredExit(regionId, exit.exit_id);
         if (!wired) continue;
+        // ⛓ AN ARRIVAL-ONLY EXIT IS NOT EMITTED (session tile-primitives-levels-gap3).
+        // The far end of a one-way link leads nowhere, has no AP name, and in
+        // the game is a landing spot, not a trigger. As a maze exit tile it
+        // would be a DEAD END (`isDeadEndExit`: every exit tile ends a walk),
+        // and in a level world that cuts a corridor — measured: L16 wired made
+        // L15's (9,2) landing a dead end and sealed r1c9 → r1c5. A return is
+        // landed by its `source_region` (mazeArrival), which never needs it.
+        if (!wired.targetApRegion) {
+            note({ kind: 'arrival_only_not_emitted', tile: exit.entrance_tile, message: `arrival-only exit "${exit.exit_id}" at [${exit.entrance_tile}] is a landing spot, not a trigger — not emitted (a return lands by its source region)` });
+            continue;
+        }
         const [x, y] = local(exit.entrance_tile);
         if (exitAt.has(keyOf(x, y))) {
             note({ kind: 'exit_tile_collision', message: `exit "${wired.apExitName}" wants tile [${x},${y}], already taken — DROPPED` });
