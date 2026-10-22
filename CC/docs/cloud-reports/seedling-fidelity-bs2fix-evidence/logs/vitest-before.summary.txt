@@ -1,0 +1,4 @@
+files 75 tests 2574 pass 2574 fail 0 skip 0
+tapeRunner rows 635 md5 a02def3b2b47710b8825a88cd62f6c4c nonpass 0
+      Tests  5 passed (5)
+exit 0

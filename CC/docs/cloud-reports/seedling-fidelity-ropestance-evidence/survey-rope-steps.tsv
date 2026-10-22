@@ -1,0 +1,8 @@
+step	level	OFF	ON	ticks OFF/ON	rows equal (ms dropped)
+20	L16	SOLVED	SOLVED	124/124	true
+22	L16	REFUSED	REFUSED	null/null	true
+33	L16	SOLVED	SOLVED	655/655	true
+73	L39	REFUSED	REFUSED	null/null	true
+103	L39	REFUSED	REFUSED	null/null	true
+144	L39	REFUSED	REFUSED	null/null	true
+164	L39	REFUSED	REFUSED	null/null	true

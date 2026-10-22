@@ -1,0 +1,75 @@
+{
+ "tape_version": 8,
+ "game": "seedling",
+ "boot": {
+  "level": 76,
+  "x": 128,
+  "y": 92
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [],
+ "despawn": [],
+ "equips": [],
+ "pins": [
+  "sound",
+  "dead_frames"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 418414780,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 1763053598
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasGhostSword": false,
+   "hasShield": true,
+   "hasFire": true,
+   "hasWand": true,
+   "hasFireWand": false,
+   "canSwim": true,
+   "hasSpear": true,
+   "hasDarkShield": true,
+   "hasDarkSuit": false,
+   "hasDarkSword": true,
+   "hasFeather": true,
+   "hasTorch": true
+  },
+  "beam": false,
+  "rock_set": false,
+  "hits_max": 4,
+  "first_use": false,
+  "extended": false,
+  "time": 5790,
+  "primary": 0,
+  "secondary": 0,
+  "grass_cut": 0,
+  "cutscene": [
+   false,
+   false,
+   false,
+   false
+  ],
+  "menu_state": 0,
+  "music": {
+   "set": "Room",
+   "index": 1
+  }
+ },
+ "tick0": null,
+ "hold": false,
+ "tick_count": 100,
+ "inputs": [],
+ "name": "igneous-l76-fade-stand-86",
+ "description": "\u26d3 fidelity IGFADE D1 \u2014 a boot (128,92) \u2192 (136,100), 4.00 px from L76 tile (8,6) (seedlingHazardSkin's clock row): the same fade timing, lava t15 / t61, respawn t46 / t92, the chain's hit at t40 between. Recorded on p4g headless (probe-igfade.mjs).",
+ "note": ""
+}

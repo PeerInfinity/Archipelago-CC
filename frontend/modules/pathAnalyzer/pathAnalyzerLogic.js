@@ -1105,7 +1105,6 @@ export class PathAnalyzerLogic {
         };
       }
 
-      case 'HasCount':
       case 'CountCheck': {
         const itemName = args.item_name || args.item || '';
         const count = args.count ?? 1;
@@ -1133,9 +1132,7 @@ export class PathAnalyzerLogic {
         };
       }
 
-      case 'CanReach':
-      case 'CanReachRegion':
-      case 'CanAccess': {
+      case 'CanReachRegion': {
         const region = args.region || args.region_name || '';
         return {
           type: 'region_check',
@@ -1143,20 +1140,6 @@ export class PathAnalyzerLogic {
           display: `Can reach: ${region}`,
           displayColor,
           identifier: `reach_${region}`,
-        };
-      }
-
-      case 'GroupCheck': {
-        const groupName = args.group || '';
-        const count = args.count ?? 1;
-        if (!groupName) return null;
-        return {
-          type: 'group_check',
-          group: groupName,
-          count: count,
-          display: `Need ${count} of group: ${groupName}`,
-          displayColor,
-          identifier: `group_${groupName}_${count}`,
         };
       }
 

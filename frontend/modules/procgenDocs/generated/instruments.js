@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 89,
-            "count": 136,
+            "browser": 90,
+            "count": 137,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 443,
-        "browser": 154,
-        "cited": 234,
-        "files": 457,
+        "blockStyle": 444,
+        "browser": 155,
+        "cited": 236,
+        "files": 458,
         "lineStyle": 14,
-        "withDocblock": 457,
-        "withFlags": 374
+        "withDocblock": 458,
+        "withFlags": 375
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7564,10 +7564,13 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "plan",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
-                "check"
+                "check",
+                "out"
             ],
             "file": "plan-seedling-bobsoldier2.mjs",
             "flags": [
@@ -7576,6 +7579,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "out"
                 }
             ],
             "inheritedFlags": [
@@ -14237,6 +14246,45 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling's ROPE CUTS, ON THE GAME (rules `rules-rope-events`).",
             "path": "scripts/procgen/probe-seedling-rope-events.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-rope-stance.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-rope-stance — ⛓⛓⛓ seedling-fidelity-ropestance: THE `rope` VERB'S SPEAR AND FIRE CUTS (`CONTACT_FIDELITY.ropeCutAnyWeapon`), ITS PLANS PLAYED ON THE GAME.",
+            "path": "scripts/procgen/probe-seedling-rope-stance.mjs"
         },
         {
             "argvHelpers": [

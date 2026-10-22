@@ -1,0 +1,15 @@
+{
+  "$comment": "BS2FIX D1 — the bobsoldier2-l30-torch row of fixtures/pickup-removal-witness.json for the ON tape (395 t), REPLACING the row for the old tape (gameObs 226). Measured: SEEDLING_PORT=9703 node scripts/procgen/probe-seedling-encounter-ticks.mjs --tape=bobsoldier2-l30-torch --out=… on p4g (the default build), headless: game hasTorch flips at sampled tick 169 (168 sampled, false), drained stream 396 obs worst |Δ| 0. The model: PICKUP_REMOVED_NEXT_FRAME ON lands it at 169, OFF at 168, x/y stream identical (fidelityEncounters2's row). Apply only with the licensed tape.",
+  "row": {
+    "tape": "bobsoldier2-l30-torch",
+    "property": "hasTorch",
+    "gameObs": 169,
+    "sampled": [
+      168,
+      169
+    ],
+    "page": "seedling_bot_ap_p4g",
+    "streamWorst": 0,
+    "observations": 396
+  }
+}

@@ -67,7 +67,7 @@ describe('L15 level world — the oracle crossing r1c5 → r1c9', () => {
  * The preset's growth (⚖ "L14 + L16", user 2026-10-21; session tile-primitives-levels-gap3) — the default
  * tier's cut. The whole preset at every subset is the slow file.
  */
-describe('L14 + L16 — the doors and the second level world', () => {
+describe('L13–L17 — the doors and the second level world', () => {
     it('L16 r1c1 → r4c21 is a weapon (its rocks), never Swim alone; witnesses replayed', () => {
         expect(crosses(l16(), 'level_16__r1c1', 'level_16__r4c21', [])).toBeNull();
         expect(crosses(l16(), 'level_16__r1c1', 'level_16__r4c21', ['Progressive Swim'])).toBeNull();
@@ -76,17 +76,29 @@ describe('L14 + L16 — the doors and the second level world', () => {
     });
 
     it('every wired door is reached empty-handed from its region\'s arrival (the atlas: True_)', () => {
+        const own = (name) => deserializeMazeWorld(RULES.preset_sidecars['1'][name].playable_payload);
         const doors = [
-            [deserializeMazeWorld(RULES.preset_sidecars['1'].level_14.playable_payload), 'level_14'],
-            [l15(), R1C5], [l15(), R1C9], [l16(), 'level_16__r1c1'],
+            [own('level_13'), 'level_13'], [own('level_14'), 'level_14'],
+            [l15(), R1C5], [l15(), R1C9], [l16(), 'level_16__r1c1'], [own('level_17'), 'level_17'],
         ];
         const priced = doors.flatMap(([world, region]) => deriveEntryLogic(world, region, HELPERS, { native: true })
-            .targets.filter((t) => t.kind === 'exit').map((t) => [t.exitName, t.minimal]));
-        expect(priced).toEqual([
+            .targets.filter((t) => t.kind === 'exit').map((t) => [t.exitName, t.minimal, `${t.x},${t.y}`]));
+        const pit = ([name]) => name.startsWith('level_16__r1c1 -> level_17');
+        expect(priced.filter((d) => !pit(d)).map(([name, minimal]) => [name, minimal])).toEqual([
+            ['level_13 -> level_14', [[]]],
             ['level_14 -> level_15__r1c5', [[]]],
+            ['level_14 -> level_13', [[]]],
             ['level_15__r1c5 -> level_14', [[]]],
             ['level_15__r1c9 -> level_16__r1c1', [[]]],
             ['level_16__r1c1 -> level_15__r1c9', [[]]],
+            ['level_17 -> level_16__r1c1', [[]]],
         ]);
+        // ⛓ L16's eight ways down to L17 (the stairs + seven pit cells; session tile-primitives-grow-levels): every
+        // one is free but the pit at (13,4), which the other pits wall in — an exit tile ends a walk. The AP
+        // destination is one, and the certifier prices it as the Or of the eight.
+        const pits = priced.filter(pit);
+        expect(pits).toHaveLength(8);
+        expect(pits.filter(([, minimal]) => minimal.length === 0).map(([, , at]) => at)).toEqual(['13,4']);
+        for (const [, minimal, at] of pits) if (at !== '13,4') expect(minimal, at).toEqual([[]]);
     });
 });

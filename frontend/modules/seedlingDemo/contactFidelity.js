@@ -853,6 +853,39 @@ export const CONTACT_FIDELITY = {
      * A/B): sweep leg 206 failed → done ×2; the route survey (full) and the 236 chest-level legs: 0 movers (crossed↔done noise).
      */
     enclosedPitCorner: true,
+    /**
+     * fidelity IGFADE (wave 23) — THE IGNEOUS-TO-LAVA TILES COUNT THE DEAD FRAMES' RENDERS (`levelRun.renderIgneousStepped`).
+     *
+     *     Engine.as:69-93,155-177  `update(); render();` — a frame the bot counts DEAD still renders
+     *     Engine.as:77,242-252     the world swap lands at the END of an update, so that frame's render is the NEW world's
+     *     Game.as:880-889          the fade's 20 dead updates skip `super.update()` but run `view()`
+     *
+     * So a visit's tiles take 1 + `LOAD_FADE_FRAMES` = 21 renders at the arrival before its first live one, and a
+     * freeze, a pickup's phase A or a Help renders them once per dead frame at the frozen position. Witnessed on the
+     * game (p4g, `igneous-l76-fade-stand` / `-86`, `igneous-l74-phase-a`). ON: those renders are stepped and the two
+     * interim refusals (an arrival in range, a dead span while a tile counts) go, except for the spans that move the
+     * player, which still refuse by name. OFF: the `igneousLava` interim, byte-identical.
+     * `SEEDLING_IGNEOUS_DEAD_FRAMES=0|1` for a node measurement.
+     * ⛓ planning-10's flip (⚖ user, 2026-10-21, IGFADE "Harvest + flip ON") turns it ON. Measured movers (CI, wave-23
+     * A/B): the route survey (full) 0; the L76 sweep legs ×2: 0 (leg 650 flips with the seam time alone, ON = OFF in a
+     * node seam sweep of its captured request).
+     */
+    igneousDeadFrames: true,
+    /**
+     * fidelity ROPESTANCE (wave 23) — A ROPE IS CUT BY THE SPEAR AND BY FIRE TOO (`solverBot.ropeCutWeapons`). The game
+     * cuts a `RopeStart` from all three weapons through `Player.genericHit` → `RopeStart.hit()` (`Player.as:1095-1097`):
+     * the sword's slash (reach gate, LOS waived for a Rope), the spear's 32x5 thrust rect (`spear()`: no reach gate and NO
+     * line test at all) and fire's 32x32 area with its 16 px radius cut (`fire()`). The run models all three
+     * (`levelRun.pullRope`). ON: with the selected slot NOT the sword, the `rope` verb and the PULL rung derive a spear
+     * stance (a facing whose `spearRect` covers the rope) or a fire stance (`auditFire` reaches it, nothing else), and
+     * press through the existing executors (`runSpear` / `runFire`), selecting a held weapon's slot when the selected one
+     * cannot cut. OFF: a swordless run refuses by name, byte-identical. With the SWORD selected nothing changes either
+     * way. `SEEDLING_ROPE_CUT_ANY_WEAPON=0|1` for a node measurement.
+     * ⛓ planning-10's flip (⚖ user, 2026-10-21, ROPESTANCE "Harvest + flip ON") turns it ON. Measured movers (CI, wave-23
+     * A/B): the route survey (full) 0; the 28 rope-level sweep legs ×2: 0. The L28 Spear from the L25 side still refuses
+     * by name on the unstepped-drill INTERIM (`unsteppedDrills`) until fidelity DRILL models mixed-room drills.
+     */
+    ropeCutAnyWeapon: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1026,6 +1059,12 @@ if (globalThis.process?.env?.SEEDLING_CHEST_PROBE_LINE_END === '0') CONTACT_FIDE
 // ⛓ fidelity L1516 D3: `SEEDLING_ENCLOSED_PIT_CORNER=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_ENCLOSED_PIT_CORNER === '1') CONTACT_FIDELITY.enclosedPitCorner = true;
 if (globalThis.process?.env?.SEEDLING_ENCLOSED_PIT_CORNER === '0') CONTACT_FIDELITY.enclosedPitCorner = false;
+// ⛓ fidelity IGFADE: `SEEDLING_IGNEOUS_DEAD_FRAMES=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_IGNEOUS_DEAD_FRAMES === '1') CONTACT_FIDELITY.igneousDeadFrames = true;
+if (globalThis.process?.env?.SEEDLING_IGNEOUS_DEAD_FRAMES === '0') CONTACT_FIDELITY.igneousDeadFrames = false;
+// ⛓ fidelity ROPESTANCE: `SEEDLING_ROPE_CUT_ANY_WEAPON=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_ROPE_CUT_ANY_WEAPON === '1') CONTACT_FIDELITY.ropeCutAnyWeapon = true;
+if (globalThis.process?.env?.SEEDLING_ROPE_CUT_ANY_WEAPON === '0') CONTACT_FIDELITY.ropeCutAnyWeapon = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
