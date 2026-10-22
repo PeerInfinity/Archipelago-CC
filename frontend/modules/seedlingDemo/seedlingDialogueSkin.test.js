@@ -26,6 +26,7 @@ import { loadPackStack } from '../contentPacks/contentPacks.js';
 import { createArtLibrary } from '../artLibrary/artLibrary.js';
 import { createJsRuntime } from './jsRuntimeCore.js';
 import { runTape } from './tapeRunner.js';
+import { parseTape } from './tapeFormat.js';
 import { atlasLevelSource, loadAtlas } from './levelSource.js';
 import {
     EFFECT_COVERAGE, KEYS, NO_TALKING_NPC_STATE, NPC_TALK_LOOK, effectSkinView, fitOverlayOps, formatEffectOp, holdEffectSkin,
@@ -223,6 +224,36 @@ describe('⛓ `levelRun.talkingNow` is READ-ONLY — L19\'s sign against the gam
         const glyphs = screenOps(view, art, { skin, cam: { x: 0, y: 0 } }).filter((o) => o.glyph !== undefined);
         expect(glyphs).toHaveLength(1);
         expect(glyphs[0].dx).toBe(10);
+    });
+});
+
+describe('⛓ the YETI (fidelity\'s YETI flip, `yetiTalk` ON by default): L58\'s talk, through `talkingNow`, with its portrait', () => {
+    it('the witnessed talk tape (`yeti-l58-talk`): a talker row tagged yeti, drawn LEFT with `YetiPic` at (5, 138), state unmoved by every read', () => {
+        const w = JSON.parse(readFileSync(join(HERE, 'fixtures/yeti-witness/yeti-l58-talk.json'), 'utf8'));
+        const open = [];
+        let drawn = null;
+        runTape(parseTape(w.tape), {
+            levelSource: atlasLevelSource(),
+            onTick: (t, now, held, run) => {
+                const before = run.stateDigest({ parts: true });
+                const row = run.talkingNow;
+                expect(run.stateDigest({ parts: true }), `t=${t}`).toEqual(before);
+                if (!row) return;
+                expect(run.level).toBe(58);
+                expect(row).toMatchObject({ source: 'talker', tag: 'yeti' });
+                open.push(t);
+                if (!drawn) {
+                    const view = effectSkinView(run, { record: recordOf(run.level) });
+                    const skin = stepEffectSkin(null, view, t);
+                    drawn = { view, ops: screenOps(view, art, { skin, cam: { x: 0, y: 0 } }) };
+                }
+            },
+        });
+        expect(open.length).toBeGreaterThan(10);
+        expect(drawn.view.dialogue).toMatchObject({ speaker: { tag: 'yeti', cls: 'Yeti' }, align: 'LEFT', portrait: 'seedling:portrait/Yeti' });
+        const pic = drawn.ops.find((o) => o.key === 'seedling:portrait/Yeti');
+        expect(pic).toMatchObject({ dx: 5, dy: 138, sw: 16, sh: 16 });
+        expect(drawn.ops.some((o) => o.rect && o.colour === '#ffffff' && o.rect.x === 4 && o.rect.y === 137)).toBe(true);
     });
 });
 
