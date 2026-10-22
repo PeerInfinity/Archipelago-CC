@@ -921,8 +921,11 @@ export const CONTACT_FIDELITY = {
      * switch adds for `yeti`); the solver's clear-tag on `{58,1}` / `{58,0}` naming `yeti@56,56` talks it out. OFF:
      * `PLACED_NPC_TALK.yeti` stays REFUSED and every build/run is byte-identical. `SEEDLING_YETI_TALK=0|1` for a node
      * measurement.
+     * ⛓ planning-10's flip (⚖ user, 2026-10-22, "Yes, please do the flip") turns it ON. Measured movers (CI, wave-25 A/B):
+     * the route survey (full) 0; the L58 sweep leg ×2: 0 (done both arms); probes standard 11/11. Inert on the route until
+     * rules-2's Yeti talk goal exists, and L58's door then refuses `unmodelled-pit-teleporter` (a queued model row).
      */
-    yetiTalk: false,
+    yetiTalk: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

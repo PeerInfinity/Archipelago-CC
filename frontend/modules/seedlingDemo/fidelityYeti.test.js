@@ -39,9 +39,10 @@ const pos = (o) => ({ t: o.t, x: o.x, y: o.y, level: o.level });
 const ENV = ['SEEDLING_CONTACT_FIDELITY', 'SEEDLING_YETI_TALK'];
 
 describe('YETI D2 — the switch and the model', () => {
-    it.skipIf(ENV.some((k) => process.env[k]))('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.yetiTalk).toBe(false);
-        expect(CONTACT_FIDELITY.yetiTalk).toBe(false);
+    // ⛓ shipped OFF; planning-10's flip (⚖ user "Yes, please do the flip", 2026-10-22) turns it ON.
+    it.skipIf(ENV.some((k) => process.env[k]))('ships ON (flipped)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.yetiTalk).toBe(true);
+        expect(CONTACT_FIDELITY.yetiTalk).toBe(true);
     });
 
     it('the table row stays REFUSED (byte-identical); the second tag is the DeadBoss portal\'s', () => {
