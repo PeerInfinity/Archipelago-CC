@@ -7,7 +7,9 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-import { deriveStagedGrant, stageGrantSave, tapeCoversVisit } from './surveyGrants.js';
+import { deriveStagedGrant, stageGrantSave, stagedRng, tapeCoversVisit } from './surveyGrants.js';
+import { SHIPPED_RNG } from '../../frontend/modules/seedlingDemo/wasmArrival.js';
+import { tentacleStreamRefusal } from '../../frontend/modules/seedlingDemo/tentacleBeast.js';
 
 const GAME = JSON.parse(readFileSync(
     new URL('../../frontend/modules/flashPanel/games/seedling.json', import.meta.url), 'utf8'));
@@ -230,4 +232,36 @@ it('surveyGrants stages through saveArrayRules.mergeSaveArray + sealLogSlots (an
     expect(src).toMatch(/import \{ mergeSaveArray, sealLogSlots \} from '\.\.\/\.\.\/frontend\/modules\/seedlingDemo\/saveArrayRules\.js';/);
     expect(src).toMatch(/sealLogSlots\(/);
     expect(src.match(/mergeSaveArray\(/g)?.length).toBeGreaterThanOrEqual(2);
+});
+
+describe('stagedRng — a staged room runs the game\'s Rng.split (RULES survey-tentacle-staging)', () => {
+    const base = JSON.parse(readFileSync(new URL(
+        '../../frontend/modules/seedlingDemo/fixtures/tapes/r8-solve-11.json', import.meta.url), 'utf8')).rng;
+
+    it('the shipped runtime splits, and STAGED_BASE (r8-solve-11) does not: the premise this exists for', () => {
+        expect(SHIPPED_RNG.split).toBe(true);
+        expect(base.split).toBe(false);
+    });
+
+    it('re-declares split only: seed and fp stay the base\'s, cosmetic is the shipped 0', () => {
+        expect(stagedRng(base, SHIPPED_RNG)).toEqual({ seed: base.seed, split: true, cosmetic: 0, fp: base.fp });
+    });
+
+    it('does not mutate the base tape\'s block', () => {
+        const copy = { ...base };
+        stagedRng(base, SHIPPED_RNG);
+        expect(base).toEqual(copy);
+    });
+
+    it('a block that already splits is returned as is (its own cosmetic state is kept)', () => {
+        const split = { seed: 7, split: true, cosmetic: 99, fp: 3 };
+        expect(stagedRng(split, SHIPPED_RNG)).toBe(split);
+        expect(stagedRng(null, SHIPPED_RNG)).toBe(null);
+    });
+
+    it('the L57 tentacle stream refuses the base block and accepts the staged one (survey steps 90/121)', () => {
+        const at = { bootLevel: 57, level: 57, worldEntries: 0 };
+        expect(tentacleStreamRefusal(base, at)).toMatch(/split: true/);
+        expect(tentacleStreamRefusal(stagedRng(base, SHIPPED_RNG), at)).toBe(null);
+    });
 });

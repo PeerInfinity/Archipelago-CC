@@ -72,7 +72,8 @@ jobs:
   manual:
     name: Substrate tests — ${{ matrix.batch }} batch
     needs: batches
-    runs-on: ubuntu-latest
+    # Pinned, not ubuntu-latest: Playwright refuses chromium on ubuntu-26.04 (2026-10-22). Un-pin once Playwright supports 26.04.
+    runs-on: ubuntu-24.04
     # Sized so the in-app runner's own budget fires first (AUTO_START_TIMEOUT_MS,
     # 600 s, testLogic.js): measured 2026-09-27 the bot-walks batch took 366 s
     # in-app on the runner and the setup steps ~83 s — so a run at the full

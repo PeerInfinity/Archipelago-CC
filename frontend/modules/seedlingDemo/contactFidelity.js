@@ -797,8 +797,11 @@ export const CONTACT_FIDELITY = {
      * `LightBossTotem` Solid, and `endState()` (the {69,0} report and the exit Teleporter to L36). The solver's
      * `solid:lightbosscontroller` row (`lights`) fights it. OFF: nothing here runs, byte-identical.
      * `SEEDLING_LIGHTS_BOSS_FIGHT=0|1` for a node measurement.
+     * ⛓ planning-10's flip (⚖ user, 2026-10-22, "Flip lightsBossFight") turns it ON. Measured movers (CI, A/B at main
+     * e2b0f2b63f): the route survey (full) only L69 159 NO-EDGE → SOLVED 826 t (0 hits, hammer LD) and L36 160 NO-ARRIVAL →
+     * SOLVED 50; sweep legs 607/608 done ×2 at leg_budget 240 s (OFF failed/unresolved); probes standard green.
      */
-    lightsBossFight: false,
+    lightsBossFight: true,
     /**
      * seedling-fidelity-bosskills D2 — THE KING OF FIRE (`lavaBoss.js`, L82) IS STEPPED: the 99-update cycle, the
      * LavaRunners (bridged chasers once they land), the LavaBalls and their reflection, the 120-update damage window
