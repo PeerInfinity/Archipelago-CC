@@ -44,8 +44,9 @@ const witnesses = readdirSync(WITNESS_DIR).filter((f) => f.endsWith('.json')).so
 const L82 = { x: 112, y: 48, tag: 0 };
 
 describe('bosskills D2 — the transcription (`Enemies/LavaBoss.as`)', () => {
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY.kingOfFireFight).toBe(false);
+    // ⛓ shipped OFF; planning-10's flip (⚖ user "Flip kingOfFireFight", 2026-10-21) turns it ON.
+    it('ships ON (flipped)', () => {
+        expect(CONTACT_FIDELITY.kingOfFireFight).toBe(true);
     });
 
     it('the cycle the game measured: sit 19 (20 on the wake), smash 16, smashback 16, armsup 22, sweep 10, sweepback 16 = 99', () => {
@@ -194,7 +195,8 @@ describe('bosskills D2 — the game witnesses, at 0 px (the switch ON)', () => {
         expect(report.flag).toMatchObject({ level: 82, tag: 0 });
     });
 
-    it('the witnesses need the switch: OFF the model has no fight, and the idle arrival parts from the game at the first runner contact', () => {
+    // ⛓ planning-10's flip: the OFF arm is now named (it was the default).
+    it('the witnesses need the switch: OFF the model has no fight, and the idle arrival parts from the game at the first runner contact', () => withContactFidelity({ kingOfFireFight: false }, () => {
         const w = witnesses.find((x) => x.name === 'kof-idle');
         let first = null;
         const st = createTapeStepper(parseTape(JSON.stringify(w.tape)), { levelSource: SRC });
@@ -207,7 +209,7 @@ describe('bosskills D2 — the game witnesses, at 0 px (the switch ON)', () => {
             r = st.next();
         }
         expect(first).toBe(121);
-    });
+    }));
 });
 
 describe('bosskills D2 — the solver (`solid:lavaboss` → `lavaboss`)', () => {
@@ -227,13 +229,14 @@ describe('bosskills D2 — the solver (`solid:lavaboss` → `lavaboss`)', () => 
         });
     }, 120000);
 
-    it('OFF: the same goal refuses, and the refusal names the switch', () => {
+    // ⛓ planning-10's flip: the OFF arm is now named (it was the default).
+    it('OFF: the same goal refuses, and the refusal names the switch', () => withContactFidelity({ kingOfFireFight: false }, () => {
         const run = createRunForStaging(staging, SRC);
         let e = null;
         try { solveSegment({ run, goals, name: 'kof-row-203-off', boot: staging.boot }); } catch (x) { e = x; }
         expect(e).toBeInstanceOf(SolverRefusal);
         expect(e.message).toMatch(/lavaboss/);
-    }, 120000);
+    }), 120000);
 });
 
 /**
