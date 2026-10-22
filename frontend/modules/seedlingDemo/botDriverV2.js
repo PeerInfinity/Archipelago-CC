@@ -2667,6 +2667,11 @@ const KILL_STAGE_TICKS = 8;
 const THREAD_MAX_WAIT = 400;
 /** ...and the eleven-frame fade on top, for a push that SINKS. */
 const PUSH_SINK_TICKS = 60;
+/**
+ * ⛓ fidelity ROPESTANCE — a spear press at a rope: the rect fires the tick after the press and `RopeStart.hit()`
+ * writes on that dispatch, so one tick past it covers the cut; a later thrust repeat is `hit()`'s real no-op.
+ */
+const SPEAR_ROPE_WAIT_TICKS = 2;
 
 function runTouch(run, perTick, touch, maxTicks, what) {
     if (run.entities('openActivators') === null) {
@@ -3334,14 +3339,14 @@ function runKill(run, perTick, kill, what) {
  * lightpole or an unmodelled arm throws there, naming the tick. This verb's
  * job is the four checks above, which are about INTENT.
  */
-function runSpear(run, perTick, spear, what) {
+export function runSpear(run, perTick, spear, what) {
     if (run.entities('openActivators') === null) {
         fail(`${what}: a spear press is a MECHANIC, and the noclip arm does not run it — `
             + '`advance` hands `stepV2` a null world state, so the press would emit its '
             + 'span, change nothing and report success. A tape that presses must '
             + 'declare noclip: false.');
     }
-    const { bridge = null, block = null, rock = null, facing, wait = null } = spear;
+    const { bridge = null, block = null, rock = null, rope = null, facing, wait = null } = spear;
     // ⚠ `to` IS THE SPEAR'S, NOT THE BLOCK'S. A `block` names the entity by
     // the coordinates the LEVEL built it at — which never change — and `to`
     // names where this particular push should leave it, which is a fact
@@ -3352,11 +3357,14 @@ function runSpear(run, perTick, spear, what) {
     // The verb was never really "a spear" — it is one tick of `primary`,
     // and which weapon that is comes from the equip — so a rock press is
     // the same four checks over a different positive control.
-    const named = [bridge, block, rock].filter((e) => e !== null);
+    // ⛓ fidelity ROPESTANCE: a FOURTH effect, `rope` — the spear's thrust cuts a `RopeStart` as the slash does
+    // (`spear()` → `genericHit(v[i], "Spear", …)` → `RopeStart.hit()`, which takes no `t`).
+    const named = [bridge, block, rock, rope].filter((e) => e !== null);
     if (named.length !== 1) {
         fail(`${what}: a press names EXACTLY ONE of \`bridge\` (by tile), \`block\` `
-            + '(by OEL coordinates, with the tile it should end on) or `rock` (a '
-            + 'BreakableRock, by OEL coordinates). Naming none presses at nothing; '
+            + '(by OEL coordinates, with the tile it should end on), `rock` (a '
+            + 'BreakableRock, by OEL coordinates) or `rope` (a RopeStart, by OEL coordinates). '
+            + 'Naming none presses at nothing; '
             + `naming ${named.length} makes the effect check ambiguous.`);
     }
     if (!(facing in FACINGS)) {
@@ -3434,6 +3442,20 @@ function runSpear(run, perTick, spear, what) {
                 + 'means an earlier leg of THIS visit already spent the swing.');
         }
         expect = { kind: 'rock', id, at: { x: rock.x, y: rock.y } };
+    } else if (rope) {
+        // ⛓ fidelity ROPESTANCE — the rope, and its positive control (`runFire`'s rope arm's, verbatim in shape).
+        const id = `rope@${rope.x},${rope.y}`;
+        if (!run.world.solids.some((e) => e.ropeId === id)) {
+            fail(`${what}: level ${run.level} has no RopeStart at (${rope.x},${rope.y}); it has `
+                + `[${run.world.solids.filter((e) => e.ropeId).map((e) => e.ropeId).join(' ') || 'none'}].`);
+        }
+        if (run.entities('pulledRopes').has(id)) {
+            fail(`${what}: ${id} is ALREADY PULLED before the press, so pulling it proves `
+                + 'nothing. `RopeStart.hit()` is entirely inside `if (!activate)`, so a '
+                + 'second press is a real no-op — which means an earlier leg of this '
+                + 'visit already spent it.');
+        }
+        expect = { kind: 'rope', id };
     } else {
         const id = `${'pushableblockspear'}@${block.x},${block.y}`;
         const live = run.entities('pushables').get(id);
@@ -3509,11 +3531,14 @@ function runSpear(run, perTick, spear, what) {
     // is seven ticks and the update order leaves ±1 of it open (see
     // `breakableRocks.HIT_TO_GONE_TICKS`), so the leg waits comfortably
     // past both and the difference cannot reach the stream.
+    // ⛓ fidelity ROPESTANCE: a rope's cut is `hit()`'s own, on the tick the rect fires — nothing glides or animates
+    // before the world reads it (`pulledRopes`), so its wait is the rect's tick after the press.
     const ticks = wait ?? (expect.kind === 'bridge'
         ? TICKS_FROM_PRESS_TO_WALKABLE
         : (expect.kind === 'rock'
             ? WAIT_AFTER_PRESS_TICKS
-            : (expect.destroys ? PUSH_SINK_TICKS : PUSH_GLIDE_TICKS)));
+            : (expect.kind === 'rope' ? SPEAR_ROPE_WAIT_TICKS
+                : (expect.destroys ? PUSH_SINK_TICKS : PUSH_GLIDE_TICKS))));
     if (expect.kind === 'rock') assertWaitCovers(ticks, what);
     for (let i = 1; i <= ticks; i++) {
         perTick.push(NO_HELD);
@@ -3533,7 +3558,13 @@ function runSpear(run, perTick, spear, what) {
     }
 
     // ── the effect ────────────────────────────────────────────────────
-    if (expect.kind === 'rock') {
+    if (expect.kind === 'rope') {
+        if (!run.entities('pulledRopes').has(expect.id)) {
+            fail(`${what}: pressed at (${at.x},${at.y}) facing ${facing} and ${expect.id} is STILL its full `
+                + `span after ${ticks} tick(s). The spear's 32x5 rect has to OVERLAP the rope's box (no reach `
+                + 'gate and no line test in `spear()`), and the slot has to hold the spear.');
+        }
+    } else if (expect.kind === 'rock') {
         // ⚠ NO EARLY EXIT FROM THE WAIT ABOVE, deliberately: a bridge's
         // loop breaks the moment the tile opens, and doing that here would
         // shorten the tape to exactly the number the ±1 lives in.

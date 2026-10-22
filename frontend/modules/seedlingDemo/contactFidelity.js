@@ -851,6 +851,18 @@ export const CONTACT_FIDELITY = {
      * A/B): sweep leg 206 failed → done ×2; the route survey (full) and the 236 chest-level legs: 0 movers (crossed↔done noise).
      */
     enclosedPitCorner: true,
+    /**
+     * fidelity ROPESTANCE (wave 23) — A ROPE IS CUT BY THE SPEAR AND BY FIRE TOO (`solverBot.ropeCutWeapons`). The game
+     * cuts a `RopeStart` from all three weapons through `Player.genericHit` → `RopeStart.hit()` (`Player.as:1095-1097`):
+     * the sword's slash (reach gate, LOS waived for a Rope), the spear's 32x5 thrust rect (`spear()`: no reach gate and NO
+     * line test at all) and fire's 32x32 area with its 16 px radius cut (`fire()`). The run models all three
+     * (`levelRun.pullRope`). ON: with the selected slot NOT the sword, the `rope` verb and the PULL rung derive a spear
+     * stance (a facing whose `spearRect` covers the rope) or a fire stance (`auditFire` reaches it, nothing else), and
+     * press through the existing executors (`runSpear` / `runFire`), selecting a held weapon's slot when the selected one
+     * cannot cut. OFF: a swordless run refuses by name, byte-identical. With the SWORD selected nothing changes either
+     * way. `SEEDLING_ROPE_CUT_ANY_WEAPON=0|1` for a node measurement.
+     */
+    ropeCutAnyWeapon: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1024,6 +1036,9 @@ if (globalThis.process?.env?.SEEDLING_CHEST_PROBE_LINE_END === '0') CONTACT_FIDE
 // ⛓ fidelity L1516 D3: `SEEDLING_ENCLOSED_PIT_CORNER=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_ENCLOSED_PIT_CORNER === '1') CONTACT_FIDELITY.enclosedPitCorner = true;
 if (globalThis.process?.env?.SEEDLING_ENCLOSED_PIT_CORNER === '0') CONTACT_FIDELITY.enclosedPitCorner = false;
+// ⛓ fidelity ROPESTANCE: `SEEDLING_ROPE_CUT_ANY_WEAPON=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_ROPE_CUT_ANY_WEAPON === '1') CONTACT_FIDELITY.ropeCutAnyWeapon = true;
+if (globalThis.process?.env?.SEEDLING_ROPE_CUT_ANY_WEAPON === '0') CONTACT_FIDELITY.ropeCutAnyWeapon = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
