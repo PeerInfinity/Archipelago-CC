@@ -311,7 +311,7 @@ Class × kind (physics and rule rows only):
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
 | physics | 1809 | 0 | 97 | 123 | 4 | 297 | 2330 |
-| rule | 662 | 141 | 243 | 22 | 616 | 107 | 1791 |
+| rule | 662 | 141 | 243 | 22 | 616 | 109 | 1793 |
 
 Rows whose note starts `REVIEW:`: **114**.
 
@@ -572,7 +572,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `DESTROYING_TILE_TYPES` | seedlingDemo/pushables.js | 3 | 3 | rule | sentinel |  |
 | `PUSH_STEP` | seedlingDemo/pushables.js | 8 | 8 | physics | sign | Player.as:1103 |
 | `SPEAR_HIT_TICKS_UNMODELLED` | seedlingDemo/presses.js | 3 | 3 | rule | magnitude |  |
-| `SPEAR_REPEAT_OFFSETS` | seedlingDemo/presses.js | 2 | 2 | rule | structural |  |
+| `SPEAR_REPEAT_OFFSETS` | seedlingDemo/presses.js | 2 | 2 | rule | derivation |  |
 | `FIRE_SPRITE` | seedlingDemo/fireVerb.js | 6 | 6 | physics/rule | count/magnitude | Player.as:53 |
 | `FIRE_PRESS_CADENCE` | seedlingDemo/fireVerb.js | 1 | 1 | rule | derivation |  |
 | `FIRE_RADIUS` | seedlingDemo/fireVerb.js | 1 | 1 | physics | derivation |  |

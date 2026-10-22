@@ -1434,7 +1434,7 @@ frontend/modules/seedlingDemo/presses.js|swordWindowStep|swordWindowStep,structu
 frontend/modules/seedlingDemo/presses.js|spearOrigin|spearOrigin,physics,sign,,direction-parity arithmetic folding spearOffset (-1 2)
 frontend/modules/seedlingDemo/presses.js|spearRect|spearRect,physics,derivation,,SPEAR_THICK / 2 (+ 1 on cases 0 and 1) rect offsets
 frontend/modules/seedlingDemo/presses.js|spearGameRect|spearGameRect,physics,derivation,,spear()'s rect from the int origin: SPEAR_THICK / 2 (+ 1 on cases 0 and 1) offsets (fidelity SPEARRECT)
-frontend/modules/seedlingDemo/presses.js|SPEAR_REPEAT_OFFSETS|(module),rule,structural,,the repeats as offsets from the first test: ticks.slice(1) minus ticks[0] (fidelity SPEARRECT)
+frontend/modules/seedlingDemo/presses.js|SPEAR_REPEAT_OFFSETS|(module),rule,derivation,,the repeats as offsets from the first test: ticks.slice(1) minus ticks[0] (fidelity SPEARRECT)
 frontend/modules/seedlingDemo/presses.js|slashRect|slashRect|16,physics,magnitude,,sprSlash frame width
 frontend/modules/seedlingDemo/presses.js|slashRect|slashRect|32,physics,magnitude,,sprSlash frame height
 frontend/modules/seedlingDemo/presses.js|slashRect|slashRect|2,physics,derivation,,h / 2 centres the slash collision rect
