@@ -1126,49 +1126,59 @@
               "id": "atlas_gate_0"
             },
             {
+              "x": 3,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
               "x": 4,
               "y": 1,
               "id": "atlas_gate_1"
             },
             {
+              "x": 5,
+              "y": 1,
+              "id": "atlas_gate_0"
+            },
+            {
               "x": 4,
               "y": 2,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 6,
               "y": 2,
-              "id": "atlas_gate_2"
+              "id": "atlas_gate_3"
             },
             {
               "x": 7,
               "y": 2,
-              "id": "atlas_gate_2"
+              "id": "atlas_gate_3"
             },
             {
               "x": 8,
               "y": 2,
-              "id": "atlas_gate_2"
+              "id": "atlas_gate_3"
             },
             {
               "x": 4,
               "y": 3,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 6,
               "y": 3,
-              "id": "atlas_gate_2"
+              "id": "atlas_gate_3"
             },
             {
               "x": 8,
               "y": 3,
-              "id": "atlas_gate_2"
+              "id": "atlas_gate_3"
             },
             {
               "x": 4,
               "y": 4,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 6,
@@ -1183,7 +1193,7 @@
             {
               "x": 4,
               "y": 5,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_2"
             },
             {
               "x": 6,
@@ -1198,27 +1208,27 @@
             {
               "x": 4,
               "y": 6,
-              "id": "atlas_gate_1"
-            },
-            {
-              "x": 6,
-              "y": 6,
-              "id": "atlas_gate_2"
-            },
-            {
-              "x": 7,
-              "y": 6,
               "id": "atlas_gate_2"
             },
             {
               "x": 6,
+              "y": 6,
+              "id": "atlas_gate_3"
+            },
+            {
+              "x": 7,
+              "y": 6,
+              "id": "atlas_gate_3"
+            },
+            {
+              "x": 6,
               "y": 7,
-              "id": "atlas_gate_2"
+              "id": "atlas_gate_3"
             },
             {
               "x": 7,
               "y": 7,
-              "id": "atlas_gate_2"
+              "id": "atlas_gate_3"
             },
             {
               "x": 20,
@@ -1284,6 +1294,49 @@
             },
             "atlas_gate_1": {
               "id": "atlas_gate_1",
+              "name": "(Progressive Swim AND (Progressive Sword OR Ghost Spear OR Fire))",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "And",
+                "children": [
+                  {
+                    "rule": "Has",
+                    "args": {
+                      "item_name": "Progressive Swim"
+                    }
+                  },
+                  {
+                    "rule": "Or",
+                    "children": [
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Progressive Sword"
+                        }
+                      },
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Ghost Spear"
+                        }
+                      },
+                      {
+                        "rule": "Has",
+                        "args": {
+                          "item_name": "Fire"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "color": "#b06eb8",
+              "display": {
+                "mode": "tree"
+              }
+            },
+            "atlas_gate_2": {
+              "id": "atlas_gate_2",
               "name": "Progressive Swim",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -1297,8 +1350,8 @@
                 "mode": "tree"
               }
             },
-            "atlas_gate_2": {
-              "id": "atlas_gate_2",
+            "atlas_gate_3": {
+              "id": "atlas_gate_3",
               "name": "L16 flag 0: rope@32,16 cleared",
               "clear_set_type": "rule",
               "clear_rule": {
@@ -1357,7 +1410,7 @@
             ],
             "rows": [
               ".........................",
-              ".A.A.A...BBBBBBB.........",
+              ".A.......BBBBBBB.........",
               ".AAA.A...BBBBBBB.........",
               ".AAA.A.C..BBBBBB.BBB.....",
               ".AAA.A.C..BBBBBBBBB..DDD.",
