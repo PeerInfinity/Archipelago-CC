@@ -107,7 +107,7 @@ import {
     adoptedClockStaging, heldArrivalClockStaging, adoptionRefusal, adoptRefusalIsTransient, arrivalHoldBlocker, queuedSwapPush, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, crossLevelEnd, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
     firstDivergence, foldDrain, goalAction, keysHeldAtReset, latchExpired, latchWatch, locationGoalServed, encounterReportServed, liveDeclarations, MAX_RECOVERIES, newGameBeginEntry, newGameCeremony,
     observeLatch,
-    primarySplitRefusal, shadowMismatch, talkCircleGuard, talkCirclesAt, TUTORIAL_DISMISS_KEY, TUTORIAL_FADE_FRAMES,
+    primarySplitRefusal, shadowMismatch, ctorMismatch, bootAtCtor, talkCircleGuard, talkCirclesAt, TUTORIAL_DISMISS_KEY, TUTORIAL_FADE_FRAMES,
     shippedTape, tapeEquips, TAPE_KEY_RELEASES, wasmGoalRefusal, expiryAction, expiryFailure, SOLVE_RETRY_BUDGET_FACTOR,
 } from '../seedlingDemo/wasmPlayback.js';
 import {
@@ -1230,6 +1230,7 @@ export function createWasmPlayback({
         const lead = r.lead ?? [];
         let heldRow = null;
         let heldDamage = null;
+        let heldCtor = null;
         try {
             c = continuationSolveRequest({ staging: r.staging, shipped: [...r.shipped, ...lead], goal, levelSource, records, record,
                 name: `wasm-continue-${goal.kind}-${goal.level}`, equips: roomEquips(r) });
@@ -1238,6 +1239,7 @@ export function createWasmPlayback({
                     equips: roomEquips(r) });
                 heldRow = { level: before.level, x: before.state.x, y: before.state.y, deaths: before.playerDeaths.length, primary: before.primary };
                 heldDamage = before.damage;
+                heldCtor = { ...before.worldCtor };
             }
         } catch (err) {
             contFallback(`the continuation could not be built: ${String(err?.message ?? err).split('\n')[0]}`, 'continuation-error');
@@ -1245,7 +1247,12 @@ export function createWasmPlayback({
         }
         // ⛓ STAGEDHITS CONSUMER — the shadow RE-BILLS the prefix's hits (a forced crossing included); the game's
         // `{hits, hits_timer}` must equal it, or the room is not the shadow: the same STOP, named with both.
-        const mismatch = shadowMismatch(heldRow ?? c.shadowRow, st) ?? stagedHitsMismatch(heldDamage ?? c.shadowDamage, st);
+        // ⛓ DELIVERY DEFERRAL — and the spawn pair `botStart` admits a continuation on (`ctorMismatch`): the game's
+        // `Main.playerPosition` must be the shadow's, or the tape below would REBUILD the room instead of continuing it.
+        const bootCtor = heldCtor ?? c.shadowCtor ?? null;
+        const ctorWhy = bootCtor ? ctorMismatch(bootCtor, readState()) : null;
+        const mismatch = shadowMismatch(heldRow ?? c.shadowRow, st) ?? stagedHitsMismatch(heldDamage ?? c.shadowDamage, st)
+            ?? (ctorWhy ? { expected: { playerPosition: ctorWhy.expected }, got: { playerPosition: ctorWhy.got } } : null);
         stats.heldChecks.push({ level: r.level, shipped: r.shipped.length, shadow: heldRow ?? c.shadowRow, game: st && { level: st.level, x: st.x, y: st.y },
             held: st?.held ?? null, frozen: st?.frozen ?? null, equal: !mismatch });
         if (mismatch) {
@@ -1258,7 +1265,7 @@ export function createWasmPlayback({
         }
         if (c.refusal) { contFallback(c.refusal, 'continuation-refused'); return; }
         stats.continuations += 1;
-        startSolve(c.request, { staging: r.staging, continuation: true, prefix: r.shipped.length, lead, heldRow });
+        startSolve(c.request, { staging: r.staging, continuation: true, prefix: r.shipped.length, lead, heldRow, bootCtor });
     }
 
     /**
@@ -1571,7 +1578,10 @@ export function createWasmPlayback({
         const hold = holds && endsHeld(goal) && !crossing;
         let tape;
         try {
-            tape = shippedTape({ staging: play.continuation ? liveDeclarations(staging, st, { granted: apSave() }) : staging, keys: plan.solution, hold, equips,
+            // ⛓ DELIVERY DEFERRAL — a continuation boots the spawn pair the host continues on (`bootAtCtor`; the
+            // arrival's own boot unless the room rewrote its spawn since, as L32's falling rock does).
+            tape = shippedTape({ staging: play.continuation ? bootAtCtor(liveDeclarations(staging, st, { granted: apSave() }), play.bootCtor) : staging,
+                keys: plan.solution, hold, equips,
                 name: `wasm-${play.continuation ? 'continue-' : ''}${goal.kind}-${goal.level}` });
         } catch (err) { fail(err.message); return; }
         const decl = exactDeclarationRefusal(tape, st, { granted: apSave() });

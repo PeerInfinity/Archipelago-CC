@@ -1345,11 +1345,12 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + '53-tick bound it is alive on two. No hit on the player. Recorded on the game; the body probe is bit-exact.',
         }),
         Object.freeze({
-            name: 'bobsoldier2-l30-torch', levels: Object.freeze([30]), bobs: 1, ticks: 460,
-            addedBy: 'Seedling fidelity BOBSOLDIER2 D2 (the AFTER: the solver\'s own plan, both switches ON)',
-            why: 'the stance walked undashed (arrival t 145), the body killed at t 167 inside the 53-tick bound, the '
-                + 'corpse\'s blade timed at the next gate, the Torchpickup and stairsup@224,160 -> L32 at t 460. Zero hits. '
-                + 'Recorded on the game; the model reproduces it.',
+            name: 'bobsoldier2-l30-torch', levels: Object.freeze([30]), bobs: 1, ticks: 395,
+            addedBy: 'Seedling fidelity BOBSOLDIER2 D2 (the AFTER: the solver\'s own plan, both switches ON); re-recorded at '
+                + 'the defaults by BS2FIX',
+            why: 'the Torchpickup first, the body alive on two hits; the exit walk\'s gate times its blade and the walk\'s '
+                + 'own press (t 169) kills it at t 171; stairsup@224,160 -> L32 at t 395. Zero hits. '
+                + 'Recorded on the game (p4g); the model reproduces it.',
         }),
         /** ⛓⛓⛓ seedling-fidelity-l30keylock — THE KEYLOCK BESIDE THE BOBSOLDIER, BEFORE AND AFTER, declared before the roster measured them. */
         Object.freeze({

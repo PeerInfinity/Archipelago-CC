@@ -231,7 +231,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 442,
         "browser": 153,
-        "cited": 234,
+        "cited": 235,
         "files": 456,
         "lineStyle": 14,
         "withDocblock": 456,
@@ -7564,10 +7564,13 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "plan",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
-                "check"
+                "check",
+                "out"
             ],
             "file": "plan-seedling-bobsoldier2.mjs",
             "flags": [
@@ -7576,6 +7579,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "out"
                 }
             ],
             "inheritedFlags": [

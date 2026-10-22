@@ -23,8 +23,9 @@
  * kit) with each of the 14 item properties staged — bare: no item moved any
  * tick; kit: `hasDarkSword` (5 legs, at a slash), `hasGhostSword` (6 — the
  * model REFUSES the ghost press) and `hasDarkShield` (1, L14) did. So the
- * check is not a table of items: it is the replay itself (`prefix`), plus the
- * state no digest carries (`slot-use`, `slot-index`).
+ * check is not a table of items: it is the replay itself (`prefix`, and the
+ * weapon state a primary press left: `slot-use`), plus the state the model does
+ * not carry (`slot-use`'s secondary / menu presses, `slot-index`).
  *
  * ⛓ SLOTS CONSUMER — the slot ORDER is no longer a clause: every live staging
  * carries the game's own array (`inventory_slots`, off `botStatus`), and the
@@ -37,6 +38,7 @@
 import { ITEM_PROPERTIES, appendInventorySlots } from './tapeFormat.js';
 import { createRunForStaging } from './tapeRunner.js';
 import { runDigest } from './jsRuntimeSolver.js';
+import { canonicalDigestText } from './levelRun.js';
 import {
     POSITIONAL_SAVE_ARRAYS, SAVE_ARRAY_RULES, addToSaveArray, liveSaveArray, mergeSaveArray, saveArrayDelta,
 } from './saveArrayRules.js';
@@ -57,6 +59,15 @@ export const SLOT_ITEM_PROPERTIES = Object.freeze(['hasSword', 'hasGhostSword', 
 
 /** The tape keys that reach a slot: `useItem(primary)`, `useItem(secondary)`, and the inventory menu. */
 export const SLOT_KEYS = Object.freeze(['primary', 'secondary', 'inventory', 'inventory2']);
+
+/**
+ * ⛓ DELIVERY DEFERRAL — the slot keys whose weapon state the REPLAY carries: `useItem(Main.primary)`. The model
+ * steps the primary press and keeps what it leaves (`progress('slashInfo')`: the swing, its end tick, the fire /
+ * wand / spear windows; `progress('primaryWeapon')`, `progress('primary')`), so a prefix whose only slot presses are
+ * these is asked by replay (`weaponWitness`). `secondary` and the menu reach `Main.secondary` and the slot cursor,
+ * which the model does not carry: a press of one still refuses.
+ */
+export const REPLAYED_SLOT_KEYS = Object.freeze(['primary']);
 
 /** `deliveryRefusal`'s clauses, in the order they are asked. */
 export const DELIVERY_CLAUSES = Object.freeze(['build', 'prefix', 'slot-use', 'slot-index']);
@@ -250,6 +261,19 @@ const hitsOf = (run) => (Array.isArray(run.playerHits) ? run.playerHits.length :
 const witness = (run) => `${runDigest(run)}|hits ${hitsOf(run)}`;
 
 /**
+ * ⛓ DELIVERY DEFERRAL — the WEAPON state a primary press leaves, as the model carries it: the swing
+ * (`slashInfo.state`, `endsAt`), the open windows (`openUntil`, `gate`'s `wanding` / `firing` / `spearing` / …) and
+ * the selected slot. `gate.hasSword` / `hasGhostSword` (and `primaryWeapon`, the weapon the NEXT press would use) are
+ * the INVENTORY — the delivery's own delta, not what a press left — so they are not in it: a press that a delivered
+ * sword would have made swing differs in `state` instead.
+ */
+export function weaponWitness(run) {
+    const { gate, ...info } = run.progress('slashInfo') ?? {};
+    const { hasSword, hasGhostSword, ...windows } = gate ?? {};
+    return canonicalDigestText({ info, windows, primary: run.progress('primary') });
+}
+
+/**
  * Can the model take `items` mid-run? null, or `{clause, why}` — the first
  * `DELIVERY_CLAUSES` row that refuses, by name. Asked with the PREDICTED
  * items, before anything is written.
@@ -262,9 +286,15 @@ const witness = (run) => `${runDigest(run)}|hits ${hitsOf(run)}`;
  *               arrival, leaves the model somewhere else at some tick (digest
  *               + the player's hits): the item would have ACTED before it
  *               arrived (the census: a dark sword's slash, a dark shield's block)
- *   slot-use    a SLOT item, and the prefix pressed a slot key: the weapon's
- *               timers (`slashing`, `firing`, …) are state no digest carries,
- *               and the model's would have run with the item
+ *   slot-use    a SLOT item, and the prefix pressed a slot key whose weapon
+ *               state the replay does not carry (`secondary`, the menu: not in
+ *               `REPLAYED_SLOT_KEYS`), or a primary press left the model's
+ *               weapon state (`weaponWitness`: the swing and the windows) other
+ *               than it is without the item. (⛓ DELIVERY DEFERRAL: this clause
+ *               refused EVERY slot press when the weapon timers were state no
+ *               witness carried; the model has carried them since, and a
+ *               blanket refusal deferred L32's Fire past the burnable-tree
+ *               exit that needs it — `room-end` is that exit.)
  *   slot-index  a fusion's `removeItem` moves `Main.primary` / `secondary`
  *               (modulo the shorter array) off the staged index: the game
  *               moves it on the frame the item lands, the re-staged model at
@@ -305,6 +335,11 @@ export function deliveryRefusal({ staging, shipped, items, save = null, status, 
         return no('build', `the room staged with ${names} is not the room the game built without it (its first row differs)`);
     }
     const keys = (shipped ?? []).map((h) => (h instanceof Set ? h : new Set(h)));
+    const slotItems = delta.filter((d) => SLOT_ITEM_PROPERTIES.includes(d.property)).map((d) => d.property);
+    // ⛓ DELIVERY DEFERRAL — the first tick whose weapon state differs, asked only when a SLOT item meets a prefix that
+    // pressed a slot key (main's trigger for this clause): every other delivery is answered exactly as before.
+    const pressedSlot = slotItems.length > 0 && keys.some((h) => SLOT_KEYS.some((k) => h.has(k)));
+    let weaponAt = -1;
     for (let t = 0; t < keys.length; t += 1) {
         try {
             // ⛓ WASM EQUIPS — a slot the shipped tapes selected (room tick → slot), re-made before its tick.
@@ -317,13 +352,18 @@ export function deliveryRefusal({ staging, shipped, items, save = null, status, 
             return no('prefix', `with ${names} staged at the arrival the shipped prefix leaves the model elsewhere at tick ${t + 1} of ${keys.length} `
                 + '— the item would have acted before it arrived');
         }
+        if (pressedSlot && weaponAt < 0 && weaponWitness(withItem) !== weaponWitness(without)) weaponAt = t;
     }
-    const slotItems = delta.filter((d) => SLOT_ITEM_PROPERTIES.includes(d.property)).map((d) => d.property);
-    if (slotItems.length) {
-        const used = keys.findIndex((h) => SLOT_KEYS.some((k) => h.has(k)));
-        if (used >= 0) {
-            return no('slot-use', `${slotItems.join(', ')} is a slot item and the shipped prefix pressed a slot key at tick ${used + 1} `
-                + '— the weapon state that press left is not in the replay');
+    if (pressedSlot) {
+        const unreplayed = keys.findIndex((h) => SLOT_KEYS.some((k) => h.has(k) && !REPLAYED_SLOT_KEYS.includes(k)));
+        if (unreplayed >= 0) {
+            const k = SLOT_KEYS.filter((key) => keys[unreplayed].has(key) && !REPLAYED_SLOT_KEYS.includes(key));
+            return no('slot-use', `${slotItems.join(', ')} is a slot item and the shipped prefix pressed ${k.join('+')} at tick ${unreplayed + 1} `
+                + '— the weapon state that press left is not in the replay (the model does not carry `Main.secondary` or the menu)');
+        }
+        if (weaponAt >= 0) {
+            return no('slot-use', `${slotItems.join(', ')} is a slot item and with it staged at the arrival the shipped prefix leaves the `
+                + `model's weapon state (the swing, the windows) elsewhere at tick ${weaponAt + 1} of ${keys.length} — the press would have used it`);
         }
     }
     const pre = { slots: status?.inventory_slots ?? [], primary: status?.primary ?? 0, secondary: status?.secondary ?? 0 };
