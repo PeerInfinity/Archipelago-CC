@@ -40,6 +40,7 @@ import { stringifyRulesJson } from '../../frontend/modules/shared/rulesJsonBuild
 import { seedlingMazeProjectionDeps } from '../../frontend/modules/flashPanel/seedlingAtlasAnalysis.js';
 import {
     PLAYTHROUGH_MAP, playthroughGridFor, playthroughAnalyzerOptions,
+    setPlaythroughLandingAtlas, playthroughLandingGates,
 } from './make-seedling-playthrough-rules.mjs';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 
@@ -87,6 +88,22 @@ export function restrictAtlas(atlas, levels, { start: fallback } = {}) {
     return stampAtlasIdentity(restricted, 'seedling');
 }
 
+/**
+ * ⛓ LANDING GATES (session tile-primitives-gated-tiles, ⚖ 2026-10-22 "Landing gates now") — the playthrough rules'
+ * `exitGates` for a landing on LETHAL terrain (L49 → L50 lands in water: the departure costs the Swim), for `levels`.
+ * Derived by the rules producer (`playthroughLandingGates`) over the WHOLE atlas, never hand-coded: the maze world
+ * already gates that water, and without these the preset's AP layer was looser than its own world (the whole-game
+ * certifier: 17 exits). A gate whose crossing is not wired inside `levels` is left out, as `ropeEventsFor` does.
+ */
+export function landingGatesFor(atlas, levels) {
+    const keep = new Set(levels);
+    setPlaythroughLandingAtlas(atlas);
+    const conns = atlas.vanilla_layout?.connections ?? [];
+    return playthroughLandingGates(atlas).filter((g) => keep.has(g.region_id) && conns.some((c) => (
+        (c.from[0] === g.region_id && c.from[1] === g.exit_id && keep.has(c.to[0]))
+        || (c.one_way !== true && c.to[0] === g.region_id && c.to[1] === g.exit_id && keep.has(c.from[0])))));
+}
+
 /** Compile the preset (or, for a measurement, the playthrough restricted to `levels`). Returns `{text, report}`. */
 export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
     const atlas = readJson(resolve(ATLAS_DIR, 'seedling-playthrough.json'));
@@ -112,6 +129,7 @@ export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
         embedSphereLog: true,
         sidecarFlavor: 'maze',
         mazeProjection,
+        exitGates: landingGatesFor(atlas, levels),
     });
     return { text: `${stringifyRulesJson(rules)}\n`, report, unresolved: mazeProjection.unresolved ?? [] };
 }
