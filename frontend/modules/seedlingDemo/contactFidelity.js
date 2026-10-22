@@ -945,6 +945,19 @@ export const CONTACT_FIDELITY = {
      * settled 201/210/387/404/776 as noise or slow); probes standard ON 11/11. seedlingRobust's {sword} L16 plan 878 → 882 t.
      */
     pixelMaskSightLines: true,
+    /**
+     * fidelity DRILLKILL (wave 26) — THE SOLVER KILLS L28's DRILLS FIRST, THEN CUTS THE ROPE (`solverBot.
+     * execDrillKillsFirst`). ⚖ The user (2026-10-22): *"The intended solution is to fight the drills first."* With
+     * `drillMixedRooms` every L28 drill is stepped, and the rope cut's stances from the L25/L26 arrivals lie in a drill's
+     * 48 px run range: the spear refused from both (`drill@128,96` t59, `drill@80,96` t31), Fire from L26. ON: before a
+     * `rope` clear-tag whose stance (or the planned walk to it) gives a live stepped drill its trigger (`runRange`, the
+     * masked "Solid" line), the solver kills that drill with a held sword or spear — a pre-stance 56 px out on one axis,
+     * a creep until the drill hops (once to 32 px, once to 16 px), a press each time `hitsTimer` runs out (sword 3
+     * hits, spear 2: `Enemy.hitsMax` 3, `spearDamage` 2), the removal waited out — and then plans the cut. FIRE CANNOT
+     * KILL A DRILL (`Enemy.hit`: `hitByFire` is false and `Drill` never sets it; `fireDamage` 0) — a Fire-only run whose
+     * stances a drill covers is refused BY NAME on that. OFF: byte-identical. `SEEDLING_DRILL_KILL_FIRST=0|1`.
+     */
+    drillKillFirst: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1133,6 +1146,9 @@ if (globalThis.process?.env?.SEEDLING_YETI_TALK === '0') CONTACT_FIDELITY.yetiTa
 // ⛓ fidelity MASKS: `SEEDLING_PIXEL_MASK_SIGHT_LINES=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_PIXEL_MASK_SIGHT_LINES === '1') CONTACT_FIDELITY.pixelMaskSightLines = true;
 if (globalThis.process?.env?.SEEDLING_PIXEL_MASK_SIGHT_LINES === '0') CONTACT_FIDELITY.pixelMaskSightLines = false;
+// ⛓ fidelity DRILLKILL: `SEEDLING_DRILL_KILL_FIRST=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_DRILL_KILL_FIRST === '1') CONTACT_FIDELITY.drillKillFirst = true;
+if (globalThis.process?.env?.SEEDLING_DRILL_KILL_FIRST === '0') CONTACT_FIDELITY.drillKillFirst = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
