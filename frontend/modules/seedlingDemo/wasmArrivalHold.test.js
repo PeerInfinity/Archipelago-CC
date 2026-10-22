@@ -14,7 +14,8 @@ const L22 = [
     row(22, 104, 184, 2), ...Array.from({ length: 155 }, (_, i) => row(22, 104 - (i + 1) / 4, 184 - (i + 1) / 8, 2)),
     row(21, 88, 152, 2),
 ];
-const SPAWN = { level: 22, x: 104, y: 184 };
+/** The begin's spawn pair (`playerPositionX/Y`); the new Player stands half a tile on, at the rows' (104,184). */
+const SPAWN = { level: 22, x: 96, y: 176 };
 
 describe('crossingArrivalVerdict', () => {
     it('L22: each planned death\'s respawn, in order, is played through at its own row', () => {
@@ -31,9 +32,15 @@ describe('crossingArrivalVerdict', () => {
     });
 
     it('a respawn at a spawn no row of the planned death stands on is not the shadow\'s', () => {
-        const v = crossingArrivalVerdict({ fromLevel: 22, expected: L22, respawns: 0, landing: { level: 22, x: 40, y: 184 } });
+        const v = crossingArrivalVerdict({ fromLevel: 22, expected: L22, respawns: 0, landing: { level: 22, x: 40, y: 176 } });
         expect(v).toMatchObject({ kind: 'unplanned' });
         expect(v.why).toMatch(/death 1 of the 2 the plan bills, but no row of it stands at that spawn/);
+    });
+
+    it('the rows stand at the PLAYER (spawn + half a tile, `Player.as:375`), never at the spawn pair itself (the L22 measurement)', () => {
+        const atPair = L22.map((r, i) => (i === 99 ? { ...r, x: 96, y: 176 } : r));
+        expect(crossingArrivalVerdict({ fromLevel: 22, expected: atPair, respawns: 0, landing: SPAWN }))
+            .toMatchObject({ kind: 'unplanned', why: expect.stringContaining("that spawn's player (104,184)") });
     });
 
     it('the row must carry THAT death: the spawn on a row of death 2 is not death 1\'s respawn', () => {

@@ -890,13 +890,14 @@ describe('⛓ CROSS-LEVEL END — a location tape that ends in another level is 
 
     /**
      * The crossing plan with ONE planned death: from row `at` on, the shadow counts a death (`deaths` +1) and row `at`
-     * stands at `spawn` in the house (the new Game's spawn pair) — `wasm-exit-22`'s shape, one death of its two.
+     * stands where the new Game builds its player in the house: `spawn` (the spawn pair) + half a tile (`Player.as:375`)
+     * — `wasm-exit-22`'s shape, one death of its two.
      */
     const deathPlan = (spawn, at = 5) => (plan, n) => {
         const p = crossPlan(plan, n);
         if (n !== 0) return p;
         return { ...p, expected: p.expected.map((r, i) => (i < at ? r
-            : { ...r, deaths: (r.deaths ?? 0) + 1, ...(i === at ? { level: HOUSE, x: spawn.x, y: spawn.y } : {}) })) };
+            : { ...r, deaths: (r.deaths ?? 0) + 1, ...(i === at ? { level: HOUSE, x: spawn.x + 8, y: spawn.y + 8 } : {}) })) };
     };
     const SPAWN = { x: A.state.playerPositionX, y: A.state.playerPositionY };
     const RESPAWN = { ...A.seam.beginEntry, 'rng.gameplay': 55, 'save.time': A.seam.beginEntry['save.time'] + 100 };

@@ -72,7 +72,7 @@ import { gameVisibleTape, holdingWindowTape, parseTape } from './tapeFormat.js';
 import { SHIPPED_RNG, UNREAD_MODELLED_READERS } from './wasmArrival.js';
 import { PUZZLEMENT_HAZARDS } from './combat.js';
 import { LEGACY_FADE_PER_LOAD } from './deadFrameBand.js';
-import { ENTITY_CLASSES } from './levelWorld.js';
+import { ENTITY_CLASSES, TILE_SIZE } from './levelWorld.js';
 import { TALK_RANGE } from './endingChain.js';
 import { mergeSaveArray } from './saveArrayRules.js';
 import { R7_GOAL_LEDGER } from './r7Acceptance.js';
@@ -127,8 +127,10 @@ export function crossLevelEnd(goal, plan) {
  *
  * The plan's rows ARE the shadow (`{level, x, y, deaths}` per tick, `deaths` = `playerDeaths.length`). Death n of
  * the plan is planned when its rows rise to `base + n` deaths, and its respawn when one of THOSE rows stands in
- * `landing.level` at the game's spawn pair (`landing.x/y` = `readState().playerPositionX/Y` at the begin). Its
- * timing is the divergence watch's (row by row), as for every other tick of the tape.
+ * `landing.level` where the new Game builds its player: the spawn pair (`landing.x/y` =
+ * `readState().playerPositionX/Y` at the begin) + half a tile (`Player(_x, _y)` → `super(_x + Tile.w / 2, _y + Tile.h /
+ * 2)`, `Player.as:375`; measured on L22: spawn (96,176), the player (104,184)). Its timing is the divergence watch's
+ * (row by row), as for every other tick of the tape.
  * `redirected` = the glue pushed a teleport since the plan shipped: its landing may be the level the crossing left
  * (a redirect to another entrance of it), and it IS the landing.
  *
@@ -148,11 +150,12 @@ export function crossingArrivalVerdict({ fromLevel, expected, respawns = 0, land
         return { kind: 'unplanned', why: `${at}: the plan bills ${planned} death(s) and ${respawns} respawned already — `
             + 'not the landing, and no planned respawn' };
     }
-    const row = expected.findIndex((r) => (r.deaths ?? base) - base === n && r.level === landing.level
-        && r.x === landing.x && r.y === landing.y);
+    const px = landing.x + TILE_SIZE / 2;
+    const py = landing.y + TILE_SIZE / 2;
+    const row = expected.findIndex((r) => (r.deaths ?? base) - base === n && r.level === landing.level && r.x === px && r.y === py);
     if (row < 0) {
         return { kind: 'unplanned', why: `${at}: death ${n} of the ${planned} the plan bills, but no row of it stands at `
-            + 'that spawn — the respawn is not the shadow\'s' };
+            + `that spawn's player (${px},${py}) — the respawn is not the shadow's` };
     }
     return { kind: 'planned-respawn', death: n, row };
 }
