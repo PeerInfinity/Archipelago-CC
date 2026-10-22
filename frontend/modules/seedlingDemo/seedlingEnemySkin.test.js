@@ -36,6 +36,7 @@ import {
     enemyOps, enemySkinView, familyOf, stepEnemySkin, updateSprite, worldFrame,
 } from './seedlingEnemySkin.js';
 import { CHASERS } from './chasers.js';
+import { withContactFidelity } from './contactFidelity.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '../../..');
@@ -59,14 +60,20 @@ const CHOP = ['primary', '', '', '', '', '', '', '', '', '', '', '', '', ''];
  * THE TAPES — one per family, in a room the census puts it in. `at` is the
  * `Game(level, x, y)` spawn; `want` is what the tape must really reach.
  */
+// ⛓ planning-10's MASKS flip (⚖ user, 2026-10-22; js-planning-8's ruling (a)): `lavarunner-L71` and `bulb-L74` run with
+//   `pixelMaskSightLines` OFF — these goldens pin the ART's walk/die frames, not fight fidelity. With it ON the stand's
+//   FIGHT swing never lands (the chaser line of sight, `Player.as:917`, against the walls near [96,200] L71 / [80,100]
+//   L74): 0 'die' frames (the ON row below pins that, so a model change shows). NOT game-witnessed — follow-ups: (1)
+//   fidelity witnesses those two swings on wasm; (2) js then re-sites the stands (if the game blocks them) or fidelity
+//   fixes the model (if it lands them), and this OFF pin goes.
 export const TAPES = Object.freeze([
     { name: 'bob-L14', level: 14, at: [16, 112], n: 300, keys: FIGHT, family: 'Bob', want: { anims: ['walk', 'die'], tint: true, fade: true } },
-    { name: 'lavarunner-L71', level: 71, at: [96, 200], n: 300, keys: FIGHT, family: 'LavaRunner', want: { anims: ['walk', 'die'], tint: true, mirror: true } },
+    { name: 'lavarunner-L71', level: 71, at: [96, 200], n: 300, keys: FIGHT, family: 'LavaRunner', want: { anims: ['walk', 'die'], tint: true, mirror: true }, fidelity: { pixelMaskSightLines: false } },
     { name: 'lavarunner-L72', level: 72, at: [120, 200], n: 160, keys: CHOP, family: 'LavaRunner', want: { anims: ['swim'] } },
     { name: 'jellyfish-L98', level: 98, at: [100, 80], n: 200, keys: FIGHT, family: 'Jellyfish', want: { anims: ['walk'] } },
     { name: 'flyer-L101', level: 101, at: [120, 250], n: 120, keys: [''], family: 'Flyer', want: { anims: ['fall'] } },
     { name: 'flyer-walk-L101', level: 101, at: [112, 240], n: 120, keys: ['left'], family: 'Flyer', want: { anims: ['walk'] } },
-    { name: 'bulb-L74', level: 74, at: [80, 100], n: 300, keys: FIGHT, family: 'Bulb', want: { anims: ['walk', 'drop', 'die'] } },
+    { name: 'bulb-L74', level: 74, at: [80, 100], n: 300, keys: FIGHT, family: 'Bulb', want: { anims: ['walk', 'drop', 'die'] }, fidelity: { pixelMaskSightLines: false } },
     { name: 'puncher-L26', level: 26, at: [48, 160], n: 300, keys: FIGHT, family: 'Puncher', want: { anims: ['walk-up', 'walk-side', 'attack-up', 'stand-up'], tint: true, mirror: true } },
     { name: 'bobsoldier-L30', level: 30, at: [80, 80], n: 200, keys: FIGHT, family: 'BobSoldier', want: { anims: ['walk'], keys: ['seedling:enemy/lameSword'], tint: true } },
     { name: 'spinner-L18', level: 18, at: [80, 80], n: 200, keys: FIGHT, family: 'Spinner', want: { keys: ['seedling:enemy/spinner'], tint: true } },
@@ -85,6 +92,8 @@ const keysOf = (tape) => Array.from({ length: tape.n }, (_, i) => tape.keys[i % 
 
 /** Run a tape; per tick: the view, the skin and the ops (the renderer, as the page runs it). */
 function runTape(tape, opts = {}) {
+    // ⛓ a tape may pin switches (`fidelity`, seedlingHazardSkin's precedent — see the TAPES comment)
+    if (tape.fidelity) return withContactFidelity(tape.fidelity, () => runTape({ ...tape, fidelity: undefined }, opts));
     const rt = boot(tape.level, tape.at);
     const rows = [];
     let skin = null;
@@ -151,6 +160,15 @@ describe('1–2. golden body ops (frame CHOICE, not pixels)', () => {
             expect(ops.every((o) => o.sheetRef), `${tape.name}: every body has art (no rectangle)`).toBe(true);
         });
     }
+
+    // ⛓ planning-10's MASKS flip: the two OFF-pinned stands, run with `pixelMaskSightLines` ON, reach 0 'die' frames
+    //   today (the swing never lands) — this row says so out loud, so a model change cannot drift past the OFF pin.
+    it.each(['lavarunner-L71', 'bulb-L74'])('the %s stand with pixelMaskSightLines ON: its FIGHT swing never lands (0 die frames)', (name) => {
+        const tape = TAPES.find((t) => t.name === name);
+        const rows = runTape({ ...tape, fidelity: { pixelMaskSightLines: true } });
+        const anims = rows.flatMap((r) => [...r.skin.bodies.values()].map((b) => b.sprite?.anim));
+        expect(anims.filter((a) => a === 'die')).toEqual([]);
+    });
 
     it('the synthetic views: a pit fall, a spinner\'s death, an arrow turning and stopping', () => {
         const lines = runSynthetic().map(lineOf);
