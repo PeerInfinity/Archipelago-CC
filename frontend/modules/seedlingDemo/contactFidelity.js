@@ -798,7 +798,7 @@ export const CONTACT_FIDELITY = {
      * `solid:lightbosscontroller` row (`lights`) fights it. OFF: nothing here runs, byte-identical.
      * `SEEDLING_LIGHTS_BOSS_FIGHT=0|1` for a node measurement.
      */
-    lightsBossFight: false,
+    lightsBossFight: true,
     /**
      * seedling-fidelity-bosskills D2 — THE KING OF FIRE (`lavaBoss.js`, L82) IS STEPPED: the 99-update cycle, the
      * LavaRunners (bridged chasers once they land), the LavaBalls and their reflection, the 120-update damage window
