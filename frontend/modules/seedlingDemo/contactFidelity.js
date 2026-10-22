@@ -875,7 +875,7 @@ export const CONTACT_FIDELITY = {
      * asks for it. A chaser whose list carries "Enemy" (the bobs) meets the live drills too. `solverBot.unsteppedDrills`
      * (ROPESTANCE's interim) returns none. OFF: byte-identical. `SEEDLING_DRILL_MIXED_ROOMS=0|1` for a node measurement.
      */
-    drillMixedRooms: false,
+    drillMixedRooms: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
