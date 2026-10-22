@@ -1,0 +1,27 @@
+{
+ "tape": "chain-armed",
+ "set_id": "seedling-vanilla-record-5aeefc3c",
+ "mounted": "seedling-vanilla-record-5aeefc3c",
+ "observations": 301,
+ "boot": {
+  "level": 39,
+  "x": 148,
+  "y": 100
+ },
+ "persistence": [
+  "39,9"
+ ],
+ "maxY43": null,
+ "transitions": [],
+ "clears": [
+  "39,9"
+ ],
+ "hits": 0,
+ "minY39": 82.55000000000001,
+ "final": {
+  "t": 300,
+  "x": 156,
+  "y": 82.55000000000001,
+  "level": 39
+ }
+}

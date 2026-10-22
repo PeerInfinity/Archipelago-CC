@@ -1,0 +1,27 @@
+{
+ "tape": "pulse-armed",
+ "set_id": "seedling-vanilla-record-5aeefc3c",
+ "mounted": "seedling-vanilla-record-5aeefc3c",
+ "observations": 201,
+ "boot": {
+  "level": 39,
+  "x": 82,
+  "y": 100
+ },
+ "persistence": [
+  "39,9"
+ ],
+ "maxY43": null,
+ "transitions": [],
+ "clears": [
+  "39,9"
+ ],
+ "hits": 2,
+ "minY39": 108,
+ "final": {
+  "t": 200,
+  "x": 167.87141274256015,
+  "y": 109,
+  "level": 39
+ }
+}
