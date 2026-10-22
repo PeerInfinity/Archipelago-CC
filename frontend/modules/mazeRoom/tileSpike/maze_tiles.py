@@ -4,7 +4,8 @@
 #
 # Signature (⚖ Q4 v1): f(state, player, cell, tile). `state`/`player` are ambient — `state` is the maze's
 # EFFECTIVE inventory (carried + held tokens). `tile` facts: floor, block, player, button, obstacle, clear_set,
-# broken (struck down this visit), struck (ITEM ACTIONS: the obstacle lists the acting action in `struck_by`).
+# broken (struck down this visit), struck (ITEM ACTIONS: the obstacle lists the acting action in `struck_by`),
+# lane_unless / lane_while (ARROW TRAPS: group tokens of the lanes over the cell), event (ROPES: the cut's event).
 
 
 def cleared(state, player, tile):
@@ -25,3 +26,11 @@ def presses(state, player, cell, tile):
 
 def strikes(state, player, cell, tile):
     return tile.obstacle is not None and tile.struck and not tile.broken
+
+
+def lane_armed(state, player, cell, tile):
+    return any(not state.has(t, player) for t in tile.lane_unless) or any(state.has(t, player) for t in tile.lane_while)
+
+
+def rope_cut(state, player, cell, tile):
+    return tile.broken or (tile.event is not None and state.has(tile.event, player))

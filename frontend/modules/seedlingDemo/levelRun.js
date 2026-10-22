@@ -40,7 +40,7 @@ import {
 } from './levelWorld.js';
 import {
     INITIAL_FRAMES_THIS_CHARACTER, PICKUP_CEREMONY, PICKUP_CEREMONY_BY_KEYTYPE,
-    HELP_DISMISS_KEYS, PICKUP_TEXT_FROM_ATTRIBUTE, PLACED_NPC_TALK, TALK_KEY,
+    HELP_DISMISS_KEYS, PICKUP_TEXT_FROM_ATTRIBUTE, PLACED_NPC_TALK, TALK_KEY, YETI_PORTAL_TAG,
     beginDialogue, stepDialogue,
 } from './dialogue.js';
 // ⛓⛓⛓ R6 SLICE 6c: the ENDING's own transcription — the placed NPC's
@@ -515,6 +515,8 @@ export const LEDGER_KIND_NAMES = Object.freeze([
     'bombEvents',
     // ⛓ fidelity BEAMTOWER D1: the towers' stepped `y` (ON only).
     'beamTowerTrace',
+    // ⛓ fidelity YETI D2: the Yeti's talk and its two writes (`CONTACT_FIDELITY.yetiTalk` ON only).
+    'yetiEvents',
 ]);
 
 /**
@@ -3068,6 +3070,20 @@ export function createLevelRun({
      * A new `Game` destroys it, as it does every runtime entity.
      */
     let witchSword = null;
+    /**
+     * ⛓⛓ fidelity YETI D2 (`CONTACT_FIDELITY.yetiTalk`): the Yeti's ledger, `run.ledger('yetiEvents')` —
+     * `yeti-open` / `yeti-close` (with `cause`, and `wrote` false when `createdPortal` already held) and one `yeti-write`
+     * per `setPersistence(tag, false)` `doneTalking()` makes. Empty in every room without a speaking Yeti, and OFF.
+     */
+    const yetiLedger = [];
+    /**
+     * ⛓⛓ fidelity YETI D2: the two writes `Yeti.doneTalking()` makes (`NPCs/Yeti.as:43-49`), `"<level>:<tag>" ->
+     * {id, level, tag, t, bootCleared}` — an `earnedClears` feeder. `bootCleared` is whether the flag was already off
+     * when the Yeti wrote it (a staged boot): the write is real, the clear is not EARNED. A run-long ledger like
+     * `watcherFlags` (never reset per visit); what the escape reads is the write's effect, `clearedByLevel` /
+     * `pendingEarnedClears`, both in `stateDigestParts`' `persist`.
+     */
+    const yetiFlags = new Map();
     /** The `{114,0}` write `doneTalking()` makes — keyed like `bossFlags`. */
     const watcherFlags = new Map();
     /**
@@ -15086,6 +15102,50 @@ export function createLevelRun({
         }
         return talkerStates.get(n);
     };
+    /**
+     * ⛓⛓⛓ fidelity YETI D2 (`CONTACT_FIDELITY.yetiTalk`) — `Yeti.doneTalking()`, run from the `talking` setter's false
+     * branch on BOTH causes (the pages exhausted, or the player out of the 24 px circle — `NPC.as:230-236`):
+     *
+     *     NPCs/Yeti.as:42-49   super.doneTalking(); if (!createdPortal) { createdPortal = true;
+     *                          Game.setPersistence(tag, false); Game.setPersistence(1, false); }
+     *
+     * `createdPortal` is an INSTANCE field, so it lives on this visit's talker row (`talkerStates`, rebuilt per
+     * visit); a second close in the same visit (out of the circle and back, `talked` reset) writes nothing.
+     *
+     * ⛔ THE TWO WRITES LAND AT DIFFERENT TIMES IN THE MODEL, BECAUSE THEIR READERS DO.
+     *   · `{level, 1}` — the DeadBoss portal (`teleporter@80,16`, tag 1). `Teleporter.update()` runs
+     *     `checkDeactivated()` EVERY frame (`Teleporter.as:89-94`), so the door opens IN THIS VISIT: applied now,
+     *     `applyClearNow` (the declared mid-visit clear's one write, which rebuilds the world and rebinds `world`).
+     *     The Yeti is added after the teleporters (`Game.as:2274` vs the Teleporter's earlier spawn line) and so
+     *     updates before them: the game's door is live on this very frame. The player cannot stand on it now (the
+     *     circle's 24 px and the door's rect are > 30 px apart in L58), so the fencepost is unobservable either way.
+     *   · `{level, tag}` — the Yeti's OWN tag. Only `NPC.check()` reads it, and only on a `Game`'s first frame: the
+     *     Yeti stays in the room for the rest of the visit and is gone from the next build. Banked, as the
+     *     Watcher's write is (`pendingEarnedClears`), and despawned by `YETI_PERSISTENCE_RESPONSE`.
+     * Both are recorded at the write's tick (`clearTagLanded`: the game's array holds the flag from the next).
+     */
+    const yetiDoneTalking = (w, cause) => {
+        const wrote = !w.createdPortal;
+        yetiLedger.push({ t: ticksCompleted, level: w.level, what: 'yeti-close', id: w.id, cause, wrote });
+        if (!wrote) return;
+        w.createdPortal = true;
+        const record = (tag) => {
+            const bootCleared = (clearedByLevel.get(w.level) ?? []).includes(tag)
+                || (pendingEarnedClears.get(w.level)?.has(tag) ?? false);
+            const key = `${w.level}:${tag}`;
+            if (!yetiFlags.has(key)) {
+                yetiFlags.set(key, { id: w.id, level: w.level, tag, t: ticksCompleted, bootCleared });
+            }
+            yetiLedger.push({ t: ticksCompleted, level: w.level, what: 'yeti-write', id: w.id, tag, bootCleared });
+        };
+        if (w.persistTag >= 0) {
+            record(w.persistTag);
+            if (!pendingEarnedClears.has(w.level)) pendingEarnedClears.set(w.level, new Set());
+            pendingEarnedClears.get(w.level).add(w.persistTag);
+        }
+        record(YETI_PORTAL_TAG);
+        applyClearNow({ level: w.level, tag: YETI_PORTAL_TAG });
+    };
     const stepTalkersNow = (released) => {
         const st = talkerStateFor(level);
         if (st.size === 0) return { frozen: false };
@@ -15133,6 +15193,7 @@ export function createLevelRun({
                                 ...(report ? { tag: DARK_SWORD_WITCH_TAG } : {}) };
                         }
                     }
+                    if (w.tag === 'yeti' && CONTACT_FIDELITY.yetiTalk) yetiDoneTalking(w, r.left ? 'left' : 'done');
                 }
                 continue;
             }
@@ -15150,7 +15211,9 @@ export function createLevelRun({
                 continue;
             }
             if (!released || w.talked || open) continue;
-            if (w.doneTalking === 'REFUSED') {
+            // ⛓ fidelity YETI D2: ON, the Yeti's `doneTalking()` IS transcribed (the close arm above); OFF the row's
+            // REFUSED stands and the open throws by name, as before.
+            if (w.doneTalking === 'REFUSED' && !(w.tag === 'yeti' && CONTACT_FIDELITY.yetiTalk)) {
                 const row = PLACED_NPC_TALK[w.tag];
                 throw new Error(`levelRun: the walk opens \`${w.tag}\`'s dialogue at tick `
                     + `${ticksCompleted} in level ${w.level} (an X release `
@@ -15171,6 +15234,9 @@ export function createLevelRun({
             if (w.tag === 'witch') {
                 witchLedger.push({ t: ticksCompleted, level: w.level, what: 'witch-open', id: w.id,
                     extra: spoken !== w.text });
+            }
+            if (w.tag === 'yeti' && CONTACT_FIDELITY.yetiTalk) {
+                yetiLedger.push({ t: ticksCompleted, level: w.level, what: 'yeti-open', id: w.id });
             }
             w.dialogue = beginNpcDialogue(spoken, {
                 talkingSpeed: w.talkingSpeed,
@@ -17427,6 +17493,14 @@ export function createLevelRun({
             if (out.some((o) => o.level === n && o.tag === tag)) continue;
             out.push({ level: n, tag, by: r.id, t: r.t });
         }
+        // ⛓⛓ fidelity YETI D2: the Yeti's two writes. ⚠ Filtered on `bootCleared`, NOT on `clearedByLevel`: the portal's
+        // `{58,1}` is applied mid-visit INTO `clearedByLevel` (its teleporter re-reads it), so that filter would hide
+        // the very clear the run earned.
+        for (const r of yetiFlags.values()) {
+            if (r.bootCleared) continue;
+            if (out.some((o) => o.level === r.level && o.tag === r.tag)) continue;
+            out.push({ level: r.level, tag: r.tag, by: r.id, t: r.t });
+        }
         // ⛓⛓⛓ R6 SLICE 6c: THE FINAL DOOR — `removed()` is
         // `Game.setPersistence(tag, false)` with no test of the cause,
         // and `animEnd` is the only caller. Its own loop because the
@@ -17507,6 +17581,8 @@ export function createLevelRun({
     const staticBodyDeathsNow = () => staticBodyDeaths.map((d) => ({ ...d }));
     /** ⛓ ENCOUNTERS D3: `run.ledger('witchEvents')` — a copy of the Witch's rows. */
     const witchEventsNow = () => witchLedger.map((r) => ({ ...r, ...(r.flag ? { flag: { ...r.flag } } : {}) }));
+    /** ⛓ fidelity YETI D2: `run.ledger('yetiEvents')` — a copy of the Yeti's rows. */
+    const yetiEventsNow = () => yetiLedger.map((r) => ({ ...r }));
     /** ⛓ CROSSROOM D2: `run.ledger('unreadRoomWrites')` — the cross-room writes no entity of their level reads. */
     const unreadRoomWritesNow = () => unreadRoomWrites.map((u) => ({ ...u }));
     const PROGRESS_FIELDS = Object.freeze({
@@ -17563,6 +17639,8 @@ export function createLevelRun({
         bombEvents: bombEventsNow,
         // ⛓ fidelity BEAMTOWER D1: the towers' stepped `y`, ON only (empty OFF).
         beamTowerTrace: () => beamTowerTrace.map((r) => ({ ...r })),
+        // ⛓ fidelity YETI D2: the Yeti's rows (ON only).
+        yetiEvents: yetiEventsNow,
     });
 
     /**
@@ -19271,6 +19349,10 @@ export function createLevelRun({
         get staticBodyDeaths() { return staticBodyDeathsNow(); },
         /** ⛓ ENCOUNTERS D3: the Witch's encounter rows — see `witchEventsNow`. */
         get witchEvents() { return witchEventsNow(); },
+        /** ⛓ fidelity YETI D2: the Yeti's rows — see `yetiEventsNow`. */
+        get yetiEvents() { return yetiEventsNow(); },
+        /** ⛓ fidelity YETI D2: the two writes `Yeti.doneTalking()` made — see `yetiFlags`. */
+        get yetiFlags() { return [...yetiFlags.values()].map((f) => ({ ...f })); },
         /** ⛓ CROSSROOM D2: the unread cross-room writes — see `unreadRoomWrites`. */
         get unreadRoomWrites() { return unreadRoomWritesNow(); },
         /**

@@ -797,8 +797,11 @@ export const CONTACT_FIDELITY = {
      * `LightBossTotem` Solid, and `endState()` (the {69,0} report and the exit Teleporter to L36). The solver's
      * `solid:lightbosscontroller` row (`lights`) fights it. OFF: nothing here runs, byte-identical.
      * `SEEDLING_LIGHTS_BOSS_FIGHT=0|1` for a node measurement.
+     * ⛓ planning-10's flip (⚖ user, 2026-10-22, "Flip lightsBossFight") turns it ON. Measured movers (CI, A/B at main
+     * e2b0f2b63f): the route survey (full) only L69 159 NO-EDGE → SOLVED 826 t (0 hits, hammer LD) and L36 160 NO-ARRIVAL →
+     * SOLVED 50; sweep legs 607/608 done ×2 at leg_budget 240 s (OFF failed/unresolved); probes standard green.
      */
-    lightsBossFight: false,
+    lightsBossFight: true,
     /**
      * seedling-fidelity-bosskills D2 — THE KING OF FIRE (`lavaBoss.js`, L82) IS STEPPED: the 99-update cycle, the
      * LavaRunners (bridged chasers once they land), the LavaBalls and their reflection, the 120-update damage window
@@ -903,6 +906,26 @@ export const CONTACT_FIDELITY = {
      * verify 0 mismatches on the hammer producers ON).
      */
     drillMixedRooms: true,
+    /**
+     * fidelity YETI (wave 25) — THE YETI'S `doneTalking()` OPENS L58's TAG-1 TELEPORTER (`levelRun`'s talker arm,
+     * `solverBot`'s clear-tag `yeti` arm).
+     *
+     *     NPCs/Yeti.as:40-50   doneTalking(): super; if (!createdPortal) { createdPortal = true;
+     *                          Game.setPersistence(tag, false); Game.setPersistence(1, false); }
+     *     Teleporter.as:89-94  update(): checkDeactivated() EVERY frame — a cleared tag opens it in the same visit
+     *     NPCs/NPC.as:119-126  check(): a cleared tag REMOVES the NPC — but only when a `Game` is built (a revisit)
+     *
+     * ON: the talk is run (no longer refused by name): both writes land on the run's ledger at the close (`done` OR
+     * `left`, the `talking` setter's two callers), `{58,1}` is applied MID-VISIT (the teleporter re-reads it) and the
+     * Yeti's own `{58,0}` is banked for the next build (`NPC.check()`, which also needs the `despawn` response the
+     * switch adds for `yeti`); the solver's clear-tag on `{58,1}` / `{58,0}` naming `yeti@56,56` talks it out. OFF:
+     * `PLACED_NPC_TALK.yeti` stays REFUSED and every build/run is byte-identical. `SEEDLING_YETI_TALK=0|1` for a node
+     * measurement.
+     * ⛓ planning-10's flip (⚖ user, 2026-10-22, "Yes, please do the flip") turns it ON. Measured movers (CI, wave-25 A/B):
+     * the route survey (full) 0; the L58 sweep leg ×2: 0 (done both arms); probes standard 11/11. Inert on the route until
+     * rules-2's Yeti talk goal exists, and L58's door then refuses `unmodelled-pit-teleporter` (a queued model row).
+     */
+    yetiTalk: true,
     /**
      * fidelity MASKS (wave 25) — THE RUN'S `collideLine("Solid", …)` SAMPLES THE "Solid" PIXELMASKS, AND THE SWING AT A
      * CHASER ASKS IT (`levelRun.collideLineSolid`'s `{masks}`, DRILL's sampler). FlashPunk's `World.collideLine` asks
@@ -1101,6 +1124,9 @@ if (globalThis.process?.env?.SEEDLING_ROPE_CUT_ANY_WEAPON === '0') CONTACT_FIDEL
 // ⛓ fidelity DRILL: `SEEDLING_DRILL_MIXED_ROOMS=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '1') CONTACT_FIDELITY.drillMixedRooms = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '0') CONTACT_FIDELITY.drillMixedRooms = false;
+// ⛓ fidelity YETI: `SEEDLING_YETI_TALK=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_YETI_TALK === '1') CONTACT_FIDELITY.yetiTalk = true;
+if (globalThis.process?.env?.SEEDLING_YETI_TALK === '0') CONTACT_FIDELITY.yetiTalk = false;
 // ⛓ fidelity MASKS: `SEEDLING_PIXEL_MASK_SIGHT_LINES=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_PIXEL_MASK_SIGHT_LINES === '1') CONTACT_FIDELITY.pixelMaskSightLines = true;
 if (globalThis.process?.env?.SEEDLING_PIXEL_MASK_SIGHT_LINES === '0') CONTACT_FIDELITY.pixelMaskSightLines = false;

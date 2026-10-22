@@ -17669,12 +17669,12 @@ its byte-frozen free oracle is compared against.
 | 29 | `r9-solve-30` | L30 → L32 | 210 | — |
 | 30 | `r9-solve-32` | L32 → END | 839 | — |
 
-**ROUTE COMPLETE** — the chain walks all 30 route steps, from the true start to route step 30 in L32 (Level 032 - Bob Boss (sphere 3.1) → Fire); there is no next room on this route.
+**ROUTE COMPLETE** — the chain walks all 30 route steps, from the true start to route step 30 in L32 (Level 032 - Bob Boss (sphere 4.2) → Fire); there is no next room on this route.
 
 **COVERAGE, BY ROUTE MODE** (`campaign-frontier.json` `coverage`; `route-only` is the route the chain was recorded on):
 
-- `route-only` through 3.1: **30/30** route steps — COMPLETE
-- `full` through 3.1: **13/47** route steps — the chain leaves this route at segment 14: `r9-solve-0` arrives in L13, route step 14 crosses to L86
+- `route-only` through 4.2: **30/30** route steps — COMPLETE
+- `full` through 4.2: **13/40** route steps — the chain leaves this route at segment 14: `r9-solve-0` arrives in L13, route step 14 crosses to L86
 
 <!-- GENERATED:campaign-chain END -->
 
@@ -24659,6 +24659,50 @@ refused, `drill@128,96` at run tick 59 — the game's tick. OFF: the interim, by
   between the tests is hit by a test the model never ran.
 - An AS3 getter typed `int` truncates: a rect built from it is not the float rect, and FlashPunk's `collideRect` is
   inclusive where `collide` is strict.
+
+### Seedling fidelity YETI — the Yeti's `doneTalking()` opens L58's tag-1 door (`yetiTalk`, OFF)
+
+Planner `seedling-fidelity-planning-10`, wave 25 (⚖ the user picked "YETI talk cloud slice" after rules-2's diagnosis
+of the tentacle survey). The report is `CC/docs/cloud-reports/seedling-fidelity-yeti.md`.
+
+**W0.** L58 (`DeadBoss.oel`) holds `yeti@56,56` (tag 0, five pages, `frames="3"`; centre (64,64)) and
+`teleporter@80,16` → L46 (tag 1). The tick chain on the game:
+- `Teleporter.checkDeactivated()` is `tag >= 0 && (!checkPersistence(tag) == invert)`, and `update()` runs it EVERY
+  frame (`Teleporter.as:89-94`), so a fresh room's door is shut and a clear opens it in the same visit.
+- The Yeti is a KEYED talker (`keyNeeded` true: the Witch's shape, not the Watcher's): an X release inside 24 px of its
+  centre opens the dialogue (`NPC.as:225`), and the `talking` setter's false branch runs `doneTalking()` on both causes,
+  the pages exhausted (`:207-214`) or the circle left (`:230-236`).
+- `Yeti.doneTalking()` (`NPCs/Yeti.as:40-50`): `if (!createdPortal) { createdPortal = true; setPersistence(tag, false);
+  setPersistence(1, false); }`. `createdPortal` is an instance field (once per visit). The Yeti is added after the
+  teleporters (`Game.as:2274`) and `addUpdate` prepends, so the door re-reads on the closing frame itself.
+- `NPC.check()` removes an NPC whose tag is cleared, on a new `Game` only: the Yeti stays for the rest of the visit.
+- The room is water except a four-tile island under the Yeti and the door's ledge (Swim needed). The door's tile is a
+  **Pit**.
+
+**The model (switch ON).** `levelRun`'s talker arm runs `yetiDoneTalking`: `{58,1}` goes through `applyClearNow` (the
+door opens mid-visit) and `{58,0}` is banked for the next build (`pendingEarnedClears`). `YETI_PERSISTENCE_RESPONSE`
+(`yeti: 'despawn'`) lets a build with `{58,0}` cleared drop the Yeti. New: the ledger `yetiEvents`, the run field
+`yetiFlags`, an `earnedClears` arm filtered on `bootCleared` (`{58,1}` lands in `clearedByLevel` mid-visit). OFF:
+`PLACED_NPC_TALK.yeti` stays REFUSED, byte-identical.
+
+**The verb.** `execClearTag`'s `yeti` arm: a clear-tag `{58,1}` (or `{58,0}`) naming `yeti@56,56` runs `execYetiTalk`
+(a stance inside the circle, the ceremony cadence until `yeti-close`, settle). Either flag cleared at the boot is
+`already-clear`; no Yeti with the door shut is `cannot-act`. From the mouth's arrival: 145 t, open t54, close t144.
+
+**Witnesses (p4g, `probe-seedling-yeti.mjs`, `fixtures/yeti-witness/`, all 0 px every tick):** `talk` (both flags off;
+crosses to L46 at t202, in the same visit), `control` (dialogue left open: both flags set), `shut` (no talk: the Pit takes
+the player, respawn at (64,104), no crossing), `revisit` (both flags cleared at the boot: walks through the Yeti's old
+Solid, crosses at t98).
+
+**The next gap.** After the talk, the solver's `reach-exit` to the door refuses `unmodelled-pit-teleporter` (housekeep
+D1's named refusal, now a third room after L43 and L100). The `talk` and `shut` witnesses are the game's answer for
+this door: on the straight approach the teleporter wins while it is live, and the Pit wins while it is shut.
+
+**Trap candidates.**
+- A door's ledger flag can be written by a dialogue in the same room. A clear that `applyEarnedClears` banks for the
+  next build is a different fact from one a per-frame reader (a `Teleporter`) sees at once: the Yeti's two writes have
+  two readers and land at two times.
+- An `earnedClears` arm filtered on `clearedByLevel` hides a clear that the run itself applied mid-visit.
 
 ### Seedling fidelity MASKS — the swing's line samples the "Solid" pixelmasks, and the chaser arm asks it (`pixelMaskSightLines`, OFF)
 
