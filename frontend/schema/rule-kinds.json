@@ -1,0 +1,784 @@
+{
+ "_about": "The rule-node KIND registry (rule-node-registry R1, ⚖ D1/D2 2026-10-21). One entry per kind a layer emits or handles. Checked by scripts/rules/ruleKindCensus.test.js against the JS engine, the Python layers (rule-kinds.python-vocab.json) and committed presets. A new kind = an entry here; a new gap fails the census by name; known_gaps may only SHRINK (gap_ceiling). Policy for unknown kinds: docs/json/developer/reference/rule-kind-registry.md.",
+ "capabilities": {
+  "pure": "needs nothing from the evaluation context beyond its operands and locals",
+  "inventory": "reads the player's items, counts or item groups",
+  "regions": "reads reachability or checked state of regions, locations or entrances — an inventory-only context must refuse it by name",
+  "world": "reads static world data: options, world attributes, player id, placements, region data",
+  "helpers": "calls game helper code (the context's executeHelper / state methods); what it needs depends on the helper",
+  "tile": "RESERVED for tile-grid state (tile primitives); no kind uses it yet"
+ },
+ "not_rule_kinds": {
+  "ast": {
+   "Event": "item classification literal, not a rule node",
+   "additive": "progression-mapping type literal",
+   "computed": "progression-mapping type literal",
+   "comprehension_details": "the iterator_info record inside all_of / any_of, read by their handlers"
+  },
+  "rb": {
+   "Unknown": "AST→RB converter error marker",
+   "ConversionError": "AST→RB converter error marker"
+  }
+ },
+ "kinds": {
+  "ast": {
+   "all_of": {
+    "capability": "pure"
+   },
+   "and": {
+    "capability": "pure"
+   },
+   "any_of": {
+    "capability": "pure"
+   },
+   "assign": {
+    "capability": "pure",
+    "statement": true
+   },
+   "ast_all_of": {
+    "capability": "pure"
+   },
+   "ast_any_of": {
+    "capability": "pure"
+   },
+   "AST_group_count": {
+    "capability": "inventory"
+   },
+   "attribute": {
+    "capability": "pure"
+   },
+   "aug_assign": {
+    "capability": "pure",
+    "statement": true
+   },
+   "binary_op": {
+    "capability": "pure"
+   },
+   "binop": {
+    "capability": "pure"
+   },
+   "block": {
+    "capability": "pure"
+   },
+   "break": {
+    "capability": "pure",
+    "statement": true
+   },
+   "call": {
+    "capability": "helpers"
+   },
+   "can_reach": {
+    "capability": "regions"
+   },
+   "can_reach_entrance": {
+    "capability": "regions"
+   },
+   "capability": {
+    "capability": "helpers"
+   },
+   "compare": {
+    "capability": "pure"
+   },
+   "comparison": {
+    "capability": "pure"
+   },
+   "conditional": {
+    "capability": "pure"
+   },
+   "constant": {
+    "capability": "pure"
+   },
+   "continue": {
+    "capability": "pure",
+    "statement": true
+   },
+   "count_check": {
+    "capability": "inventory"
+   },
+   "count_item": {
+    "capability": "inventory"
+   },
+   "count_true": {
+    "capability": "pure"
+   },
+   "counts": {
+    "capability": "inventory"
+   },
+   "dict_lambda_lookup": {
+    "capability": "pure"
+   },
+   "enemy_requirement": {
+    "capability": "helpers"
+   },
+   "error": {
+    "capability": "pure"
+   },
+   "f_string": {
+    "capability": "pure"
+   },
+   "for_iter": {
+    "capability": "pure",
+    "statement": true
+   },
+   "for_range": {
+    "capability": "pure",
+    "statement": true
+   },
+   "formatted_value": {
+    "capability": "pure"
+   },
+   "function_call": {
+    "capability": "helpers"
+   },
+   "game_specific_check": {
+    "capability": "helpers"
+   },
+   "generator_expression": {
+    "capability": "pure"
+   },
+   "generic_helper": {
+    "capability": "helpers"
+   },
+   "generic_rule": {
+    "capability": "helpers"
+   },
+   "group_check": {
+    "capability": "inventory"
+   },
+   "group_count": {
+    "capability": "inventory"
+   },
+   "helper": {
+    "capability": "helpers"
+   },
+   "if_statement": {
+    "capability": "pure",
+    "statement": true
+   },
+   "index": {
+    "capability": "pure"
+   },
+   "item_check": {
+    "capability": "inventory"
+   },
+   "item_check_all": {
+    "capability": "inventory"
+   },
+   "item_check_any": {
+    "capability": "inventory"
+   },
+   "item_check_count": {
+    "capability": "inventory"
+   },
+   "item_check_with_mapping": {
+    "capability": "inventory"
+   },
+   "lambda": {
+    "capability": "pure"
+   },
+   "list": {
+    "capability": "pure"
+   },
+   "location_check": {
+    "capability": "regions"
+   },
+   "location_rule_ref": {
+    "capability": "regions"
+   },
+   "locations_checked": {
+    "capability": "regions"
+   },
+   "map": {
+    "capability": "pure"
+   },
+   "max": {
+    "capability": "pure"
+   },
+   "method_call": {
+    "capability": "helpers"
+   },
+   "min": {
+    "capability": "pure"
+   },
+   "name": {
+    "capability": "pure"
+   },
+   "negate": {
+    "capability": "pure"
+   },
+   "not": {
+    "capability": "pure"
+   },
+   "option_value": {
+    "capability": "world"
+   },
+   "or": {
+    "capability": "pure"
+   },
+   "param_ref": {
+    "capability": "pure"
+   },
+   "placement_lookup": {
+    "capability": "world"
+   },
+   "placement_search": {
+    "capability": "world"
+   },
+   "player_id": {
+    "capability": "world"
+   },
+   "prog_item_count": {
+    "capability": "inventory"
+   },
+   "region_attribute": {
+    "capability": "world"
+   },
+   "region_check": {
+    "capability": "regions"
+   },
+   "region_reference": {
+    "capability": "world"
+   },
+   "return": {
+    "capability": "pure",
+    "statement": true
+   },
+   "set": {
+    "capability": "pure"
+   },
+   "set_comprehension": {
+    "capability": "pure"
+   },
+   "setting_in": {
+    "capability": "world"
+   },
+   "slice": {
+    "capability": "pure"
+   },
+   "starred": {
+    "capability": "pure"
+   },
+   "state_method": {
+    "capability": "helpers"
+   },
+   "subscript": {
+    "capability": "pure"
+   },
+   "sum": {
+    "capability": "pure"
+   },
+   "sum_of": {
+    "capability": "pure"
+   },
+   "total_items_count": {
+    "capability": "inventory"
+   },
+   "tuple": {
+    "capability": "pure"
+   },
+   "tuple_assign": {
+    "capability": "pure",
+    "statement": true
+   },
+   "unique_count": {
+    "capability": "inventory"
+   },
+   "unknown": {
+    "capability": "pure"
+   },
+   "unknown_capability": {
+    "capability": "helpers"
+   },
+   "value": {
+    "capability": "pure"
+   },
+   "variable": {
+    "capability": "pure"
+   },
+   "weighted_count_true": {
+    "capability": "pure"
+   },
+   "while_loop": {
+    "capability": "pure",
+    "statement": true
+   },
+   "world_attribute": {
+    "capability": "world"
+   },
+   "world_reference": {
+    "capability": "world"
+   }
+  },
+  "rb": {
+   "and": {
+    "capability": "pure"
+   },
+   "And": {
+    "capability": "pure"
+   },
+   "Arithmetic": {
+    "capability": "pure"
+   },
+   "AST_all_of": {
+    "capability": "pure"
+   },
+   "AST_any_of": {
+    "capability": "pure"
+   },
+   "AST_block": {
+    "capability": "pure"
+   },
+   "AST_call": {
+    "capability": "helpers"
+   },
+   "AST_capability": {
+    "capability": "helpers"
+   },
+   "AST_comparison": {
+    "capability": "pure"
+   },
+   "AST_count_item": {
+    "capability": "inventory"
+   },
+   "AST_count_true": {
+    "capability": "pure"
+   },
+   "AST_counts": {
+    "capability": "inventory"
+   },
+   "AST_dict_lambda_lookup": {
+    "capability": "pure"
+   },
+   "AST_enemy_requirement": {
+    "capability": "helpers"
+   },
+   "AST_error": {
+    "capability": "pure"
+   },
+   "AST_f_string": {
+    "capability": "pure"
+   },
+   "AST_formatted_value": {
+    "capability": "pure"
+   },
+   "AST_function_call": {
+    "capability": "helpers"
+   },
+   "AST_game_specific_check": {
+    "capability": "helpers"
+   },
+   "AST_generator_expression": {
+    "capability": "pure"
+   },
+   "AST_generic_helper": {
+    "capability": "helpers"
+   },
+   "AST_generic_rule": {
+    "capability": "helpers"
+   },
+   "AST_group_count": {
+    "capability": "inventory"
+   },
+   "AST_lambda": {
+    "capability": "pure"
+   },
+   "AST_location_rule_ref": {
+    "capability": "regions"
+   },
+   "AST_map": {
+    "capability": "pure"
+   },
+   "AST_max": {
+    "capability": "pure"
+   },
+   "AST_method_call": {
+    "capability": "helpers"
+   },
+   "AST_min": {
+    "capability": "pure"
+   },
+   "AST_negate": {
+    "capability": "pure"
+   },
+   "AST_placement_lookup": {
+    "capability": "world"
+   },
+   "AST_placement_search": {
+    "capability": "world"
+   },
+   "AST_player_id": {
+    "capability": "world"
+   },
+   "AST_prog_item_count": {
+    "capability": "inventory"
+   },
+   "AST_region_attribute": {
+    "capability": "world"
+   },
+   "AST_region_check": {
+    "capability": "regions"
+   },
+   "AST_set": {
+    "capability": "pure"
+   },
+   "AST_set_comprehension": {
+    "capability": "pure"
+   },
+   "AST_setting_in": {
+    "capability": "world"
+   },
+   "AST_slice": {
+    "capability": "pure"
+   },
+   "AST_starred": {
+    "capability": "pure"
+   },
+   "AST_subscript": {
+    "capability": "pure"
+   },
+   "AST_sum": {
+    "capability": "pure"
+   },
+   "AST_sum_of": {
+    "capability": "pure"
+   },
+   "AST_unknown": {
+    "capability": "pure"
+   },
+   "AST_unknown_capability": {
+    "capability": "helpers"
+   },
+   "AST_weighted_count_true": {
+    "capability": "pure"
+   },
+   "ASTRule": {
+    "capability": "helpers"
+   },
+   "AtLeast": {
+    "capability": "pure"
+   },
+   "Attribute": {
+    "capability": "pure"
+   },
+   "bool": {
+    "capability": "pure"
+   },
+   "CanReachEntrance": {
+    "capability": "regions"
+   },
+   "CanReachLocation": {
+    "capability": "regions"
+   },
+   "CanReachRegion": {
+    "capability": "regions"
+   },
+   "Compare": {
+    "capability": "pure"
+   },
+   "Conditional": {
+    "capability": "pure"
+   },
+   "Constant": {
+    "capability": "pure"
+   },
+   "Count": {
+    "capability": "inventory"
+   },
+   "CountCheck": {
+    "capability": "inventory"
+   },
+   "CountFromList": {
+    "capability": "inventory"
+   },
+   "CountGroup": {
+    "capability": "inventory"
+   },
+   "CountGroupUnique": {
+    "capability": "inventory"
+   },
+   "CountItem": {
+    "capability": "inventory"
+   },
+   "EntranceAccessRule": {
+    "capability": "regions"
+   },
+   "EntranceAccessRuleCall": {
+    "capability": "regions"
+   },
+   "False_": {
+    "capability": "pure"
+   },
+   "Filtered": {
+    "capability": "pure"
+   },
+   "group_count": {
+    "capability": "inventory"
+   },
+   "Has": {
+    "capability": "inventory"
+   },
+   "HasAll": {
+    "capability": "inventory"
+   },
+   "HasAllCounts": {
+    "capability": "inventory"
+   },
+   "HasAny": {
+    "capability": "inventory"
+   },
+   "HasAnyCount": {
+    "capability": "inventory"
+   },
+   "HasFromList": {
+    "capability": "inventory"
+   },
+   "HasFromListUnique": {
+    "capability": "inventory"
+   },
+   "HasGroup": {
+    "capability": "inventory"
+   },
+   "HasGroupUnique": {
+    "capability": "inventory"
+   },
+   "Helper": {
+    "capability": "helpers"
+   },
+   "HelperCall": {
+    "capability": "helpers"
+   },
+   "ItemCheck": {
+    "capability": "inventory"
+   },
+   "List": {
+    "capability": "pure"
+   },
+   "MaxValue": {
+    "capability": "pure"
+   },
+   "MinValue": {
+    "capability": "pure"
+   },
+   "Name": {
+    "capability": "pure"
+   },
+   "NestedRule": {
+    "capability": "pure"
+   },
+   "Not": {
+    "capability": "pure"
+   },
+   "OptionValue": {
+    "capability": "world"
+   },
+   "or": {
+    "capability": "pure"
+   },
+   "Or": {
+    "capability": "pure"
+   },
+   "StateMethod": {
+    "capability": "helpers"
+   },
+   "True_": {
+    "capability": "pure"
+   },
+   "Tuple": {
+    "capability": "pure"
+   },
+   "unique_count": {
+    "capability": "inventory"
+   },
+   "UniqueCount": {
+    "capability": "inventory"
+   },
+   "weighted_sum": {
+    "capability": "pure"
+   },
+   "WeightedSum": {
+    "capability": "pure"
+   },
+   "WorldAttribute": {
+    "capability": "world"
+   },
+   "WrapperRule": {
+    "capability": "pure"
+   }
+  }
+ },
+ "known_gaps": {
+  "js.ast": [
+   "enemy_requirement",
+   "error",
+   "formatted_value",
+   "game_specific_check",
+   "generic_rule",
+   "set_comprehension",
+   "setting_in",
+   "starred",
+   "tuple_assign",
+   "unknown",
+   "unknown_capability"
+  ],
+  "js.rb": [
+   "AST_enemy_requirement",
+   "AST_error",
+   "AST_formatted_value",
+   "AST_game_specific_check",
+   "AST_generic_rule",
+   "AST_set_comprehension",
+   "AST_setting_in",
+   "AST_starred",
+   "AST_unknown",
+   "AST_unknown_capability"
+  ],
+  "world_generator.rb": [
+   "ASTRule",
+   "AST_call",
+   "AST_counts",
+   "AST_enemy_requirement",
+   "AST_error",
+   "AST_f_string",
+   "AST_formatted_value",
+   "AST_game_specific_check",
+   "AST_generator_expression",
+   "AST_generic_helper",
+   "AST_generic_rule",
+   "AST_lambda",
+   "AST_map",
+   "AST_method_call",
+   "AST_negate",
+   "AST_player_id",
+   "AST_region_attribute",
+   "AST_set",
+   "AST_set_comprehension",
+   "AST_setting_in",
+   "AST_slice",
+   "AST_starred",
+   "AST_subscript",
+   "AST_sum",
+   "AST_sum_of",
+   "AST_unknown",
+   "AST_unknown_capability",
+   "Attribute",
+   "CountCheck",
+   "CountGroup",
+   "CountGroupUnique",
+   "Filtered",
+   "ItemCheck",
+   "NestedRule",
+   "Tuple",
+   "WrapperRule",
+   "bool",
+   "unique_count",
+   "weighted_sum"
+  ],
+  "world_generator.rb_map_without_handler": [],
+  "helper_codegen.ast": [
+   "capability",
+   "count_true",
+   "counts",
+   "enemy_requirement",
+   "error",
+   "game_specific_check",
+   "generic_helper",
+   "generic_rule",
+   "location_rule_ref",
+   "placement_search",
+   "player_id",
+   "set_comprehension",
+   "setting_in",
+   "slice",
+   "starred",
+   "unknown",
+   "unknown_capability"
+  ],
+  "helper_codegen.rb": [
+   "ASTRule",
+   "AST_all_of",
+   "AST_any_of",
+   "AST_block",
+   "AST_call",
+   "AST_comparison",
+   "AST_count_item",
+   "AST_counts",
+   "AST_dict_lambda_lookup",
+   "AST_enemy_requirement",
+   "AST_error",
+   "AST_f_string",
+   "AST_formatted_value",
+   "AST_game_specific_check",
+   "AST_generator_expression",
+   "AST_generic_helper",
+   "AST_generic_rule",
+   "AST_lambda",
+   "AST_location_rule_ref",
+   "AST_map",
+   "AST_max",
+   "AST_method_call",
+   "AST_min",
+   "AST_negate",
+   "AST_player_id",
+   "AST_prog_item_count",
+   "AST_region_attribute",
+   "AST_set",
+   "AST_set_comprehension",
+   "AST_setting_in",
+   "AST_slice",
+   "AST_starred",
+   "AST_subscript",
+   "AST_sum",
+   "AST_sum_of",
+   "AST_unknown",
+   "AST_unknown_capability",
+   "AST_weighted_count_true",
+   "AtLeast",
+   "Attribute",
+   "CountCheck",
+   "CountFromList",
+   "CountGroupUnique",
+   "CountItem",
+   "EntranceAccessRuleCall",
+   "Filtered",
+   "HasAllCounts",
+   "HasAnyCount",
+   "ItemCheck",
+   "MaxValue",
+   "MinValue",
+   "Name",
+   "NestedRule",
+   "StateMethod",
+   "WrapperRule",
+   "bool",
+   "unique_count",
+   "weighted_sum"
+  ],
+  "converter.rb_to_ast": [
+   "ASTRule",
+   "Arithmetic",
+   "Attribute",
+   "Conditional",
+   "Constant",
+   "CountCheck",
+   "CountFromList",
+   "CountGroup",
+   "CountGroupUnique",
+   "CountItem",
+   "EntranceAccessRuleCall",
+   "ItemCheck",
+   "List",
+   "MaxValue",
+   "MinValue",
+   "Name",
+   "NestedRule",
+   "OptionValue",
+   "StateMethod",
+   "Tuple",
+   "WorldAttribute",
+   "bool",
+   "unique_count",
+   "weighted_sum"
+  ]
+ },
+ "gap_ceiling": 159
+}

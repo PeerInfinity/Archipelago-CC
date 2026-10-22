@@ -79,10 +79,12 @@
  * which is the sharpest possible statement of what the abort buys.
  *
  * Usage:
- *   node scripts/procgen/plan-seedling-r6-shieldboss.mjs [--write]
+ *   node scripts/procgen/plan-seedling-r6-shieldboss.mjs            # plan + report
+ *   node scripts/procgen/plan-seedling-r6-shieldboss.mjs --write    # write both tapes
+ *   node scripts/procgen/plan-seedling-r6-shieldboss.mjs --check    # both committed tapes are byte-identical
  */
 
-import { writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -94,6 +96,24 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
 const WRITE = process.argv.includes('--write');
+const CHECK = process.argv.includes('--check');
+
+/**
+ * `--check`: the committed fixture must be BYTE-identical to what this plan
+ * derives today — the regenerate-r*-tapes form, so a drift prints
+ * `DIFFERS <name>:` and reds the `producer-checks` CI job.
+ */
+const checkBytes = (name, json) => {
+    const path = join(MODULE, 'fixtures', 'tapes', `${name}.json`);
+    const have = existsSync(path) ? readFileSync(path, 'utf8') : null;
+    if (have === json) {
+        console.log(`same ${name}: ${json.length} bytes`);
+        return true;
+    }
+    console.log(`DIFFERS ${name}: ${have === null ? 'the file does not exist'
+        : `${have.length} bytes committed vs ${json.length} derived`} — re-run with --write`);
+    return false;
+};
 
 const { createLevelRun } = await import(join(MODULE, 'levelRun.js'));
 const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
@@ -403,7 +423,10 @@ if (checks.some((k) => !k.ok)) {
     process.exit(1);
 }
 
-if (WRITE) {
+if (CHECK) {
+    const same = [tape, control].map((t) => checkBytes(t.name, `${serializeTape(t)}\n`));
+    if (!same.every(Boolean)) process.exit(1);
+} else if (WRITE) {
     for (const t of [tape, control]) {
         const path = join(MODULE, 'fixtures', 'tapes', `${t.name}.json`);
         writeFileSync(path, `${serializeTape(t)}\n`);

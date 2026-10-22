@@ -1,0 +1,132 @@
+{
+ "game": "seedling",
+ "name": "lights-stand",
+ "boot": {
+  "level": 69,
+  "x": 48,
+  "y": 128
+ },
+ "noclip": false,
+ "noDamage": false,
+ "noHazards": [],
+ "grants": [],
+ "persistence": [
+  {
+   "level": 5,
+   "tag": 0,
+   "note": ""
+  },
+  {
+   "level": 8,
+   "tag": 0,
+   "note": ""
+  },
+  {
+   "level": 8,
+   "tag": 1,
+   "note": ""
+  },
+  {
+   "level": 10,
+   "tag": 0,
+   "note": ""
+  }
+ ],
+ "equips": [],
+ "pins": [
+  "sound",
+  "dead_frames"
+ ],
+ "save": {
+  "totem_parts": [],
+  "keys": [],
+  "seal_parts": []
+ },
+ "rng": {
+  "seed": 418414780,
+  "split": false,
+  "cosmetic": 0,
+  "fp": 1763053598
+ },
+ "seam": {
+  "items": {
+   "hasSword": true,
+   "hasGhostSword": false,
+   "hasShield": false,
+   "hasFire": false,
+   "hasWand": false,
+   "hasFireWand": false,
+   "canSwim": false,
+   "hasSpear": false,
+   "hasDarkShield": false,
+   "hasDarkSuit": false,
+   "hasDarkSword": false,
+   "hasFeather": false,
+   "hasTorch": false
+  },
+  "beam": false,
+  "rock_set": false,
+  "hits_max": 3,
+  "first_use": false,
+  "extended": false,
+  "time": 8586,
+  "primary": 0,
+  "secondary": 0,
+  "grass_cut": 0,
+  "cutscene": [
+   false,
+   false,
+   false,
+   false
+  ],
+  "menu_state": 0,
+  "music": {
+   "set": "Room",
+   "index": 1
+  }
+ },
+ "tick_count": 700,
+ "inputs": [
+  {
+   "key": "up",
+   "from": 0,
+   "to": 28
+  },
+  {
+   "key": "primary",
+   "from": 30,
+   "to": 31
+  },
+  {
+   "key": "primary",
+   "from": 36,
+   "to": 37
+  },
+  {
+   "key": "right",
+   "from": 28,
+   "to": 40
+  },
+  {
+   "key": "primary",
+   "from": 42,
+   "to": 43
+  },
+  {
+   "key": "primary",
+   "from": 48,
+   "to": 49
+  },
+  {
+   "key": "primary",
+   "from": 54,
+   "to": 55
+  },
+  {
+   "key": "primary",
+   "from": 60,
+   "to": 61
+  }
+ ],
+ "tape_version": 8
+}

@@ -475,6 +475,12 @@ describe('who takes the box', () => {
          * fidelity WALLFLYER the body-and-death witness, `probe-seedling-wallflyer-mobiles.mjs`;
          * fidelity STATICLADDER the DarkTrap light-death witness, `probe-seedling-darktrap-mobiles.mjs`, and the
          * class-parametric chaser witness (K2's lavarunner), `probe-seedling-chaser-mobiles.mjs`;
+         * fidelity LIGHTS the L69 Lights fight's witness (the intro, the fliers, the shots, the report),
+         * `probe-seedling-lights.mjs`;
+         * fidelity L1516 L15's chest probe line (the edge column the game keeps Solid, the inner control),
+         * `probe-seedling-l15-chest-line.mjs`;
+         * fidelity L1516 L16's enclosed pit entered across a corner (and the solver's leg-206 solve),
+         * `probe-seedling-l16-corner-pit.mjs`;
          * hammer-phase C1 the static sword-kill witness, `probe-seedling-static-sword-mobiles.mjs`;
          * RULES l38-button-event the cross-room ButtonRoom write witness, `probe-seedling-cross-room-button.mjs`;
          * fidelity ENCOUNTERS2 the encounter per-tick witness, `probe-seedling-encounter-ticks.mjs`;
@@ -483,6 +489,7 @@ describe('who takes the box', () => {
          * RULES l37-fallrock-patch the delivered set's open L37 ↔ L38 corridor, `probe-seedling-l37-fallrock.mjs`;
          * RULES rock-remove the delivered set's open L74 / L39 / L29 rock rooms, `probe-seedling-rock-remove.mjs`;
          * RULES l32-rock-move the delivered set's moved L32 Bob-arena rock (walk-out without Fire, the pit with it), `probe-seedling-l32-rock-move.mjs`;
+         * RULES block-path L15's lock held by the block (Sword), shut without a weapon, the diagonal button, the swim, `probe-seedling-l15-block-path.mjs`;
          * fidelity BOMBPUSHER the lobber/Bomb witness, `probe-seedling-bombpusher.mjs` (its `--reuse` arm runs no browser);
          * fidelity BOMBBLAST the blast-on-a-body witness, `probe-seedling-bomb-blast-body.mjs` (its `--reuse` arm, likewise);
          * ci-skip-rules RULE 3 the full-tier differential, `check-seedling-bot-differential.mjs`, whose
@@ -490,7 +497,8 @@ describe('who takes the box', () => {
          * seedling-js IMPORT GUARD five browser probes the full `check-procgen-help.mjs` failed on the
          * import door, whose work (the take included) moved into `main()`: `probe-seedling-hold.mjs`,
          * `probe-seedling-pushblock-weapon.mjs`, `probe-seedling-u15-turret-mobiles.mjs`,
-         * `probe-seedling-u7-puncher-mobiles.mjs` and `probe-seedling-u9-shield-mobiles.mjs`.)
+         * `probe-seedling-u7-puncher-mobiles.mjs` and `probe-seedling-u9-shield-mobiles.mjs`;
+         * fidelity ROPE the `rope` verb's plans on the game, `probe-seedling-rope-verb.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -512,15 +520,19 @@ describe('who takes the box', () => {
             'probe-seedling-descent.mjs', 'probe-seedling-wasm-midroom-replan.mjs', 'probe-seedling-dash-window.mjs',
             'probe-seedling-restart-warp.mjs', 'probe-seedling-divergence-sweep.mjs', 'probe-seedling-slot-order.mjs',
             'probe-seedling-contact-divergence.mjs', 'probe-seedling-axe-phase.mjs', 'probe-seedling-arrival-solid.mjs',
-            'probe-seedling-restart-route.mjs', 'probe-seedling-restart-held-items.mjs', 'probe-seedling-arrival-escape.mjs',
+            'probe-seedling-restart-route.mjs', 'probe-seedling-walk-order.mjs', 'probe-seedling-restart-held-items.mjs', 'probe-seedling-arrival-escape.mjs',
             'probe-seedling-obstacle-events.mjs', 'probe-seedling-lethal-landings.mjs', 'probe-seedling-tentacle-mouth.mjs', 'probe-seedling-loop-restart.mjs', 'probe-seedling-bosslock-latch.mjs', 'probe-seedling-persistence-rebuild.mjs', 'probe-seedling-killlock.mjs', 'probe-seedling-iceturret-spear.mjs', 'probe-seedling-cleartag.mjs', 'probe-seedling-ladder2-phase.mjs', 'probe-seedling-bobsoldier-mobiles.mjs', 'probe-seedling-wallflyer-mobiles.mjs', 'probe-seedling-darktrap-mobiles.mjs', 'probe-seedling-chaser-mobiles.mjs', 'probe-seedling-static-sword-mobiles.mjs', 'probe-seedling-cross-room-button.mjs',
             'probe-seedling-encounter-ticks.mjs',
-            'probe-seedling-wand-mobiles.mjs', 'probe-seedling-l37-fallrock.mjs', 'probe-seedling-rock-remove.mjs', 'probe-seedling-l32-rock-move.mjs',
+            'probe-seedling-wand-mobiles.mjs', 'probe-seedling-l37-fallrock.mjs', 'probe-seedling-rock-remove.mjs', 'probe-seedling-l32-rock-move.mjs', 'probe-seedling-l15-block-path.mjs',
             'probe-seedling-bombpusher.mjs', 'probe-seedling-staged-hits.mjs', 'probe-seedling-seal-delivery.mjs',
             'probe-seedling-bomb-blast-body.mjs',
+            'probe-seedling-lights.mjs',
+            'probe-seedling-l15-chest-line.mjs', 'probe-seedling-l16-corner-pit.mjs',
             'check-seedling-bot-differential.mjs',
             'probe-seedling-hold.mjs', 'probe-seedling-pushblock-weapon.mjs', 'probe-seedling-u15-turret-mobiles.mjs',
-            'probe-seedling-u7-puncher-mobiles.mjs', 'probe-seedling-u9-shield-mobiles.mjs'];
+            'probe-seedling-u7-puncher-mobiles.mjs', 'probe-seedling-u9-shield-mobiles.mjs',
+            'probe-seedling-bosskills.mjs',
+            'probe-seedling-rope-verb.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

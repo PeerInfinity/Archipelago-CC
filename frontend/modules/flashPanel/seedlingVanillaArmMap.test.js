@@ -14,6 +14,8 @@ import { describe, expect, it } from 'vitest';
 
 import {
     atlasEventGoal,
+    BOSS_REPORT_REFUSAL,
+    BOUND_BOSS_FIGHTS,
     ENCOUNTER_REFUSAL,
     EVENT_GOAL_REFUSAL,
     runtimeEventsOf,
@@ -29,6 +31,8 @@ import { ATLAS_CHECK_PLAYER, ATLAS_ROOM_SUBSTRATE_ID } from '../seedlingDemo/see
 import { AP_ITEM_TYPE } from '../seedlingDemo/apPlacementRewriter.js';
 import { R7_GOAL_LEDGER } from '../seedlingDemo/r7Acceptance.js';
 import { loadWasmPlaybackEngine } from './seedlingWasmPlayback.js';
+import { withContactFidelity } from '../seedlingDemo/contactFidelity.js';
+import { clearTagVerbOf, solverGoalFor } from '../seedlingDemo/jsRuntimeSolver.js';
 
 const abs = (rel) => fileURLToPath(new URL(rel, import.meta.url));
 const readJson = (rel) => JSON.parse(readFileSync(abs(rel), 'utf8'));
@@ -320,4 +324,84 @@ describe('⛓ §5.18 — the JS runtime TAKES the vanilla arm; a load that binds
         expect(c.walkTo({ kind: 'location', name: LOADED.entries[0].location })).toBe(true);
         expect(held).toBe(1);
     });
+});
+
+describe('⛓ LIGHTS WIRING — leg 608: a wired boss kill is its fight\'s clear-tag while its switch is ON', () => {
+    const LIGHTS = LOADED.reports.find((r) => r.entityType === 'lightbosscontroller');
+    const resolve = (on) => withContactFidelity({ lightsBossFight: on },
+        () => resolveSeedlingAtlasGoal({ kind: 'location', name: LIGHTS.location }, MAP, {}));
+
+    it('BOUND_BOSS_FIGHTS is PINNED to the solver\'s tables: each verb registered with its switch ON, absent OFF', () => {
+        for (const [type, sw] of Object.entries(BOUND_BOSS_FIGHTS)) {
+            expect(withContactFidelity({ [sw]: false }, () => clearTagVerbOf(`solid:${type}`)), type).toEqual({ verb: null, registered: false });
+            expect(withContactFidelity({ [sw]: true }, () => clearTagVerbOf(`solid:${type}`).registered), type).toBe(true);
+            // and each names a boss row the vanilla arm reports (a stale row is a red, not a silent no-op)
+            expect(LOADED.reports.map((r) => r.entityType), type).toContain(type);
+        }
+    });
+
+    it('OFF: byte-identical — the boss kill stays refused by its old text', () => {
+        expect(resolve(false)).toEqual({ refused: `"${LIGHTS.location}" is a location the vanilla arm's map did NOT bind — `
+            + BOSS_REPORT_REFUSAL(LIGHTS) });
+        // the map still accounts for it as a refusal (entries + refused + events = every location)
+        expect(MAP.refused.map((r) => r.location)).toContain(LIGHTS.location);
+    });
+
+    it('the map\'s boss row: the report address and the body the DELIVERED room holds (only the listed fights)', () => {
+        // ⛓ BOSS WIRING — and fidelity BOSSKILLS' two (the rows are listed whatever the switches; only the resolve binds)
+        const byType = new Map(MAP.bosses.map((b) => [b.entityType, b]));
+        expect(MAP.bosses.length).toBe(3);
+        expect(byType.get('lightbosscontroller')).toEqual({ location: LIGHTS.location, level: 69, entityType: 'lightbosscontroller',
+            address: { level: 69, tag: 0 }, at: { x: 72, y: 72 } });
+        expect(byType.get('lavaboss')).toEqual({ location: 'Level 082 - King of Fire', level: 82, entityType: 'lavaboss',
+            address: { level: 82, tag: 0 }, at: { x: 112, y: 48 } });
+        expect(byType.get('tentaclebeast')).toEqual({ location: 'Level 057 - Tentacled Beast', level: 57,
+            entityType: 'tentaclebeast', address: { level: 57, tag: 0 }, at: { x: 80, y: 48 } });
+    });
+
+    it('ON: the event-shaped goal, and the solver mapping hands the clear-tag on the body', () => {
+        const r = resolve(true);
+        expect(r).toEqual({ goal: { kind: 'location', level: 69, tag: null, entityType: null, name: LIGHTS.location,
+            event: { eventId: null, tag: { level: 69, tag: 0 }, at: { x: 72, y: 72 }, obstacle: 'lightbosscontroller@72,72' } } });
+        const mapped = withContactFidelity({ lightsBossFight: true }, () => solverGoalFor(r.goal, { run: { level: 69 } }));
+        expect(mapped).toEqual({ goal: { kind: 'clear-tag', tag: { level: 69, tag: 0 }, at: { x: 72, y: 72 },
+            obstacle: 'lightbosscontroller@72,72' } });
+    });
+});
+
+/**
+ * ⛓ BOSS WIRING (slice `seedling-js-boss-wiring`) — legs 506/508 (`Level 057 - Tentacled Beast`) and 665/667
+ * (`Level 082 - King of Fire`): each boss kill is its fight's `clear-tag` while its switch is ON, and keeps its old
+ * refusal, byte for byte, while it is OFF. The goals are fidelity BOSSKILLS' own (`fidelityTentacleBeast.test.js`'s
+ * clear-tag on `tentaclebeast@80,48`; `lavaboss@112,48`, the body `fidelityKingOfFire.test.js`'s fight is built from).
+ *
+ * ── THE MUTATION LIST ──
+ *   m1 drop a row from BOUND_BOSS_FIGHTS   -> its "ON" row reds (the old refusal comes back).
+ *   m2 the row's switch name misspelt      -> the PIN row above reds (registered OFF / not ON).
+ *   m3 wiredBossOf ignores the switch      -> the "OFF" row reds (a goal where the refusal stood).
+ */
+describe('⛓ BOSS WIRING — legs 506/508 + 665/667: the Tentacled Beast and the King of Fire', () => {
+    const ROWS = [
+        { type: 'tentaclebeast', sw: 'tentacleBeastFight', level: 57, at: { x: 80, y: 48 } },
+        { type: 'lavaboss', sw: 'kingOfFireFight', level: 82, at: { x: 112, y: 48 } },
+    ];
+    for (const { type, sw, level, at } of ROWS) {
+        const report = LOADED.reports.find((r) => r.entityType === type);
+        const resolve = (on) => withContactFidelity({ [sw]: on },
+            () => resolveSeedlingAtlasGoal({ kind: 'location', name: report.location }, MAP, {}));
+
+        it(`${type} OFF: byte-identical — the old refusal`, () => {
+            expect(resolve(false)).toEqual({ refused: `"${report.location}" is a location the vanilla arm's map did NOT bind — `
+                + BOSS_REPORT_REFUSAL(report) });
+        });
+
+        it(`${type} ON: the event-shaped goal → the solver's clear-tag on the body`, () => {
+            const obstacle = `${type}@${at.x},${at.y}`;
+            const r = resolve(true);
+            expect(r).toEqual({ goal: { kind: 'location', level, tag: null, entityType: null, name: report.location,
+                event: { eventId: null, tag: { level, tag: 0 }, at, obstacle } } });
+            const mapped = withContactFidelity({ [sw]: true }, () => solverGoalFor(r.goal, { run: { level } }));
+            expect(mapped).toEqual({ goal: { kind: 'clear-tag', tag: { level, tag: 0 }, at, obstacle } });
+        });
+    }
 });

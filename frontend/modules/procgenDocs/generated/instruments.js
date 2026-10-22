@@ -59,7 +59,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 4,
+            "count": 5,
             "id": "ci"
         },
         {
@@ -104,12 +104,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 9,
+            "count": 11,
             "id": "make"
         },
         {
             "browser": 1,
-            "count": 7,
+            "count": 8,
             "id": "measure"
         },
         {
@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 81,
-            "count": 128,
+            "browser": 88,
+            "count": 135,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 432,
-        "browser": 146,
-        "cited": 227,
-        "files": 445,
-        "lineStyle": 13,
-        "withDocblock": 445,
-        "withFlags": 361
+        "blockStyle": 442,
+        "browser": 153,
+        "cited": 235,
+        "files": 456,
+        "lineStyle": 14,
+        "withDocblock": 456,
+        "withFlags": 373
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1469,7 +1469,9 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/census-seedling-sites.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "rendered"
+            ],
             "browser": false,
             "category": "census",
             "citedBy": [
@@ -4804,6 +4806,7 @@ export const INSTRUMENTS = frz({
             "category": "check",
             "citedBy": [
                 "docs/json/developer/procgen/concepts.md",
+                "docs/json/developer/procgen/maze.md",
                 "docs/json/developer/procgen/substrate-registry.md",
                 "docs/json/developer/procgen/text-adventure.md"
             ],
@@ -5214,6 +5217,35 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/check-worldgen-package-sidecars.mjs"
         },
         {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "ci",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "table"
+            ],
+            "file": "ci-expected-red.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "table"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "ci-expected-red — **A GATE BATTERY'S RED ARMS, JUDGED AGAINST THE NAMED TABLE OF EXPECTED REDS; EVERY OTHER RED FAILS THE JOB** (Seedling fidelity, slice GATESUBJ — D4).",
+            "path": "scripts/procgen/ci-expected-red.mjs"
+        },
+        {
             "argvHelpers": [
                 "arg",
                 "flag"
@@ -5224,6 +5256,7 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "audit",
+                "changed",
                 "host",
                 "json",
                 "plan",
@@ -5241,6 +5274,12 @@ export const INSTRUMENTS = frz({
                         "flag"
                     ],
                     "name": "audit"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "changed"
                 },
                 {
                     "how": [
@@ -5314,7 +5353,8 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
-                "arg"
+                "arg",
+                "porcelain"
             ],
             "browser": false,
             "category": "ci",
@@ -6796,6 +6836,66 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "make",
+            "citedBy": [],
+            "docblockStyle": "line",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "make-seedling-font.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling font maker — writes the glyph sheet behind the JS runtime's font seam (`seedlingEffectSkin.KEYS.font` = `seedling:font/default`, frame = char code − 32) from the GLYPHS table below.",
+            "path": "scripts/procgen/make-seedling-font.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "make",
+            "citedBy": [
+                "docs/json/developer/procgen/maze.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "make-seedling-playthrough-maze.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "quiet"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "The `seedling_playthrough_maze` preset: Seedling's PLAYTHROUGH atlas, restricted to a growing list of levels, projected into the MAZE substrate (tile-primitives Stage 2, session tile-primitives-stage2-l15).",
+            "path": "scripts/procgen/make-seedling-playthrough-maze.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "make",
             "citedBy": [
                 "docs/json/developer/procgen/gotchas.md",
                 "docs/json/developer/procgen/seedling-editor.md"
@@ -7053,6 +7153,73 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "measure-apworld-raw-view — **WHAT COUNTS AS \"TOO BIG\" FOR THE APWORLD HUB'S RAW VIEW, MEASURED IN A REAL BROWSER** (APWORLD EDITOR HUB slice H2; ⚖ user: *\"Or maybe this should be disabled if the data is too big.",
             "path": "scripts/procgen/measure-apworld-raw-view.mjs"
+        },
+        {
+            "argvHelpers": [
+                "argOf",
+                "seedDir"
+            ],
+            "browser": false,
+            "category": "measure",
+            "citedBy": [
+                "docs/json/developer/procgen/playback-and-debugging.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json",
+                "legs",
+                "log",
+                "penalties",
+                "preset",
+                "rules"
+            ],
+            "file": "measure-bot-route-orders.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "legs"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "log"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "penalties"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "preset"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "rules"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "measure-bot-route-orders — **WHAT ORDER SHOULD THE PLAYBACK BOT VISIT LOCATIONS IN?** Prices the bot's walk route under several orderings of the same sphere log, offline: no browser, no game.",
+            "path": "scripts/procgen/measure-bot-route-orders.mjs"
         },
         {
             "argvHelpers": [],
@@ -8362,9 +8529,17 @@ export const INSTRUMENTS = frz({
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r1-route.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8408,11 +8583,18 @@ export const INSTRUMENTS = frz({
             ],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "clears",
                 "reach"
             ],
             "file": "plan-seedling-r2-route.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8541,10 +8723,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "reach"
             ],
             "file": "plan-seedling-r3-route.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "startsWith"
@@ -8590,11 +8779,18 @@ export const INSTRUMENTS = frz({
             ],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "reach",
                 "survey"
             ],
             "file": "plan-seedling-r4-route.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "startsWith"
@@ -8665,11 +8861,18 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "read",
                 "write"
             ],
             "file": "plan-seedling-r5-bobboss.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8699,10 +8902,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "write"
             ],
             "file": "plan-seedling-r5-bosskey.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8726,10 +8936,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "write"
             ],
             "file": "plan-seedling-r5-conch.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8753,10 +8970,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "write"
             ],
             "file": "plan-seedling-r5-feather.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8780,10 +9004,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "write"
             ],
             "file": "plan-seedling-r5-karlore.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8807,6 +9038,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "only",
                 "record",
                 "win",
@@ -8814,6 +9046,12 @@ export const INSTRUMENTS = frz({
             ],
             "file": "plan-seedling-r5-l37-burn.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8837,10 +9075,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "write"
             ],
             "file": "plan-seedling-r5-l40-join.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8863,9 +9108,17 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r5-l40-part0.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8889,6 +9142,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "only",
                 "record",
                 "win",
@@ -8896,6 +9150,12 @@ export const INSTRUMENTS = frz({
             ],
             "file": "plan-seedling-r5-l40-part1.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8918,9 +9178,17 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r5-l40-part5.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8943,9 +9211,17 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r5-l41-part3.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -8980,9 +9256,17 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r5-l42-part4.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9011,9 +9295,17 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r5-l43-wand.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9037,10 +9329,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "write"
             ],
             "file": "plan-seedling-r5-l60-kill.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9064,10 +9363,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "write"
             ],
             "file": "plan-seedling-r5-shaft.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9091,10 +9397,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "write"
             ],
             "file": "plan-seedling-r5-swim.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9118,10 +9431,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "write"
             ],
             "file": "plan-seedling-r5-totem-entrance.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9145,10 +9465,17 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "write"
             ],
             "file": "plan-seedling-r5-waterfall.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9171,9 +9498,18 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check",
+                "write"
+            ],
             "file": "plan-seedling-r6-shieldboss.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9196,9 +9532,17 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r6-wblood.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9221,9 +9565,17 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r6-wdoor.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9246,9 +9598,17 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r6-wowl.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9277,9 +9637,17 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r6-wseed.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9302,9 +9670,17 @@ export const INSTRUMENTS = frz({
             "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
-            "documentedFlags": [],
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r6-wtalk.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -9914,8 +10290,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
-                "arg",
-                "sameTape"
+                "arg"
             ],
             "browser": false,
             "category": "plan",
@@ -10412,6 +10787,61 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-boot-reset — **TWO WINDOWS ON ONE PAGE, AND WHAT THE SECOND ONE INHERITS.**",
             "path": "scripts/procgen/probe-seedling-boot-reset.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-bosskills.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dir"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "file"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "witness"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-bosskills — ⛓⛓⛓ seedling-fidelity-bosskills D1/D2: THE KING OF FIRE (`LavaBoss`, L82) AND THE TENTACLED BEAST (L57), ASKED OF THE GAME TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-bosskills.mjs"
         },
         {
             "argvHelpers": [
@@ -11839,6 +12269,153 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "host",
+                "only",
+                "out"
+            ],
+            "file": "probe-seedling-l15-block-path.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L15 BLOCK PATH, ON THE GAME (rules `rules-block-path`).",
+            "path": "scripts/procgen/probe-seedling-l15-block-path.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "out"
+            ],
+            "file": "probe-seedling-l15-chest-line.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L15 CHEST PROBE LINE, ON THE GAME (fidelity L1516 D1/D2, `CONTACT_FIDELITY.chestProbeLineEnd`).",
+            "path": "scripts/procgen/probe-seedling-l15-chest-line.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "out"
+            ],
+            "file": "probe-seedling-l16-corner-pit.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L16 ENCLOSED PIT, ON THE GAME (fidelity L1516 D3, sweep leg 206 `level_16__r1c1 <- in_L15_144_16 -> exit:out_pit_8_3`).",
+            "path": "scripts/procgen/probe-seedling-l16-corner-pit.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
                 "out",
                 "wait-for-box"
             ],
@@ -12128,6 +12705,63 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-level-set-transport — the RECEIVER's half of the level-set delivery, driven in the built artifact.",
             "path": "scripts/procgen/probe-seedling-level-set-transport.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-lights.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "compare"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "file"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "frames"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "witness"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-lights — ⛓⛓⛓ seedling-fidelity-lights D1/D2: THE L69 LIGHTS FIGHT, ASKED OF THE GAME TICK BY SAMPLED TICK, and (with `--compare`) of the model at the same ticks.",
+            "path": "scripts/procgen/probe-seedling-lights.mjs"
         },
         {
             "argvHelpers": [
@@ -12918,6 +13552,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
+                "check",
                 "only",
                 "record",
                 "win",
@@ -12925,6 +13560,12 @@ export const INSTRUMENTS = frz({
             ],
             "file": "probe-seedling-r5-spinner.mjs",
             "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
                 {
                     "how": [
                         "includes"
@@ -13540,6 +14181,45 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling ROCKMOVE's \"Remove bundle\", ON THE GAME (rules `rules-rock-remove`).",
             "path": "scripts/procgen/probe-seedling-rock-remove.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-rope-verb.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-rope-verb — ⛓⛓⛓ seedling-fidelity-rope: THE SOLVER'S `rope` VERB (`CONTACT_FIDELITY.ropeCutVerb`), ITS PLANS PLAYED ON THE GAME.",
+            "path": "scripts/procgen/probe-seedling-rope-verb.mjs"
         },
         {
             "argvHelpers": [
@@ -14323,6 +15003,81 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-v8-seam — does the GAME honour a tape v8 `seam` block, and does its latch report back what the block declared?",
             "path": "scripts/procgen/probe-seedling-v8-seam.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "budget-s",
+                "expect",
+                "host",
+                "max-restarts",
+                "only",
+                "order",
+                "until"
+            ],
+            "file": "probe-seedling-walk-order.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "budget-s"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "expect"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "max-restarts"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "order"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "until"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling WALK ORDER (slice `bot-route-chooser`, ⚖ the user 2026-10-20: *\"the playback bot restarts the second dungeon twice because the sphere order says to collect some seals elsewhere first\"*) — the Playback Bot plays `seedling_playthrough` from the new game under a walk order (`playbackBot/walkOrder.js`) on the r…",
+            "path": "scripts/procgen/probe-seedling-walk-order.mjs"
         },
         {
             "argvHelpers": [
@@ -16226,7 +16981,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": false,
             "category": "replay",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
                 "every",
@@ -17262,7 +18019,14 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "stamp-seedling-vanilla-set.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
             "inheritedFlags": [
                 {
                     "from": "argvHelp.js",

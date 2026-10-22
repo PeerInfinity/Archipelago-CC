@@ -20,30 +20,30 @@
     },
     {
       "sphere": "0.3",
-      "location": "Level 017 - Chest",
-      "item": "Seal",
-      "level": 17
-    },
-    {
-      "sphere": "0.4",
       "location": "Level 086 - Chest",
       "item": "Seal",
       "level": 86
     },
     {
       "sphere": "1.1",
+      "location": "Level 017 - Chest",
+      "item": "Seal",
+      "level": 17
+    },
+    {
+      "sphere": "1.2",
       "location": "Level 019 - Boss Key 0",
       "item": "Red Key",
       "level": 19
     },
     {
-      "sphere": "1.2",
+      "sphere": "1.3",
       "location": "Level 019 - Shieldspire",
       "item": "Seal",
       "level": 19
     },
     {
-      "sphere": "1.3",
+      "sphere": "1.4",
       "location": "Level 036 - Chest",
       "item": "Seal",
       "level": 36

@@ -18,7 +18,8 @@
  *     ├─> Add evaluateRule method to snapshot for helper use
  *     ├─> Call helper function with (snapshot, staticData, ...args)
  *
- *   Output: Helper function result (boolean or any type)
+ *   Output: Helper function result (boolean or any type); `undefined` (undetermined, warned once per
+ *   name) when no helper of that name exists — the reachability loop reads it as not traversable
  *
  * State Method Execution (executeStateMethod):
  *   Input: Method name and arguments
@@ -87,7 +88,7 @@ function log(level, message, ...data) {
  * @param {StateManager} manager - The StateManager instance
  * @param {string} name - The helper function name
  * @param {...any} args - Arguments to pass to the helper function
- * @returns {any} Result from the helper function
+ * @returns {any} Result from the helper function, or `undefined` when no helper of that name exists
  */
 export function executeHelper(manager, name, ...args) {
   // Recursion protection: prevent getSnapshot from calling isLocationAccessible during helper execution
@@ -146,7 +147,14 @@ export function executeHelper(manager, name, ...args) {
       // New helper signature: (snapshot, staticData, ...args)
       return manager.helperFunctions[name](snapshot, staticData, ...args);
     }
-    return false; // Default return if no helper is found
+    // No helper of that name: undetermined (⚖ D3), never a silent false. An unknown Rule Builder
+    // kind also lands here, coerced to a helper call by ruleBuilderEvaluator's default branch.
+    const warned = manager._missingHelpersWarned || (manager._missingHelpersWarned = new Set());
+    if (!warned.has(name)) {
+      warned.add(name);
+      log('warn', `No helper '${name}' (rules.json helpers or game logic): undetermined`);
+    }
+    return undefined;
   } finally {
     // Restore the previous state
     manager._inHelperExecution = wasInHelperExecution;

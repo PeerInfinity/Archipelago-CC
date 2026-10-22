@@ -97,7 +97,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_STATUE_TALK_RANGE
         || !!process.env.SEEDLING_AXE_PRICED_CROSSING
         || !!process.env.SEEDLING_GUARD_APPROACH_STANCE || !!process.env.SEEDLING_COVERED_GOAL_REFUSAL
-        || !!process.env.SEEDLING_SHAKE_BAND_MOOT || !!process.env.SEEDLING_SPINNER_SWING_LOS)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_SHAKE_BAND_MOOT || !!process.env.SEEDLING_SPINNER_SWING_LOS
+        || !!process.env.SEEDLING_KING_OF_FIRE_FIGHT || !!process.env.SEEDLING_TENTACLE_BEAST_FIGHT)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -187,7 +188,22 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             apReportBosses: true,
             // ⛓ fidelity L40GUARD: `guardApproachStance` (D2), `coveredGoalRefusal` (D3), `shakeBandMoot` and
             // `spinnerSwingLineOfSight` (D4) shipped OFF; ⛓ planning-9's flip (⚖ user "Flip all four", 2026-10-19) turns them ON.
-            guardApproachStance: true, coveredGoalRefusal: true, shakeBandMoot: true, spinnerSwingLineOfSight: true });
+            guardApproachStance: true, coveredGoalRefusal: true, shakeBandMoot: true, spinnerSwingLineOfSight: true,
+            // ⛓ fidelity IGNEOUS D2: `igneousLava` (the type-31 tile crumbles to lava) shipped OFF;
+            // ⛓ planning-9's flip (⚖ user "Flip igneousLava ON", 2026-10-21) turns it ON.
+            igneousLava: true,
+            // ⛓ fidelity LIGHTS (wave 20): the L69 fight's model and verb, OFF.
+            lightsBossFight: false,
+            // ⛓ seedling-fidelity-bosskills: the King of Fire's and the Tentacled Beast's fights ship OFF.
+            kingOfFireFight: false, tentacleBeastFight: false,
+            // ⛓ fidelity ROPE (wave 22): the `rope` verb ships OFF.
+            // ⛓ planning-9's flip (⚖ user "Yes, flip it", 2026-10-21) turns `ropeCutVerb` ON.
+            ropeCutVerb: true,
+            // ⛓ fidelity L1516 D2: `chestProbeLineEnd` (a chest's probe line stops at px+11) shipped OFF;
+            // ⛓ fidelity L1516 D3: `enclosedPitCorner` (an enclosed pit entered across a corner) shipped OFF;
+            // ⛓ planning-9's flip (⚖ user "Flip chest / pit switches", 2026-10-21) turns both ON.
+            chestProbeLineEnd: true,
+            enclosedPitCorner: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

@@ -129,7 +129,7 @@ import {
     // ⛓⛓⛓ hammer-phase RE: the refuge's best-ETA cut (behind `REFUGE_ETA_CUT`, ON by default since the user's flip; a behaviour switch, see its file).
     REFUGE_ETA_CUT, REFUGE_ETA_CUT_COUNTS, refugeEtaCut,
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
-    fallDestination, PhysicsV2Error, playerBoxAt,
+    fallDestination, PhysicsV2Error, playerBoxAt, terrainProbeRect,
     HITBOX, WALK_SPEED,
     // ⛓⛓⛓ hammer-phase SF: the admissible strike floor's terrain read (`strikeEtaFloorOf`, behind `STRIKE_ETA_FLOOR`, OFF).
     SLIDING_SPEED, hazardFlagsFor,
@@ -162,10 +162,14 @@ import {
     createWandShot, stepWandShot, wandShotRect, MAGICAL_LOCK_OPEN_TICK_OFFSET,
     // ⛓⛓⛓ hammer-phase XC: the cross-pass escape cache's key spells its arguments as the digest spells the run.
     canonicalDigestText,
+    // ⛓ fidelity BOSSFORK D1b: the beast's "dying" length bounds the wait for its mouth (`awaitTentacleMouth`).
+    TENTACLE_BEAST_ANIMS, animTicks as tentacleAnimTicks,
 } from './solverView.js';
 import {
     bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
     AXE_UPDATE_OFFSET, axeVisitClock, phaseHazardCanReach, phaseHazardHit,
+    // ⛓ fidelity IGNEOUS D3: the type-31 tiles' clocks along a previewed walk.
+    igneousWalkDanger,
 } from './dangerMap.js';
 import { axeCanReach, axeHitsPlayer, SPINNING_AXE } from './hazards.js';
 import { planDash } from './mover.js';
@@ -192,6 +196,27 @@ import { AXE_PRICED_CROSSING, AXE_PRICED_TRACE, admitAxeCrossing } from './axePr
 // ⛓ seedling-fidelity-arrowlane D2 — the armed-lane crossing arm (`ARROW_LANE_CROSSING`, OFF).
 import { ARROW_LANE_CROSSING, ARROW_LANE_TRACE, LaneCrossingExcept, admitLaneCrossing, laneCrossingExcept,
     laneCrossingFor } from './arrowLaneCrossing.js';
+// ⛓⛓⛓ SEEDLING FIDELITY LIGHTS D3: the L69 fight's verb (`lights`, behind `CONTACT_FIDELITY.lightsBossFight`).
+import { execLights } from './lightsVerb.js';
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY LIGHTS D3 — **A ROW THAT EXISTS ONLY WHILE ITS SWITCH IS ON.** `obj[key]` reads `get()`'s
+ * answer (`undefined` while the switch is off, which is what an absent row reads), and the row is NON-ENUMERABLE, so
+ * every reader that ENUMERATES the table — the catalogue invariants, `R8_STRATEGY_EXECUTORS`' derivation rows, the
+ * pending list, the entity blocks' strategy columns — reads it byte for byte as it was. `frontierExecutor`'s and
+ * `clearTagExecutor`'s own rule ("the frozen table every other reader enumerates"), applied to a table row so that
+ * rules-2's `bossGoal` (`OBSTACLE_STRATEGIES['solid:<type>']` + `STRATEGY_EXECUTORS[verb]`) picks the fight up with
+ * the switch and never without it. ⚠ At a default flip the row becomes a plain one (and owes the derivation row, the
+ * catalogue's pending list and `KNOWN_STRATEGY_VERBS`).
+ */
+function switchGatedRow(table, key, get) {
+    Object.defineProperty(table, key, { get, enumerable: false });
+    return table;
+}
+// ⛓ seedling-fidelity-bosskills D2 — the King of Fire's policy (the run steps the fight, `lavaBoss.js`).
+import { LAVA_BOSS_POLICY_VARIANTS, createLavaBossPolicy, lavaBossPolicyStep } from './lavaBossPolicy.js';
+// ⛓ seedling-fidelity-bosskills D3 — the Tentacled Beast's policy (the run steps the fight, `tentacleBeast.js`).
+import { TENTACLE_BEAST_POLICY_VARIANTS, createTentacleBeastPolicy, tentacleBeastPolicyStep } from './tentacleBeastPolicy.js';
 
 /**
  * ⛓⛓⛓ THE TRANSIT PROBE'S OWN NON-VACUITY, AS A FUNCTION.
@@ -467,7 +492,7 @@ const fail = (m, opts) => { throw new SolverBotError(m, opts); };
  *   rather than guessed. Registering an executor is one row here; that is
  *   the "adds policies rather than restructuring" contract.
  */
-export const OBSTACLE_STRATEGIES = Object.freeze({
+export const OBSTACLE_STRATEGIES = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow({
     'solid:pushableblock': 'shove',
     'solid:pushableblockfire': 'shove',
     /**
@@ -650,7 +675,33 @@ export const OBSTACLE_STRATEGIES = Object.freeze({
      */
     'proximity-hazard:iceturret': 'brave',
     'pickup': 'collect',
-});
+    /**
+     * ⛓⛓⛓ seedling-fidelity-bosskills D2 — **THE KING OF FIRE IS FOUGHT, NOT ROUTED AROUND.** His 64x58 body seals
+     * the only corridor to L82's exit (`teleporter@144,0`): the route survey's steps 203/224 read *"Obstacle:
+     * solid:lavaboss … No strategy row exists"*. The verb (`execLavaBoss`) plays `lavaBossPolicy` against the run's
+     * own stepped fight (`lavaBoss.js`); with `CONTACT_FIDELITY.kingOfFireFight` off it resolves `held: false` and
+     * refuses by name.
+     */
+    // (`solid:lavaboss` → `lavaboss` is registered below, switch-gated on `kingOfFireFight`, as Lights' row is.)
+    /**
+     * ⛓⛓⛓ seedling-fidelity-bosskills D3 — **THE TENTACLED BEAST IS FOUGHT.** L57's only way on is its mouth
+     * (`createMouthEntrance`, a Teleporter to `tentacle_beast_mouth` once eight tentacles are gone); the route survey's
+     * step 125 read *"no strategy row for solid:tentaclebeast"*. The verb (`execTentacleBeast`) plays
+     * `tentacleBeastPolicy` against the run's own stepped fight (`tentacleBeast.js`), whose placements are the run's
+     * own draw stream; with `CONTACT_FIDELITY.tentacleBeastFight` off, or the stream's premises unmet, it resolves
+     * `held: false` and refuses by name.
+     */
+    // (`solid:tentaclebeast` → `tentaclebeast` is registered below, switch-gated on `tentacleBeastFight`.)
+}, 'solid:lightbosscontroller', () => (CONTACT_FIDELITY.lightsBossFight ? 'lights' : undefined)),
+'solid:lavaboss', () => (CONTACT_FIDELITY.kingOfFireFight ? 'lavaboss' : undefined)),
+'solid:tentaclebeast', () => (CONTACT_FIDELITY.tentacleBeastFight ? 'tentaclebeast' : undefined)),
+/**
+ * ⛓⛓⛓ fidelity ROPE (wave 22, `CONTACT_FIDELITY.ropeCutVerb`) — **A ROPE IS CUT, NOT ROUTED AROUND.** A `RopeStart`
+ * is `type = "Rope"`, which IS in the player's solids, so its span is a wall until a swing `hit()`s it and shrinks it
+ * to the pulley cell. The verb (`execRope`) is the PULL rung's stance and `execPull`, asked by a `clear-tag` on the
+ * rope's own tag or by a frontier corridor. OFF no row: the survey's L39 steps keep "No strategy row exists".
+ */
+'solid:rope', () => (CONTACT_FIDELITY.ropeCutVerb ? 'rope' : undefined)));
 
 /**
  * ⛓⛓⛓ PROCGEN PoC SLICE 3b — **THE SECOND SELECTION PATH, AS DATA.**
@@ -715,7 +766,7 @@ export const STRATEGY_REFINEMENTS = Object.freeze([
  * row that had to DERIVE its own parameters rather than bind a placement: a
  * leg spec carried `{presser, ticks}` and a live policy has to work out both.
  */
-export const STRATEGY_EXECUTORS = Object.freeze({
+export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow({
     collect: execCollect,
     chest: execChest,
     hold: execHold,
@@ -803,7 +854,23 @@ export const STRATEGY_EXECUTORS = Object.freeze({
      * `resolveBraveStrategy`.
      */
     brave: execBrave,
-});
+    /**
+     * ⛓⛓⛓ seedling-fidelity-bosskills D2 — the first executor that PLAYS A POLICY on forks to pick among its own
+     * variants before committing one: the King of Fire's fight is deterministic, so a variant that kills without a
+     * death on the fork kills on the run. See `execLavaBoss`.
+     */
+    // (`lavaboss` is registered below, switch-gated on `kingOfFireFight`.)
+    /** ⛓ bosskills D3 — the Tentacled Beast, the King of Fire's pattern (variants on forks). See `execTentacleBeast`. */
+    // (`tentaclebeast` is registered below, switch-gated on `tentacleBeastFight`.)
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY LIGHTS D3 — `lights` (registered below, switch-gated): the L69 fight as SORTIES and DODGES,
+     * each forecast on a clone of the run's own fight (`lightsVerb.js`), finished on {69,0} in `earnedClears`.
+     */
+}, 'lights', () => (CONTACT_FIDELITY.lightsBossFight ? execLights : undefined)),
+'lavaboss', () => (CONTACT_FIDELITY.kingOfFireFight ? execLavaBoss : undefined)),
+'tentaclebeast', () => (CONTACT_FIDELITY.tentacleBeastFight ? execTentacleBeast : undefined)),
+// ⛓ fidelity ROPE — `rope` (switch-gated on `ropeCutVerb`): the PULL rung's cut as a strategy. See `execRope`.
+'rope', () => (CONTACT_FIDELITY.ropeCutVerb ? execRope : undefined)));
 
 /**
  * ⛓⛓⛓ SEEDLING FIDELITY CRUSHER — **THE FRONTIER'S EXECUTOR LOOKUP**, and the
@@ -2721,6 +2788,12 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
     if (strategy === 'wand') return resolveWandStrategy(run, obstacle, contacts, blocked);
     // ⛓ fidelity SEALDOOR D2 — reached only while `sealDoorApproach` registers the verb (`frontierExecutor`).
     if (strategy === 'approach') return resolveApproachStrategy(run, obstacle, contacts, blocked);
+    // ⛓ bosskills D2 — the King of Fire (`held: false` while `kingOfFireFight` is off).
+    if (strategy === 'lavaboss') return resolveLavaBossStrategy(run, obstacle);
+    // ⛓ bosskills D3 — the Tentacled Beast (`held: false` while `tentacleBeastFight` is off or its stream is unmet).
+    if (strategy === 'tentaclebeast') return resolveTentacleBeastStrategy(run, obstacle);
+    // ⛓ fidelity ROPE — reached only while `ropeCutVerb` registers the verb (the row is switch-gated).
+    if (strategy === 'rope') return resolveRopeStrategy(run, obstacle, contacts, blocked);
     if (strategy !== 'hold') return null;
     return resolveHoldStrategy(run, obstacle, contacts, blocked);
 }
@@ -6561,6 +6634,80 @@ function dashRejectionSummary(dash) {
         }));
     if (dash.why) rows.push({ option: 'sword-dash', why: dash.why });
     return rows;
+}
+
+/**
+ * ⛓⛓ fidelity L1516 D3 — **AN ENCLOSED PIT IS ENTERED ACROSS A CORNER** (`CONTACT_FIDELITY.enclosedPitCorner`).
+ *
+ * `Player.getState` samples ONE point a tick, the cell holding (x, y + checkOffsetY) (`Player.as:679`), and the fall
+ * starts on the first tick it reads Pit (`set state`, `:720-724`; the lerp aims at THAT cell's centre). A pit whose four
+ * orthogonal neighbours are all pits (L16's (13,4), sweep leg 206's `out_pit_8_3`) is therefore entered only by a
+ * diagonal step that jumps the probe point across a corner it shares with a floor cell — between two ticks, both axes
+ * at once. Witnessed on the game (`probe-seedling-l16-corner-pit.mjs`, `fixtures/l1516-witness/`): from (240,96) the
+ * held up+left falls into (13,4) and lands in L17 at (136, …); 8 ticks of up first falls into (14,4) instead.
+ *
+ * `null` when the pit is not enclosed (every other pit: the goal's plan exemption already reaches it). Otherwise the
+ * diagonal floor cells (not pit, water or lava, and walkable), each with the move's two keys (toward the pit) and a
+ * stance on the probe's diagonal through the shared corner, 6 px inside the cell.
+ */
+export function enclosedPitCorners(world, pit) {
+    const pits = new Set((world.pitTiles ?? []).map((p) => `${p.tx},${p.ty}`));
+    const { tx, ty } = pit;
+    if (![[1, 0], [-1, 0], [0, 1], [0, -1]].every(([dx, dy]) => pits.has(`${tx + dx},${ty + dy}`))) return null;
+    const floor = new Map((world.walkableTiles ?? []).map((t) => [`${t.tx},${t.ty}`, t]));
+    const out = [];
+    for (const [dx, dy] of [[1, 1], [-1, 1], [1, -1], [-1, -1]]) {
+        const cell = floor.get(`${tx + dx},${ty + dy}`);
+        if (!cell || cell.t === 6 || cell.t === 1 || cell.t === 17) continue;
+        const corner = { x: dx > 0 ? pit.rect.right : pit.rect.x, y: dy > 0 ? pit.rect.bottom : pit.rect.y };
+        out.push({
+            dx, dy, cell: { tx: cell.tx, ty: cell.ty }, corner,
+            keys: [dx > 0 ? 'left' : 'right', dy > 0 ? 'up' : 'down'],
+            // the probe point is (x, y + 1): the stance's probe sits on the diagonal through the corner
+            stance: { x: corner.x + dx * 6, y: corner.y - 1 + dy * 6 },
+        });
+    }
+    return out;
+}
+
+/** The corner step's exact search bound: a pre-step of up to this many ticks on one axis, then the diagonal. */
+export const ENCLOSED_PIT_CORNER = Object.freeze({ maxPre: 12, maxDiagonal: 40 });
+
+/**
+ * The corner step, previewed with the run's own stepper (`run.previewStepper`): the held sets that make the FIRST fall
+ * aim at `pit`'s centre, or `null`. Pre-steps first (none, then 1..`maxPre` ticks of either key, then of nothing), the
+ * diagonal after, the shortest first. A preview that crosses a level, falls elsewhere or dies is not a candidate.
+ */
+export function enclosedPitCornerKeys(run, pit, cand) {
+    const centre = { x: pit.rect.x + pit.rect.w / 2, y: pit.rect.y + pit.rect.h / 2 };
+    const diag = new Set(cand.keys);
+    const pres = [[]];
+    for (let j = 1; j <= ENCLOSED_PIT_CORNER.maxPre; j += 1) {
+        for (const k of [...cand.keys, null]) pres.push(Array.from({ length: j }, () => (k ? new Set([k]) : new Set())));
+    }
+    for (const pre of pres) {
+        const step = run.previewStepper();
+        let st = { ...run.state };
+        const held = [];
+        let ok = null;
+        try {
+            for (let i = 0; i < pre.length + ENCLOSED_PIT_CORNER.maxDiagonal && ok === null; i += 1) {
+                const h = i < pre.length ? pre[i] : diag;
+                st = step(st, h);
+                held.push(h);
+                if (st.transition) break;
+                if (st.fall) {
+                    ok = st.fall.target.x === centre.x && st.fall.target.y === centre.y;
+                    break;
+                }
+            }
+        } catch (e) {
+            if (!(e instanceof PhysicsV2Error)) throw e;
+            continue;
+        }
+        if (ok) return { held, pre: pre.length };
+    }
+    return null;
 }
 
 /** The walk's own keys during a standing tail — empty, and named as such. */
@@ -15817,6 +15964,209 @@ export function shieldBossPressTick(window) {
  * for `destroy` would walk into a solid for 34 or 11 ticks (R6 §13.5, set by
  * the game's own first recording).
  */
+/**
+ * ⛓⛓⛓ seedling-fidelity-bosskills D2 — RESOLVE the `lavaboss` work order: L82's King of Fire on the frontier (or a
+ * clear-tag on his report `{82,0}`). The fight is the RUN's (`run.lavaBossFight`, `lavaBoss.js`), so the resolver only
+ * binds the body and names the stance; `held: false` (a refusal by name, never a silent pass) when the switch is off,
+ * when the run's bag cannot fight (the sword swings the reflect and the hits; the Dark Suit is the lava under the body,
+ * `Player.checkDrowning`'s `eff == 17 && !hasDarkSuit`), or when the body is gone.
+ */
+function resolveLavaBossStrategy(run, obstacle) {
+    const refuse = (option, why) => ({ strategy: 'lavaboss', held: false, boss: obstacle.id, rejected: [{ option, why }] });
+    if (!CONTACT_FIDELITY.kingOfFireFight) {
+        return refuse(`fight ${obstacle.id}`, 'the King of Fire\'s fight is not stepped with '
+            + '`CONTACT_FIDELITY.kingOfFireFight` off — the body is a wall the model does not fight');
+    }
+    const fight = run.entities('lavaBossFight');
+    if (!fight || fight.id !== obstacle.id) {
+        return refuse(`fight ${obstacle.id}`, `the run holds no King of Fire fight for ${obstacle.id} in level ${run.level}`);
+    }
+    if (fight.boss.removed) return refuse(`fight ${obstacle.id}`, `${obstacle.id} has already been removed`);
+    const inv = run.progress('inventory') ?? {};
+    if (!inv.hasSword || !inv.hasDarkSuit) {
+        return refuse(`fight ${obstacle.id}`, `the fight needs the sword (the reflect and the three hits) and the Dark `
+            + `Suit (the lava under the body); this run holds sword ${!!inv.hasSword}, Dark Suit ${!!inv.hasDarkSuit}`);
+    }
+    return {
+        strategy: 'lavaboss',
+        postCondition: 'removal',
+        target: { x: fight.boss.x, y: fight.boss.y },
+        boss: obstacle.id,
+        stance: { x: fight.boss.x, y: fight.boss.y + 80 },
+        rejected: [{
+            option: 'route around the body',
+            why: `${obstacle.id} is a 64x58 "LavaBoss" wall across the only corridor to the exit (teleporter@144,0); `
+                + 'it leaves the type list only at its removal, after the third counted hit, "die" and the fade',
+        }],
+    };
+}
+
+/**
+ * Executor: the `lavaboss` verb. ⛓ bosskills D2.
+ *
+ * The fight is deterministic and the run steps every part of it, so the policy (`lavaBossPolicy.js`) is played, not
+ * planned around: each variant (`LAVA_BOSS_POLICY_VARIANTS`) is played on a FORK of the run (`ctx.fork`, the live
+ * state replayed) until one removes the body with no death, and that one is played on the run. Without a fork the
+ * first variant is played on the run and judged by the same test. The completion is OBSERVED: the body's removal
+ * (`run.lavaBossFight.boss.removed`), one tick after it lands (the request is a render; `updateLists` drains it).
+ */
+const LAVA_BOSS_FIGHT_BOUND = 3000;
+function playLavaBossPolicy(r, perTick, params, ctx) {
+    const mem = createLavaBossPolicy(params);
+    const deathsBefore = (r.ledger('playerHits') ?? []).filter((h) => h.died).length;
+    let removedAt = null;
+    for (let spent = 0; spent <= LAVA_BOSS_FIGHT_BOUND; spent += 1) {
+        const view = r.entities('lavaBossFight');
+        if (view === null) return { ok: false, why: `the room (level ${r.level}) holds no fight any more`, spent };
+        if (view.boss.removed) {
+            if (removedAt === null) removedAt = spent;
+            if (spent > removedAt) return { ok: true, spent, report: view.report, log: mem.log };
+        }
+        const held = lavaBossPolicyStep(mem, { view, p: r.state, slashing: r.progress('slashInfo').state.slashing });
+        if (perTick) perTick.push(held);
+        const { transition } = r.advance(held);
+        if (transition) {
+            fail(`${ctx.what}: the run crossed from level ${transition.from_level} to ${transition.to_level} during the `
+                + 'King of Fire\'s fight. The fight is per visit.');
+        }
+        const deaths = (r.ledger('playerHits') ?? []).filter((h) => h.died).length;
+        if (deaths > deathsBefore) return { ok: false, why: `the player died at spent ${spent}`, spent };
+    }
+    return { ok: false, why: `the body is still in the world after ${LAVA_BOSS_FIGHT_BOUND} ticks`, spent: LAVA_BOSS_FIGHT_BOUND };
+}
+function execLavaBoss(run, perTick, resolved, ctx) {
+    if (resolved.held === false) {
+        throw new SolverRefusal(`${ctx.what}: lavaboss ${resolved.boss}: ${resolved.rejected?.[0]?.why ?? 'not held'}`,
+            { obstacle: { kind: 'solid', id: resolved.boss, tag: 'lavaboss' } });
+    }
+    const from = perTick.length;
+    const tried = [];
+    let params = LAVA_BOSS_POLICY_VARIANTS[0];
+    if (typeof ctx.fork === 'function') {
+        params = null;
+        for (const v of LAVA_BOSS_POLICY_VARIANTS) {
+            const f = ctx.fork();
+            if (!f) break;
+            const r = playLavaBossPolicy(f, null, v, ctx);
+            tried.push({ params: { ...v }, ok: r.ok, spent: r.spent, why: r.why ?? null });
+            if (r.ok) { params = v; break; }
+        }
+        if (params === null) {
+            throw new SolverRefusal(`${ctx.what}: no King of Fire policy variant kills ${resolved.boss} without a death `
+                + `on a fork of this run — ${tried.map((t) => `${JSON.stringify(t.params)}: ${t.why}`).join('; ')}`,
+            { obstacle: { kind: 'solid', id: resolved.boss, tag: 'lavaboss' } });
+        }
+    }
+    const r = playLavaBossPolicy(run, perTick, params, ctx);
+    if (!r.ok) {
+        throw new SolverRefusal(`${ctx.what}: the King of Fire policy ${JSON.stringify(params)} did not kill `
+            + `${resolved.boss}: ${r.why}`, { obstacle: { kind: 'solid', id: resolved.boss, tag: 'lavaboss' } });
+    }
+    return { verb: 'lavaboss', target: resolved.boss, from, ticks: perTick.length - from, params: { ...params },
+        tried, report: r.report };
+}
+
+/**
+ * ⛓⛓⛓ seedling-fidelity-bosskills D3 — RESOLVE the `tentaclebeast` work order: L57's Tentacled Beast (the clear-tag on
+ * its report `{57,0}`). The fight is the RUN's (`run.entities('tentacleBeastFight')`, `tentacleBeast.js`); `held:
+ * false` (a refusal by name) when the switch is off, when the run cannot fight (no sword: a tentacle takes one sword
+ * hit while it sits), when the beast is already dead, or when the run's draw stream cannot be the game's (the view's
+ * `streamRefusal`: a declared seed, `split: true`, and the room the only one built since the reseed).
+ */
+function resolveTentacleBeastStrategy(run, obstacle) {
+    const refuse = (option, why) => ({ strategy: 'tentaclebeast', held: false, boss: obstacle.id,
+        rejected: [{ option, why }] });
+    if (!CONTACT_FIDELITY.tentacleBeastFight) {
+        return refuse(`fight ${obstacle.id}`, 'the Tentacled Beast\'s fight is not stepped with '
+            + '`CONTACT_FIDELITY.tentacleBeastFight` off — the beast is a body the model does not fight');
+    }
+    const fight = run.entities('tentacleBeastFight');
+    if (!fight || fight.id !== obstacle.id) {
+        return refuse(`fight ${obstacle.id}`, `the run holds no Tentacled Beast fight for ${obstacle.id} in level ${run.level}`);
+    }
+    if (fight.beast.dead) return refuse(`fight ${obstacle.id}`, `${obstacle.id} is already dead`);
+    const inv = run.progress('inventory') ?? {};
+    if (!inv.hasSword) {
+        return refuse(`fight ${obstacle.id}`, 'a tentacle dies to one sword hit while it sits; this run holds no sword');
+    }
+    if (fight.streamRefusal) {
+        return refuse(`fight ${obstacle.id}`, `the tentacles' placements are \`Math.random()\` draws, and the run's `
+            + `stream ${fight.streamRefusal}`);
+    }
+    return {
+        strategy: 'tentaclebeast',
+        postCondition: 'mouth',
+        target: { x: fight.beast.x, y: fight.beast.y },
+        boss: obstacle.id,
+        rejected: [{
+            option: 'route around the beast',
+            why: `L57's only way on is ${obstacle.id}'s mouth, which the game adds only at the end of "dying", after `
+                + 'eight tentacles are gone',
+        }],
+    };
+}
+
+/**
+ * Executor: the `tentaclebeast` verb. ⛓ bosskills D3.
+ *
+ * The run steps the whole fight (the draws included), so the policy (`tentacleBeastPolicy.js`) is played, not planned
+ * around: each variant is played on a FORK of the run until one opens the mouth with no death, and that one is played
+ * on the run. The completion is OBSERVED: the mouth standing (`run.entities('tentacleBeastFight').mouth`), which the
+ * game adds at the end of "dying" — the report `{57,0}` is written at its start.
+ */
+const TENTACLE_BEAST_FIGHT_BOUND = 6000;
+function playTentacleBeastPolicy(r, perTick, params, ctx) {
+    const mem = createTentacleBeastPolicy(params);
+    const deathsBefore = (r.ledger('playerHits') ?? []).filter((h) => h.died).length;
+    for (let spent = 0; spent <= TENTACLE_BEAST_FIGHT_BOUND; spent += 1) {
+        const view = r.entities('tentacleBeastFight');
+        if (view === null) return { ok: false, why: `the room (level ${r.level}) holds no fight any more`, spent };
+        if (view.mouth) return { ok: true, spent, report: view.report, log: mem.log };
+        const held = tentacleBeastPolicyStep(mem, { view, p: r.state, slashing: r.progress('slashInfo').state.slashing });
+        if (perTick) perTick.push(held);
+        const { transition } = r.advance(held);
+        if (transition) {
+            fail(`${ctx.what}: the run crossed from level ${transition.from_level} to ${transition.to_level} during the `
+                + 'Tentacled Beast\'s fight. The fight is per visit.');
+        }
+        const deaths = (r.ledger('playerHits') ?? []).filter((h) => h.died).length;
+        if (deaths > deathsBefore) return { ok: false, why: `the player died at spent ${spent}`, spent };
+    }
+    return { ok: false, why: `the mouth is not open after ${TENTACLE_BEAST_FIGHT_BOUND} ticks`, spent: TENTACLE_BEAST_FIGHT_BOUND };
+}
+function execTentacleBeast(run, perTick, resolved, ctx) {
+    const obstacle = { kind: 'solid', id: resolved.boss, tag: 'tentaclebeast' };
+    if (resolved.held === false) {
+        throw new SolverRefusal(`${ctx.what}: tentaclebeast ${resolved.boss}: ${resolved.rejected?.[0]?.why ?? 'not held'}`,
+            { obstacle });
+    }
+    const from = perTick.length;
+    const tried = [];
+    let params = TENTACLE_BEAST_POLICY_VARIANTS[0];
+    if (typeof ctx.fork === 'function') {
+        params = null;
+        for (const v of TENTACLE_BEAST_POLICY_VARIANTS) {
+            const f = ctx.fork();
+            if (!f) break;
+            const r = playTentacleBeastPolicy(f, null, v, ctx);
+            tried.push({ params: { ...v }, ok: r.ok, spent: r.spent, why: r.why ?? null });
+            if (r.ok) { params = v; break; }
+        }
+        if (params === null) {
+            throw new SolverRefusal(`${ctx.what}: no Tentacled Beast policy variant opens the mouth of ${resolved.boss} `
+                + `without a death on a fork of this run — ${tried.map((t) => `${JSON.stringify(t.params)}: ${t.why}`).join('; ')}`,
+            { obstacle });
+        }
+    }
+    const r = playTentacleBeastPolicy(run, perTick, params, ctx);
+    if (!r.ok) {
+        throw new SolverRefusal(`${ctx.what}: the Tentacled Beast policy ${JSON.stringify(params)} did not open the `
+            + `mouth of ${resolved.boss}: ${r.why}`, { obstacle });
+    }
+    return { verb: 'tentaclebeast', target: resolved.boss, from, ticks: perTick.length - from, params: { ...params },
+        tried, report: r.report };
+}
+
 function execFight(run, perTick, resolved, ctx) {
     const id = resolved.boss;
     const UP = new Set(['up']);
@@ -17180,6 +17530,95 @@ function execPull(run, perTick, resolved, ctx) {
         + '`set activate` publishes its group on the swing that lands; a pull that '
         + `latches nothing leaves [${resolved.traps.join(', ')}] firing, so the corridor `
         + 'this rung promised does not exist.');
+}
+
+/**
+ * The PULL rung's stance admission, named so the `rope` verb asks the same one: a swing stance stands in no static
+ * danger volume (the map AVOID forbids). ⛓ fidelity ROPE: hoisted from the rung unchanged.
+ */
+const pullStanceAdmit = (run) => (c) => !dangerVolumes(run, 0).some((v) => rectsOverlapLocal(
+    playerBoxAt(c.x, c.y), v.rect));
+
+/**
+ * ⛓⛓⛓ fidelity ROPE (wave 22, behind `CONTACT_FIDELITY.ropeCutVerb`) — RESOLVE the `rope` work order: a
+ * `RopeStart` cut ON PURPOSE, from a `clear-tag` on its own tag (rules-2's `rules-rope-events`: `{16,0}`
+ * `rope@32,16`, `{28,0}` `rope@160,64`) or from a frontier corridor its span walls (L39's `rope@96,384`).
+ *
+ * ⛔ NO SECOND CUT. The stance is the PULL rung's (`deriveSwingStance` with `pullStanceAdmit`), the act is
+ * `execPull` (aim, swing, the group LATCHED on the live run), and the cut itself is the run's `pullRope`
+ * (`Player.genericHit` → `RopeStart.hit()`: shrink to the pulley cell, `setPersistence(tag, false)`, publish `t`).
+ *
+ * `held: false`, named, when the run cannot cut it:
+ *   · the rope is ALREADY pulled (this visit, or `check()` re-pulled it at the build): `hit()` is entirely inside
+ *     `if (!activate)`, and what stands is the one-cell pulley Solid, which no verb removes;
+ *   · the `primary` slot is not the SWORD — the pull this verb derives is `execPull`'s sword swing. The game also cuts
+ *     with the Spear's thrust and with Fire (`Player.as:989,1032`, both `genericHit`); neither arm is driven here.
+ *   · the rope publishes no group (`ropePublish` null): `execPull`'s post-condition is the group's latch.
+ */
+function resolveRopeStrategy(run, obstacle, contacts, blocked = []) {
+    const rope = (run.world.solids ?? []).find((s) => s.ropeId === obstacle.id);
+    if (!rope) return null;
+    const cannot = (why) => ({ strategy: 'rope', held: false, rope: obstacle.id,
+        rejected: [{ option: `rope ${obstacle.id}`, why }] });
+    if ((run.entities('pulledRopes') ?? new Set()).has(rope.ropeId)) {
+        return cannot(`${rope.ropeId} is already pulled${rope.bootPulled ? ' (its tag is cleared, so '
+            + '`RopeStart.check()` re-pulled it at the build)' : ' this visit'}: \`hit()\` is entirely inside `
+            + '`if (!activate)`, and what stands is the one-cell pulley Solid (`setHitbox(16, 16, 8, 8)`), which no '
+            + 'verb removes');
+    }
+    const weapon = run.progress('primaryWeapon');
+    if (weapon !== 'sword') {
+        return cannot(`the run's \`primary\` slot ${weapon === null ? 'holds NOTHING' : `fires \`${weapon}\``} — `
+            + 'the cut this verb drives is the PULL rung\'s SWORD swing (`execPull`). The game also cuts with the '
+            + 'Spear\'s thrust and with Fire (`Player.as:989,1032` → `genericHit` → `RopeStart.hit()`); neither arm '
+            + 'is driven by this verb');
+    }
+    // `activators.ropePublish`'s own test: a rope publishes its `t` when `t >= 0`.
+    const pub = rope.ropeT >= 0 ? { group: rope.ropeT } : null;
+    if (!pub) {
+        return cannot(`${rope.ropeId} publishes no group (t=${rope.ropeT ?? -1}), and \`execPull\`'s `
+            + 'post-condition is that group\'s latch on the live run');
+    }
+    const { stance, discharged } = deriveSwingStance(run, { rect: rope.rect, id: rope.ropeId }, contacts, blocked,
+        ({ candidates, outOfReach, noRect, unsafe }) => `solverBot: no REACHABLE stance for a swing at `
+            + `${rope.ropeId} in level ${run.level} — ${candidates.length} cell(s) put the slash rect on the rope, `
+            + `${unsafe} of them inside a danger volume, and none of the rest plans a corridor from `
+            + `(${run.state.x},${run.state.y}); ${outOfReach} more were beyond SLASH_REACH (${SLASH_REACH} px) and `
+            + `${noRect} were in reach with the rect pointing elsewhere.`,
+        pullStanceAdmit(run));
+    const group = pub.group;
+    return {
+        strategy: 'rope',
+        rope: rope.ropeId,
+        group,
+        traps: (run.world.arrowTraps ?? []).filter((x) => x.t === group).map((x) => x.id),
+        target: rope.rect,
+        stance,
+        discharged,
+        rejected: hypothesisRejection(discharged),
+    };
+}
+
+/**
+ * Executor: the `rope` verb — `execPull` (the PULL rung's aim, swing and latch), then the cut's own write asserted
+ * on the run: its `ropePulls` row. A `clear-tag` then finishes on `earnedClears` as every clear-tag does.
+ */
+function execRope(run, perTick, resolved, ctx) {
+    if (resolved.held === false) {
+        throw new SolverRefusal(`${ctx.what}: ${resolved.rope} cannot be cut by this run — `
+            + `${resolved.rejected[0].why}`, { obstacle: { kind: 'solid', id: resolved.rope } });
+    }
+    const record = execPull(run, perTick, {
+        rope: resolved.rope, group: resolved.group, traps: resolved.traps,
+        target: resolved.target, stance: resolved.stance,
+    }, { what: ctx.what });
+    const pulled = (run.ledger('ropePulls') ?? []).find((p) => p.id === resolved.rope) ?? null;
+    if (!pulled) {
+        throw new SolverRefusal(`${ctx.what}: group t=${resolved.group} latched, and the run's \`ropePulls\` holds `
+            + `no pull of ${resolved.rope} — the latch came from another publisher, so the rope's own tag is unwritten`,
+        { obstacle: { kind: 'solid', id: resolved.rope } });
+    }
+    return { ...record, verb: 'rope', flag: { ...pulled.flag }, pulledAt: pulled.t };
 }
 
 /**
@@ -19579,6 +20018,36 @@ function solveSegmentUnder({
         solverEquips.push({ t: run.ticksCompleted, slot });
     };
     /**
+     * ⛓⛓ fidelity BOSSFORK D1b (`CONTACT_FIDELITY.tentacleBeastFight`; OFF the run has no fight and this returns at
+     * once) — **A MOUTH STILL TO OPEN.** The beast's report lands as its "dying" starts, and the mouth Teleporter only
+     * when "dying" ends (`TentacleBeast.as`; `tentacleBeast.js` pushes `mouth`). The `tentaclebeast` verb itself plays
+     * through it, but a reach-exit at the mouth's cell asked inside that window found no teleporter and refused: the JS
+     * page's continue request after the clear-tag (sweep leg 505, run 39659335148, request 1 at t2866: the report at
+     * t2864). The walk now idles until the run builds the mouth, bounded by the anim, and refuses by name on a crossing,
+     * a hit or the bound (an idle that takes damage is not a plan).
+     */
+    const awaitTentacleMouth = (goal) => {
+        const f = CONTACT_FIDELITY.tentacleBeastFight ? run.entities('tentacleBeastFight') : null;
+        if (!f || f.mouth || !f.beast.dead || f.beast.anim !== 'dying') return;
+        if (goal.exit.x !== f.beast.x - 8 || goal.exit.y !== f.beast.y - 8) return;
+        const what = `solverBot(${name}) reach-exit (${goal.exit.x},${goal.exit.y}): ${f.id}'s mouth`;
+        const bound = tentacleAnimTicks(...TENTACLE_BEAST_ANIMS.dying);
+        const hits = (run.ledger('playerHits') ?? []).length;
+        const idle = new Set();
+        for (let waited = 0; waited <= bound; waited += 1) {
+            if (run.entities('tentacleBeastFight')?.mouth) return;
+            perTick.push(idle);
+            const { transition } = run.advance(idle);
+            if (transition) {
+                refuse(`${what}: the run crossed to level ${transition.to_level} while the beast was dying`, { goal });
+            }
+            if ((run.ledger('playerHits') ?? []).length > hits) {
+                refuse(`${what}: the player was hit while waiting for the mouth (the beast is "dying")`, { goal });
+            }
+        }
+        refuse(`${what} is not open ${bound + 1} ticks into "dying"`, { goal });
+    };
+    /**
      * ⛓ hammer-phase B3c — the replay's two other inputs, shared by the fork and the rewind: this segment's apitem
      * takes (tape index, `apItemsTaken`) and the clock check at the end of the caller's prefix.
      */
@@ -20147,6 +20616,12 @@ function solveSegmentUnder({
                 const c = withoutSources(ceremonyBesideLiveBody(run, s, corpses.at(s.tick)), except);
                 if (c.danger) return { x: s.x, y: s.y, tick: s.tick, ...c };
             }
+        }
+        // ⛓ fidelity IGNEOUS D3: the type-31 tiles' clocks along THIS walk (the dwell breaks a tile; OFF: null).
+        const igneous = igneousWalkDanger(run, samples);
+        if (igneous) {
+            const ig = withoutSources(igneous, except);
+            if (ig.danger) return { ...igneous, ...ig };
         }
         return null;
     };
@@ -21372,8 +21847,7 @@ function solveSegmentUnder({
                             + 'reach with the rect pointing elsewhere.',
                         // ⛔ THE STANCE IS STOOD IN FOR A SWING, so it must be out of every
                         // static danger volume — the same map AVOID forbids.
-                        (c) => !dangerVolumes(run, 0).some((v) => rectsOverlapLocal(
-                            playerBoxAt(c.x, c.y), v.rect)));
+                        pullStanceAdmit(run));
                 } catch (e) {
                     if (!(e instanceof SolverRefusal)) throw e;
                     pullWhy = `${ropeId} silences [${silencer.traps.join(', ')}] (group `
@@ -23763,8 +24237,12 @@ function solveSegmentUnder({
         const parsed = goal.obstacle ? /^([a-z0-9_]+)@(-?\d+),(-?\d+)$/i.exec(goal.obstacle) : null;
         const solidAt = (s) => (s.x === goal.at.x && s.y === goal.at.y)
             || (s.rect?.x === goal.at.x && s.rect?.y === goal.at.y);
+        // ⛓ bosskills D3: the Tentacled Beast is a `pixelmask` Solid (`world.pixelmasks`, never `world.solids`), so a
+        // clear-tag on its report binds it there; its row's resolver answers the switch (`held: false` OFF).
         const solid = (run.world.solids ?? []).find((s) => solidAt(s)
-            && (!parsed || s.tag === parsed[1])) ?? null;
+            && (!parsed || s.tag === parsed[1]))
+            ?? (parsed?.[1] === 'tentaclebeast'
+                ? (run.world.pixelmasks ?? []).find((s) => solidAt(s) && s.tag === 'tentaclebeast') ?? null : null);
         const cls = parsed?.[1] ?? solid?.tag ?? null;
         const id = `${cls ?? '?'}@${goal.at.x},${goal.at.y}`;
         const whatCT = `solverBot(${name}) clear-tag {${flag.level},${flag.tag}} ${id}`;
@@ -23790,8 +24268,20 @@ function solveSegmentUnder({
                 + `${flag.level}'s, and only that level's own world holds the obstacle. The macro layer `
                 + 'owes the crossing first.');
         }
+        /**
+         * ⛓ fidelity ROPE (behind `CONTACT_FIDELITY.ropeCutVerb`) — **A CUT IS NO `earnedClears` ROW.** `pullRope`
+         * banks the rope's flag for the next build (`pendingEarnedClears`) and appends a `ropePulls` row carrying it,
+         * and `levelRun.earnedClearsNow` has no rope arm (measured: L16's and L28's cuts leave it empty). So a rope's
+         * clear-tag finishes on the run's own `ropePulls` row for this flag, stamped AT the write (`hit()` runs
+         * `setPersistence(tag, false)`), which `clearTagLanded`'s generic arm reads as "the run is past its tick".
+         */
+        const ropeWritten = () => {
+            if (!(CONTACT_FIDELITY.ropeCutVerb && cls === 'rope')) return null;
+            const p = (run.ledger('ropePulls') ?? []).find((r) => r.flag?.level === flag.level && r.flag?.tag === flag.tag);
+            return p ? { level: flag.level, tag: flag.tag, by: p.id, t: p.t } : null;
+        };
         const written = () => run.ledger('earnedClears')
-            .find((c) => c.level === flag.level && c.tag === flag.tag) ?? null;
+            .find((c) => c.level === flag.level && c.tag === flag.tag) ?? ropeWritten() ?? null;
         /** The game has written it (`clearTagLanded`). */
         const landed = () => clearTagLanded(run, written(), id);
         const done = (arm, extra = {}) => {
@@ -23975,6 +24465,48 @@ function solveSegmentUnder({
                     + `only writer of its tag: no walk clears {${flag.level},${flag.tag}}`);
             }
         }
+        /**
+         * ⛓⛓⛓ fidelity LIGHTS D3 (behind `CONTACT_FIDELITY.lightsBossFight`) — **THE LIGHTS CONTROLLER IS NO SOLID.**
+         * `LightBossController` is a bare `Entity` (the model's `notSolid`), so `world.solids` never holds it and the
+         * arm below would call {69,0} `already-clear` with the fight never fought. ON the world's own roster binds it
+         * (`lightsControllers`, a CLEARED row is the game's `check()` → `endState()`: really `already-clear`), and the
+         * verb is the table's (`lights`, `lightsVerb.execLights`), finished on the same ledger as every clear-tag.
+         */
+        const lightsRow = CONTACT_FIDELITY.lightsBossFight && cls === 'lightbosscontroller' && !solid
+            ? (run.world.lightsControllers ?? []).find((c) => c.id === id) ?? null : null;
+        if (lightsRow && lightsRow.cleared) {
+            done('already-clear', { why: `${id}'s tag is cleared at the build: \`check()\` ran \`endState()\` (the exit `
+                + 'Teleporter, no intro, no totem, no fliers) — the boot\'s persistence holds the report' });
+            return;
+        }
+        if (lightsRow) {
+            const verb = OBSTACLE_STRATEGIES[`solid:${cls}`];
+            seeRow({
+                tick: perTick.length,
+                saw: saw(),
+                goal: { kind: goal.kind, tag: { ...flag }, at: { x: goal.at.x, y: goal.at.y } },
+                obstacle: { kind: 'solid', id },
+                strategy: { verb },
+                rejected: [],
+                keys: [],
+            });
+            const record = STRATEGY_EXECUTORS[verb](run, perTick, { strategy: verb, obstacle: { kind: 'solid', tag: cls, id } },
+                { walkTo, goal, what: `${whatCT} -> ${verb}`, refuse: (reason, why) => refuseCT(reason, why) });
+            const waited = waitForWrite(`'${verb}' ran (${JSON.stringify(record).slice(0, 160)})`);
+            done('verb', { strategy: verb, waited, ...record });
+            return;
+        }
+        /**
+         * ⛓ fidelity ROPE (behind `CONTACT_FIDELITY.ropeCutVerb`) — **A CUT ROPE STILL STANDS.** `RopeStart.check()`
+         * re-hits a rope whose tag is cleared (`:31-38`), and `hit()` SHRINKS it to the pulley cell rather than removing
+         * it, so `world.solids` holds it and the arm below would not call it `already-clear`. The build's `bootPulled`
+         * is that `check()`: the boot's persistence holds the flag cleared, which is the game's own `already-clear`.
+         */
+        if (CONTACT_FIDELITY.ropeCutVerb && cls === 'rope' && solid?.ropeId && solid.bootPulled === true) {
+            done('already-clear', { why: `${solid.ropeId}'s tag is cleared at the build: \`check()\` re-pulled it `
+                + '(shrunk to the pulley cell, its group re-published) — the boot\'s persistence holds the cut' });
+            return;
+        }
         if (!solid && !watcher) {
             done('already-clear', { why: `no ${cls ?? 'solid'} stands at (${goal.at.x},${goal.at.y}) in level `
                 + `${run.level}'s live world and the ledger is silent: the build left it out, which is the `
@@ -24046,6 +24578,10 @@ function solveSegmentUnder({
         const record = clearTagExecutor(verb)(run, perTick, resolved, {
             maxTicksPerTarget, economies, dashMode, what: `${whatCT} -> ${verb}`,
             before, walkTo, goal, equip, rewind,
+            // ⛓ fidelity BOSSFORK D1: the segment's own fork (`forkRun`, above; null without one), as the frontier arm
+            // passes it — `execLavaBoss` / `execTentacleBeast` try their policy variants on it. No other clear-tag verb
+            // reads `ctx.fork` (`bait` is the frontier's only), so a verb that does not fight a boss is unchanged.
+            fork,
         });
         for (const c of resolved.exempt ?? []) exemptions.add(c);
         // ⛓ fidelity WATCHERTALK D2: the talk is certified by the run's own `watcherTalks` row for this flag.
@@ -24117,6 +24653,65 @@ function solveSegmentUnder({
                 });
             }
             const crossTo = { level: fall.to_level, pit, arrival: { ...fall.ctor } };
+            // ⛓⛓ fidelity L1516 D3: an ENCLOSED pit (`enclosedPitCorners`) is entered across a corner. OFF, or any
+            // pit with a non-pit orthogonal neighbour: the walk below, byte-identical.
+            // ⚠ Only with a diagonal floor cell, and only from OUTSIDE the pit's cell: a fall that lands the player in
+            // the pit already (L84 (2,2), sweep leg 671, from the L83 pit) is the walk's, as before.
+            const corners = CONTACT_FIDELITY.enclosedPitCorner ? enclosedPitCorners(run.world, pit) : null;
+            const inPit = rectsOverlap(terrainProbeRect(run.state.x, run.state.y), pit.rect);
+            if (corners && corners.length > 0 && !inPit) {
+                const near = corners.slice().sort((a, b) => Math.hypot(a.stance.x - run.state.x, a.stance.y - run.state.y)
+                    - Math.hypot(b.stance.x - run.state.x, b.stance.y - run.state.y));
+                const cand = near[0];
+                walkTo(goal, cand.stance, { what: `${whatPit} corner (${cand.cell.tx},${cand.cell.ty}) stance` });
+                const plan = enclosedPitCornerKeys(run, pit, cand);
+                if (!plan) {
+                    refuse(`${whatPit}: from the corner stance (${run.state.x},${run.state.y}) in (${cand.cell.tx},`
+                        + `${cand.cell.ty}) no pre-step of <= ${ENCLOSED_PIT_CORNER.maxPre} ticks and diagonal `
+                        + `[${cand.keys.join('+')}] falls into the pit before a neighbour.`,
+                    { goal, obstacle: { kind: 'enclosed-pit', id: `pit@${tx},${ty}` } });
+                }
+                const hits0 = (run.ledger('playerHits') ?? []).length;
+                let edge = null;
+                for (const h of plan.held) {
+                    perTick.push(h);
+                    const r = run.advance(h);
+                    if (r.transition) { edge = r.transition; break; }
+                    if (run.state.fall) break;
+                }
+                const fellAt = run.state.fall?.target ?? null;
+                if (!edge && !(fellAt && fellAt.x === pit.rect.x + pit.rect.w / 2 && fellAt.y === pit.rect.y + pit.rect.h / 2)) {
+                    fail(`${whatPit}: the corner step previewed a fall into the pit and the run did not take it `
+                        + `(fall ${JSON.stringify(fellAt)}) — the preview is not this run.`);
+                }
+                if ((run.ledger('playerHits') ?? []).length !== hits0) {
+                    refuse(`${whatPit}: the corner step took a hit the preview did not price.`,
+                        { goal, obstacle: { kind: 'enclosed-pit', id: `pit@${tx},${ty}` } });
+                }
+                // the fall-out: no input reaches the player (`checkFallingInPit`), so nothing is pressed
+                while (!edge && run.state.fall) {
+                    perTick.push(NO_HELD_PREVIEW);
+                    const r = run.advance(NO_HELD_PREVIEW);
+                    if (r.transition) edge = r.transition;
+                }
+                if (!edge || edge.to_level !== fall.to_level) {
+                    fail(`${whatPit}: the corner fall did not cross to level ${fall.to_level} (${JSON.stringify(edge)}).`);
+                }
+                const swapsBefore = run.transitions.length;
+                const coast = coastThroughTransport(run, perTick, maxTicksPerTarget, `${whatPit}->L${fall.to_level}`);
+                const swaps = run.transitions.slice(swapsBefore);
+                records.push({
+                    goal: 'reach-pit', to: fall.to_level, t: edge.t, coast,
+                    corner: { cell: cand.cell, keys: cand.keys, pre: plan.pre, ticks: plan.held.length },
+                    ...(swaps.length > 0 ? {
+                        chained: {
+                            via: swaps.map((sw) => ({ t: sw.t, from_level: sw.from_level, to_level: sw.to_level })),
+                            ends: { level: run.level, x: run.state.x, y: run.state.y },
+                        },
+                    } : {}),
+                });
+                return;
+            }
             goalPlanExtra = { allowPit: { tx, ty } };
             goalRides = pitRides(tx, ty);
             const t = walkTo(goal, {
@@ -24203,6 +24798,7 @@ function solveSegmentUnder({
             continue;
         }
         if (goal.kind === 'reach-exit') {
+            awaitTentacleMouth(goal);
             const { index, teleporter } = findExitNamed(run.world, goal.exit);
             const centre = {
                 x: teleporter.rect.x + TILE_SIZE / 2,
@@ -24381,6 +24977,8 @@ function solveSegmentUnder({
             const rec = STRATEGY_EXECUTORS[strategy](run, perTick, resolvedBlocker, {
                 maxTicksPerTarget, economies, dashMode, what: `${what} -> ${strategy}`,
                 before: null, walkTo, goal, equip, rewind,
+                // ⛓ fidelity BOSSFORK D1: the segment's fork, as the frontier arm and the clear-tag arm pass it.
+                fork,
             });
             records.push({ goal: goal.kind, strategy, ...rec });
             // ⛓ seedling-fidelity-movingwait: a paced wait is its own decision row (absent on a still one).

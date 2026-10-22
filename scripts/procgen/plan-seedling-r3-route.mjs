@@ -43,15 +43,16 @@
  * one entry R3 opens by hand.
  *
  * Run: node scripts/procgen/plan-seedling-r3-route.mjs [--write] [--verbose]
+ *      node scripts/procgen/plan-seedling-r3-route.mjs --check   # the committed fixtures are byte-identical
  *      node scripts/procgen/plan-seedling-r3-route.mjs --reach=71:3
  */
 
-import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { emitFixtures } from './producerFixtureBytes.js';
 
 argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -68,6 +69,7 @@ const {
 const { makeRouteGraph } = await import(join(HERE, 'seedlingRouteGraph.mjs'));
 
 const WRITE = process.argv.includes('--write');
+const CHECK = process.argv.includes('--check');
 const VERBOSE = process.argv.includes('--verbose');
 const OUT = join(MODULE, 'fixtures', 'r3-route.json');
 const LEVEL_COUNT = 116;
@@ -518,9 +520,7 @@ const route = {
 
 assertRouteWellFormed(route);
 
-if (WRITE) {
-    writeFileSync(OUT, `${JSON.stringify(route, null, 2)}\n`);
-    console.log(`\nwrote ${OUT}`);
-} else {
+const outputs = [{ path: OUT, text: `${JSON.stringify(route, null, 2)}\n` }];
+if (!emitFixtures(outputs, { write: WRITE, check: CHECK })) {
     console.log('\n(dry run — pass --write to commit the route)');
 }

@@ -277,6 +277,58 @@ function atlasEdges(from) {
         }));
 }
 
+/** ⛓ fidelity LIGHTS D4: the switch set this process runs under, and the L69 controller's death exit. */
+const LIGHTS_FIDELITY = await import(join(MODULE, 'contactFidelity.js'));
+const LIGHTS_WORLD = await import(join(MODULE, 'lightBossWorld.js'));
+function lightsDeathEdge(from, to, x, y) {
+    const e = (levelsByNo.get(from)?.entities ?? []).find((n) => n.type === 'lightbosscontroller' && n.x === x && n.y === y);
+    if (!e) return null;
+    const exit = LIGHTS_WORLD.lightsWorldRows(e, x, y, Number(e.attrs?.tag ?? -1), new Set([Number(e.attrs?.tag ?? -1)])).exit;
+    if (!exit || exit.to !== to) return null;
+    return { from, to, via: `lightbosscontroller@${x},${y}`, exit: { x, y }, arrival: { x: exit.playerx, y: exit.playery },
+        death: true };
+}
+
+/**
+ * ⛓ fidelity BOSSFORK D3 (`CONTACT_FIDELITY.tentacleBeastFight`; OFF never reached): L57's mouth. The Tentacled Beast's
+ * Teleporter is added at the end of its "dying" (`TentacleBeast.as`), so the .oel holds no `to` — as Lights' death exit,
+ * the model's own CLEARED build answers it: a run built on the room with the beast's tag cleared holds the mouth at the
+ * build (`levelRun.tentacleMouthAtBuild`, BOSSFORK D2), and the edge is that Teleporter (its cell, its arrival).
+ */
+const TENTACLE_MOUTH_EDGES = new Map();
+async function tentacleMouthEdgeOf(from, x, y) {
+    const e = (levelsByNo.get(from)?.entities ?? []).find((n) => n.type === 'tentaclebeast' && n.x === x && n.y === y);
+    const tag = Number(e?.attrs?.tag ?? -1);
+    if (!e || tag < 0) return null;
+    const { createRunForStaging } = await import(join(MODULE, 'tapeRunner.js'));
+    const run = createRunForStaging({ boot: { level: from, x, y }, noclip: false, noDamage: false, noHazards: [],
+        grants: [], persistence: [{ level: from, tag }], despawn: [], equips: [], pins: [], save: null, rng: null,
+        seam: null }, levelSourceFromAtlas(atlas));
+    const mouth = run.world.teleporters.filter((t) => t.runtime === 'tentacle_beast_mouth');
+    return mouth.length === 1 ? mouth[0] : null;
+}
+for (const l of atlas.levels) {
+    if (!LIGHTS_FIDELITY.CONTACT_FIDELITY.tentacleBeastFight) break;
+    for (const n of l.entities ?? []) {
+        if (n.type === 'tentaclebeast') TENTACLE_MOUTH_EDGES.set(`${l.level}:${n.x},${n.y}`, await tentacleMouthEdgeOf(l.level, n.x, n.y));
+    }
+}
+/** The fight the mouth's crossing needs: `clear-tag` on the beast's own tag (`bossGoal`'s clear-tag shape, no report row). */
+function tentacleMouthFightGoal(level, edge) {
+    const [x, y] = edge.via.slice('tentaclebeast@'.length).split(',').map(Number);
+    const e = (levelsByNo.get(level)?.entities ?? []).find((n) => n.type === 'tentaclebeast' && n.x === x && n.y === y);
+    const tag = Number(e?.attrs?.tag ?? -1);
+    if (!e || tag < 0) return null;
+    return { kind: 'clear-tag', tag: { level, tag }, at: { x, y }, obstacle: edge.via,
+        why: `${edge.via}'s mouth stands only once the beast is dead — the kill {${level},${tag}} before the crossing` };
+}
+function tentacleMouthEdge(from, to, x, y) {
+    const t = TENTACLE_MOUTH_EDGES.get(`${from}:${x},${y}`) ?? null;
+    if (!t || t.to !== to) return null;
+    return { from, to, via: `tentaclebeast@${x},${y}`, exit: { x: t.x, y: t.y }, arrival: { x: t.playerx, y: t.playery },
+        death: true };
+}
+
 /** ONE edge for a route hop; two would make the goal ambiguous, so it says so. */
 function edgeFor(from, to) {
     const hits = atlasEdges(from).filter((e) => e.to === to);
@@ -449,6 +501,16 @@ function hopEdge(from, to, hop) {
         const m = /^out_([a-z]+)_(-?\d+)_(-?\d+)$/.exec(id);
         const edge = m && atlasEdges(from).find((e) => e.to === to && e.via === `${m[1]}@${m[2]},${m[3]}`);
         if (edge) return { edge, refusal: null };
+        // ⛓ fidelity LIGHTS D4 (`CONTACT_FIDELITY.lightsBossFight`; OFF never reached): a DEATH exit. `endState()` adds the
+        // Teleporter when the fight is won (`LightBossController.as:102-107`), so the .oel holds no `to` — the model's own
+        // build answers it (`lightBossWorld.lightsWorldRows`, the cleared arm), and the edge is that Teleporter.
+        const death = m && m[1] === 'lightbosscontroller' && LIGHTS_FIDELITY.CONTACT_FIDELITY.lightsBossFight
+            ? lightsDeathEdge(from, to, Number(m[2]), Number(m[3])) : null;
+        if (death) return { edge: death, refusal: null };
+        // ⛓ fidelity BOSSFORK D3 (`tentacleBeastFight`; OFF never reached): the mouth, from the model's cleared build.
+        const mouth = m && m[1] === 'tentaclebeast' && LIGHTS_FIDELITY.CONTACT_FIDELITY.tentacleBeastFight
+            ? tentacleMouthEdge(from, to, Number(m[2]), Number(m[3])) : null;
+        if (mouth) return { edge: mouth, refusal: null };
         return { edge: null, refusal: `the AP exit '${hop.name}' is ${id || '(no exit_id)'}, and the `
             + `atlas has no such entity with \`to\` ${to} in L${from} — the two sources disagree.` };
     }
@@ -974,6 +1036,13 @@ function buildSteps(visits, legs, id) {
             } else if (edge?.kind === 'pit') {
                 goals.push({ kind: 'reach-pit', pit: { ...edge.pit }, why: `${edge.via} → L${next.level}` });
             } else if (edge) {
+                // ⛓ fidelity BOSSFORK D3 (ON only: OFF no edge is `tentaclebeast@`): the mouth stands only once the beast
+                //   is dead, so its crossing is the fight first, unless this visit's goals already clear its report —
+                //   the JS runtime's own shape for the same exit (`FIGHT_EXITS`: clear-tag, then reach-exit).
+                const mouthFight = /^tentaclebeast@/.test(edge.via) ? tentacleMouthFightGoal(v.level, edge) : null;
+                if (mouthFight && !goals.some((g) => g.kind === 'clear-tag' && g.obstacle === mouthFight.obstacle)) {
+                    goals.push(mouthFight);
+                }
                 goals.push({ kind: 'reach-exit', exit: edge.exit, why: `${edge.via} → L${next.level}` });
             }
         }

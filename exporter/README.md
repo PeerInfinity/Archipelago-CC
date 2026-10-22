@@ -202,6 +202,29 @@ python -m exporter.converter --python "state.has('Sword')" --to-json
 
 See `converter/README.md` for detailed usage.
 
+⚠ `converter/` is a lighter, separate re-implementation. For the conversion an
+export actually performs, use `script_api.py` below.
+
+### Script API (`script_api.py`)
+
+Python source ⇄ the rules.json `helpers` format, through the production code
+paths: `python_to_helpers(source)` runs this analyzer the way an export runs it
+on a worldgen `Rules.py` (calls between the script's functions stay
+`{"type": "helper"}` references; parameters and defaults become
+`params`/`defaults`), and `helpers_to_python(helpers, rules=None)` runs
+world_generator's helper codegen (a rules document supplies the option
+definitions — without them an option reads back as a world attribute). Both
+return `{helpers|code, warnings, errors}`.
+
+The frontend runs it under Pyodide (`frontend/modules/helperScript/`), serving
+only the files `scripts/build/helper-script-files.mjs` lists, so that subset
+must import nothing outside the standard library — no `BaseClasses`, `worlds`,
+`Utils`, or `exporter.exporter` (hence the lazy `exporter/__init__.py`).
+`test/test_exporter_script_api.py` holds it to that under `python -I -S`.
+
+⚠ `python_to_helpers` IMPORTS the source (the analyzer reads functions through
+`inspect`), so its top-level statements run.
+
 ### Game Handlers (`games/`)
 
 Game-specific export customization. Each game can have a handler that:

@@ -8,6 +8,14 @@
       "path": "./modules/quickLaunch/index.js",
       "enabled": true
     },
+    "miniPanels": {
+      "path": "./modules/miniPanels/index.js",
+      "enabled": true
+    },
+    "checksPanel": {
+      "path": "./modules/checksPanel/index.js",
+      "enabled": false
+    },
     "json": {
       "path": "./modules/json/index.js",
       "enabled": true
@@ -228,6 +236,8 @@
   "loadPriority": [
     "modules",
     "quickLaunch",
+    "miniPanels",
+    "checksPanel",
     "json",
     "storagePanel",
     "events",

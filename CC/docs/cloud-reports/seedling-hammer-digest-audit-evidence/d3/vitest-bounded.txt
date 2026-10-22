@@ -1,0 +1,65 @@
+
+ RUN  v4.0.15 /home/user/Archipelago-CC
+
+ ✓ frontend/modules/seedlingDemo/levelRunStateDigest.test.js (11 tests) 2557ms
+     ✓ two fresh runs of one staging agree at every tick, and no two ticks share one  466ms
+     ✓ reading it changes nothing: a run digested every tick walks the tape as one that never is  491ms
+     ✓ digest EQUAL below T = 406 and DIFFERENT from T on — the clear lands at T, in place and persist only  761ms
+     ✓ a run with NO row (pass 1) digests equal below T too; its own advance at T is what tells (the kill-lock arm)  617ms
+ ✓ frontend/modules/seedlingDemo/solveProgressTap.test.js (34 tests) 194ms
+ ✓ frontend/modules/seedlingDemo/seedlingCanCross.test.js (17 tests) 24108ms
+     ✓ can: swordless L14 from the captured arrival, and the witness is the committed tape's keys  3189ms
+     ✓ cannot: L22 from L25 toward L29, bare — the re-planned corridor stalls short of (88,88), a true refusal  775ms
+     ✓ undecided: a budget of 0 consults trips at the first site — never `cannot`  2822ms
+     ✓ fresh-built and captured L14 arrivals give the same verdict and the same plan  2597ms
+     ✓ the same call twice is the same verdict, plan and work; no hook at all is the same plan  6788ms
+     ✓ L16 → L18 from L15 over {sword, conch}: {sword} is minimal but unproved, and {sword, conch} also CAN (ROBUST D3)  4077ms
+     ✓ `cancross-l16-sword-none` IS canCross's `none` witness for L16 → L17 with the Sword, byte for byte  416ms
+     ✓ the default dash mode is the solver's, and its L16 → L17 plan IS `dash-l16-sword-all`, every field but its prose  2543ms
+ ✓ frontend/modules/seedlingDemo/solveProgressHeartbeat.test.js (5 tests) 69667ms
+     ✓ ⛓⛓⛓ previewWalk: every output is byte-identical with a hook installed and without, and the hooked walk beats  321ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): the digest and the shouldStop count are equal with no hook and under the tap at every rate; the asks are deadline sites only  27751ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the digest and the shouldStop count are equal with no hook and under the tap at every rate; the asks are deadline sites only  40892ms
+     ✓ ⛓⛓⛓ planWaypoints: the string-pull plan is byte-identical with a hook installed and without; unhooked, no heartbeat path runs  683ms
+ ✓ frontend/modules/seedlingDemo/fidelityIgneous.test.js (16 tests) 809ms
+ ✓ frontend/modules/seedlingDemo/fidelityApFlip.test.js (17 tests) 933ms
+     ✓ ON: the totem's kill is BANKED (`pendingEarnedClears`), so a same-run re-entry builds it despawned  381ms
+ ✓ frontend/modules/seedlingDemo/fidelityLights.test.js (17 tests) 1025ms
+ ✓ frontend/modules/seedlingDemo/solveProgress.test.js (57 tests) 133962ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  27690ms
+     ✓ ⛓⛓⛓ L6 ladder climb: no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  464ms
+     ✓ ⛓⛓⛓ L3 plain walk: no hook, a peeking hook, a silent hook and a throwing hook give the same bytes  322ms
+     ✓ ⛓⛓ under a deadline that never trips (the page's budgeted pass), the hook changes nothing either, and work.shouldStop IS the caller's count  10074ms
+     ✓ ⛓⛓ L18 hammer room (residue 21): keys are role paths, stable across the stream; counts never fall  6207ms
+     ✓ ⛓⛓ L18 hammer room (residue 21): a tile's count never falls and its firstTick never rises  973ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): the answer, the shouldStop total and the asks are W0's, hooked and unhooked; unhooked, no kind is looked up  9994ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, the shouldStop total and the asks are W0's, hooked and unhooked; unhooked, no kind is looked up  17128ms
+     ✓ ⛓⛓⛓ lastWhy is the thrown why VERBATIM: L18's first pass refuses, and its last why is the error's message  2923ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): the answer, shouldStop, the asks and the work are W0's, hooked and unhooked; unhooked, no frame is read  10003ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, shouldStop, the asks and the work are W0's, hooked and unhooked; unhooked, no frame is read  15717ms
+     ✓ ⛓⛓⛓ L18 hammer room (residue 21): the answer, shouldStop and the asks are W0's hooked and unhooked; unhooked, no cache count is read  7449ms
+     ✓ ⛓⛓⛓ L40 kill rung (the totem part at (160,640)): the answer, shouldStop and the asks are W0's hooked and unhooked; unhooked, no cache count is read  9700ms
+     ✓ ⛓⛓⛓ non-vacuous, the cross-pass escape cache ON (the test only, wired by its hook): L18's segments report the solve's own hits and misses  6195ms
+     ✓ ⛓⛓ the solver wires the escape member: counted with the switch ON and no installer, null with it OFF; a null hand-in is null  7224ms
+ ✓ frontend/modules/seedlingDemo/escapeCrossPassCache.test.js (19 tests) 156968ms
+     ✓ ⛓⛓⛓ L18 residue 21: the bytes, the stream, the asks, the shouldStop total and the instruments are OFF's, with cross-pass hits  34386ms
+     ✓ ⛓⛓⛓ L18 residue 21, STRIKE_ETA_FLOOR ON: the bytes, the stream, the asks, the shouldStop total and the instruments are OFF's, with cross-pass hits  17421ms
+     ✓ ⛓ L6 ladder climb: ON is OFF (no escape is asked; nothing is looked up)  301ms
+     ✓ ⛓⛓⛓ a budget that trips mid-search gives OFF's answer, stream and asks — a hit tripped at its k-th ask included  35789ms
+     ✓ ⛓⛓⛓ every hit recomputed and compared: 0 mismatches, and the bytes are OFF's  12298ms
+     ✓ ⛓⛓⛓ every hit recomputed and compared: 0 mismatches (floor ON), and the bytes are OFF's  10362ms
+     ✓ ⛓⛓ maxEntries 0: OFF exactly, and a full scope misses rather than evicts  9170ms
+     ✓ ⛓⛓ maxEntries 1: OFF exactly, and a full scope misses rather than evicts  9345ms
+     ✓ ⛓⛓ maxEntries 7: OFF exactly, and a full scope misses rather than evicts  9698ms
+     ✓ ⛓⛓⛓ two solves back to back: the second's first lookup misses, and it hits exactly as the first did  5396ms
+     ✓ ⛓⛓⛓ the clocked hazard: one call at two seam times across the hammer's phase is two entries, and the two answers differ  1734ms
+     ✓ ⛓⛓⛓ a drifting beam tower inside a SEARCH (L18 + a tower): two seam times a hammer period apart — the drift alone parts the answers, two entries, verify 0 mismatches  3254ms
+     ✓ ⛓⛓⛓ the digest's `visit` part is in the key: one seam, one tick, one clock, the tower drifted from two ticks — the digests differ in `visit` ALONE, and the answers differ  2012ms
+     ✓ ⛓⛓⛓ the arguments: `pressAt` and the held sets' ORDER are in the key — each variant is OFF's answer  3023ms
+     ✓ ⛓⛓⛓ the deadline's presence is in the key; a tripped miss is never stored; an entry stored before a trip is never read after one  2628ms
+
+ Test Files  9 passed (9)
+      Tests  193 passed (193)
+   Start at  16:23:45
+   Duration  163.17s (transform 10.73s, setup 0ms, import 26.69s, tests 390.22s, environment 1ms)
+

@@ -372,8 +372,11 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         //   L32's two locations (Bob Boss, Times) stand on it: tile [4,8] -> [5,8]. No name, rule or exit moves.
         // ⛓ rules-r4b-followup (85e0ef9e… -> bdcc2651): a pit lands from the pit tile's CENTRE (`Tile.as:103`), so
         //   L70's pit exit is out_pit_3_8 -> in_pit_L70_3_8 (it was (3,7)). No name, rule or location moves.
+        // ⛓ rules-block-path (bdcc2651… -> 63fa26d6): a re-closing lock's entry is priced by the block paths that
+        //   hold its button, so L15 r1c5->r1c9, L16 r1c1->r4c21 and L41 r4c15->r7c15 gain rules. No name, exit or
+        //   location moves (the overlay fixture rewrites byte-identical).
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('bdcc265196e7d72b8dd3a828ff15f1f1');
+            .toBe('63fa26d64389feb3b54ea9f770b54a94');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

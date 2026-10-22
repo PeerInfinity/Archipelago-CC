@@ -1,0 +1,31 @@
+PAGE: seedling_bot_ap_p4g · delivered seedling-vanilla-record-f5bdb07d
+# box lock: TAKEN by probe-seedling-rope-events.mjs (browser, pid 3186) — head 52bccca51, 9 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"l16-cut","set_id":"seedling-vanilla-record-f5bdb07d","mounted":"seedling-vanilla-record-f5bdb07d","observations":656,"boot":{"level":16,"x":32,"y":64},"persistence":["3,0","5,0","8,0","8,1","10,0","11,0","15,0","15,2","15,3"],"transitions":[{"t":655,"from":16,"to":18,"at":{"x":24,"y":40}}],"clears":["10,0","11,0","15,0","15,2","15,3","16,0","16,3","16,4","16,6","16,7","3,0","5,0","8,0","8,1"],"hits":0,"minY28":null,"final":{"t":655,"x":24,"y":40,"level":18}}
+PASS: l16-cut: the game ran the tape to its end on the delivered set — 656 obs, seedling-vanilla-record-f5bdb07d
+PASS: l16-cut: the cut from the L15 side clears {16,0}, and the walk crosses the lanes to L18 with no hit — {"clears":["10,0","11,0","15,0","15,2","15,3","16,0","16,3","16,4","16,6","16,7","3,0","5,0","8,0","8,1"],"hits":0,"minY28":null,"final":{"t":655,"x":24,"y":40,"level":18},"transitions":[{"t":655,"from":16,"to":18,"at":{"x":24,"y":40}}]}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"l28-cut","set_id":"seedling-vanilla-record-f5bdb07d","mounted":"seedling-vanilla-record-f5bdb07d","observations":221,"boot":{"level":28,"x":96,"y":16},"persistence":[],"transitions":[],"clears":["28,0","28,1","28,2"],"hits":2,"minY28":24,"final":{"t":220,"x":144.3142210767841,"y":89.21509629580366,"level":28}}
+PASS: l28-cut: the game ran the tape to its end on the delivered set — 221 obs, seedling-vanilla-record-f5bdb07d
+PASS: l28-cut: the cut clears the rope {28,0} and the rock {28,1} together — {"clears":["28,0","28,1","28,2"],"hits":2,"minY28":24,"final":{"t":220,"x":144.3142210767841,"y":89.21509629580366,"level":28},"transitions":[]}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"l28-fire","set_id":"seedling-vanilla-record-f5bdb07d","mounted":"seedling-vanilla-record-f5bdb07d","observations":221,"boot":{"level":28,"x":96,"y":16},"persistence":[],"transitions":[],"clears":["28,0","28,1","28,2"],"hits":2,"minY28":24,"final":{"t":220,"x":144.3142210767841,"y":89.21509629580366,"level":28}}
+PASS: l28-fire: the game ran the tape to its end on the delivered set — 221 obs, seedling-vanilla-record-f5bdb07d
+PASS: l28-fire: with FIRE alone (no Sword, no Spear) the same cut clears {28,0} and {28,1} (Player.as:1032) — {"clears":["28,0","28,1","28,2"],"hits":2,"minY28":24,"final":{"t":220,"x":144.3142210767841,"y":89.21509629580366,"level":28},"transitions":[]}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"l28-noitem","set_id":"seedling-vanilla-record-f5bdb07d","mounted":"seedling-vanilla-record-f5bdb07d","observations":221,"boot":{"level":28,"x":96,"y":16},"persistence":[],"transitions":[],"clears":[],"hits":2,"minY28":24,"final":{"t":220,"x":144.3142210767841,"y":89.21509629580366,"level":28}}
+PASS: l28-noitem: the game ran the tape to its end on the delivered set — 221 obs, seedling-vanilla-record-f5bdb07d
+PASS: l28-noitem: the CONTROL: the same walk and presses with no item cut nothing — {"clears":[],"hits":2,"minY28":24,"final":{"t":220,"x":144.3142210767841,"y":89.21509629580366,"level":28},"transitions":[]}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"l28-cross","set_id":"seedling-vanilla-record-f5bdb07d","mounted":"seedling-vanilla-record-f5bdb07d","observations":261,"boot":{"level":28,"x":128,"y":288},"persistence":["28,0","28,1"],"transitions":[],"clears":["28,0","28,1","28,2"],"hits":0,"minY28":122.00632634083664,"final":{"t":260,"x":188.46081009604856,"y":122.00632634083664,"level":28}}
+PASS: l28-cross: the game ran the tape to its end on the delivered set — 261 obs, seedling-vanilla-record-f5bdb07d
+PASS: l28-cross: on a later visit (both tags cleared, no items) the fallen rock holds the button: north of the lock (y < 208) — {"clears":["28,0","28,1","28,2"],"hits":0,"minY28":122.00632634083664,"final":{"t":260,"x":188.46081009604856,"y":122.00632634083664,"level":28},"transitions":[]}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"l28-control","set_id":"seedling-vanilla-record-f5bdb07d","mounted":"seedling-vanilla-record-f5bdb07d","observations":261,"boot":{"level":28,"x":128,"y":288},"persistence":[],"transitions":[],"clears":[],"hits":0,"minY28":226.1991150953927,"final":{"t":260,"x":188.46081009604856,"y":226.1991150953927,"level":28}}
+PASS: l28-control: the game ran the tape to its end on the delivered set — 261 obs, seedling-vanilla-record-f5bdb07d
+PASS: l28-control: with nothing cleared the lock stands: the walk stays at y >= 208 — {"clears":[],"hits":0,"minY28":226.1991150953927,"final":{"t":260,"x":188.46081009604856,"y":226.1991150953927,"level":28},"transitions":[]}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"l28-rock-only","set_id":"seedling-vanilla-record-f5bdb07d","mounted":"seedling-vanilla-record-f5bdb07d","observations":261,"boot":{"level":28,"x":128,"y":288},"persistence":["28,1"],"transitions":[],"clears":["28,1","28,2"],"hits":0,"minY28":122.00632634083664,"final":{"t":260,"x":188.46081009604856,"y":122.00632634083664,"level":28}}
+PASS: l28-rock-only: the game ran the tape to its end on the delivered set — 261 obs, seedling-vanilla-record-f5bdb07d
+PASS: l28-rock-only: {28,1} alone builds the rock fallen: north of the lock (y < 208) — {"clears":["28,1","28,2"],"hits":0,"minY28":122.00632634083664,"final":{"t":260,"x":188.46081009604856,"y":122.00632634083664,"level":28},"transitions":[]}
+ALL CHECKS PASSED

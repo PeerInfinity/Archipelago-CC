@@ -11,7 +11,7 @@ Maps every test script and validation tool to the GitHub Actions workflow(s) tha
 
 | Workflow | File | Trigger | Description |
 |----------|------|---------|-------------|
-| Unit Tests | `unittests.yml` | push, PR | Python pytest (`pytest -n auto`) |
+| Unit Tests | `unittests.yml` | push, PR, dispatch | Python pytest (`pytest -n auto`); the Windows/macOS legs only on a PR or a `full_matrix` dispatch |
 | JavaScript Unit Tests | `unittests_frontend.yml` | push, PR, dispatch | Parallel jobs: JS Vitest (`npm run test:unit` + `test:unit:slow`), the headless procgen gates (`ci-gates.mjs`), the browser gate shards |
 | Test ALTTP & Regression | `test-templates.yml` | push (main), PR, dispatch | Spoiler test + frontend regression (both boots) + substrate tests, one parallel job per on-push batch (`testBatches.js`) with a budget-headroom check each |
 | Substrate tests — manual batches | `test-substrates-manual.yml` | dispatch | The manual substrate batches (`bot-walks`, `noiz2sa`, `runner`; `manual: true` in `testBatches.js`), one or `all` |
@@ -54,7 +54,7 @@ Maps every test script and validation tool to the GitHub Actions workflow(s) tha
 | Script | Workflow(s) | Notes |
 |--------|-------------|-------|
 | `run-tests.js` | `test-templates.yml`, `test-substrates-manual.yml`, `test-all-sequential.yml` | Called via `npm test` |
-| `list-test-batches.js` | `test-templates.yml`, `test-substrates-manual.yml` | Prints the on-push / manual batches (`testBatches.js`) as the jobs' matrix |
+| `list-test-batches.js` | `test-templates.yml`, `test-substrates-manual.yml` | Prints the on-push / manual / dispatchable batches (`testBatches.js`) as the jobs' matrix; `--changed=` drops a `pushPaths` batch no pushed path hits |
 | `check-batch-headroom.js` | `test-templates.yml`, `test-substrates-manual.yml` | Grades each batch run against its in-app budget: fails on NEVER STARTED / CUT OFF rows or a span over budget, warns past `HEADROOM_WARN_FRACTION` |
 | `analyze-test-results.js` | **No workflow** | Post-hoc analysis of Playwright results |
 | `test-health-check.js` | **No workflow** | Environment sanity check |
@@ -80,6 +80,8 @@ Maps every test script and validation tool to the GitHub Actions workflow(s) tha
 
 | Script | Workflow(s) | Notes |
 |--------|-------------|-------|
+| `scripts/rules/ruleKindCensus.test.js` | `unittests_frontend.yml` (vitest) | Cross-layer rule-node kind census: [rule-kind-registry.md](reference/rule-kind-registry.md) |
+| `test/general/test_rule_kind_vocab.py` | `unittests.yml` (pytest) | The census's Python vocabulary snapshot is fresh |
 | `sync-rule-docs.py` | **No workflow** | Rule types documentation coverage |
 | `sync-rule-tests.py` | **No workflow** | Rule types test coverage |
 | `sync-script-docs.py` | **No workflow** | Script documentation coverage |

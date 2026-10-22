@@ -1,0 +1,8 @@
+     ✓ lights-stand: every sampled tick — the player (and its hits), the intro, the fliers, the shots, the level 201ms
+     ✓ lights-revisit: every sampled tick — the player (and its hits), the intro, the fliers, the shots, the level 13ms
+     ✓ lights-solve-sword: every sampled tick — the player (and its hits), the intro, the fliers, the shots, the level 103ms
+     × lights-solve-spear: every sampled tick — the player (and its hits), the intro, the fliers, the shots, the level 64ms
+     ✓ the stand: the intro's pages are done at t62 (its removal), the six fliers stand at (80,-32) from t63 6ms
+     ✓ the revisit: {69,0} cleared — no intro, no fliers, the exit Teleporter at (72,72) to L36 (120,104) 1ms
+     ✓ the solves: {69,0} lands on the game on the tick after the last flier leaves the world 11ms
+     ✓ CONTROL: with the switch OFF the stand is NOT reproduced (no fight is stepped) 54ms

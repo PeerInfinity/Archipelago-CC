@@ -51,14 +51,15 @@
  * Usage:
  *   node scripts/procgen/plan-seedling-r5-karlore.mjs            # plan + report
  *   node scripts/procgen/plan-seedling-r5-karlore.mjs --write    # write the tapes
+ *   node scripts/procgen/plan-seedling-r5-karlore.mjs --check    # the committed fixtures are byte-identical
  */
 
-import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { emitFixtures } from './producerFixtureBytes.js';
 
 argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -75,6 +76,7 @@ const { assertWindowEndsAtRest } = await import(join(MODULE, 'director.js'));
 const { KARLORE, CONCH, KEY_LEG } = await import(join(MODULE, 'r5Chain.js'));
 
 const WRITE = process.argv.includes('--write');
+const CHECK = process.argv.includes('--check');
 const source = atlasLevelSource();
 
 // ⛓ THE FIRE ARM'S WORLD IS NOW THE MODEL'S OWN (R5 slice 4 step 4).
@@ -309,13 +311,11 @@ if (!conch || conch.tag !== CONCH.item) {
 console.log(`   confirmed: the pit is real, its fallthrough is L${world.fallthrough.level}, `
     + `and the ${conch.tag} is at ${JSON.stringify(conch.rect)}`);
 
-if (WRITE) {
-    const dir = join(MODULE, 'fixtures', 'tapes');
-    for (const t of [control, fire]) {
-        const path = join(dir, `${t.name}.json`);
-        writeFileSync(path, serializeTape(t));
-        console.log(`   wrote ${path}`);
-    }
-} else {
+const dir = join(MODULE, 'fixtures', 'tapes');
+const outputs = [control, fire].map((t) => {
+    const path = join(dir, `${t.name}.json`);
+    return { path, text: serializeTape(t) };
+});
+if (!emitFixtures(outputs, { write: WRITE, check: CHECK })) {
     console.log('\n(dry run — pass --write to emit the two tapes)');
 }

@@ -1,0 +1,25 @@
+PAGE: seedling_bot_ap_p4g · delivered seedling-vanilla-record-f5bdb07d
+# box lock: BUSY — check-seedling-bot-differential.mjs (pid 2032637, browser) since 2026-10-21T01:43:29.440Z; queuing for up to 600s
+# box lock: TAKEN by probe-seedling-l15-block-path.mjs (browser, pid 2070779) — head 035982f31, 14 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"with-sword","set_id":"seedling-vanilla-record-f5bdb07d","mounted":"seedling-vanilla-record-f5bdb07d","observations":457,"transitions":[{"t":456,"from":15,"to":16,"at":{"x":40,"y":72}}],"out":{"t":456,"from":15,"to":16,"at":{"x":40,"y":72}},"maxX":152.21763820133216,"clears":["10,0","11,0","15,0","15,2","15,3","3,0","5,0","8,0","8,1"],"final":{"t":456,"x":40,"y":72,"level":16},"model":{"refused":null,"transitions":[{"t":456,"from":15,"to":16,"at":{"x":40,"y":72}}],"maxX":152.21763820133216,"final":{"t":456,"x":40,"y":72,"level":16},"agrees":true}}
+PASS: with-sword: the game ran the tape to its end on the delivered set — 457 obs, seedling-vanilla-record-f5bdb07d
+PASS: with-sword: both rocks break, the lock opens, and L15 → L16 — {"out":{"t":456,"from":15,"to":16,"at":{"x":40,"y":72}},"clears":["10,0","11,0","15,0","15,2","15,3","3,0","5,0","8,0","8,1"]}
+PASS: with-sword: the model agrees — {"t":456,"x":40,"y":72,"level":16}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"no-weapon","set_id":"seedling-vanilla-record-f5bdb07d","mounted":"seedling-vanilla-record-f5bdb07d","observations":457,"transitions":[],"out":null,"maxX":93.93190231617379,"clears":["10,0","11,0","3,0","5,0","8,0","8,1"],"final":{"t":456,"x":90.73936522532503,"y":66.42530244682033,"level":15},"model":{"refused":null,"transitions":[],"maxX":93.93190231617379,"final":{"t":456,"x":90.73936522532503,"y":66.42530244682033,"level":15},"agrees":true}}
+PASS: no-weapon: the game ran the tape to its end on the delivered set — 457 obs, seedling-vanilla-record-f5bdb07d
+PASS: no-weapon: no rock breaks and the player stays in L15 — {"final":{"t":456,"x":90.73936522532503,"y":66.42530244682033,"level":15},"clears":["10,0","11,0","3,0","5,0","8,0","8,1"]}
+PASS: no-weapon: the model agrees — {"t":456,"x":90.73936522532503,"y":66.42530244682033,"level":15}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"button-hold","set_id":"seedling-vanilla-record-f5bdb07d","mounted":"seedling-vanilla-record-f5bdb07d","observations":261,"transitions":[],"out":null,"maxX":125.96634679075365,"clears":["10,0","11,0","3,0","5,0","8,0","8,1"],"final":{"t":260,"x":125.96634679075365,"y":60.95316561961455,"level":15},"model":{"refused":null,"transitions":[],"maxX":125.96634679075365,"final":{"t":260,"x":125.96634679075365,"y":60.95316561961455,"level":15},"agrees":true}}
+PASS: button-hold: the game ran the tape to its end on the delivered set — 261 obs, seedling-vanilla-record-f5bdb07d
+PASS: button-hold: held 120 ticks on the DIAGONAL button, the player never reaches the lock (max x < 128) — {"maxX":125.96634679075365,"final":{"t":260,"x":125.96634679075365,"y":60.95316561961455,"level":15}}
+PASS: button-hold: the model agrees — {"t":260,"x":125.96634679075365,"y":60.95316561961455,"level":15}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"swim","set_id":"seedling-vanilla-record-f5bdb07d","mounted":"seedling-vanilla-record-f5bdb07d","observations":481,"transitions":[],"out":null,"maxX":157.9831537272124,"clears":["10,0","11,0","3,0","5,0","8,0","8,1"],"final":{"t":480,"x":157.9831537272124,"y":114.23859683532189,"level":15},"model":{"refused":null,"transitions":[{"t":327,"from":15,"to":16,"at":{"x":40,"y":72}}],"maxX":157.9831537272124,"final":{"t":480,"x":40,"y":61.8,"level":16},"agrees":true}}
+PASS: swim: the game ran the tape to its end on the delivered set — 481 obs, seedling-vanilla-record-f5bdb07d
+FAIL: swim: with the Conch and no weapon, L15 → L16 by the water, rocks standing — {"out":null,"clears":["10,0","11,0","3,0","5,0","8,0","8,1"]}
+PASS: swim: the model agrees — {"t":480,"x":40,"y":61.8,"level":16}
+wrote 4 witness file(s) to CC/docs/cloud-reports/rules-block-path-evidence
+1 CHECK(S) FAILED

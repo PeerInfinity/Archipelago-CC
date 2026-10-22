@@ -24,6 +24,7 @@
  *   node scripts/procgen/check-seedling-hammer-monotonicity.mjs --rows                 # the row table, and exit
  *   node scripts/procgen/check-seedling-hammer-monotonicity.mjs --records=<file.jsonl> --modes=off,fight
  *                                                                                    # re-solve a capture only
+ * @ci-box it has no argument-free run: it takes a positional `--row=<row>` (or `--records=`) and exits 1 without one, and each row re-runs a whole producer under the capture hook and re-solves every record per mode, which has never been priced on a runner, so adopting a row into CI is a costed decision.
  *   … --json=<path>         every record's verdicts and ticks per mode
  *   … --keep=<file.jsonl>   keep the capture (default: a temp file, removed)
  *   … --shard=k/N           re-solve every N-th record from k (a child of `--jobs`)

@@ -24,7 +24,9 @@
   ],
   "persistence": [],
   "equips": [],
-  "pins": ["dead_frames"],
+  "pins": [
+    "dead_frames"
+  ],
   "tick_count": 493,
   "inputs": [
     {

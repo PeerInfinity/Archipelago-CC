@@ -69,8 +69,10 @@ export const TEST_CASE_FILES = [
   './testCases/substrateRegistryPanelTests.js',
   './testCases/procgenPipelineTests.js',
   './testCases/quickLaunchTests.js',
+  './testCases/miniPanelsTests.js',
   './testCases/tutorialTests.js',
   './testCases/storagePanelTests.js',
+  './testCases/ruleConverterTests.js',
   //'./testCases/manualTests.js',
 ];
 

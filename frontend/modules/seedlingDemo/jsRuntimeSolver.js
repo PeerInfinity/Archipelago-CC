@@ -64,6 +64,10 @@ import {
 } from './solverBot.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { TILE_SIZE } from './levelWorld.js';
+// ⛓ LIGHTS WIRING — the fight's exit, as the model's world build makes it (a leaf module: no imports).
+import { lightsWorldRows } from './lightBossWorld.js';
+// ⛓ BOSS WIRING — the Tentacled Beast's ctor and mouth offsets (`TentacleBeast.as`), so its fight exit is the model's.
+import { TENTACLE_BEAST } from './tentacleBeast.js';
 import { KILLLOCK_BODIES, killLockBodiesStamp, normalizeKillLockBodies, withKillLockBodies } from './killLockBodies.js';
 import { CONTACT_FIDELITY, contactFidelityStamp, normalizeContactFidelity, withContactFidelity } from './contactFidelity.js';
 import { axeDodgeAskStamp, withAxeDodgeAsk } from './axeDodgeAskHook.js';
@@ -476,6 +480,8 @@ export function passNote(plan, { expired = false } = {}) {
  *   while the run stands latched on the goal's teleporter — still the door's `reach-exit`: the solver
  *   steps off a latched door itself, fidelity STEP-OFF)
  * @param {object|null} ctx.placement  the location's entity (`{x, y}`, OEL)
+ * @param {Function|null} [ctx.levelSource]  ⛓ BOSS WIRING — `(level) => record`, the room source the run was built
+ *   from: a `FIGHT_EXITS` row whose fight view carries no tag reads it off the room's placement (null = no such row binds)
  *
  * ⛓ §5.36 (⚖ the user: the SOLVER for everything) — a mounted GENERATED set's
  * goals are mapped here too, exactly as a real room's: the old "a generated
@@ -483,7 +489,7 @@ export function passNote(plan, { expired = false } = {}) {
  * every committed generated leg the walker did, and the swim apitem the
  * walker never reached).
  */
-export function solverGoalFor(goal, { run, resolved, placement = null }) {
+export function solverGoalFor(goal, { run, resolved, placement = null, levelSource = null }) {
     if (goal?.kind === 'exit' && resolved?.pit) {
         // ⛓ S4 — a pit exit → `reach-pit` at the pit TILE the walker resolved (its rect origin = tile·16).
         const { tx, ty } = resolved.pit;
@@ -494,7 +500,15 @@ export function solverGoalFor(goal, { run, resolved, placement = null }) {
         // door's `reach-exit` too: `solveSegment` steps off a latched door and walks back (a `step-off`
         // verb), or refuses a closed pocket by name (`closed — the run stands LATCHED …`).
         const tp = run?.world?.teleporters?.[resolved?.allowTeleporter];
-        if (!tp) return { walker: 'no live teleporter resolved for the exit' };
+        if (!tp) {
+            // ⛓ LIGHTS WIRING — an exit a boss FIGHT adds (L69's endState Teleporter): the fight, then the exit.
+            const fight = fightExitOf(run, goal, levelSource);
+            // ⛓ BOSS WIRING — a fight already won whose exit is not in the arrival's world yet (the beast's mouth: the
+            // model builds the dead fight, and so the mouth, when the fight is first asked) is the door's plain reach-exit.
+            if (fight?.standing) return { goal: { kind: 'reach-exit', exit: { x: fight.exit.x, y: fight.exit.y } } };
+            if (fight) return fightExitGoal(goal, run, fight);
+            return { walker: 'no live teleporter resolved for the exit' };
+        }
         return { goal: { kind: 'reach-exit', exit: { x: tp.x, y: tp.y } } };
     }
     if (goal?.kind === 'location' && goal.encounter) {
@@ -524,6 +538,87 @@ export function solverGoalFor(goal, { run, resolved, placement = null }) {
     }
     return { walker: `a ${goal?.kind ?? 'missing'} goal has no solver goal kind` };
 }
+
+/**
+ * ⛓ LIGHTS WIRING (slice `seedling-js-lights-wiring`) — **AN EXIT THAT ONLY A FIGHT OPENS.** A boss whose death adds
+ * the room's exit (L69: `LightBossController.endState()`'s `Teleporter`, appended mid-visit by `lightBoss.withLightsExit`)
+ * has no live teleporter on the exit's cells at the arrival. Each row names the WORLD list the model builds for the
+ * fight's controllers (present only while the fight's switch is ON, so OFF nothing here is reached) and the exit the
+ * model's own world build makes once the controller's tag is cleared (`lightBossWorld.lightsWorldRows`' exit arm).
+ * Nothing is typed: the obstacle, its tag and the exit are the controller row's and the model's.
+ * ⚠ One row per fight SHAPE. Each row is `fightsOf(run, levelSource)` → the uncleared-or-cleared fight rows
+ * `{id, x, y, tag, cleared}` (empty while the switch is OFF) and `exitOf(row)` → the exit the fight's end adds.
+ *
+ * ⛓ BOSS WIRING (slice `seedling-js-boss-wiring`) — L57's TENTACLED BEAST: its mouth `Teleporter` is added at the end of
+ * "dying" (`TentacleBeast.createMouthEntrance`, `levelWorld.withRuntimeTeleporters`). The fight is the run's
+ * (`run.entities('tentacleBeastFight')`, null while `CONTACT_FIDELITY.tentacleBeastFight` is OFF or the room holds
+ * none); its view names the body (`tentaclebeast@<x>,<y>`, the `.oel` placement) but not the tag, so the tag is the
+ * placement's in the room source. The mouth is the model's ctor and mouth offsets from that placement.
+ */
+export const FIGHT_EXITS = Object.freeze([
+    Object.freeze({
+        fightsOf: (run) => run?.world?.lightsControllers ?? [],
+        exitOf: (c) => lightsWorldRows({ attrs: { fliernum: String(c.flierNum) } }, c.x, c.y, c.tag, new Set([c.tag])).exit,
+    }),
+    Object.freeze({
+        fightsOf: (run, levelSource) => {
+            const view = typeof run?.entities === 'function' ? run.entities('tentacleBeastFight') : null;
+            if (!view || typeof levelSource !== 'function') return [];
+            const p = (levelSource(run.level)?.entities ?? []).filter((e) => `${e.type}@${e.x},${e.y}` === view.id);
+            if (p.length !== 1 || !Number.isInteger(Number(p[0].attrs?.tag))) return [];
+            return [{ id: view.id, x: p[0].x, y: p[0].y, tag: Number(p[0].attrs.tag), cleared: view.beast.dead === true }];
+        },
+        // A cleared {57,0} builds the beast dead WITH its mouth (`TentacleBeast.as:52-60`): the exit stands.
+        standsWhenCleared: true,
+        exitOf: (c) => ({ x: c.x + TENTACLE_BEAST.ctorDx + TENTACLE_BEAST.mouthDx,
+            y: c.y + TENTACLE_BEAST.ctorDy + TENTACLE_BEAST.mouthDy }),
+    }),
+]);
+
+/**
+ * ⛓ LIGHTS WIRING — `{controller, exit}`: an uncleared fight whose exit lands on one of the goal's cells, or null.
+ * ⛓ BOSS WIRING — a row that lists a CLEARED fight (`standing`: the row says the exit already stands in the game) is
+ * answered `{controller, exit, standing: true}`; a row that lists only uncleared ones (Lights') is never asked that.
+ */
+export function fightExitOf(run, goal, levelSource = null) {
+    const tiles = Array.isArray(goal?.tiles) && goal.tiles.length ? goal.tiles : Array.isArray(goal?.tile) ? [goal.tile] : [];
+    for (const row of FIGHT_EXITS) {
+        for (const controller of row.fightsOf(run, levelSource)) {
+            if (controller.cleared && row.standsWhenCleared !== true) continue;
+            const exit = row.exitOf(controller);
+            if (exit && tiles.some(([tx, ty]) => Math.floor(exit.x / TILE_SIZE) === tx && Math.floor(exit.y / TILE_SIZE) === ty)) {
+                return controller.cleared ? { controller, exit, standing: true } : { controller, exit };
+            }
+        }
+    }
+    return null;
+}
+
+/**
+ * ⛓ LIGHTS WIRING — the fight's goal: a `sequence` (the JS side's own shape, `solverGoalsOf`) of the solver's
+ * `clear-tag` on the controller (its flag `{level, tag}`; the verb is the solver's own `OBSTACLE_STRATEGIES` row,
+ * `lights`) and then `reach-exit` onto the Teleporter the fight's end adds. A verb the tables do not register is
+ * refused BY THE SOLVER'S REASON (`no-verb`), like an event goal.
+ */
+export function fightExitGoal(goal, run, { controller: c, exit }) {
+    const flag = { level: run.level, tag: c.tag };
+    const key = `solid:${c.id.split('@')[0]}`;
+    const { verb, registered } = clearTagVerbOf(key);
+    if (!registered) {
+        const reason = 'no-verb';
+        return { walker: `the exit "${goal?.name ?? 'the exit'}" is opened by a fight (${c.id}, its flag {${flag.level},${flag.tag}}): `
+            + `the solver's clear-tag refuses it — ${reason}: ${verb ? `${key} selects '${verb}', which no clear-tag executor is `
+                + 'registered for' : `no strategy row exists for ${key}`}`,
+        refusal: { kind: 'clear-tag', reason, flag, id: c.id } };
+    }
+    return { goal: { kind: 'sequence', goals: [
+        { kind: 'clear-tag', tag: flag, at: { x: c.x, y: c.y }, obstacle: c.id },
+        { kind: 'reach-exit', exit: { x: exit.x, y: exit.y } },
+    ] } };
+}
+
+/** ⛓ LIGHTS WIRING — the solver goals a mapped goal names: a `sequence`'s, in order, else the one goal. */
+export const solverGoalsOf = (solverGoal) => (solverGoal?.kind === 'sequence' ? solverGoal.goals : [solverGoal]);
 
 /**
  * ⛓ EVENT GOALS — the verb the solver's `clear-tag` executor would select for an obstacle key, and whether it is
@@ -708,7 +803,7 @@ export function solveFromTape({ staging, perTick, live, levelSource, solverGoal,
     // ⛓ SHOULD-STOP — the pass's deadline (`passShouldStop`; null = today's search exactly).
     // ⛓ RECALIBRATE — and whether it also asks the fine sites (`time`, `walk`, the via-set `detour`; only with a hook).
     // ⛓⛓ CRUSHER — and a fork of the run (`forkRunFor`): `bait` tries a choreography there before committing it.
-    const out = solveSegment({ run, goals: [solverGoal], name, boot: staging.boot, prefix: perTick, dashMode, shouldStop,
+    const out = solveSegment({ run, goals: solverGoalsOf(solverGoal), name, boot: staging.boot, prefix: perTick, dashMode, shouldStop,
         forkRun: forkRunFor({ staging, levelSource, scratchPersistence, equips, prefixLength: perTick.length }),
         ...(shouldStop ? { fineCheckpoints: fineCheckpoints === true } : {}) });
     const solveMs = clock() - t1;
@@ -1065,7 +1160,7 @@ export function createRuntimeSolver({
         keysFor(run, goal, resolved) {
             if (!enabled) return null;
             const mapped = solverGoalFor(goal, {
-                run, resolved, placement: goal?.kind === 'location' ? placementOf(goal) : null,
+                run, resolved, placement: goal?.kind === 'location' ? placementOf(goal) : null, levelSource: getLevelSource(),
             });
             if (mapped.walker) { cancel(); return null; }
             if (plan) {

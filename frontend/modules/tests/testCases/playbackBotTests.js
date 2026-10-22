@@ -255,6 +255,78 @@ registerTest({
 });
 
 /**
+ * ⛓ WALK ORDER (bot-route-chooser) — the bot's walk orders on a plain world where the order matters: Adventure's
+ * seed 84719271504320872445 (no substrate, loop mode off, direct play), played to the end three times — the listed
+ * order, then `reachable-cheapest`, then `sphere-cheapest`. Each must finish with every sphere-log location checked;
+ * `reachable-cheapest` must walk FEWER region transitions than the listed order and `sphere-cheapest` no more
+ * (offline, `measure-bot-route-orders.mjs --preset=adventure`: 7 → 5 and 7). ⚠ Not Coding Adventure, where the
+ * cheapest orders gain most: its graph is bidirectional and direct play cannot cross a synthesized reverse exit
+ * ("ServerPath has no exit "ToServerPath" in the static data", in the listed order too). The row sets its own walk
+ * order and puts the viewer's back.
+ */
+const WALK_ORDER_RULES = './presets/adventure/AP_84719271504320872445/AP_84719271504320872445_rules.json';
+
+async function playbackBotWalkOrderTest(testController) {
+  const loopModeOn = () => centralRegistry.getPublicFunction('loops', 'isLoopModeActive')?.() === true;
+  if (loopModeOn()) {
+    testController.eventBus.publish('loops:setLoopMode', { action: 'disable', activatePanel: false }, 'tests');
+    await testController.pollForCondition(() => !loopModeOn(), 'loop mode off', 5000, 100);
+  }
+  testController.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
+  const panel = await testController.pollForValue(() => getActivePanel(), 'playback bot panel instance', 5000, 100);
+  const bot = panel?.getBot?.();
+  testController.reportCondition('bot reachable', !!bot);
+  if (!bot) return testController.getOverallResult();
+  const orderBefore = bot.getWalkOrder();
+  const sourceBefore = bot.getTargetSource();
+  bot.setTargetSource('sphere');
+  const runs = {};
+  try {
+    for (const order of ['sphere-in-order', 'reachable-cheapest', 'sphere-cheapest']) {
+      bot.reset();
+      bot.setWalkOrder(order);
+      await testController.loadRulesFromFile(WALK_ORDER_RULES);
+      const sphereState = getSphereStateSingleton();
+      await sphereState.loadSphereLog(WALK_ORDER_RULES.replace('_rules.json', '_sphere_log.jsonl'));
+      const sphereLocations = (sphereState.getSphereData() ?? []).flatMap((e) => e?.locations ?? []);
+      bot.refresh();
+      await bot.instant();
+      const finished = await testController.pollForCondition(
+        () => (bot.getStatus() || '').startsWith('finished') || /^(error|blocked)/.test(bot.getStatus() || ''),
+        `${order}: bot reaches a terminal status`, 120000, 250);
+      const checked = new Set(testController.stateManager.getLatestStateSnapshot()?.checkedLocations ?? []);
+      const missing = sphereLocations.filter((n) => !checked.has(n));
+      runs[order] = bot.getRouteStats();
+      testController.reportCondition(`${order}: finished with every sphere-log location checked (status "${bot.getStatus()}", `
+        + `missing: ${missing.slice(0, 5).join(', ') || 'none'}; ${JSON.stringify(runs[order])})`,
+        finished && (bot.getStatus() || '').startsWith('finished') && missing.length === 0 && sphereLocations.length > 0);
+      bot.stop();
+    }
+    const listed = runs['sphere-in-order']?.transitions ?? -Infinity;
+    testController.reportCondition('reachable-cheapest walks fewer region transitions than the listed order '
+      + `(${runs['reachable-cheapest']?.transitions} < ${listed})`, (runs['reachable-cheapest']?.transitions ?? Infinity) < listed);
+    testController.reportCondition('sphere-cheapest walks no more region transitions than the listed order '
+      + `(${runs['sphere-cheapest']?.transitions} ≤ ${listed})`, (runs['sphere-cheapest']?.transitions ?? Infinity) <= listed);
+  } finally {
+    bot.stop();
+    bot.setWalkOrder(orderBefore);
+    bot.setTargetSource(sourceBefore);
+  }
+  return testController.getOverallResult();
+}
+
+registerTest({
+  id: 'playback-bot-walk-order',
+  name: 'Playback Bot: walk orders (Adventure, direct play)',
+  description:
+    'Plays an Adventure seed to the end three times — listed order, cheapest reachable, cheapest in the sphere — and '
+    + 'asserts each finishes with every location checked, cheapest reachable in fewer region transitions.',
+  testFunction: playbackBotWalkOrderTest,
+  category: 'Playback Bot',
+  enabled: false,
+});
+
+/**
  * ⛓ LOOP MODE (loop-mode-bot S3) — ⚖ the first target: the Adventure preset in Loop mode, no procgen features. The
  * row presses the Loops panel's Generate Costs (which enters Loop mode), sets the Loops queue to Instant (⚖ tests
  * may), and presses the bot's Play: the bot plays loop after loop by writing the Loops queue itself — explore loops

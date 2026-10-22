@@ -33,9 +33,10 @@
  * Usage:
  *   node scripts/procgen/plan-seedling-r5-conch.mjs            # plan + report
  *   node scripts/procgen/plan-seedling-r5-conch.mjs --write    # write the tape
+ *   node scripts/procgen/plan-seedling-r5-conch.mjs --check    # the committed tape is byte-identical
  */
 
-import { writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -62,6 +63,24 @@ const {
 const { KARLORE } = await import(join(MODULE, 'r5Chain.js'));
 
 const WRITE = process.argv.includes('--write');
+const CHECK = process.argv.includes('--check');
+
+/**
+ * `--check`: the committed fixture must be BYTE-identical to what this plan
+ * derives today — the regenerate-r*-tapes form, so a drift prints
+ * `DIFFERS <name>:` and reds the `producer-checks` CI job.
+ */
+const checkBytes = (name, json) => {
+    const path = join(MODULE, 'fixtures', 'tapes', `${name}.json`);
+    const have = existsSync(path) ? readFileSync(path, 'utf8') : null;
+    if (have === json) {
+        console.log(`same ${name}: ${json.length} bytes`);
+        return true;
+    }
+    console.log(`DIFFERS ${name}: ${have === null ? 'the file does not exist'
+        : `${have.length} bytes committed vs ${json.length} derived`} — re-run with --write`);
+    return false;
+};
 const source = atlasLevelSource();
 /** ⛓ The world the walk really runs in: `fire` is banked before every door. */
 const heldFire = { hasFire: true };
@@ -305,7 +324,10 @@ if (JSON.stringify([...uncrossed].sort()) !== JSON.stringify([...declaredUncross
         + `declares [${declaredUncrossed.join(', ')}]`);
 }
 
-if (WRITE) {
+if (CHECK) {
+    console.log('');
+    if (!checkBytes(tape.name, serializeTape(tape))) process.exit(1);
+} else if (WRITE) {
     const path = join(MODULE, 'fixtures', 'tapes', `${tape.name}.json`);
     writeFileSync(path, serializeTape(tape));
     console.log(`\n   wrote ${path}`);

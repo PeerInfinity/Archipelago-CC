@@ -65,6 +65,15 @@ jobs:
       - name: Stage world_generator into the site
         run: cp -r world_generator frontend/world_generator
 
+      # ⛓⛓ THE RULE CONVERTER'S EXACT MODE RUNS exporter.script_api IN THE PAGE
+      # (Pyodide; helperScript/), fetching the files `helperScriptFiles.json`
+      # lists from `<siteRoot>/exporter/` — the repo root locally, so the same
+      # path only exists on the site because of this copy. Only that SUBSET is
+      # staged (not all of exporter/), by the script that generates the list.
+      # ⛔ `frontend/exporter/` is in .gitignore, like `frontend/world_generator/`.
+      - name: Stage the exporter's helper-script subset into the site
+        run: node scripts/build/helper-script-files.mjs --stage frontend/exporter
+
       - name: Setup Pages
         uses: actions/configure-pages@v6.0.0
 

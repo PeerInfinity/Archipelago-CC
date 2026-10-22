@@ -74,6 +74,9 @@ import {
     BOMB, stepBomb, stepBombPusher,
     // ⛓ LADDER2: the placed grenade, and the player's hitbox origin (its entity point).
     HITBOX, PLACED_GRENADE, blastReaches, createPlacedGrenade, stepPlacedGrenade,
+    // ⛓ fidelity IGNEOUS D3: the rect `getState` compares a tile against, and the type-31 tile's clock (pure; the
+    // run's state comes through `entities('igneousTiles')`).
+    terrainProbeRect, igneousInRange, igneousRendersToLava, stepIgneousRender,
 } from './solverView.js';
 import {
     hazardVolume, volumeHitsBox, axeHitsPlayer, SPINNING_AXE,
@@ -82,6 +85,94 @@ import {
 } from './hazards.js';
 // ⛓ SEEDLING FIDELITY CRUSHER — the sight-aware arm, behind `CRUSHER_BAIT`.
 import { CRUSHER_BAIT, crusherSightDanger } from './crusherBait.js';
+
+/**
+ * ⛓⛓⛓ fidelity IGNEOUS D3 — THE IGNEOUS-TO-LAVA TILES' CLOCKS, as danger (`run.entities('igneousTiles')`; `null` — so
+ * nothing — while `CONTACT_FIDELITY.igneousLava` is off).
+ *
+ *   breaking   the clock runs with nobody near (`Tile.as:410-421`): lava at `now + igneousRendersToLava`. A box whose
+ *              terrain probe touches the tile at or after that tick is the lava death — BOTH modes (a dwell that spans
+ *              the tick stands there at it; a transit that reaches the cell after it walks onto lava).
+ *   unbroken   only the player's own presence advances it, and walking THROUGH is fine (the run steps the break and
+ *              the clock above takes over). WAIT mode only: a dwell IN RANGE (origin within sqrt(512)/2 of the centre)
+ *              long enough to break it (`counter + 1` renders) is danger — the break is the point of no return, so
+ *              no stance is chosen that starts the fuse under or beside itself.
+ *
+ * ⚠ THE RENDER COUNT IS TAKEN AS THE TICK COUNT: true on screen and while nothing freezes (the run refuses a dead
+ * span over a live tile by name), and the probe is the CONSERVATIVE half of `getState` (rect overlap without the
+ * nearest-tile test). Each source names the tile and its clock.
+ */
+export function igneousDanger(run, box, tick, mode = 'wait') {
+    const tiles = run.entities('igneousTiles');
+    if (!tiles) return [];
+    const ox = box.x + HITBOX.originX;
+    const oy = box.y + HITBOX.originY;
+    const probe = terrainProbeRect(ox, oy);
+    const now = run.ticksCompleted;
+    const out = [];
+    for (const t of tiles) {
+        if (t.lava) continue;
+        if (t.breaking) {
+            const lavaAt = now + igneousRendersToLava(t);
+            if (tick >= lavaAt && rectsOverlap(probe, t.rect)) {
+                out.push({ kind: 'igneous', id: `igneous@${t.tx},${t.ty}`, lavaAt,
+                    why: `Igneous-to-Lava tile (${t.tx},${t.ty}) is breaking (frame ${t.frame}, counter ${t.counter}) `
+                        + `and is LAVA from tick ${lavaAt}; the box stands on it at ${tick}` });
+            }
+        } else if (mode === 'wait' && tick - now >= t.counter + 1 && igneousInRange(t, ox, oy)) {
+            out.push({ kind: 'igneous', id: `igneous@${t.tx},${t.ty}`, breaksAt: now + t.counter + 1,
+                why: `a dwell to tick ${tick} within ${Math.sqrt(512) / 2} px of Igneous-to-Lava tile (${t.tx},${t.ty}) `
+                    + `breaks it at tick ${now + t.counter + 1} (counter ${t.counter}) — lava ${igneousRendersToLava(t)} `
+                    + 'renders from now' });
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓⛓⛓ fidelity IGNEOUS D3 — THE TILES' CLOCKS ALONG ONE PREVIEWED WALK. `igneousDanger` prices a box at a tick and
+ * cannot see the player's OWN dwell, which is what breaks an unbroken tile — the leg 649 shape: a phase stall parked
+ * on tile (2,5) for 25 ticks certifies clean box by box, and the tile turns under the walk at t38. So the samples are
+ * replayed through the render's own state machine (`stepIgneousRender`), each sample one rendered frame at its
+ * position (a tick gap renders the previous position again), from the run's live clocks: the first sample whose
+ * terrain probe touches a tile that turned at an EARLIER render (the update reads the previous frame's `t`) is the
+ * lava death, named with the tile and its clock. Every tile is taken as on screen (the conservative direction for a
+ * walk beside it). `null` while the family is (`CONTACT_FIDELITY.igneousLava` off) or nothing turns under the walk.
+ */
+export function igneousWalkDanger(run, samples) {
+    const tiles = run.entities('igneousTiles');
+    if (!tiles || samples.length === 0) return null;
+    const live = tiles.map((t) => ({ t, s: t, breakAt: t.breaking ? run.ticksCompleted : null, lavaAt: null }));
+    let prevTick = run.ticksCompleted;
+    let prev = null;
+    const render = (x, y, tick) => {
+        for (const e of live) {
+            if (e.s.lava) continue;
+            const r = stepIgneousRender(e.s, igneousInRange(e.t, x, y));
+            e.s = r.state;
+            if (r.event === 'break') e.breakAt = tick;
+            if (r.event === 'lava') e.lavaAt = tick;
+        }
+    };
+    for (const sm of samples) {
+        if (prev !== null) for (let k = prevTick + 1; k < sm.tick; k += 1) render(prev.x, prev.y, k);
+        const probe = terrainProbeRect(sm.x, sm.y);
+        const under = live.find((e) => e.s.lava && rectsOverlap(probe, e.t.rect));
+        if (under) {
+            const { tx, ty } = under.t;
+            return { x: sm.x, y: sm.y, tick: sm.tick, danger: true, mode: 'transit', horizon: sm.tick - run.ticksCompleted,
+                sources: [{ kind: 'igneous', id: `igneous@${tx},${ty}`, lavaAt: under.lavaAt ?? run.ticksCompleted,
+                    breakAt: under.breakAt,
+                    why: `Igneous-to-Lava tile (${tx},${ty}) turns to LAVA at the tick-${under.lavaAt ?? run.ticksCompleted} `
+                        + `render (broken at ${under.breakAt ?? 'an earlier visit'}) under this walk, which stands on it at `
+                        + `${sm.tick} — the lava death` }] };
+        }
+        render(sm.x, sm.y, sm.tick);
+        prev = sm;
+        prevTick = sm.tick;
+    }
+    return null;
+}
 
 export class DangerMapError extends Error {
     constructor(message) { super(message); this.name = 'DangerMapError'; }
@@ -1703,6 +1794,8 @@ export function dangerAt(run, tick, box, {
         ...spitDanger(run, box, horizon, mode === 'transit' ? spits : null, mode),
         // ⛓ fidelity CORRIDOR D2: the walk's own wallflyer/drill forecast — TRANSIT only, and only when handed.
         ...(mode === 'transit' && corridorBodies ? corridorBodyDanger(corridorBodies) : []),
+        // ⛓ fidelity IGNEOUS D3: the type-31 tiles' clocks (OFF: the family is null, so nothing).
+        ...igneousDanger(run, box, tick, mode),
     ];
     return { danger: sources.length > 0, horizon, mode, sources };
 }

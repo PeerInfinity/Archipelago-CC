@@ -570,6 +570,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "This document explains the state machine that drives the Loops module's action queue. It describes the underlying state flags, the named states they combine into, the methods and events that…"
     },
     {
+        "path": "docs/json/developer/reference/rule-kind-registry.md",
+        "title": "Rule-Node Kind Registry and Census",
+        "section": "developer/reference",
+        "summary": "A rules.json rule node has a kind: an AST node's type ({\"type\": \"item_check\"}) or a Rule Builder node's rule ({\"rule\": \"Has\"}). Several layers produce kinds and several consume them. A kind that one…"
+    },
+    {
         "path": "docs/json/developer/reference/rule-type-dispatch-inventory.md",
         "title": "Rule-Type Dispatch Inventory",
         "section": "developer/reference",
@@ -754,6 +760,12 @@ export const DOCS_INDEX = Object.freeze([
         "title": "Bounce Region Editor Panel",
         "section": "user/modules",
         "summary": "The Bounce Region Editor edits one bounce zone of a generated world: its platforms, the springs, jetpacks, pickups and portals on them, and the size of the level. As you edit, it works out again…"
+    },
+    {
+        "path": "docs/json/user/modules/checksPanel.md",
+        "title": "Checks Panel",
+        "section": "user/modules",
+        "summary": "The Checks panel is one line: how far the loaded game has got."
     },
     {
         "path": "docs/json/user/modules/discoveryPanel.md",
@@ -1157,6 +1169,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/modules/apworldEditor.md",
             "docs/json/user/modules/bounceDemo.md",
             "docs/json/user/modules/bounceRegionEditor.md",
+            "docs/json/user/modules/checksPanel.md",
             "docs/json/user/modules/discoveryPanel.md",
             "docs/json/user/modules/dungeons.md",
             "docs/json/user/modules/editor.md",
@@ -1408,6 +1421,8 @@ export const HELP_SECTIONS = Object.freeze([
                     "docs/json/developer/reference/logging-system.md",
                     "docs/json/developer/reference/url-parameters.md",
                     "docs/json/developer/reference/rule-types-reference.md",
+                    "docs/json/developer/reference/rule-kind-registry.md",
+                    "docs/json/developer/reference/rule-type-dispatch-inventory.md",
                     "docs/json/developer/reference/loops-module-states.md"
                 ],
                 "single": false
@@ -1439,7 +1454,6 @@ export const HELP_SECTIONS = Object.freeze([
                 "heading": true,
                 "docs": [
                     "docs/json/developer/reference/host-settings.md",
-                    "docs/json/developer/reference/rule-type-dispatch-inventory.md",
                     "docs/json/developer/reference/ut-tracking-modes.md"
                 ],
                 "single": false

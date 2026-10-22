@@ -29,6 +29,7 @@ import {
     auditRunShards,
     ciGateArms,
     ciGatePlanFor,
+    ciArmlessIdentityRows,
     ciIdentityArms,
     ciUnrunnableIdentityRows,
     ciRunnable,
@@ -39,6 +40,7 @@ import {
 } from './ciGatePlan.js';
 import { LOCAL_HOST, REPO, argvFor, gateRoster } from './gateRoster.js';
 import { readStandingValues, standingRows } from './standingValues.js';
+import { EXCLUDED as PRODUCER_EXCLUDED, enrolled as producerChecksEnrolled } from './ci-producer-checks.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -1118,5 +1120,84 @@ describe('auditRunShards — a FIXED shard is held to its kill deadline, not the
         const r = auditRunShards({ jobs: [fixed(CI_FIXED_SHARD_LIMIT_MS + 30_000)] });
         expect(r.ok).toBe(false);
         expect(r.over[0].name).toMatch(/Headless/);
+    });
+});
+
+describe('ci-manual-moves — the identity rows CI runs no arm for, each with a derived reason', () => {
+    const armless = ciArmlessIdentityRows({ repo: REPO });
+    const kindOf = new Map(armless.map((r) => [r.row.key, r.kind]));
+    const armKeys = new Set(ciGateArms({ repo: REPO, set: 'all' }).map((a) => a.key));
+    const bank = readStandingValues({ repo: REPO })?.rows ?? {};
+
+    it('D1 — every producer row Producer --checks runs has no arm, unless the bank quotes CI for it', () => {
+        const covered = producerChecksEnrolled(REPO).map((p) => p.split('/').pop().replace(/\.mjs$/, ''))
+            .filter((n) => PRODUCER_EXCLUDED[n] === undefined);
+        expect(covered.length).toBeGreaterThan(0);
+        for (const name of covered) {
+            const key = `producer: ${name} --check`;
+            if (!standingRows({ repo: REPO }).some((r) => r.key === key)) continue;
+            if (bank[key]?.ciSourced) {
+                expect(armKeys.has(key), `${key} is CI-sourced, so it keeps its arm`).toBe(true);
+            } else {
+                expect(kindOf.get(key), key).toBe('producer');
+                expect(armKeys.has(key), key).toBe(false);
+            }
+        }
+        /** ⛔ the two the brief named: one CI-sourced, one EXCLUDED from the job. */
+        expect(armKeys.has('producer: plan-seedling-r7-attribution --check')).toBe(true);
+        expect(armKeys.has('producer: plan-seedling-r7-ends-meet --check')).toBe(true);
+    });
+
+    it('D2 — an identity row that runs a CI-runnable gate\'s own script rides that gate\'s arm', () => {
+        expect(kindOf.get('identity: generated set')).toBe('gate');
+        expect(armKeys.has('identity: generated set')).toBe(false);
+        expect(armKeys.has('gate: seedling-generated-set')).toBe(true);
+    });
+
+    it('B4/B6 — the kind-pair censuses and the solve-seedling chain declare @ci-box and get no arm', () => {
+        for (const key of ['identity: empty pairs c3', 'identity: empty pairs c6', 'identity: carved pairs c4',
+            'identity: solve-seedling-r9-campaign --check', 'identity: solve-seedling-r8-d2-chain --check',
+            'producer: solve-seedling-r8-d2 --check']) {
+            expect(kindOf.get(key), key).toBe('ci-box');
+            expect(armKeys.has(key), key).toBe(false);
+        }
+        /** ⛓ no `solve-seedling-*` row of any kind keeps an arm (⚖ the chain stays manual). */
+        expect([...armKeys].filter((k) => /solve-seedling-/.test(k))).toEqual([]);
+    });
+
+    it('the Windows rows keep their own reason, and ciUnrunnableIdentityRows is exactly them', () => {
+        const win = armless.filter((r) => r.kind === 'windows').map((r) => r.row.key).sort();
+        expect(ciUnrunnableIdentityRows({ repo: REPO }).map((r) => r.key).sort()).toEqual(win);
+    });
+
+    it('every armless row has a reason a reader can act on, and no armless row is an arm', () => {
+        for (const r of armless) {
+            expect(['windows', 'ci-box', 'producer', 'gate']).toContain(r.kind);
+            expect(r.why.length).toBeGreaterThan(10);
+            expect(armKeys.has(r.row.key)).toBe(false);
+        }
+    });
+});
+
+describe('ci-manual-moves — a @ci-paths gate gets its OWN shard, after the partition', () => {
+    const plan = ciGatePlanFor({ repo: REPO, set: 'browser' });
+    const pathShards = plan.shards.filter((s) => s.pathFiltered);
+
+    it('seedling-wasm-ship is path-filtered and in no packed shard', () => {
+        expect(pathShards.map((s) => s.keys)).toEqual([['gate: seedling-wasm-ship']]);
+        const packed = plan.shards.filter((s) => !s.pathFiltered).flatMap((s) => s.keys);
+        expect(packed).not.toContain('gate: seedling-wasm-ship');
+    });
+
+    it('path shards are numbered after every packed shard, so dropping one moves no id', () => {
+        const ids = plan.shards.map((s) => s.id);
+        expect(ids).toEqual(ids.map((_, i) => i));
+        const firstPath = plan.shards.findIndex((s) => s.pathFiltered);
+        expect(plan.shards.slice(firstPath).every((s) => s.pathFiltered)).toBe(true);
+    });
+
+    it('the shards still cover every browser arm exactly once', () => {
+        const keys = plan.shards.flatMap((s) => s.keys).sort();
+        expect(keys).toEqual(plan.arms.map((a) => a.key).sort());
     });
 });

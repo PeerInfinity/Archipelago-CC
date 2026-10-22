@@ -771,6 +771,86 @@ export const CONTACT_FIDELITY = {
      * ✅ ON by default since the user's flip (⚖ "Flip all four", 2026-10-19); `SEEDLING_SPINNER_SWING_LOS=0|1` for a node measurement.
      */
     spinnerSwingLineOfSight: true,
+    /**
+     * fidelity IGNEOUS D2/D3 — THE IGNEOUS-TO-LAVA TILE (type 31) CRUMBLES (`igneousLava.js`, `levelRun.renderIgneousNow`).
+     *
+     *     Tile.as:390-433    inside render(), on screen only: the nearest Player within sqrt(512)/2 of the tile's
+     *                        centre counts igneousCounter 8 → 0 and breaks on the 9th in-range frame; a breaking tile
+     *                        steps igneousFrame every 9 frames and is `t = 17` (LAVA) at the 3rd — player or not
+     *     Player.as:713-737  31 → 17 under a standing player is a state CHANGE: `inLava`, the lava death
+     *
+     * Witnessed on the game (p4g, the five `igneous-*` D1 tapes, sweep leg 649's among them: lava at the t38 render,
+     * death t39). ON: the run steps every type-31 tile at the frame's render point and writes lava through the per-visit
+     * tile overlay (`withTileWrites`); a dead span or an arrival the run does not step refuses by name; the solver
+     * prices the tiles' clocks. OFF: no tile is stepped, byte-identical. `SEEDLING_IGNEOUS_LAVA=0|1` for a node
+     * measurement.
+     * ⛓ planning-9's flip (⚖ user, 2026-10-21, "Flip igneousLava ON") turns it ON. Measured movers (CI, wave-20 A/B): route
+     * survey step 195 (L76) SOLVED 519 → 496 (the OFF walk dies on the game; the ON walk is witnessed at 0 px) and sweep
+     * leg 649 failed → done (×2); every other survey step and the other 48 type-31 legs unchanged.
+     */
+    igneousLava: true,
+    /**
+     * fidelity LIGHTS (wave 20) — THE L69 LIGHTS FIGHT IS STEPPED (`lightBoss.js`, `levelRun.stepLightsNow`): the intro
+     * NPC (an X release within 24 px opens it, the pages freeze the room, its removal spawns the six fliers), the
+     * `LightBossController`'s three `worldFrame` patterns and their shots, the six `LightBoss` fliers (their contact and
+     * the `LightBossShot`s billed on the player; a sword / spear press hits them, `Enemy.hit`, `hitsMax` 3), the
+     * `LightBossTotem` Solid, and `endState()` (the {69,0} report and the exit Teleporter to L36). The solver's
+     * `solid:lightbosscontroller` row (`lights`) fights it. OFF: nothing here runs, byte-identical.
+     * `SEEDLING_LIGHTS_BOSS_FIGHT=0|1` for a node measurement.
+     */
+    lightsBossFight: false,
+    /**
+     * seedling-fidelity-bosskills D2 — THE KING OF FIRE (`lavaBoss.js`, L82) IS STEPPED: the 99-update cycle, the
+     * LavaRunners (bridged chasers once they land), the LavaBalls and their reflection, the 120-update damage window
+     * and the death's report `{82,0}`; the body leaves the solids at its removal; a WandShot flies through it; the
+     * `solid:lavaboss` → `lavaboss` strategy executes the fight. OFF: no fight is built, the census body stays the
+     * wall it always was, a press on it refuses as before and the strategy refuses by name — byte-identical.
+     */
+    kingOfFireFight: false,
+    /**
+     * seedling-fidelity-bosskills D3 — THE TENTACLED BEAST (`tentacleBeast.js`, L57): the wake, the seeded
+     * `Math.random` spawns (the run's declared `rng` stream, as the Owl's), the tentacles' sit window and their
+     * `hitRect`, the whirlpools, the death's report `{57,0}` and the mouth Teleporter. OFF: byte-identical.
+     */
+    tentacleBeastFight: false,
+    /**
+     * fidelity ROPE (wave 22) — A ROPE IS CUT ON PURPOSE (`solverBot.resolveRopeStrategy` / `execRope`): the solver's
+     * `solid:rope` row (`rope`), the PULL rung's swing stance and `execPull` asked by a `clear-tag` on the rope's own
+     * tag (`{16,0}` `rope@32,16`, `{28,0}` `rope@160,64`) or by a rope across a frontier corridor (L39's
+     * `rope@96,384`). The cut itself is the run's (`levelRun.pullRope`, R5 slice 10), witnessed on the game by
+     * rules-2's rope-events game probe (it lands with `rules-rope-events`). OFF: no row, no verb — byte-identical (the survey's L39 steps keep "No
+     * strategy row exists"). `SEEDLING_ROPE_CUT_VERB=0|1` for a node measurement.
+     * ⛓ planning-9's flip (⚖ user, 2026-10-21, "Yes, flip it") turns it ON, landing as one integration with js rope-goal
+     * and rules-2's `rules-rope-events` (which makes the cut an event the logic requires). Measured movers (CI, wave-22
+     * A/B): survey L39 steps 73 / 164 change refusal text (REFUSED → REFUSED); the 28 rope-level sweep legs: 0 movers.
+     */
+    ropeCutVerb: true,
+    /**
+     * fidelity L1516 D2 — A CHEST'S PROBE LINE STOPS ONE PIXEL SHORT OF `toX` (`chest.chestProbeLine`).
+     *
+     *     Chest.as:63      collideLine("Player", x-originX+m, …, x-originX+width-2*m, …)   (m = 2)
+     *     World.as:442     while (x < toX) collidePoint(…)       World.as:514  the end point: `precision > 1` only
+     *
+     * So the integer probes are px+2 .. px+11, not px+12. Witnessed on the game (p4g, `l15-chest-line-edge`): the
+     * player climbing column 9 under L15 `chest@144,96` at x 157.98 (box left 155.98) touched no probe and STOPPED at
+     * y 114.24 under the Solid; the model's px+12 probe opened the chest and walked through it. ON: the line ends at
+     * px+11 (the keyLock's transcription). OFF: px+12, byte-identical. `SEEDLING_CHEST_PROBE_LINE_END=0|1` for a node
+     * measurement.
+     * ⛓ planning-9's flip (⚖ user, 2026-10-21, "Flip chest / pit switches") turns it ON. Measured movers (CI, wave-21
+     * A/B): sweep leg 206 failed → done ×2; the route survey (full) and the 236 chest-level legs: 0 movers (crossed↔done noise).
+     */
+    chestProbeLineEnd: true,
+    /**
+     * fidelity L1516 D3 — AN ENCLOSED PIT IS ENTERED ACROSS A CORNER (`solverBot.enclosedPitCorners`, the reach-pit
+     * executor). `Player.getState` reads one point a tick (`Player.as:679`), so a diagonal step jumps it across the
+     * corner a floor cell shares with a pit whose four neighbours are pits (L16's (13,4), sweep leg 206). Witnessed on
+     * the game (p4g, `l16-corner-pit-corner` / `-control`, 0 px). ON: the executor walks to a stance in a diagonal floor
+     * cell and takes the corner step its preview found. OFF: the plan exemption alone, which cannot reach such a pit
+     * (refused by name), byte-identical. `SEEDLING_ENCLOSED_PIT_CORNER=0|1` for a node measurement.
+     * ⛓ planning-9's flip (⚖ user, 2026-10-21, "Flip chest / pit switches") turns it ON. Measured movers (CI, wave-21
+     * A/B): sweep leg 206 failed → done ×2; the route survey (full) and the 236 chest-level legs: 0 movers (crossed↔done noise).
+     */
+    enclosedPitCorner: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -926,6 +1006,24 @@ if (globalThis.process?.env?.SEEDLING_SHAKE_BAND_MOOT === '1') CONTACT_FIDELITY.
 if (globalThis.process?.env?.SEEDLING_SHAKE_BAND_MOOT === '0') CONTACT_FIDELITY.shakeBandMoot = false;
 if (globalThis.process?.env?.SEEDLING_SPINNER_SWING_LOS === '1') CONTACT_FIDELITY.spinnerSwingLineOfSight = true;
 if (globalThis.process?.env?.SEEDLING_SPINNER_SWING_LOS === '0') CONTACT_FIDELITY.spinnerSwingLineOfSight = false;
+// ⛓ fidelity IGNEOUS D2: `SEEDLING_IGNEOUS_LAVA=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_IGNEOUS_LAVA === '1') CONTACT_FIDELITY.igneousLava = true;
+if (globalThis.process?.env?.SEEDLING_IGNEOUS_LAVA === '0') CONTACT_FIDELITY.igneousLava = false;
+// ⛓ fidelity LIGHTS: `SEEDLING_LIGHTS_BOSS_FIGHT=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_LIGHTS_BOSS_FIGHT === '1') CONTACT_FIDELITY.lightsBossFight = true;
+if (globalThis.process?.env?.SEEDLING_LIGHTS_BOSS_FIGHT === '0') CONTACT_FIDELITY.lightsBossFight = false;
+// ⛓ seedling-fidelity-bosskills — the two boss fights, for a node measurement (both ship OFF).
+if (globalThis.process?.env?.SEEDLING_KING_OF_FIRE_FIGHT === '1') CONTACT_FIDELITY.kingOfFireFight = true;
+if (globalThis.process?.env?.SEEDLING_TENTACLE_BEAST_FIGHT === '1') CONTACT_FIDELITY.tentacleBeastFight = true;
+// ⛓ fidelity ROPE: `SEEDLING_ROPE_CUT_VERB=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_ROPE_CUT_VERB === '1') CONTACT_FIDELITY.ropeCutVerb = true;
+if (globalThis.process?.env?.SEEDLING_ROPE_CUT_VERB === '0') CONTACT_FIDELITY.ropeCutVerb = false;
+// ⛓ fidelity L1516 D2: `SEEDLING_CHEST_PROBE_LINE_END=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_CHEST_PROBE_LINE_END === '1') CONTACT_FIDELITY.chestProbeLineEnd = true;
+if (globalThis.process?.env?.SEEDLING_CHEST_PROBE_LINE_END === '0') CONTACT_FIDELITY.chestProbeLineEnd = false;
+// ⛓ fidelity L1516 D3: `SEEDLING_ENCLOSED_PIT_CORNER=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_ENCLOSED_PIT_CORNER === '1') CONTACT_FIDELITY.enclosedPitCorner = true;
+if (globalThis.process?.env?.SEEDLING_ENCLOSED_PIT_CORNER === '0') CONTACT_FIDELITY.enclosedPitCorner = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

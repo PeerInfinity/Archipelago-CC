@@ -38,10 +38,11 @@ describe('resolve and frameRect', () => {
     });
 
     it('FALLBACK: a key no pack carries resolves to null (the caller draws its rectangle)', () => {
-        // (G3 added `seedling:enemy/bob`, this row's example until then; a WallFlyer has no art yet.)
-        expect(art.has('seedling:enemy/wallflyer')).toBe(false);
-        expect(art.frameRect('seedling:enemy/wallflyer', 0)).toBeNull();
-        expect(art.frameAt('seedling:enemy/wallflyer', 'walk', 10)).toBeNull();
+        // (G3 added `seedling:enemy/bob` and G3b `seedling:enemy/wallflyer`, this row's examples until then; a
+        // SpinningAxe has no art yet.)
+        expect(art.has('seedling:enemy/spinningaxe')).toBe(false);
+        expect(art.frameRect('seedling:enemy/spinningaxe', 0)).toBeNull();
+        expect(art.frameAt('seedling:enemy/spinningaxe', 'walk', 10)).toBeNull();
         expect(art.frameAt('seedling:tile/ground', 'noSuchAnim', 10)).toBeNull();
     });
 

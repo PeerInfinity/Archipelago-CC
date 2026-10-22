@@ -74,6 +74,29 @@
  * AP items are drawn as their looks (`apItemOps`). `__seedlingJsGraphics.enemies`
  * reads back what was drawn, body by body. With no stack nothing here runs.
  *
+ * ⛓ GRAPHICS G3b — and so are the room bodies that are not chasers: the
+ * wallflyers, drills, ice turrets and their blasts, turrets and their spits,
+ * and the Bob Boss (`seedlingRoomBodySkin.js`: `roomBodySkinView` /
+ * `stepRoomBodySkin` after every tick, `roomBodyOps` at each paint, Y-sorted
+ * with the enemies). `__seedlingJsGraphics.roomBodies` reads them back.
+ * ⛓ G3c — the spinning axes, crushers, lava chains, the Boss Totem and its
+ * shots, the bomb pusher and its bombs, and the placed grenades
+ * (`seedlingHazardSkin.js`: `hazardSkinView` / `stepHazardSkin` after every
+ * tick, `hazardOps` at each paint, Y-sorted with the rest; their static solids
+ * are not painted again, `roomOps`' `drawnObjects`).
+ * `__seedlingJsGraphics.hazards` reads them back.
+ * ⛓ G4 — the explosions, slash hits and rain (Y-sorted with the rest), and the
+ * screen-anchored overlays on top: the talk bars and typed text (a placeholder
+ * font — ⚖ the font is open), the totem's white-out, the hearts and the load
+ * fade (`seedlingEffectSkin.js`). ⚖ The overlays sit on the MODEL's camera rect
+ * in room mode too, and follow mode jiggles inside a shake band on the
+ * renderer's own draw (user, 2026-10-21). ⛓ THE FADE HOLD: a room build's
+ * dead frames are SPENT by the run, never ticked, so with a stack on the page
+ * holds its clock for them — each owed frame is one tick slot that steps the
+ * fade (`holdEffectSkin`) instead of the run. The run's inputs and ticks are
+ * unchanged; only the wall clock waits. With no stack nothing here runs.
+ * `__seedlingJsGraphics.effects` reads them back.
+ *
  * ⛓ KILLLOCK HOOK — `?killLockBodies=<keys>|none` (the `SEEDLING_KILLLOCK_BODIES`
  * grammar) sets this page's `killLockBodies` switches before its first run;
  * absent = the defaults. The panel adds it only when its settings are
@@ -97,6 +120,11 @@ import {
 import { CAMERA_MODES, cameraView, paintOps, roomOps } from './seedlingSkinRenderer.js';
 import { playerOps, skinView, stepPlayerSkin } from './seedlingPlayerSkin.js';
 import { apItemOps, enemyOps, enemySkinView, stepEnemySkin } from './seedlingEnemySkin.js';
+import { roomBodyOps, roomBodySkinView, stepRoomBodySkin } from './seedlingRoomBodySkin.js';
+import { HAZARD_OBJECT_TAGS, hazardOps, hazardSkinView, stepHazardSkin } from './seedlingHazardSkin.js';
+import {
+    effectOps, effectSkinView, holdEffectSkin, holdOwed, jiggleCam, primeEffectSkin, screenOps, stepEffectSkin,
+} from './seedlingEffectSkin.js';
 import { loadPackStack, packsBaseUrl, parseRegistry } from '../contentPacks/contentPacks.js';
 import { browserDecoder, createArtLibrary, loadSheetImages } from '../artLibrary/artLibrary.js';
 
@@ -187,6 +215,12 @@ export function mountJsRuntimePage(win = window) {
         skin: null, player: null,
         // ⛓ G3 — the bodies' pictures (one step per game tick) and the last paint's body ops.
         enemySkin: null, enemies: null,
+        // ⛓ G3b — the room bodies' pictures and the last paint's ops.
+        roomBodySkin: null, roomBodies: null,
+        // ⛓ G3c — the puzzlements' and the last bodies' pictures and the last paint's ops.
+        hazardSkin: null, hazards: null,
+        // ⛓ G4 — the effects' and overlays' state (one step per game tick, one hold per owed dead frame), the last paint's.
+        effectSkin: null, effects: null, held: 0,
     };
     let graphicsLoad = 0;
     function setGraphics({ graphics: stack, camera } = {}) {
@@ -196,7 +230,7 @@ export function mountJsRuntimePage(win = window) {
         }
         if (stack === undefined || stack === graphics.stack) return Promise.resolve(graphics.status);
         const ticket = ++graphicsLoad;
-        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null, enemySkin: null, enemies: null });
+        Object.assign(graphics, { stack: stack || null, art: null, images: null, error: null, failedSheets: [], counts: null, skin: null, player: null, enemySkin: null, enemies: null, roomBodySkin: null, roomBodies: null, hazardSkin: null, hazards: null, effectSkin: null, effects: null });
         if (!stack) { graphics.status = 'off'; return Promise.resolve('off'); }
         graphics.status = 'loading';
         return loadGraphicsStack(stack, { win }).then(({ art, images, failed }) => {
@@ -239,6 +273,11 @@ export function mountJsRuntimePage(win = window) {
         get paintMs() { return { ...graphics.paintMs }; },
         get player() { return graphics.player ? { ...graphics.player } : null; },
         get enemies() { return graphics.enemies ? { ...graphics.enemies, ops: graphics.enemies.ops.map((o) => ({ ...o })) } : null; },
+        get roomBodies() { return graphics.roomBodies ? { ...graphics.roomBodies, ops: graphics.roomBodies.ops.map((o) => ({ ...o })) } : null; },
+        get hazards() { return graphics.hazards ? { ...graphics.hazards, ops: graphics.hazards.ops.map((o) => ({ ...o })) } : null; },
+        get effects() { return graphics.effects ? { ...graphics.effects, ops: graphics.effects.ops.map((o) => ({ ...o })), screen: graphics.effects.screen.map((o) => ({ ...o })) } : null; },
+        /** ⛓ G4 — how many dead frames the fade hold has shown (the wall clock waited; the run did not tick). */
+        get held() { return graphics.held; },
         get packsOfKeys() { return graphics.art ? Object.fromEntries(graphics.art.keys().map((k) => [k, graphics.art.packOf(k)])) : null; },
         set: setGraphics,
     };
@@ -278,14 +317,38 @@ export function mountJsRuntimePage(win = window) {
         last = now;
         let n = 0;
         while (acc >= TICK_MS && n < MAX_TICKS_PER_FRAME) {
+            // ⛓ G4 — the fade hold: an owed dead frame takes this tick slot, and the run waits.
+            if (graphics.stack && runtime.run) {
+                const ev = effectView();
+                // a fresh run starts with its boot build's fade owed; a stack switched on mid-run owes nothing
+                if (graphics.effectSkin?.epoch.run !== runtime.run) {
+                    graphics.effectSkin = primeEffectSkin(runtime.run.ticksCompleted === 0 ? ev : { ...ev, loadSpans: [] });
+                    if (runtime.run.ticksCompleted !== 0) graphics.effectSkin.seen.loadSpans = ev.loadSpans.length;
+                }
+                if (holdOwed(graphics.effectSkin)) {
+                    graphics.effectSkin = holdEffectSkin(graphics.effectSkin, ev);
+                    graphics.held += 1;
+                    acc -= TICK_MS;
+                    n += 1;
+                    continue;
+                }
+            }
             runtime.tick(heldFromCodes(down));
             if (graphics.stack) {
                 graphics.skin = stepPlayerSkin(graphics.skin, skinView(runtime.run), runtime.ticks);
                 graphics.enemySkin = stepEnemySkin(graphics.enemySkin, enemySkinView(runtime.run), runtime.ticks);
+                graphics.roomBodySkin = stepRoomBodySkin(graphics.roomBodySkin, roomBodySkinView(runtime.run), runtime.ticks);
+                graphics.hazardSkin = stepHazardSkin(graphics.hazardSkin, hazardSkinView(runtime.run), runtime.ticks);
+                graphics.effectSkin = stepEffectSkin(graphics.effectSkin, effectView(), runtime.ticks);
             }
             acc -= TICK_MS;
             n += 1;
         }
+    }
+    /** ⛓ G4 — the effects' view: the run, and the room's level record (the rain row the world does not keep). */
+    function effectView() {
+        const run = runtime.run;
+        return effectSkinView(run, { record: run ? ((runtime.mounted ?? runtime.vanilla)?.records?.get(run.level) ?? null) : null });
     }
     function frame(now) {
         lastFrameAt = now;
@@ -360,19 +423,45 @@ export function mountJsRuntimePage(win = window) {
             ? { anim: graphics.skin?.anim ?? null, ops: playerSprites.map((o) => ({ key: o.key, frame: o.frame, flipX: o.flipX, tint: o.tint ?? null, pack: art.packOf(o.key) })) }
             : null;
         const ev = art ? enemySkinView(runtime.run) : null;
-        const entitySprites = ev ? enemyOps(ev, art, { skin: graphics.enemySkin }) : [];
+        const rv = art ? roomBodySkinView(runtime.run) : null;
+        const bodySprites = rv ? roomBodyOps(rv, art, { skin: graphics.roomBodySkin }) : [];
+        graphics.roomBodies = rv
+            ? { bodies: graphics.roomBodySkin?.bodies.size ?? 0,
+                ops: bodySprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, tint: o.tint ?? null, pack: o.key ? art.packOf(o.key) : null })) }
+            : null;
+        const hv = art ? hazardSkinView(runtime.run) : null;
+        const hazardSprites = hv ? hazardOps(hv, art, { skin: graphics.hazardSkin }) : [];
+        graphics.hazards = hv
+            ? { bodies: graphics.hazardSkin?.bodies.size ?? 0,
+                ops: hazardSprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, rot: o.rot ?? 0, tint: o.tint ?? null, pack: o.key ? art.packOf(o.key) : null })) }
+            : null;
+        const enemySprites = ev ? enemyOps(ev, art, { skin: graphics.enemySkin }) : [];
+        const fv = art && graphics.effectSkin ? effectView() : null;
+        const effectSprites = fv ? effectOps(fv, art, { skin: graphics.effectSkin }) : [];
+        const entitySprites = [...enemySprites, ...bodySprites, ...hazardSprites, ...effectSprites];
         const apItemSprites = art ? apItemOps(apItems, art, AP_ITEM_COLOUR) : null;
         graphics.enemies = ev
             ? { bodies: ev.chasers.length + ev.spinners.length + ev.arrows.length, apItems: apItemSprites.length,
-                ops: [...entitySprites, ...apItemSprites].map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, tint: o.tint ?? null,
+                ops: [...enemySprites, ...apItemSprites].map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, tint: o.tint ?? null,
                     pack: o.key ? art.packOf(o.key) : null })) }
             : null;
         const ops = roomOps(world, art, {
             level, tick: runtime.ticks, player: playerBoxAt(state.x, state.y), playerSprites, apItems,
-            ...(art ? { apItemSprites, entitySprites } : {}),
+            ...(art ? { apItemSprites, entitySprites, drawnObjects: (o) => HAZARD_OBJECT_TAGS.has(o.tag) } : {}),
         });
-        const view = cameraView(graphics.camera, world, state, runtime.run);
-        graphics.counts = { ops: ops.length, ...paintOps(ctx, ops, art ? graphics.images : null, view, canvas, { tinted }) };
+        // ⚖ follow mode jiggles inside a shake band on the renderer's own draw; the band's edges are the model's
+        const view = cameraView(graphics.camera, world, state, runtime.run,
+            { jiggle: (now) => jiggleCam(now, level, runtime.ticks) });
+        // ⚖ the overlays: on the displayed screen in follow mode, on the model's camera rect (its middle) in room mode
+        const cam = graphics.camera === 'follow' ? view : cameraView('follow', world, state, runtime.run);
+        const overlays = fv ? screenOps(fv, art, { skin: graphics.effectSkin, cam }) : [];
+        graphics.effects = fv
+            ? { explosions: graphics.effectSkin.explosions.length, slashes: graphics.effectSkin.slashes.length, droplets: graphics.effectSkin.droplets.length,
+                hearts: { ...graphics.effectSkin.hearts }, cover: graphics.effectSkin.cover, owed: graphics.effectSkin.fadeQueue.length,
+                ops: effectSprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, pack: o.key ? art.packOf(o.key) : null })),
+                screen: overlays.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, colour: o.colour ?? null, alpha: o.alpha ?? 1, glyph: o.glyph ?? null })) }
+            : null;
+        graphics.counts = { ops: ops.length + overlays.length, ...paintOps(ctx, [...ops, ...overlays], art ? graphics.images : null, view, canvas, { tinted }) };
         const ms = win.performance.now() - t0;
         graphics.frames += 1;
         const pm = graphics.paintMs;

@@ -282,10 +282,14 @@ const sprite = (art, key, frame, at, extra = {}) => {
  * @param {object[]} [opts.apItemSprites] the AP items' ops (`seedlingEnemySkin.apItemOps`, G3); when given they
  *   replace the logo drawn for each of `apItems`
  * @param {object[]} [opts.entitySprites] every other body's ops (`seedlingEnemySkin.enemyOps`, G3), Y-sorted
+ * @param {function} [opts.drawnObjects] `(objectSolid) → boolean`: a static solid the caller draws itself as a body
+ *   (G3c's crushers, axes, chains, totem, bomb pusher — `seedlingHazardSkin.HAZARD_OBJECT_TAGS`), so its build-time
+ *   rectangle is not painted under (or, for a crusher that has moved, beside) the sprite. Omitted: every object is drawn.
  * @param {Function} [opts.mask] the autotiler (a test's MUTANT; default `autotileMask`)
  */
 export function roomOps(world, art, {
     level, tick = 0, player = null, playerSprites = null, apItems = [], apItemSprites = null, entitySprites = null, mask = autotileMask,
+    drawnObjects = null,
 } = {}) {
     const plan = planFor(world, level, mask);
     const ops = [];
@@ -309,6 +313,7 @@ export function roomOps(world, art, {
     }
 
     for (const o of plan.objects) {
+        if (drawnObjects?.(o)) continue;
         const fallback = rectOp(o.rect, objectSolidColour(o), 0.85, -o.rect.bottom);
         if (o.cls?.as3 === 'CliffSide' && has('seedling:scenery/cliffside')) {
             ops.push(sprite(art, 'seedling:scenery/cliffside', o.cls.frame ?? 0, o, { layer: 0, fallback }));
@@ -343,16 +348,19 @@ export function roomOps(world, art, {
 /**
  * The visible rectangle in room pixels. `room`: the whole room (today's view).
  * `follow`: the original's 160×160 camera — the run's own camera when it has
- * one (`run.cameraNow`; a shaking band is drawn at its middle), else the
+ * one (`run.cameraNow`; a shaking band is drawn at its middle, or where
+ * `opts.jiggle(cameraNow)` puts it — G4), else the
  * follow target clamped as `Game.view()` clamps it.
  */
-export function cameraView(mode, world, state, run = null) {
+export function cameraView(mode, world, state, run = null, { jiggle = null } = {}) {
     const room = world.world;
     if (mode !== 'follow') return { x: 0, y: 0, w: room.width, h: room.height };
     let cam = null;
     try {
         const now = run?.cameraNow ?? null;
         if (now?.cam) cam = now.cam;
+        // ⛓ G4 — `jiggle(cameraNow)` places the camera inside a shake band (the cosmetic draw); absent, the middle.
+        else if (now?.band && jiggle) cam = jiggle(now);
         else if (now?.band) cam = { x: Math.round((now.band.x.lo + now.band.x.hi) / 2), y: Math.round((now.band.y.lo + now.band.y.hi) / 2) };
     } catch { cam = null; }
     if (!cam) {

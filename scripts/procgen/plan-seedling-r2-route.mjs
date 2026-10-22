@@ -43,16 +43,17 @@
  * that a fact about the map instead of a fact about this file.
  *
  * Run: node scripts/procgen/plan-seedling-r2-route.mjs [--write] [--verbose]
+ *      node scripts/procgen/plan-seedling-r2-route.mjs --check   # the committed fixtures are byte-identical
  *      node scripts/procgen/plan-seedling-r2-route.mjs --clears
  *      node scripts/procgen/plan-seedling-r2-route.mjs --reach=71:3
  */
 
-import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { emitFixtures } from './producerFixtureBytes.js';
 
 argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -70,6 +71,7 @@ const {
 const { makeRouteGraph } = await import(join(HERE, 'seedlingRouteGraph.mjs'));
 
 const WRITE = process.argv.includes('--write');
+const CHECK = process.argv.includes('--check');
 const VERBOSE = process.argv.includes('--verbose');
 const OUT = join(MODULE, 'fixtures', 'r2-route.json');
 const LEVEL_COUNT = 116;
@@ -377,9 +379,7 @@ if (g.unbuildable.size > 0) {
     console.log(`levels that do not build (${g.unbuildable.size}), on the route: `
         + `${onRoute.join(', ') || 'none'}`);
 }
-if (WRITE) {
-    writeFileSync(OUT, `${JSON.stringify(route, null, 2)}\n`);
-    console.log(`\nwrote ${OUT}`);
-} else {
+const outputs = [{ path: OUT, text: `${JSON.stringify(route, null, 2)}\n` }];
+if (!emitFixtures(outputs, { write: WRITE, check: CHECK })) {
     console.log('\n(dry run — pass --write to update fixtures/r2-route.json)');
 }

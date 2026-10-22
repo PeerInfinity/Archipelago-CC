@@ -117,6 +117,18 @@ See [World Generator Test Guide](../docs/json/developer/tests/test-world-generat
   python scripts/test/test-json-world-builder.py
   ```
 
+- **`test/check-helper-script-pyodide.mjs`** - The helper-script converter
+  (`exporter/script_api.py`, Python ⇄ the rules.json `helpers` format) in a REAL
+  Pyodide from Node: the two manifests' files plus `helperScriptCore.js`'s
+  `convertInPyodide`, the function the page's worker calls. Round-trips a
+  hand-written script and the alttp_worldgen preset's helpers, and fails if
+  anything outside the served files was imported. Needs the pinned `pyodide`
+  package, which is not a repo dependency (exit 2 without it).
+  ```bash
+  npm i --no-save pyodide@0.28.3
+  node scripts/test/check-helper-script-pyodide.mjs
+  ```
+
 #### Integration Tests
 
 - **`test/run_multiclient_test.py`** - Orchestrate multiclient integration tests
@@ -217,6 +229,19 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   node scripts/build/world-generator-files.mjs --write   # regenerate
   ```
 
+- **`build/helper-script-files.mjs`** - The SUBSET of `exporter/` the page fetches
+  to run `exporter.script_api` (Python ⇄ the rules.json `helpers` format) under
+  Pyodide (`frontend/modules/helperScript/helperScriptFiles.json`; its `INCLUDE`
+  list names the files, `git ls-files` resolves them). Re-run with `--write` after
+  adding or removing a file there; `helperScriptFiles.test.js` fails while it is
+  stale. `--stage <dir>` copies exactly those files (the Pages deploy does
+  `--stage frontend/exporter`).
+  ```bash
+  node scripts/build/helper-script-files.mjs                          # check
+  node scripts/build/helper-script-files.mjs --write                  # regenerate
+  node scripts/build/helper-script-files.mjs --stage frontend/exporter
+  ```
+
 - **`build/bundle-frontend.js`** - Bundle the frontend for production using esbuild
   ```bash
   node scripts/build/bundle-frontend.js            # Production build
@@ -245,6 +270,19 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
 ### Procgen Scripts (scripts/procgen/)
 
 Headless CLI drivers and verification harnesses for the procedural-generation substrates. See **[scripts/procgen/README.md](./procgen/README.md)** for full usage.
+
+### Rule-Kind Census (scripts/rules/)
+
+The cross-layer rule-node kind census. See **[rule-kind-registry.md](../docs/json/developer/reference/rule-kind-registry.md)**.
+
+- **`rules/ruleKindCensus.js`** - Print every layer's gaps against the registry `frontend/schema/rule-kinds.json`. The gate is `rules/ruleKindCensus.test.js` (vitest)
+  ```bash
+  node scripts/rules/ruleKindCensus.js [--json]
+  ```
+- **`rules/rule_kind_vocab.py`** - Regenerate the Python layers' vocabulary snapshot `frontend/schema/rule-kinds.python-vocab.json` (pytest checks it is fresh)
+  ```bash
+  python scripts/rules/rule_kind_vocab.py --write   # or --check
+  ```
 
 ### Documentation and Reporting Scripts (scripts/docs/)
 

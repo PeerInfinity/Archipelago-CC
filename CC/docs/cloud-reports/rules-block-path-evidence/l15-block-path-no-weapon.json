@@ -1,0 +1,35 @@
+{
+ "tape": "no-weapon",
+ "set_id": "seedling-vanilla-record-f5bdb07d",
+ "mounted": "seedling-vanilla-record-f5bdb07d",
+ "observations": 457,
+ "transitions": [],
+ "out": null,
+ "maxX": 93.93190231617379,
+ "clears": [
+  "10,0",
+  "11,0",
+  "3,0",
+  "5,0",
+  "8,0",
+  "8,1"
+ ],
+ "final": {
+  "t": 456,
+  "x": 90.73936522532503,
+  "y": 66.42530244682033,
+  "level": 15
+ },
+ "model": {
+  "refused": null,
+  "transitions": [],
+  "maxX": 93.93190231617379,
+  "final": {
+   "t": 456,
+   "x": 90.73936522532503,
+   "y": 66.42530244682033,
+   "level": 15
+  },
+  "agrees": true
+ }
+}

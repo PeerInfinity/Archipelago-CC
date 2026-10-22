@@ -90,6 +90,13 @@ Examples:
     )
 
     parser.add_argument(
+        '--lossy',
+        action='store_true',
+        help='Emit an always-true placeholder for a rule kind with no codegen path, listing each one '
+             '(default: fail, naming the kind)'
+    )
+
+    parser.add_argument(
         '--game-name',
         type=str,
         default=None,
@@ -181,6 +188,7 @@ Examples:
             canonical_seed=canonical_seed,
             player_id=args.player_id,
             apply_name_substitutions=args.apply_name_substitutions,
+            lossy=args.lossy,
         )
 
         # Load and validate
@@ -206,6 +214,7 @@ Examples:
                 game_name=args.game_name,
                 canonical_seed=canonical_seed,
                 player_id=args.player_id,
+                lossy=args.lossy,
             )
             out_dir = Path(args.apworld)
             out_dir.mkdir(parents=True, exist_ok=True)

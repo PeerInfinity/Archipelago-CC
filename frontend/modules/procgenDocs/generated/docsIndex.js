@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 28,
-        "headings": 1141,
+        "headings": 1152,
         "indexHeadings": 2,
-        "lines": 31000,
+        "lines": 31462,
         "pages": 4,
-        "words": 423706
+        "words": 431490
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -170,7 +170,7 @@ export const DOCS_INDEX = frz({
             "file": "playback-and-debugging.md",
             "h1": "Playback and Debugging Tools",
             "headings": 9,
-            "lines": 114,
+            "lines": 124,
             "links": [
                 "architecture.md",
                 "bounce.md",
@@ -179,7 +179,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/playback-and-debugging.md",
-            "words": 3474
+            "words": 3678
         },
         {
             "description": "How loop mode records what a player does in a region and plays it back: per-block modes (Manual, Record, Playback, Bot) and the Instant toggle, the saved-recording store, the capture contract that decides who records, queue annotations, summary substrates, reset handling and multi-run replay, and the strict action gate.",
@@ -205,8 +205,8 @@ export const DOCS_INDEX = frz({
             "description": "The maze substrate (`frontend/modules/mazeRoom/`, substrate id `maze`) renders each region as a grid-of-tiles room: the player walks tile by tile, picks up items by stepping onto location tiles, and leaves through exit tiles. It is the only substrate with saved custom queues, and it doubles as the second binding of the procgen level generator.",
             "file": "maze.md",
             "h1": "Maze Substrate",
-            "headings": 25,
-            "lines": 278,
+            "headings": 27,
+            "lines": 317,
             "links": [
                 "architecture.md",
                 "concepts.md",
@@ -218,7 +218,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/maze.md",
-            "words": 5284
+            "words": 6767
         },
         {
             "description": "The maze lab page (`frontend/modules/mazeRoom/lab.html`) is a standalone static page that generates, edits, solves and hand-drives maze levels from URL parameters alone, and edits region libraries and worlds. It is the maze's counterpart of Seedling's `seedlingDemo/watch.html`, and it also runs inside the frontend in a Golden Layout panel.",
@@ -334,7 +334,7 @@ export const DOCS_INDEX = frz({
             "file": "seedling-bot.md",
             "h1": "The Seedling Real-Game Bot",
             "headings": 37,
-            "lines": 727,
+            "lines": 731,
             "links": [
                 "architecture.md",
                 "flash.md",
@@ -344,36 +344,36 @@ export const DOCS_INDEX = frz({
                 "seedling-solve-progress.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot.md",
-            "words": 34093
+            "words": 34606
         },
         {
             "description": "The Seedling solver reaches the simulation through a single run object and a set of imported helpers.",
             "file": "seedling-solver-surface.md",
             "h1": "The Seedling Solver's Surface",
             "headings": 15,
-            "lines": 302,
+            "lines": 306,
             "links": [
                 "concepts.md"
             ],
             "path": "docs/json/developer/procgen/seedling-solver-surface.md",
-            "words": 4544
+            "words": 4581
         },
         {
             "description": "What the Seedling solver reports while it solves: one hook, called at fixed points in the search, and a snapshot that holds a tree of the solver's goals and rungs, a tile map of the states it previewed, and its work counts.",
             "file": "seedling-solve-progress.md",
             "h1": "The Seedling Solver's Progress Stream",
             "headings": 21,
-            "lines": 419,
+            "lines": 425,
             "links": [],
             "path": "docs/json/developer/procgen/seedling-solve-progress.md",
-            "words": 11463
+            "words": 11929
         },
         {
             "description": "This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts.",
             "file": "seedling-bot-log.md",
             "h1": "Seedling Bot and Procgen Arcs: the Build Log",
-            "headings": 655,
-            "lines": 24102,
+            "headings": 664,
+            "lines": 24462,
             "links": [
                 "architecture.md",
                 "demos.md",
@@ -381,17 +381,17 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot-log.md",
-            "words": 258801
+            "words": 263330
         },
         {
             "description": "Every numeric literal in Seedling's JS simulation — the static import closure of `frontend/modules/seedlingDemo/levelRun.js` — is one row of a generated census, `scripts/procgen/seedling-constants-census.csv`, and every row carries a REVIEWED class (`physics`, `rule`, `cosmetic`, `structural`) joined from `scripts/procgen/seedling-constants-fields.csv`.",
             "file": "seedling-constants.md",
             "h1": "Seedling Constants Census",
             "headings": 16,
-            "lines": 690,
+            "lines": 729,
             "links": [],
             "path": "docs/json/developer/procgen/seedling-constants.md",
-            "words": 10275
+            "words": 10827
         },
         {
             "description": "The contract two bots share: what every input tape says whatever game it drives (the envelope), how Seedling's tape and Robot Wants Kitty's two tape forms map onto it, the core every observation stream reports, and why the gates compare exactly. `frontend/modules/seedlingDemo/tapeEnvelope.js` reads the envelope and `observationTolerance.js` is the diagnostic comparator; neither is a gate.",

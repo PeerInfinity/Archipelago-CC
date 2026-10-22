@@ -38,6 +38,7 @@ export const moduleInfo = {
         { key: 'playbackBot_mazeCollect', kind: STORAGE_KINDS.state, label: 'Playback Bot: maze collect policy' },
         { key: 'playbackBot_manaStrategy', kind: STORAGE_KINDS.state, label: 'Playback Bot: loop-mode mana strategy' },
         { key: 'playbackBot_targetSource', kind: STORAGE_KINDS.state, label: 'Playback Bot: check next (sphere log / any reachable)' },
+        { key: 'playbackBot_walkOrder', kind: STORAGE_KINDS.state, label: 'Playback Bot: walk order (in order / cheapest in sphere / cheapest reachable)' },
     ],
 };
 
@@ -75,6 +76,9 @@ export function register(registrationApi) {
     registrationApi.registerEventBusSubscriberIntent?.(PLAYBACK_WALK_FAILED_EVENT);
     // ⛓ solver-walk S2: a live walk's note ("solving…") — see onWalkNote.
     registrationApi.registerEventBusSubscriberIntent?.(PLAYBACK_WALK_NOTE_EVENT);
+    // ⛓ ROPE GOAL: a goal-first BREAK step's event is collected by the game's flag (a local check, no
+    // user:locationCheck) — the snapshot that holds it is the bot's signal (see onSnapshotUpdated).
+    registrationApi.registerEventBusSubscriberIntent?.('stateManager:snapshotUpdated');
 
     // Dispatcher receivers — formerly in presets/index.js. Each one
     // propagates first (so stateManager + downstream handlers see the
@@ -230,10 +234,23 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     };
     _moduleEventBus?.subscribe?.(PLAYBACK_WALK_NOTE_EVENT, onWalkNote, 'playbackBot');
 
+    // ⛓ ROPE GOAL: an obstacle EVENT is collected as a LOCAL check (`seedlingRegionGlue._eventCollect` →
+    // `collectEvent`, deliberately never user:locationCheck, whose connected path drops a location without a
+    // server id), so a bot that walked to break it first has no other signal that the gated walk now exists.
+    const onSnapshot = () => {
+        try {
+            getActivePanel()?.getBot()?.onSnapshotUpdated?.();
+        } catch (e) {
+            log('warn', 'playbackBot: bot.onSnapshotUpdated threw', e);
+        }
+    };
+    _moduleEventBus?.subscribe?.('stateManager:snapshotUpdated', onSnapshot, 'playbackBot');
+
     return () => {
         _moduleEventBus?.unsubscribe?.('maze:consumableCollected', onConsumable, 'playbackBot');
         _moduleEventBus?.unsubscribe?.(PLAYBACK_WALK_FAILED_EVENT, onWalkFailed, 'playbackBot');
         _moduleEventBus?.unsubscribe?.(PLAYBACK_WALK_NOTE_EVENT, onWalkNote, 'playbackBot');
+        _moduleEventBus?.unsubscribe?.('stateManager:snapshotUpdated', onSnapshot, 'playbackBot');
         _moduleEventBus = null;
         _moduleDispatcher = null;
     };

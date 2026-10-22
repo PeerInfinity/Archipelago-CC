@@ -19,6 +19,7 @@
  *   node scripts/procgen/check-seedling-rewind-exactness.mjs --script=plan-seedling-hammer-a-escape.mjs --args=--check
  *   … --keep=<file.jsonl>   keep the probe rows (default: a temp file, removed)
  *   … --json=<path>         the summary as JSON
+ * @ci-box it has no argument-free run: it takes a positional `--row=<row>` (or `--script=`) and exits 1 without one, and each row re-runs a whole producer under the probe hook, which has never been priced on a runner, so adopting a row into CI is a costed decision.
  */
 
 import { spawn } from 'node:child_process';

@@ -349,3 +349,9 @@ frontend/docs/
 # apworld editor's `⭳ .apworld` fetches it from the site root). ⛔ Build output;
 # the source is world_generator/ at the repo root.
 frontend/world_generator/
+
+# ⛓ the exporter's helper-script subset, staged into the Pages artifact by the
+# same workflow (`node scripts/build/helper-script-files.mjs --stage`; the rule
+# converter's Exact mode fetches it from the site root). ⛔ Build output; the
+# source is exporter/ at the repo root.
+frontend/exporter/

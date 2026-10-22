@@ -1,0 +1,17 @@
+== step 93 — L56 ... SOLVED 262 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 463 ms
+== step 94 — L57 ... NO-EDGE — the AP exit 'level_57 -> level_58__r4c1' is out_tentaclebeast_80_48, and the atlas has no such entity with `to` 58 in L57 — the two sources disagree.
+== step 95 — L58 ... NO-ARRIVAL — the AP exit 'level_57 -> level_58__r4c1' is out_tentaclebeast_80_48, and the atlas has no such entity with `to` 58 in L57 — the two sources disagree.
+== step 124 — L56 ... SOLVED 262 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 452 ms
+== step 125 — L57 ... REFUSED — solverBot(survey-step-125) clear-tag {57,0} tentaclebeast@80,48: 'tentaclebeast' cannot act on tentaclebeast@80,48 with this run's bag — the Tentacled Beast's f
+== step 126 — L58 ... NO-ARRIVAL — the AP exit 'level_57 -> level_58__r4c1' is out_tentaclebeast_80_48, and the atlas has no such entity with `to` 58 in L57 — the two sources disagree.
+== step 190 — L71 ... REFUSED — solverBot(survey-step-190) chest (160,256) stance -> kill -> chaser kill (lavarunner@64,224) by press: lavarunner@64,224 is still in the world after the whole 1
+== step 194 — L71 ... SOLVED 327 ticks, 2 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 1456 ms
+== step 202 — L71 ... SOLVED 193 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 641 ms
+== step 221 — L71 ... REFUSED — solverBot(survey-step-221) reach-exit (224,304)->L80 -> kill -> chaser kill (lavarunner@64,224) by press: lavarunner@64,224 is still in the world after the whol
+== step 223 — L71 ... SOLVED 171 ticks, 1 decision(s), 0 re-plan(s), 0 hit(s), 1 pass(es) — 794 ms
+  step 94 L57: NO-EDGE — unclassified — see the refusal text
+  step 95 L58: NO-ARRIVAL — unclassified — see the refusal text
+  step 125 L57: REFUSED — unclassified — see the refusal text
+  step 126 L58: NO-ARRIVAL — unclassified — see the refusal text
+  step 190 L71: REFUSED — unclassified — see the refusal text
+  step 221 L71: REFUSED — unclassified — see the refusal text

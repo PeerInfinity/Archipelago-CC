@@ -133,11 +133,15 @@ describe('the committed playthrough at a real sphere — the census\'s RESTART-O
     const finderAt = (items) => finderOver(Object.fromEntries(Object.entries(rules.regions['1']).map(([n, r]) => [n,
         (r.exits ?? []).filter((e) => holds(e.access_rule ?? null, items)).map((e) => [e.name, e.connected_region])])));
 
-    it('every RESTART-ONLY region of sphere 0.4 routes home by Restart; without the flag, by nothing', () => {
-        const row = census.rows.find((r) => r.sphere === '0.4');
+    // ⛓ rules-block-path — the LAST step of sphere 0, derived rather than named: it was '0.4' until L17's Chest
+    // moved to sphere 1 (L15's lock now costs the Sword), and its RESTART-ONLY pockets are the same 25 at '0.3'.
+    const LAST_OF_SPHERE_0 = census.rows.filter((r) => r.sphere.startsWith('0.')).at(-1).sphere;
+
+    it('every RESTART-ONLY region of the last step of sphere 0 routes home by Restart; without the flag, by nothing', () => {
+        const row = census.rows.find((r) => r.sphere === LAST_OF_SPHERE_0);
         expect(census.kind).toBe('restart-only');
         expect(row.stuck.length).toBeGreaterThan(0);
-        const at = finderAt(spheres.find((s) => s.sphere === '0.4').items);
+        const at = finderAt(spheres.find((s) => s.sphere === LAST_OF_SPHERE_0).items);
         const bare = structuredClone(rules);
         delete bare.exporter['1'].return_to_menu;
         for (const pocket of row.stuck) {
@@ -151,8 +155,8 @@ describe('the committed playthrough at a real sphere — the census\'s RESTART-O
     });
 
     it('a region that is NOT restart-only walks (the walk is preferred, never a Restart)', () => {
-        const row = census.rows.find((r) => r.sphere === '0.4');
-        const at = finderAt(spheres.find((s) => s.sphere === '0.4').items);
+        const row = census.rows.find((r) => r.sphere === LAST_OF_SPHERE_0);
+        const at = finderAt(spheres.find((s) => s.sphere === LAST_OF_SPHERE_0).items);
         const walker = Object.keys(rules.regions['1'])
             .find((n) => n !== 'Menu' && n !== census.start && !row.stuck.includes(n) && at(census.start, n));
         expect(planRoute({ from: walker, to: census.start, findPath: at, rules }).kind).toBe('walk');

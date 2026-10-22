@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-832cd44f",
+  "atlas_id": "seedling-7660a339",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "832cd44f" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "7660a339" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -1126,7 +1126,20 @@
       "subgraph": {
         "sub_regions": ["r1c5","r1c9","r6c8"],
         "internal_exits": [
-          { "from": "r1c5", "to": "r1c9", "bidirectional": false, "source": "analyzer" },
+          {
+            "from": "r1c5",
+            "to": "r1c9",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+                { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+              ]
+            }
+          },
           {
             "from": "r1c5",
             "to": "r6c8",
@@ -1139,7 +1152,25 @@
             "to": "r1c5",
             "bidirectional": false,
             "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Swim" } },
+                {
+                  "rule": "And",
+                  "children": [
+                    {
+                      "rule": "Or",
+                      "children": [
+                        { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                        { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+                      ]
+                    },
+                    { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+                  ]
+                }
+              ]
+            }
           },
           {
             "from": "r1c9",
@@ -1255,7 +1286,19 @@
       "subgraph": {
         "sub_regions": ["r1c1","r4c21"],
         "internal_exits": [
-          { "from": "r1c1", "to": "r4c21", "bidirectional": false, "source": "analyzer" }
+          {
+            "from": "r1c1",
+            "to": "r4c21",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          }
         ]
       }
     },
@@ -3074,10 +3117,16 @@
             "bidirectional": false,
             "source": "analyzer",
             "access_rule": {
-              "rule": "Or",
+              "rule": "And",
               "children": [
-                { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
-                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+                {
+                  "rule": "Or",
+                  "children": [
+                    { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                    { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+                  ]
+                },
+                { "rule": "Has", "args": { "item_name": "Fire" } }
               ]
             }
           },

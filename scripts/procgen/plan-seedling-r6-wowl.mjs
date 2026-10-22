@@ -84,20 +84,22 @@
  *
  * Usage:
  *   node scripts/procgen/plan-seedling-r6-wowl.mjs [--write] [--search]
+ *   node scripts/procgen/plan-seedling-r6-wowl.mjs --check   # the committed fixtures are byte-identical
  */
 
-import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { emitFixtures } from './producerFixtureBytes.js';
 
 argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
 const WRITE = process.argv.includes('--write');
+const CHECK = process.argv.includes('--check');
 const SEARCH = process.argv.includes('--search');
 
 const { createLevelRun } = await import(join(MODULE, 'levelRun.js'));
@@ -653,12 +655,10 @@ if (checks.some((k) => !k.ok)) {
     process.exit(1);
 }
 
-if (WRITE) {
-    for (const t of [tape, control]) {
-        const path = join(MODULE, 'fixtures', 'tapes', `${t.name}.json`);
-        writeFileSync(path, `${serializeTape(t)}\n`);
-        console.log(`wrote ${path}`);
-    }
-} else {
+const outputs = [tape, control].map((t) => {
+    const path = join(MODULE, 'fixtures', 'tapes', `${t.name}.json`);
+    return { path, text: `${serializeTape(t)}\n` };
+});
+if (!emitFixtures(outputs, { write: WRITE, check: CHECK })) {
     console.log('\n(dry run — pass --write to emit the tapes)');
 }

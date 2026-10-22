@@ -82,6 +82,7 @@ import { PROFILE } from './seedlingProfile.js';
 import { outOfBandFlagForWriter } from './outOfBandLedger.js';
 import { CONTACT_FIDELITY } from './contactFidelity.js';
 import { reportSlotsReadBy } from './apReportBosses.js';
+import { lightsWorldRows } from './lightBossWorld.js';
 
 /**
  * The player hitbox origin, for recovering the entity position from a box.
@@ -3093,6 +3094,18 @@ export function postFallRockOf(e) {
     return CONTACT_FIDELITY.fallRockPostFall === true && e?.type === 'fallrock';
 }
 
+/**
+ * ⛓ seedling-fidelity-bosskills D2 (`CONTACT_FIDELITY.kingOfFireFight`): is `e` L82's arena rock — a `fallrocklarge`
+ * with `bossrock` and NOT `thirdboss` — whose cleared tag this build may BUILD FALLEN? Its ctor's `!checkPersistence`
+ * arm is the whole post-fall state (`y = fallTo`, `type = "Solid"`, `cameraTimer = 0`, and no `thirdboss` spawn), the
+ * state the game rebuilds after a death in the King of Fire's room; `levelRun`'s arena-rock arm owns the Solid
+ * (`fallenRocksNow`). OFF it stays refused, as before.
+ */
+export function lavaArenaRockOf(e) {
+    return CONTACT_FIDELITY.kingOfFireFight === true && e?.type === 'fallrocklarge'
+        && Boolean(Number(e.attrs?.bossrock)) && !Boolean(Number(e.attrs?.thirdboss));
+}
+
 export function clearedAwayByTag(e, clearedTags) {
     if (!clearedTags) return false;
     const entityTag = tagOf(e.type, e.attrs);
@@ -3719,6 +3732,10 @@ export const LIVE_GEOMETRY_KEYS = Object.freeze([
     // `solid.beamTowerId` — `{rect}` where the run's drift left it. `null` (switch OFF, or no tower) is the
     // placement rect, which is what every query read before the key existed.
     'beamTowers',
+    // ⛓ seedling-fidelity-bosskills D2 (`CONTACT_FIDELITY.kingOfFireFight`): the King of Fire's body, by its
+    // `lavaboss@x,y` id — `{removed}`; the body is a wall until `FP.world.remove`. `null` (switch OFF, or no fight)
+    // is the placement rect, which is what every query read before the key existed.
+    'lavaBosses',
 ]);
 
 /**
@@ -3814,6 +3831,9 @@ export function normalizeLiveOpts(o) {
         pushables: o.pushables ?? null,
         fallenRocks: o.fallenRocks ?? null,
         beamTowers: o.beamTowers ?? null,
+        // ⛓ fidelity LIGHTS D2: only carried when a caller passes one (OFF: the bag's keys as before).
+        ...(o.lightTotems ? { lightTotems: o.lightTotems } : {}),
+        lavaBosses: o.lavaBosses ?? null,
         beforeTypeFlip: o.beforeTypeFlip ?? false,
     };
 }
@@ -4169,6 +4189,26 @@ export function withTileWrites(world, writes) {
     return o;
 }
 
+/**
+ * ⛓ seedling-fidelity-bosskills D3 — a world with RUNTIME teleporters ahead of its placed ones: a `Teleporter` an
+ * entity adds while the room runs (the Tentacled Beast's mouth, `TentacleBeast.createMouthEntrance`) is PREPENDED to
+ * the update list, so it is asked first — `playerPhysicsV2` walks `teleporters` in that order. Rows are
+ * `levelWorld`'s own teleporter shape. No rows: the world itself.
+ */
+export function withRuntimeTeleporters(world, rows) {
+    if (!rows || rows.length === 0) return world;
+    const teleporters = [...rows, ...world.teleporters];
+    const o = Object.create(world);
+    Object.defineProperties(o, {
+        teleporters: { value: teleporters, enumerable: true },
+        runtimeTeleporters: { value: rows.map((r) => ({ ...r })), enumerable: true },
+        teleporterHit: {
+            value: (box) => teleporters.filter((t) => !t.deactivated && rectsOverlap(box, t.rect)), enumerable: true,
+        },
+    });
+    return o;
+}
+
 export function buildLevelWorld(levelRecord, {
     roles = PRE_R5_ROLES, cleared = null, inventory = null, nextLevelRecord = null,
 } = {}) {
@@ -4313,6 +4353,8 @@ export function buildLevelWorld(levelRecord, {
     const arenaRockFallen = new Set();
     /** ⛓ fidelity L74LEG624 D2: the non-arena `FallRock`s this build's clears leave FALLEN (`postFallRockOf`). */
     const postFallRocks = new Set();
+    /** ⛓ bosskills D2: L82's arena rock, built fallen from a cleared tag (`lavaArenaRockOf`, the switch ON). */
+    const lavaArenaFallen = new Set();
     /**
      * ⛔⛔ R5 slice 13: every live `Spinner` — the first ENEMY the run steps.
      *
@@ -4501,6 +4543,18 @@ export function buildLevelWorld(levelRecord, {
             const now = o.beamTowers.get(s.beamTowerId);
             if (now) return now.rect;
         }
+        // ⛓ fidelity LIGHTS D2: the `LightBossTotem` — a wall until its `die` render writes `type = ""`. A missing entry is
+        // the standing totem.
+        if (o.lightTotems && s.lightTotemId) {
+            const now = o.lightTotems.get(s.lightTotemId);
+            if (now && now.gone) return null;
+        }
+        // ⛓ bosskills D2: the King of Fire leaves the type list at `FP.world.remove` (`LavaBoss.as:195`), never at
+        // `destroy` — the body is a wall for the whole death and fade.
+        if (o.lavaBosses && s.cls?.type === 'LavaBoss') {
+            const now = o.lavaBosses.get(`${s.tag}@${s.x},${s.y}`);
+            if (now && now.removed) return null;
+        }
         return s.rect;
     };
     /**
@@ -4571,6 +4625,8 @@ export function buildLevelWorld(levelRecord, {
      * wall, it is the only thing between the player and the ending.
      */
     const finalDoors = [];
+    /** ⛓ fidelity LIGHTS D2: the `lightbosscontroller`s (`lightBoss.lightsWorldRows`); only returned while ON. */
+    const lightsControllers = [];
     /**
      * ⛓ R5: the entities a HELD ITEM removed at build time.
      *
@@ -4735,6 +4791,14 @@ export function buildLevelWorld(levelRecord, {
         // this tag" would be wrong in two of the three.
         const entityTag = tagOf(e.type, e.attrs);
         let clearedHere = false;
+        // ⛓⛓⛓ SEEDLING FIDELITY LIGHTS D2 (`CONTACT_FIDELITY.lightsBossFight`; OFF: nothing). `check()` builds the
+        // totem (a 16x16 Solid) while the controller's tag holds, and `endState()`'s exit Teleporter once it is cleared.
+        if (e.type === 'lightbosscontroller' && CONTACT_FIDELITY.lightsBossFight) {
+            const rows = lightsWorldRows(e, x, y, entityTag, clearedTags);
+            if (rows.totem) solids.push(rows.totem);
+            if (rows.exit) teleporters.push(rows.exit);
+            lightsControllers.push(rows.controller);
+        }
         // ⚠ AN "APPEAR" CLASS IS ABSENT ON A FRESH BOOT, and that is the
         // exact mirror of a parked FallRock. `MoonrockPile.check()` is
         // `if (tag >= 0 && checkPersistence(tag)) remove(this)` — its own
@@ -4791,6 +4855,8 @@ export function buildLevelWorld(levelRecord, {
              */
             if (refusal && arenaRockOf(e)) {
                 arenaRockFallen.add(`${e.type}@${x},${y}`);
+            } else if (refusal && lavaArenaRockOf(e)) {
+                lavaArenaFallen.add(`${e.type}@${x},${y}`);
             } else if (refusal && postFallRockOf(e)) {
                 // ⛓ fidelity L74LEG624 D2: the rock the game leaves after its fall (the clear list is the game's live
                 // `persistence_cleared`, so {74,2} after L74's arrival button is TRUE state, not a staging choice).
@@ -5421,6 +5487,8 @@ export function buildLevelWorld(levelRecord, {
                 ...(arenaRockFallen.has(`${e.type}@${x},${y}`) ? { fallenAtBuild: true } : {}),
                 // ⛓ L74LEG624 D2: present only when the build's clears felled a non-arena rock (the switch ON).
                 ...(postFallRocks.has(`${e.type}@${x},${y}`) ? { postFall: true } : {}),
+                // ⛓ bosskills D2: present only when the build's clears felled L82's arena rock (the switch ON).
+                ...(lavaArenaFallen.has(`${e.type}@${x},${y}`) ? { lavaArenaFallen: true } : {}),
             });
         }
         /**
@@ -6186,6 +6254,8 @@ export function buildLevelWorld(levelRecord, {
          * the run's per-visit business.
          */
         shieldBosses,
+        // ⛓ fidelity LIGHTS D2: present only while `CONTACT_FIDELITY.lightsBossFight` is ON (OFF: the world's keys as before).
+        ...(CONTACT_FIDELITY.lightsBossFight ? { lightsControllers } : {}),
         /**
          * ⛓⛓⛓ R6 slice 6c: the final door, `{id, tag, x, y, ex, ey,
          * persistTag, standingRect}`.

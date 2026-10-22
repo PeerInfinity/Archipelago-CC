@@ -170,3 +170,46 @@ input.ql-inline-rename { flex: none; width: 12em; max-width: 80%; }
 /* P6 — mobile keeps the 44px touch target (styles/mobile.css) but narrows the side padding, so the
    button row fits a 390px screen without wrapping or overflowing. */
 body.mobile-layout-active .ql-bar button { padding: 12px 8px; }
+
+/* The Mini panels section (quickLaunchMini.js): a row per panel — name, how it shows now, a switch. */
+.ql-mini {
+    margin: 4px 0 6px;
+}
+.ql-mini > summary {
+    cursor: pointer;
+    font-weight: bold;
+}
+.ql-mini-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 0 2px 14px;
+}
+.ql-mini-name {
+    flex: 0 0 7.5em;
+}
+.ql-mini-state {
+    flex: 1 1 auto;
+    min-width: 0;
+    color: #aaa;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ql-mini-note {
+    padding: 2px 0 2px 14px;
+    color: #aaa;
+}
+.ql-mini-toggle {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    background: #1e1e26;
+    color: #b8b8c4;
+    border: 1px solid #34343e;
+    border-radius: 3px;
+    font: inherit;
+    font-size: 11px;
+    padding: 0 4px;
+    cursor: pointer;
+}
+.ql-mini-toggle:hover { border-color: #5a8dee; color: #d8d8e0; }

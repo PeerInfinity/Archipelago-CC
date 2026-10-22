@@ -30,7 +30,8 @@ on:
       batch:
         description: >-
           A manual test-substrates batch (testBatches.js `manual: true`:
-          bot-walks, noiz2sa, runner, tutorials, tutorials-procgen, tutorials-procgen-loops, tutorials-tracker, tutorials-seedling, tutorials-seedling-whole-game, feature-checks), or `all` to run every manual batch as
+          bot-walks, noiz2sa, runner, tutorials, tutorials-procgen, tutorials-procgen-loops, tutorials-tracker, tutorials-seedling, tutorials-seedling-whole-game, feature-checks),
+          a path-filtered on-push batch (`pushPaths`: apworld), or `all` to run every manual batch as
           parallel jobs.
         type: string
         default: all
@@ -55,12 +56,14 @@ jobs:
           BATCH: ${{ inputs.batch || 'all' }}
         run: |
           manual=$(node scripts/test/list-test-batches.js --manual)
+          # ⛓ ci-manual-moves — by name, a path-filtered on-push batch too.
+          named=$(node scripts/test/list-test-batches.js --dispatchable)
           if [ "$BATCH" = all ]; then
             list="$manual"
-          elif node -e 'process.exit(JSON.parse(process.argv[1]).includes(process.argv[2]) ? 0 : 1)' "$manual" "$BATCH"; then
+          elif node -e 'process.exit(JSON.parse(process.argv[1]).includes(process.argv[2]) ? 0 : 1)' "$named" "$BATCH"; then
             list="[\"$BATCH\"]"
           else
-            echo "::error::'$BATCH' is not a manual batch; manual batches: $manual (on-push batches run in test-templates.yml)"
+            echo "::error::'$BATCH' is not a dispatchable batch; dispatchable: $named (the other on-push batches run in test-templates.yml)"
             exit 2
           fi
           echo "Batches: $list"

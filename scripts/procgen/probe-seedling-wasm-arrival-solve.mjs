@@ -277,13 +277,24 @@ async function main() {
             check(`${tag}: the staged JS run stands where the game's player does (no stepped tick on either side)`,
                 fresh.level === status.level && fresh.state.x === status.x && fresh.state.y === status.y,
                 `JS (${fresh.state.x}, ${fresh.state.y}) game (${status.x}, ${status.y}); spawn (${staging.boot.x}, ${staging.boot.y})`);
-            const tape = parseTape(buildStagedTape({ staging, perTick: [], name: `w1-${tag}` }));
+            const built = buildStagedTape({ staging, perTick: [], name: `w1-${tag}` });
+            const tape = parseTape(built);
             // A tape's clear rows carry a `note` the model never reads; the rest must come back unchanged.
             const back = stagingFromTape(tape);
             back.persistence = back.persistence.map(({ level, tag }) => ({ level, tag }));
-            check(`${tag}: the staging round-trips the tape format (buildStagedTape → parseTape)`,
-                JSON.stringify(back) === JSON.stringify(staging),
-                JSON.stringify(back) === JSON.stringify(staging) ? `v${tape.tape_version}` : `${JSON.stringify(back)}`);
+            // ⛓ SLOTS CONSUMER — the slot array is staged off botStatus and no tape carries it (the tape is
+            // unchanged; `wasmEquips.test.js` pins its absence). ⛓ FP REQUEST — the staging stages no `fp`, and
+            // `parseTape` normalises an undeclared fp to 0 (= "do not touch", the same meaning), so the round trip
+            // adds exactly that one key. The same comparison as `wasmArrival.test.js`'s twin row.
+            const { inventory_slots: slots, ...format } = staging;
+            const want = JSON.stringify({ ...format, rng: { ...format.rng, fp: 0 } });
+            const trip = JSON.stringify(back) === want && !Object.hasOwn(staging.rng ?? {}, 'fp')
+                && !Object.hasOwn(built, 'inventory_slots')
+                && JSON.stringify(slots) === JSON.stringify(status.inventory_slots);
+            check(`${tag}: the staging round-trips the tape format (buildStagedTape → parseTape)`, trip,
+                trip ? `v${tape.tape_version}; slots ${JSON.stringify(slots)} staged off botStatus, not the tape`
+                    : `back ${JSON.stringify(back)} want ${want}; slots ${JSON.stringify(slots)}; `
+                        + `the built tape ${Object.hasOwn(built, 'inventory_slots') ? 'CARRIES' : 'carries no'} inventory_slots`);
             if (status.level !== ROOM.level) continue;
 
             const inPage = await page.evaluate(solveInPage, { staging, goals: GOALS, map: MAP_REL });
