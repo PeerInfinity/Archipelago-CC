@@ -231,7 +231,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 443,
         "browser": 154,
-        "cited": 235,
+        "cited": 236,
         "files": 457,
         "lineStyle": 14,
         "withDocblock": 457,
@@ -6885,8 +6885,20 @@ export const INSTRUMENTS = frz({
             ],
             "inheritedFlags": [
                 {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "charge-crossings"
+                },
+                {
                     "from": "argvHelp.js",
                     "name": "help"
+                },
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "masks"
+                },
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "no-directional-locks"
                 }
             ],
             "oneLiner": "The `seedling_playthrough_maze` preset: Seedling's PLAYTHROUGH atlas, restricted to a growing list of levels, projected into the MAZE substrate (tile-primitives Stage 2, session tile-primitives-stage2-l15).",
@@ -7552,10 +7564,13 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "plan",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
-                "check"
+                "check",
+                "out"
             ],
             "file": "plan-seedling-bobsoldier2.mjs",
             "flags": [
@@ -7564,6 +7579,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "out"
                 }
             ],
             "inheritedFlags": [

@@ -1,0 +1,166 @@
+CI gates @ 7fa44ca3c — run 39672844116 success, 13 job(s), 160 line(s)
+  same       gate: canonical-placements                   ci=0/0  exit=0
+  not-banked gate: concept-trial-play                     ci=25/0  exit=0
+  same       gate: jta-managed-zone-skip                  ci=6/0  exit=0
+  MOVED      gate: loop-costs-one-model                   ci=5/0  bank=4/0  exit=0
+  same       gate: maze-lab                               ci=265/0  exit=0
+  same       gate: omsi-mana-leg                          ci=13/0  exit=0
+  same       gate: preset-bundle-load                     ci=10/0  exit=0
+  MOVED      gate: procgen-demos                          ci=264/0  bank=261/0  exit=0
+  MOVED      gate: procgen-docs                           ci=194/0  bank=134/0  exit=0
+  MOVED      gate: procgen-help                           ci=451/0  bank=267/0  exit=0
+  same       gate: procgen-lab-hosting                    ci=78/0  exit=0
+  same       gate: procgen-maze-recipe                    ci=3/0  exit=0
+  same       gate: procgen-reference                      ci=21/0  exit=0
+  not-banked gate: regenerate-region-control              ci=0/0  exit=0
+  same       gate: region-step-editing                    ci=14/0  exit=0
+  MOVED      gate: seedling-ap-placement                  ci=93/0/1  bank=84/0/1  exit=0
+  same       gate: seedling-editor-arm                    ci=226/0  exit=0
+  same       gate: seedling-editor-boot                   ci=41/0  exit=0
+  same       gate: seedling-editor-edit                   ci=71/0  exit=0
+  same       gate: seedling-editor-export                 ci=29/0  exit=0
+  same       gate: seedling-editor-generate               ci=224/0  exit=0
+  same       gate: seedling-editor-generate (own server)  ci=230/0  exit=0
+  same       gate: seedling-editor-lanes                  ci=22/0  exit=0
+  same       gate: seedling-editor-manual                 ci=41/0  exit=0
+  same       gate: seedling-editor-overlays               ci=24/0  exit=0
+  same       gate: seedling-editor-phases                 ci=94/0  exit=0
+  MOVED      gate: seedling-editor-refusal                ci=21/0  bank=20/0  exit=0
+  same       gate: seedling-editor-sequence               ci=35/0  exit=0
+  same       gate: seedling-editor-shapes                 ci=37/0  exit=0
+  same       gate: seedling-editor-solve                  ci=11/0  exit=0
+  same       gate: seedling-editor-switch                 ci=62/0  exit=0
+  same       gate: seedling-editor-world                  ci=50/0  exit=0
+  shallow    gate: seedling-full-tier-owed                ci=2/0/1  bank=5/0  exit=0
+             ⛔ @ci-shallow: every verdict is a diff against a baseline commit, and a depth-1 checkout carries none of them
+  same       gate: seedling-generated-set                 ci=32/0  exit=0
+  same       gate: seedling-rerecord-rehearsal            ci=28/0  exit=0
+  same       gate: seedling-save-stamp                    ci=21/0  exit=0
+  same       gate: seedling-source-pin                    ci=6/0  exit=0
+  not-banked gate: seedling-string-pull-fast              ci=1/0  exit=0
+  same       gate: seedling-vanilla-manifest              ci=24/0  exit=0
+  same       gate: seedling-wasm-element                  ci=11/0  exit=0
+  same       gate: seedling-wasm-pages                    ci=20/0  exit=0
+  same       gate: seedling-wasm-pins                     ci=0/0  exit=0
+  MOVED      gate: seedling-wasm-ship                     ci=415/0  bank=263/0  exit=0
+  same       gate: sidecar-fields                         ci=0/0  exit=0
+  same       gate: ta-mana-leg                            ci=3/0  exit=0
+  not-banked gate: worldgen-package-sidecars              ci=27/0  exit=0
+  same       identity: acceptance batch                   ci=933c14f76004ce5822762933714ab185  exit=0
+  same       identity: AREA census default                ci=02b22525a2f36abf8657d996f89b79db  exit=0
+  same       identity: carved pairs c4                    ci=ebb9e743e7ebeb45849e51be510155c1  exit=0
+  same       identity: empty pairs c3                     ci=4937da806072ceddebca4f317617c36a  exit=0
+  same       identity: empty pairs c6                     ci=430573e9aa483a45b49d5041eb0f8915  exit=0
+  same       identity: ENEMY census default               ci=f0bec57641e1fd541ddad6f1aa24e883  exit=0
+  same       identity: generate-procgen-reference.mjs     ci=ALL 7 GENERATED MODULES AND 5 MARKDOWN REGIONS MATCH THE CODE  exit=0
+  same       identity: generated set                      ci=OK  exit=0
+  same       identity: guard census (elements)            ci=a6d18d49ae256c321d175f45ec76dccc  exit=0
+  same       identity: killgate s2                        ci=006b063920a079dae670765d2b968c95  exit=0
+  same       identity: killgate s5                        ci=7d4cb820c71a476abfb89a10b6d1ece6  exit=0
+  same       identity: killgate s9                        ci=49e23d85e2b7b9561385513d82833882  exit=0
+  same       identity: level post-sword s1                ci=fb1a59e5433e71fea436db1ea4b2ae57  exit=0
+  same       identity: level pre-sword s1                 ci=e28c1e5d6522dcca4682c44e7333a32f  exit=0
+  same       identity: maze byte-identity                 ci=57e07d213c90523b1b38d792c55a6a15  exit=0
+  same       identity: solve-seedling-r8-battery --check  ci=405d9c4bb37a0ab00fb0ef9a99194783  exit=0
+  same       identity: solve-seedling-r8-d2-chain --check ci=b76f648331c7a56e8fc11f89d5a4daf8  exit=0
+  same       identity: solve-seedling-r8-l18 --check      ci=465a8b469896813dc7efc8c1ce3937d2  exit=0
+  MOVED      identity: solve-seedling-r9-campaign --check ci=0dd656407ab78c3a46815716c38fee71  bank=3d41b9fb93b9d3818b467c67a9693499  exit=0
+  same       identity: solve-seedling-r9-l3 --check       ci=6cd35fe1414af6bf5beb7605f235cb8e  exit=0
+  not-banked producer: plan-seedling-axe-witness --check  ci=d765b9ca2d39c3d83d3619ff1c008245  exit=0
+  not-banked producer: plan-seedling-bobsoldier --check   ci=4c2dee24b1479afb7a2467739efdebc6  exit=0
+  not-banked producer: plan-seedling-bobsoldier2 --check  ci=2e94b9ef800f8bfb0f0aeb8cfdc3c10c  exit=0
+  not-banked producer: plan-seedling-bulb --check         ci=a369ebe5d7f492f79b6572a7ecbaf68e  exit=0
+  not-banked producer: plan-seedling-burn-witness --check ci=a30e67d747501810e1b7a0335c070e54  exit=0
+  not-banked producer: plan-seedling-c1-static-sword --check ci=9d7c195043f0b0f7e9f52f2c6763034a  exit=0
+  not-banked producer: plan-seedling-crusher-witness --check ci=4093709f5cb61c729913b4d157635a5f  exit=0
+  not-banked producer: plan-seedling-encounters --check   ci=1d2910e2fbb89dbce577f20247f3d4df  exit=0
+  not-banked producer: plan-seedling-f1-l5-lock --check   ci=c4206479eaa917548c01bc3f8c8a11eb  exit=0
+  not-banked producer: plan-seedling-f1-l5-open-lock --check ci=6381a6cd205e569e600ad6feb30ef770  exit=0
+  not-banked producer: plan-seedling-f1c-l18-lock --check ci=d2d46d2cfad3db8a192d41ca2c2ee8dd  exit=0
+  not-banked producer: plan-seedling-f1c-l18-phase --check ci=01ec5f9f652555a593beea93e0142e6e  exit=0
+  not-banked producer: plan-seedling-f4-l8-sandtraps --check ci=ccea3ce1fb2acb60e302e9fffc4fdcc2  exit=0
+  not-banked producer: plan-seedling-f6-reentry --check   ci=e797e8cf474be25cecd7b2aef65d9cd4  exit=0
+  not-banked producer: plan-seedling-f7-reentry --check   ci=18571df8a936cb40d676255637cd4bb9  exit=0
+  not-banked producer: plan-seedling-frontier3-witness --check ci=7d571d620a43216af88bd0d473080313  exit=0
+  not-banked producer: plan-seedling-ghostmotion --check  ci=3ba1198897c502ae27da0c8ea5582f0a  exit=0
+  not-banked producer: plan-seedling-ghostsword --check   ci=542ebb09fd74b83071765c807e359785  exit=0
+  not-banked producer: plan-seedling-hammer-a-escape --check ci=29891f04b5306cf7035d49d248651ebf  exit=0
+  not-banked producer: plan-seedling-hammer-b1-approach --check ci=78925b7711721c7bb9e6590e215e15a3  exit=0
+  not-banked producer: plan-seedling-hammer-b2-fight --check ci=9709cfc176b1e5c877dc7d90f54ff61c  exit=0
+  not-banked producer: plan-seedling-hammer-bw-bombstand --check ci=d58f5fde67f0e69ac99cb4e0747f6f7d  exit=0
+  not-banked producer: plan-seedling-hammer-c2-ghost --check ci=aec709b93217680a376addcd5aaeebb8  exit=0
+  not-banked producer: plan-seedling-hammer-d-ghostwall --check ci=c119d9a51252249d2cb10705646e3055  exit=0
+  not-banked producer: plan-seedling-hammer-dd-walkkill --check ci=bee0869b1d7ced316e4cf9f5ba3e2009  exit=0
+  not-banked producer: plan-seedling-hammer-g1-ghostkill --check ci=cf51469458ed1d838ac6dafc5d677af6  exit=0
+  not-banked producer: plan-seedling-hammer-sf-strikefloor --check ci=eb04d6f448b0149e077896e1bef64e90  exit=0
+  not-banked producer: plan-seedling-l12keyline-witness --check ci=5a77e186fed6f27e3670ae780554a59c  exit=0
+  not-banked producer: plan-seedling-l14-swordless --check ci=afef0caee9efe63d5f57c4bcf2ca8de3  exit=0
+  not-banked producer: plan-seedling-l30keylock --check   ci=5873a210036793909531f3612b3f7183  exit=0
+  not-banked producer: plan-seedling-l40button-witness --check ci=e899cd21c485e6ee342a7c105f87bfa8  exit=0
+  not-banked producer: plan-seedling-ladder2-witness --check ci=50b72731919842e612fa79ac28431871  exit=0
+  not-banked producer: plan-seedling-proximity-witness --check ci=574e07f6a895a792940635513d576f27  exit=0
+  not-banked producer: plan-seedling-pushblock-witness --check ci=5de6a42709f7769f1be5543923930be5  exit=0
+  not-banked producer: plan-seedling-r1-dark-suit --check ci=daa19a7bf32bf73f4da44eedbbac1a73  exit=0
+  not-banked producer: plan-seedling-r1-route --check     ci=8e2c030cc7a114248c23c12b463ef0fe  exit=0
+  not-banked producer: plan-seedling-r2-route --check     ci=b59fbb76211f513d2ac4d9c731aafd04  exit=0
+  not-banked producer: plan-seedling-r2-singles --check   ci=d8c805503a9c33922350db3c0cef2dde  exit=0
+  not-banked producer: plan-seedling-r2-wallflyer --check ci=d30c1acc90c6210e7752a9724be10f6b  exit=0
+  not-banked producer: plan-seedling-r3-death --check     ci=33010b695072ac0e468004f7d8a4d3d0  exit=0
+  not-banked producer: plan-seedling-r3-route --check     ci=c2f028bc8d4eb73ac8eb771764244a68  exit=0
+  not-banked producer: plan-seedling-r4 --check           ci=15ddb671b972fa3179e502e222db2173  exit=0
+  not-banked producer: plan-seedling-r4-route --check     ci=8923b578d4a9d688a837ee25c54b762c  exit=0
+  not-banked producer: plan-seedling-r5-bobboss --check   ci=d7ffd46b07db97881f2a3af97ab5f4bb  exit=0
+  not-banked producer: plan-seedling-r5-bosskey --check   ci=025a88d0d289ca8d7ffd521a83b2d839  exit=0
+  not-banked producer: plan-seedling-r5-conch --check     ci=11ad51385e3e26bd21a19c63687ce262  exit=0
+  not-banked producer: plan-seedling-r5-feather --check   ci=75ed45ad83ab54c7fa65825be1745407  exit=0
+  not-banked producer: plan-seedling-r5-karlore --check   ci=f33e46d4437433dda64b0f0d668f411a  exit=0
+  not-banked producer: plan-seedling-r5-l37-burn --check  ci=a1b7b3ba9bbc7617416586baef64394c  exit=0
+  not-banked producer: plan-seedling-r5-l40-join --check  ci=dcd543f07ec83991601bf3b97f7fcdb4  exit=0
+  not-banked producer: plan-seedling-r5-l40-part0 --check ci=afab7a78c264024b665110f9c501e853  exit=0
+  not-banked producer: plan-seedling-r5-l40-part1 --check ci=8d68e42966ef71aebe8c18a127b1c19c  exit=0
+  not-banked producer: plan-seedling-r5-l40-part5 --check ci=40e00a8009e61029bc32755d9406cc15  exit=0
+  not-banked producer: plan-seedling-r5-l41-part3 --check ci=f3f072c7984a0eec9a724bfc69780f4c  exit=0
+  not-banked producer: plan-seedling-r5-l42-part4 --check ci=1c94b065496fc635ad6ec90fedb8854a  exit=0
+  not-banked producer: plan-seedling-r5-l43-wand --check  ci=46fa66003010c6352215da34a71d18c3  exit=0
+  not-banked producer: plan-seedling-r5-l60-kill --check  ci=171a2bf40e07135136712ee2443ab8e0  exit=0
+  not-banked producer: plan-seedling-r5-shaft --check     ci=cdfbfaf4dd63abdc98aece27aca799a6  exit=0
+  not-banked producer: plan-seedling-r5-swim --check      ci=e4e4036d2791b479f17e3b1f88c00c0b  exit=0
+  not-banked producer: plan-seedling-r5-totem-entrance --check ci=cbdcf596f1fc4211a3fcd6bfd663a319  exit=0
+  not-banked producer: plan-seedling-r5-waterfall --check ci=bd975e8716cf5ac7aacea6fb864b1ba8  exit=0
+  not-banked producer: plan-seedling-r6-shieldboss --check ci=9b276b8f16c9deb090baf8049c5dc915  exit=0
+  not-banked producer: plan-seedling-r6-wblood --check    ci=87fa9d4416145054c644a266d7ab18c4  exit=0
+  not-banked producer: plan-seedling-r6-wdoor --check     ci=dda400edd9b826f930c1bd97c3648b1d  exit=0
+  not-banked producer: plan-seedling-r6-wowl --check      ci=2ff8e8c9b13086077aaa0cd3203b5820  exit=0
+  not-banked producer: plan-seedling-r6-wseed --check     ci=691571f1f78298dfd064c886242d520e  exit=0
+  not-banked producer: plan-seedling-r6-wtalk --check     ci=d5015403d1b03a697a2ec53468310a3b  exit=0
+  MOVED      producer: plan-seedling-r7-attribution --check ci=acf8236df36d0519d1f79d8972e18f17  bank=7f91f14fadbba36c51fa22ebbbba821e  exit=0
+  MOVED      producer: plan-seedling-r7-ends-meet --check ci=f1675cfc089acf3f36fc79c9dc8b1bba  bank=67bd57b2b92bb70875e944f4d182da37  exit=0
+  same       producer: plan-seedling-r8-hammer-pair --check ci=f29fa128d9449d3dc4e9cbd7236ed762  exit=0
+  same       producer: plan-seedling-r8-l18-spinner --check ci=3d0742362203f9964123bd2db05a25df  exit=0
+  same       producer: plan-seedling-r9-l0-sword-dash --check ci=1a469afaffa2d4c3157ba54950e4059f  exit=0
+  same       producer: plan-seedling-r9-l6-bob-press --check ci=fa831b4d94d13bad5b4361ac322aa282  exit=0
+  same       producer: plan-seedling-r9-l6-harmless-window --check ci=0b27a9ff777336c8fcb44d4e6be5ce5f  exit=0
+  same       producer: plan-seedling-r9-l6-sword-dash-hit --check ci=bf86d08002567b5ea9731cd4666a0702  exit=0
+  not-banked producer: plan-seedling-return-l15 --check   ci=8d7b493a0bbc440c7399d837786db029  exit=0
+  not-banked producer: plan-seedling-sealdoor-witness --check ci=4647f05987174a884bb1090529853c10  exit=0
+  not-banked producer: plan-seedling-slots-witness --check ci=c08fe48f7ed8f3b19f58aa94f67d9ea2  exit=0
+  not-banked producer: plan-seedling-stance-witness --check ci=c0ff94e21dd336741f4be8765027ec17  exit=0
+  not-banked producer: plan-seedling-u10-puncher-dwell --check ci=0e55da105f08256a81ea235a95fefa0d  exit=0
+  not-banked producer: plan-seedling-u11-dark-shield --check ci=13ff1bc6cff1052c60971347eb3b5f3d  exit=0
+  not-banked producer: plan-seedling-u11-facing --check   ci=edb55eda803957ae3ecf35cd75e01bf0  exit=0
+  not-banked producer: plan-seedling-u12-pull --check     ci=a95140eea0d53ca5936488faa67753cd  exit=0
+  not-banked producer: plan-seedling-u14-moonrock --check ci=29b73f83727361890e8a372bc42f8444  exit=0
+  not-banked producer: plan-seedling-u15-turret --check   ci=17867266829c5b470e91bb1afaa2587f  exit=0
+  not-banked producer: plan-seedling-u7-puncher --check   ci=cea8e935e423d8fd6580ff1637839062  exit=0
+  not-banked producer: plan-seedling-u9-shield-bump --check ci=8f295ed62984bd161f771b3f94aaabff  exit=0
+  not-banked producer: plan-seedling-wallflyer --check    ci=531a42f413c21c0651bc4920f0b2e43b  exit=0
+  not-banked producer: plan-seedling-wand-witness --check ci=fa683123bc95b693633ce0e1613635fc  exit=0
+  not-banked producer: plan-seedling-watcher-witness --check ci=571e3511300a35c92b8133dbe6597c9b  exit=0
+  not-banked producer: plan-seedling-watchertalk-witness --check ci=78be196824b6a61f9ae88d4a6c41af1e  exit=0
+  same       producer: solve-seedling-r8-d2 --check       ci=f2cfe3f99f919e769e6b0a102b796c45  exit=0
+  not-banked smoke: seedling-bot-differential             ci=28/0/37  exit=0
+  not-banked structure: seedling-producer-boundaries      ci=32/0  exit=0
+  ⚠ 1 job log(s) unreadable: Same SHA already green? (completed/skipped)
+
+60 same, 10 MOVED, 1 shallow (declared, never compared), 89 not-banked, 0 MISSING.
+⚖ 72 (b): the bar is PER ROW — three consecutive runs in which THAT row reads `same`. This exit code is the run-level answer, not the bar; since S4 a `shallow` row is outside BOTH (it is excluded from the CI-sourced set by its own declaration, not by a verdict).

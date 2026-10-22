@@ -72,10 +72,15 @@ export const TAPES = Object.freeze([
     { name: 'axe-L48', fixture: 'axe-l48-reach-l49', family: 'SpinningAxe', keys: ['seedling:puzzlement/spinningaxe'], want: ['a:plain'] },
     // beside the chain's arm (L76 `lavachain@128,64`, dir 3: the arm runs down x 134..138), out of its reach
     // ⛓ planning-9's igneousLava flip (⚖ user, 2026-10-21; js-7's review): this stand arrives within 11.31 px of L76's
-    // Igneous-to-Lava tile (10,6), and with `igneousLava` ON levelRun refuses that arrival by name (`IGNEOUS_UNMODELLED`,
-    // fidelity IGNEOUS's named INTERIM: the load fade's renders would count and are not stepped). These rows test the
-    // CHAIN's art, not the tile, so they run with the switch OFF. ⚠ On the game a stand in (10,6)'s range really does
-    // crumble it to lava; this pin is about the interim, not a claim that the tile is inert.
+    // Igneous-to-Lava tile (10,6) (8.94 px; the clock row below, (8,6) at 4.00 px), and with `igneousLava` ON levelRun
+    // refuses that arrival by name (`IGNEOUS_UNMODELLED`, fidelity IGNEOUS's named INTERIM). These rows test the
+    // CHAIN's art, not the tile, so they run with the switch OFF.
+    // ⛓ fidelity IGFADE (wave 23) MEASURED what the interim hid: with `igneousDeadFrames` ON the load fade's 21 renders
+    // are stepped and the stand is no longer refused — it DIES: the tile is lava at the t15 render, the death restart
+    // rebuilds it and its own fade turns it again (t61), a restart every 46 ticks (witnessed on p4g:
+    // `fixtures/igneous-witness/igneous-l76-fade-stand` / `-86`). So the chain's art moves with it — this row's
+    // golden LavaChain ops change and the clock row bills 3 hits where it asserts > 3. The pin stays OFF on purpose:
+    // the tile is NOT inert on the game; these rows are about the chain.
     { name: 'chain-L76', level: 76, at: [152, 92], n: 200, family: 'LavaChain', keys: [KEYS.chain], want: ['c:sit', 'c:extend', 'c:hit', 'c:retract'], fidelity: { igneousLava: false } },
     { name: 'crusher-L42', fixture: 'crusher-l42-round-trip', family: 'Crusher', keys: [KEYS.crusher], want: ['k:moving', 'k:rest'] },
     { name: 'totem-kill-L43', fixture: 'r6-totem-kill', family: 'BossTotem', keys: [KEYS.totem, KEYS.totemShot],
@@ -290,7 +295,8 @@ describe('3. the independent stratum (by hand from the AS3, and the clocks again
         expect(agree(1)).toBeLessThan(billed.size);
     }, 120_000);
 
-    // ⛓ igneousLava OFF for this stand, as chain-L76's row (the arrival is in tile (10,6)'s range: IGNEOUS_UNMODELLED).
+    // ⛓ igneousLava OFF for this stand, as chain-L76's row (the arrival (136,100) is 4.00 px from tile (8,6): the interim
+    // refuses it, and with IGFADE's `igneousDeadFrames` ON the stand dies in lava every 46 ticks — see chain-L76's row).
     it('⛓ the chain\'s clock is the one the model bills (L76, standing in the arm through its death rebuilds)', () => withContactFidelity({ igneousLava: false }, () => {
         const rt = boot(76, [128, 92]);
         let skin = null;

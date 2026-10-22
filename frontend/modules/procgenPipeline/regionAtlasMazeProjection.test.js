@@ -118,6 +118,13 @@ const CORRIDOR_ROWS = [
     '#####',
 ];
 
+// The corridor plus a one-cell pocket behind its east wall, at (5,1) -> "r1c5".
+const POCKET_ROWS = [
+    '######',
+    '.K..#.',
+    '######',
+];
+
 const corridorRegion = (overrides = {}) => clone({
     region_id: 'vault',
     bounds: { x: 0, y: 0, w: 5, h: 3 },
@@ -535,10 +542,62 @@ describe('refusals and collisions', () => {
         expect(() => project(region, CORRIDOR_ROWS)).toThrow(/stale against the map document/);
     });
 
-    it('refuses a region that declares no subgraph but whose map splits in two', () => {
-        const region = corridorRegion();
+    it('refuses a region that declares no subgraph but whose exits and locations stand in two pieces', () => {
+        const region = corridorRegion({
+            locations: [{ name: 'west', tile: [0, 1] }, { name: 'east', tile: [3, 1] }],
+        });
         delete region.subgraph;
-        expect(() => project(region, CORRIDOR_ROWS)).toThrow(/declares no subgraph, but its tile map splits/);
+        expect(() => project(region, CORRIDOR_ROWS)).toThrow(/declares no subgraph, but its exits and locations stand in 2 components/);
+    });
+
+    /**
+     * ⛓ AGREEMENT IS NOT EQUALITY (session tile-primitives-levels-gap3). A producer may PRUNE a
+     * component nothing enters and nothing stands in (the playthrough generator's
+     * `pruneUnreachableSubRegions` — 29 of the 115 playthrough regions). The atlas then declares a
+     * subset, or nothing; the check survives as "every declared piece is computed AND no undeclared
+     * piece binds an exit or a location".
+     */
+    it('an UNSPLIT region whose map has a door-less pocket projects its one bound piece; the pocket is walled and named', () => {
+        const region = corridorRegion({ locations: [{ name: 'east', tile: [3, 1] }] });
+        delete region.subgraph;
+        const { sidecars, notes } = project(region, CORRIDOR_ROWS);
+        const p = sidecars.vault.playable_payload;
+        expect(at(p, 2, 1)).toBe(MAZE_TILE_FLOOR);
+        expect(at(p, 0, 1)).toBe(MAZE_TILE_WALL);
+        expect(notes.find((n) => n.kind === 'pruned_pocket').message).toMatch(/"r1c0".*WALLED/);
+    });
+
+    it('a SPLIT region that declares a subset: the undeclared door-less pocket is walled and named', () => {
+        // a third piece at (5,1), behind the wall, that no exit and no location uses
+        const region = corridorRegion({ subgraph: { sub_regions: ['r1c0', 'r1c2'], internal_exits: [] } });
+        const { sidecars, notes } = project(region, POCKET_ROWS);
+        expect(Object.keys(sidecars)).toEqual(['vault__r1c0', 'vault__r1c2']);
+        expect(notes.filter((n) => n.kind === 'pruned_pocket').map((n) => n.message)).toEqual([
+            expect.stringMatching(/"r1c5" \(1 tile\(s\)\)/),
+        ]);
+    });
+
+    it('refuses a region whose UNDECLARED piece holds a location — that one is stale, not pruned', () => {
+        const region = corridorRegion({
+            subgraph: { sub_regions: ['r1c0', 'r1c2'], internal_exits: [] },
+            locations: [{ name: 'stranded', tile: [5, 1] }],
+        });
+        expect(() => project(region, POCKET_ROWS)).toThrow(/does not declare \[r1c5\], but an exit or a location stands in it/);
+    });
+
+    it('with the persisted partition, a declared piece must hold EXACTLY the partition\'s tiles', () => {
+        const region = corridorRegion();
+        const partitionFor = () => ({ origin: [0, 0], sub_regions: ['r1c0', 'r1c2'], rows: ['.....', 'A.B..', '.....'] });
+        expect(() => project(region, CORRIDOR_ROWS, { partitionFor })).toThrow(/"r1c2" computes 2 tile\(s\) but the persisted partition holds 1/);
+        const agrees = () => ({ origin: [0, 0], sub_regions: ['r1c0', 'r1c2'], rows: ['.....', 'A.BB.', '.....'] });
+        expect(() => project(region, CORRIDOR_ROWS, { partitionFor: agrees })).not.toThrow();
+    });
+
+    it('a region with no dry piece holding anything is refused by name without a level-world builder', () => {
+        // Seedling's all-water levels: every cell gated, so the analyzer finds NO component at all
+        const region = corridorRegion({ locations: [{ name: 'in the water', tile: [1, 1] }] });
+        delete region.subgraph;
+        expect(() => project(region, ['#####', '#KKK#', '#####'])).toThrow(/none of its 0 walkable component\(s\) holds an exit or a location/);
     });
 
     it('drops a second exit that wants an already-taken tile, loudly', () => {

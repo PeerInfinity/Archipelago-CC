@@ -24354,6 +24354,44 @@ Measured:
   of a captured request reproduces the sweep's game rows; a pit-fall witness is a different arrival.
 - `replay-seedling-solve-request.mjs --seam-time-sweep` prints `error` as the kind of a successful PLAN (`kind ?? 'error'`).
 
+### Seedling hammer-phase LD — the Lights fight in the danger map
+
+⚖ The user approved the slice on 2026-10-21. The report is `CC/docs/cloud-reports/seedling-hammer-lights-danger.md`.
+It takes fidelity LIGHTSARR's hand-over 1. Everything it adds is read only while `CONTACT_FIDELITY.lightsBossFight` is
+ON (still OFF); no switch moved.
+
+**The base.** LIGHTSARR (`origin/claude/lightsarr-lights-arrival-zpv7ou`) was not on main. Survey step 159 ON at main
+`2408fc5a` is SOLVED 559 t with 0 hits. The 1-hit victim exists only with LIGHTSARR's shield shove, so the branch merges
+it (`21d539b8`). The 823 t / 1 hit victim reproduces there.
+
+**The victim, measured.** The kill ends at t806. `LightBossShot` #75 was fired at t784 from (56,60) and hits the
+reach-exit walk at update t811.
+
+**The pricing.** `dangerMap.lightsDanger` is in `dangerAt`'s union.
+- It copies `run.entities('lightsFight')` and steps the copy forward with `lightBoss.js`'s own functions, with no
+  player in it: the shots (the margin-0 cull against the resting 160x160 screen), the fliers, and the controller on
+  `Game.worldFrame`.
+- A shot is a `spit` source (`lights: true`), because a `LightBossShot` is a `TurretSpit`. So the ladder's existing
+  DODGE rung answers it.
+- A flier's contact gate (not dying, `hitsTimer <= 0`) is a `lightBoss` source.
+- TRANSIT prices frames h and h+1: update T+1 moves the shot, then tests the box left at T. WAIT prices the union of
+  0 … h+1.
+- `TRANSIT_INGREDIENTS` gains an autonomous `lights` row.
+
+**After.** Step 159 ON is SOLVED **826 t, 0 hits**: a 1-tick stall at t807, then a different line to the Teleporter.
+
+**The digest.** DA's `escape-reach` is unchanged with `dangerMap.js` in its file set (61 functions, 9 run members):
+the hammer escape reaches no danger-map function. `member-reach` gives `lightsExits` → advance / entities /
+tentacleBeastFight, and `lightsSpearRepeats` → advance. Neither reaches one of the escape's eight members, so no map
+moves IN. XC verify: hammer-a / b1 / b2 hit and verify 2160 / 1654 / 1030 entries with 0 mismatches; the two ON Lights
+solves and step 159 make 0 lookups.
+
+**Fixtures.** None moved. The two ON Lights solves re-solve their witnesses key for key (sword 559 t, spear 361 t). The
+producer roster is 93 / 0 red, before and after.
+
+**Trap candidate.** *A mutant predicted from the victim alone can pass.* "Price frame h only" was predicted to miss the
+t810 box, and it did not: a 4x4 shot under 1 px/t overlaps the box on both frames. The frame is pinned by a constructed
+row (`dangerMap.test.js`: frame 17 is the first that meets the box, so horizon 16 sees it only through h+1).
 ### Seedling fidelity L1516 — L15's chest is a Solid, L16's enclosed pit, leg 209's hit (`chestProbeLineEnd`, `enclosedPitCorner`, OFF)
 
 The report is `CC/docs/cloud-reports/seedling-fidelity-l1516.md`. Base `98689e2e3c`. Two `CONTACT_FIDELITY` switches,
@@ -24470,6 +24508,75 @@ cut and the crossing to L18 with 0 hits, the verb's own swing (`execPull` presse
 **Hand-overs.** The Spear's thrust and Fire also cut (`Player.as:989,1032`; rules-2's `l28-fire` tape), and this verb
 drives only the sword: a Spear-only or Fire-only bag refuses `cannot-act` by name. The L39 frontier cut is ON-only and
 stalls next at `wandlock@144,64`; its Pulser (the rope's group) is the next question there.
+
+### Seedling fidelity BS2FIX — the bobsoldier2 INTERIM pin, retirement prepared (licence pending)
+
+⚖ The user (2026-10-19, on the interims report): bobsoldier2 *"Keep pin, queue fix"*; (2026-10-20) *"run it now"*.
+`plan-seedling-bobsoldier2.mjs` pins `strikeIframeLapse` OFF because both its tapes were game-recorded under the
+pre-lapse strike gate. Base main `934f99422b`; report `CC/docs/cloud-reports/seedling-fidelity-bs2fix.md`.
+
+**Measured at the defaults (lapse ON), survey step 50, switch by switch.** No setting of `KILL_STANCE_AS_FORECAST` /
+`SWORD_GATE_TIMED` reaches the kill arm's dwell. The walk's lapse-admitted presses leave the collect's corridor clean, so the
+collect runs FIRST (STRIKELAPSE D1's stand walk) with `bobsoldier@48,80` alive on 2 hits. What decides is the exit walk's gate
+at (72.65,66.46):
+- both ON: 395 t; the walk towards (72,88) kills the body with its own press (t169, `killedOnWalk`);
+- D2b alone: 404 t, the same kill;
+- both OFF and D2a alone: refused at 168 t, pad 16 against the LIVE body.
+The ON torch plan equals the CI survey's own step-50 walk (run 39496129402), key for key.
+
+**The game (p4g, the default build).** The ON torch tape: 396 obs, the model reproduces it, and the content equals the
+wave-19 p4f recording (p4g does not differ). `hasTorch` lands at game obs 169 (model OFF 168, `PICKUP_REMOVED_NEXT_FRAME`
+ON 169). The body probe: 181 of 182 samples exact; the one off (t168) is the sample straddling the ceremony's end.
+
+**What the BEFORE means with the lapse ON.** It is a pre-lapse executor/forecast mismatch, with no ON witness: the dwell is
+unreachable at all four switch settings. The tape is game-recorded keys whose replay does not read the switch (stream and
+body md5 equal under either setting). So it stays as a named, permanent CONTROL (`CONTROL_FIDELITY`, u10's shape) and
+stays byte-identical.
+
+**Shipped:** the retired arm behind `LAPSE_PIN_RETIRED` (OFF; pinned `--check` byte-identical, log md5 `2e94b9ef`);
+`--out=`; four ON rows in `fidelityBobSoldier2`. **Licence kit** (evidence `licence/`): the torch tape 460 → 395, its
+expectation, the `pickup-removal-witness` row (226 → 169, p4g), `r8Acceptance` ticks, the tape index, and the restated test
+rows. Licensed bounded run: one red outside the region, `fidelityStrikeLapse`'s "OFF … byte for byte" row. A proposed
+restatement (a key digest of the retired 460-t plan) is the second patch.
+
+**Trap candidate.** A test comment's measurement under a switch decays when another slice repairs the path. Here
+`fidelityBobSoldier2`'s "ON refuses at every switch setting" (FLIP14) had been false since STRIKELAPSE D1 + hammer DD.
+
+### Seedling fidelity IGFADE — the Igneous-to-Lava tiles count the dead frames' renders (`igneousDeadFrames`, OFF)
+
+⚖ The user (2026-10-21) picked "IGNEOUS load-fade renders": retire IGNEOUS's named interim (`IGNEOUS_UNMODELLED` on an
+arrival in range and on a dead span while a tile counts). Report: `CC/docs/cloud-reports/seedling-fidelity-igfade.md`.
+
+**The count, from the AS3.** `Main.update` is `Bot.update(); super.update();` and `Engine.onEnterFrame` is
+`update(); render();`, so a frame the bot counts dead still renders. `FP.world = new Game(…)` writes `_goto` only;
+`Engine.checkWorld` swaps at the END of that frame's update, so the same frame's render is already the new world's, under
+the camera `loadlevel` wrote raw. Then the fade's 20 dead updates each run `view()` (outside the `blackCover` gate) and a
+render. ⇒ **21 renders** at the arrival before a visit's first live one, for a boot and for a death restart alike.
+
+**On the game** (p4g headless, `CC/docs/cloud-reports/seedling-fidelity-igfade-evidence/drivers/probe-igfade.mjs`: the encounter-ticks probe plus `botStatus().dead_frames` per tick).
+A boot at (160,100), 8.94 px from L76's (10,6), standing: the tile turns at the t15 render (36 − 21), the death restarts at
+t46, the restart's own fade turns the rebuilt tile at t61, restart t92 (`igneous-l76-fade-stand`; the `-86` stand by
+(8,6) is the same). 20 renders would put both a tick later; the mutant says so.
+
+**The model.** `levelRun.renderIgneousStepped` (ON only; OFF is the interim, byte-identical): the fade's 21 renders at the
+arrival under the settle's own cameras, then `clock.spans` since the last render. A Help is drained at the top of its
+tick, so it renders BEFORE that tick's render at the previous render's position; a pickup's phase A and the wand / seed
+fades render after it, at this tick's position, the camera stepped per dead frame. Staged witness on p4g:
+`igneous-l74-phase-a` (the Dark Shield's phase A turns a breaking (5,3); the walk back dies on it), 0 px.
+
+**Measured: on the game's content the frozen spans change nothing a player can see.** The only frozen span on a type-31
+level is L74's phase A, and its stance is 26 px from the nearest tile, a round trip longer than the 27 renders a breaking
+tile has left. The spans that DO touch a tile move the player inside them and stay refused by name: L74's button fall
+(the button stands 11.31 px from (18,7), exactly the radius) and L71's chest seal ceremony.
+
+**Movers ON:** the 15 type-31 survey steps and the 49 type-31 sweep legs in node: 0. Bounded vitest ON: the two env
+artifacts plus `fidelityIgneous`'s interim row (the arrival refusal, which the switch retires).
+
+**Trap candidates.**
+- A "dead frame" is dead to the BOT's gate, not to `render()`: anything render-driven (`Tile.render`, the totem's head)
+  counts it. Ask which half of the frame a mechanism lives in before pricing a span.
+- A death respawning at the same spot is invisible in the position stream: read `dead_frames` (or a death ledger), not
+  x/y, for a stand witness.
 
 ### Seedling fidelity ROPESTANCE — the `rope` verb and the PULL rung cut with the Spear and with Fire (`ropeCutAnyWeapon`, OFF)
 

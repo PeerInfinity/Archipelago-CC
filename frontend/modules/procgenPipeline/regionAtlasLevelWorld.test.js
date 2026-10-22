@@ -7,7 +7,13 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { projectRegionToMaze, projectLevelWorld, levelHasInteraction, MAZE_TILE_FLOOR } from './regionAtlasMazeProjection.js';
 import { seedlingMazeProjectionDeps, seedlingLevelEntities } from '../flashPanel/seedlingAtlasAnalysis.js';
-import { buildPlaythroughMaze, OUT_FILE, LEVELS } from '../../../scripts/procgen/make-seedling-playthrough-maze.mjs';
+import {
+    buildPlaythroughMaze, OUT_FILE, LEVELS, restrictAtlas,
+} from '../../../scripts/procgen/make-seedling-playthrough-maze.mjs';
+import {
+    PLAYTHROUGH_MAP, playthroughGridFor, playthroughAnalyzerOptions,
+} from '../../../scripts/procgen/make-seedling-playthrough-rules.mjs';
+import { compileRegionAtlas } from './regionAtlasCompiler.js';
 
 const J = (rel) => JSON.parse(readFileSync(new URL(rel, import.meta.url), 'utf8'));
 const ATLAS = J('../flashPanel/atlases/seedling-playthrough.json');
@@ -109,6 +115,64 @@ describe('projectLevelWorld — L15', () => {
         }, rows)).toThrow(/partition holds \[r1c5, r1c9, r3c1, r6c8\].*stale/);
         expect(() => projectLevelWorld(L15, grid, ctx, [{ kind: 'rock', tiles: [[6, 5]], strike: [], label: 'r' }]))
             .toThrow(/names no item that strikes it/);
+    });
+});
+
+/**
+ * ⚖ "Atlas's own grid" (user, 2026-10-21; session tile-primitives-levels-gap3). The playthrough atlas was
+ * analysed on its generator's OVERLAY grid over the DELIVERED rooms; the projection recomputes on exactly
+ * that, so its stale check is a real one (measured at the slice: 45 regions refused on the raw transcription).
+ */
+describe('the atlas\'s own grid — every playthrough region, compiled alone', () => {
+    const ownGrid = {
+        gridForLevel: (level) => playthroughGridFor(level),
+        conditionKey: playthroughAnalyzerOptions.conditionKey,
+        resolveCondition: playthroughAnalyzerOptions.resolveCondition,
+    };
+    const deps = seedlingMazeProjectionDeps({
+        mapDoc: PLAYTHROUGH_MAP, gameConfig: CONFIG, levelWorlds: { partition: PARTITION }, analysis: ownGrid,
+    });
+    const compileAlone = (id) => compileRegionAtlas(restrictAtlas(ATLAS, [id]), {
+        mapDoc: MAP, embedSphereLog: true, sidecarFlavor: 'maze', mazeProjection: deps,
+    });
+
+    it('every region projects but the ghost rocks, which refuse by name (an And has no single strike item)', () => {
+        const refused = {};
+        for (const r of ATLAS.regions) {
+            try { compileAlone(r.region_id); } catch (e) { refused[r.region_id] = e.message; }
+        }
+        expect(Object.keys(refused)).toEqual(['level_3', 'level_101']);
+        for (const m of Object.values(refused)) expect(m).toMatch(/hasGhostSword.*not one Has — a strike needs exactly one item/);
+    }, 120_000);
+
+    it('an ALL-WATER level (L50: no dry cell) is one level world, every cell of it Swim', () => {
+        const { rules } = compileAlone('level_50');
+        const sc = rules.preset_sidecars['1'].level_50;
+        expect(sc.shared_world).toBe('level_50');
+        const p = sc.playable_payload;
+        expect(p.shared_world.regions).toEqual(['level_50']);
+        const floor = p.tiles.filter((t) => t === MAZE_TILE_FLOOR).length;
+        expect(floor).toBeGreaterThan(0);
+        const rules_ = new Set(p.obstacles.map((o) => JSON.stringify(p.obstacleLib[o.id].clear_rule ?? p.obstacleLib[o.id].clear_set)));
+        expect([...rules_].some((r) => r.includes('Progressive Swim'))).toBe(true);
+    });
+
+    it('a level world emits no ARRIVAL-ONLY exit: a landing spot is not a trigger (it would end a walk)', () => {
+        const { rules, report } = compileRegionAtlas(restrictAtlas(ATLAS, ['level_15', 'level_16']), {
+            mapDoc: MAP, embedSphereLog: true, sidecarFlavor: 'maze', mazeProjection: deps,
+        });
+        const p = rules.preset_sidecars['1'].level_15__r1c5.playable_payload;
+        expect(p.exits.map((e) => e.atlas_exit_id)).toEqual(['out_stairsdown_144_16']);
+        expect(p.exits.every((e) => e.exit_id && e.targetRegion)).toBe(true);
+        expect(JSON.stringify(report)).toMatch(/arrival_only_not_emitted/);
+    });
+
+    it('CONTROL: the raw transcription is refused where the overlay moves a tile (L12\'s chest), by the partition check', () => {
+        const raw = seedlingMazeProjectionDeps({ mapDoc: MAP, gameConfig: CONFIG, levelWorlds: { partition: PARTITION } });
+        const l12 = ATLAS.regions.find((r) => r.region_id === 'level_12');
+        expect(() => projectRegionToMaze(l12, raw.gridFor(l12), ctxFor(raw)))
+            .toThrow(/"r42c29" computes 226 tile\(s\) but the persisted partition holds 227/);
+        expect(() => projectRegionToMaze(l12, deps.gridFor(l12), ctxFor(deps))).not.toThrow();
     });
 });
 
