@@ -218,8 +218,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity YETI (wave 25): the Yeti's talk and its {58,1} teleporter shipped OFF;
             // ⛓ planning-10's flip (⚖ user "Yes, please do the flip", 2026-10-22) turns it ON.
             yetiTalk: true,
-            // ⛓ fidelity MASKS (wave 25): `pixelMaskSightLines` (every run line samples the "Solid" pixelmasks) ships OFF.
-            pixelMaskSightLines: false });
+            // ⛓ fidelity MASKS (wave 25): `pixelMaskSightLines` (every run line samples the "Solid" pixelmasks) shipped OFF;
+            // ⛓ planning-10's flip (⚖ user "Harvest + flip ON", 2026-10-22) turns it ON.
+            pixelMaskSightLines: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

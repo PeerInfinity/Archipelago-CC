@@ -67,8 +67,9 @@ function bruteMaskLine(world, fx, fy, tx, ty) {
 }
 
 describe('fidelity MASKS — the switch', () => {
-    it('is OFF by default', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.pixelMaskSightLines).toBe(false);
+    // ⛓ shipped OFF; planning-10's flip (⚖ user "Harvest + flip ON", 2026-10-22) turns it ON.
+    it('is ON by default (flipped)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.pixelMaskSightLines).toBe(true);
     });
 });
 

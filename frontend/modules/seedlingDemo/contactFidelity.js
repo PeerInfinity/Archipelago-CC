@@ -940,8 +940,11 @@ export const CONTACT_FIDELITY = {
      * agree with them; L92 holds a spinner beside CliffSides — handed over), the other boss arms (no mask in their rooms),
      * and every "Player"-type line (a spinner's hammer, a wallflyer's ray, the BobBoss swords, a chest's probe), which
      * never meets a mask. No crusher shares a level with a mask (`assertCrusherSolidsBound` still refuses that case).
+     * ⛓ planning-10's flip (⚖ user, 2026-10-22, MASKS "Harvest + flip ON") turns it ON. Measured movers (CI, wave-25 A/B
+     * on ubuntu-24.04): the route survey (full) 0; the 356 chaser-room sweep legs ×2: 0 settled (a 240 s keyed re-run
+     * settled 201/210/387/404/776 as noise or slow); probes standard ON 11/11. seedlingRobust's {sword} L16 plan 878 → 882 t.
      */
-    pixelMaskSightLines: false,
+    pixelMaskSightLines: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
