@@ -945,6 +945,25 @@ export const CONTACT_FIDELITY = {
      * settled 201/210/387/404/776 as noise or slow); probes standard ON 11/11. seedlingRobust's {sword} L16 plan 878 → 882 t.
      */
     pixelMaskSightLines: true,
+    /**
+     * fidelity PITPORT (wave 26) — A LIVE TELEPORTER STANDING ON A PIT TILE IS AN EXIT THE WALK ENDS ON
+     * (`botDriverV2.findExit`, `botDriverV2.plannerObstacleAt`'s pit arm, `solverBot.findExitNamed`).
+     *
+     *     Teleporter.as:89-118  update(): no fall guard — a live door fires on the first frame the player box overlaps
+     *                           it (`!playerTouching`), and the teleporters update BEFORE the player (`addUpdate`
+     *                           prepends), so the swap is recorded before `Player.update` reads the tile
+     *     Player.as:745-771     checkFallingInPit(): the fall needs 20 frames of fade before its own `FP.world =`
+     *                           (or `die()`), and only a fall already in flight could lose the race
+     *
+     * The pit edge reads the tile under `(x, y + checkOffsetY)`, a point inside the 4x5 box, and a door's 16x16 rect is
+     * its own tile (L43, L58, L100: every pit door in the atlas), so on any approach the door's overlap comes no later
+     * than the edge, and the door wins. ON: `findExit` admits a LIVE, unlatched door on a pit, and the planner exempts
+     * that one pit tile only while it plans to that door (`allowTeleporter`). A SHUT door stays refused (DEACTIVATED)
+     * and its pit stays forbidden floor; a run LATCHED on a pit door keeps `unmodelled-pit-teleporter` (the door cannot
+     * fire, the pit takes the player). OFF: byte-identical. `SEEDLING_PIT_TELEPORTER_CROSSING=0|1` for a node
+     * measurement. Witnessed on p4g: YETI's `talk`/`shut`, and PITPORT's `fixtures/pitdoor-witness/`.
+     */
+    pitTeleporterCrossing: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1133,6 +1152,9 @@ if (globalThis.process?.env?.SEEDLING_YETI_TALK === '0') CONTACT_FIDELITY.yetiTa
 // ⛓ fidelity MASKS: `SEEDLING_PIXEL_MASK_SIGHT_LINES=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_PIXEL_MASK_SIGHT_LINES === '1') CONTACT_FIDELITY.pixelMaskSightLines = true;
 if (globalThis.process?.env?.SEEDLING_PIXEL_MASK_SIGHT_LINES === '0') CONTACT_FIDELITY.pixelMaskSightLines = false;
+// ⛓ fidelity PITPORT: `SEEDLING_PIT_TELEPORTER_CROSSING=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PIT_TELEPORTER_CROSSING === '1') CONTACT_FIDELITY.pitTeleporterCrossing = true;
+if (globalThis.process?.env?.SEEDLING_PIT_TELEPORTER_CROSSING === '0') CONTACT_FIDELITY.pitTeleporterCrossing = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

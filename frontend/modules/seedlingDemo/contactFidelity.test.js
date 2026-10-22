@@ -220,7 +220,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             yetiTalk: true,
             // ⛓ fidelity MASKS (wave 25): `pixelMaskSightLines` (every run line samples the "Solid" pixelmasks) shipped OFF;
             // ⛓ planning-10's flip (⚖ user "Harvest + flip ON", 2026-10-22) turns it ON.
-            pixelMaskSightLines: true });
+            pixelMaskSightLines: true,
+            // ⛓ fidelity PITPORT (wave 26): a live door on a Pit tile is an exit the walk ends on; ships OFF.
+            pitTeleporterCrossing: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

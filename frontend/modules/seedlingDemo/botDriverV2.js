@@ -465,8 +465,11 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
         if (rectsOverlap(box, v.rect)) return { kind: v.kind ?? 'persistence-effect', blocker: v };
     }
     const probe = grow(terrainProbeRect(x, y), margin);
+    // ⛓ fidelity PITPORT (`pitTeleporterCrossing`, OFF → null): the allowed exit's own pit tile, when the door is live.
+    const doorPit = allowTeleporter === null ? null : liveDoorPitTile(level, allowTeleporter);
     for (const tile of level.pitTiles) {
         if (allowPit && tile.tx === allowPit.tx && tile.ty === allowPit.ty) continue;
+        if (tile === doorPit) continue;
         if (rectsOverlap(probe, tile.rect)) return { kind: 'pit', blocker: tile };
     }
     // ⚠ ARMED LETHAL TERRAIN IS FORBIDDEN FLOOR (R4), and this policy is
@@ -1469,8 +1472,28 @@ export function planWaypoints(level, from, to, allowTeleporter = null, opts = {}
     return stringPull(level, points, allowTeleporter, opts, fast, true);
 }
 
-/** Locate the teleporter a leg's `exit` names, by its OEL coordinates. */
-function findExit(level, exit) {
+/**
+ * ⛓ fidelity PITPORT (`CONTACT_FIDELITY.pitTeleporterCrossing`, OFF → always null): the Pit tile under
+ * `level.teleporters[index]` when that door is LIVE and stands on its own pit tile, i.e. the one pit a walk to that
+ * door may enter. The door fires on the first frame its rect overlaps the box (`Teleporter.as:96-110`, updated before
+ * the player), and the pit edge's probe point lies inside the box, so the door always wins the race on that tile.
+ */
+export function liveDoorPitTile(level, index) {
+    if (!CONTACT_FIDELITY.pitTeleporterCrossing || index === null || index === undefined) return null;
+    const tp = level.teleporters[index];
+    if (!tp || tp.deactivated) return null;
+    const tx = Math.floor(tp.x / TILE_SIZE);
+    const ty = Math.floor(tp.y / TILE_SIZE);
+    return level.pitTiles.find((t) => t.tx === tx && t.ty === ty) ?? null;
+}
+
+/**
+ * Locate the teleporter a leg's `exit` names, by its OEL coordinates.
+ *
+ * ⛓ fidelity PITPORT: `latched` (the run's `state.latched`, a set of indices) is read only under
+ * `pitTeleporterCrossing`, for a door on a pit tile — a latched door cannot fire, so the pit takes the player.
+ */
+function findExit(level, exit, { latched = null } = {}) {
     const i = level.teleporters.findIndex((tp) => tp.x === exit.x && tp.y === exit.y);
     if (i < 0) {
         fail(`level ${level.level} has no teleporter at (${exit.x},${exit.y}); it has `
@@ -1487,7 +1510,8 @@ function findExit(level, exit) {
     }
     const tx = Math.floor(tp.x / TILE_SIZE);
     const ty = Math.floor(tp.y / TILE_SIZE);
-    if (level.pitTiles.some((t) => t.tx === tx && t.ty === ty)) {
+    if (level.pitTiles.some((t) => t.tx === tx && t.ty === ty)
+        && !(liveDoorPitTile(level, i) !== null && !(latched?.has?.(i) ?? false))) {
         fail(`the teleporter at (${exit.x},${exit.y}) in level ${level.level} stands ON `
             + `a PIT tile (${tx},${ty}). Walking into it fires the trigger and the pit `
             + 'edge in the same tick, and which one wins is FlashPunk bookkeeping this '
@@ -6443,7 +6467,7 @@ export function synthesizeLegs(legs, opts = {}) {
             return;
         }
 
-        const { index, teleporter } = findExit(run.world, leg.exit);
+        const { index, teleporter } = findExit(run.world, leg.exit, { latched: run.state.latched ?? null });
         const destination = legs[li + 1].level;
         if (teleporter.to !== destination) {
             fail(`legs[${li}].exit (${leg.exit.x},${leg.exit.y}) goes to level `
