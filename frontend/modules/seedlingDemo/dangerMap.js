@@ -1184,10 +1184,10 @@ export function staticEnemyDanger(run, box) {
     /**
      * ⛓ fidelity DRILL D2 (`drillMixedRooms`): a drill the run STEPS is not at its placement once it has hopped — the
      * spinners' trap 157 one class over. It sits between hops, so it is priced as a static box at its LIVE position
-     * (`run.drills`), and a removed one not at all. OFF: every drill at its placement, as before.
+     * (`run.entities('drillBodies')`), and a removed one not at all. OFF: every drill at its placement, as before.
      */
     const liveDrills = CONTACT_FIDELITY.drillMixedRooms
-        ? new Map((run.drills?.bodies ?? []).map((d) => [d.id, d])) : null;
+        ? new Map((run.entities('drillBodies') ?? []).map((d) => [d.id, d])) : null;
     for (const inst of (world.combat?.enemies ?? [])) {
         if (stepped && isBridgedChaser(inst.tag)) continue;
         if (live.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;

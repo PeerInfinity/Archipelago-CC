@@ -326,6 +326,9 @@ export const FAMILY_BLOCKS = deepFreeze([
     { family: 'tentacleBeastFight', kind: RUN_ENTITIES, blocks: [],
         solverReads: ['solverBot'], strategies: [],
         why: 'L57\'s Tentacled Beast, stepped (seedling-fidelity-bosskills D3: `levelRun.tentacleBeastFightNow`, `tentacleBeast.js`): the beast, its tentacles and whirlpools, the draw stream\'s state and `streamRefusal`, the mouth; `null` while `CONTACT_FIDELITY.tentacleBeastFight` is off. A bespoke fight, so no generic block.' },
+    { family: 'drillBodies', kind: RUN_ENTITIES, blocks: ['contact', 'proximity'],
+        solverReads: ['dangerMap'], strategies: [],
+        why: 'the drills the run steps in this level (TERRAIN W3\'s lone drill; fidelity DRILL: every drill of a mixed room with `CONTACT_FIDELITY.drillMixedRooms` ON): id, live position and box, `removed` (`levelRun.drillBodiesNow`, `drill.js`); a drill hops 16 px toward a player inside its 48 px run range with a clear "Solid" line. `dangerMap.staticEnemyDanger` prices a stepped one at its live box with the key ON.' },
 
     /* ── the hazard volumes (`hazards.hazardVolume`, avoid volumes, unions over phase) ── */
     { family: 'volume:crusher', kind: VOLUME, blocks: ['lane-charge', 'contact'],

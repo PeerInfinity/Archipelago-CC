@@ -2703,6 +2703,7 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
             'burnedTrees', 'latchedGroups', 'pulledRopes', 'turretDamage', 'turretsSettled',
             'arrowFlights', 'bosses', 'talkCircles', 'bobBoss', 'pulls', 'shooters', 'staticBodies',
             'darkTraps', 'bombPushers', 'bombs', 'igneousTiles', 'lightsFight', 'lavaBossFight', 'tentacleBeastFight',
+            'drillBodies',
         ]);
         expect(Object.isFrozen(ENTITY_FAMILY_NAMES)).toBe(true);
         for (const f of ENTITY_FAMILY_NAMES) {
@@ -2843,6 +2844,15 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
             expect(seen.has('lightsFight')).toBe(true);
             for (const f of seen) witnessed.add(f);
         });
+    });
+
+    it('L88\'s drill (TERRAIN W3; fidelity DRILL\'s fold): drillBodies, through the query', () => {
+        const run = createLevelRun({ levelSource, boot: { level: 88, x: 120, y: 120 }, roles: ROLES });
+        const { bad, seen } = compareEveryTick(run, 30, () => new Set());
+        expect(bad).toEqual([]);
+        expect(seen.has('drillBodies')).toBe(true);
+        expect(run.entities('drillBodies').map((d) => d.id)).toEqual(['drill@128,160']);
+        for (const f of seen) witnessed.add(f);
     });
 
     it('every family was witnessed NON-TRIVIALLY by the rows above', () => {

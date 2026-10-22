@@ -448,6 +448,8 @@ export const ENTITY_FAMILY_NAMES = Object.freeze([
     'lavaBossFight',
     // ⛓ seedling-fidelity-bosskills D3: the Tentacled Beast's (likewise).
     'tentacleBeastFight',
+    // ⛓ fidelity DRILL D2: the drills this visit steps, live (the danger map's static row reads them).
+    'drillBodies',
 ]);
 
 /**
@@ -16923,6 +16925,9 @@ export function createLevelRun({
             }),
         }))
         : null);
+    /** ⛓ fidelity DRILL D2: every drill the run steps in this level, `{id, x, y, rect, removed}` (`[]` under noclip). */
+    const drillBodiesNow = () => (noclip ? [] : [...drillStateFor(level).values()]
+        .map((d) => ({ id: d.id, x: d.x, y: d.y, rect: drillRect(d), removed: d.removed })));
     const ENTITY_FAMILIES = Object.freeze({
         openActivators: openActivatorsNow,
         pushables: pushablesNow,
@@ -16958,6 +16963,7 @@ export function createLevelRun({
         lightsFight: lightsFightNow,
         lavaBossFight: lavaBossFightNow,
         tentacleBeastFight: tentacleBeastFightNow,
+        drillBodies: drillBodiesNow,
     });
 
     /**
@@ -17615,6 +17621,8 @@ export function createLevelRun({
          * run made (`launch`, `contact` with its retaliation, `destroyed`,
          * `removed`).
          */
+        /** ⛓ fidelity DRILL D2: the entities fold's `drillBodies` (`run.entities('drillBodies')`). */
+        get drillBodies() { return drillBodiesNow(); },
         /** ⛓ seedling-fidelity-terrain W3: the live drill(s) and their events (`hop`, `contact`, `struck`). */
         get drills() {
             return {
