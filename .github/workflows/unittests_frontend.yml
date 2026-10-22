@@ -629,7 +629,8 @@ jobs:
     # push (measured on the probe run 39056958592: the shards never ran).
     # ⛓ RULE 2 — and a docs-only branch push skips the shards (see the plan job).
     if: ${{ !cancelled() && needs.browser-gate-plan.result == 'success' && needs.browser-gate-plan.outputs.needed == 'true' }}
-    runs-on: ubuntu-latest
+    # Pinned, not ubuntu-latest: Playwright refuses chromium on ubuntu-26.04 (2026-10-22). Un-pin once Playwright supports 26.04.
+    runs-on: ubuntu-24.04
     # ⛔ WITHOUT THIS LINE THE GITHUB DEFAULT IS 360 MINUTES, and this job
     # holds the one row whose runner cost is genuinely unknown:
     # `seedling-wasm-element` is 934.7 s of headless SwiftShader on the box.
