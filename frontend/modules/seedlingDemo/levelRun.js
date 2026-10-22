@@ -18760,6 +18760,23 @@ export function createLevelRun({
          * report the one kind of ceremony that CANNOT be advanced by pressing
          * anything as a dialogue waiting for a press.
          */
+        /**
+         * ⛓ JS G4b-dialogue: the NPC whose `Game.talk()` draws NOW (`Game.talking`), or null.
+         * ⛔ READ-ONLY: `.get()` on the per-level maps as they stand — never the lazy
+         * `talkerStateFor`/`watcherStateFor`/`bobArenaNow` builders; writes nothing, builds
+         * nothing. The pickup ceremony's dialogue stays on `ceremonyNow`.
+         */
+        get talkingNow() {
+            const row = (source, id, tag, d, extra = {}) => ({ source, id, tag, ...extra, page: d.page, pages: d.pages.length,
+                text: d.pages[d.page] ?? '', currentCharacter: d.currentCharacter });
+            for (const w of talkerStates.get(level)?.values() ?? []) if (w.talking && w.dialogue && !w.dialogue.done) return row('talker', w.id, w.tag, w.dialogue);
+            for (const w of watcherStates.get(level)?.values() ?? []) if (w.talking && w.dialogue && !w.dialogue.done) return row('watcher', w.id, 'watcher', w.dialogue);
+            const a = bobArena && bobArena.level === level ? bobArena : null;
+            if (a?.npc?.d && !a.npc.d.done) return row('bobBoss', null, 'bobboss', a.npc.d, { form: a.npc.form });
+            const intro = lightsFights.get(level)?.intro;
+            if (intro?.talking && intro.d && !intro.d.done) return row('lightsIntro', null, 'lightboss', intro.d);
+            return null;
+        },
         get ceremonyNow() {
             if (ceremony === null) return null;
             const d = ceremony.dialogue;
