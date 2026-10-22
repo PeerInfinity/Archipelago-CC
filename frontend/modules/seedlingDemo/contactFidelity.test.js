@@ -204,8 +204,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ planning-9's flip (⚖ user "Flip chest / pit switches", 2026-10-21) turns both ON.
             chestProbeLineEnd: true,
             enclosedPitCorner: true,
-            // ⛓ fidelity IGFADE (wave 23): `igneousDeadFrames` (the type-31 tiles count the dead frames' renders) ships OFF.
-            igneousDeadFrames: false });
+            // ⛓ fidelity IGFADE (wave 23): `igneousDeadFrames` (the type-31 tiles count the dead frames' renders) shipped OFF;
+            // ⛓ planning-10's flip (⚖ user "Harvest + flip ON", 2026-10-21) turns it ON.
+            igneousDeadFrames: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

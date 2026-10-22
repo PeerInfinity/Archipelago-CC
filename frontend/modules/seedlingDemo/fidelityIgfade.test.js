@@ -71,8 +71,9 @@ const gameRestarts = (name) => {
 const ON = { igneousLava: true, igneousDeadFrames: true };
 
 describe('IGFADE — the switch', () => {
-    it('ships OFF, under igneousLava ON (byte-identical OFF: the interim refuses by name)', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.igneousDeadFrames).toBe(false);
+    // ⛓ shipped OFF; planning-10's flip (⚖ user "Harvest + flip ON", 2026-10-21) turns it ON.
+    it('ships ON (flipped), under igneousLava ON (OFF: the interim refuses by name)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.igneousDeadFrames).toBe(true);
         expect(CONTACT_FIDELITY_DEFAULTS.igneousLava).toBe(true);
     });
 

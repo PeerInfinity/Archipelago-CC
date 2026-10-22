@@ -864,8 +864,11 @@ export const CONTACT_FIDELITY = {
      * interim refusals (an arrival in range, a dead span while a tile counts) go, except for the spans that move the
      * player, which still refuse by name. OFF: the `igneousLava` interim, byte-identical.
      * `SEEDLING_IGNEOUS_DEAD_FRAMES=0|1` for a node measurement.
+     * ⛓ planning-10's flip (⚖ user, 2026-10-21, IGFADE "Harvest + flip ON") turns it ON. Measured movers (CI, wave-23
+     * A/B): the route survey (full) 0; the L76 sweep legs ×2: 0 (leg 650 flips with the seam time alone, ON = OFF in a
+     * node seam sweep of its captured request).
      */
-    igneousDeadFrames: false,
+    igneousDeadFrames: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
