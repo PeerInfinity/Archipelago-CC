@@ -12,6 +12,8 @@ import {
     generateMaze,
     extractPathsAndObstacles,
     isExit,
+    hasItemActions,
+    sharedWorldCrossing,
 } from './mazeRoomEngine.js';
 import {
     DEFAULT_ITEMS, DEFAULT_OBSTACLES, isObstacleCleared,
@@ -40,20 +42,26 @@ import {
     grantItem,
     fireLoopResetTeleport,
 } from '../resourceChannels/resourceChannelsLibrary.js';
-import { findPath, stepsToActions } from './mazeAutopather.js';
+import { findPath, stepsToActions, planItemActions, inputsToEntries } from './mazeAutopather.js';
 import { SubstrateInactiveOverlay } from '../shared/substrateInactiveOverlay.js';
 import { substrateRegistryEntry } from './mazeRoomLibrary.js';
 import { getSavedQueues } from '../loops/savedQueueStore.js';
 import { hashRulesData } from '../shared/rulesHash.js';
 import { ACTION_QUEUE_FORMAT, ActionQueue, ActionState } from '../shared/actionQueue/index.js';
 import {
-    KEY_MAP,
     MAZE_SUBSTRATE,
     ACTION_MOVE,
     ACTION_WAIT,
     ACTION_LOCATION_CHECK,
+    ACTION_TURN,
+    ACTION_USE,
+    ACTION_CROSS,
     describeMazeAction,
+    keyToMazeEntry,
     locationCheckEntry,
+    turnEntry,
+    useEntry,
+    useKeyBindings,
     waitEntry,
 } from './mazeKeys.js';
 import {
@@ -270,6 +278,7 @@ export class MazeRoomUI {
             // surfaces deliver grants identically.
             onConsumableGrant: (grant) => this._grantConsumableTile(grant),
             onManaGrant: (amount) => this._grantManaTile(amount),
+            onRegionCross: (crossing) => this._onVisualizerRegionCross(crossing),
         });
 
         // Tile-level action queue (Cavernous-2-style). Player keydowns
@@ -911,6 +920,23 @@ export class MazeRoomUI {
             }
             return;
         }
+        // ⛓ ITEM ACTIONS (⚖ "Plan strikes"): the visualizer plans an
+        // item-action world over engine states (`_planTilePath`), so the queue
+        // mirror is filled from the SAME planner, from the panel's own state —
+        // turn and use entries included.
+        if (this._plansItemActions()) {
+            const planned = planItemActions(this.world, this.state,
+                { kind: 'tile', x: target.x, y: target.y }, {
+                    inventory: this.externalInventory ?? undefined,
+                    clearanceOpts: this._planningClearanceOpts(),
+                    excludeOtherExits: true,
+                });
+            if (planned) this._appendEntries(inputsToEntries(planned.inputs));
+            if (action.type === 'locationCheck' && action.locationName) {
+                this._mazeQueue.add(locationCheckEntry(action.locationName));
+            }
+            return;
+        }
         let path = null;
         try {
             path = findPath(
@@ -1040,6 +1066,11 @@ export class MazeRoomUI {
      * becomes seen on arrival via _onVisualizerChange's per-step fog
      * expansion — that primes the next chain leg.
      */
+    /** ⛓ ITEM ACTIONS: plan over engine states (strikes included) on this world? */
+    _plansItemActions() {
+        return hasItemActions(this.world) && !(this.world.hazards?.length > 0) && !!this.state;
+    }
+
     _resolveExploreTarget() {
         if (!this.fogEnabled) return { alreadyComplete: true };
         const seenTiles = this.seenTilesByRegion.get(this._seenSetKey());
@@ -1052,6 +1083,17 @@ export class MazeRoomUI {
         }
         const fromPos = this.state?.player_pos;
         if (!fromPos) return { alreadyComplete: true };
+        if (this._plansItemActions()) {
+            // ⛓ ITEM ACTIONS: a frontier past an unbroken rock is reachable by a strike.
+            const planned = planItemActions(this.world, this.state, { kind: 'closestUnexplored' }, {
+                seenTiles,
+                inventory: this.externalInventory ?? undefined,
+                clearanceOpts: this._planningClearanceOpts(),
+                excludeOtherExits: true,
+            });
+            if (!planned || planned.length === 0) return { alreadyComplete: true };
+            return { x: planned.end.x, y: planned.end.y, name: null };
+        }
         const result = findPath(
             this.world,
             fromPos,
@@ -1114,17 +1156,23 @@ export class MazeRoomUI {
             let bestByDistance = null;
             let bestDistance = Infinity;
             for (const exit of candidates) {
-                const result = findPath(
-                    this.world, fromPos,
-                    { kind: 'tile', x: exit.x, y: exit.y },
-                    {
-                        inventory: this.externalInventory,
-                        obstacleLib: this.world?.obstacleLib,
+                const result = this._plansItemActions()
+                    ? planItemActions(this.world, this.state, { kind: 'tile', x: exit.x, y: exit.y }, {
+                        inventory: this.externalInventory ?? undefined,
                         clearanceOpts: this._planningClearanceOpts(),
                         excludeOtherExits: true,
-                        hazards: this.world?.hazards,
-                    },
-                );
+                    })
+                    : findPath(
+                        this.world, fromPos,
+                        { kind: 'tile', x: exit.x, y: exit.y },
+                        {
+                            inventory: this.externalInventory,
+                            obstacleLib: this.world?.obstacleLib,
+                            clearanceOpts: this._planningClearanceOpts(),
+                            excludeOtherExits: true,
+                            hazards: this.world?.hazards,
+                        },
+                    );
                 if (result && result.length < bestDistance) {
                     bestDistance = result.length;
                     bestByDistance = exit;
@@ -1519,6 +1567,18 @@ export class MazeRoomUI {
     }
 
     _adoptLoadedRegion(payload, { skipRender = false } = {}) {
+        // ⛓ SHARED LEVEL WORLD (tile-primitives Stage 2): a crossing between two
+        // AP regions of ONE level world is a walk inside it. procgenPlayer marks
+        // it `sameWorld`; the panel keeps the player, the blocks, what was
+        // broken, the queue, the replay, the fog and the visit recording, and
+        // only the region changes. Anything else is an ordinary entry below.
+        if (payload?.sameWorld === true && payload.world && payload.world === this.world && this.state) {
+            this.currentRegionId = payload.region_id ?? this.currentRegionId;
+            this.message = `Crossed into ${this.currentRegionId}`;
+            this._visualizer?.setRegion?.(this.currentRegionId);
+            if (!skipRender) this.render();
+            return;
+        }
         // Payload shape (per procgen-player.md §"Event flow"):
         //   { region_id, world, arrivedFrom }
         // arrivedFrom.exit_id (when present) names the exit IN THE
@@ -1571,8 +1631,16 @@ export class MazeRoomUI {
         this.arrivedFromExitId = payload?.arrivedFrom?.exit_id ?? null;
         this.arrivalDoorId = arrival?.exitId ?? null;
         let spawnAt = null;
+        // ⛓ A fresh entry into a shared level world with no arrival exit lands
+        // on the ENTERED region's own entrance (the world's `entrance` is its
+        // carrier's).
+        const ownEntrance = arrival ? null
+            : this.world?.sharedWorld?.entrances?.[payload?.region_id] ?? null;
         if (arrival) {
             spawnAt = { x: arrival.x, y: arrival.y };
+            this.state.player_pos = spawnAt;
+        } else if (ownEntrance) {
+            spawnAt = { x: ownEntrance.x, y: ownEntrance.y };
             this.state.player_pos = spawnAt;
         }
         this.stats = null;
@@ -2110,6 +2178,22 @@ export class MazeRoomUI {
      * region into this panel via maze:loadRegion. The visualizer
      * itself paused on _awaitingRegionLoad until setWorld arrives.
      */
+    /**
+     * ⛓ SHARED LEVEL WORLD: a visualizer walk (the bot, an explore target)
+     * crossed into another AP region of the same world. Same publish as a
+     * keyboard `cross` — the walk itself never pauses, the world is the same.
+     */
+    _onVisualizerRegionCross(crossing) {
+        this.currentRegionId = crossing.targetRegion;
+        const fromLoop = this._loopsDrivenAction != null;
+        this.apis?.dispatcher?.publish?.('user:regionMove', {
+            sourceRegion: crossing.sourceRegion,
+            targetRegion: crossing.targetRegion,
+            exitName: crossing.exitName ?? null,
+            ...(fromLoop ? { fromLoop: true } : {}),
+        }, { initialTarget: 'bottom' });
+    }
+
     _onVisualizerExitCross(exit, sourceRegion) {
         const dispatcher = this.apis?.dispatcher;
         if (!dispatcher?.publish) return;
@@ -2364,6 +2448,10 @@ export class MazeRoomUI {
             Object.assign(this.state, {
                 player_pos: newPos,
                 ...(typeof vState.turn === 'number' ? { turn: vState.turn } : {}),
+                // ⛓ ITEM ACTIONS: a visualizer turn / strike changes facing and
+                // the broken set without moving — same one-fact-per-tick copy.
+                ...(vState.facing !== undefined ? { facing: vState.facing } : {}),
+                ...(Array.isArray(vState.broken) ? { broken: vState.broken.slice() } : {}),
             });
         }
         // Tick detection: the visualizer's turn counter strictly
@@ -2554,13 +2642,22 @@ export class MazeRoomUI {
         // the upcoming path. (No locationCheck terminator — explore
         // doesn't end at a specific location.)
         const startPos = this.state?.player_pos ?? { x: 0, y: 0 };
-        const path = findPath(
+        const planned = this._plansItemActions()
+            ? planItemActions(this.world, this.state, { kind: 'tile', x: next.x, y: next.y }, {
+                inventory: this.externalInventory ?? undefined,
+                clearanceOpts: this._planningClearanceOpts(),
+                excludeOtherExits: true,
+            })
+            : null;
+        const path = planned ? null : findPath(
             this.world,
             { x: startPos.x, y: startPos.y },
             { kind: 'tile', x: next.x, y: next.y },
             { hazards: this.world?.hazards, allowWait: true },
         );
-        if (path && Array.isArray(path.steps) && path.steps.length >= 2) {
+        if (planned) {
+            this._appendEntries(inputsToEntries(planned.inputs));
+        } else if (path && Array.isArray(path.steps) && path.steps.length >= 2) {
             const moves = stepsToActions(path.steps);
             this._appendEntries(moves);
         }
@@ -2703,6 +2800,8 @@ export class MazeRoomUI {
             controls.appendChild(stopBtn);
         }
         wrap.appendChild(controls);
+        const itemRow = this._renderItemActionButtons(readOnly);
+        if (itemRow) wrap.appendChild(itemRow);
 
         // Replay buttons for each saved best-queue matching the current
         // (region, arrivedFromExitId). Hidden when nothing's saved or
@@ -2734,6 +2833,47 @@ export class MazeRoomUI {
         }
 
         return wrap;
+    }
+
+    /**
+     * ⛓ ITEM ACTIONS — the turn buttons and one button per `action_lib` entry
+     * (labelled with its key), only on an item-action world. A click is the
+     * same press as the key (`_pressEntry`). `null` on every other world.
+     */
+    _renderItemActionButtons(readOnly) {
+        const lib = this.world?.actionLib;
+        if (!lib || Object.keys(lib).length === 0) return null;
+        const row = document.createElement('div');
+        row.className = 'maze-room-item-actions';
+        const add = (text, title, spec) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'maze-room-item-action';
+            btn.textContent = text;
+            btn.title = title;
+            btn.disabled = readOnly;
+            btn.addEventListener('click', () => {
+                this._pressEntry(spec);
+                this.rootElement?.focus();
+            });
+            row.appendChild(btn);
+        };
+        for (const [dir, glyph] of [['N', '⇡'], ['W', '⇠'], ['S', '⇣'], ['E', '⇢']]) {
+            add(glyph, `turn ${dir} (Shift+arrow)`, turnEntry(dir));
+        }
+        const keyOf = Object.fromEntries(Object.entries(useKeyBindings(lib)).map(([k, id]) => [id, k]));
+        for (const id of Object.keys(lib).sort()) {
+            const key = keyOf[id];
+            add(key ? `${key.toUpperCase()}: ${id}` : id,
+                `use ${id}${lib[id].item ? ` (needs ${lib[id].item})` : ''}`, useEntry(id));
+        }
+        if (this.state?.facing) {
+            const facing = document.createElement('span');
+            facing.className = 'maze-room-item-facing';
+            facing.textContent = `facing ${this.state.facing}`;
+            row.appendChild(facing);
+        }
+        return row;
     }
 
     _renderQueueCursor() {
@@ -2774,6 +2914,12 @@ export class MazeRoomUI {
             glyph = '◌';
         } else if (entry.actionType === ACTION_LOCATION_CHECK) {
             glyph = '✓';
+        } else if (entry.actionType === ACTION_TURN) {
+            glyph = { N: '⇡', S: '⇣', E: '⇢', W: '⇠' }[entry.actionId] ?? '?';
+        } else if (entry.actionType === ACTION_USE) {
+            glyph = '⚔';
+        } else if (entry.actionType === ACTION_CROSS) {
+            glyph = '⇥';
         } else {
             glyph = '?';
         }
@@ -3569,6 +3715,8 @@ export class MazeRoomUI {
             isLocationVisible: (name) => this._isLocationVisibleToUI(name),
             isConsumableCollected: (x, y) => this._visualizer
                 ?.isConsumableCollected?.(this.currentRegionId, x, y),
+            broken: this.state?.broken ?? null,
+            facing: this.state?.facing ?? null,
         });
     }
 
@@ -3638,7 +3786,7 @@ export class MazeRoomUI {
         // the keystroke so default browser behavior (e.g. spacebar
         // scrolling) doesn't fire either.
         if (this._loopsDrivenAction) {
-            if (e.key === 'Backspace' || KEY_MAP[e.key]) e.preventDefault();
+            if (e.key === 'Backspace' || keyToMazeEntry(e, this.world.actionLib)) e.preventDefault();
             return;
         }
         // Backspace: editing op (not a queue verb). Removes the action
@@ -3655,9 +3803,20 @@ export class MazeRoomUI {
             }
             return;
         }
-        const spec = KEY_MAP[e.key];
+        // ⛓ ITEM ACTIONS: Shift+arrow / Z X C V bind only on a world with an
+        // action_lib; elsewhere this is `KEY_MAP[e.key]`, exactly as before.
+        const spec = keyToMazeEntry(e, this.world.actionLib);
         if (!spec) return;
         e.preventDefault();
+        this._pressEntry(spec);
+    }
+
+    /**
+     * Append-and-execute ONE pressed entry — the keyboard's path, shared with
+     * the item-action buttons so a click and a key are the same press.
+     */
+    _pressEntry(spec) {
+        if (!this.world || !this.state || this._loopsDrivenAction) return;
         // Cancel an active replay so direct input takes over. Pressed
         // key still routes through the queue as normal — replay's
         // pending tail is preserved, but the user is now in control.
@@ -3916,6 +4075,22 @@ export class MazeRoomUI {
      */
     _executeQueueAction(entry) {
         if (entry?.actionType === ACTION_MOVE) {
+            // ⛓ SHARED LEVEL WORLD: a move whose arrival cell another AP region
+            // owns IS a crossing. It is PROMOTED in place to the `cross` entry
+            // the queue format already has (⚖ "cross + dir + params"), so the
+            // loop-mode gate runs before the step and the recording keeps the
+            // regions — its replay needs no exit lookup.
+            const crossing = this._sharedWorldCrossingFor(entry);
+            if (crossing) {
+                entry.actionType = ACTION_CROSS;
+                entry.params = {
+                    ...(entry.params ?? {}),
+                    boundary: crossing.boundary,
+                    sourceRegion: crossing.sourceRegion,
+                    targetRegion: crossing.targetRegion,
+                };
+                return this._executeCrossAction(entry);
+            }
             return this._executeMoveAction(entry);
         }
         if (entry?.actionType === ACTION_WAIT) {
@@ -3926,7 +4101,89 @@ export class MazeRoomUI {
             this._executeLocationCheckAction(entry.actionId);
             return null;
         }
+        if (entry?.actionType === ACTION_TURN || entry?.actionType === ACTION_USE) {
+            return this._executeInPlaceAction(entry);
+        }
+        if (entry?.actionType === ACTION_CROSS) {
+            return this._executeCrossAction(entry);
+        }
         return `unknown maze action type '${entry?.actionType}'`;
+    }
+
+    /**
+     * The in-world crossing a MOVE entry would make from where the player
+     * stands now, or `null` — off a shared level world, for any other entry,
+     * or when the arrival cell is "no news" / the player's own region.
+     */
+    _sharedWorldCrossingFor(entry) {
+        if (!this.world?.sharedWorld || !this.state) return null;
+        const to = intendedTileFor(this.state.player_pos, entry?.actionId);
+        if (!to) return null;
+        return sharedWorldCrossing(this.world, this.currentRegionId, to.x, to.y);
+    }
+
+    /**
+     * ⛓ Run a `cross` entry INSIDE a shared level world: the loop-mode gate is
+     * asked first (a gated crossing must not put the player on the far side's
+     * floor), then the step runs exactly as a move does, then the panel
+     * publishes `user:regionMove` for the AP exit the atlas declares —
+     * procgenPlayer recognises the shared world and answers `sameWorld`, so
+     * the player, the blocks and every broken rock stay where they are.
+     *
+     * Refused by name: off a shared world (the entry has nothing to cross
+     * inside), or when the player is not in the entry's `sourceRegion` (a
+     * replay that has left the route it was recorded on).
+     */
+    _executeCrossAction(entry) {
+        const p = entry?.params ?? {};
+        if (!this.world?.sharedWorld) {
+            return `${describeMazeAction(entry)} refused: this world is not a shared level world`;
+        }
+        if (p.sourceRegion !== this.currentRegionId) {
+            return `${describeMazeAction(entry)} refused: the player is in "${this.currentRegionId}", `
+                + `not "${p.sourceRegion}"`;
+        }
+        const gate = this._crossGate();
+        // Region FIRST, so the step's own events (a check on the boundary
+        // cell) are filed under the region the player arrives in; a refused
+        // step puts it back.
+        this.currentRegionId = p.targetRegion;
+        const reason = this._executeMoveAction(entry, { gate });
+        if (reason !== null) {
+            this.currentRegionId = p.sourceRegion;
+            return reason;
+        }
+        const dispatcher = this.apis?.dispatcher;
+        const exitName = this.world.sharedWorld.links[`${p.sourceRegion}>${p.targetRegion}`] ?? null;
+        const fromLoop = this._loopsDrivenAction != null;
+        this._visualizer?.setRegion?.(p.targetRegion);
+        dispatcher?.publish?.('user:regionMove', {
+            sourceRegion: p.sourceRegion,
+            targetRegion: p.targetRegion,
+            exitName,
+            ...(fromLoop ? { fromLoop: true } : {}),
+        }, { initialTarget: 'bottom' });
+        return null;
+    }
+
+    /**
+     * The loop-mode action gate a `cross` entry asks BEFORE its step — the
+     * same question procgenPlayer asks of every `user:regionMove`
+     * (`loops.gateSubstrateAction`). Absent (no loops module) → no gate.
+     */
+    _crossGate() {
+        const gate = centralRegistry?.getPublicFunction?.('loops', 'gateSubstrateAction');
+        if (typeof gate !== 'function') return undefined;
+        const fromLoop = this._loopsDrivenAction != null;
+        return (crossing) => (gate({
+            kind: 'move',
+            regionName: crossing.sourceRegion,
+            data: {
+                sourceRegion: crossing.sourceRegion,
+                targetRegion: crossing.targetRegion,
+                ...(fromLoop ? { fromLoop: true } : {}),
+            },
+        }) === false ? 'the loop-mode action gate refused it' : true);
     }
 
     /**
@@ -3942,7 +4199,7 @@ export class MazeRoomUI {
      * @param {object} entry - a `move` queue entry; `actionId` is the direction
      * @returns {string|null} the refusal reason, or null when the move ran
      */
-    _executeMoveAction(entry) {
+    _executeMoveAction(entry, { gate } = {}) {
         const dir = entry?.actionId;
         if (!this.world || !this.state) return 'no world or state loaded';
         // In playback mode (externalInventory non-null) the snapshot is
@@ -3971,12 +4228,16 @@ export class MazeRoomUI {
             // when no snapshot is loaded.
             const ruleEvaluator = this._currentRuleEvaluator();
             const clearOpts = ruleEvaluator ? { evaluateRule: ruleEvaluator } : undefined;
-            const { next, reason } = executeMazeEntry(this.world, this.state, entry, {
+            const { next, reason, faced } = executeMazeEntry(this.world, this.state, entry, {
                 inventoryOverride: this.externalInventory ?? undefined,
                 clearanceOpts: clearOpts,
+                gate,
             });
             if (next === null) {
                 refusal = reason;
+                // ⚖ "Refusal + facing": a bump on an item-action world turns
+                // the player toward it; the move itself stays refused.
+                if (faced) this.state = faced;
             } else {
                 this.state = next;
                 if (this.externalInventory !== null) {
@@ -4076,6 +4337,48 @@ export class MazeRoomUI {
         if (!this._loopsDrivenAction) {
             this._tickAndCheckHazards();
         }
+    }
+
+    /**
+     * ⛓ ITEM ACTIONS — a queued `turn` or `use`. The player does not move, so
+     * it is a WAIT to everything around the engine (⚖ "Costs a turn": mana at
+     * the per-tile rate in playback, hazards tick); the engine decides the
+     * facing / the strike. A refused use (item not held) still passes the turn
+     * (hazards tick, no mana), as a refused move does.
+     *
+     * @returns {string|null} the refusal reason, or null when it ran
+     */
+    _executeInPlaceAction(entry) {
+        if (!this.world || !this.state) return 'no world or state loaded';
+        const ruleEvaluator = this._currentRuleEvaluator();
+        const { next, reason } = executeMazeEntry(this.world, this.state, entry, {
+            inventoryOverride: this.externalInventory ?? undefined,
+            clearanceOpts: ruleEvaluator ? { evaluateRule: ruleEvaluator } : undefined,
+        });
+        if (next === null) {
+            if (!this._loopsDrivenAction) this._tickAndCheckHazards();
+            return reason;
+        }
+        const struck = next.broken?.length !== this.state.broken?.length;
+        this.state = next;
+        if (struck) this.message = `Struck the rock with ${entry.actionId}.`;
+        const pos = this.state.player_pos;
+        const hazardAllowed = validateMoveAgainstHazards(this.world.hazards, pos, pos);
+        if (hazardAllowed && this.externalInventory !== null && this._shouldDeductMazeMana()) {
+            const gs = getGameStateSingleton?.();
+            if (gs) {
+                const cost = this._perTileMoveCost();
+                gs.deductMana(cost);
+                if (this.currentRegionId) gs.addRegionXP(this.currentRegionId, cost);
+                if (!this._loopsDrivenAction) this._directWalkCost += cost;
+                if (gs.getCurrentMana() <= 0) {
+                    this._fireLoopReset();
+                    return null;
+                }
+            }
+        }
+        if (!this._loopsDrivenAction) this._tickAndCheckHazards();
+        return null;
     }
 
     /**

@@ -4,6 +4,8 @@
  * STAGED POST-SWORD BOOT. R8 slice 6, kickoff §13.10's banked recon and
  * §R6 13.8's honest route.
  *
+ * @ci-box the user moved the `solve-seedling-*` chain `--check`s off push (⚖ 2026-10-21): the box answers this row (`node scripts/procgen/standing-values.mjs --write --key=<its key>`), and CI runs no arm for it.
+ *
  * ── THE ROOM THIS SCRIPT CROSSES, AND THE TWO IT REPORTS ──────────────
  *
  * The rung's boundary target is `hasShield` flipped inside a driven solver

@@ -12,27 +12,12 @@
 name: "CodeQL"
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - '**.py'
-      - '**.js'
-      - '.github/workflows/*.yml'
-      - '.github/workflows/*.yaml'
-      - '**/action.yml'
-      - '**/action.yaml'
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ main ]
-    paths:
-      - '**.py'
-      - '**.js'
-      - '.github/workflows/*.yml'
-      - '.github/workflows/*.yaml'
-      - '**/action.yml'
-      - '**/action.yaml'
+  # Fork change (ci-manual-moves, user ruling 2026-10-21): no push or
+  # pull_request trigger — the weekly cron plus a manual dispatch only.
+  # Upstream's push/pull_request blocks are the only lines removed.
   schedule:
     - cron: '44 8 * * 1'
+  workflow_dispatch:
 
 permissions:
   security-events: write

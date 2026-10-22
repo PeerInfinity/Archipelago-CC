@@ -191,7 +191,7 @@ async function loadRegistry() {
 async function main() {
     const t0 = Date.now();
     const { substrateRegistry, failed, core, report, agreement } = await loadRegistry();
-    const { sidecarFieldsOf, sidecarPayloadErrors } = core;
+    const { sidecarFieldsOf, sidecarPayloadErrors, sharedWorldAliasError } = core;
     const { sidecarIssues, describeSidecarIssue, UNCHECKED_SIDECAR_KINDS } = report;
     const { regionRuleAgreement, ruleAgreementFails, describeDisagreement, RULE_AGREEMENT } = agreement;
 
@@ -251,6 +251,15 @@ async function main() {
                 const decl = declarationOf(entry.substrate);
                 if (decl.error) {
                     fails.push({ ...at, substrate: entry.substrate, field: null, ...decl.error });
+                    continue;
+                }
+                // ⛓ A shared-level-world ALIAS carries no payload: it is checked
+                // for a sibling that carries its world, not field by field.
+                const alias = sharedWorldAliasError(regions, entry);
+                if (alias !== null) {
+                    if (alias !== '') {
+                        fails.push({ ...at, substrate: entry.substrate, field: null, code: GATE_CAUSES.NOT_AN_ENTRY, message: alias });
+                    }
                     continue;
                 }
                 for (const e of sidecarPayloadErrors(decl.fields, entry.playable_payload)) {

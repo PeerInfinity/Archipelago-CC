@@ -447,6 +447,12 @@
             "category": "Seedling atlas maze"
         },
         {
+            "id": "seedling-playthrough-maze-l15-level-world",
+            "enabled": true,
+            "category": "Seedling atlas maze",
+            "_comment": "Tile-primitives Stage 2: Seedling L15 as ONE shared level world — sword refused, then granted; rocks struck, block pushed onto the button, the held lock crossed into r1c9 with the level's state kept."
+        },
+        {
             "id": "seedling-atlas-sphere-placed-region",
             "enabled": true,
             "category": "Seedling atlas maze",
@@ -529,6 +535,12 @@
             "enabled": true,
             "category": "Seedling JS runtime",
             "_comment": "GRAPHICS G3c. jsRuntime.html?graphics=seedling&camera=follow mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 61 (two red spinning axes; the stance no blade reaches): each is drawn as seedling:puzzlement/spinningaxeRed from the seedling pack, every sheet decodes, an angle changes (the renderer's update clock is live), zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
+        },
+        {
+            "id": "seedling-js-runtime-graphics-effects",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "GRAPHICS G4. jsRuntime.html?graphics=seedling (room mode) mounted STANDALONE in the row's own iframe and driven through its own __swfBridge to level 61 (Dungeon 6 rain; G3c's stance out of the axes' reach): the page holds the boot build's 20 dead frames (the fade is drawn, the run waits), the rain is drawn as seedling:fx/droplet and three full hearts as seedling:hud/heart from the seedling pack, the cover is gone after the hold, every sheet decodes, zero console errors. No panel, preset or AP state touched; the iframe is removed. seedling-js batch."
         },
         {
             "id": "seedling-js-runtime-solver-opens-kill-lock",

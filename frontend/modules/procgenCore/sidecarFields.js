@@ -448,3 +448,23 @@ export function sidecarPayloadErrors(fields, payload) {
     }
     return out;
 }
+
+/**
+ * ⛓ SHARED LEVEL WORLD ALIASES (tile-primitives Stage 2; `rules.schema.json`
+ * `presetSidecarEntry.shared_world`). An entry naming `shared_world` with NO
+ * `playable_payload` is an ALIAS: its world is the one a SIBLING entry of the
+ * same slot carries, whose payload's `shared_world.key` equals the name.
+ * Returns `null` for an entry that is not an alias, else the refusal sentence
+ * (`''` when the alias resolves) — a gate checks the alias instead of a payload.
+ *
+ * @param {Record<string, object>} regions one slot of `preset_sidecars`
+ * @param {object} entry
+ * @returns {string|null}
+ */
+export function sharedWorldAliasError(regions, entry) {
+    if (typeof entry?.shared_world !== 'string' || entry.playable_payload !== undefined) return null;
+    const carried = Object.values(regions ?? {}).some((e) => e !== entry
+        && e?.substrate === entry.substrate
+        && e?.playable_payload?.shared_world?.key === entry.shared_world);
+    return carried ? '' : `alias of shared world '${entry.shared_world}', which no sibling payload carries`;
+}

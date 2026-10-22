@@ -1,0 +1,8 @@
+s1 SOLVED level 58 ticks 2765 clears [{"level":57,"tag":0,"by":"tentaclebeast@80,48","t":2504}] deaths 0 ms 1032 | params {"gap": 10, "margin": 3, "whirl": 26, "warn": "hit"} tried []
+s2 SOLVED level 58 ticks 1047 clears [{"level":57,"tag":0,"by":"tentaclebeast@80,48","t":787}] deaths 0 ms 890 | params {"gap": 10, "margin": 3, "whirl": 26, "warn": "hit"} tried []
+s3 SOLVED level 58 ticks 1512 clears [{"level":57,"tag":0,"by":"tentaclebeast@80,48","t":1251}] deaths 0 ms 877 | params {"gap": 10, "margin": 3, "whirl": 26, "warn": "hit"} tried []
+s4 SOLVED level 58 ticks 2450 clears [{"level":57,"tag":0,"by":"tentaclebeast@80,48","t":2190}] deaths 0 ms 1044 | params {"gap": 10, "margin": 3, "whirl": 26, "warn": "hit"} tried []
+s5 SOLVED level 58 ticks 2260 clears [{"level":57,"tag":0,"by":"tentaclebeast@80,48","t":2013}] deaths 0 ms 1150 | params {"gap": 10, "margin": 3, "whirl": 26, "warn": "hit"} tried []
+s6 SOLVED level 58 ticks 1364 clears [{"level":57,"tag":0,"by":"tentaclebeast@80,48","t":1103}] deaths 0 ms 890 | params {"gap": 10, "margin": 3, "whirl": 26, "warn": "hit"} tried []
+s7 SOLVED level 58 ticks 955 clears [{"level":57,"tag":0,"by":"tentaclebeast@80,48","t":747}] deaths 0 ms 569 | params {"gap": 10, "margin": 3, "whirl": 26, "warn": "hit"} tried []
+s8 SOLVED level 58 ticks 1069 clears [{"level":57,"tag":0,"by":"tentaclebeast@80,48","t":948}] deaths 0 ms 261 | params {"gap": 10, "margin": 3, "whirl": 26, "warn": "hit"} tried []

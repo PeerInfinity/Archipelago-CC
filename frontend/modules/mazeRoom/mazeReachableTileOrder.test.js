@@ -324,9 +324,13 @@ describe('placeGateAndKey — a key never lands on a tile that already holds an 
 });
 
 describe('extractPathsAndObstacles — one ghost BFS tree serves every target', () => {
-    it('annotates every exit and pickup exactly as a per-target ghost BFS would', () => {
+    it('annotates every exit and pickup: the ghost route first, then every other MINIMAL obstacle set', () => {
         // The reference is the pre-C0 shape: one \`reach\` per target over a
         // position-keyed solver whose step sees walls and nothing else.
+        // ⛓ Since slice maze-logic-t1t2-fix (⚖ T2 "All-routes minimal sets") that route is
+        // p1 VERBATIM whenever its obstacle set is minimal, and the paths' sets are exactly
+        // the minimal ones — referenced here by brute force over every subset of the ids,
+        // the others walled.
         const DELTA = { [INPUT_N]: [0, -1], [INPUT_S]: [0, 1], [INPUT_E]: [1, 0], [INPUT_W]: [-1, 0] };
         const ghost = makeBfsSolver({
             inputs: INPUTS,
@@ -340,9 +344,26 @@ describe('extractPathsAndObstacles — one ghost BFS tree serves every target', 
                 const d = DELTA[input];
                 const x = s.player_pos.x + d[0];
                 const y = s.player_pos.y + d[1];
+                if (world.open) {
+                    const id = getObstacle(world, x, y);
+                    if (id && !world.open.has(id)) return null;
+                }
                 return isFloor(world, x, y) ? { ...s, player_pos: { x, y } } : null;
             },
         });
+        const key = (ids) => [...ids].sort().join('+');
+        const minimalSets = (world, position) => {
+            const ids = [...new Set(world.obstacles.values())];
+            const open = [];
+            for (let m = 0; m < (1 << ids.length); m++) {
+                const set = ids.filter((_, i) => m & (1 << i));
+                const r = reach({ ...world, open: new Set(set) }, ghost, createState(world),
+                    (st) => st.player_pos.x === position.x && st.player_pos.y === position.y);
+                if (r.ok) open.push(set);
+            }
+            return open.filter((a) => !open.some((b) => b.length < a.length && b.every((i) => a.includes(i))))
+                .map(key).sort();
+        };
         const reference = (world, position) => {
             const r = reach(world, ghost, createState(world),
                 (s) => s.player_pos.x === position.x && s.player_pos.y === position.y);
@@ -362,6 +383,8 @@ describe('extractPathsAndObstacles — one ghost BFS tree serves every target', 
         let unreachable = 0;
         let withObstacles = 0;
         let atEntrance = 0;
+        let ghostNotMinimal = 0;
+        let multiRoute = 0;
         for (let i = 0; i < 200; i++) {
             const world = randomWorld(rng);
             // A back exit stands ON the entrance tile (the top-down layout puts it
@@ -373,12 +396,22 @@ describe('extractPathsAndObstacles — one ghost BFS tree serves every target', 
             const out = extractPathsAndObstacles(world);
             for (const t of [...out.exits, ...out.locations]) {
                 const expected = reference(world, t.position);
-                expect(t.paths, `world ${i} target ${t.id}`).toEqual(expected);
+                const minimal = minimalSets(world, t.position);
+                expect(t.paths.map((p) => key(p.obstacles)).sort(), `world ${i} target ${t.id}`).toEqual(minimal);
+                expect(t.paths.map((p) => p.path_id)).toEqual(t.paths.map((_, n) => `p${n + 1}`));
+                if (expected.length > 0 && minimal.includes(key(expected[0].obstacles))) {
+                    expect(t.paths[0], `world ${i} target ${t.id}`).toEqual(expected[0]);
+                } else if (expected.length > 0) {
+                    ghostNotMinimal++;
+                }
+                if (t.paths.length > 1) multiRoute++;
                 targets++;
                 if (expected.length === 0) unreachable++;
                 else if (expected[0].obstacles.length > 0) withObstacles++;
             }
         }
+        expect(ghostNotMinimal).toBeGreaterThan(0);
+        expect(multiRoute).toBeGreaterThan(0);
         expect(targets).toBeGreaterThan(0);
         expect(unreachable).toBeGreaterThan(0);
         expect(withObstacles).toBeGreaterThan(0);

@@ -78,7 +78,7 @@
 
 import { execFileSync } from 'node:child_process';
 
-import { ciGateArms, ciRunnable, ciUnrunnableIdentityRows } from './ciGatePlan.js';
+import { ciArmlessIdentityRows, ciGateArms, ciRunnable } from './ciGatePlan.js';
 import { REPO, gateRoster } from './gateRoster.js';
 import { browserShardsRan } from './ciDocsOnly.js';
 import {
@@ -144,11 +144,20 @@ if (GATE) {
     if (!identityArm && !gate) {
         /**
          * ⛔ S4c — an IDENTITY key that no arm claims is refused with its own
-         * reason, never with a sentence about `check-*.mjs`. The only way to
+         * reason, never with a sentence about `check-*.mjs`. Before ci-manual-moves the only way to
          * be an identity row with no arm is ⚖ 72 (a).
          */
-        const winRow = ciUnrunnableIdentityRows({ repo: REPO }).find((r) => r.key === GATE);
-        if (winRow) {
+        const armless = ciArmlessIdentityRows({ repo: REPO }).find((r) => r.row.key === GATE);
+        /** ⛓ ci-manual-moves — a row CI runs no arm for for ANOTHER reason
+         *  (`@ci-box`, or covered by another arm or `Producer --checks`) is
+         *  refused with that reason: its standing row is the box's. */
+        if (armless && armless.kind !== 'windows') {
+            console.error(`REFUSED: ${JSON.stringify(GATE)} has no CI arm — ${armless.why.replace(/\.$/, '')}. CI prints `
+                + 'no line for it, so there is nothing here to quote; its standing row is measured on '
+                + 'the box. ⛔ This is a refusal, not a 0/0.');
+            process.exit(5);
+        }
+        if (armless) {
             console.error(`REFUSED: ${JSON.stringify(GATE)} runs an instrument that holds the `
                 + 'Windows Python driver (`/mnt/c/Windows/py.exe`), which a runner does not '
                 + 'have — so no answer for it exists at any SHA. Its standing row is measured '

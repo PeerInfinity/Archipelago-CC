@@ -385,6 +385,10 @@ async function main() {
         }
         async function writeTrace() {
             const verbs = await rp.gameFrame().evaluate(() => window.__swfBridge.game.__trace ?? null);
+            // ⛓ DELIVERY DEFERRAL — the game's own readout when the walk ends (level, place, hold / tape state)
+            const game = await rp.gameFrame().evaluate(() => {
+                try { const r = window.__swfBridge.game.botStatus(); return typeof r === 'string' ? JSON.parse(r) : r; } catch (err) { return { error: String(err?.message ?? err) }; }
+            }).catch((err) => ({ error: String(err?.message ?? err) }));
             const eng = await page.evaluate(async () => {
                 const { substrateRegistry } = await import('./modules/shared/procgen/substrateRegistry.js');
                 const e = substrateRegistry.get('flash_seedling')?.getPlaybackController?.()?._wasmEngine ?? null;
@@ -395,7 +399,9 @@ async function main() {
                     // ⛓ DELIVERY TICK — each self-check the next goal waited on, and the deliveries the game already showed
                     selfChecks: st.selfChecks ?? null, deliveryInGame: st.deliveryInGame ?? null, arrivalWatch: st.arrivalWatch ?? null, heldChecks: st.heldChecks, adoptRefused: st.adoptRefused,
                     history: st.history.map((h) => ({ ...h, goal: { name: h.goal?.name ?? null, kind: h.goal?.kind ?? null, level: h.goal?.level ?? null } })),
-                    arrivalReads: e.arrivalReads, timeline: st.timeline ?? null, crossLevelEnds: st.crossLevelEnds ?? null, staleGoals: st.staleGoals ?? null }));
+                    arrivalReads: e.arrivalReads, timeline: st.timeline ?? null, crossLevelEnds: st.crossLevelEnds ?? null, staleGoals: st.staleGoals ?? null,
+                    // ⛓ DELIVERY DEFERRAL — where the engine stands when the walk ends (its phase, held room, gate)
+                    status: e.status?.() ?? null }));
             });
             const solves = await page.evaluate(() => window.__solveLog ?? null);
             // ⛓ WALK IDENTITY — the glue's Restart decisions and the start-hop pushes they made
@@ -406,7 +412,7 @@ async function main() {
             const { writeFileSync, mkdirSync } = await import('node:fs');
             mkdirSync(dirname(TRACE), { recursive: true });
             const bot = await botStatus();
-            writeFileSync(TRACE, JSON.stringify({ verbs, engine: eng, solves, restartDeferrals: bot.restartDeferrals, restartGlue }));
+            writeFileSync(TRACE, JSON.stringify({ verbs, engine: eng, game, solves, restartDeferrals: bot.restartDeferrals, restartGlue }));
             out('B trace written', { file: TRACE, verbs: verbs?.length ?? null, tapes: (verbs ?? []).filter((v) => v.verb === 'botLoadTape').length,
                 solves: (solves ?? []).filter((x) => x.t === 'solve').length, workers: (solves ?? []).filter((x) => x.t === 'new').length });
             out('B self-checks', (eng?.selfChecks ?? []).map((r) => ({ location: r.location, tick: r.tick, settled: r.settled, delivered: r.delivered, waitedMs: r.waitedMs })));
@@ -537,6 +543,28 @@ async function main() {
             check('B: the walk ends FINISHED, with a NAMED refusal, or on the budget — never a silent stall',
                 (end?.status ?? '').startsWith('finished') || (end?.status ?? '').startsWith('error') || Date.now() - t0 >= BUDGET_MS,
                 end?.status ?? '');
+            // ⛓ ROPE GOAL — a goal-first BREAK step is answered: the walk never ENDS on "breaking X first (<event id>)" once the
+            // game has collected that event (a local check, no user:locationCheck — measured before the fix: L16's rope cut
+            // and collected at +222 s, the status frozen on its break step to the 900 s budget). Read off the bot's final
+            // status and the rules' own event row, not the fix's state.
+            const brk = await page.evaluate(async (status) => {
+                const id = /breaking \S+ first \((flag:L\d+:\d+)\)/.exec(status)?.[1] ?? null;
+                if (!id) return { eventId: null };
+                const { getActivePanel } = await import('./modules/playbackBot/index.js');
+                const bot = getActivePanel()?.getBot?.();
+                const rules = bot?._getRulesJson?.() ?? null;
+                const pid = String(bot?._getPlayerId?.() ?? '1');
+                const names = Object.values(rules?.regions?.[pid] ?? {}).flatMap((r) => r.locations ?? [])
+                    .filter((l) => l.event_id === id).map((l) => l.name);
+                const checked = window.stateManagerProxy?.getLatestStateSnapshot?.()?.checkedLocations ?? [];
+                return { eventId: id, names, collected: names.some((n) => checked.includes(n)) };
+            }, end?.status ?? '');
+            out('B break steps', { ...brk, replans: (await page.evaluate(async () => {
+                const { getActivePanel } = await import('./modules/playbackBot/index.js');
+                return (getActivePanel()?.getBot?.()?.getLog?.() ?? []).filter((l) => /collected by the game — re-planning/.test(l));
+            })) });
+            check('B: no walk ends on a BREAK step whose event the game already collected (the bot re-plans after the break)',
+                !(brk.eventId && brk.collected), JSON.stringify(brk));
         }
 
         try {

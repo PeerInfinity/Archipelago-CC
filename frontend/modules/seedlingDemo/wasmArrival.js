@@ -448,7 +448,7 @@ export function arrivalSolverGoal(goal, { staging, levelSource, record, run: giv
     // ⛓ EVENT GOALS — nor does an event location (→ `clear-tag`).
     const placement = goal.kind === 'location' && !goal.encounter && !goal.event
         ? locationEntityOf(record, goal.tag, goal.entityType ?? null) : null;
-    return solverGoalFor(goal, { run, resolved, placement, generated: false });
+    return solverGoalFor(goal, { run, resolved, placement, generated: false, levelSource });
 }
 
 /**
@@ -484,7 +484,7 @@ export function arrivalSolveRequest({ staging, solverGoal, levelSource, records,
  * shipping anything), and its digest is the request's `live`, so the worker's
  * own replay is asserted against it (`solveFromTape`).
  *
- * @returns {{request?: object, shadowRow: object, shadowDamage: object, mapped: object, refusal?: string}}
+ * @returns {{request?: object, shadowRow: object, shadowDamage: object, shadowCtor: {x:number, y:number}, mapped: object, refusal?: string}}
  *   `refusal` = no continuation (the goal maps to nothing) — the engine falls
  *   back, named. ⛓ STEP-OFF RETIRE: a shadow latched on the goal door is an
  *   ordinary continuation (the solver steps off it from the shadow).
@@ -501,12 +501,15 @@ export function continuationSolveRequest({ staging, shipped, goal, levelSource, 
     // ⛓ STAGEDHITS CONSUMER — the damage the replay RE-BILLED (`stagedHitsMismatch` reads it against the game's
     // `botStatus`). Never staged here: the arrival is a new `Player` and the prefix's hits are the replay's.
     const shadowDamage = shadow.damage;
+    // ⛓ DELIVERY DEFERRAL — the spawn pair the host's `atBootPosition` reads after the prefix (`wasmPlayback.bootAtCtor`).
+    const shadowCtor = { ...shadow.worldCtor };
     const mapped = arrivalSolverGoal(goal, { staging, levelSource, record,
         run: replayTape({ staging, perTick, levelSource, scratchPersistence: true, equips: eq }) });
-    if (!mapped.goal) return { shadowRow, shadowDamage, mapped, refusal: `the solver has no goal for ${goal?.name ?? goal?.kind}: ${mapped.walker}` };
+    if (!mapped.goal) return { shadowRow, shadowDamage, shadowCtor, mapped, refusal: `the solver has no goal for ${goal?.name ?? goal?.kind}: ${mapped.walker}` };
     return {
         shadowRow,
         shadowDamage,
+        shadowCtor,
         mapped,
         request: { staging, perTick, live, solverGoal: mapped.goal, name, scratchPersistence: true, equips: eq, levelSource,
             source: { records } },

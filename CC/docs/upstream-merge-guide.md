@@ -37,7 +37,7 @@ These files are only modified in the fork. Upstream hasn't touched them, so ther
 | File | Fork change |
 |------|------------|
 | `.gitattributes` | Added `merge=ours` strategy |
-| `.github/workflows/codeql-analysis.yml` | Added explicit permissions |
+| `.github/workflows/codeql-analysis.yml` | Added explicit permissions; since 2026-10-21 no `push`/`pull_request` trigger (weekly cron + `workflow_dispatch` only) |
 | `pytest.ini` | Added `test_json` to testpaths |
 | `settings.py` | `skip_required_files` support |
 
@@ -46,6 +46,11 @@ If upstream does touch any of these in a future merge, use the diff files to und
 - `diff-files/core-files.diff` covers `settings.py`
 
 **Action:** Nothing — these files won't conflict.
+
+**Upstream workflows the fork customises, which upstream DOES edit** (expect a conflict there and keep both sides):
+`.github/workflows/unittests.yml` carries three fork additions, each marked `Fork addition` / `Fork change` in the
+file: the *Python tests needed?* guard job and the branch-push `concurrency` group (2026-10-10, F1/F3), and the
+Windows/macOS `include` legs moved behind `pull_request` or a `full_matrix` dispatch (2026-10-21).
 
 ### Category 3: World bug/determinism fixes (verify upstream hasn't fixed independently)
 

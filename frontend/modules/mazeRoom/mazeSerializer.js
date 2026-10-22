@@ -29,7 +29,7 @@ import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { TILE_FLOOR, TILE_WALL } from '../shared/procgen/mazeAlgorithms/gridTiles.js';
 import { computeLongestShortestPath } from './mazeGeometry.js';
 import { makeLocationName } from '../procgenCore/apLocationNaming.js';
-import { REQUIRED_ENVELOPE_FIELD } from '../procgenCore/sidecarFields.js';
+import { REQUIRED_ENVELOPE_FIELD, envelopeExitNames } from '../procgenCore/sidecarFields.js';
 import { isConceptRow } from '../procgenCore/concepts.js';
 import { GOAL_ITEM } from '../procgenCore/goalItem.js';
 
@@ -41,6 +41,7 @@ const atXY = (extra = {}, required = []) => Object.freeze({
 });
 /** Written only by the maze atlas projection — the provenance keys its ten committed rooms carry. */
 const ATLAS_PROJECTION = '`projectRegionToMaze` (`procgenPipeline/regionAtlasMazeProjection.js`)';
+const LEVEL_WORLD_PROJECTION = '`projectLevelWorld` (`procgenPipeline/regionAtlasMazeProjection.js`)';
 
 /**
  * ⛓⛓ PRESET SIDECARS D0 — **THE TILE-GRID PAYLOAD, DECLARED BESIDE ITS
@@ -60,11 +61,16 @@ const ATLAS_PROJECTION = '`projectRegionToMaze` (`procgenPipeline/regionAtlasMaz
  *
  * ⚠ Three keys `serializeMazeWorld` CAN emit that no committed preset carries
  * (`hazards`, `consumableTiles`, `manaTiles` — each omitted when empty) are
- * declared, because the serializer writes them. ⛔ Four keys
- * `deserializeMazeWorld` READS that no sidecar writer emits (`blocks`,
- * `buttons`, `buttonLib` — the lab level record's, via
- * `serializeMazeEntities` — and the legacy single `exit`) are NOT: the gate
- * would refuse a sidecar that carried one.
+ * declared, because the serializer writes them. ⛔ The legacy single `exit`,
+ * which `deserializeMazeWorld` still READS, is NOT: the gate would refuse a
+ * sidecar that carried one.
+ *
+ * ⛓ SHARED LEVEL WORLDS (tile-primitives Stage 2) — a third writer: the atlas
+ * projection's `projectLevelWorld` emits `blocks`, `buttons`, `buttonLib`,
+ * `action_lib` and `shared_world` on the ONE payload a level world carries
+ * (every other sub-region of that level is a payload-less alias entry — see
+ * `rules.schema.json` `presetSidecarEntry.shared_world`). Each is omitted on
+ * every other payload, so the corpus they were measured on is unmoved.
  */
 export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
     exits: REQUIRED_ENVELOPE_FIELD,
@@ -164,6 +170,47 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
             + 'shuffled-spiral room when the pipeline\'s *Maze rooms play as* is zones; the APWorld Editor '
             + 'sets it per room.',
     }),
+    blocks: Object.freeze({
+        type: 'array', required: false,
+        description: 'Pushable blocks\' INITIAL cells `{x, y}` (arc 2). Where they are now is the play '
+            + 'state\'s (`state.blocks`). Written by the shared-level-world projection '
+            + '(`projectLevelWorld`) and the lab level record (`serializeMazeEntities`); omitted when there are none.',
+        schema: Object.freeze({ items: atXY() }),
+    }),
+    buttons: Object.freeze({
+        type: 'array', required: false,
+        description: 'Buttons `{x, y, id}` — `id` keys `buttonLib`. A button is pressed while a block or the '
+            + 'player stands on it. Written beside `blocks`; omitted when there are none.',
+        schema: Object.freeze({ items: atXY({ id: Object.freeze({ type: 'string' }) }, ['id']) }),
+    }),
+    buttonLib: Object.freeze({
+        type: 'object', required: false,
+        description: 'Button id → `{kind, holds}`: the token a pressed button DERIVES for that step (a HOLD, '
+            + 'never stored). Written beside `buttons`.',
+    }),
+    action_lib: Object.freeze({
+        type: 'object', required: false,
+        description: 'Item actions (⚖ ITEM ACTIONS): action id → `{item, primitive: \'strike\', condition, key}`; '
+            + 'an obstacle whose lib entry lists the id in `struck_by` breaks when struck. Read through '
+            + '`checkActionLib`. Written by `projectLevelWorld` from the game\'s rock rows; omitted when empty.',
+    }),
+    shared_world: Object.freeze({
+        type: 'object', required: false, derived: true,
+        description: `A SHARED LEVEL WORLD, written by ${LEVEL_WORLD_PROJECTION}: \`{key, regions, rows, entrances, links}\` — which AP `
+            + 'region owns each cell (`rows`, an index into `regions`, `.` = no news), each region\'s arrival '
+            + 'cell, and the AP exit name of each in-world crossing. Read through `checkSharedWorld`; every '
+            + 'other region of the level is an alias entry naming `key`.',
+        schema: Object.freeze({
+            required: Object.freeze(['key', 'regions', 'rows', 'entrances']),
+            properties: Object.freeze({
+                key: Object.freeze({ type: 'string' }),
+                regions: Object.freeze({ type: 'array', items: Object.freeze({ type: 'string' }) }),
+                rows: Object.freeze({ type: 'array', items: Object.freeze({ type: 'string' }) }),
+                entrances: Object.freeze({ type: 'object' }),
+                links: Object.freeze({ type: 'object' }),
+            }),
+        }),
+    }),
     atlas_region: Object.freeze({
         type: 'string', required: false, derived: true,
         description: `Atlas provenance written by ${ATLAS_PROJECTION}: the atlas region this room was `
@@ -206,6 +253,24 @@ export function tileGridApLocationNames(payload) {
     if (!Array.isArray(payload?.items)) return null;
     return payload.items.map((i) => i?.locationName)
         .filter((n) => typeof n === 'string' && n !== '');
+}
+
+/**
+ * ⛓ PRESET SIDECARS V0 — **WHERE A TILE-GRID PAYLOAD CARRIES ITS AP EXIT
+ * NAMES** (the registry's `apExitNamesOf` slot): the envelope's `exitName`s
+ * (`envelopeExitNames`), plus — on a SHARED LEVEL WORLD's payload — every AP
+ * exit its `shared_world.links` carries as an in-world crossing (tile-primitives
+ * Stage 2). `null` when the payload has no `exits` array.
+ *
+ * @param {object} payload
+ * @returns {string[]|null}
+ */
+export function tileGridApExitNames(payload) {
+    const envelope = envelopeExitNames(payload);
+    if (envelope === null) return null;
+    const links = payload?.shared_world?.links;
+    if (!links || typeof links !== 'object') return envelope;
+    return [...envelope, ...Object.values(links).filter((n) => typeof n === 'string' && n !== '')];
 }
 
 // Serialize a maze world into the sidecar payload shape. Maps and

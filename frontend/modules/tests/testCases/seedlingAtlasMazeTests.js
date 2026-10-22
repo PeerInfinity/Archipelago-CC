@@ -49,6 +49,8 @@ import { getPanelInstance } from '../../mazeRoom/index.js';
 import { getGameStateSingleton } from '../../gameState/singleton.js';
 import { getActivePanel as getBotPanel } from '../../playbackBot/index.js';
 import { getSphereStateSingleton } from '../../sphereState/singleton.js';
+import { nativeReachUnder } from '../../mazeRoom/tileSpike/deriveLevelWorldLogic.js';
+import { sharedWorldOwnerAt, TURN_PREFIX, USE_PREFIX } from '../../mazeRoom/mazeRoomEngine.js';
 
 const PRESET_PATH = './presets/seedling_atlas_maze/AP_1/AP_1_rules.json';
 // A world sphere growth GREW with pieces of the same map hung off it
@@ -736,6 +738,147 @@ async function sphereWorldBotCompletion(testController) {
 
     return testController.getOverallResult();
 }
+
+// ────────────────────────────────────────────────────────────────
+// 5. L15 as ONE shared level world (tile-primitives Stage 2)
+// ────────────────────────────────────────────────────────────────
+const L15_PRESET_PATH = './presets/seedling_playthrough_maze/AP_1/AP_1_rules.json';
+const L15_R1C5 = 'level_15__r1c5';
+const L15_R1C9 = 'level_15__r1c9';
+
+const L14 = 'level_14';
+const L16_R1C1 = 'level_16__r1c1';
+
+/** Run a planned input list on the panel through its real key handler; stops at the first refusal. */
+function runPlan(panel, world, plan) {
+    for (const input of plan) {
+        if (input.startsWith(TURN_PREFIX)) {
+            panel._handleKeydown({ key: KEY_FOR[input.slice(TURN_PREFIX.length)], shiftKey: true, preventDefault: () => {} });
+        } else if (input.startsWith(USE_PREFIX)) {
+            press(panel, world.actionLib[input.slice(USE_PREFIX.length)].key);
+        } else {
+            press(panel, KEY_FOR[input]);
+        }
+        if (panel._queueRefusal) break;
+    }
+}
+
+/** The plan from where the player stands to the exit leading to `target`, holding `inventory`. */
+function planToExit(panel, target, inventory) {
+    const world = panel.world;
+    const exit = [...world.exits.values()].find((e) => e.targetRegion === target);
+    if (!exit) return null;
+    const reach = nativeReachUnder({ ...world, entrance: { ...panel.state.player_pos } }, inventory);
+    return reach.planTo(`${exit.x},${exit.y}`);
+}
+
+/**
+ * Seedling L14 → L15 → L16 in the maze (tile-primitives Stage 2; grown to L14 + L16 by session
+ * tile-primitives-levels-gap3, ⚖ "L14 + L16"). The preset starts in L14; its stairs land the player in L15,
+ * which plays as ONE shared level world: the sword is refused before it is held; once granted through
+ * stateManager, the player breaks both rocks, pushes the block onto the button and walks through the held
+ * lock — and crossing into r1c9 changes the AP region (dispatcher, procgenPlayer, gameState) while the panel
+ * KEEPS the level's state: same world object, the block still on the button, both rocks still broken. Then
+ * r1c9's stairs take the player OUT of the shared world into L16's — a different world object. Every route
+ * is planned off the LIVE world (`nativeReachUnder`), never hard-coded.
+ */
+async function l15SharedLevelWorld(testController) {
+    testController.log('Loading seedling_playthrough_maze (L14 → L15 → L16; L15 and L16 shared level worlds)…');
+    await testController.loadRulesFromFile(L15_PRESET_PATH);
+    await testController.stateManager.pingWorker('after-rules-load', 5000);
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'mazeRoomPanel' });
+    const inL14 = await testController.pollForValue(
+        () => {
+            const p = getPanelInstance();
+            return (p?.world && p.state && p.currentRegionId === L14) ? p : null;
+        },
+        `maze panel mounted in ${L14}`, 20000, 250);
+    testController.assertEqual('the preset put the player in L14', true, !!inL14);
+    if (!inL14) return testController.getOverallResult();
+
+    // ── L14's stairs down: a door between two worlds ──
+    const down = planToExit(inL14, L15_R1C5, []);
+    testController.assertEqual('L14 reaches its stairs to L15 empty-handed (the atlas: True_)', true, !!down);
+    if (!down) return testController.getOverallResult();
+    runPlan(inL14, inL14.world, down);
+    const panel = await testController.pollForValue(
+        () => {
+            const p = getPanelInstance();
+            return (p?.world?.sharedWorld && p.state && p.currentRegionId === L15_R1C5) ? p : null;
+        },
+        `the stairs moved the player into ${L15_R1C5}`, 20000, 250);
+    testController.assertEqual('the stairs put the player in L15 r1c5 on a shared level world', true, !!panel);
+    if (!panel) return testController.getOverallResult();
+    testController.assertEqual('gameState agrees: the AP region is L15 r1c5', L15_R1C5, readCurrentRegion());
+    const world = panel.world;
+
+    // ── negative: no sword, no strike ──
+    press(panel, world.actionLib.sword.key);
+    testController.assertEqual('Z without the sword is refused by the engine',
+        'use sword blocked: use sword needs Progressive Sword', panel._queueRefusal);
+
+    // ── grant the sword through the normal stateManager path ──
+    await testController.stateManager.addItemToInventory('Progressive Sword', 1);
+    const held = await testController.pollForCondition(
+        () => getPanelInstance()?.externalInventory?.has?.('Progressive Sword') === true,
+        'the panel sees the granted sword', 15000, 200);
+    testController.assertEqual('the panel sees the granted sword', true, !!held);
+    if (!held) return testController.getOverallResult();
+
+    const start = `${panel.state.player_pos.x},${panel.state.player_pos.y}`;
+    const reach = nativeReachUnder({ ...world, entrance: { ...panel.state.player_pos } }, ['Progressive Sword']);
+    const goal = [...reach.cells.keys()].find((c) => {
+        const [x, y] = c.split(',').map(Number);
+        return sharedWorldOwnerAt(world, x, y) === L15_R1C9;
+    });
+    testController.assertEqual(`with the sword, r1c9 is reachable from ${start}`, true, !!goal);
+    if (!goal) return testController.getOverallResult();
+    const plan = reach.planTo(goal);
+    testController.log(`plan to ${goal}: ${plan.length} inputs, ${plan.filter((i) => i.startsWith(USE_PREFIX)).length} strikes`);
+    runPlan(panel, world, plan);
+    testController.assertEqual('every input of the plan ran', null, panel._queueRefusal);
+
+    const crossed = await testController.pollForCondition(
+        () => readCurrentRegion() === L15_R1C9 && getPanelInstance()?.currentRegionId === L15_R1C9,
+        `walking onto r1c9's floor moved the AP region to ${L15_R1C9}`, 15000, 200);
+    testController.assertEqual('the in-world crossing changed the AP region (gameState + panel)', true, !!crossed);
+    const now = getPanelInstance();
+    testController.assertEqual('the panel KEPT the same world object', true, now?.world === world);
+    testController.assertEqual('the block is still on the button', '7,2', now?.state?.blocks?.join('|'));
+    testController.assertEqual('both rocks are still broken', '6,1|6,5', now?.state?.broken?.join('|'));
+    testController.assertEqual('the player stands where the plan ended', goal,
+        `${now?.state?.player_pos?.x},${now?.state?.player_pos?.y}`);
+
+    // ── r1c9's stairs down: OUT of one shared world into another ──
+    const toL16 = planToExit(now, L16_R1C1, ['Progressive Sword']);
+    testController.assertEqual('r1c9 reaches its stairs to L16 (the atlas: True_)', true, !!toL16);
+    if (!toL16) return testController.getOverallResult();
+    runPlan(now, world, toL16);
+    const inL16 = await testController.pollForValue(
+        () => {
+            const p = getPanelInstance();
+            return (p?.world?.sharedWorld?.key === 'level_16' && p.currentRegionId === L16_R1C1
+                && readCurrentRegion() === L16_R1C1) ? p : null;
+        },
+        `the stairs moved the player into ${L16_R1C1}`, 20000, 250);
+    testController.assertEqual('the stairs put the player in L16 r1c1 — L16\'s own shared world (gameState + panel)', true, !!inL16);
+    testController.assertEqual('a DIFFERENT world object from L15\'s', true, !!inL16 && inL16.world !== world);
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-playthrough-maze-l15-level-world',
+    name: 'Seedling playthrough (maze): L14 → L15 (one shared level world) → L16',
+    description: 'Seedling L14–L16 in the maze (tile-primitives Stage 2 + levels-gap3): L14\'s stairs '
+               + 'land the player in L15, projected as ONE maze world; the sword is refused before it '
+               + 'is held; once granted, the player breaks both rocks, pushes the block onto the button '
+               + 'and crosses the held lock into r1c9 — the AP region changes through the real '
+               + 'dispatcher / procgenPlayer / gameState while the panel keeps the same world, the block '
+               + 'and the broken rocks — then takes r1c9\'s stairs into L16\'s own shared world.',
+    testFunction: l15SharedLevelWorld,
+    category: 'Seedling atlas maze',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
 
 registerTest({
     id: 'seedling-atlas-maze-boundary-crossing',

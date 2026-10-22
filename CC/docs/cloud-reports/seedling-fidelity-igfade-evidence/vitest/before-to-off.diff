@@ -1,0 +1,270 @@
+0a1
+> failed	modules/loops/loopBlockBuilder.test.js > LoopBlockBuilder — loopSupport capability gating real substrate entries declare the agreed capability matrix
+516d516
+< passed	modules/loops/loopBlockBuilder.test.js > LoopBlockBuilder — loopSupport capability gating real substrate entries declare the agreed capability matrix
+781,955d780
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — M2 Playback departure crossing crosses the departure only AFTER the interior replay drains
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — M2 Playback departure crossing drops a departure with an unresolvable exit id without dispatching
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — M2 Playback departure crossing empty-interior recording issues the departure regionMove directly
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — M2 Playback departure crossing instant drains the interior + crosses the departure synchronously (M3, no clock)
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — M2 Playback departure crossing resolves the exit by exitName as well as exit_id
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — M2 Playback departure crossing returns false when there is nothing to replay and no departure
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — R-b: a replay refuses BEFORE step 0 _getReplayableTargets LABELS a recording whose digest no longer matches
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — R-b: a replay refuses BEFORE step 0 a recording that predates this slice still replays — R2 is the net
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — R-b: a replay refuses BEFORE step 0 a replay lacking a required key refuses NAMING it, and queues nothing
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — R-b: a replay refuses BEFORE step 0 a replay on an EDITED world refuses before the first step, naming the digest
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — R-b: a replay refuses BEFORE step 0 the recording carries BOTH fields, derived from the visit's own start
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — R-b: a replay refuses BEFORE step 0 …and an empty-handed visit that never crossed the door needs nothing
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — R2: a replay REFUSES BY NAME rather than walking on a refusal the RECORDING knew about (params.refused) replays as a COMPLETION — reproducing it is the recording replaying correctly
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — R2: a replay REFUSES BY NAME rather than walking on the INSTANT drain obeys the same rule — the departure is not crossed
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — R2: a replay REFUSES BY NAME rather than walking on the SAME recording on the world it was recorded on runs to the end
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — R2: a replay REFUSES BY NAME rather than walking on the ticked driver stops at the first refused entry, names the index, and does NOT fire the completion (so a loops block stays parked)
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — _shouldDeductMazeMana (M3b parked live-play drain) loop mode off → drains (the out-of-loop economy)
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — _shouldDeductMazeMana (M3b parked live-play drain) loop mode on, nothing parked → free (blocked-anyway hand play must not bleed mana)
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — _shouldDeductMazeMana (M3b parked live-play drain) loop mode on, parked live play in THIS region → drains (rule 2: Manual/Record drain)
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — _shouldDeductMazeMana (M3b parked live-play drain) loop mode on, parked live play in a DIFFERENT region → free
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — _shouldDeductMazeMana (M3b parked live-play drain) loops livePlayRegion unavailable (loops disabled / test env) → free, no throw
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — _shouldDeductMazeMana (M3b parked live-play drain) loops-driven walks always drain, regardless of parking
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — _shouldDeductMazeMana (M3b parked live-play drain) no manaEnabled → never drains
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — a canvas click is `tileAtPoint`'s answer, not `/ TILE_PX` ⛓ a point off the room paints nothing and does not throw — the panel is not a lab, so the refusal is SILENT but it is `tileAtPoint`'s
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — a canvas click is `tileAtPoint`'s answer, not `/ TILE_PX` ⛓ every visual pixel of a tile is that tile, at both edges of the box
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — a canvas click is `tileAtPoint`'s answer, not `/ TILE_PX` ⛔ a 2x-scaled canvas: the visual CENTRE of tile (3,2) is tile (3,2) — the old arithmetic said (7,5)
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — a canvas click is `tileAtPoint`'s answer, not `/ TILE_PX` ⛔ the 1 px BORDER is subtracted — a click on the first pixel of tile (5,4) is tile (5,4), and NOT the neighbour (4,3) the border-blind arithmetic names
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — a canvas click is `tileAtPoint`'s answer, not `/ TILE_PX` ⛔ …and its top-left CORNER is the same tile — the old arithmetic said (6,4)
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — a delegated walk advances the panel's OWN turn counter (D5) ⛓ a visualizer that carries no counter leaves the panel's number alone
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — a delegated walk advances the panel's OWN turn counter (D5) ⛔ k moves and w waits leave `state.turn` at k + w
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — a delegated walk advances the panel's OWN turn counter (D5) ⛔ …and the end-of-region message SAYS so — it used to under-count the whole walk
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — action queue integration (Phase 1) _executeLocationCheckAction no-ops outside playback mode
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — action queue integration (Phase 1) _executeLocationCheckAction no-ops with empty locationName
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — action queue integration (Phase 1) _executeLocationCheckAction publishes user:locationCheck in playback mode
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — action queue integration (Phase 1) _executeWaitAction deducts mana in playback mode
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — action queue integration (Phase 1) _executeWaitAction is a no-op outside playback mode
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — action queue integration (Phase 1) clears the queue on region adoption
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — action queue integration (Phase 1) constructs the SHARED ActionQueue as panel._mazeQueue (Q-b)
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — action queue integration (Phase 1) refuses an unknown actionType by name rather than silently doing nothing
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — action queue integration (Phase 1) routes locationCheck entries through _executeLocationCheckAction
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — action queue integration (Phase 1) routes move entries through _executeMoveAction
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — action queue integration (Phase 1) routes wait entries through _executeWaitAction
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — append-and-execute on a keypress (Q-b) a REFUSED press marks the entry FAILED and names the reason, where the old queue marked it done and forgot
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — append-and-execute on a keypress (Q-b) a keypress appends AND runs when the edit point is the tail
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — append-and-execute on a keypress (Q-b) a press APPENDS without executing when entries are still pending ahead
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — append-and-execute on a keypress (Q-b) a press with the edit cursor MID-QUEUE inserts and does NOT execute
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — append-and-execute on a keypress (Q-b) each press in sequence runs in order
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — arrival position on region load T2b F2 — a keypress that crosses regions leaves the queue {0,0}, and the NEXT keypress does not throw
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — arrival position on region load T2b F4 — the container's 'show' reaches onPanelShow (render + focus)
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — arrival position on region load T2b F4 — the focus waits until the root is DISPLAYED (a hidden root refuses focus)
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — arrival position on region load a load with no arrival (or none that resolves) clears both: the entrance, and the "entrance" key
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — arrival position on region load an exit_id that names nothing here + source_region → the exit leading back to the source
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — arrival position on region load spawns at the arrivedFrom exit tile, not the entrance
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — arrival position on region load spawns at the entrance when arrivedFrom is null
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — arrival position on region load the visualizer mirroring callback does not clobber the arrival pos
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — arrival position on region load …and with no exit leading back, the entrance stands
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — arrival position on region load ⛔ a load arriving through an exit → the hazard reset's door is THAT exit
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — arrival position on region load ⛔ …through the source_region arm: the door is the exit it resolved to; the key stays the store's
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — discovery filtering helpers falls back to exit_id when exitName is missing
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — discovery filtering helpers hides undiscovered exits when discovery mode is on
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — discovery filtering helpers hides undiscovered locations when discovery mode is on
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — discovery filtering helpers shows everything when discovery mode is off, even if not discovered
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — discovery population (fog opt-out) does not crash on a region with no items / exits
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — discovery population (fog opt-out) marks every location and exit on region entry when world.fogEnabled is false
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — discovery population (fog opt-out) subsequent fog-opt-out regions accumulate discoveries (does not clear prior marks)
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — fog of war helpers _computeVisibleAt clips out-of-bounds neighbors
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — fog of war helpers _computeVisibleAt returns position plus 4-coord-adjacent in-bounds tiles
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — fog of war helpers _expandFogVisibility adds new tiles to the seen-set
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — fog of war helpers _expandFogVisibility fires discovery for items/exits at newly-visible tiles
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — fog of war helpers _isTileVisibleForRender gates by the seen-set when fog is enabled
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — fog of war helpers _isTileVisibleForRender returns true for all tiles when fog is disabled
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — fog of war helpers _seenTilesForCurrentRegion lazily creates a per-region set
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — fog of war helpers _seenTilesForCurrentRegion uses a sentinel key when no region is loaded (dev / Generate flow)
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — fog of war helpers seen-set survives a region transition and back (no re-fog)
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — fog/discovery interaction on region entry fog ON only reveals tiles within the spawn visibility
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — fog/discovery interaction on region entry panel fog OFF + world without fog flag does NOT auto-reveal (default fog on)
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — fog/discovery interaction on region entry panel fog OFF + world.fogEnabled false reveals every location/exit on entry
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — hazard runtime integration (Phase 2e) Rule-2 bumped move leaves player on hazard.next → pre-tick teleport
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — hazard runtime integration (Phase 2e) _adoptLoadedRegion resets hazard phases to 0
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — hazard runtime integration (Phase 2e) _executeMoveAction allows + ticks when destination is clear
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — hazard runtime integration (Phase 2e) _executeMoveAction does not tick when loops is driving (visualizer does)
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — hazard runtime integration (Phase 2e) _executeMoveAction skips engine.step when hazard blocks the destination
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — hazard runtime integration (Phase 2e) _executeWaitAction advances state.turn and moves nothing else
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — hazard runtime integration (Phase 2e) _executeWaitAction rejection + stomp triggers a pre-tick teleport
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — hazard runtime integration (Phase 2e) _executeWaitAction ticks hazards even when no mana deducted
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — hazard runtime integration (Phase 2e) _fireHazardTeleport clears pending queue actions + stops replay
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — hazard runtime integration (Phase 2e) _fireHazardTeleport moves player to world.entrance and resets hazards
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — hazard runtime integration (Phase 2e) _fireHazardTeleport prefers the arrived-from exit over world.entrance
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — hazard runtime integration (Phase 2e) _onVisualizerChange treats a turn-only advance (wait) as a tick
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — hazard runtime integration (Phase 2e) _tickAndCheckHazards is a no-op when world has no hazards
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — hazard runtime integration (Phase 2e) _tickAndCheckHazards leaves phase + position alone when a valid move exists
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — hazard runtime integration (Phase 2e) _tickAndCheckHazards teleports when no valid move remains after the tick
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — hazard runtime integration (Phase 2e) a hazard-REFUSED wait still passes the turn — the engine never refuses a wait
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — hazard runtime integration (Phase 2e) a queued `wait` entry reaches the engine through _executeQueueAction
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — hazard runtime integration (Phase 2e) moving OUT from under a stomp threat is still allowed (escape works)
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — hazard runtime integration (Phase 2e) waiting on a tile a hazard will step into triggers the pre-tick teleport
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) XP reduction is applied to per-tile move cost
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _deductMazeStepMana awards XP equal to mana spent
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _deductMazeStepMana deducts location cost on an unchecked location tile
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _deductMazeStepMana deducts move cost on a floor tile
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _deductMazeStepMana skips deduction when loop mode is active
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _deductMazeStepMana skips deduction when manaEnabled is off
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _deductMazeStepMana triggers loop reset when mana hits zero
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _deductMazeStepMana uses move cost on an already-checked location tile
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _deductMazeStepMana with freshLocationCheck override charges location cost
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _finalizeVisitOnExit extracts locationCheck actions into locationsChecked
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _finalizeVisitOnExit stashes a SavedQueue with action slice + mana fields
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _finalizeVisitOnExit stashes regardless of cached rules (loops owns the rules-hash)
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _locationTileCost reads from costDataManager when loaded
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _onLoopsSubstrateActionBegan — fails back with completed:false when target unresolvable
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _onLoopsSubstrateActionBegan — ignores actions for other regions
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _onLoopsSubstrateActionBegan — sets _loopsDrivenAction and calls walkToTile on resolvable target
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _perTileMoveCost = baseRegionCost / longestShortestPath
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _perTileMoveCost falls back to default region cost when costData not loaded
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _perTileMoveCost handles longestShortestPath = 1
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _pickBestExit — defensive fallback to first candidate when no info
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _pickBestExit — falls back to closest BFS distance when no saved data
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _pickBestExit — prefers lowest saved-queue mana cost
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _resolveLoopsActionTarget — explore returns alreadyComplete when fog is off
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _resolveLoopsActionTarget — explore returns alreadyComplete when seenTiles is empty
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _resolveLoopsActionTarget — locationCheck resolves via itemLocationNames
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _resolveLoopsActionTarget — regionMove resolves to matching exit tile
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _resolveLoopsActionTarget — unknown destinationRegion returns null
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _shouldDeductMazeMana allows deduction during queue-driven walks (Phase 6d)
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _shouldDeductMazeMana is false when loop mode is active
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _shouldDeductMazeMana is false when manaEnabled is off
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — loop-mode mana hooks (Phase 3) _shouldDeductMazeMana is true with manaEnabled and loop mode inactive
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — playback controller adapter controller methods delegate to the visualizer
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — playback controller adapter getPlaybackController returns a stable object exposing the substrate-neutral interface
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — saved queue replay _getReplayableTargets returns empty when rules data isn't cached
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — saved queue replay _getReplayableTargets returns saved queues for matching (region, arrival)
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — saved queue replay _getReplayableTargets uses "entrance" sentinel when arrivedFromExitId is null
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — saved queue replay _populateLoopsDrivenQueue appends locationCheck terminator for location targets
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — saved queue replay _populateLoopsDrivenQueue appends moves derived from the path
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — saved queue replay _populateLoopsDrivenQueue skips path BFS when world lacks tiles
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — saved queue replay _populateLoopsDrivenQueue still adds locationCheck terminator without tiles
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — saved queue replay _replayBestPath EXPANDS a run-length folded recording into one entry per turn
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — saved queue replay _replayBestPath appends the saved actions to the queue
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — saved queue replay _replayBestPath no-ops on missing key
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — saved queue replay _stopReplay clears the driver and is idempotent
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — saved queue replay keyboard input is blocked while loops is driving
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — saved queue replay region adoption resets direct-walk tracking
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — saved queue replay region adoption stops an active replay
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — saved queue replay the replay button promises the EXPANDED turn count, not the stored row count
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — saved queue replay ⛔ after a load through an exit, the recordings made through that exit are the ones offered
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — skeleton constructs without DOM and starts with empty state
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — skeleton discoveryModeActive defaults to false in headless tests
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — the edit cursor is PANEL state (Q-b) Backspace deletes the entry before the cursor and never enters the done region
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — the edit cursor is PANEL state (Q-b) _clearPendingEntries preserves the done history
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — the edit cursor is PANEL state (Q-b) an UNCLAMPED done-region index really does throw — the clamp is load-bearing, not decorative
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — the edit cursor is PANEL state (Q-b) clamps a negative index up to the queue cursor
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — the edit cursor is PANEL state (Q-b) clamps an index inside the DONE region up to the cursor — the shared class would have THROWN a RangeError there
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — the edit cursor is PANEL state (Q-b) clamps overshoot down to length
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — the edit cursor is PANEL state (Q-b) ignores a non-integer index
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — the edit cursor is PANEL state (Q-b) null restores tail (append) behaviour
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — the visit recording (R1, R5, the loops fold) R1: itemsPickedUp is FILLED from the keyboard/replay pickup path, where it used to be a literal []
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — the visit recording (R1, R5, the loops fold) R1: the BOT path fills it too, so a loops-delegated walk records its pickups
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — the visit recording (R1, R5, the loops fold) R5: the stash names its actions' vocabulary
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — the visit recording (R1, R5, the loops fold) a REFUSED turn stays in the recording, marked, because it consumed a turn the hazard phase depends on
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — the visit recording (R1, R5, the loops fold) the recording covers only the turns of THIS visit
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — the visit recording (R1, R5, the loops fold) the recording is FOLDED: a 4-step corridor is ONE entry
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — the visit recording (R1, R5, the loops fold) two captures of the same visit are BYTE-IDENTICAL (no wall-clock ids), which is what the store's duplicate detection compares
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — visualizer pickup → system:locationCheck dispatch drops the publish when no locationName is provided
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — visualizer pickup → system:locationCheck dispatch falls back to currentRegionId when regionId is missing
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — visualizer pickup → system:locationCheck dispatch publishes system:locationCheck with locationName + itemId + regionName
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — walkTo command resolution a bot walkTo that sticks is reported to the bot as playback:walkFailed, in the walker's own words, once
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — walkTo command resolution drops a kind: tile target whose region does not match the loaded one
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — walkTo command resolution drops a kind: tile target with non-finite coords
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — walkTo command resolution drops unknown exit names without throwing
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — walkTo command resolution drops unknown location names without throwing
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — walkTo command resolution drops walkTo when no world is loaded (early call)
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — walkTo command resolution resolves a kind: exit target by exitName fallback
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — walkTo command resolution resolves a kind: exit target by exit_id (Map key)
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — walkTo command resolution resolves a kind: location target via world.itemLocationNames
+< passed	modules/mazeRoom/mazeRoomUI.test.js > MazeRoomUI — walkTo command resolution resolves a kind: tile target when region matches the loaded one
+1411,1442d1235
+< passed	modules/procgenCore/compositeMapRenderer.test.js > compositeMapIdOf prefers render_hint over substrate (the shipping precedence)
+< passed	modules/procgenCore/compositeMapRenderer.test.js > compositeMapIdOf ⛔ NO `?? 'maze'` DEFAULT — a region naming neither resolves to null
+< passed	modules/procgenCore/compositeMapRenderer.test.js > drawCompositeMap dispatches through the registry a region with NO payload is a STUB — no painter is asked, declared or not
+< passed	modules/procgenCore/compositeMapRenderer.test.js > drawCompositeMap dispatches through the registry an EMPTY cell draws its border and nothing else
+< passed	modules/procgenCore/compositeMapRenderer.test.js > drawCompositeMap dispatches through the registry an id NO registry entry answers to also gets the generic box, by that id
+< passed	modules/procgenCore/compositeMapRenderer.test.js > drawCompositeMap dispatches through the registry calls the declared painter with the cell's own origin and the shared geometry
+< passed	modules/procgenCore/compositeMapRenderer.test.js > drawCompositeMap dispatches through the registry honours a caller's tilePx everywhere: cell origin AND the geometry handed on
+< passed	modules/procgenCore/compositeMapRenderer.test.js > drawCompositeMap dispatches through the registry offsets each cell by its grid coordinate
+< passed	modules/procgenCore/compositeMapRenderer.test.js > drawCompositeMap dispatches through the registry ⛓ GENERIC BY NAME: an UNDECLARED substrate gets the box, labelled with its id
+< passed	modules/procgenCore/compositeMapRenderer.test.js > fitTextToWidth handles empty / nullish input
+< passed	modules/procgenCore/compositeMapRenderer.test.js > fitTextToWidth returns just the ellipsis when no characters fit
+< passed	modules/procgenCore/compositeMapRenderer.test.js > fitTextToWidth returns the original string when it already fits
+< passed	modules/procgenCore/compositeMapRenderer.test.js > fitTextToWidth truncates with an ellipsis when over the budget
+< passed	modules/procgenCore/compositeMapRenderer.test.js > resolveExitTilePositions accepts the in-memory Map<exit_id, exit> shape from deserializeWorld
+< passed	modules/procgenCore/compositeMapRenderer.test.js > resolveExitTilePositions distributes per-side independently and pins to correct wall
+< passed	modules/procgenCore/compositeMapRenderer.test.js > resolveExitTilePositions distributes side-only exits evenly along their wall, avoiding corners
+< passed	modules/procgenCore/compositeMapRenderer.test.js > resolveExitTilePositions drops exits with neither (x,y) nor a known side
+< passed	modules/procgenCore/compositeMapRenderer.test.js > resolveExitTilePositions mixes (x,y)-bearing and side-only exits in the same region
+< passed	modules/procgenCore/compositeMapRenderer.test.js > resolveExitTilePositions preserves explicit (x, y) verbatim and skips even-distribution
+< passed	modules/procgenCore/compositeMapRenderer.test.js > resolveExitTilePositions returns [] for empty / non-array inputs
+< passed	modules/procgenCore/compositeMapRenderer.test.js > the click geometry honours a non-default tilePx (the cell size is derived, never assumed)
+< passed	modules/procgenCore/compositeMapRenderer.test.js > the click geometry maps a client point to a canvas-backing pixel, undoing CSS scaling
+< passed	modules/procgenCore/compositeMapRenderer.test.js > the click geometry maps a pixel to a cell and to the pixel WITHIN that cell
+< passed	modules/procgenCore/compositeMapRenderer.test.js > the click geometry returns null outside the grid, and for a null point
+< passed	modules/procgenCore/compositeMapRenderer.test.js > the click geometry returns null when the canvas has no layout (0×0 rect)
+< passed	modules/procgenCore/compositeMapRenderer.test.js > ⛓ the renderer's exit accessor and the pipeline's cannot drift agrees with getRegionExits on an array, a Map, and an absence
+< passed	modules/procgenCore/compositeMapRenderer.test.js > ⛓ the shipped declarers a substrate with NO declaration (bounce) falls back, by name
+< passed	modules/procgenCore/compositeMapRenderer.test.js > ⛓ the shipped declarers draws the connection line between a paired exit and entrance
+< passed	modules/procgenCore/compositeMapRenderer.test.js > ⛓ the shipped declarers maze and text_adventure both DECLARE compositeMap.drawRegion
+< passed	modules/procgenCore/compositeMapRenderer.test.js > ⛓ the shipped declarers the declaration is DATA — resolving a painter needs no browser
+< passed	modules/procgenCore/compositeMapRenderer.test.js > ⛓ the shipped declarers the selection outlines the whole cell, or one exit's square
+< passed	modules/procgenCore/compositeMapRenderer.test.js > ⛓ the shipped declarers ⛔ a maze region is painted by the MAZE, not by the generic box
+1782,1835d1574
+< passed	modules/procgenPipeline/sphereSteps.test.js > appendSphere (envelope path) appends a sphere from a bare rules.json (maze)
+< passed	modules/procgenPipeline/sphereSteps.test.js > appendSphere (envelope path) bounce (zone substrate) appends with the oracle clean
+< passed	modules/procgenPipeline/sphereSteps.test.js > appendSphere (envelope path) chains: a second append onto an appended world grows depth
+< passed	modules/procgenPipeline/sphereSteps.test.js > appendSphere (envelope path) expands the grid on demand when the appended wave overflows
+< passed	modules/procgenPipeline/sphereSteps.test.js > appendSphere (envelope path) importSphereEnvelope deserializes a serialized envelope unchanged
+< passed	modules/procgenPipeline/sphereSteps.test.js > appendSphere (envelope path) importSphereEnvelope loads a top-down-sphere rules.json (region_id join)
+< passed	modules/procgenPipeline/sphereSteps.test.js > appendSphere (envelope path) importSphereEnvelope reconstructs from a rules.json and tags the source
+< passed	modules/procgenPipeline/sphereSteps.test.js > appendSphere (envelope path) rebuild throws for a zone substrate (bounce) — needs the saved envelope
+< passed	modules/procgenPipeline/sphereSteps.test.js > appendSphere (envelope path) rebuilds an envelope from a bare rules.json and recompiles cleanly (maze)
+< passed	modules/procgenPipeline/sphereSteps.test.js > appendSphere (envelope path) relocates the goal out of a multi-item final sphere (depth + 1)
+< passed	modules/procgenPipeline/sphereSteps.test.js > appendSphere (envelope path) reverts a goal-only final sphere and appends new content + goal
+< passed	modules/procgenPipeline/sphereSteps.test.js > appendSphere (envelope path) throws when the source has no completion item
+< passed	modules/procgenPipeline/sphereSteps.test.js > appendSphere (envelope path) truncateSphereWorld deletes a dropped teleporter child and keeps its same-side sibling
+< passed	modules/procgenPipeline/sphereSteps.test.js > appendSphere (envelope path) truncateSphereWorld drops a dropped parent's teleporter entries, so a regrow keeps its exits
+< passed	modules/procgenPipeline/sphereSteps.test.js > appendSphere (envelope path) truncateSphereWorld drops the later-wave node suffix + their regions
+< passed	modules/procgenPipeline/sphereSteps.test.js > appendSphere (envelope path) truncateToWave rewinds to an earlier sphere, then regrows
+< passed	modules/procgenPipeline/sphereSteps.test.js > appendSphere (envelope path) ⛓ names the MISSING SIDECAR by region, not by a count
+< passed	modules/procgenPipeline/sphereSteps.test.js > appendSphere (envelope path) ⛓⛓ P1a — importSphereEnvelope reads the slot opts.playerId names
+< passed	modules/procgenPipeline/sphereSteps.test.js > appendSphere (envelope path) ⛓⛓ and its sentence is VERBATIM the one the rebuild throws — zone substrate, and a document that is not sphere-grown at all
+< passed	modules/procgenPipeline/sphereSteps.test.js > appendSphere (envelope path) ⛓⛓ sphereRebuildRefusal returns null exactly when the rebuild succeeds
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps runner SPHERE_STEPS lists the six steps in order
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps runner a JSON round-trip between EVERY step is byte-identical to in-process
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps runner a gap stops detection (stale downstream data is ignored)
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps runner batched JSON round-trip between EVERY step == in-process batched run
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps runner batched run (spheresPerBatch < total) runs end-to-end and the oracle holds
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps runner batched step runner == growSpheresBatchedGen (unify invariant)
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps runner bounce config: stepped == monolithic
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps runner carrying spheresPerBatch on the config is byte-identical (default = all)
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps runner detectCompleted derives the resume point from data presence
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps runner editing a region (batch < all) keeps the grid and recompiles
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps runner editing items (batch < all) re-runs forward and the oracle holds
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps runner editing topology (batch < all) re-runs forward without double-wiring
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps runner embeds a compact sphere_tree (no grid) sufficient to resume wiring
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps runner in-process full run reproduces the monolithic rules.json
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps runner resolveSpheresPerBatch normalises the "all spheres" sentinels to the total
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps runner resolveSpheresPerBatch passes through an in-range positive integer
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps runner resumeEnvelope picks up from the first missing step
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps runner runToStep can stop partway and resume
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps runner serializeEnvelope output is pure JSON at each stage
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps — recorded layout edits N edits → undo ×N → the never-edited grid, byte for byte
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps — recorded layout edits a layout move RESYNCS the tree node cells (and the start cell)
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps — recorded layout edits a re-roll after an exit-side edit keeps the parent's teleporter to its child (oracle clean)
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps — recorded layout edits a recorded move REPLAYS from config + seed + edits alone
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps — recorded layout edits a refused edit leaves the grid untouched and records nothing
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps — recorded layout edits an edited world rebuilds from its rules.json at the EDITED placement
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps — recorded layout edits an exit-side edit RESYNCS the tree node sides
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps — recorded layout edits an unedited envelope is untouched by the replay (byte-identity)
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps — recorded layout edits procgen_metadata carries the recording — and omits it when unedited
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps — recorded layout edits re-running ③ on the CARRY path fails the SAME way it did before B-d
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps — recorded layout edits set-substrate replays at ②c and undoes from ②b (the node it wrote is ②b s)
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps — recorded layout edits the batch gate replays a layout edit ONCE in a sphere-major run
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps — recorded layout edits the codec carries the recording across a serialise/deserialise boundary
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps — recorded layout edits the replay consumes NO rng: the post-③ rng snapshot is unmoved
+< passed	modules/procgenPipeline/sphereSteps.test.js > sphereSteps — recorded layout edits undo re-runs from the edit s OWN step, not from step 0
+2091a1831
+> passed	modules/seedlingDemo/contactFidelityHook.test.js > the settings: one boolean per switch of CONTACT_FIDELITY, the schema default IS the model's default igneousDeadFrames → flashPanel.seedlingContactIgneousDeadFrames, default false

@@ -274,7 +274,9 @@ export const FAMILY_BLOCKS = deepFreeze([
         solverReads: ['solverBot'], strategies: [],
         why: 'the Activators groups a `room = -1` press latched open (`levelRun.js:10718`).' },
     { family: 'pulledRopes', kind: RUN_ENTITIES, blocks: [],
-        solverReads: ['botDriverV2'], strategies: [],
+        // ⛓ fidelity ROPE: `solverBot.resolveRopeStrategy` reads it (a rope already pulled is no work order). The
+        // `rope` row is switch-gated (non-enumerable), so `strategies` stays the enumerated table's answer.
+        solverReads: ['botDriverV2', 'solverBot'], strategies: [],
         why: 'pulled rope ids (`levelRun.js:10582`) — an obstacle\'s state, not a block.' },
     { family: 'turretDamage', kind: RUN_ENTITIES, blocks: ['hp', 'emitter'],
         solverReads: ['botDriverV2'], strategies: [],
@@ -316,8 +318,8 @@ export const FAMILY_BLOCKS = deepFreeze([
         solverReads: ['dangerMap'], strategies: [],
         why: 'the room\'s Igneous-to-Lava tiles (type 31) with their render-driven clocks — `igneousCounter`, `igneousBreakApart`, `igneousFrame` and whether the tile has turned to lava (fidelity IGNEOUS: `levelRun.igneousTilesNow`, `igneousLava.js`); `null` while `CONTACT_FIDELITY.igneousLava` is off.' },
     { family: 'lightsFight', kind: RUN_ENTITIES, blocks: ['hp', 'emitter', 'contact'],
-        solverReads: ['lightsVerb'], strategies: [],
-        why: 'L69\'s fight (fidelity LIGHTS: `levelRun.lightsFightNow`, `lightBoss.js`): the intro, the controller\'s `worldFrame` pattern (spin, radius, state), the six `LightBoss` fliers (contact, `hits`, the die anim) and their `LightBossShot`s; the `lights` verb forecasts a clone of it. `null` while `CONTACT_FIDELITY.lightsBossFight` is off.' },
+        solverReads: ['dangerMap', 'lightsVerb'], strategies: [],
+        why: 'L69\'s fight (fidelity LIGHTS: `levelRun.lightsFightNow`, `lightBoss.js`): the intro, the controller\'s `worldFrame` pattern (spin, radius, state), the six `LightBoss` fliers (contact, `hits`, the die anim) and their `LightBossShot`s; the `lights` verb forecasts a clone of it, and the danger map steps a copy of its shots and fliers (hammer LD: `dangerMap.lightsDanger`). `null` while `CONTACT_FIDELITY.lightsBossFight` is off.' },
     { family: 'lavaBossFight', kind: RUN_ENTITIES, blocks: [],
         solverReads: ['solverBot'], strategies: [],
         why: 'L82\'s King of Fire, stepped (seedling-fidelity-bosskills D2: `levelRun.lavaBossFightNow`, `lavaBoss.js`): the body\'s cycle, hits, window and fade, its balls and its runners; `null` while `CONTACT_FIDELITY.kingOfFireFight` is off. A bespoke fight, so no generic block.' },

@@ -1,0 +1,10 @@
+2a3,5
+> failed	modules/seedlingDemo/contactFidelity.test.js > contact witnesses (fixtures/contact-witness) the shipped defaults: all three ON
+> failed	modules/seedlingDemo/dashShape.test.js > the request: byte-identical at the defaults, stamped only off-default (in `stampHooks`, the one door) the defaults add no field (today's request key list exactly)
+> failed	modules/seedlingDemo/fidelityIgneous.test.js > IGNEOUS — the tile on the game (D1) and in the model (D2) an arrival within range of an unturned tile refuses by name (the load fade's renders would count it)
+1794d1796
+< passed	modules/seedlingDemo/contactFidelity.test.js > contact witnesses (fixtures/contact-witness) the shipped defaults: all three ON
+1921d1922
+< passed	modules/seedlingDemo/dashShape.test.js > the request: byte-identical at the defaults, stamped only off-default (in `stampHooks`, the one door) the defaults add no field (today's request key list exactly)
+2574d2574
+< passed	modules/seedlingDemo/fidelityIgneous.test.js > IGNEOUS — the tile on the game (D1) and in the model (D2) an arrival within range of an unturned tile refuses by name (the load fade's renders would count it)

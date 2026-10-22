@@ -191,6 +191,8 @@ jobs:
           THROUGH: ${{ needs.plan.outputs.through }}
         run: |
           set -o pipefail
+          # ⛔ an empty list is a planning defect, never "every step" (runs 39658737187/39658741693: a 511 s re-carry → DUPLICATE-STEP)
+          if [ -z "${STEPS//[ ,]/}" ]; then echo "::error::EMPTY-SHARD: $R shard $I was planned with no steps — refusing rather than surveying every step"; exit 1; fi
           mkdir -p out
           S=$(date +%s)
           node scripts/procgen/survey-seedling-route.mjs --through="$THROUGH" --route="$R" --only="$STEPS" \

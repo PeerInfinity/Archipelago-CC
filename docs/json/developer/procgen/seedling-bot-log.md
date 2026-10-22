@@ -24246,6 +24246,36 @@ walk the gadget) or a candidate list the gate walks, not a wider range.
 **Trap candidate.** `continue-on-error` hides a red at the job level, and printing the red in a line is not the same as
 someone reading it. Five arms were red for 2–3 weeks. A line-reader that fails the job is what makes the red visible.
 
+### Seedling hammer-phase DA — the digest's visit audit
+
+⚖ The user approved the slice on 2026-10-21. `ESCAPE_CROSS_PASS_CACHE` (XC) keys each escape on `run.stateDigest()`,
+whose `visit` part listed its maps by hand with nothing checking the list. The report is
+`CC/docs/cloud-reports/seedling-hammer-digest-audit.md`.
+
+**The audit is the census, re-run.** Fidelity DIGEST's AST tools at `bf259ff199`: the escape still reads the same eight
+run members; the closure they reach reads 75 bindings (74 with the shadow filter). One is new and undigested:
+**`lightsFights`** (`liveSolidOpts` → `lightTotemsNow`: the L69 totem's solid, `lightsBossFight` ON only). It is now in
+`visit`. The other 30 per-visit maps are read only through run members outside the escape's eight (`advance`,
+`entities`, the other forecasts), named per map.
+
+**Measured, not argued.** A scratch hook (`__eval` in a scratch copy of `levelRun.js`) perturbs one map in place
+between two probes of the digest and the escape's run surface. `lightsFights`: the surface moved in 123 of 125
+samples while the base digest stood still — a false equal, latent (no committed workload calls the escape in L69).
+The exempt maps never moved the surface. The first run of the tool said `lavaChainStates` did: its entries hold the
+world's own hazard row (`h`), so the perturbation edited the world in place, which the world memo deliberately cannot
+see. The tool now skips every object the world holds.
+
+**The guard** (`levelRunStateDigest.test.js`). `DIGEST_EXEMPT` (30 rows, each `UNREAD` / `DERIVED` / `LAZY` with
+its fact) and `digestCoverage(src)`: every `const …States = new Map()`, `…ByLevel` map, `…Windows` array and
+`freshVisitState` reset is digested or exempt, never both, and no exempt row is stale. A new `fooStates` reds the row
+by name.
+
+**Hand-overs.** `igneousStates` is exempt by code (read by `renderIgneousNow` and `igneousTilesNow` only), but
+fidelity's `dfaa06e240` puts it IN. That is harmless, and when it lands, its `DIGEST_EXEMPT` row must go: the guard
+reds a map that is both. Any new lava or lights map a fidelity branch adds meets the guard and must choose.
+
+**Trap candidate.** *A perturbation that reaches a shared object measures the sharer.* A per-visit entry that holds a
+world row is the world's state as much as the map's; editing it in place measured the world memo, not the map.
 ### Seedling fidelity BOSSKILLS — the King of Fire and the Tentacled Beast, modelled and fought (two switches, OFF)
 
 Planner `seedling-fidelity-planning-9`, wave 20. Two new switches ship OFF: `CONTACT_FIDELITY.kingOfFireFight` (L82,
@@ -24280,3 +24310,308 @@ A clear-tag on {57,0} binds the beast in `world.pixelmasks`.
 escape through `liveSolidOpts`), so the King of Fire switch must not flip until the digest covers them (hammer arc).
 The survey stages L57 unsplit (`r8-solve-11`'s block), so step 125 refuses on the stream premise (staging, JS arc). The
 atlas has no `out_tentaclebeast_80_48` edge, so steps 94/95/125/126 stay NO-EDGE (rules/survey).
+
+### Seedling fidelity LIGHTSARR — the Lights fight after a real arrival: the shield's shove (`lightsBossFight`, OFF)
+
+The report is `CC/docs/cloud-reports/seedling-fidelity-lightsarr.md`. Base `98689e2e3c`. Everything is behind
+`CONTACT_FIDELITY.lightsBossFight` (still OFF); no new switch.
+
+**D1 — the arrival was not the cause.** The sweep's legs 607/608 (run 39626706339) leave the plan at t170/t171 with one
+hit the forecast called impossible. The suspect was the clock at a wasm arrival (`arrivalClock` model 5454 vs live 5453).
+Measured:
+- The captured request already carries the shifted seam (5433 → 5432; the plan's tick 0 is live 5453), so the solve ran
+  on the live clock.
+- Leg 608's plan, replayed in node (616 t, the page's own answer) and played on p4g from its own staging, bills the SAME
+  hit at t170. The game row matches the sweep's to the bit (y 102.70749889921584).
+- The first tick where model ≠ game is **t154**. Flier 0, inside its `hits_timer` (16), takes v (−2.92, −2.02) on the
+  game, and again at t157 and t160, as the player walks left into it. That is `Player.shieldBump` →
+  `Enemy.knockback(5, p)`. The model had no shield arm for a LightBoss, and the four LIGHTS witnesses held no shield.
+
+**D2 — the model.**
+- `lightBoss.lightBossKnockback` and `lightsShieldBump` model the shove. `levelRun.lightsShieldBumpNow` steps it, called
+  from `shieldBumpNow` (the player's update, with the box the previous frame's render placed).
+- `lightsVerb`'s forecast steps the same shove.
+- The dark shield on a flier out of its i-frame is refused by name (unwitnessed).
+- Two game witnesses reproduce at 0 px:
+  - `lightsarr-shield` (617 t, leg 608's plan, through its death);
+  - `lightsarr-arrival` (541 t: booted in L70, into its pit, the ceiling drop into L69, the intro, a scripted fight).
+- Mutants: no shove fails at t154; the box taken off the live player fails at t195.
+
+**D3 — movers.**
+- Re-solved in node with the fix, both legs win on the game at 0 px: 608 in 672 t (0 hits, {69,0} at t671) and 607 in
+  680 t (0 hits, in L36).
+- The seam census −3..3 gives a PLAN at every time for both legs.
+- The LIGHTS witnesses (fast and slow) are unchanged; none of them holds a shield.
+- The local survey ON moves step 159 (L69): SOLVED 559 t / 0 hits → SOLVED 823 t / **1 hit**. The hit lands at t811,
+  after the fight: a shot still in flight catches the reach-exit walk, which the danger map cannot see (LIGHTS hand-over
+  2, the hammer arc's region).
+
+**Trap candidates.**
+- A witness set that holds one inventory misses every arm the inventory adds. Here the four LIGHTS witnesses had no
+  shield, and the shield is a player-side contact that moves enemies.
+- The sweep's "arrival" (19 dead frames and a held re-arrival at the rules' landing) is not the game's pit fall. A pit
+  fall from L70 drops from the ceiling to (56,53) and bounces for about 86 ticks with input ignored. A boot-staged replay
+  of a captured request reproduces the sweep's game rows; a pit-fall witness is a different arrival.
+- `replay-seedling-solve-request.mjs --seam-time-sweep` prints `error` as the kind of a successful PLAN (`kind ?? 'error'`).
+
+### Seedling hammer-phase LD — the Lights fight in the danger map
+
+⚖ The user approved the slice on 2026-10-21. The report is `CC/docs/cloud-reports/seedling-hammer-lights-danger.md`.
+It takes fidelity LIGHTSARR's hand-over 1. Everything it adds is read only while `CONTACT_FIDELITY.lightsBossFight` is
+ON (still OFF); no switch moved.
+
+**The base.** LIGHTSARR (`origin/claude/lightsarr-lights-arrival-zpv7ou`) was not on main. Survey step 159 ON at main
+`2408fc5a` is SOLVED 559 t with 0 hits. The 1-hit victim exists only with LIGHTSARR's shield shove, so the branch merges
+it (`21d539b8`). The 823 t / 1 hit victim reproduces there.
+
+**The victim, measured.** The kill ends at t806. `LightBossShot` #75 was fired at t784 from (56,60) and hits the
+reach-exit walk at update t811.
+
+**The pricing.** `dangerMap.lightsDanger` is in `dangerAt`'s union.
+- It copies `run.entities('lightsFight')` and steps the copy forward with `lightBoss.js`'s own functions, with no
+  player in it: the shots (the margin-0 cull against the resting 160x160 screen), the fliers, and the controller on
+  `Game.worldFrame`.
+- A shot is a `spit` source (`lights: true`), because a `LightBossShot` is a `TurretSpit`. So the ladder's existing
+  DODGE rung answers it.
+- A flier's contact gate (not dying, `hitsTimer <= 0`) is a `lightBoss` source.
+- TRANSIT prices frames h and h+1: update T+1 moves the shot, then tests the box left at T. WAIT prices the union of
+  0 … h+1.
+- `TRANSIT_INGREDIENTS` gains an autonomous `lights` row.
+
+**After.** Step 159 ON is SOLVED **826 t, 0 hits**: a 1-tick stall at t807, then a different line to the Teleporter.
+
+**The digest.** DA's `escape-reach` is unchanged with `dangerMap.js` in its file set (61 functions, 9 run members):
+the hammer escape reaches no danger-map function. `member-reach` gives `lightsExits` → advance / entities /
+tentacleBeastFight, and `lightsSpearRepeats` → advance. Neither reaches one of the escape's eight members, so no map
+moves IN. XC verify: hammer-a / b1 / b2 hit and verify 2160 / 1654 / 1030 entries with 0 mismatches; the two ON Lights
+solves and step 159 make 0 lookups.
+
+**Fixtures.** None moved. The two ON Lights solves re-solve their witnesses key for key (sword 559 t, spear 361 t). The
+producer roster is 93 / 0 red, before and after.
+
+**Trap candidate.** *A mutant predicted from the victim alone can pass.* "Price frame h only" was predicted to miss the
+t810 box, and it did not: a 4x4 shot under 1 px/t overlaps the box on both frames. The frame is pinned by a constructed
+row (`dangerMap.test.js`: frame 17 is the first that meets the box, so horizon 16 sees it only through h+1).
+### Seedling fidelity L1516 — L15's chest is a Solid, L16's enclosed pit, leg 209's hit (`chestProbeLineEnd`, `enclosedPitCorner`, OFF)
+
+The report is `CC/docs/cloud-reports/seedling-fidelity-l1516.md`. Base `98689e2e3c`. Two `CONTACT_FIDELITY` switches,
+both OFF and byte-identical OFF: the identity block's rows are equal OFF and ON (md5 `14f71e53…`), the six producer
+`--check`s are unchanged, and the 54 chest-level route-survey steps match on every field with both switches ON.
+
+**D1/D2 — the chest the model walked through** (`chestProbeLineEnd`; `chest.chestProbeLine`).
+- `Chest.update` opens on `collideLine("Player", px+2, py+17, px+12, py+17)` (`Chest.as:63`). `World.collideLine` at
+  precision 1 walks `while (x < toX)` and tests the end point only when `precision > 1` (`World.as:442`, `:514`), so
+  the integer probes are px+2..px+11. The keyLock's transcription already said `x1: 11`; the chest's said px+12, read
+  inclusive by `keyLineTouches`.
+- The chest is built, Solid, and unopened in the model: it opened, one pixel early. rules-2's first L15 swim cut
+  climbed column 9 at x 157.997 (box left 155.997, first probe 156): the game kept the chest Solid and stopped the
+  player at y 114.343; the model opened it at t200 and walked to L16.
+- Game witness `probe-seedling-l15-chest-line.mjs` (p4g headless logic-only): `edge` (the stop) and `inner` (4 ticks
+  less east, x ≈ 152: the chest opens on both sides). ON reproduces both at 0 px; OFF drifts at t200 on `edge`.
+
+**D3 — sweep leg 206 is not a shove** (`enclosedPitCorner`; `solverBot.enclosedPitCorners`, `enclosedPitCornerKeys`).
+- The goal `out_pit_8_3` is L16's pit (13,4), and all four of its neighbours are pits. The planner exempts only the goal
+  tile, so the goal is an island; `pushableblock@256,80` was merely the nearest frontier solid, and a `PushableBlock`
+  in a pit is destroyed without filling it (`PushableBlock.as:76-85`).
+- `Player.getState` reads one point a tick (the cell holding (x, y+1)); the fall starts on the first Pit read and lerps
+  to that cell's centre. A diagonal step moves both axes in one tick, so the point jumps the corner (224,80) from floor
+  (14,5) straight into (13,4).
+- ON: the reach-pit executor walks to a stance in a diagonal floor cell, previews the corner step with
+  `run.previewStepper` (pre-steps of up to 12 ticks on one axis, then the diagonal; a candidate counts only if the first
+  fall's `target` is the pit's centre), takes it, and coasts the fall. A pit with no diagonal floor cell, or a player
+  already in the pit's cell (L84 (2,2), leg 671, which lands from L83 into it), keeps the walk.
+- Game witness `probe-seedling-l16-corner-pit.mjs`: `corner` falls into (13,4) and lands L17 (136, …); `control` (8
+  ticks of up first) falls into (14,4) and lands at x 152; `solve`, the solver's own leg-206 solution from the arrival
+  (335 ticks), falls into (13,4) and ends L17 (136,56). All three at 0 px.
+
+**D4 — leg 209's UNBILLED-HIT is billed by the model.** Stepping the leg's arrival staging (seam 4887) with nothing
+held, `arrowtrap@112,32#0.1` hits on model tick 6: `hits` 1, `hitsTimer` 19, (120, 51.25), which is the game's tape-0
+read exactly. The leg refused at plan time (`wasm-hold-16`, 0 ticks), so the sweep had no model row to bill it against.
+Hand-over to the JS arc (the sweep's hit attribution on a refused leg); the refusal itself is correct (⚖ 2026-10-21).
+
+**Trap candidate.** *A refusal names the nearest frontier solid, not the reason.* Leg 206's refusal read like a shove
+gap ("Obstacle: solid:pushableblock … Strategy 'shove' failed"); the real fact was in its tail ("different connected
+components"), and the component was one tile surrounded by pits.
+
+**Trap candidate.** *An inclusive integer range transcribed from an exclusive raycast.* `keyLineTouches` reads `x1`
+inclusive; every caller must hand it `toX - 1`. The keyLock did, the chest did not.
+
+### Seedling fidelity BOSSFORK — the two boss fights wired to the solver's fork and the route survey (switches still OFF)
+
+Planner `seedling-fidelity-planning-9`, wave 22. Everything is behind `kingOfFireFight` / `tentacleBeastFight`, both
+still OFF. The report is `CC/docs/cloud-reports/seedling-fidelity-bossfork.md`.
+
+**D1 — the fork.** The frontier arm already handed its executors `fork`; the clear-tag arm and the placement-blocker arm
+did not, so `execLavaBoss` / `execTentacleBeast` played policy variant 0 alone there. Now both arms pass the segment's
+existing fork (the fork itself is unchanged). Sweep leg 665 (`location:Level 082 - King of Fire`, the clear-tag {82,0})
+went from a refusal (variant 0 dies at spent 691) to SOLVED 870 t (variant 2, `standY` 160). The answer was played on
+p4g and holds at 0 px (`fixtures/lavaboss-witness/kof-fork-665`). For L57, seeds 1–8 walk identically with and without
+the fork: variant 0 wins each time.
+
+**D1b — the mouth still to open.** The beast's report lands as "dying" starts, and the mouth Teleporter only appears 61
+updates later. The JS page's continue request after the clear-tag (leg 505, request 1 at t2866) asked a bare reach-exit
+in that window and refused "no teleporter at (96,64)". `awaitTentacleMouth` now idles until the mouth stands. The
+continuation is the first plan's tail tick for tick, so the sweep had already played it on the game.
+
+**D2 — a cleared L57's build.** `tentacleFightFor` is lazy, so a build with {57,0} cleared had no mouth until the first
+step. `tentacleMouthAtBuild` builds the mouth at the boot and in `enterWorld`, for the cleared arm only. This also
+corrects an arrival: from L58 the door lands the player ON the mouth at (104,72). The game keeps them in L57 (new
+witness `tb-enter-cleared`), while the model used to walk them back into L58 at t3.
+
+**D3 — the survey.** `hopEdge` answers `out_tentaclebeast_80_48` from the model's cleared build (ON only, as LIGHTS
+did for L69), and the crossing asks for the fight first. Steps 90/121 (L57) go from NO-EDGE to REFUSED on the stream's
+`split: true` premise; with L57 staged split they SOLVE 2060 t. Steps 91/122 (L58) go from NO-ARRIVAL to REFUSED on
+L58's own `teleporter@80,16` (tag 1), which the staging deactivates.
+
+**D4 — the ~110 s on legs 505/506 is play time, not solve time.** The captured requests solve in about 1 s in node.
+The page then plays 3,124 / 2,924 ticks at the runner's 28.8 ticks/s.
+
+**Trap candidates.**
+- A boss verb that tries variants "on `ctx.fork`" plays only variant 0 at a call site that passes no `fork`, and
+  nothing says so. Grep every `STRATEGY_EXECUTORS[…](` / `clearTagExecutor(…)(` call for the context keys a verb reads.
+- A runtime teleporter built lazily (on the first step) misses the arrival's latch. An arrival that lands on it then
+  teleports straight back. Build what the game's ctor builds at the build.
+
+### Seedling fidelity ROPE — a `rope` verb that cuts a rope to clear its flag (`ropeCutVerb`, OFF)
+
+Planner `seedling-fidelity-planning-9`, wave 22. rules-2's `rules-rope-events` makes a cut rope a cross-visit EVENT
+(`flag:L16:0` `rope@32,16`, `flag:L28:0` `rope@160,64`), and the JS mapping turns each into the solver's `clear-tag`,
+which refused it `no-verb` ("no strategy row exists for solid:rope"). The verb ships behind a new switch,
+`CONTACT_FIDELITY.ropeCutVerb` (OFF). The report is `CC/docs/cloud-reports/seedling-fidelity-rope.md`.
+
+**The verb.** `OBSTACLE_STRATEGIES['solid:rope'] = 'rope'` and `STRATEGY_EXECUTORS.rope = execRope`, switch-gated
+(non-enumerable) rows. It is the PULL rung's cut, not a second one: the stance is `deriveSwingStance` with the rung's
+danger-free admission (hoisted unchanged as `pullStanceAdmit`), and the act is `execPull`. `resolveRopeStrategy` refuses
+by name (`held: false`) a rope already pulled, a primary that is not the sword, and a rope with no group. The goal shape
+is `{kind: 'clear-tag', tag: {level, tag}, at: {x, y}, obstacle: 'rope@x,y'}`; with the switch ON,
+`jsRuntimeSolver.clearTagVerbOf('solid:rope')` answers `{verb: 'rope', registered: true}` with no JS edit.
+
+**Why a switch.** A rope is `type = "Rope"`, which is in the player's solids, so the frontier names its span
+`solid:rope`. The route survey's four L39 steps (`rope@96,384`) refuse "No strategy row exists" on main; with the row
+they move (REFUSED → REFUSED past the cut, a walk stall at `wandlock@144,64`). So the row cannot ship unconditional.
+
+**Measured: a cut is no `earnedClears` row.** `pullRope` banks the flag for the next build (`pendingEarnedClears`) and
+writes a `ropePulls` row, and `levelRun.earnedClearsNow` has no rope arm. So a rope's clear-tag finishes on the run's
+`ropePulls` row for its flag, past its tick. A rope that booted pulled (`check()` re-hit it) is `already-clear`.
+
+**Witnesses (p4g, 0 px).** rules-2's rope-events game probe (7 tapes; it lands with its `rules-rope-events` slice) and F7's re-entry probe, re-run on this
+session's port. Three of the verb's own plans (`probe-seedling-rope-verb.mjs --record`, `fixtures/rope-witness/`): the L16
+cut and the crossing to L18 with 0 hits, the verb's own swing (`execPull` pressed t26, the flag at t28), and L28's cut
+(`{28,0}` and the rock's `{28,1}` on the same tick, t45).
+
+**Trap candidates.**
+- A goal "finished when the flag is in `earnedClears`" is not a property every writer has: the rope's write never
+  reaches that ledger. Ask the run which ledger carries a family's write before naming a finish.
+- A probe that drops a tape's final tick cannot see a write that lands on the plan's last tick (`rope-l16-verb`'s first
+  run: the flag at t28 of a 28-tick plan). Pad the tape, or gate on the write's tick being inside the window.
+
+**Hand-overs.** The Spear's thrust and Fire also cut (`Player.as:989,1032`; rules-2's `l28-fire` tape), and this verb
+drives only the sword: a Spear-only or Fire-only bag refuses `cannot-act` by name. The L39 frontier cut is ON-only and
+stalls next at `wandlock@144,64`; its Pulser (the rope's group) is the next question there.
+
+### Seedling fidelity BS2FIX — the bobsoldier2 INTERIM pin, retirement prepared (licence pending)
+
+⚖ The user (2026-10-19, on the interims report): bobsoldier2 *"Keep pin, queue fix"*; (2026-10-20) *"run it now"*.
+`plan-seedling-bobsoldier2.mjs` pins `strikeIframeLapse` OFF because both its tapes were game-recorded under the
+pre-lapse strike gate. Base main `934f99422b`; report `CC/docs/cloud-reports/seedling-fidelity-bs2fix.md`.
+
+**Measured at the defaults (lapse ON), survey step 50, switch by switch.** No setting of `KILL_STANCE_AS_FORECAST` /
+`SWORD_GATE_TIMED` reaches the kill arm's dwell. The walk's lapse-admitted presses leave the collect's corridor clean, so the
+collect runs FIRST (STRIKELAPSE D1's stand walk) with `bobsoldier@48,80` alive on 2 hits. What decides is the exit walk's gate
+at (72.65,66.46):
+- both ON: 395 t; the walk towards (72,88) kills the body with its own press (t169, `killedOnWalk`);
+- D2b alone: 404 t, the same kill;
+- both OFF and D2a alone: refused at 168 t, pad 16 against the LIVE body.
+The ON torch plan equals the CI survey's own step-50 walk (run 39496129402), key for key.
+
+**The game (p4g, the default build).** The ON torch tape: 396 obs, the model reproduces it, and the content equals the
+wave-19 p4f recording (p4g does not differ). `hasTorch` lands at game obs 169 (model OFF 168, `PICKUP_REMOVED_NEXT_FRAME`
+ON 169). The body probe: 181 of 182 samples exact; the one off (t168) is the sample straddling the ceremony's end.
+
+**What the BEFORE means with the lapse ON.** It is a pre-lapse executor/forecast mismatch, with no ON witness: the dwell is
+unreachable at all four switch settings. The tape is game-recorded keys whose replay does not read the switch (stream and
+body md5 equal under either setting). So it stays as a named, permanent CONTROL (`CONTROL_FIDELITY`, u10's shape) and
+stays byte-identical.
+
+**Shipped:** the retired arm behind `LAPSE_PIN_RETIRED` (OFF; pinned `--check` byte-identical, log md5 `2e94b9ef`);
+`--out=`; four ON rows in `fidelityBobSoldier2`. **Licence kit** (evidence `licence/`): the torch tape 460 → 395, its
+expectation, the `pickup-removal-witness` row (226 → 169, p4g), `r8Acceptance` ticks, the tape index, and the restated test
+rows. Licensed bounded run: one red outside the region, `fidelityStrikeLapse`'s "OFF … byte for byte" row. A proposed
+restatement (a key digest of the retired 460-t plan) is the second patch.
+
+**Trap candidate.** A test comment's measurement under a switch decays when another slice repairs the path. Here
+`fidelityBobSoldier2`'s "ON refuses at every switch setting" (FLIP14) had been false since STRIKELAPSE D1 + hammer DD.
+
+### Seedling fidelity IGFADE — the Igneous-to-Lava tiles count the dead frames' renders (`igneousDeadFrames`, OFF)
+
+⚖ The user (2026-10-21) picked "IGNEOUS load-fade renders": retire IGNEOUS's named interim (`IGNEOUS_UNMODELLED` on an
+arrival in range and on a dead span while a tile counts). Report: `CC/docs/cloud-reports/seedling-fidelity-igfade.md`.
+
+**The count, from the AS3.** `Main.update` is `Bot.update(); super.update();` and `Engine.onEnterFrame` is
+`update(); render();`, so a frame the bot counts dead still renders. `FP.world = new Game(…)` writes `_goto` only;
+`Engine.checkWorld` swaps at the END of that frame's update, so the same frame's render is already the new world's, under
+the camera `loadlevel` wrote raw. Then the fade's 20 dead updates each run `view()` (outside the `blackCover` gate) and a
+render. ⇒ **21 renders** at the arrival before a visit's first live one, for a boot and for a death restart alike.
+
+**On the game** (p4g headless, `CC/docs/cloud-reports/seedling-fidelity-igfade-evidence/drivers/probe-igfade.mjs`: the encounter-ticks probe plus `botStatus().dead_frames` per tick).
+A boot at (160,100), 8.94 px from L76's (10,6), standing: the tile turns at the t15 render (36 − 21), the death restarts at
+t46, the restart's own fade turns the rebuilt tile at t61, restart t92 (`igneous-l76-fade-stand`; the `-86` stand by
+(8,6) is the same). 20 renders would put both a tick later; the mutant says so.
+
+**The model.** `levelRun.renderIgneousStepped` (ON only; OFF is the interim, byte-identical): the fade's 21 renders at the
+arrival under the settle's own cameras, then `clock.spans` since the last render. A Help is drained at the top of its
+tick, so it renders BEFORE that tick's render at the previous render's position; a pickup's phase A and the wand / seed
+fades render after it, at this tick's position, the camera stepped per dead frame. Staged witness on p4g:
+`igneous-l74-phase-a` (the Dark Shield's phase A turns a breaking (5,3); the walk back dies on it), 0 px.
+
+**Measured: on the game's content the frozen spans change nothing a player can see.** The only frozen span on a type-31
+level is L74's phase A, and its stance is 26 px from the nearest tile, a round trip longer than the 27 renders a breaking
+tile has left. The spans that DO touch a tile move the player inside them and stay refused by name: L74's button fall
+(the button stands 11.31 px from (18,7), exactly the radius) and L71's chest seal ceremony.
+
+**Movers ON:** the 15 type-31 survey steps and the 49 type-31 sweep legs in node: 0. Bounded vitest ON: the two env
+artifacts plus `fidelityIgneous`'s interim row (the arrival refusal, which the switch retires).
+
+**Trap candidates.**
+- A "dead frame" is dead to the BOT's gate, not to `render()`: anything render-driven (`Tile.render`, the totem's head)
+  counts it. Ask which half of the frame a mechanism lives in before pricing a span.
+- A death respawning at the same spot is invisible in the position stream: read `dead_frames` (or a death ledger), not
+  x/y, for a stand witness.
+
+### Seedling fidelity ROPESTANCE — the `rope` verb and the PULL rung cut with the Spear and with Fire (`ropeCutAnyWeapon`, OFF)
+
+Planner `seedling-fidelity-planning-10`, wave 23 (⚖ the user picked "Spear/Fire rope stances"; rules-2's rules take a rope
+cut as `Sword | Spear | Fire`). The report is `CC/docs/cloud-reports/seedling-fidelity-ropestance.md`.
+
+**The game.** `RopeStart` is in the player's `hitables` and `genericHit` calls `hit()` with no `t`, so every weapon cuts
+it, each through its own filter: the slash (reach gate, the line test waived for a Rope), the spear's 32x5 rect
+(`spear()`: NO reach gate and NO line test at all) and fire's 32x32 area with its 16 px radius cut. W0 measured the run
+cutting both ropes with the Spear's thrust and with Fire (and publishing the group): the gap was the solver's only.
+
+**The verb (switch ON, the sword selected = unchanged either way).** `ropeCutWeapons`: the selected Spear/Fire, then
+held weapons by slot (sword, fire, spear; no sword slot while the ghost-sword flag is up), selected by `equip` and the
+old slot restored. Stances: fire from `burnStanceCandidates` + `auditFire` (the rope and nothing else, the burn verb's
+lean); spear from tile centres within 3 tiles whose thrust cuts cleanly from the cell and after `faceTowards`' tap
+(previewed, with its terrain test). Ranked (a plan with the static danger volumes forbidden first, then
+`stanceReaches`), at most 3, and the EXECUTOR walks them in order — a walk refused at no tick tries the next. The acts
+are `runFire`'s `rope` target and a new `runSpear` `rope` target. The PULL rung takes the same arms; its post-condition
+stays the silencer's latch.
+
+**Witnesses (p4g, 0 px; `probe-seedling-rope-stance.mjs`, `fixtures/ropestance-witness/`).** L16 from the L15 arrival
+with the Spear (thrust north from (40,56)) and with Fire ((24,40) refused at no tick, (88,40) pressed); L28 from the L25
+arrival with Fire ((152,56)); L28 from a stand east of the rope with the Spear, and with the Wand selected (the spear's
+slot equipped for the thrust).
+
+**Measured model gap (handed over).** `levelRun.drillStateFor` steps a drill only in a room whose ONLY census enemy it
+is; L28 holds two drills and a bobsoldier, so its drills never move in the model. On the game, the spear plan from the
+L25 side was hit at t59 by `drill@128,96`'s hop. Named INTERIM behind the switch: a rope stance and the walk the solver
+plans to it never give an unstepped drill its trigger (`runRange` with a clear line; 2 px slack for a planned corridor).
+The L28 spear cut from the L25 side therefore refuses by name until the drills are stepped.
+
+**Trap candidates.**
+- A stance that `stanceReaches` plans can still be a walk the ladder refuses (a chaser's leash beside it): a verb with
+  many equivalent stances should hand the executor a ranked list, not one cell.
+- A room's census can hold an enemy class the model steps only alone (`drillStateFor`): a "modelled class" is not a
+  modelled ROOM. Ask whether the run steps the body in THIS room before trusting a 0-hit plan near it.
+- A spear stance's face tap can nudge the player a fraction of a pixel into water; preview the tap with the executor's
+  own terrain test.

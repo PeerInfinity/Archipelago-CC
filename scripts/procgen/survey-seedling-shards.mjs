@@ -96,8 +96,10 @@ if (process.argv.includes('--bound')) {
     const timeoutS = Number(argOf('timeout', '1500'));
     const only = argOf('only');
     let steps = route.steps;
-    if (only) {
+    if (only !== null) {
         const want = new Set(only.split(',').map((s) => s.trim()).filter(Boolean));
+        // ⛔ absent = every step; present-but-empty is a lost list, never "everything"
+        if (!want.size) fail('--only= names no step — omit --only to plan every step');
         const unknown = [...want].filter((id) => !steps.some((s) => String(s.step) === id));
         if (unknown.length) fail(`--only names step(s) not on the route: ${unknown.join(',')}`);
         steps = steps.filter((s) => want.has(String(s.step)));

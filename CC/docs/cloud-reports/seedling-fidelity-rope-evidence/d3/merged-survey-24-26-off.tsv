@@ -1,0 +1,2 @@
+24	L16	REFUSED		["clear-tag","reach-pit"]	solverBot(survey-step-24) clear-tag {16,0} rope@32,16: no strategy row exists for solid:rope — the catalogue names no verb that clears it
+26	L16	SOLVED	516	["reach-exit"]	

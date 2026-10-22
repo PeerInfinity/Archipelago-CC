@@ -13,7 +13,7 @@
  * requirement replayable on the engine). Each witness plan is replayed through `step` too.
  */
 import { describe, it, expect } from 'vitest';
-import { createState, step, getExitAt, mazeVisitedKey, setObstacle, extractPathsAndObstacles, INPUTS } from '../mazeRoomEngine.js';
+import { createState, step, getExitAt, mazeVisitedKey, setObstacle, extractPathsAndObstacles, worldInputs } from '../mazeRoomEngine.js';
 import { generateMazeLevel, MAZE_PALETTE } from '../procgenMaze.js';
 import { parseAreaSpec } from '../../procgenCore/areaSpec.js';
 import { parseElementSpec } from '../../procgenCore/elementSpec.js';
@@ -22,6 +22,8 @@ import { compileRegion } from '../../shared/procgen/pathsAndObstaclesCompiler.js
 import { evaluateRuleAgainstInventory } from '../../shared/procgen/library.js';
 import { deriveRegionLogic, regionItems, ruleFromMinimalSets } from './deriveTileLogic.js';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
+import { setTile, TILE_WALL, useInput } from '../mazeRoomEngine.js';
+import { itemActionPicture, SWORD } from '../mazeItemActions.fixtures.js';
 
 const has = (item) => ({ rule: 'Has', args: { item_name: item } });
 const WEAPON_OR_SWIM = { rule: 'Or', children: [has('Progressive Swim'), has('Progressive Sword')] };
@@ -57,7 +59,7 @@ function engineCells(world, inventory, pickups) {
     for (let head = 0; head < queue.length; head++) {
         const s = queue[head];
         if (head > 0 && getExitAt(w, s.player_pos.x, s.player_pos.y) !== null) continue;
-        for (const input of INPUTS) {
+        for (const input of worldInputs(w)) {
             const n = step(w, s, input);
             if (n === null || seen.has(mazeVisitedKey(n))) continue;
             seen.add(mazeVisitedKey(n));
@@ -117,30 +119,24 @@ describe('Q3 search — the generated guard room', () => {
     });
 
     /**
-     * Today's logic (`extractPathsAndObstacles` → `compileRegion`) differs at two targets, both
-     * DEFECTS in today's logic, not in the search (the engine checks below arbitrate):
-     *  (1) flag_K0 needs `sw_A0` — a HELD TOKEN, never an AP item: the ghost path annotates the
-     *      guard door like any door, so the rule is unsatisfiable in AP play;
-     *  (2) flag_K0 and key_red@7,3 need `key_red` — the ONE geometric path crosses door_red (7,1),
-     *      but another route avoids it (the derived witness walks it on the engine with no key).
-     * Both rocks join that one path's conjunction — the `lane` one because the player crosses it,
-     * the `button` one only by the ghost BFS's tie-break (today's logic never asks about a block's
-     * path; here it happens to walk the button cell). Only the search prices the block.
+     * The path-extracted logic (`extractPathsAndObstacles` → `compileRegion`) used to differ at two
+     * targets, both DEFECTS of that logic (the engine checks below arbitrated): (T1) flag_K0 needed
+     * the HELD token `sw_A0`, never an AP item; (T2) flag_K0 and key_red@7,3 needed `key_red` — the
+     * ONE ghost path crossed door_red (7,1) though another route avoids it. Fixed by slice
+     * maze-logic-t1t2-fix (all-routes minimal sets; a block world priced by the engine), which
+     * uses THIS search as its oracle: on all three variants the two now agree target for target.
      */
-    it('differs from today\'s path-extracted logic exactly where today\'s logic is wrong', () => {
-        const w = guardRoom();
-        const today = compileRegion(extractPathsAndObstacles(w), { obstacleLib: w.obstacleLib });
-        const at = (x, y) => today.locations.find((l) => l.position.x === x && l.position.y === y).rule;
-        expect(at(5, 3)).toEqual({ rule: 'And', children: [has('key_red'), has('sw_A0')] });
-        expect(at(7, 3)).toEqual(has('key_red'));
-        expect([at(5, 12), at(8, 12), at(0, 4)]).toEqual([{ rule: 'False_' }, { rule: 'False_' }, { rule: 'True_' }]);
-        expect(today.exits[0].rule).toEqual(has('flag_K0'));
-        const pathTo = (room) => extractPathsAndObstacles(room).locations
-            .find((l) => l.position.x === 5 && l.position.y === 3).paths[0].obstacles;
-        expect(pathTo(guardRoom({ rock: 'lane' }))).toEqual(['door_red', 'rock', 'door_A0']);
-        // ⛔ COINCIDENCE, not modelling: the ghost BFS reaches (7,3) through (8,3) before (7,4)
-        // (N before W), so its one path happens to step on the button-cell rock.
-        expect(pathTo(guardRoom({ rock: 'button' }))).toEqual(['door_red', 'rock', 'door_A0']);
+    it('the path-extracted logic agrees with the derived logic (T1/T2 fixed)', () => {
+        for (const rock of [null, 'lane', 'button']) {
+            const w = guardRoom({ rock });
+            const extracted = compileRegion(extractPathsAndObstacles(w), { obstacleLib: w.obstacleLib });
+            const derived = rulesById(deriveRegionLogic(w, HELPERS));
+            const byId = {
+                ...Object.fromEntries(extracted.locations.map((l) => [`${l.item}@${l.position.x},${l.position.y}`, l.rule])),
+                ...Object.fromEntries(extracted.exits.map((e) => [`exit:${e.id}`, e.rule])),
+            };
+            expect(byId).toEqual(derived);
+        }
     });
 
     for (const pickups of ['ap', 'in-room']) {
@@ -198,5 +194,72 @@ describe('Q3 search — refusals are BY NAME', () => {
     it('a region whose item axis exceeds the lattice cap', () => {
         expect(() => deriveRegionLogic(guardRoom({ rock: 'lane' }), HELPERS, { maxItems: 3 }))
             .toThrow(/4 region items exceed the lattice cap 3/);
+    });
+});
+
+/* ── ITEM ACTIONS (slice tile-primitives-item-actions): a STRIKE-gated location ─────────────── */
+
+describe('Q3 search — a strike-gated location', () => {
+    // Two rocks of one row: `rock` only a strike opens (clear_set []); `rock_swim` a strike OR Swim
+    // opens — the L15 rock's shape with the sword as an ACTION rather than a passive clearance.
+    const ROW = ['########', '#P..rLX#', '#..S...#', '########'];
+    const world = (rockId) => {
+        const w = itemActionPicture(ROW);
+        w.obstacleLib.rock_swim = { kind: 'rock', clear_set: [['Progressive Swim']], struck_by: ['sword'] };
+        // seal the lower row's way round to the location and the exit
+        setTile(w, 5, 2, TILE_WALL);
+        setTile(w, 6, 2, TILE_WALL);
+        if (rockId !== 'rock') setObstacle(w, 4, 1, rockId);
+        return w;
+    };
+
+    it('the search\'s item axis names the sword (its action strikes a region obstacle)', () => {
+        expect(regionItems(world('rock'))).toEqual(['Progressive Sword']);
+        expect(regionItems(world('rock_swim'))).toEqual(['Progressive Swim', 'Progressive Sword']);
+    });
+
+    for (const [rockId, expected] of [
+        ['rock', has(SWORD)],
+        ['rock_swim', { rule: 'Or', children: [has('Progressive Swim'), has(SWORD)] }],
+    ]) {
+        for (const pickups of ['ap', 'in-room']) {
+            it(`${rockId} (${pickups}): derived = ${JSON.stringify(expected)}; the engine agrees at every subset; `
+                + 'every witness replays on the engine', () => {
+                const w = world(rockId);
+                const derived = deriveRegionLogic(w, HELPERS, { pickups });
+                const rules = rulesById(derived);
+                if (pickups === 'ap') {
+                    expect(rules['flag_B@5,1']).toEqual(expected);
+                    expect(rules['exit:exit']).toEqual(expected);
+                } else {
+                    // the sword lies in the room: in-room play fetches it, so only the swim half matters
+                    expect(rules['flag_B@5,1']).toEqual({ rule: 'True_' });
+                }
+                expect(engineDisagreements(w, derived, pickups)).toEqual([]);
+                const replayWorld = pickups === 'ap' ? { ...w, items: new Map() } : w;
+                for (const t of derived.targets) {
+                    for (const { inventory, plan } of t.witnesses) {
+                        let s = createState(replayWorld);
+                        s.inventory = new Set(inventory);
+                        for (const input of plan) {
+                            s = step(replayWorld, s, input);
+                            expect(s).not.toBeNull();
+                        }
+                        expect(s.player_pos).toEqual({ x: t.x, y: t.y });
+                    }
+                }
+                if (pickups === 'ap' && rockId === 'rock') {
+                    const witness = derived.targets.find((t) => t.id === 'flag_B@5,1').witnesses[0];
+                    expect(witness.plan).toContain(useInput('sword'));
+                }
+            });
+        }
+    }
+
+    it('a world WITHOUT item actions prices the strike-only rock False_ (nothing opens it)', () => {
+        const w = world('rock');
+        w.actionLib = {};
+        const rules = rulesById(deriveRegionLogic(w, HELPERS, { pickups: 'ap' }));
+        expect(rules['flag_B@5,1']).toEqual({ rule: 'False_' });
     });
 });

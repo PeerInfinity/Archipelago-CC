@@ -248,6 +248,8 @@ import {
     lightsExitRow, lightsFightView, stepLightBossFlier, stepLightBossFlierGraphic, stepLightBossShot,
     stepLightsController, withLightsExit,
 } from './lightBoss.js';
+// ⛓ fidelity LIGHTSARR D2: the moving shield's shove on a flier (`lightsShieldBumpNow`).
+import { lightsShieldBump } from './lightBoss.js';
 import { DRILL, drillRect, hitDrill, newDrill, stepDrill, stepDrillGraphic } from './drill.js';
 // ⚠ `SWORD_FORCE` ONLY. `combatVerbs` owns the swing GEOMETRY, which this
 // file does not use — the press rect comes from `presses.slashRect` — but
@@ -2065,6 +2067,22 @@ export function createLevelRun({
             if (fight?.mouth && n === level) world = visitWorld(level);
         }
         return tentacleFights.get(n);
+    };
+    /**
+     * ⛓⛓ fidelity BOSSFORK D2 (`CONTACT_FIDELITY.tentacleBeastFight`; OFF never asks) — **A CLEARED ROOM'S MOUTH STANDS AT
+     * THE BUILD.** `tentacleFightFor` is lazy: the steppers ask it on the first `advance`, so a run that BUILDS L57 with
+     * its beast's tag cleared held no mouth Teleporter in `run.world` until then, and a solver (or a reader) that asked
+     * the world at the build saw the plain room. The game's ctor builds the beast dead with the mouth already standing
+     * (`TentacleBeast.as:52-60`; BOSSKILLS D1 witnessed the revisit: "built dead with the mouth standing; into L58 at
+     * t162"). So a build (the boot, `enterWorld`) asks the fight at once — ONLY for the cleared arm: a live beast's fight
+     * still opens its draw stream when a step first asks for it, where it always has.
+     */
+    const tentacleMouthAtBuild = () => {
+        if (!CONTACT_FIDELITY.tentacleBeastFight || tentacleFights.has(level)) return;
+        const e = (levelSource(level)?.entities ?? []).filter((x) => x.type === 'tentaclebeast');
+        if (e.length !== 1) return;
+        const tag = Number(e[0].attrs?.tag ?? -1);
+        if (tag >= 0 && (clearedByLevel.get(level) ?? []).includes(tag)) tentacleFightFor(level);
     };
     /**
      * The live boxes, for `collidesSolid`'s `shieldBosses` arm and for the
@@ -5266,6 +5284,8 @@ export function createLevelRun({
         // shield lock earns, which `applyEarnedClears` above has just
         // cashed. Two families, two lifetimes, three lines apart on purpose.
         if (!noclip) freshVisitState(level);
+        // ⛓ fidelity BOSSFORK D2: a cleared Tentacled Beast's mouth is part of the build (ON only).
+        tentacleMouthAtBuild();
         // A thrust cannot outlive its level either: `spear()` collides the
         // rect against `FP.world`, and by the time it fires the world is the
         // destination's.
@@ -9748,6 +9768,11 @@ export function createLevelRun({
         if (!CONTACT_FIDELITY.igneousLava) return;
         const tiles = igneousTilesOf(worldFor(level));
         if (tiles.length === 0) return;
+        // ⛓ fidelity IGFADE: the dead frames are stepped, not refused (`renderIgneousStepped`; OFF: the interim below).
+        if (CONTACT_FIDELITY.igneousDeadFrames === true) {
+            renderIgneousStepped(tiles);
+            return;
+        }
         const dead = clock.deadFrames;
         let visit = igneousStates.get(level);
         if (!visit) {
@@ -9798,6 +9823,154 @@ export function createLevelRun({
             tileWriteEvents.push({ t: ticksCompleted, level, id: `igneous@${key}`, kind: 'igneous-lava',
                 x: tile.x, y: tile.y, tile: { tx: tile.tx, ty: tile.ty }, becomes: IGNEOUS.becomes });
         }
+    }
+
+    /**
+     * ⛓⛓⛓ fidelity IGFADE — THE DEAD FRAMES' RENDERS, STEPPED (behind `CONTACT_FIDELITY.igneousDeadFrames`, OFF).
+     *
+     * `Main.update` is `Bot.update(); super.update();` and `Engine.onEnterFrame` is `update(); render();`, so a frame
+     * the bot counts DEAD still renders, and `Tile.render`'s case 31 counts on it like any other. Two kinds:
+     *
+     *   THE LOAD FADE (D1). `FP.world = new Game(…)` only writes `_goto`; `Engine.checkWorld` swaps at the END of that
+     *     frame's update (`Engine.as:77,242-252`), so the SAME frame's render is the new world's — under the camera
+     *     `loadlevel` wrote raw (`Game.as:2251-2252`, `initialCamera`). Then `LOAD_FADE_FRAMES` (20) dead updates, each
+     *     ending in `view()` (`Game.as:888-889`, outside the gate) and a render. ⇒ 1 + 20 = **21 renders** before the
+     *     visit's first live one, every one at the arrival (the Player is built there and nothing updates it), under
+     *     the settle's own cameras (`settleCameraForLoad`'s loop). Witnessed on p4g (`igneous-l76-fade-stand`, boot
+     *     (160,100) in range of (10,6)): lava at the t15 render (36 − 21) and again at t61 after the restart (respawn
+     *     obs t46: its own 21), the game's restarts at t46 / t92.
+     *   THE SPANS (D2) — `clock.spans` since the last render. `help` is drained at the TOP of its tick (the Help's
+     *     frame precedes that tick's update), so it renders BEFORE this render, at the previous render's position;
+     *     the rest are spent inside this tick's update and render AFTER it, at this tick's position. On every dead
+     *     frame `view()` still runs (`Game.as:889`), so the camera is stepped toward the frozen player per frame.
+     *
+     * ⛔ STILL REFUSED BY NAME (each a named residue): a span that moves the player inside it (a fall rock's snap, a
+     * moonrock's / arena rock's release frame, a door's or a seal's ceremony — not transcribed here), a dead render
+     * under a shaking or banded camera (⚖ the cosmetic RNG is never modelled), and a room load inside a visit.
+     * Each refusal fires only when some tile is breaking or in range, i.e. when the render would change something.
+     */
+    const IGNEOUS_FROZEN_SPAN = (s) => s.kind === 'help'
+        || (s.kind === 'ceremony' && /^pickup phase A/.test(s.why ?? ''))
+        || (s.kind === 'freeze' && /^(wand-approach-fade|seed-cover-fade)\b/.test(s.why ?? ''));
+    const igneousStepRefusal = (msg) => Object.assign(new Error(`levelRun: ${msg} — not modelled; refused by name `
+        + '(fidelity IGFADE).'), { code: 'IGNEOUS_UNMODELLED' });
+    const igneousRelevantAt = (visit, tiles, px, py) => tiles.find((t) => {
+        const s = visit.tiles.get(`${t.tx},${t.ty}`) ?? IGNEOUS_FRESH;
+        return !s.lava && (s.breaking || igneousInRange(t, px, py));
+    }) ?? null;
+    const writeIgneousLava = (tile, key) => {
+        const writes = new Map(tileWritesByLevel.get(level) ?? []);
+        writes.set(key, IGNEOUS.becomes);
+        tileWritesByLevel.set(level, writes);
+        world = visitWorld(level);
+        tileWriteEvents.push({ t: ticksCompleted, level, id: `igneous@${key}`, kind: 'igneous-lava',
+            x: tile.x, y: tile.y, tile: { tx: tile.tx, ty: tile.ty }, becomes: IGNEOUS.becomes });
+    };
+    /** One DEAD render of every type-31 tile: the player frozen at (px, py), the point camera `c`. */
+    const renderIgneousDead = (visit, tiles, px, py, c, why) => {
+        for (const tile of tiles) {
+            const key = `${tile.tx},${tile.ty}`;
+            const s = visit.tiles.get(key) ?? IGNEOUS_FRESH;
+            if (s.lava) continue;
+            const inRange = igneousInRange(tile, px, py);
+            if (!inRange && !s.breaking) continue;
+            if (!camOnScreen(tile.rect, c, 0)) continue;
+            const r = stepIgneousRender(s, inRange);
+            visit.tiles.set(key, r.state);
+            if (r.event === null) continue;
+            igneousEvents.push({ t: ticksCompleted, level, tile: key, event: r.event, dead: why });
+            if (r.event === 'lava') writeIgneousLava(tile, key);
+        }
+    };
+    /** A span's `frames` dead renders at `at` ({x, y, cam}); returns the camera its last `view()` left. */
+    const stepIgneousSpan = (visit, tiles, span, at) => {
+        const near = igneousRelevantAt(visit, tiles, at.x, at.y);
+        const what = `${span.frames} dead frame(s) (${span.kind}${span.why ? `: ${span.why}` : ''}) before tick `
+            + `${ticksCompleted} in level ${level}`;
+        if (span.kind === 'load') {
+            if (near) throw igneousStepRefusal(`${what} are a room load inside one visit`);
+            return at?.cam ?? null;
+        }
+        if (!IGNEOUS_FROZEN_SPAN(span)) {
+            if (near) {
+                throw igneousStepRefusal(`${what} move the player inside the span, while Igneous-to-Lava tile `
+                    + `(${near.tx},${near.ty}) is breaking or in range`);
+            }
+            return null;
+        }
+        if (!near) return at?.cam ?? null;
+        if (at === null || !at.cam || camBand !== null || shake !== 0) {
+            throw igneousStepRefusal(`${what} render Igneous-to-Lava tile (${near.tx},${near.ty}) under a camera this run `
+                + `does not hold as a point (${camBand !== null || shake !== 0 ? 'a shake band'
+                    : 'unknown after an untranscribed span'})`);
+        }
+        let c = at.cam;
+        const w = worldFor(level).world;
+        for (let i = 0; i < span.frames; i += 1) {
+            c = stepCamera(c, at, w, { cameraTarget: bossCameraTarget });
+            renderIgneousDead(visit, tiles, at.x, at.y, c, span.kind);
+        }
+        return c;
+    };
+    function renderIgneousStepped(tiles) {
+        let visit = igneousStates.get(level);
+        if (!visit) {
+            // The visit's ledger starts after its own build (the fade is D1's, below).
+            const all = clock.spans;
+            let from = 0;
+            for (let i = all.length - 1; i >= 0; i -= 1) if (all[i].kind === 'load') { from = i + 1; break; }
+            visit = { tiles: new Map(), dead: clock.deadFrames, spans: from, last: null };
+            igneousStates.set(level, visit);
+            const a = spawnFromBoot(worldCtor);
+            const near = tiles.find((t) => igneousInRange(t, a.x, a.y));
+            if (near && camBand !== null) {
+                throw igneousStepRefusal(`the load fade at (${a.x}, ${a.y}) in level ${level} renders `
+                    + `Igneous-to-Lava tile (${near.tx},${near.ty}) under a shaken settle (a shake band)`);
+            }
+            // Every tile is fresh, so only a tile in range of the arrival can count; the cameras are walked either
+            // way, because the fade's last one is where a `help` span's dead render would start.
+            const w = worldFor(level).world;
+            let c = initialCamera(a.x, a.y);
+            if (near) renderIgneousDead(visit, tiles, a.x, a.y, c, 'load');
+            for (let i = 0; i < LOAD_FADE_FRAMES; i += 1) {
+                c = stepCamera(c, a, w);
+                if (near) renderIgneousDead(visit, tiles, a.x, a.y, c, 'load');
+            }
+            visit.last = { x: a.x, y: a.y, cam: camBand === null ? c : null };
+        }
+        const all = clock.spans;
+        const fresh = all.slice(visit.spans);
+        visit.spans = all.length;
+        visit.dead = clock.deadFrames;
+        for (const s of fresh) {
+            if (s.kind === 'help') visit.last = { ...visit.last, cam: stepIgneousSpan(visit, tiles, s, visit.last) };
+        }
+        for (const tile of tiles) {
+            const key = `${tile.tx},${tile.ty}`;
+            const s = visit.tiles.get(key) ?? IGNEOUS_FRESH;
+            if (s.lava) continue;
+            const inRange = igneousInRange(tile, state.x, state.y);
+            if (!inRange && !s.breaking) continue;
+            const vis = camBand === null ? (camOnScreen(tile.rect, cam, 0) ? 'on' : 'off')
+                : onScreenUnderShake(tile.rect, camBand, 0);
+            if (vis === 'uncertain') {
+                throw Object.assign(new Error(`levelRun: at tick ${ticksCompleted} Igneous-to-Lava tile (${key}) in level `
+                    + `${level} is on screen for some cameras of the shake band and off for others, and its render `
+                    + 'would change it — the jiggle is not modelled; refused by name (fidelity IGNEOUS).'),
+                { code: 'IGNEOUS_UNMODELLED' });
+            }
+            if (vis === 'off') continue;
+            const r = stepIgneousRender(s, inRange);
+            visit.tiles.set(key, r.state);
+            if (r.event === null) continue;
+            igneousEvents.push({ t: ticksCompleted, level, tile: key, event: r.event });
+            if (r.event === 'lava') writeIgneousLava(tile, key);
+        }
+        let here = { x: state.x, y: state.y, cam: camBand === null && cam ? { x: cam.x, y: cam.y } : null };
+        for (const s of fresh) {
+            if (s.kind !== 'help') here = { ...here, cam: stepIgneousSpan(visit, tiles, s, here) };
+        }
+        visit.last = here;
     }
 
     /**
@@ -15714,6 +15887,7 @@ export function createLevelRun({
     function shieldBumpNow() {
         bobShieldBumpNow();
         if (!inventory?.hasShield) return;
+        lightsShieldBumpNow();
         const slashing = slashState.slashing;
         const rendered = shieldRenderState ?? state;
         const p = { x: state.x, y: state.y };
@@ -15862,6 +16036,23 @@ export function createLevelRun({
         for (const r of due) {
             lightsSlashNow({ rect: spearRect(state.x, state.y, r.direction), reachLimit: Infinity, weapon: 'spear',
                 pressTick: r.pressTick, hits: [], ghost: false, direction: r.direction, repeat: 'lights' });
+        }
+    }
+
+    /**
+     * ⛓⛓ SEEDLING FIDELITY LIGHTSARR D2 — `Player.shieldBump` against the L69 fliers (`lightBoss.lightsShieldBump`),
+     * from `shieldBumpNow` (the player's update, after the fight stepped this tick; the shield is held). The box is
+     * where the previous frame's render left it (`shieldRenderState`), the gate and the shove's point the live `state`.
+     * Rows go to `shieldBumpLedger` (family `lightboss`) and the fight's ledger (`shield-bump`).
+     */
+    function lightsShieldBumpNow() {
+        const fight = CONTACT_FIDELITY.lightsBossFight ? (lightsFights.get(level) ?? null) : null;
+        if (!fight) return;
+        const rows = lightsShieldBump(fight, { player: state, rendered: shieldRenderState ?? state,
+            slashing: slashState.slashing, dark: inventory?.hasDarkShield === true });
+        for (const r of rows) {
+            shieldBumpLedger.push({ t: ticksCompleted + 1, level, family: 'lightboss', ...r });
+            lightsEvents.push({ t: ticksCompleted + 1, level, what: 'shield-bump', ...r });
         }
     }
 
@@ -17183,6 +17374,13 @@ export function createLevelRun({
      * EXCLUDED with its reason. A binding added to that reach later is a binding this list must gain, and the census
      * tool in the report's evidence is how to tell.
      *
+     * ⛓ THE VISIT AUDIT (hammer-phase DA, `CC/docs/cloud-reports/seedling-hammer-digest-audit.md`): the same census at
+     * `bf259ff199` reads 75 bindings (74 with the shadow filter); the one new is `lightsFights` (`liveSolidOpts` →
+     * `lightTotemsNow`, the L69 totem's solid, ON only), now in `visit`. Every other per-visit map — every
+     * `const …States = new Map()`, every `…ByLevel` map, every `…Windows`, everything `freshVisitState` resets — is in a
+     * part below or in `levelRunStateDigest.test.js`'s `DIGEST_EXEMPT` with the fact that lets it stay out, and that
+     * file's guard row reds a new one by name until it chooses.
+     *
      * ⛔ `persistence`, `timedClears` AND `declaredClears` ARE NOT IN THAT REACH. A declared row reaches the escape
      * only through what `applyTimedClears` WRITES — `clearedByLevel` and the rebuilt `world`, both digested — and it
      * writes at `c.at === tick` only. So a run whose row is `PENDING_AT` and one whose row is `at = T` digest EQUAL
@@ -17241,11 +17439,18 @@ export function createLevelRun({
             /** the save-side state the builds and the activators read */
             persist: part({ clearedByLevel, pendingEarnedClears, despawnedByLevel, staticRemovedTags, unreadRoomWrites,
                 totemParts, keys, collectedPickups, lockSnap, moonrockSet, chestOpens, rockFalls }),
-            /** the per-visit runtime state: every `…States` map the reach reads, and the windows */
+            /**
+             * the per-visit runtime state: every `…States` map the reach reads, and the windows (the rest are
+             * `DIGEST_EXEMPT`'s, each with its reason); `lightsFights` is the L69 fight, whose `totemGone` opens the
+             * totem's solid in `liveSolidOpts` (DA); `igneousStates` is fidelity's (`dfaa06e240`), which DA measured
+             * UNREAD by the escape: a superset key, so it only costs misses; `lavaBossFights` + `lavaArenaRocks` are
+             * BOSSKILLS' (the King of Fire's body and L82's arena rock, read through `liveSolidOpts`)
+             */
             visit: part({ activatorStates, bridgeStates, pushableStates, rockStates, burnStates, ropeStates,
                 fallRockStates, moonrockStates, crusherStates, bossStates, shieldBossStates, finalDoorStates,
                 turretStates, beamTowerStates, magicalLockStates, chestStates, pulserStates, spinnerStates,
-                pullsByLevel, wandWindows, fireWindows, igneousStates, lavaBossFights, lavaArenaRocks }),
+                pullsByLevel, wandWindows, fireWindows, igneousStates, lightsFights, lavaBossFights,
+                lavaArenaRocks }),
             /**
              * the module switches this file's import closure consults — a separate component because a reader of
              * them reads no run: the caller keys on solverBot's own (see the report's hand-over)
@@ -17255,6 +17460,9 @@ export function createLevelRun({
                 NEAREST_TILE_INDEX, SOLID_GRID }),
         };
     };
+
+    // ⛓ fidelity BOSSFORK D2: and the boot's build, here because every binding the fight's build reads is now made.
+    tentacleMouthAtBuild();
 
     return {
         get level() { return level; },

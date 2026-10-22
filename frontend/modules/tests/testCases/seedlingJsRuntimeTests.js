@@ -837,6 +837,71 @@ registerTest({
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
+/**
+ * ⛓ GRAPHICS G4 — the effects and the overlays in a real browser: `jsRuntime.html?graphics=seedling` (room mode, the
+ * default under a stack) mounted STANDALONE in the row's own iframe and driven through its own `__swfBridge` to
+ * `Game(61, 104, 144)` — Dungeon 6's rain (heaviness 100), the stance G3c's row measured out of both axes' reach. No
+ * panel, preset or AP state is touched; the iframe is removed however the row ends.
+ *
+ * It asserts what node cannot: the page HOLDS its clock for the boot build's 20 dead frames (the fade is drawn while the
+ * run waits), the droplet and heart sheets DECODE, the rain is drawn as `seedling:fx/droplet` and three hearts as
+ * `seedling:hud/heart` from the seedling pack, the black cover is gone once the hold ends, and nothing errs.
+ */
+export async function seedlingJsRuntimeGraphicsEffects(tc) {
+    const frame = document.createElement('iframe');
+    // Visible (a display:none frame gets no animation frames, and the page paints only in rAF), but out of the way.
+    Object.assign(frame.style, { position: 'fixed', right: '0', bottom: '0', width: '160px', height: '160px',
+        opacity: '0.01', pointerEvents: 'none', border: '0' });
+    const errors = [];
+    try {
+        frame.src = './modules/seedlingDemo/jsRuntime.html?graphics=seedling';
+        document.body.appendChild(frame);
+        const win = await tc.pollForValue(() => {
+            const w = frame.contentWindow;
+            return w?.__runtimeReady && w.__seedlingJsRuntime?.vanilla && w.__seedlingJsGraphics?.status === 'ready' ? w : null;
+        }, 'the standalone JS page loaded the vanilla map and the seedling pack stack', 20000, 200);
+        tc.reportCondition('the standalone page is up with its pack', !!win);
+        if (!win) return tc.getOverallResult();
+        const origError = win.console.error.bind(win.console);
+        win.console.error = (...a) => { errors.push(a.map(String).join(' ')); origError(...a); };
+        win.addEventListener('error', (e) => errors.push(`uncaught: ${e.message}`));
+        const game = await (await fetch('./modules/flashPanel/games/seedling.json')).json();
+        win.__swfBridge.game.configure(JSON.stringify({ classes: game.classes, state_properties: game.state_properties }));
+        win.__swfBridge.queueItems([{ class: 'game', property: 'menu', value: false },
+            { invocation: 'new_instance', className: 'Game', args: [61, 104, 144] }]);
+        const g = win.__seedlingJsGraphics;
+        const rt = win.__seedlingJsRuntime;
+        const drops = (e) => (e?.ops ?? []).filter((o) => o.key === 'seedling:fx/droplet');
+        const hearts = (e) => (e?.screen ?? []).filter((o) => o.key === 'seedling:hud/heart');
+        const raining = await tc.pollForValue(() => (g.held >= 20 && drops(g.effects).length >= 3 ? g.effects : null),
+            'the page held the boot fade and then drew the rain of level 61 from the pack', 15000, 100);
+        tc.log(`effects: held ${g.held}, ${JSON.stringify(raining ? { ...raining, screen: raining.screen.length } : null)}`);
+        tc.assertEqual('the boot build\'s 20 dead frames were held (the run waited, the fade was drawn)', true, g.held >= 20);
+        tc.assertEqual('the rain resolved to seedling:fx/droplet from the seedling pack', 'seedling',
+            [...new Set(drops(raining).map((o) => o.pack))].join(','));
+        tc.assertEqual('three hearts, all full, drawn as seedling:hud/heart', '0,0,0', hearts(raining).map((o) => o.frame).join(','));
+        tc.assertEqual('the black cover is gone after the hold', '0/0', `${raining?.cover}/${raining?.owed}`);
+        tc.assertEqual('every sheet decoded (none fell back to rectangles)', '[]', JSON.stringify(g.failedSheets));
+        tc.assertEqual('no console error on the page', '[]', JSON.stringify(errors));
+        tc.assertEqual('the run is in level 61 and did not halt', '61/null', `${rt.run?.level}/${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        frame.remove();
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-graphics-effects',
+    name: 'Seedling JS runtime: the effects, hearts and fade in the original graphics (G4)',
+    description: 'Mounts jsRuntime.html?graphics=seedling standalone in its own iframe, drives it to level 61 (Dungeon 6 rain) '
+        + 'through its own __swfBridge, and asserts the page holds the boot fade (20 dead frames), draws the rain as '
+        + 'seedling:fx/droplet and three hearts as seedling:hud/heart from the seedling pack, the cover is gone after the hold, '
+        + 'every sheet decodes, and no console error. Touches no panel, preset or AP state; the iframe is removed however it ends.',
+    testFunction: seedlingJsRuntimeGraphicsEffects,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
 export async function seedlingJsRuntimeBotCompletesAtlasLocation(tc) {
     let previous = 'auto';
     try { previous = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }

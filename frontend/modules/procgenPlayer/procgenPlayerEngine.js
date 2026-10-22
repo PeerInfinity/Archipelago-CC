@@ -71,7 +71,17 @@ export function buildWarehouse(rulesJson, playerId, registry, opts = {}) {
 
     const warehouse = new WorldWarehouse();
     warehouse.playerId = playerId;
+    // ⛓ SHARED LEVEL WORLDS (tile-primitives Stage 2): an entry naming
+    // `shared_world` and carrying NO payload is an ALIAS of the entry whose
+    // payload carries that world. Aliases resolve AFTER every carrier has
+    // deserialized, so they hold the very same world object — the identity a
+    // same-world crossing is recognised by.
+    const aliases = [];
     for (const [regionId, entry] of Object.entries(sidecars)) {
+        if (typeof entry?.shared_world === 'string' && entry.playable_payload === undefined) {
+            aliases.push([regionId, entry]);
+            continue;
+        }
         const adapter = registry.get(entry.substrate);
         if (!adapter) {
             logger.warn?.(`procgenPlayer: unknown substrate '${entry.substrate}' for region ${regionId}; skipping`);
@@ -106,9 +116,32 @@ export function buildWarehouse(rulesJson, playerId, registry, opts = {}) {
             substrate: entry.substrate,
             world: read.world,
             loadRegionEvent: adapter.loadRegionEvent,
+            ...(typeof entry.shared_world === 'string' ? { sharedWorld: entry.shared_world } : {}),
         });
     }
+    for (const [regionId, entry] of aliases) {
+        const carrier = [...warehouse.regions.values()].find((e) => e.sharedWorld === entry.shared_world
+            && e.substrate === entry.substrate);
+        if (!carrier) {
+            const refusal = `region ${regionId} is an alias of shared world '${entry.shared_world}', `
+                + 'but no warehoused region carries that world';
+            logger.warn?.(`procgenPlayer: ${refusal}`);
+            warehouse.refused.set(regionId, refusal);
+            continue;
+        }
+        warehouse.regions.set(regionId, { ...carrier });
+    }
     return warehouse;
+}
+
+/**
+ * ⛓ SAME-WORLD CROSSING: do two warehoused regions share one level world?
+ * (Both name the same `sharedWorld` key, so they hold the same world object.)
+ */
+export function sharesWorld(warehouse, regionA, regionB) {
+    const a = regionA ? warehouse?.get(regionA) : null;
+    const b = regionB ? warehouse?.get(regionB) : null;
+    return !!(a && b && a.sharedWorld && a.sharedWorld === b.sharedWorld && a.world === b.world);
 }
 
 /**

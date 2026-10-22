@@ -1,0 +1,44 @@
+# box lock: TAKEN by check-procgen-reference.mjs (browser, pid 7731) — head f7f1183e0, 0 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+the generated modules: 39 URL parameters, 6 biomes, 134 refusal names, 9 registry entries, 445 instruments, 28 documents, 0 findings — 780 anchors expected
+[centralRegistry] CentralRegistry initialized
+[stateManagerProxy] [stateManagerProxy] Failed to initialize worker: ReferenceError: Worker is not defined
+    at StateManagerProxy.initializeWorker (file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:244:25)
+    at new StateManagerProxy (file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxy.js:112:10)
+    at file:///home/user/Archipelago-CC/frontend/modules/stateManager/stateManagerProxySingleton.js:64:36
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async loadRegistry (file:///home/user/Archipelago-CC/scripts/procgen/reference/registry.mjs:99:17)
+    at async buildRegistry (file:///home/user/Archipelago-CC/scripts/procgen/reference/registry.mjs:214:36)
+    at async file:///home/user/Archipelago-CC/scripts/procgen/generate-procgen-reference.mjs:104:18
+[discoveryState] [DiscoveryState] Constructed
+PASS: ⛓⛓⛓ the checked-in modules AND the markdown regions ARE what the code says (`--check` = regenerate, no diff) — ALL 7 GENERATED MODULES AND 5 MARKDOWN REGIONS MATCH THE CODE
+PASS: ⛓⛓ the 3 markdown GENERATED REGIONS are present, with exactly one marker pair each and a non-empty body — substrate-capability-matrix · procgen-instruments · procgen-docs-index
+
+the REFERENCE page
+  http://127.0.0.1:37859/frontend/modules/procgenDocs/reference.html
+PASS: ⛓ the reference page RESOLVES (HTTP 200) — status 200
+PASS: …with ZERO console errors and ZERO pageerrors
+PASS: ⛓⛓ it RENDERED one row per module row, section by section (15 sections, 780 rows) — url 39 · retired 3 · codecs 6 · biomes 6 · templates 17 · excluded 12 · elements 13 · kinds 45 · findings 0 · refusal-sources 14 · refusals 134 · enums 5 · registry 9 · instruments 445 · docs 32
+PASS: …and its own total agrees (measured off its DOM, never echoed from the import) — page 780
+PASS: ⛓⛓ …and the EMPTY findings section says so IN WORDS, not by being blank — ⛓ No findings. Every disagreement these tables have measured — the incomplete refusal cons
+PASS: ⛓⛓ every ANCHOR a link could name exists, and no others (780) — exact
+PASS: ⛔ …and NOT ONE glossary slug rendered as a dead literal — dead: 0
+PASS: ⛓⛓ the FILTER narrows on "killgate" — 12 of 780
+PASS: …and CLEARING it brings every row back — visible 780
+
+the GLOSSARY page — the other end of every terms: link
+  http://127.0.0.1:37859/frontend/modules/procgenDocs/glossary.html
+PASS: ⛓ the glossary page RESOLVES (HTTP 200) — status 200
+PASS: ⛓⛓ every terms: link the reference page prints has an anchor here (66 distinct) — all present
+PASS: …and they are exactly the slugs the generated table declares — 66 slugs
+PASS: …and every one of them RESOLVES in the module too
+
+the two LAB pages — the header link, and only that
+PASS: ⛓ /frontend/modules/seedlingDemo/watch.html RESOLVES (HTTP 200) — status 200
+PASS: …and its header links the REFERENCE page — #docLinks → [../procgenDocs/glossary.html, ../procgenDocs/demos.html, ../procgenDocs/reference.html]
+PASS: …and that link LOADS from this page's own host — http://127.0.0.1:37859/frontend/modules/procgenDocs/reference.html → 200
+PASS: ⛓ /frontend/modules/mazeRoom/lab.html RESOLVES (HTTP 200) — status 200
+PASS: …and its header links the REFERENCE page — #docLinks → [../procgenDocs/glossary.html, ../procgenDocs/demos.html, ../procgenDocs/reference.html]
+PASS: …and that link LOADS from this page's own host — http://127.0.0.1:37859/frontend/modules/procgenDocs/reference.html → 200
+
+ALL CHECKS PASSED

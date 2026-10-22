@@ -88,7 +88,7 @@ import { reach } from '../shared/simulatorCore.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import {
     TILE_FLOOR, TILE_WALL, bfsSolver, clearItem, clearObstacle, createState, createWorld,
-    detectStepEvents, getItem, getObstacle, getTile, serializeMazeEntities, setBlock, setButton,
+    checkActionLib, detectStepEvents, getItem, getObstacle, getTile, serializeMazeEntities, setBlock, setButton,
     setItem, setObstacle, setTile, step,
 } from './mazeRoomEngine.js';
 import { rngFor } from './procgenRng.js';
@@ -451,6 +451,9 @@ export function deserializeMazeLevel(payload) {
     `"buttonLib" must be an object of per-instance entries when present, got `
         + `${JSON.stringify(payload.buttonLib)}`);
     if (payload.buttonLib) world.buttonLib = { ...world.buttonLib, ...payload.buttonLib };
+    // ⛓ ITEM ACTIONS — `serializeMazeEntities` writes `action_lib` only when the
+    // world has one; the engine's one checker reads it back (absent → `{}`).
+    world.actionLib = checkActionLib(payload.action_lib, 'deserializeMazeLevel');
     return world;
 }
 

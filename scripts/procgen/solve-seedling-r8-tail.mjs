@@ -3,6 +3,8 @@
  * solve-seedling-r8-tail — THE BATTERY'S TAIL, through the TWO-PASS
  * AUTHORING LOOP. R8 slice 4, kickoff §12.10.1/§12.10.3.
  *
+ * @ci-box the user moved the `solve-seedling-*` chain `--check`s off push (⚖ 2026-10-21): the box answers this row (`node scripts/procgen/standing-values.mjs --write --key=<its key>`), and CI runs no arm for it.
+ *
  * Slice 3b closed the battery at 2 of 4 and reported the other two rather
  * than recording them (armB, on purpose): L5 needed machinery nobody had
  * built and L8 needed a tick the model refuses to compute. Both are here.

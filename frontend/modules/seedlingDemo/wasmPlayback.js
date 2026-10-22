@@ -725,6 +725,35 @@ export function shadowMismatch(shadowRow, status) {
 }
 
 /**
+ * ⛓ DELIVERY DEFERRAL — THE HOST'S CONTINUE-OR-REBUILD PAIR. `Bot.botStart` builds a NEW world unless
+ * `bootLevel == Main.level && atBootPosition()`, and `atBootPosition` compares the tape's boot with
+ * `Main.playerPositionX/Y` (`Bot.as:1950`): the SPAWN the current `Game` was built at, which the room itself may
+ * rewrite mid-visit (L32's `FallRockLarge` writes `playerPosition = (72, 104)`, the Bob arena's respawn). A
+ * continuation that boots the room's ARRIVAL after such a write is not continued: the host rebuilds the room at
+ * the arrival, and the plan plays in a world the shadow is not. The model keeps that pair (`levelRun.worldCtor`,
+ * rewritten where the game writes it), so the shadow's pair is the boot that continues the live world.
+ *
+ * null when the game's pair (`readState().playerPositionX/Y`) is the shadow's, else `{expected, got}` — a held
+ * room whose respawn the model did not rewrite is not the shadow (named, never shipped past).
+ */
+export function ctorMismatch(shadowCtor, state) {
+    if (!shadowCtor) return null;
+    const got = { x: state?.playerPositionX ?? null, y: state?.playerPositionY ?? null };
+    if (got.x === shadowCtor.x && got.y === shadowCtor.y) return null;
+    return { expected: { x: shadowCtor.x, y: shadowCtor.y }, got };
+}
+
+/**
+ * `staging` booting at `ctor` (`{x, y}`, the shadow's `worldCtor`) — the boot `atBootPosition` admits, so the
+ * host CONTINUES the held world. The staging itself when its boot already is that pair (every room whose spawn
+ * was not rewritten since its arrival: byte-identical).
+ */
+export function bootAtCtor(staging, ctor) {
+    if (!ctor || !staging?.boot || (staging.boot.x === ctor.x && staging.boot.y === ctor.y)) return staging;
+    return { ...staging, boot: { ...staging.boot, x: ctor.x, y: ctor.y } };
+}
+
+/**
  * ⛓ W7 — THE GLUE QUERY: may the engine hold the arrival it just saw? A hold
  * BLOCKS every world swap, the glue's own included (W0 i.11), so an arrival
  * the glue is about to REDIRECT must not be held — the redirect's own landing

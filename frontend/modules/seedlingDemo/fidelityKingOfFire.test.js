@@ -44,8 +44,9 @@ const witnesses = readdirSync(WITNESS_DIR).filter((f) => f.endsWith('.json')).so
 const L82 = { x: 112, y: 48, tag: 0 };
 
 describe('bosskills D2 — the transcription (`Enemies/LavaBoss.as`)', () => {
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY.kingOfFireFight).toBe(false);
+    // ⛓ shipped OFF; planning-10's flip (⚖ user "Flip kingOfFireFight", 2026-10-21) turns it ON.
+    it('ships ON (flipped)', () => {
+        expect(CONTACT_FIDELITY.kingOfFireFight).toBe(true);
     });
 
     it('the cycle the game measured: sit 19 (20 on the wake), smash 16, smashback 16, armsup 22, sweep 10, sweepback 16 = 99', () => {
@@ -147,9 +148,11 @@ function modelSamples(tape) {
 const sorted = (a) => a.map((p) => `${p[0]},${p[1]}`).sort();
 
 describe('bosskills D2 — the game witnesses, at 0 px (the switch ON)', () => {
-    it('there are five, each recorded on p4g', () => {
-        expect(witnesses.map((w) => w.name)).toEqual(['kof-death-respawn', 'kof-idle', 'kof-policy-kill', 'kof-reflect',
-            'kof-solve-203']);
+    // ⛓ fidelity BOSSFORK D1 added `kof-fork-665` / `kof-fork-667`: the clear-tag arm's answers to sweep legs 665 and
+    // 667 (the latter staged with the arena rock {82,1} cleared), played on the game.
+    it('there are seven, each recorded on p4g', () => {
+        expect(witnesses.map((w) => w.name)).toEqual(['kof-death-respawn', 'kof-fork-665', 'kof-fork-667', 'kof-idle',
+            'kof-policy-kill', 'kof-reflect', 'kof-solve-203']);
         for (const w of witnesses) expect(w.page).toBe('seedling_bot_ap_p4g');
     });
 
@@ -192,7 +195,8 @@ describe('bosskills D2 — the game witnesses, at 0 px (the switch ON)', () => {
         expect(report.flag).toMatchObject({ level: 82, tag: 0 });
     });
 
-    it('the witnesses need the switch: OFF the model has no fight, and the idle arrival parts from the game at the first runner contact', () => {
+    // ⛓ planning-10's flip: the OFF arm is now named (it was the default).
+    it('the witnesses need the switch: OFF the model has no fight, and the idle arrival parts from the game at the first runner contact', () => withContactFidelity({ kingOfFireFight: false }, () => {
         const w = witnesses.find((x) => x.name === 'kof-idle');
         let first = null;
         const st = createTapeStepper(parseTape(JSON.stringify(w.tape)), { levelSource: SRC });
@@ -205,7 +209,7 @@ describe('bosskills D2 — the game witnesses, at 0 px (the switch ON)', () => {
             r = st.next();
         }
         expect(first).toBe(121);
-    });
+    }));
 });
 
 describe('bosskills D2 — the solver (`solid:lavaboss` → `lavaboss`)', () => {
@@ -225,11 +229,68 @@ describe('bosskills D2 — the solver (`solid:lavaboss` → `lavaboss`)', () => 
         });
     }, 120000);
 
-    it('OFF: the same goal refuses, and the refusal names the switch', () => {
+    // ⛓ planning-10's flip: the OFF arm is now named (it was the default).
+    it('OFF: the same goal refuses, and the refusal names the switch', () => withContactFidelity({ kingOfFireFight: false }, () => {
         const run = createRunForStaging(staging, SRC);
         let e = null;
         try { solveSegment({ run, goals, name: 'kof-row-203-off', boot: staging.boot }); } catch (x) { e = x; }
         expect(e).toBeInstanceOf(SolverRefusal);
         expect(e.message).toMatch(/lavaboss/);
+    }), 120000);
+});
+
+/**
+ * ⛓⛓ fidelity BOSSFORK D1 — THE CLEAR-TAG ARM PASSES THE SEGMENT'S FORK. Sweep legs 665 / 667 (`location:Level 082 -
+ * King of Fire`) are the clear-tag {82,0} on `lavaboss@112,48`. Before D1 the arm handed the executor no `ctx.fork`, so
+ * `execLavaBoss` played variant 0 alone and it dies (spent 691 / 707). With the fork it plays variants 0 and 1 on forks
+ * (both die), commits variant 2 (`standY` 160), and the walk is the witness's own tape. 667's staging is leg 664's
+ * captured request with the arena rock {82,1} cleared (the L96 side's arrival; no 667 capture exists ON yet).
+ *
+ * Mutant (predicted, copy + restore): drop `fork` from the clear-tag arm's executor context → the ON row reds with the
+ * variant-0 refusal (spent 691), and the no-fork row still passes.
+ */
+for (const [leg, tried, ticks, presses] of [
+    ['665', [[false, 691], [false, 923], [true, 844]], 870, ['0:primary+up|up', '2:primary+up|up']],
+    ['667', [[false, 707], [false, 938], [true, 853]], 865, []],
+]) describe(`bossfork D1 — the clear-tag arm hands the executor the segment's fork (leg ${leg})`, () => {
+    const w = witnesses.find((x) => x.name === `kof-fork-${leg}`);
+    const staging = stagingFromTape(parseTape(JSON.stringify({ ...w.tape, inputs: [], tick_count: 0 })));
+    const goals = [{ kind: 'clear-tag', tag: { level: 82, tag: 0 }, at: { x: 112, y: 48 }, obstacle: 'lavaboss@112,48' }];
+    const keysOf = (perTick) => perTick.map((k) => [...k].sort().join('+'));
+    const tapeKeys = () => {
+        const per = Array.from({ length: w.tape.tick_count }, () => new Set());
+        for (const i of w.tape.inputs) for (let t = i.from; t < i.to; t += 1) per[t].add(i.key);
+        return keysOf(per);
+    };
+
+    it('ON, with a fork: variants 0 and 1 die on forks, variant 2 kills him, and the walk is the witness\'s tape', () => {
+        withContactFidelity({ kingOfFireFight: true }, () => {
+            const run = createRunForStaging(staging, SRC);
+            const out = solveSegment({ run, goals, name: `kof-fork-${leg}`, boot: staging.boot,
+                forkRun: () => createRunForStaging(staging, SRC) });
+            const rec = out.records.find((r) => r.verb === 'lavaboss');
+            expect(rec.params).toEqual({ standY: 160, strike: 20 });
+            expect(rec.tried.map((t) => [t.ok, t.spent])).toEqual(tried);
+            expect(run.earnedClears.map((c) => `${c.level}:${c.tag}`)).toEqual(expect.arrayContaining(['82:0']));
+            expect(run.playerDeaths.length).toBe(0);
+            // The witness's tape is the page solver's answer (`solveAnytime` on the leg's request). 665's walk equals it
+            // on every tick but 0 and 2, where it also holds `primary` (the arrival's swing; measured); 667's on all.
+            const mine = keysOf(out.perTick);
+            const theirs = tapeKeys();
+            expect([mine.length, theirs.length]).toEqual([ticks, ticks]);
+            const diff = mine.map((k, t) => (k === theirs[t] ? null : `${t}:${k}|${theirs[t]}`)).filter(Boolean);
+            expect(diff).toEqual(presses);
+        });
+    }, 120000);
+
+    it(`ON, without a fork (no \`forkRun\`): variant 0 alone, and it refuses on its death at spent ${tried[0][1]}`, () => {
+        withContactFidelity({ kingOfFireFight: true }, () => {
+            const run = createRunForStaging(staging, SRC);
+            let e = null;
+            try { solveSegment({ run, goals, name: `kof-nofork-${leg}`, boot: staging.boot }); } catch (x) { e = x; }
+            expect(e).toBeInstanceOf(SolverRefusal);
+            expect(e.message).toMatch(new RegExp('\\{"standY":168,"strike":20\\} did not kill lavaboss@112,48: the player '
+                + `died at spent ${tried[0][1]}`));
+        });
     }, 120000);
 });

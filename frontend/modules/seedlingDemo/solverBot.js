@@ -70,6 +70,8 @@ import {
     runHold,
     runShove, runDwell, SHOVE_STEP,
     CEREMONY_CADENCE_START, ceremonyCadenceStep, runFire,
+    // ⛓ fidelity ROPESTANCE: the spear's press at a rope (`runSpear`'s `rope` target), and its face nudge's terrain test.
+    runSpear, livePerVisitOpts,
 } from './botDriverV2.js';
 import { resolvePresser } from './botDriverV2.js';
 // ⛓ SEEDLING FIDELITY CRUSHER — the `bait` verb (behind `CRUSHER_BAIT`).
@@ -129,7 +131,7 @@ import {
     // ⛓⛓⛓ hammer-phase RE: the refuge's best-ETA cut (behind `REFUGE_ETA_CUT`, ON by default since the user's flip; a behaviour switch, see its file).
     REFUGE_ETA_CUT, REFUGE_ETA_CUT_COUNTS, refugeEtaCut,
     DARKTRAP_LIGHT_DEATH, MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
-    fallDestination, PhysicsV2Error, playerBoxAt,
+    fallDestination, PhysicsV2Error, playerBoxAt, terrainProbeRect,
     HITBOX, WALK_SPEED,
     // ⛓⛓⛓ hammer-phase SF: the admissible strike floor's terrain read (`strikeEtaFloorOf`, behind `STRIKE_ETA_FLOOR`, OFF).
     SLIDING_SPEED, hazardFlagsFor,
@@ -138,6 +140,8 @@ import {
     MOVE_SPEEDS, SLASH_DASH_FORCE,
     chestStanceBand,
     fireRect, INVENTORY_ITEM_IDS, auditFire,
+    // ⛓ fidelity ROPESTANCE: a fire cut's wait is the press window (`execRopeCut`); an unstepped drill's run range.
+    FIRE_WINDOW, DRILL,
     pullModelled, pullsDrainingInto,
     PULSER, pulsePushes, pulserCycle, newPushable,
     KILLLOCK_BODIES,
@@ -162,6 +166,8 @@ import {
     createWandShot, stepWandShot, wandShotRect, MAGICAL_LOCK_OPEN_TICK_OFFSET,
     // ⛓⛓⛓ hammer-phase XC: the cross-pass escape cache's key spells its arguments as the digest spells the run.
     canonicalDigestText,
+    // ⛓ fidelity BOSSFORK D1b: the beast's "dying" length bounds the wait for its mouth (`awaitTentacleMouth`).
+    TENTACLE_BEAST_ANIMS, animTicks as tentacleAnimTicks,
 } from './solverView.js';
 import {
     bodyKillRegions, chaserDanger, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
@@ -490,7 +496,7 @@ const fail = (m, opts) => { throw new SolverBotError(m, opts); };
  *   rather than guessed. Registering an executor is one row here; that is
  *   the "adds policies rather than restructuring" contract.
  */
-export const OBSTACLE_STRATEGIES = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow({
+export const OBSTACLE_STRATEGIES = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow({
     'solid:pushableblock': 'shove',
     'solid:pushableblockfire': 'shove',
     /**
@@ -692,7 +698,14 @@ export const OBSTACLE_STRATEGIES = Object.freeze(switchGatedRow(switchGatedRow(s
     // (`solid:tentaclebeast` → `tentaclebeast` is registered below, switch-gated on `tentacleBeastFight`.)
 }, 'solid:lightbosscontroller', () => (CONTACT_FIDELITY.lightsBossFight ? 'lights' : undefined)),
 'solid:lavaboss', () => (CONTACT_FIDELITY.kingOfFireFight ? 'lavaboss' : undefined)),
-'solid:tentaclebeast', () => (CONTACT_FIDELITY.tentacleBeastFight ? 'tentaclebeast' : undefined)));
+'solid:tentaclebeast', () => (CONTACT_FIDELITY.tentacleBeastFight ? 'tentaclebeast' : undefined)),
+/**
+ * ⛓⛓⛓ fidelity ROPE (wave 22, `CONTACT_FIDELITY.ropeCutVerb`) — **A ROPE IS CUT, NOT ROUTED AROUND.** A `RopeStart`
+ * is `type = "Rope"`, which IS in the player's solids, so its span is a wall until a swing `hit()`s it and shrinks it
+ * to the pulley cell. The verb (`execRope`) is the PULL rung's stance and `execPull`, asked by a `clear-tag` on the
+ * rope's own tag or by a frontier corridor. OFF no row: the survey's L39 steps keep "No strategy row exists".
+ */
+'solid:rope', () => (CONTACT_FIDELITY.ropeCutVerb ? 'rope' : undefined)));
 
 /**
  * ⛓⛓⛓ PROCGEN PoC SLICE 3b — **THE SECOND SELECTION PATH, AS DATA.**
@@ -757,7 +770,7 @@ export const STRATEGY_REFINEMENTS = Object.freeze([
  * row that had to DERIVE its own parameters rather than bind a placement: a
  * leg spec carried `{presser, ticks}` and a live policy has to work out both.
  */
-export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow({
+export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow(switchGatedRow(switchGatedRow(switchGatedRow({
     collect: execCollect,
     chest: execChest,
     hold: execHold,
@@ -859,7 +872,9 @@ export const STRATEGY_EXECUTORS = Object.freeze(switchGatedRow(switchGatedRow(sw
      */
 }, 'lights', () => (CONTACT_FIDELITY.lightsBossFight ? execLights : undefined)),
 'lavaboss', () => (CONTACT_FIDELITY.kingOfFireFight ? execLavaBoss : undefined)),
-'tentaclebeast', () => (CONTACT_FIDELITY.tentacleBeastFight ? execTentacleBeast : undefined)));
+'tentaclebeast', () => (CONTACT_FIDELITY.tentacleBeastFight ? execTentacleBeast : undefined)),
+// ⛓ fidelity ROPE — `rope` (switch-gated on `ropeCutVerb`): the PULL rung's cut as a strategy. See `execRope`.
+'rope', () => (CONTACT_FIDELITY.ropeCutVerb ? execRope : undefined)));
 
 /**
  * ⛓⛓⛓ SEEDLING FIDELITY CRUSHER — **THE FRONTIER'S EXECUTOR LOOKUP**, and the
@@ -2781,6 +2796,8 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
     if (strategy === 'lavaboss') return resolveLavaBossStrategy(run, obstacle);
     // ⛓ bosskills D3 — the Tentacled Beast (`held: false` while `tentacleBeastFight` is off or its stream is unmet).
     if (strategy === 'tentaclebeast') return resolveTentacleBeastStrategy(run, obstacle);
+    // ⛓ fidelity ROPE — reached only while `ropeCutVerb` registers the verb (the row is switch-gated).
+    if (strategy === 'rope') return resolveRopeStrategy(run, obstacle, contacts, blocked);
     if (strategy !== 'hold') return null;
     return resolveHoldStrategy(run, obstacle, contacts, blocked);
 }
@@ -6621,6 +6638,80 @@ function dashRejectionSummary(dash) {
         }));
     if (dash.why) rows.push({ option: 'sword-dash', why: dash.why });
     return rows;
+}
+
+/**
+ * ⛓⛓ fidelity L1516 D3 — **AN ENCLOSED PIT IS ENTERED ACROSS A CORNER** (`CONTACT_FIDELITY.enclosedPitCorner`).
+ *
+ * `Player.getState` samples ONE point a tick, the cell holding (x, y + checkOffsetY) (`Player.as:679`), and the fall
+ * starts on the first tick it reads Pit (`set state`, `:720-724`; the lerp aims at THAT cell's centre). A pit whose four
+ * orthogonal neighbours are all pits (L16's (13,4), sweep leg 206's `out_pit_8_3`) is therefore entered only by a
+ * diagonal step that jumps the probe point across a corner it shares with a floor cell — between two ticks, both axes
+ * at once. Witnessed on the game (`probe-seedling-l16-corner-pit.mjs`, `fixtures/l1516-witness/`): from (240,96) the
+ * held up+left falls into (13,4) and lands in L17 at (136, …); 8 ticks of up first falls into (14,4) instead.
+ *
+ * `null` when the pit is not enclosed (every other pit: the goal's plan exemption already reaches it). Otherwise the
+ * diagonal floor cells (not pit, water or lava, and walkable), each with the move's two keys (toward the pit) and a
+ * stance on the probe's diagonal through the shared corner, 6 px inside the cell.
+ */
+export function enclosedPitCorners(world, pit) {
+    const pits = new Set((world.pitTiles ?? []).map((p) => `${p.tx},${p.ty}`));
+    const { tx, ty } = pit;
+    if (![[1, 0], [-1, 0], [0, 1], [0, -1]].every(([dx, dy]) => pits.has(`${tx + dx},${ty + dy}`))) return null;
+    const floor = new Map((world.walkableTiles ?? []).map((t) => [`${t.tx},${t.ty}`, t]));
+    const out = [];
+    for (const [dx, dy] of [[1, 1], [-1, 1], [1, -1], [-1, -1]]) {
+        const cell = floor.get(`${tx + dx},${ty + dy}`);
+        if (!cell || cell.t === 6 || cell.t === 1 || cell.t === 17) continue;
+        const corner = { x: dx > 0 ? pit.rect.right : pit.rect.x, y: dy > 0 ? pit.rect.bottom : pit.rect.y };
+        out.push({
+            dx, dy, cell: { tx: cell.tx, ty: cell.ty }, corner,
+            keys: [dx > 0 ? 'left' : 'right', dy > 0 ? 'up' : 'down'],
+            // the probe point is (x, y + 1): the stance's probe sits on the diagonal through the corner
+            stance: { x: corner.x + dx * 6, y: corner.y - 1 + dy * 6 },
+        });
+    }
+    return out;
+}
+
+/** The corner step's exact search bound: a pre-step of up to this many ticks on one axis, then the diagonal. */
+export const ENCLOSED_PIT_CORNER = Object.freeze({ maxPre: 12, maxDiagonal: 40 });
+
+/**
+ * The corner step, previewed with the run's own stepper (`run.previewStepper`): the held sets that make the FIRST fall
+ * aim at `pit`'s centre, or `null`. Pre-steps first (none, then 1..`maxPre` ticks of either key, then of nothing), the
+ * diagonal after, the shortest first. A preview that crosses a level, falls elsewhere or dies is not a candidate.
+ */
+export function enclosedPitCornerKeys(run, pit, cand) {
+    const centre = { x: pit.rect.x + pit.rect.w / 2, y: pit.rect.y + pit.rect.h / 2 };
+    const diag = new Set(cand.keys);
+    const pres = [[]];
+    for (let j = 1; j <= ENCLOSED_PIT_CORNER.maxPre; j += 1) {
+        for (const k of [...cand.keys, null]) pres.push(Array.from({ length: j }, () => (k ? new Set([k]) : new Set())));
+    }
+    for (const pre of pres) {
+        const step = run.previewStepper();
+        let st = { ...run.state };
+        const held = [];
+        let ok = null;
+        try {
+            for (let i = 0; i < pre.length + ENCLOSED_PIT_CORNER.maxDiagonal && ok === null; i += 1) {
+                const h = i < pre.length ? pre[i] : diag;
+                st = step(st, h);
+                held.push(h);
+                if (st.transition) break;
+                if (st.fall) {
+                    ok = st.fall.target.x === centre.x && st.fall.target.y === centre.y;
+                    break;
+                }
+            }
+        } catch (e) {
+            if (!(e instanceof PhysicsV2Error)) throw e;
+            continue;
+        }
+        if (ok) return { held, pre: pre.length };
+    }
+    return null;
 }
 
 /** The walk's own keys during a standing tail — empty, and named as such. */
@@ -17446,6 +17537,597 @@ function execPull(run, perTick, resolved, ctx) {
 }
 
 /**
+ * The PULL rung's stance admission, named so the `rope` verb asks the same one: a swing stance stands in no static
+ * danger volume (the map AVOID forbids). ⛓ fidelity ROPE: hoisted from the rung unchanged.
+ */
+const pullStanceAdmit = (run) => (c) => !dangerVolumes(run, 0).some((v) => rectsOverlapLocal(
+    playerBoxAt(c.x, c.y), v.rect));
+
+/**
+ * ⛓⛓⛓ fidelity ROPESTANCE (wave 23, behind `CONTACT_FIDELITY.ropeCutAnyWeapon`) — **THE ROPE IS CUT BY THE WEAPON THE
+ * RUN HOLDS.** `RopeStart` is in the player's `hitables` (`Player.as:99`) and `genericHit` calls `hit()` with no `t`
+ * (`:1095-1097`), so all three weapons cut it, each through its own filter:
+ *   · the SWORD's slash (`slash()`, `:912-917`): `distanceRectPoint <= slash width`, the line test WAIVED for a Rope —
+ *     the PULL rung's stance and `execPull`, unchanged;
+ *   · the SPEAR's thrust (`spear()`, `:~960-989`): the facing 32x5 rect alone — NO reach gate and NO line test, so a
+ *     stance is a facing whose `spearRect` the press audit lands on the rope (`ropeSpearReach`);
+ *   · FIRE (`fire()`, `:~1026-1032`): the 32x32 area with its 16 px radius cut (`distanceRects`, the transcribed
+ *     `originY`), no aim — a stance is a cell `auditFire` reaches the rope from and nothing else (`ropeFireReach`).
+ * The run cuts with all three already (`levelRun.pullRope`, from the fire arm and the weapon-strike arm); this is the
+ * solver's half. The acts are the existing executors (`runSpear`'s `rope` target, `runFire`'s), never a second press.
+ *
+ * ⛔ THE SELECTED SLOT FIRST, and with the SWORD selected this is never asked (the verb and the rung keep their own
+ * sword path, byte-identical, the switch either way). Otherwise: the selected Spear or Fire, then every held cutting
+ * weapon by slot (sword, fire, spear), each selected by `equip` for its press and the old slot restored after (the
+ * `burn` verb's rule: a later walk's strike policy presses `primary`). A sword slot swings the GHOST sword while that
+ * flag is up (`levelRun.weaponForPress`), which is not this verb's swing, so it is not offered then.
+ */
+const ROPE_CUT_WEAPONS = Object.freeze(['sword', 'fire', 'spear']);
+const ROPE_FACING_NAMES = Object.freeze({ [RIGHT]: 'E', [UP]: 'N', [LEFT]: 'W', [DOWN]: 'S' });
+/** How many tiles out from the rope's box a spear stance is looked for: the thrust is 32 px from a 2 px origin. */
+const ROPE_SPEAR_RING = 3;
+
+/** The weapons a swordless run cuts a rope with, in the order tried: `[{weapon, slot}]` (`slot` null = selected). */
+function ropeCutWeapons(run) {
+    const primary = run.progress('primaryWeapon');
+    const out = [];
+    if (primary === 'spear' || primary === 'fire') out.push({ weapon: primary, slot: null });
+    const slots = run.progress('inventorySlots') ?? [];
+    const inv = run.progress('inventory') ?? {};
+    for (const weapon of ROPE_CUT_WEAPONS) {
+        if (weapon === primary) continue;
+        if (weapon === 'sword' && inv.hasGhostSword) continue;
+        const slot = slots.indexOf(INVENTORY_ITEM_IDS[weapon]);
+        if (slot >= 0) out.push({ weapon, slot });
+    }
+    return out;
+}
+
+/**
+ * ⛓ INTERIM (named; the modelling is queued — the report's hand-over): the drills the run does NOT step. `levelRun`'s
+ * `drillStateFor` admits a drill only in a room whose ONLY census enemy it is (with `drillLive`), so in L28 (two drills
+ * and a bobsoldier) neither drill moves in the model — while the game's `Drill.update` hops one onto a player inside
+ * `runRange` with a clear line and its contact knocks them back. Measured on p4g: the spear stance (136,72) beside
+ * `drill@128,96` took a hit at t59 that the model never saw (probe-seedling-rope-stance, `ropestance-l28-spear`).
+ * A rope stance therefore keeps every candidate's point, and the walk to it, from giving such a drill its trigger:
+ * within `runRange` of its body centre (`DRILL.dx/dy` in from the placement) with a clear "Solid" line. Rooms whose drill IS stepped are priced by the model and need nothing here.
+ */
+/**
+ * The interim's allowance for a PLANNED corridor (waypoints, not the driven walk): L28's fire walk from the L25 arrival
+ * plans through (136,56), exactly `runRange` (48.0 px) from `drill@128,96`'s centre, and the game played it with no hop
+ * (`ropestance-l28-fire`, 0 px); the spear's walk to (184,88) passed ~24 px from it and was hit. 2 px separates them.
+ */
+const ROPE_DRILL_PLAN_SLACK = 2;
+
+function unsteppedDrills(run) {
+    const enemies = run.world.combat?.enemies ?? [];
+    const stepped = CONTACT_FIDELITY.drillLive && enemies.length === 1 && enemies[0].tag === 'drill';
+    return stepped ? [] : enemies.filter((e) => e.tag === 'drill' && !e.removed);
+}
+
+/** The refusal's clause for the interim: which unstepped drills a stance and its walk keep out of, or nothing. */
+function unsteppedDrillNote(run) {
+    const drills = unsteppedDrills(run);
+    return drills.length === 0 ? '' : ` or within the ${DRILL.runRange} px run range of an UNSTEPPED drill `
+        + `([${drills.map((e) => `${e.tag}@${e.x},${e.y}`).join(', ')}]: \`levelRun\` steps a drill only in a room whose `
+        + 'only census enemy it is, so the model cannot price its hop — the ropestance interim)';
+}
+
+/** `pullStanceAdmit`, and (the interim above) out of every unstepped drill's run range. */
+const ropeStanceAdmit = (run) => {
+    const base = pullStanceAdmit(run);
+    const drills = unsteppedDrills(run);
+    return (c) => base(c) && !drills.some((e) => Math.hypot(c.x - (e.x + DRILL.dx), c.y - (e.y + DRILL.dy))
+        <= DRILL.runRange && !run.collideLineSolid(e.x + DRILL.dx, e.y + DRILL.dy, c.x, c.y));
+};
+
+/** The rope's OEL coordinates, from its id (`rope@x,y`) — the spelling `runSpear` / `runFire` name a rope by. */
+function ropeOel(ropeId) {
+    const m = /@(-?\d+),(-?\d+)$/.exec(ropeId);
+    return { x: Number(m[1]), y: Number(m[2]) };
+}
+
+/** What a fire press from `at` does to the rope: `hit` (it is cut), and every OTHER responder it acts on or refuses. */
+function ropeFireReach(run, at, ropeId) {
+    const audit = auditFire(run.world, at, { pushables: run.entities('pushables') });
+    const isRope = (r) => r.as3 === 'RopeStart' && r.id === ropeId;
+    return {
+        hit: audit.modelled.some(isRope),
+        others: [...audit.modelled.filter((r) => !isRope(r)), ...audit.refused]
+            .map((r) => r.id ?? `${r.tag}@${r.x},${r.y}`),
+    };
+}
+
+/** What a spear thrust facing `dir` from `at` does to the rope: `hit`, and every non-inert other responder. */
+function ropeSpearReach(run, at, dir, ropeId) {
+    const audit = auditPress(run.world, spearRect(at.x, at.y, dir),
+        { weapon: 'spear', pushables: run.entities('pushables') });
+    const isRope = (r) => r.as3 === 'RopeStart' && `${r.tag}@${r.x},${r.y}` === ropeId;
+    return {
+        hit: audit.live.some(isRope),
+        others: audit.live.filter((r) => !isRope(r) && PRESS_ARM_POLICY[r.as3]?.policy !== 'inert')
+            .map((r) => `${r.tag}@${r.x},${r.y}`),
+    };
+}
+
+/**
+ * Where a one-tick tap of `dir`'s key from rest at `from` leaves the player once friction stops them — `faceTowards`'
+ * nudge, previewed — or null when the tap does not turn them (pinned against something that way) or leaves them on
+ * something `faceTowards` refuses (its own `plannerObstacleAt` test: a fraction of a pixel into water is lethal).
+ */
+function previewFaceTap(run, from, dir) {
+    const step = run.previewStepper();
+    let p = { ...run.state, x: from.x, y: from.y, vx: 0, vy: 0, direction: (dir + 2) % 4 };
+    p = step(p, new Set([FACING_KEYS[dir]]));
+    const NONE = new Set();
+    for (let i = 0; i < BURN_SETTLE_MAX && (p.vx !== 0 || p.vy !== 0); i += 1) p = step(p, NONE);
+    if (p.direction !== dir || p.vx !== 0 || p.vy !== 0) return null;
+    const o = plannerObstacleAt(run.world, p.x, p.y, null, { ...livePerVisitOpts(run), avoidVolumes: false,
+        noclip: false, noHazards: run.noHazards, inventory: run.progress('inventory') });
+    return o ? null : { x: p.x, y: p.y };
+}
+
+/** A clean spear cut from `at` facing `dir`: the rope, and nothing else that acts. */
+const spearCutsFrom = (run, at, dir, ropeId) => {
+    const r = ropeSpearReach(run, at, dir, ropeId);
+    return r.hit && r.others.length === 0;
+};
+
+/** How many stances a swordless cut walks toward before it refuses (each refused walk spent no tick). */
+const ROPE_STANCE_TRIES = 3;
+
+/**
+ * The stances of `viable` (in its order) the walk can plan to, at most `ROPE_STANCE_TRIES`, PREFERRING the ones a
+ * corridor with the danger map's static volumes forbidden reaches (the AVOID rung's own plan, `planWaypoints` +
+ * `extraVolumes`), then any `stanceReaches` answers (the lazy hypothesis included), as every stance verb asks.
+ * ⛔ A STATIC PLAN IS NOT THE WALK, so this returns a LIST and the executor walks it in order (`execRopeCut`): a cut is
+ * wanted from anywhere along a 48-112 px span, and the nearest stance can be the dangerous one — L16's fire stance
+ * (24,40) from the L15 arrival sits in `bob@16,16`'s leash beside `sandtrap@32,32`, and the walk there exhausts the
+ * ladder (measured) while (88,40) is the other end of the same rope.
+ * @returns `[{c, reached}]`, empty when none plans.
+ */
+function rankRopeStances(run, viable, contacts, blocked) {
+    const vols = dangerVolumes(run, 0);
+    const drills = unsteppedDrills(run);
+    /**
+     * ⛓ The drill INTERIM (`unsteppedDrills`): the walk's own pricing cannot see such a body, so in a room that holds
+     * one a stance is kept only when the corridor the walk will plan to it (`planWaypoints`, the walk's options) never
+     * gives such a drill its trigger (in `runRange` with a clear line), sampled every 2 px. No such room: never asked.
+     */
+    const clearOfDrills = (c) => {
+        if (drills.length === 0) return true;
+        let wps;
+        try {
+            wps = planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null, solverPlanOpts(run, contacts));
+        } catch (e) {
+            if (!(e instanceof BotDriverV2Error)) throw e;
+            return false;
+        }
+        const pts = [{ x: run.state.x, y: run.state.y }, ...wps.map((w) => ({ x: w.x, y: w.y })), { x: c.x, y: c.y }];
+        // `Drill.update`'s own trigger: within `runRange` AND no "Solid" on the line (the run's `collideLineSolid`).
+        const inRange = (x, y) => drills.some((e) => {
+            const dx = e.x + DRILL.dx;
+            const dy = e.y + DRILL.dy;
+            return Math.hypot(x - dx, y - dy) <= DRILL.runRange - ROPE_DRILL_PLAN_SLACK
+                && !run.collideLineSolid(dx, dy, x, y);
+        });
+        for (let i = 1; i < pts.length; i += 1) {
+            const n = Math.max(1, Math.ceil(Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y) / 2));
+            for (let k = 0; k <= n; k += 1) {
+                if (inRange(pts[i - 1].x + (pts[i].x - pts[i - 1].x) * k / n,
+                    pts[i - 1].y + (pts[i].y - pts[i - 1].y) * k / n)) return false;
+            }
+        }
+        return true;
+    };
+    const avoids = (c) => {
+        try {
+            planWaypoints(run.world, run.state, { x: c.x, y: c.y }, null,
+                solverPlanOpts(run, contacts, { extraVolumes: vols }));
+            return true;
+        } catch (e) {
+            if (!(e instanceof BotDriverV2Error)) throw e;
+            return false;
+        }
+    };
+    const out = [];
+    const taken = new Set();
+    for (const c of viable) {
+        if (out.length >= ROPE_STANCE_TRIES) return out;
+        if (avoids(c) && clearOfDrills(c)) { out.push({ c, reached: { discharged: [] } }); taken.add(c); }
+    }
+    const hypothesis = lazyStanceHypothesis(run, blocked, contacts);
+    for (const c of viable) {
+        if (out.length >= ROPE_STANCE_TRIES) return out;
+        if (taken.has(c) || !clearOfDrills(c)) continue;
+        const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
+        if (reached) out.push({ c, reached });
+    }
+    return out;
+}
+
+/**
+ * The fire stances: `burnStanceCandidates` over the window around the rope (walkable tile centres whose `fireRect`
+ * overlaps it, nearest the player first), each asked of `ropeFireReach` — from the centre, then from a lean against the
+ * rope (`burnLeanKey` / `previewLean`, the `burn` verb's) — out of every danger volume, ranked (`rankRopeStances`).
+ * @returns `{approach: [{x, y, at, lean}], discharged}` (`approach` empty: the live position is the stance).
+ */
+function ropeFireStance(run, rope, contacts, blocked) {
+    const admit = ropeStanceAdmit(run);
+    const here = { x: run.state.x, y: run.state.y };
+    const live = ropeFireReach(run, here, rope.ropeId);
+    if (live.hit && live.others.length === 0 && admit(here)) return { approach: [], discharged: [] };
+    const candidates = burnStanceCandidates(run, rope, burnWindowTiles(rope));
+    let missed = 0;
+    let crowded = 0;
+    let unsafe = 0;
+    const viable = [];
+    for (const c of candidates) {
+        let reach = ropeFireReach(run, c, rope.ropeId);
+        let lean = null;
+        if (!reach.hit) {
+            const key = burnLeanKey(c, rope);
+            const leaned = key ? previewLean(run, c, key) : null;
+            const again = leaned ? ropeFireReach(run, leaned, rope.ropeId) : null;
+            if (!again || !again.hit) { missed += 1; continue; }
+            reach = again;
+            lean = { key, at: leaned };
+        }
+        if (reach.others.length > 0) { crowded += 1; continue; }
+        if (!admit(c) || (lean && !admit(lean.at))) { unsafe += 1; continue; }
+        viable.push({ x: c.x, y: c.y, lean });
+    }
+    const ranked = rankRopeStances(run, viable, contacts, blocked);
+    if (ranked.length > 0) {
+        return {
+            approach: ranked.map(({ c }) => ({ x: c.x, y: c.y, at: c.lean ? { ...c.lean.at } : { x: c.x, y: c.y },
+                lean: c.lean ? c.lean.key : null })),
+            discharged: ranked[0].reached.discharged,
+        };
+    }
+    throw new SolverRefusal(`solverBot: no REACHABLE stance for a fire press at ${rope.ropeId} in level ${run.level} — `
+        + `${candidates.length} walkable cell(s) put \`fireRect\` on the rope; ${missed} were cut by the 16 px radius `
+        + `(from the cell centre and from a lean against the rope), ${crowded} also reached another fire responder, `
+        + `${unsafe} stand inside a danger volume${unsteppedDrillNote(run)}, and ${viable.length} plan no corridor from `
+        + `(${run.state.x},${run.state.y})${unsteppedDrills(run).length ? ' clear of it' : ''}.`,
+    { obstacle: { kind: 'solid', id: rope.ropeId } });
+}
+
+/**
+ * The spear stances: tile centres within `ROPE_SPEAR_RING` tiles of the rope's box, each with the first facing whose
+ * thrust cuts it cleanly BOTH from the cell (a walk that arrives facing that way presses there) and from where the face
+ * tap leaves it (`previewFaceTap`); out of every danger volume, nearest the player first, ranked (`rankRopeStances`).
+ * @returns `{approach: [{x, y, dir, facing}], dir?, facing?, discharged}` (`approach` empty: the live position is the
+ *   stance, facing `dir`).
+ */
+function ropeSpearStance(run, rope, contacts, blocked) {
+    const admit = ropeStanceAdmit(run);
+    const here = { x: run.state.x, y: run.state.y };
+    for (const dir of [RIGHT, UP, LEFT, DOWN]) {
+        const tapped = run.state.direction === dir ? here : previewFaceTap(run, here, dir);
+        if (tapped && spearCutsFrom(run, tapped, dir, rope.ropeId) && admit(here)) {
+            return { approach: [], dir, facing: ROPE_FACING_NAMES[dir], discharged: [] };
+        }
+    }
+    const levelW = Number.isFinite(run.world.width) ? run.world.width * TILE_SIZE : Infinity;
+    const levelH = Number.isFinite(run.world.height) ? run.world.height * TILE_SIZE : Infinity;
+    const opts = solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 });
+    const r = rope.rect;
+    const cells = [];
+    for (let ty = Math.floor(r.y / TILE_SIZE) - ROPE_SPEAR_RING; ty <= Math.floor((r.bottom - 1) / TILE_SIZE)
+        + ROPE_SPEAR_RING; ty += 1) {
+        for (let tx = Math.floor(r.x / TILE_SIZE) - ROPE_SPEAR_RING; tx <= Math.floor((r.right - 1) / TILE_SIZE)
+            + ROPE_SPEAR_RING; tx += 1) {
+            const c = { x: tx * TILE_SIZE + TILE_SIZE / 2, y: ty * TILE_SIZE + TILE_SIZE / 2 };
+            if (c.x < 0 || c.y < 0 || c.x > levelW || c.y > levelH) continue;
+            cells.push({ ...c, d: Math.hypot(c.x - run.state.x, c.y - run.state.y) });
+        }
+    }
+    cells.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
+    let candidates = 0;
+    let unsafe = 0;
+    const viable = [];
+    for (const c of cells) {
+        if (plannerObstacleAt(run.world, c.x, c.y, null, opts)) continue;
+        const dir = [RIGHT, UP, LEFT, DOWN].find((d) => {
+            if (!spearCutsFrom(run, c, d, rope.ropeId)) return false;
+            const tapped = previewFaceTap(run, c, d);
+            return tapped !== null && spearCutsFrom(run, tapped, d, rope.ropeId);
+        });
+        if (dir === undefined) continue;
+        candidates += 1;
+        if (!admit(c)) { unsafe += 1; continue; }
+        viable.push({ x: c.x, y: c.y, dir });
+    }
+    const ranked = rankRopeStances(run, viable, contacts, blocked);
+    if (ranked.length > 0) {
+        return {
+            approach: ranked.map(({ c }) => ({ x: c.x, y: c.y, dir: c.dir, facing: ROPE_FACING_NAMES[c.dir] })),
+            discharged: ranked[0].reached.discharged,
+        };
+    }
+    throw new SolverRefusal(`solverBot: no REACHABLE stance for a spear thrust at ${rope.ropeId} in level `
+        + `${run.level} — ${candidates} walkable cell(s) within ${ROPE_SPEAR_RING} tiles have a facing whose 32x5 rect `
+        + `cuts the rope and nothing else (from the cell and after the face tap); ${unsafe} stand inside a danger volume`
+        + `${unsteppedDrillNote(run)} and ${viable.length} plan no corridor from (${run.state.x},${run.state.y})`
+        + `${unsteppedDrills(run).length ? ' clear of it' : ''}.`,
+    { obstacle: { kind: 'solid', id: rope.ropeId } });
+}
+
+/**
+ * RESOLVE a swordless cut: the first weapon of `ropeCutWeapons` with a stance (the sword's by `deriveSwingStance` and
+ * `pullStanceAdmit`, as the PULL rung derives it). `null` when the run holds no weapon that cuts; a `SolverRefusal`
+ * naming every weapon's own refusal when none has a stance.
+ */
+function resolveRopeCut(run, rope, contacts, blocked = []) {
+    const weapons = ropeCutWeapons(run);
+    if (weapons.length === 0) return null;
+    const tried = [];
+    for (const w of weapons) {
+        try {
+            if (w.weapon === 'sword') {
+                if (!(rope.ropeT >= 0)) {
+                    tried.push({ option: `cut ${rope.ropeId} with the sword`, why: `it publishes no group (t=`
+                        + `${rope.ropeT ?? -1}), and \`execPull\`'s post-condition is that group's latch` });
+                    continue;
+                }
+                const { stance, discharged } = deriveSwingStance(run, { rect: rope.rect, id: rope.ropeId }, contacts,
+                    blocked, ({ candidates, outOfReach, noRect, unsafe }) => `solverBot: no REACHABLE stance for a swing `
+                        + `at ${rope.ropeId} in level ${run.level} — ${candidates.length} cell(s) put the slash rect on `
+                        + `the rope, ${unsafe} of them inside a danger volume, and none of the rest plans a corridor; `
+                        + `${outOfReach} more were beyond SLASH_REACH (${SLASH_REACH} px) and ${noRect} were in reach `
+                        + 'with the rect pointing elsewhere.', pullStanceAdmit(run));
+                return { weapon: 'sword', slot: w.slot, stance, discharged, tried };
+            }
+            const s = w.weapon === 'fire' ? ropeFireStance(run, rope, contacts, blocked)
+                : ropeSpearStance(run, rope, contacts, blocked);
+            return { weapon: w.weapon, slot: w.slot, ...s, tried };
+        } catch (e) {
+            if (!(e instanceof SolverRefusal)) throw e;
+            tried.push({ option: `cut ${rope.ropeId} with the ${w.weapon}`, why: e.message });
+        }
+    }
+    throw new SolverRefusal(`solverBot: no held weapon cuts ${rope.ropeId} from a REACHABLE stance in level `
+        + `${run.level} — ${tried.map((t) => `${t.option}: ${t.why}`).join(' | ')}`,
+    { obstacle: { kind: 'solid', id: rope.ropeId } });
+}
+
+/**
+ * `resolveRopeCut`'s answer as a `rope` work order: the sword path's fields plus the weapon's own. A spear or fire order
+ * carries `stance: null` and its ranked `approach`, which the EXECUTOR walks (a caller walks only a `stance`).
+ */
+function ropeCutOrder(run, rope, cut) {
+    const group = rope.ropeT >= 0 ? rope.ropeT : null;
+    return {
+        strategy: 'rope',
+        rope: rope.ropeId,
+        group,
+        traps: (run.world.arrowTraps ?? []).filter((x) => group !== null && x.t === group).map((x) => x.id),
+        target: rope.rect,
+        weapon: cut.weapon,
+        slot: cut.slot,
+        stance: cut.weapon === 'sword' ? cut.stance : null,
+        ...(cut.weapon === 'sword' ? {} : { approach: cut.approach }),
+        ...(cut.weapon === 'spear' && cut.approach.length === 0 ? { dir: cut.dir, facing: cut.facing } : {}),
+        discharged: cut.discharged,
+        rejected: [...cut.tried, ...hypothesisRejection(cut.discharged)],
+    };
+}
+
+/**
+ * Executor: a swordless cut — the order `resolveRopeCut` made, driven by the weapon's own executor: `execPull` for a
+ * sword selected by `equip`, `runFire`'s `rope` target, `runSpear`'s `rope` target.
+ *   · WALK the ranked `approach` in order (`ctx.walkTo`), the next one when a walk refuses having spent no tick (the
+ *     turret spear kill's rule); a walk that cut it on the way (a strike) is the post-condition already met;
+ *   · SETTLE (both presses refuse a moving stance), re-ask the reach where the walk actually stopped (a miss is a
+ *     stance finding, refused by name), select the weapon's slot, press, select the old slot again.
+ * The post-condition is the run's own `ropePulls` row (`execRope` asserts it).
+ */
+function execRopeCut(run, perTick, resolved, ctx) {
+    const refuse = (why) => {
+        throw new SolverRefusal(why, { obstacle: { kind: 'solid', id: resolved.rope } });
+    };
+    const from = perTick.length;
+    const pulled = () => (run.ledger('ropePulls') ?? []).find((p) => p.id === resolved.rope) ?? null;
+    const base = { weapon: resolved.weapon, target: resolved.rope, group: resolved.group, slot: resolved.slot };
+    if (resolved.slot !== null && typeof ctx.equip !== 'function') {
+        refuse(`${ctx.what}: cutting ${resolved.rope} with the ${resolved.weapon} needs its slot (${resolved.slot}) `
+            + 'selected, and this caller hands no `equip`.');
+    }
+    let stance = resolved.stance ?? null;
+    let pose = { lean: null, dir: resolved.dir, facing: resolved.facing };
+    const approach = resolved.approach ?? [];
+    if (approach.length > 0) {
+        if (typeof ctx.walkTo !== 'function') {
+            refuse(`${ctx.what}: the ${resolved.weapon} stance for ${resolved.rope} is a walk away, and this caller `
+                + 'hands no `walkTo`.');
+        }
+        const whys = [];
+        for (const a of approach) {
+            const before = perTick.length;
+            try {
+                if (!hasArrived(run.state, a, DEFAULT_TOLERANCE)) {
+                    ctx.walkTo(ctx.goal, { x: a.x, y: a.y },
+                        { what: `${ctx.what} -> ${resolved.weapon} stance (${a.x},${a.y})` });
+                }
+                stance = { x: a.x, y: a.y };
+                pose = { lean: a.lean ?? null, dir: a.dir, facing: a.facing };
+                break;
+            } catch (e) {
+                if (!(e instanceof SolverRefusal) || perTick.length !== before) throw e;
+                whys.push(`(${a.x},${a.y}): ${e.message.split('\n')[0].slice(0, 240)}`);
+            }
+        }
+        if (stance === null) {
+            refuse(`${ctx.what}: no ${resolved.weapon} stance for ${resolved.rope} is walkable — `
+                + `${whys.join(' | ')}`);
+        }
+    }
+    if (pulled()) {
+        return { ...base, stance, from, ticks: perTick.length - from, pressTick: null,
+            pulledBy: `the approach — ${resolved.rope} was pulled at tick ${pulled().t} on the walk to the stance` };
+    }
+    const prior = run.progress('primary');
+    const select = () => {
+        if (resolved.slot !== null && run.progress('primary') !== resolved.slot) ctx.equip(resolved.slot);
+    };
+    const restore = () => { if (run.progress('primary') !== prior) ctx.equip(prior); };
+    if (resolved.weapon === 'sword') {
+        select();
+        const rec = execPull(run, perTick, { rope: resolved.rope, group: resolved.group, traps: resolved.traps,
+            target: resolved.target, stance }, { what: ctx.what });
+        restore();
+        return { ...rec, ...base, stance, restoredSlot: prior };
+    }
+    const NO_KEYS = new Set();
+    const settle = (what) => {
+        for (let i = 0; run.state.vx !== 0 || run.state.vy !== 0; i += 1) {
+            if (i > BURN_SETTLE_MAX) refuse(`${ctx.what}: ${what} never came to rest.`);
+            perTick.push(NO_KEYS);
+            const { transition } = run.advance(NO_KEYS);
+            if (transition) {
+                refuse(`${ctx.what}: the run crossed to level ${transition.to_level} while settling after ${what}.`);
+            }
+        }
+    };
+    settle(`the walk to the ${resolved.weapon} stance`);
+    const oel = ropeOel(resolved.rope);
+    let rec;
+    if (resolved.weapon === 'fire') {
+        if (pose.lean) {
+            const held = new Set([pose.lean]);
+            for (let i = 0; i < BURN_LEAN_MAX; i += 1) {
+                const before = { x: run.state.x, y: run.state.y };
+                perTick.push(held);
+                const { transition } = run.advance(held);
+                if (transition) {
+                    refuse(`${ctx.what}: the lean toward ${resolved.rope} crossed to level ${transition.to_level}.`);
+                }
+                if (run.state.x === before.x && run.state.y === before.y) break;
+            }
+            settle('the lean');
+        }
+        const reach = ropeFireReach(run, run.state, resolved.rope);
+        if (!reach.hit || reach.others.length > 0) {
+            refuse(`${ctx.what}: the walk came to rest at (${run.state.x},${run.state.y}) and a fire press from there `
+                + `${reach.hit ? 'reaches' : 'misses'} ${resolved.rope}${reach.others.length
+                    ? ` and also reaches [${reach.others.join(', ')}]` : ''}. A walk that ends somewhere else than the `
+                + 'stance is a corridor finding, not a rope one.');
+        }
+        select();
+        rec = runFire(run, perTick, { rope: oel, wait: FIRE_WINDOW.endTick }, `${ctx.what} (${resolved.rope})`);
+    } else {
+        const at = run.state.direction === pose.dir ? { x: run.state.x, y: run.state.y }
+            : previewFaceTap(run, run.state, pose.dir);
+        if (!at || !spearCutsFrom(run, at, pose.dir, resolved.rope)) {
+            refuse(`${ctx.what}: the walk came to rest at (${run.state.x},${run.state.y}) and a thrust facing `
+                + `${pose.facing} from there${at ? '' : ' (after the face tap, which does not turn the player)'} does `
+                + `not cut ${resolved.rope} cleanly. A walk that ends somewhere else than the stance is a corridor `
+                + 'finding, not a rope one.');
+        }
+        select();
+        rec = runSpear(run, perTick, { rope: oel, facing: pose.facing }, `${ctx.what} (${resolved.rope})`);
+    }
+    restore();
+    return { ...base, stance, from, ticks: perTick.length - from, pressTick: rec?.pressTick ?? null,
+        restoredSlot: prior };
+}
+
+/**
+ * ⛓⛓⛓ fidelity ROPE (wave 22, behind `CONTACT_FIDELITY.ropeCutVerb`) — RESOLVE the `rope` work order: a
+ * `RopeStart` cut ON PURPOSE, from a `clear-tag` on its own tag (rules-2's `rules-rope-events`: `{16,0}`
+ * `rope@32,16`, `{28,0}` `rope@160,64`) or from a frontier corridor its span walls (L39's `rope@96,384`).
+ *
+ * ⛔ NO SECOND CUT. The stance is the PULL rung's (`deriveSwingStance` with `pullStanceAdmit`), the act is
+ * `execPull` (aim, swing, the group LATCHED on the live run), and the cut itself is the run's `pullRope`
+ * (`Player.genericHit` → `RopeStart.hit()`: shrink to the pulley cell, `setPersistence(tag, false)`, publish `t`).
+ *
+ * `held: false`, named, when the run cannot cut it:
+ *   · the rope is ALREADY pulled (this visit, or `check()` re-pulled it at the build): `hit()` is entirely inside
+ *     `if (!activate)`, and what stands is the one-cell pulley Solid, which no verb removes;
+ *   · the `primary` slot is not the SWORD — the pull this verb derives is `execPull`'s sword swing. The game also cuts
+ *     with the Spear's thrust and with Fire (`Player.as:989,1032`, both `genericHit`); neither arm is driven here.
+ *   · the rope publishes no group (`ropePublish` null): `execPull`'s post-condition is the group's latch.
+ */
+function resolveRopeStrategy(run, obstacle, contacts, blocked = []) {
+    const rope = (run.world.solids ?? []).find((s) => s.ropeId === obstacle.id);
+    if (!rope) return null;
+    const cannot = (why) => ({ strategy: 'rope', held: false, rope: obstacle.id,
+        rejected: [{ option: `rope ${obstacle.id}`, why }] });
+    if ((run.entities('pulledRopes') ?? new Set()).has(rope.ropeId)) {
+        return cannot(`${rope.ropeId} is already pulled${rope.bootPulled ? ' (its tag is cleared, so '
+            + '`RopeStart.check()` re-pulled it at the build)' : ' this visit'}: \`hit()\` is entirely inside `
+            + '`if (!activate)`, and what stands is the one-cell pulley Solid (`setHitbox(16, 16, 8, 8)`), which no '
+            + 'verb removes');
+    }
+    const weapon = run.progress('primaryWeapon');
+    if (weapon !== 'sword') {
+        if (!CONTACT_FIDELITY.ropeCutAnyWeapon) {
+            return cannot(`the run's \`primary\` slot ${weapon === null ? 'holds NOTHING' : `fires \`${weapon}\``} — `
+                + 'the cut this verb drives is the PULL rung\'s SWORD swing (`execPull`). The game also cuts with the '
+                + 'Spear\'s thrust and with Fire (`Player.as:989,1032` → `genericHit` → `RopeStart.hit()`); neither arm '
+                + 'is driven by this verb');
+        }
+        // ⛓ fidelity ROPESTANCE: the spear's thrust, fire, or a held sword selected for the swing.
+        const cut = resolveRopeCut(run, rope, contacts, blocked);
+        if (cut === null) {
+            return cannot(`the run's \`primary\` slot ${weapon === null ? 'holds NOTHING' : `fires \`${weapon}\``} and `
+                + 'no slot holds a Sword, Fire or Spear — the three weapons whose press reaches `RopeStart.hit()` '
+                + '(`Player.genericHit`, `Player.as:1095-1097`). The wand\'s shot does not (`WandShot.checkEntity` has no '
+                + 'rope arm).');
+        }
+        return ropeCutOrder(run, rope, cut);
+    }
+    // `activators.ropePublish`'s own test: a rope publishes its `t` when `t >= 0`.
+    const pub = rope.ropeT >= 0 ? { group: rope.ropeT } : null;
+    if (!pub) {
+        return cannot(`${rope.ropeId} publishes no group (t=${rope.ropeT ?? -1}), and \`execPull\`'s `
+            + 'post-condition is that group\'s latch on the live run');
+    }
+    const { stance, discharged } = deriveSwingStance(run, { rect: rope.rect, id: rope.ropeId }, contacts, blocked,
+        ({ candidates, outOfReach, noRect, unsafe }) => `solverBot: no REACHABLE stance for a swing at `
+            + `${rope.ropeId} in level ${run.level} — ${candidates.length} cell(s) put the slash rect on the rope, `
+            + `${unsafe} of them inside a danger volume, and none of the rest plans a corridor from `
+            + `(${run.state.x},${run.state.y}); ${outOfReach} more were beyond SLASH_REACH (${SLASH_REACH} px) and `
+            + `${noRect} were in reach with the rect pointing elsewhere.`,
+        pullStanceAdmit(run));
+    const group = pub.group;
+    return {
+        strategy: 'rope',
+        rope: rope.ropeId,
+        group,
+        traps: (run.world.arrowTraps ?? []).filter((x) => x.t === group).map((x) => x.id),
+        target: rope.rect,
+        stance,
+        discharged,
+        rejected: hypothesisRejection(discharged),
+    };
+}
+
+/**
+ * Executor: the `rope` verb — `execPull` (the PULL rung's aim, swing and latch), then the cut's own write asserted
+ * on the run: its `ropePulls` row. A `clear-tag` then finishes on `earnedClears` as every clear-tag does.
+ */
+function execRope(run, perTick, resolved, ctx) {
+    if (resolved.held === false) {
+        throw new SolverRefusal(`${ctx.what}: ${resolved.rope} cannot be cut by this run — `
+            + `${resolved.rejected[0].why}`, { obstacle: { kind: 'solid', id: resolved.rope } });
+    }
+    // ⛓ fidelity ROPESTANCE: a swordless order (`resolveRopeCut`) carries its `weapon`; the sword path carries none.
+    const record = resolved.weapon !== undefined ? execRopeCut(run, perTick, resolved, ctx) : execPull(run, perTick, {
+        rope: resolved.rope, group: resolved.group, traps: resolved.traps,
+        target: resolved.target, stance: resolved.stance,
+    }, { what: ctx.what });
+    const pulled = (run.ledger('ropePulls') ?? []).find((p) => p.id === resolved.rope) ?? null;
+    if (!pulled) {
+        throw new SolverRefusal(`${ctx.what}: group t=${resolved.group} latched, and the run's \`ropePulls\` holds `
+            + `no pull of ${resolved.rope} — the latch came from another publisher, so the rope's own tag is unwritten`,
+        { obstacle: { kind: 'solid', id: resolved.rope } });
+    }
+    return { ...record, verb: 'rope', flag: { ...pulled.flag }, pulledAt: pulled.t };
+}
+
+/**
  * ⛓⛓⛓ ⚖ §11.8a RULING 2's LADDER — THE COMBAT POLICY'S DECISION ORDER.
  *
  *   AVOID -> TIME -> BAIT -> KILL, cheapest first, and every escalation is a
@@ -19842,6 +20524,36 @@ function solveSegmentUnder({
         solverEquips.push({ t: run.ticksCompleted, slot });
     };
     /**
+     * ⛓⛓ fidelity BOSSFORK D1b (`CONTACT_FIDELITY.tentacleBeastFight`; OFF the run has no fight and this returns at
+     * once) — **A MOUTH STILL TO OPEN.** The beast's report lands as its "dying" starts, and the mouth Teleporter only
+     * when "dying" ends (`TentacleBeast.as`; `tentacleBeast.js` pushes `mouth`). The `tentaclebeast` verb itself plays
+     * through it, but a reach-exit at the mouth's cell asked inside that window found no teleporter and refused: the JS
+     * page's continue request after the clear-tag (sweep leg 505, run 39659335148, request 1 at t2866: the report at
+     * t2864). The walk now idles until the run builds the mouth, bounded by the anim, and refuses by name on a crossing,
+     * a hit or the bound (an idle that takes damage is not a plan).
+     */
+    const awaitTentacleMouth = (goal) => {
+        const f = CONTACT_FIDELITY.tentacleBeastFight ? run.entities('tentacleBeastFight') : null;
+        if (!f || f.mouth || !f.beast.dead || f.beast.anim !== 'dying') return;
+        if (goal.exit.x !== f.beast.x - 8 || goal.exit.y !== f.beast.y - 8) return;
+        const what = `solverBot(${name}) reach-exit (${goal.exit.x},${goal.exit.y}): ${f.id}'s mouth`;
+        const bound = tentacleAnimTicks(...TENTACLE_BEAST_ANIMS.dying);
+        const hits = (run.ledger('playerHits') ?? []).length;
+        const idle = new Set();
+        for (let waited = 0; waited <= bound; waited += 1) {
+            if (run.entities('tentacleBeastFight')?.mouth) return;
+            perTick.push(idle);
+            const { transition } = run.advance(idle);
+            if (transition) {
+                refuse(`${what}: the run crossed to level ${transition.to_level} while the beast was dying`, { goal });
+            }
+            if ((run.ledger('playerHits') ?? []).length > hits) {
+                refuse(`${what}: the player was hit while waiting for the mouth (the beast is "dying")`, { goal });
+            }
+        }
+        refuse(`${what} is not open ${bound + 1} ticks into "dying"`, { goal });
+    };
+    /**
      * ⛓ hammer-phase B3c — the replay's two other inputs, shared by the fork and the rewind: this segment's apitem
      * takes (tape index, `apItemsTaken`) and the clock check at the end of the caller's prefix.
      */
@@ -21607,7 +22319,9 @@ function solveSegmentUnder({
          * swing; a swordless climb keeps its words) and only in a room with a
          * silencer at all (`roomHasLaneSilencer`: L16 alone in the atlas).
          */
-        if (!silencer && corridor && run.progress('primaryWeapon') === 'sword'
+        // ⛓ fidelity ROPESTANCE (`ropeCutAnyWeapon`, OFF): or with any weapon that cuts a rope (`ropeCutWeapons`).
+        if (!silencer && corridor && (run.progress('primaryWeapon') === 'sword'
+            || (CONTACT_FIDELITY.ropeCutAnyWeapon && ropeCutWeapons(run).length > 0))
             && roomHasLaneSilencer(run)) {
             const passed = new Set(dangerExcept ?? []);
             for (let next = hit, n = 0; next && !silencer && n < LATER_LANE_PROBES; n += 1) {
@@ -21620,8 +22334,26 @@ function solveSegmentUnder({
             const ropeId = silencer.rope.ropeId;
             let pull = null;
             let pullWhy = null;
+            // ⛓ fidelity ROPESTANCE: a swordless cut's order (`resolveRopeCut`), switch ON only.
+            let cut = null;
             const weapon = run.progress('primaryWeapon');
-            if (weapon !== 'sword') {
+            if (weapon !== 'sword' && CONTACT_FIDELITY.ropeCutAnyWeapon) {
+                try {
+                    const answer = resolveRopeCut(run, silencer.rope, contacts, []);
+                    if (answer === null) {
+                        pullWhy = `${ropeId} silences [${silencer.traps.join(', ')}] (group t=${silencer.group}), but `
+                            + `the run's \`primary\` slot ${weapon === null ? 'holds NOTHING' : `fires \`${weapon}\``} `
+                            + 'and no slot holds a Sword, Fire or Spear — the weapons whose press cuts a rope. The '
+                            + 'weapon is a SUB-ORDER the macro layer owes.';
+                    } else {
+                        cut = ropeCutOrder(run, silencer.rope, answer);
+                    }
+                } catch (e) {
+                    if (!(e instanceof SolverRefusal)) throw e;
+                    pullWhy = `${ropeId} silences [${silencer.traps.join(', ')}] (group `
+                        + `t=${silencer.group}), but ${e.message}`;
+                }
+            } else if (weapon !== 'sword') {
                 // ⛔ `break`'s own gate: the pull this rung derives is a SWORD swing.
                 pullWhy = `${ropeId} silences [${silencer.traps.join(', ')}] (group `
                     + `t=${silencer.group}), but the run's \`primary\` slot `
@@ -21641,13 +22373,36 @@ function solveSegmentUnder({
                             + 'reach with the rect pointing elsewhere.',
                         // ⛔ THE STANCE IS STOOD IN FOR A SWING, so it must be out of every
                         // static danger volume — the same map AVOID forbids.
-                        (c) => !dangerVolumes(run, 0).some((v) => rectsOverlapLocal(
-                            playerBoxAt(c.x, c.y), v.rect)));
+                        pullStanceAdmit(run));
                 } catch (e) {
                     if (!(e instanceof SolverRefusal)) throw e;
                     pullWhy = `${ropeId} silences [${silencer.traps.join(', ')}] (group `
                         + `t=${silencer.group}), but ${e.message}`;
                 }
+            }
+            if (cut) {
+                // ⛓ fidelity ROPESTANCE — the same rung row, the weapon named; the executor walks the ranked
+                // approach (a sword selected by `equip` keeps the rung's own stance walk). The post-condition is the
+                // rung's: the silencer's group LATCHED on the live run (`execPull`'s, asked of a spear or fire cut).
+                rowFor('pull', refused, { target: ropeId, group: silencer.group,
+                    stance: cut.stance ?? cut.approach?.[0] ?? null, weapon: cut.weapon });
+                pullingRopes.add(ropeId);
+                let record;
+                try {
+                    if (cut.stance) walkTo(goal, cut.stance, { what: `${what} -> pull (${ropeId}) stance` });
+                    record = execRopeCut(run, perTick, { ...cut, traps: silencer.traps },
+                        { what: `${what} -> pull (${ropeId})`, walkTo, goal, equip });
+                } finally {
+                    pullingRopes.delete(ropeId);
+                }
+                if (!(run.entities('latchedGroups') ?? new Set()).has(silencer.group)) {
+                    throw new SolverRefusal(`${what} -> pull (${ropeId}): cut with the ${cut.weapon} and group `
+                        + `t=${silencer.group} is NOT latched in the live run — the rope's \`set activate\` publishes `
+                        + `its group on the hit that lands, so [${silencer.traps.join(', ')}] still fire.`,
+                    { obstacle: { kind: 'solid', id: ropeId } });
+                }
+                records.push({ goal: goal.kind, strategy: 'pull', ...record, silenced: silencer.traps });
+                return { escalations };
             }
             if (pull) {
                 rowFor('pull', refused, { target: ropeId, group: silencer.group,
@@ -24063,8 +24818,20 @@ function solveSegmentUnder({
                 + `${flag.level}'s, and only that level's own world holds the obstacle. The macro layer `
                 + 'owes the crossing first.');
         }
+        /**
+         * ⛓ fidelity ROPE (behind `CONTACT_FIDELITY.ropeCutVerb`) — **A CUT IS NO `earnedClears` ROW.** `pullRope`
+         * banks the rope's flag for the next build (`pendingEarnedClears`) and appends a `ropePulls` row carrying it,
+         * and `levelRun.earnedClearsNow` has no rope arm (measured: L16's and L28's cuts leave it empty). So a rope's
+         * clear-tag finishes on the run's own `ropePulls` row for this flag, stamped AT the write (`hit()` runs
+         * `setPersistence(tag, false)`), which `clearTagLanded`'s generic arm reads as "the run is past its tick".
+         */
+        const ropeWritten = () => {
+            if (!(CONTACT_FIDELITY.ropeCutVerb && cls === 'rope')) return null;
+            const p = (run.ledger('ropePulls') ?? []).find((r) => r.flag?.level === flag.level && r.flag?.tag === flag.tag);
+            return p ? { level: flag.level, tag: flag.tag, by: p.id, t: p.t } : null;
+        };
         const written = () => run.ledger('earnedClears')
-            .find((c) => c.level === flag.level && c.tag === flag.tag) ?? null;
+            .find((c) => c.level === flag.level && c.tag === flag.tag) ?? ropeWritten() ?? null;
         /** The game has written it (`clearTagLanded`). */
         const landed = () => clearTagLanded(run, written(), id);
         const done = (arm, extra = {}) => {
@@ -24279,6 +25046,17 @@ function solveSegmentUnder({
             done('verb', { strategy: verb, waited, ...record });
             return;
         }
+        /**
+         * ⛓ fidelity ROPE (behind `CONTACT_FIDELITY.ropeCutVerb`) — **A CUT ROPE STILL STANDS.** `RopeStart.check()`
+         * re-hits a rope whose tag is cleared (`:31-38`), and `hit()` SHRINKS it to the pulley cell rather than removing
+         * it, so `world.solids` holds it and the arm below would not call it `already-clear`. The build's `bootPulled`
+         * is that `check()`: the boot's persistence holds the flag cleared, which is the game's own `already-clear`.
+         */
+        if (CONTACT_FIDELITY.ropeCutVerb && cls === 'rope' && solid?.ropeId && solid.bootPulled === true) {
+            done('already-clear', { why: `${solid.ropeId}'s tag is cleared at the build: \`check()\` re-pulled it `
+                + '(shrunk to the pulley cell, its group re-published) — the boot\'s persistence holds the cut' });
+            return;
+        }
         if (!solid && !watcher) {
             done('already-clear', { why: `no ${cls ?? 'solid'} stands at (${goal.at.x},${goal.at.y}) in level `
                 + `${run.level}'s live world and the ledger is silent: the build left it out, which is the `
@@ -24350,6 +25128,10 @@ function solveSegmentUnder({
         const record = clearTagExecutor(verb)(run, perTick, resolved, {
             maxTicksPerTarget, economies, dashMode, what: `${whatCT} -> ${verb}`,
             before, walkTo, goal, equip, rewind,
+            // ⛓ fidelity BOSSFORK D1: the segment's own fork (`forkRun`, above; null without one), as the frontier arm
+            // passes it — `execLavaBoss` / `execTentacleBeast` try their policy variants on it. No other clear-tag verb
+            // reads `ctx.fork` (`bait` is the frontier's only), so a verb that does not fight a boss is unchanged.
+            fork,
         });
         for (const c of resolved.exempt ?? []) exemptions.add(c);
         // ⛓ fidelity WATCHERTALK D2: the talk is certified by the run's own `watcherTalks` row for this flag.
@@ -24421,6 +25203,65 @@ function solveSegmentUnder({
                 });
             }
             const crossTo = { level: fall.to_level, pit, arrival: { ...fall.ctor } };
+            // ⛓⛓ fidelity L1516 D3: an ENCLOSED pit (`enclosedPitCorners`) is entered across a corner. OFF, or any
+            // pit with a non-pit orthogonal neighbour: the walk below, byte-identical.
+            // ⚠ Only with a diagonal floor cell, and only from OUTSIDE the pit's cell: a fall that lands the player in
+            // the pit already (L84 (2,2), sweep leg 671, from the L83 pit) is the walk's, as before.
+            const corners = CONTACT_FIDELITY.enclosedPitCorner ? enclosedPitCorners(run.world, pit) : null;
+            const inPit = rectsOverlap(terrainProbeRect(run.state.x, run.state.y), pit.rect);
+            if (corners && corners.length > 0 && !inPit) {
+                const near = corners.slice().sort((a, b) => Math.hypot(a.stance.x - run.state.x, a.stance.y - run.state.y)
+                    - Math.hypot(b.stance.x - run.state.x, b.stance.y - run.state.y));
+                const cand = near[0];
+                walkTo(goal, cand.stance, { what: `${whatPit} corner (${cand.cell.tx},${cand.cell.ty}) stance` });
+                const plan = enclosedPitCornerKeys(run, pit, cand);
+                if (!plan) {
+                    refuse(`${whatPit}: from the corner stance (${run.state.x},${run.state.y}) in (${cand.cell.tx},`
+                        + `${cand.cell.ty}) no pre-step of <= ${ENCLOSED_PIT_CORNER.maxPre} ticks and diagonal `
+                        + `[${cand.keys.join('+')}] falls into the pit before a neighbour.`,
+                    { goal, obstacle: { kind: 'enclosed-pit', id: `pit@${tx},${ty}` } });
+                }
+                const hits0 = (run.ledger('playerHits') ?? []).length;
+                let edge = null;
+                for (const h of plan.held) {
+                    perTick.push(h);
+                    const r = run.advance(h);
+                    if (r.transition) { edge = r.transition; break; }
+                    if (run.state.fall) break;
+                }
+                const fellAt = run.state.fall?.target ?? null;
+                if (!edge && !(fellAt && fellAt.x === pit.rect.x + pit.rect.w / 2 && fellAt.y === pit.rect.y + pit.rect.h / 2)) {
+                    fail(`${whatPit}: the corner step previewed a fall into the pit and the run did not take it `
+                        + `(fall ${JSON.stringify(fellAt)}) — the preview is not this run.`);
+                }
+                if ((run.ledger('playerHits') ?? []).length !== hits0) {
+                    refuse(`${whatPit}: the corner step took a hit the preview did not price.`,
+                        { goal, obstacle: { kind: 'enclosed-pit', id: `pit@${tx},${ty}` } });
+                }
+                // the fall-out: no input reaches the player (`checkFallingInPit`), so nothing is pressed
+                while (!edge && run.state.fall) {
+                    perTick.push(NO_HELD_PREVIEW);
+                    const r = run.advance(NO_HELD_PREVIEW);
+                    if (r.transition) edge = r.transition;
+                }
+                if (!edge || edge.to_level !== fall.to_level) {
+                    fail(`${whatPit}: the corner fall did not cross to level ${fall.to_level} (${JSON.stringify(edge)}).`);
+                }
+                const swapsBefore = run.transitions.length;
+                const coast = coastThroughTransport(run, perTick, maxTicksPerTarget, `${whatPit}->L${fall.to_level}`);
+                const swaps = run.transitions.slice(swapsBefore);
+                records.push({
+                    goal: 'reach-pit', to: fall.to_level, t: edge.t, coast,
+                    corner: { cell: cand.cell, keys: cand.keys, pre: plan.pre, ticks: plan.held.length },
+                    ...(swaps.length > 0 ? {
+                        chained: {
+                            via: swaps.map((sw) => ({ t: sw.t, from_level: sw.from_level, to_level: sw.to_level })),
+                            ends: { level: run.level, x: run.state.x, y: run.state.y },
+                        },
+                    } : {}),
+                });
+                return;
+            }
             goalPlanExtra = { allowPit: { tx, ty } };
             goalRides = pitRides(tx, ty);
             const t = walkTo(goal, {
@@ -24507,6 +25348,7 @@ function solveSegmentUnder({
             continue;
         }
         if (goal.kind === 'reach-exit') {
+            awaitTentacleMouth(goal);
             const { index, teleporter } = findExitNamed(run.world, goal.exit);
             const centre = {
                 x: teleporter.rect.x + TILE_SIZE / 2,
@@ -24685,6 +25527,8 @@ function solveSegmentUnder({
             const rec = STRATEGY_EXECUTORS[strategy](run, perTick, resolvedBlocker, {
                 maxTicksPerTarget, economies, dashMode, what: `${what} -> ${strategy}`,
                 before: null, walkTo, goal, equip, rewind,
+                // ⛓ fidelity BOSSFORK D1: the segment's fork, as the frontier arm and the clear-tag arm pass it.
+                fork,
             });
             records.push({ goal: goal.kind, strategy, ...rec });
             // ⛓ seedling-fidelity-movingwait: a paced wait is its own decision row (absent on a still one).
