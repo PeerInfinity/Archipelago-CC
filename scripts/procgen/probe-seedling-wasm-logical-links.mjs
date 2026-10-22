@@ -527,10 +527,19 @@ async function main() {
             // arrival ends in a `held` row (measured before the fix: 3/10 runs fell back at the L19 Restart, whose route opens
             // on a logical link, so its goal came in the landing's own turn and the watch was re-based over the landing).
             const watchRows = eng.arrivalWatch ?? [];
-            check('B: every Restart\'s start-hop arrival is HELD (0 `no-held-arrival` fallbacks; each expected arrival ends `held`)',
-                !(eng.forcedBy?.['no-held-arrival'] > 0) && (eng.expectedArrivals ?? 0) >= 1
-                    && watchRows.filter((r) => r.at === 'expect').length === watchRows.filter((r) => r.at === 'held').length,
-                JSON.stringify({ forcedBy: eng.forcedBy, expectedArrivals: eng.expectedArrivals, rows: watchRows.map((r) => r.at) }));
+            // ⛓ NO SUBJECT (interim, js gate ruling 2026-10-21): B no longer restarts once rope events land; restore a
+            // forced-Restart subject. A walk that took no Restart prints a LOUD named SKIP (never a PASS, never counted
+            // green); a `no-held-arrival` fallback, or a Restart whose expected arrivals are not all held, still FAILS.
+            if ((eng.expectedArrivals ?? 0) === 0 && watchRows.length === 0 && deferrals.length === 0
+                && !(eng.forcedBy?.['no-held-arrival'] > 0)) {
+                console.log('SKIP (no subject): B took no Restart in its budget — the restart-hold check did not run — '
+                    + JSON.stringify({ firstLegs: moves.slice(0, 5) }));
+            } else {
+                check('B: every Restart\'s start-hop arrival is HELD (0 `no-held-arrival` fallbacks; each expected arrival ends `held`)',
+                    !(eng.forcedBy?.['no-held-arrival'] > 0) && (eng.expectedArrivals ?? 0) >= 1
+                        && watchRows.filter((r) => r.at === 'expect').length === watchRows.filter((r) => r.at === 'held').length,
+                    JSON.stringify({ forcedBy: eng.forcedBy, expectedArrivals: eng.expectedArrivals, rows: watchRows.map((r) => r.at) }));
+            }
             // ⛓ CROSS-LEVEL END — a location leg whose plan ends in another level (L32 Bob Boss → L30) is HELD at its
             // landing (no `held-end` / `unheld-end` fallback, no `cross-level-end` re-arrival), and its own check SETTLES.
             const cross = eng.crossLevelEnds ?? [];

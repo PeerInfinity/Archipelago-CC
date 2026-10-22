@@ -147,7 +147,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync } from 
 import { fileURLToPath } from 'node:url';
 
 import { familyOf } from './surveyFamily.js';
-import { deriveStagedGrant, stageGrantSave, tapeCoversVisit } from './surveyGrants.js';
+import { deriveStagedGrant, stageGrantSave, stagedRng, tapeCoversVisit } from './surveyGrants.js';
 import {
     RESTART_TARGET, deriveLegs, gameStateEventsOf, stagedPersistence, keyItemsOf, makeRuleHolds, pickupsThrough, regionPath as surveyRegionPath,
     ROUTE_MODES, routeOnlyRows,
@@ -1325,12 +1325,15 @@ async function solveOneStep(step) {
     const { buildStagedTape } = await import(join(MODULE, 'botDriverV1.js'));
     const { createRunForStaging, solveStaging, stagingFromTape } =
         await import(join(MODULE, 'tapeRunner.js'));
+    const { SHIPPED_RNG } = await import(join(MODULE, 'wasmArrival.js'));
 
     const boot = bootFor(step);
     const base = parseTape(committedTape(boot.source));
     const staging = solveStaging(stagingFromTape(base));
     if (boot.kind === 'staged') {
         staging.boot = { level: step.level, x: step.arrival.x, y: step.arrival.y };
+        // ⛓ RULES survey-tentacle-staging: the room runs the game's `Rng.split`, not the base tape's (`stagedRng`).
+        staging.rng = stagedRng(staging.rng, SHIPPED_RNG);
     }
     /**
      * ⛓ RULES survey-save-arrays — **THE DELIVERED SAVE ARRAYS ARE STAGED** (`surveyGrants.stageGrantSave`, through
@@ -1439,7 +1442,7 @@ async function solveOneStep(step) {
             what: `the staged block equals ${crossName}'s committed boot`,
             ok: JSON.stringify(staging.boot) === JSON.stringify(other.boot)
                 && JSON.stringify(staging.save) === JSON.stringify(other.save)
-                && JSON.stringify(staging.rng) === JSON.stringify(other.rng)
+                && JSON.stringify(staging.rng) === JSON.stringify(stagedRng(other.rng, SHIPPED_RNG))
                 && JSON.stringify(staging.seam) === JSON.stringify(other.seam),
             got: { ...staging.boot },
             want: { ...other.boot },

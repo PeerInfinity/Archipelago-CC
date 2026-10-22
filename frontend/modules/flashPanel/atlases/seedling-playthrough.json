@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-7660a339",
+  "atlas_id": "seedling-78124631",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "7660a339" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "78124631" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -1208,7 +1208,7 @@
           "kind": "teleporter",
           "exit_tiles": [[7,4]],
           "entrance_tile": [7,4],
-          "sub_region": "r1c1"
+          "sub_region": "r3c7"
         },
         {
           "exit_id": "out_stairsup_352_80",
@@ -1222,56 +1222,56 @@
           "kind": "teleporter",
           "exit_tiles": [[12,3]],
           "entrance_tile": [12,3],
-          "sub_region": "r1c1"
+          "sub_region": "r1c9"
         },
         {
           "exit_id": "out_pit_8_2",
           "kind": "teleporter",
           "exit_tiles": [[13,3]],
           "entrance_tile": [13,3],
-          "sub_region": "r1c1"
+          "sub_region": "r1c9"
         },
         {
           "exit_id": "out_pit_9_2",
           "kind": "teleporter",
           "exit_tiles": [[14,3]],
           "entrance_tile": [14,3],
-          "sub_region": "r1c1"
+          "sub_region": "r1c9"
         },
         {
           "exit_id": "out_pit_7_3",
           "kind": "teleporter",
           "exit_tiles": [[12,4]],
           "entrance_tile": [12,4],
-          "sub_region": "r1c1"
+          "sub_region": "r1c9"
         },
         {
           "exit_id": "out_pit_8_3",
           "kind": "teleporter",
           "exit_tiles": [[13,4]],
           "entrance_tile": [13,4],
-          "sub_region": "r1c1"
+          "sub_region": "r1c9"
         },
         {
           "exit_id": "out_pit_9_3",
           "kind": "teleporter",
           "exit_tiles": [[14,4]],
           "entrance_tile": [14,4],
-          "sub_region": "r1c1"
+          "sub_region": "r1c9"
         },
         {
           "exit_id": "out_pit_8_4",
           "kind": "teleporter",
           "exit_tiles": [[13,5]],
           "entrance_tile": [13,5],
-          "sub_region": "r1c1"
+          "sub_region": "r1c9"
         },
         {
           "exit_id": "in_L17_32_48",
           "kind": "teleporter",
           "exit_tiles": [[7,3]],
           "entrance_tile": [7,3],
-          "sub_region": "r1c1"
+          "sub_region": "r3c7"
         },
         {
           "exit_id": "in_L18_16_16",
@@ -1284,10 +1284,38 @@
       "locations": [],
       "annotations": { "rules_source": "analyzer" },
       "subgraph": {
-        "sub_regions": ["r1c1","r4c21"],
+        "sub_regions": ["r1c1","r1c9","r3c7","r4c21","r6c8"],
         "internal_exits": [
           {
             "from": "r1c1",
+            "to": "r1c9",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "L16 flag 0: rope@32,16 cleared" } }
+          },
+          {
+            "from": "r1c1",
+            "to": "r3c7",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "L16 flag 0: rope@32,16 cleared" } }
+          },
+          {
+            "from": "r1c1",
+            "to": "r6c8",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "L16 flag 0: rope@32,16 cleared" } }
+          },
+          {
+            "from": "r1c9",
+            "to": "r3c7",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "L16 flag 0: rope@32,16 cleared" } }
+          },
+          {
+            "from": "r1c9",
             "to": "r4c21",
             "bidirectional": false,
             "source": "analyzer",
@@ -1296,6 +1324,44 @@
               "children": [
                 { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
                 { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          },
+          {
+            "from": "r1c9",
+            "to": "r6c8",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "L16 flag 0: rope@32,16 cleared" } },
+                {
+                  "rule": "Or",
+                  "children": [
+                    { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                    { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "from": "r3c7",
+            "to": "r6c8",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "L16 flag 0: rope@32,16 cleared" } },
+                {
+                  "rule": "Or",
+                  "children": [
+                    { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                    { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+                  ]
+                }
               ]
             }
           }
@@ -2008,7 +2074,13 @@
       "subgraph": {
         "sub_regions": ["r0c6","r1c18","r11c4"],
         "internal_exits": [
-          { "from": "r11c4", "to": "r1c18", "bidirectional": false, "source": "analyzer" }
+          {
+            "from": "r11c4",
+            "to": "r1c18",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "L28 flag 0: rope@160,64 cleared" } }
+          }
         ]
       }
     },

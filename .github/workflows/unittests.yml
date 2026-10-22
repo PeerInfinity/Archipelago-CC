@@ -125,15 +125,17 @@ jobs:
   unit:
     needs: changes
     if: needs.changes.outputs.run == 'true'
-    runs-on: ${{ matrix.os }}
-    name: Test Python ${{ matrix.python.version }} ${{ matrix.os }}
+    # A python entry's own `runner` overrides matrix.os for that one leg.
+    runs-on: ${{ matrix.python.runner || matrix.os }}
+    name: Test Python ${{ matrix.python.version }} ${{ matrix.python.runner || matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
         python:
-          - {version: '3.11.2'} # Change to '3.11' around 2026-06-10
+          # Pinned, not ubuntu-latest: setup-python has no 3.11.2 for ubuntu-26.04 (2026-10-22). Un-pin once it ships one, or once this leg moves to a version 26.04 has.
+          - {version: '3.11.2', runner: ubuntu-24.04} # Change to '3.11' around 2026-06-10
           - {version: '3.12'}
           - {version: '3.13'}
         # Fork change (ci-manual-moves): upstream's three include legs —

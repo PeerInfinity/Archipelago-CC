@@ -42,6 +42,7 @@
 
 import { allOf, anyOf, entitySealedTiles, entitySemantics, flag, key, tileTypeForPlacement } from './seedlingSemantics.js';
 import { PUSHABLE_KINDS } from './seedlingBlockPaths.js';
+import { ropeEventCondition } from './seedlingObstacleEvents.js';
 
 /**
  * ⛔ THE WEAPON DISJUNCTION, and it is the ONE conservative approximation in
@@ -185,7 +186,10 @@ export function buildGroupOpeners(mapDoc, tileSize = 16) {
  *   `pulser`  — a Pulser stands in the room, a second arm that moves a FIRE
  *               block with no item (`Pulser.as:100`);
  *   `fallers` — every `fallrock` opened only by ropes: its landing tile and
- *               each rope's tiles and cutting condition (`FallRock.as:31-38`).
+ *               each rope's tiles and cutting condition (`FallRock.as:31-38`),
+ *               plus `event` — ⛓ RULES rope-events: the cut as a cross-visit
+ *               event (`ropeEventCondition`), since the rock is rebuilt fallen
+ *               on every later visit (one rope = one event; several = none).
  * `buildSeedlingRegionGrid` prices an entry by the block paths where
  * `blockHolderVerdict` decides it, and keeps the player-reach price, by name,
  * where it does not.
@@ -217,6 +221,9 @@ export function buildBlockHolders(mapDoc, { tileSize = 16 } = {}) {
                 return [{
                     tx: Math.floor(e.x / tileSize),
                     ty: Math.floor(e.y / tileSize),
+                    ...(opener.length === 1 ? {
+                        event: ropeEventCondition({ level: level.level, tag: Number(opener[0].attrs?.tag), x: opener[0].x, y: opener[0].y }),
+                    } : {}),
                     triggers: opener.map((o) => {
                         const sem = entitySemantics(o);
                         return { tiles: entitySealedTiles(o, sem), condition: sem?.condition ?? null };
@@ -1391,6 +1398,9 @@ export function resolveOverlayCondition(condition) {
     if (condition.seals !== undefined) {
         return { rule: 'Has', args: { item_name: SEAL_ITEM_NAME, count: condition.seals } };
     }
+    // ⛓ RULES rope-events — a cross-visit event (`ropeEventCondition`): the
+    // generator mints the event; a name it did not mint is refused there.
+    if (condition.event !== undefined) return { rule: 'Has', args: { item_name: condition.event } };
     if (condition.flag !== undefined && OVERLAY_CONDITIONS[condition.flag]) {
         return OVERLAY_CONDITIONS[condition.flag];
     }

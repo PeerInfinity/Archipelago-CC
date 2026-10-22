@@ -3,9 +3,12 @@
  * 2026-10-21; session tile-primitives-stage2-l15 for L15, grown by tile-primitives-levels-gap3 to every region
  * and by tile-primitives-grow-levels to a REGION SAMPLE + per-target grouping). Two halves:
  *   - INSIDE a level world: for every ordered pair of its sub-regions, the rule derived by search over the
- *     played shared world (`deriveLevelWorldLogic`) must AGREE with the preset's AP exit — the atlas row,
- *     False_ where the atlas has none — at every subset of the items (truth-table equality; the atlas spells
- *     L15 r1c9 → r1c5 as Or(Swim, And(weapon, Swim)), the search as Swim);
+ *     played shared world (`deriveLevelWorldLogic`) must AGREE with the atlas's IN-WORLD CLOSURE — reach over
+ *     the AP exits between that world's own sub-regions — at every subset of the items, both ways (truth-table
+ *     equality; the atlas spells L15 r1c9 → r1c5 as Or(Swim, And(weapon, Swim)), the search as Swim). The
+ *     search is transitive over the world's cells, so a direct row alone under-states a pair that passes
+ *     through a third sub-region (L16 r1c1 → r4c21 = r1c1 → r1c9 → r4c21 once the rope lane splits the level;
+ *     ⚖ user 2026-10-22 "Land with exact exemptions", session rules-rope-events);
  *   - OUT of every region (`deriveEntryLogic`): from its arrival, each owned location against its AP rule, and
  *     each TARGET REGION its outbound exits lead to against the Or of the AP exits to it (L16's seven pits to
  *     L17 are seven AP exits and one destination; the interior pit is walled in by the other six).
@@ -61,6 +64,36 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions } = {})
             }
         }
     };
+    /** The atlas's reach over the AP exits BETWEEN `members` (one level world's sub-regions), per inventory. */
+    const inWorldClosure = (members) => {
+        const inWorld = new Set(members);
+        const edges = members.flatMap((from) => REGIONS[from].exits.filter((e) => inWorld.has(e.connected_region))
+            .map((e) => ({ from, to: e.connected_region, rule: e.access_rule ?? { rule: 'True_' } })));
+        const reaches = (from, to, inv) => {
+            const seen = new Set([from]);
+            for (let grew = true; grew;) {
+                grew = false;
+                for (const e of edges) {
+                    if (seen.has(e.from) && !seen.has(e.to) && holds(e.rule, inv)) { seen.add(e.to); grew = true; }
+                }
+            }
+            return seen.has(to);
+        };
+        return { edges, reaches };
+    };
+    const agreeWithClosure = (label, closure, pair, items) => {
+        if (closure.edges.some((e) => counted(e.rule))) { problems.push(`${label}: an in-world AP rule counts an item — a set truth table cannot certify it`); return; }
+        const derived = ruleFromMinimalSets(pair.minimal);
+        const asked = new Set(items);
+        for (const e of closure.edges) ruleItems(e.rule, asked);
+        for (const inv of subsets([...asked].sort())) {
+            const atlas = closure.reaches(pair.from, pair.to, inv);
+            if (holds(derived, inv) !== atlas) {
+                problems.push(`${label} holding [${inv}]: derived ${holds(derived, inv)}, atlas ${atlas}`);
+                return;
+            }
+        }
+    };
     const replay = (label, world, inventory, plan, cell) => {
         const w = { ...world, items: new Map() };
         let s = createState(w);
@@ -77,9 +110,9 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions } = {})
         if (world.sharedWorld && !sharedDone.has(world.sharedWorld.key)) {
             sharedDone.add(world.sharedWorld.key);
             const out = deriveLevelWorldLogic(world, helpers, { native });
+            const closure = inWorldClosure(world.sharedWorld.regions);
             for (const p of out.pairs) {
-                const atlas = REGIONS[p.from].exits.find((e) => e.connected_region === p.to)?.access_rule ?? { rule: 'False_' };
-                agree(`${p.from} → ${p.to}`, atlas, p.minimal, out.items);
+                agreeWithClosure(`${p.from} → ${p.to}`, closure, p, out.items);
                 for (const w of p.witnesses) replay(`${p.from} → ${p.to}`, enteredAt(world, p.from), w.inventory, w.plan, w.cell);
                 lines.push(`${p.from}>${p.to}=${JSON.stringify(p.minimal)}`);
             }

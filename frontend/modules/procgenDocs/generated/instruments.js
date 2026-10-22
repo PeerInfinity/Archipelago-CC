@@ -231,7 +231,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 445,
         "browser": 156,
-        "cited": 238,
+        "cited": 237,
         "files": 459,
         "lineStyle": 14,
         "withDocblock": 459,
@@ -12871,51 +12871,6 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
-                "arg"
-            ],
-            "browser": true,
-            "category": "probe",
-            "citedBy": [
-                "docs/json/developer/procgen/seedling-bot-log.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "probe-seedling-mask-lines.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "dump"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "only"
-                },
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "record"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "probe-seedling-mask-lines — ⛓⛓⛓ seedling-fidelity-masks: THE SWING'S LINE OF SIGHT SAMPLES THE \"Solid\" PIXELMASKS (`CONTACT_FIDELITY.pixelMaskSightLines`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
-            "path": "scripts/procgen/probe-seedling-mask-lines.mjs"
-        },
-        {
-            "argvHelpers": [
                 "ONLY",
                 "VARIANTS",
                 "WORLDS",
@@ -14289,6 +14244,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling ROCKMOVE's \"Remove bundle\", ON THE GAME (rules `rules-rock-remove`).",
             "path": "scripts/procgen/probe-seedling-rock-remove.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "out"
+            ],
+            "file": "probe-seedling-rope-events.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's ROPE CUTS, ON THE GAME (rules `rules-rope-events`).",
+            "path": "scripts/procgen/probe-seedling-rope-events.mjs"
         },
         {
             "argvHelpers": [

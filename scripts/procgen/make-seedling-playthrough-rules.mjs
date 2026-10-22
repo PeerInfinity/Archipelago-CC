@@ -89,7 +89,9 @@ const {
     deriveObstacleEvents, deriveLockEvents, deriveButtonEvents, crossRoomButtonsOf, persistenceEffect, obstacleEventName, parseSolidId,
     deriveTalkEvents, crossRoomPrerequisitesOf,
     poleKillsOf, POLE_LIGHT_ARM,
+    ropesOf, ropeVerdict, deriveRopeEvents, ropeEventCondition, ropeEventName, ropeLaneCharges,
 } = await imp('frontend/modules/flashPanel/seedlingObstacleEvents.js');
+const { arrowLane, arrowTrapEntityPoint } = await imp('frontend/modules/seedlingDemo/arrowTrap.js');
 const { contactRect } = await imp('frontend/modules/seedlingDemo/combat.js');
 const { DARKTRAP_LIGHT_DEATH } = await imp('frontend/modules/seedlingDemo/enemyDamage.js');
 const { FLAG_ACTIONS } = await imp('frontend/modules/seedlingDemo/arrivalSolid.js');
@@ -277,14 +279,35 @@ const arrivalTilesFor = (levelNumber) => {
     }
     return arrivalTilesByLevel.get(levelNumber) ?? [];
 };
-const gridFor = (level, { directionalLocks = DIRECTIONAL_LOCKS, arrivals = true } = {}) => SEM.buildSeedlingRegionGrid(
-    { x: 0, y: 0, w: level.width, h: level.height }, MASKS ? expandPixelMasks(level) : level,
-    {
-        entityOverride,
-        tileOverride: OV.overlayTileSemantics,
-        ...(directionalLocks ? { directionalLocks, ...(arrivals ? { arrivalTiles: arrivalTilesFor(level.level) } : {}) } : {}),
-    },
-);
+// ⛓⛓ RULES rope-events — the ropes of the delivered set, and which are MINTED (every peer of the cut's group opens
+// something: `seedlingObstacleEvents.ropeVerdict`). A minted rope's silenced traps charge their LANES its event
+// (`ropeLaneCharges`), so a crossing of an armed lane costs the cut (⚖ the user, 2026-10-21: no tank-a-hit crossing).
+const ROPES = ropesOf(MAP).map((row) => ({ ...row, verdict: ropeVerdict(row, levelOf(row.level)) }));
+/** `"tx,ty"` of a level's game landings and its links: the doors a lane leaves open (`ropeLaneCharges`). */
+const doorTilesOf = (level) => new Set([
+    ...gameLandings(MAP).filter((g) => g.level === level.level).map((g) => `${Math.floor(g.x / TILE)},${Math.floor(g.y / TILE)}`),
+    ...(level.entities ?? []).filter((e) => LINK_TAGS.includes(e.type)).map((e) => `${Math.floor(e.x / TILE)},${Math.floor(e.y / TILE)}`),
+]);
+const ropeChargesFor = (level, baseGrid) => ROPES.filter((r) => r.level === level.level && !r.verdict.refuse).flatMap((r) => {
+    const lanes = r.verdict.effects.filter((e) => e.effect === 'silences')
+        .map((e) => arrowLane({ id: `${e.peer.type}@${e.peer.x},${e.peer.y}`, t: r.tset, ...arrowTrapEntityPoint(e.peer.x, e.peer.y) }));
+    return lanes.length ? ropeLaneCharges(baseGrid, lanes, ropeEventCondition(r), doorTilesOf(level), TILE) : [];
+});
+const gridFor = (level, { directionalLocks = DIRECTIONAL_LOCKS, arrivals = true } = {}) => {
+    const build = (extra) => SEM.buildSeedlingRegionGrid(
+        { x: 0, y: 0, w: level.width, h: level.height }, MASKS ? expandPixelMasks(level) : level,
+        {
+            entityOverride,
+            tileOverride: OV.overlayTileSemantics,
+            ...(directionalLocks ? { directionalLocks, ...(arrivals ? { arrivalTiles: arrivalTilesFor(level.level) } : {}) } : {}),
+            ...extra,
+        },
+    );
+    const base = build({});
+    if (!ROPES.some((r) => r.level === level.level && !r.verdict.refuse)) return base;
+    const cellCharges = ropeChargesFor(level, base);
+    return cellCharges.length ? build({ cellCharges }) : base;
+};
 /** ⛓ SWIM T4 — the analyzer grid this generator builds for one level (the census's read). Additive. */
 export const playthroughGridFor = (level, options) => gridFor(level, options);
 /**
@@ -1392,6 +1415,70 @@ export function playthroughTalkEvents(doc, { existing = [] } = {}) {
     });
 }
 
+/**
+ * ⛓⛓ RULES rope-events — **THE ROPE CUTS AS AP EVENTS** (`flashPanel/seedlingObstacleEvents.js` `deriveRopeEvents`
+ * holds the schema and the why). The rows are every rope of the delivered map (`ROPES`), so the set is derived. The
+ * GATES are not here: the analyzer prices them, since a minted rope's silenced lanes are charged its event in the grid
+ * (`gridFor`) and its rock on a holder is a block-path holder through the event (`OV.buildBlockHolders`). This answers:
+ *   - PLACE: the ONE sub-region the rope's own tile borders (several or none = a refusal by name);
+ *   - RULE: the rope's own cut condition (`SEM.entitySemantics`'s rope row), resolved as every crossing is.
+ * One gate IS here: a game LANDING on a charged lane cell (or a door the lane leaves open) stands in the armed lane on
+ * arrival, so its departure costs the cut too (`exitGates`, as a landing inside an obstacle costs its event) — ⚖ the
+ * user 2026-10-21: logic never expects tanking a hit. (L17's stairs land on L16's (7,3), in `arrowtrap@112,32`'s lane.)
+ * Refused ropes are printed by name; a rope event NAME in the rules that this mints nowhere is refused (`main`).
+ */
+export function playthroughRopeEvents(doc) {
+    const regionOf = (id) => doc.regions.find((r) => r.region_id === id);
+    const conns = doc.vanilla_layout?.connections ?? [];
+    const derived = deriveRopeEvents(ROPES, {
+        level: (n) => levelOf(n),
+        place: (row) => {
+            const regionId = regionIdFor(row.level);
+            const region = regionOf(regionId);
+            if (!region) throw new Error(`rope events: ${regionId} is not in the atlas`);
+            const subs = region.subgraph?.sub_regions;
+            if (!subs) return { region_id: regionId, side: apRegionName(regionId) };
+            const grid = gridFor(levelOf(row.level));
+            const { indexOf, components } = regionAnalyses.get(regionId).componentsResult;
+            const [x, y] = [Math.floor(row.x / TILE), Math.floor(row.y / TILE)];
+            const beside = new Set();
+            for (const [nx, ny] of [[x, y - 1], [x + 1, y], [x, y + 1], [x - 1, y]]) {
+                if (nx < 0 || ny < 0 || nx >= grid.width || ny >= grid.height) continue;
+                const i = indexOf[ny * grid.width + nx];
+                if (i >= 0 && subs.includes(components[i].id)) beside.add(components[i].id);
+            }
+            if (beside.size !== 1) {
+                throw new Error(`rope events: L${row.level} rope@${row.x},${row.y} borders sub-regions [${[...beside].join(', ')}] of `
+                    + `${regionId} — one was expected`);
+            }
+            const [c] = beside;
+            return { region_id: regionId, sub_region: c, side: apRegionName(regionId, c) };
+        },
+        rule: (row) => {
+            const entity = levelOf(row.level).entities.find((e) => e.type === 'rope' && e.x === row.x && e.y === row.y);
+            const rule = analyzerOptions.resolveCondition(SEM.entitySemantics(entity)?.condition);
+            if (!rule) throw new Error(`rope events: L${row.level} rope@${row.x},${row.y}'s cut does not resolve to items`);
+            return rule;
+        },
+    });
+    const exitGates = [];
+    for (const row of derived.minted) {
+        const level = levelOf(row.level);
+        const lane = new Set(ropeChargesFor(level, gridFor(level, {})).filter((c) => c.condition.event === ropeEventName(row))
+            .map((c) => `${c.tile[0]},${c.tile[1]}`));
+        for (const L of gameLandings(MAP).filter((g) => g.level === row.level)) {
+            if (!lane.has(`${Math.floor(L.x / TILE)},${Math.floor(L.y / TILE)}`)) continue;
+            const door = parseSolidId(L.door);
+            const dep = { region_id: regionIdFor(L.from), exit_id: outExitId({ type: door.cls, x: door.x, y: door.y }) };
+            if (!conns.some((c) => c.from[0] === dep.region_id && c.from[1] === dep.exit_id)) {
+                throw new Error(`rope events: the atlas has no connection ${dep.region_id}/${dep.exit_id} for L${L.from} ${L.door}`);
+            }
+            exitGates.push({ ...dep, rule: { rule: 'Has', args: { item_name: ropeEventName(row) } } });
+        }
+    }
+    return { ...derived, exitGates };
+}
+
 /** `events` with each `eventGates` row's `Has(<item_name>)` ANDed onto its event's access rule (a new object; none = as is). */
 export function withEventGates(events, eventGates) {
     return events.map((e) => {
@@ -1650,6 +1737,7 @@ function main() {
     const talks = playthroughTalkEvents(doc, { existing: [...obstacle.events, ...locks.events, ...buttons.events] });
     const priorEvents = withEventGates([...obstacle.events, ...locks.events, ...buttons.events], talks.eventGates);
     const landingGates = playthroughLandingGates(doc);
+    const ropes = playthroughRopeEvents(doc);
     const { rules, report } = compileRegionAtlas(doc, {
         mapDoc: MAP,
         gameName: GAME_NAME,
@@ -1668,14 +1756,24 @@ function main() {
         // ⛓ RULES obstacle-events: the saved obstacles' events and the landing edges they gate.
         // ⛓ RULES l38-button-event: and the cross-room button presses (obstacle = the target, side = the button).
         // ⛓ RULES watcher-event: and the cross-room prerequisites (the Watcher's talk, read by the FinalDoor).
-        events: [...priorEvents, ...talks.events],
+        // ⛓ RULES rope-events: and the rope cuts (their gates are priced by the analyzer).
+        events: [...priorEvents, ...talks.events, ...ropes.events],
         // ⛓ RULES lock-events: a latched lock's far-side return costs its event, not the reach of its open side.
         internalExitRules: locks.internalExitRules,
         // ⛓ RULES game-truth-gaps (R2): and the landings on lethal terrain.
-        exitGates: [...obstacle.exitGates, ...buttons.exitGates, ...talks.exitGates, ...landingGates],
+        exitGates: [...obstacle.exitGates, ...buttons.exitGates, ...talks.exitGates, ...landingGates, ...ropes.exitGates],
     });
     applyBossLocationOptions(rules);
     const rulesText = stringifyRulesJson(rules);
+    // ⛓ RULES rope-events: a rope event the rules NAME must be one this run minted (a refused rope's name in a
+    // block-path or lane condition would be an item nothing places).
+    const mintedRopes = new Set(ropes.events.map((e) => e.name));
+    const named = [...new Set(ROPES.map((r) => ropeEventName(r)).filter((n) => rulesText.includes(JSON.stringify(n))))];
+    const stray = named.filter((n) => !mintedRopes.has(n));
+    if (stray.length) {
+        console.error(`ERROR: the rules name rope event(s) never minted: ${stray.join(', ')}`);
+        process.exit(1);
+    }
 
     if (check) {
         let bad = 0;
@@ -1723,6 +1821,9 @@ function main() {
             + `(pressed at L${e.fields.action.presser.level} buttonroom@${e.fields.action.presser.x},${e.fields.action.presser.y})`).join('')}`
         + `${quiet ? '' : buttons.exitGates.map((g) => `\n  gated ${g.region_id}/${g.exit_id}`).join('')}`
         + `${buttons.skipped.length ? `; ${buttons.skipped.length} skipped: ${buttons.skipped.join('; ')}` : ''}`);
+    console.log(`${ropes.events.length} rope cut event(s) [${ropes.events.map((e) => `${e.name} @ ${e.fields.side}`).join('; ')}]; `
+        + `${ropes.exitGates.length} landing(s) in a lane gated${quiet ? '' : ropes.exitGates.map((g) => `\n  gated ${g.region_id}/${g.exit_id}`).join('')}; `
+        + `${ropes.refused.length} rope(s) refused${quiet ? '' : ropes.refused.map((r) => `\n  refused ${r}`).join('')}`);
     console.log(`${talks.events.length} cross-room prerequisite event(s), ${talks.exitGates.length} crossing(s) and `
         + `${talks.eventGates.length} event(s) gated on them`
         + `${quiet ? '' : talks.events.map((e) => `\n  ${e.fields.event_id} ${e.name} @ ${e.fields.side} (${e.fields.action.verb}; gates `

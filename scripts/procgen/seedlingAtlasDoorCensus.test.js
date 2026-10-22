@@ -56,7 +56,7 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
     // pocket opens through (one boundary exit rule); every count holds.
     // ⛓ RULES kill-locks — restamped (ae491163 -> 5c55890f): a decided kill-lock's rule is its room's bodies'
     // (L18/L26/L53/L60 widen to Wand | Dark Shield; L98's stairs under the lock are charged); every count holds.
-    it('115 regions, 54 carry a subgraph: 195 sub-regions, 286 internal exits, 201 of them need Progressive Swim', () => {
+    it('115 regions, 54 carry a subgraph: 198 sub-regions, 292 internal exits, 201 of them need Progressive Swim', () => {
         // ⛓ RULES game-truth-gaps — restamped (5c55890f -> db0a4f7f): L57 is lifted from never-enter (⚖ 2026-10-06),
         //   so 113 -> 114 regions (L57 is all water, no subgraph); every other count holds. The landing gates are rules-only.
         // ⛓ R4b (rules-boss-locations) — restamped (db0a4f7f -> db4c2681): L69 is lifted from never-enter (the Lights
@@ -68,11 +68,14 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         //   (`Tile.as:103`; witnessed on p4g), so L70's pit lands on L69 (3,8), not (3,7); no count moves.
         // ⛓ rules-block-path — restamped (832cd44f -> 7660a339): a re-closing lock's entry is priced by the
         // block paths that hold its button (L15/L16/L41), so three analyzer rows gain a rule.
-        expect(c.atlasId).toBe('seedling-7660a339');
+        // ⛓ rules-rope-events — restamped (7660a339 -> 78124631): a rope cut is an event, and L16's rope-silenced
+        // arrow lanes charge it, so L16 splits (+3 sub-regions: r1c9, r3c7, r6c8) and its crossings, with L28's lock
+        // now entered from r1c18 too, give +6 internal exits; no swim count moves.
+        expect(c.atlasId).toBe('seedling-78124631');
         // ⛓ rules-block-path — swim 200 -> 201: L15 r1c5 -> r1c9 was True_ and is now Or(Sword, Spear, Swim)
         // (the block path's weapon OR the swim round the lock). Bare Has(Swim) 166 -> 165: the return
         // r1c9 -> r1c5 is now Or(Swim, And(weapon, Swim)) — the same condition, unabsorbed by the analyzer.
-        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 54, 195, 286, 201]);
+        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([115, 54, 198, 292, 201]);
         expect(c.swimLevels).toHaveLength(21);
         expect(c.byRule.slice(0, 2)).toEqual([
             { rule: 'Has(Progressive Swim)', count: 165 },
