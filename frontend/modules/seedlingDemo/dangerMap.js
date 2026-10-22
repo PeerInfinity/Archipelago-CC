@@ -80,6 +80,8 @@ import {
     // ⛓ hammer LD: the L69 Lights fight's shots and fliers, stepped forward by the model's own functions.
     LIGHT_BOSS, SCREEN_H, SCREEN_W, cloneLightsFight, lightBossRect, stepLightBossFlier, stepLightBossFlierGraphic,
     stepLightBossShot, stepLightsController,
+    // ⛓ fidelity DRILL D2: a stepped drill is priced at its live box.
+    CONTACT_FIDELITY,
 } from './solverView.js';
 import {
     hazardVolume, volumeHitsBox, axeHitsPlayer, SPINNING_AXE,
@@ -1300,6 +1302,13 @@ export function staticEnemyDanger(run, box) {
      */
     const live = spinnersTheRunSteps(run);
     const harmless = darkTrapsHarmless(run);
+    /**
+     * ⛓ fidelity DRILL D2 (`drillMixedRooms`): a drill the run STEPS is not at its placement once it has hopped — the
+     * spinners' trap 157 one class over. It sits between hops, so it is priced as a static box at its LIVE position
+     * (`run.entities('drillBodies')`), and a removed one not at all. OFF: every drill at its placement, as before.
+     */
+    const liveDrills = CONTACT_FIDELITY.drillMixedRooms
+        ? new Map((run.entities('drillBodies') ?? []).map((d) => [d.id, d])) : null;
     for (const inst of (world.combat?.enemies ?? [])) {
         if (stepped && isBridgedChaser(inst.tag)) continue;
         if (live.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;
@@ -1308,13 +1317,17 @@ export function staticEnemyDanger(run, box) {
         if (pricing.kind === 'boss') continue;
         // ⛓ LADDER2: a placed grenade has no contact — its blast is ingredient (g).
         if (pricing.pricedBy === 'stepPlacedGrenadesNow') continue;
-        const r = contactRect(inst);
+        const liveDrill = liveDrills?.get(`${inst.tag}@${inst.x},${inst.y}`) ?? null;
+        if (liveDrill?.removed) continue;
+        const r = liveDrill ? liveDrill.rect : contactRect(inst);
         if (!r) continue;
         if (rectsOverlap(box, r)) {
             out.push({
                 kind: 'enemy',
                 id: `${inst.tag}@${inst.x},${inst.y}`,
-                why: `a static "Enemy" body at its ${stepped ? 'placement (this room is '
+                why: liveDrill ? `a stepped drill, priced as a static box where it stands now (${liveDrill.x},${liveDrill.y}) `
+                    + '(`drillMixedRooms`: it hops only when the player is in its run range with a clear line)'
+                    : `a static "Enemy" body at its ${stepped ? 'placement (this room is '
                     + 'stepped, so this class is unbridged and does not move)'
                     : 'PLACEMENT — this room\'s chaser roster is REFUSED, so the model has '
                         + 'no live position for it'}, priced "${pricing.kind}" by `

@@ -36,6 +36,7 @@
 import {
     NEAREST_TILE_INDEX, PLAYER_SOLID_TYPES, SOLID_GRID, TILE_SIZE,
     addedTimeKey, buildLevelWorld, normalizeLiveOpts, rect, rectsOverlap, tagOf, withRuntimeTeleporters, withTileWrites,
+    maskHitsBox,
 } from './levelWorld.js';
 import {
     INITIAL_FRAMES_THIS_CHARACTER, PICKUP_CEREMONY, PICKUP_CEREMONY_BY_KEYTYPE,
@@ -74,6 +75,7 @@ import {
     SLASH_HIT_TICKS, SLASH_REACH, SPEAR_DAMAGE, SWORD_DAMAGE, auditFire, auditPress,
     slashReachFor, swordWindowReplace, swordWindowSchedule, swordWindowStep,
     distanceRectPoint, slashRect, spearRect,
+    SPEAR_LENGTH, SPEAR_THICK, spearOrigin,
 } from './presses.js';
 import { FIRE_PRESS_CADENCE, FIRE_WINDOW, fireRect } from './fireVerb.js';
 import { PUSH_SPEAR_DIRECTION, hitPushableFromPoint } from './pushables.js';
@@ -446,6 +448,8 @@ export const ENTITY_FAMILY_NAMES = Object.freeze([
     'lavaBossFight',
     // ⛓ seedling-fidelity-bosskills D3: the Tentacled Beast's (likewise).
     'tentacleBeastFight',
+    // ⛓ fidelity DRILL D2: the drills this visit steps, live (the danger map's static row reads them).
+    'drillBodies',
 ]);
 
 /**
@@ -3984,6 +3988,14 @@ export function createLevelRun({
                     const e = enemies[0];
                     const id = `${e.tag}@${e.x},${e.y}`;
                     byId.set(id, newDrill({ id, x: e.x, y: e.y }));
+                } else if (CONTACT_FIDELITY.drillMixedRooms) {
+                    // ⛓ fidelity DRILL: EVERY drill of a mixed room (L28, L91), in placement order; `stepDrillsNow`
+                    // walks them in the game's update order and its hop reads the other "Enemy" bodies.
+                    for (const e of enemies) {
+                        if (e.tag !== 'drill') continue;
+                        const id = `${e.tag}@${e.x},${e.y}`;
+                        byId.set(id, newDrill({ id, x: e.x, y: e.y }));
+                    }
                 }
             }
             drillStates.set(n, byId);
@@ -4682,6 +4694,8 @@ export function createLevelRun({
         lightsFights.delete(n);
         lightsExits.delete(n);
         lightsSpearRepeats.length = 0;
+        // ⛓ fidelity DRILL D2: and a spear thrust's pending drill repeats (the Player is reconstructed).
+        drillSpearRepeats.length = 0;
         // ⛓ U14-swim D1: a new `Game` constructs the moonrock again, from `rockSet`.
         moonrockStates.delete(n);
         // ⛓ U15-swim D1: and every turret (angle 0, `shootTimer` 0) and no spit.
@@ -7128,9 +7142,12 @@ export function createLevelRun({
                 const dst = drillStateFor(level);
                 const d = dst.get(r.chaserId);
                 const reach = distanceRectPoint(state.x, state.y, drillRect(d));
-                const blocker = reach > reachLimit || ghost ? null : collideLineSolid(state.x, state.y, d.x, d.y);
+                // ⛓ fidelity DRILL D2: `spear()` tests the rect and nothing else (`Player.as:960-990`) — no reach gate and
+                // no line (OFF: `slash()`'s two gates, as before).
+                const rectOnly = CONTACT_FIDELITY.drillMixedRooms && weapon === 'spear';
+                const blocker = rectOnly || reach > reachLimit || ghost ? null : collideLineSolid(state.x, state.y, d.x, d.y);
                 let verdict = { landed: false, killed: false };
-                if (reach <= reachLimit && !blocker) {
+                if (rectOnly ? spearTouchesDrill(state.x, state.y, direction, d) : (reach <= reachLimit && !blocker)) {
                     verdict = hitDrill(d, {
                         damage: pressHitDamage(weapon),
                         t: pressHitType(weapon),
@@ -7435,6 +7452,21 @@ export function createLevelRun({
         bobBossSlashNow({ rect, reachLimit, weapon, pressTick, hits });
         // ⛓ fidelity LIGHTS D2: the six LightBoss fliers — runtime `Enemy`s no census holds, as the BobBoss is.
         lightsSlashNow({ rect, reachLimit, weapon, pressTick, hits, ghost, direction, repeat: thrust.repeat ?? null });
+        // ⛓ fidelity DRILL D2: a spear thrust's T+3 / T+5 tests against the drills (`drillSpearRepeatsNow`).
+        if (weapon === 'spear' && !ghost && CONTACT_FIDELITY.drillMixedRooms && drillStateFor(level).size > 0) {
+            // The first test, for a drill the audit's (`spearRect`, strict) rect missed and the game's touches.
+            const audited = new Set(audit.live.filter((r) => r.family === 'drill').map((r) => r.chaserId));
+            const dst = drillStateFor(level);
+            for (const d of [...dst.values()]) {
+                if (d.removed || audited.has(d.id) || !spearTouchesDrill(state.x, state.y, direction, d)) continue;
+                const verdict = hitDrill(d, { damage: pressHitDamage('spear'), t: pressHitType('spear'), frozen: ceremony !== null });
+                if (verdict.killed) stageDrillKill(verdict.d, 'spear');
+                dst.set(d.id, verdict.d);
+                if (verdict.landed) drillEvents.push({ t: ticksCompleted, level, id: d.id, kind: 'struck', weapon: 'spear' });
+                hits.push({ as3: 'Enemy', id: d.id, landed: verdict.landed, killed: verdict.killed === true });
+            }
+            for (const k of DRILL_SPEAR_REPEATS) drillSpearRepeats.push({ at: ticksCompleted + k, direction, pressTick });
+        }
         // ⛓ bosskills D2: the King of Fire's balls and body (no-op OFF).
         lavaBossSlashNow({ rect, reachLimit, weapon, ghost, pressTick, hits });
         // ⛓ bosskills D3: the Tentacled Beast's tentacles (no-op OFF).
@@ -8275,7 +8307,8 @@ export function createLevelRun({
         const solidOpts = normalizeLiveOpts(liveSolidOpts());
         // ⛓ R4-swim D2: the drive's own list, so a forecast meets the turret
         // where the drive does.
-        const staticEnemyBoxes = chaserStaticEnemyBoxesNow();
+        // ⛓ fidelity DRILL D2: the live drills too, held where they stand now — the forecast does not hop them (named).
+        const staticEnemyBoxes = [...chaserStaticEnemyBoxesNow(), ...drillWallsNow()];
         /**
          * ⛓ fidelity L40CONTACT D1 (`chaserSpinnerWalls`): the spinners MOVE, so the forecast steps its own copy, one
          * step per forecast tick and BEFORE the chasers (the game's update order, `chaserSpinnerWallsNow`), under
@@ -11101,17 +11134,27 @@ export function createLevelRun({
      *   3. **`collidePoint` is half-open** (`>= left && < right`), which a
      *      1x1 box at integer coordinates reproduces exactly.
      *
+     * ⛓ fidelity DRILL D2: `{masks: true}` also samples the "Solid" PIXELMASKS (a `CliffSide`, a `Building`) per
+     * point, as `Entity.collidePoint` → `Pixelmask.collideHitbox` does: the float bounds test, then the 1x1 box's pixel
+     * (`maskHitsBox`). Measured on p4g: L28's `drill@128,96` does not hop at a player 46.9 px away because its line
+     * crosses the opaque half of the CliffSide at (160,112); the boxes alone see a clear line. Default OFF: every other
+     * caller reads the boxes alone, as before (`assertCrusherSolidsBound` still refuses the crusher's case by name).
+     *
      * @returns {?{tag: ?string, at: {x, y}}} the first blocker, or null
      */
-    function collideLineSolid(fromXf, fromYf, toXf, toYf) {
+    function collideLineSolid(fromXf, fromYf, toXf, toYf, { masks: withMasks = false } = {}) {
         const fromX = Math.trunc(fromXf);
         const fromY = Math.trunc(fromYf);
         const toX = Math.trunc(toXf);
         const toY = Math.trunc(toYf);
         const boxes = world.solidBoxesForMover(normalizeLiveOpts(liveSolidOpts()));
+        const masks = withMasks ? (world.pixelmasks ?? []).filter((p) => p.cls?.type === 'Solid') : [];
         const at = (px, py) => {
             for (const s of boxes) {
                 if (px >= s.x && px < s.right && py >= s.y && py < s.bottom) return s;
+            }
+            for (const p of masks) {
+                if (maskHitsBox(p.mask, p.maskX, p.maskY, { x: px, y: py, right: px + 1, bottom: py + 1 })) return p;
             }
             return null;
         };
@@ -12157,22 +12200,78 @@ export function createLevelRun({
      * enemies is immaterial). The contact goes through `applyPlayerHit`; the
      * dark suit's retaliation is `Enemy.hit(1, …, 1, "Suit")` (an empty
      * knockback), and a retaliation that kills is refused by name.
+     * ⛓ fidelity DRILL D2 (`drillMixedRooms`): a MIXED room's drills too — the LAST placement first, each hop's
+     * "Enemy" half read by `drillEnemyBodiesTest`, the sight line with the pixelmasks, a hop onto water/lava/a pit refused
+     * by name. Above the chasers in this tick, as in the game's update list.
      */
+    /**
+     * ⛓⛓⛓ fidelity DRILL D2 (`CONTACT_FIDELITY.drillMixedRooms`) — THE "Enemy" HALF OF A DRILL'S HOP TEST.
+     *
+     * `Drill.update`'s hop is `collideTypes(solids, tox, y)` with `solids = Mobile.solids + "Enemy"` (`Drill.as:35`),
+     * so in a room with other enemies a body can stop it. `Game.loadlevel` adds `drill` (`:2290`) after `bob` and
+     * `bobsoldier` (`:2276-2277`) and `World.addUpdate` PREPENDS, so a drill updates BEFORE every chaser (they are
+     * read where the PREVIOUS tick left them — `stepChasersNow` runs later in this tick) and the LAST drill placement
+     * first (a drill that updated earlier is read where THIS tick left it: `drills` is the map being stepped). The
+     * static census boxes, the ice turrets, the wallflyers and the spinners are the rows the chasers' own sweep reads.
+     *
+     * ⛔ A census body of the "Enemy" type that the run does NOT step (a moving class with no live state here) has no
+     * position to read: the hop's question is REFUSED by name, never answered by passing through it.
+     *
+     * @returns {(rect: object) => boolean} the test, for the drill `selfId`
+     */
+    function drillEnemyBodiesTest(selfId, drills) {
+        const chasers = chaserStateFor(level);
+        const boxes = [
+            ...chaserStaticEnemyBoxesNow().map((b) => b.rect),
+            ...[...wallFlyerStateFor(level).values()].filter((w) => !w.removed).map((w) => wallFlyerRect(w)),
+            ...(spinnerRectsNow() ?? []).map((b) => b.rect),
+        ];
+        const unstepped = (world.combat?.enemies ?? []).filter((e) => e.tag !== 'drill' && e.row.speed !== 0
+            && !chasers.has(`${e.tag}@${e.x},${e.y}`) && e.tag !== 'wallflyer' && e.tag !== 'spinner');
+        return (rect) => {
+            if (unstepped.length > 0) {
+                throw new Error(`levelRun: ${selfId} in level ${level} asks its hop test (\`collideTypes(solids, …)\`, `
+                    + `"Enemy" in \`Drill.solids\`) at tick ${ticksCompleted + 1}, and the room holds `
+                    + `${unstepped.length} moving "Enemy" bod(ies) the run does not step `
+                    + `[${unstepped.map((e) => `${e.tag}@${e.x},${e.y}`).join(', ')}], so their position is unknown. `
+                    + 'Refused by name rather than passed through (fidelity DRILL D2).');
+            }
+            for (const [id, o] of drills) {
+                if (id === selfId || o.removed) continue;
+                if (rectsOverlap(rect, drillRect(o))) return true;
+            }
+            for (const c of chasers.values()) {
+                if (c.removed || c.collidable === false) continue;
+                if (rectsOverlap(rect, chaserBoxAt(c.tag, c.x, c.y))) return true;
+            }
+            return boxes.some((b) => rectsOverlap(rect, b));
+        };
+    }
+    /** ⛓ fidelity DRILL D2: the live drills, as "Enemy" walls to a chaser whose list carries the type (`[]` OFF). */
+    function drillWallsNow() {
+        if (!CONTACT_FIDELITY.drillMixedRooms || !CONTACT_FIDELITY.drillLive) return [];
+        return [...drillStateFor(level).values()].filter((d) => !d.removed).map((d) => ({ id: d.id, rect: drillRect(d) }));
+    }
     function stepDrillsNow() {
         if (noclip || noDamage) return;
         const st = drillStateFor(level);
         if (st.size === 0) return;
         const base = spinnerCtx();
         const t = ticksCompleted + 1;
-        for (const [id, before] of st) {
+        const mixed = CONTACT_FIDELITY.drillMixedRooms;
+        // ⛓ fidelity DRILL D2: the game's update order is the LAST placement first (one drill: no order).
+        for (const id of (mixed ? [...st.keys()].reverse() : [...st.keys()])) {
+            const before = st.get(id);
             if (before.removed) continue;
+            const enemyAt = mixed ? drillEnemyBodiesTest(id, st) : null;
             const out = stepDrill(before, {
                 frozen: ceremony !== null,
                 onScreen: (rect) => onScreenNow(rect, `drill ${id}`),
                 playerBox: playerBoxAt(state.x, state.y),
                 player: { x: state.x, y: state.y },
-                lineBlocked: (x0, y0, x1, y1) => !!collideLineSolid(x0, y0, x1, y1),
-                collides: (rect) => base.collides(rect),
+                // ⛓ fidelity DRILL D2: `collideLine("Solid", …)` meets the pixelmasks too (OFF: the boxes alone).
+                lineBlocked: (x0, y0, x1, y1) => !!collideLineSolid(x0, y0, x1, y1, { masks: mixed }),
+                collides: (rect) => base.collides(rect) || (enemyAt !== null && enemyAt(rect)),
                 hitPlayer: (d) => {
                     let cur = d;
                     applyPlayerHit({
@@ -12189,6 +12288,18 @@ export function createLevelRun({
                 },
             });
             const d = stepDrillGraphic(out.d);
+            /**
+             * ⛓ fidelity DRILL D2: `Enemy.update`'s terrain switch is not in `drill.js` (L88's drill never leaves
+             * ground). A mixed room's drill that hops onto water, lava or a pit is refused by name, not walked on.
+             */
+            if (mixed && out.hopped) {
+                const tt = base.tileTypeAt(d.x, d.y);
+                if (tt === ENEMY_TERRAIN_DESTROYS.water || tt === ENEMY_TERRAIN_DESTROYS.lava || tt === ENEMY_PIT_TILE) {
+                    throw new Error(`levelRun: ${id} in level ${level} hops onto tile type ${tt} at (${d.x},${d.y}) on tick `
+                        + `${t}; \`Enemy.update\`'s terrain switch (water, lava, a pit) is not modelled for a drill. `
+                        + 'Refused by name (fidelity DRILL D2).');
+                }
+            }
             st.set(id, d);
             if (out.contact) drillEvents.push({ t, level, id, kind: 'contact', x: d.x, y: d.y });
             if (out.hopped) drillEvents.push({ t, level, id, kind: 'hop', x: d.x, y: d.y });
@@ -12222,7 +12333,9 @@ export function createLevelRun({
         // The live order: the LAST wallflyer placement updates first; the drills in placement order.
         const flyers = [...wallFlyerStateFor(level)].reverse().filter(([, w]) => !w.removed)
             .map(([id, w]) => [id, { ...w, dieAnim: w.dieAnim ? { ...w.dieAnim } : null }]);
+        // ⛓ fidelity DRILL D2: a mixed room's drills in the game's update order (the LAST placement first).
         const drills = [...drillStateFor(level)].filter(([, d]) => !d.removed).map(([id, d]) => [id, { ...d }]);
+        if (CONTACT_FIDELITY.drillMixedRooms) drills.reverse();
         if (flyers.length === 0 && drills.length === 0) return null;
         const fl = new Map(flyers);
         const dr = new Map(drills);
@@ -12281,11 +12394,15 @@ export function createLevelRun({
                 for (const [id, before] of dr) {
                     if (before.removed) continue;
                     let contact = false;
+                    // ⛓ fidelity DRILL D2: the "Enemy" half reads the forecast's own drills and the run's chasers where
+                    // they stand NOW (this forecast does not step a chaser — named).
+                    const enemyAt = CONTACT_FIDELITY.drillMixedRooms ? drillEnemyBodiesTest(id, dr) : null;
                     const out = stepDrill(before, {
                         frozen: false, onScreen: onScreen(id), playerBox,
                         player: { x: playerPos.x, y: playerPos.y },
-                        lineBlocked: (x0, y0, x1, y1) => !!collideLineSolid(x0, y0, x1, y1),
-                        collides: (rect) => sctx.collides(rect),
+                        lineBlocked: (x0, y0, x1, y1) => !!collideLineSolid(x0, y0, x1, y1,
+                            { masks: CONTACT_FIDELITY.drillMixedRooms }),
+                        collides: (rect) => sctx.collides(rect) || (enemyAt !== null && enemyAt(rect)),
                         hitPlayer: (d) => { contact = true; return d; },
                     });
                     dr.set(id, stepDrillGraphic(out.d));
@@ -12493,7 +12610,8 @@ export function createLevelRun({
         const solidOpts = normalizeLiveOpts(liveSolidOpts());
         // ⛓ THE NON-CHASER "Enemy" BODIES, read once per tick (see the helper).
         // ⛓ fidelity L40CONTACT D1: and the live spinners, where this tick's spinner step left them (OFF: none).
-        const staticEnemyBoxes = [...chaserStaticEnemyBoxesNow(), ...chaserSpinnerWallsNow()];
+        // ⛓ fidelity DRILL D2: and the live drills, where this tick's drill step left them (OFF: none).
+        const staticEnemyBoxes = [...chaserStaticEnemyBoxesNow(), ...chaserSpinnerWallsNow(), ...drillWallsNow()];
         // ⚠ THE UPDATE ORDER WITHIN THE FAMILY IS THE ADD ORDER, and the add
         // order is the `.oel`'s — `for each (o in xml.objects[0].bob)` walks
         // the placements in file order and PREPENDS each, so the LAST
@@ -16026,6 +16144,53 @@ export function createLevelRun({
      */
     const lightsSpearRepeats = [];
     const LIGHTS_SPEAR_REPEATS = Object.freeze([2, 4]);
+    /**
+     * ⛓⛓ fidelity DRILL D2 (`CONTACT_FIDELITY.drillMixedRooms`) — THE SPEAR'S OTHER TWO TESTS, against the drills. A drill
+     * is not idempotent inside the five ticks either: one HOPS into the rect after the first test (measured on p4g, L28
+     * from the L25 arrival: `drill@80,96` hops to (120,72) at t71 and the T+3 test hits it — "hit" at t73, the model's
+     * "drill"). From the live position, in the latched direction, the rect alone (`spear()` has no reach gate and no
+     * line); a drill already in its i-frame takes nothing (`hitDrill`). Cleared with the level, like the fliers' list.
+     */
+    const drillSpearRepeats = [];
+    const DRILL_SPEAR_REPEATS = LIGHTS_SPEAR_REPEATS;
+    /**
+     * ⛓ fidelity DRILL D2: does `Player.spear()`'s test, AS THE GAME RUNS IT, touch this drill? Two things `spearRect`
+     * does not carry (measured on p4g, the L28 spear from the L25 arrival: the player at x 125.13 facing east, the drill's
+     * box ending at x 125 — the game hit it):
+     *   · `spearX` / `spearY` are `int` getters (`Player.as:1341-1348`): the rect's origin is TRUNCATED;
+     *   · `World.collideRectInto` → `Entity.collideRect` is INCLUSIVE on all four edges (`>=` / `<=`).
+     * The four cases are `spear()`'s (`Player.as:971-980`), with `thick/2` the Number 2.5.
+     */
+    const spearTouchesDrill = (x, y, direction, d) => {
+        const o = spearOrigin(x, y, direction);
+        const sx = Math.trunc(o.x);
+        const sy = Math.trunc(o.y);
+        const L = SPEAR_LENGTH;
+        const T = SPEAR_THICK;
+        const r = direction === 0 ? { x: sx, y: sy - T / 2 + 1, w: L, h: T }
+            : direction === 1 ? { x: sx - T / 2 + 1, y: sy - L, w: T, h: L }
+                : direction === 2 ? { x: sx - L, y: sy - T / 2, w: L, h: T }
+                    : { x: sx - T / 2, y: sy, w: T, h: L };
+        const b = drillRect(d);
+        return b.right >= r.x && b.bottom >= r.y && b.x <= r.x + r.w && b.y <= r.y + r.h;
+    };
+    function drillSpearRepeatsNow() {
+        if (drillSpearRepeats.length === 0) return;
+        const due = drillSpearRepeats.filter((r) => r.at === ticksCompleted);
+        for (let i = drillSpearRepeats.length - 1; i >= 0; i -= 1) {
+            if (drillSpearRepeats[i].at <= ticksCompleted) drillSpearRepeats.splice(i, 1);
+        }
+        const dst = drillStateFor(level);
+        for (const r of due) {
+            for (const d of [...dst.values()]) {
+                if (d.removed || !spearTouchesDrill(state.x, state.y, r.direction, d)) continue;
+                const verdict = hitDrill(d, { damage: pressHitDamage('spear'), t: pressHitType('spear'), frozen: ceremony !== null });
+                if (verdict.killed) stageDrillKill(verdict.d, 'spear');
+                dst.set(d.id, verdict.d);
+                if (verdict.landed) drillEvents.push({ t: ticksCompleted, level, id: d.id, kind: 'struck', weapon: 'spear', repeat: true });
+            }
+        }
+    }
     function lightsSpearRepeatsNow() {
         if (lightsSpearRepeats.length === 0) return;
         const due = lightsSpearRepeats.filter((r) => r.at === ticksCompleted);
@@ -16913,6 +17078,9 @@ export function createLevelRun({
             }),
         }))
         : null);
+    /** ⛓ fidelity DRILL D2: every drill the run steps in this level, `{id, x, y, rect, removed}` (`[]` under noclip). */
+    const drillBodiesNow = () => (noclip ? [] : [...drillStateFor(level).values()]
+        .map((d) => ({ id: d.id, x: d.x, y: d.y, rect: drillRect(d), removed: d.removed })));
     const ENTITY_FAMILIES = Object.freeze({
         openActivators: openActivatorsNow,
         pushables: pushablesNow,
@@ -16948,6 +17116,7 @@ export function createLevelRun({
         lightsFight: lightsFightNow,
         lavaBossFight: lavaBossFightNow,
         tentacleBeastFight: tentacleBeastFightNow,
+        drillBodies: drillBodiesNow,
     });
 
     /**
@@ -17605,6 +17774,8 @@ export function createLevelRun({
          * run made (`launch`, `contact` with its retaliation, `destroyed`,
          * `removed`).
          */
+        /** ⛓ fidelity DRILL D2: the entities fold's `drillBodies` (`run.entities('drillBodies')`). */
+        get drillBodies() { return drillBodiesNow(); },
         /** ⛓ seedling-fidelity-terrain W3: the live drill(s) and their events (`hop`, `contact`, `struck`). */
         get drills() {
             return {
@@ -21597,6 +21768,8 @@ export function createLevelRun({
                 for (const thrust of fired.fires) applyThrust(thrust);
                 // ⛓ fidelity LIGHTS D2: a spear thrust's T+3 / T+5 tests against the L69 fliers (`lightsSpearRepeatsNow`).
                 lightsSpearRepeatsNow();
+                // ⛓ fidelity DRILL D2: and against the drills (none scheduled OFF).
+                drillSpearRepeatsNow();
             }
             // ── ⛓ THE FIRE WINDOW'S HIT TICKS ────────────────────────
             // `Player.update` calls `fire()` in the same place it calls

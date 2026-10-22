@@ -126,15 +126,19 @@ export const LEGS = {
             expect: 'burn-order', grant: ['Fire', 'Progressive Sword'] },
     ],
     X: [
-        { name: 'residue L28', at: [28, 96, 16], goal: exit(28, [[0, 6]], 'out_teleporter_0_96'), expect: 'repeat' },
+        // ⛓ planning-10's DRILL flip (`drillMixedRooms` ON; ⚖ user licence 2026-10-22, "Yes, I license the change"): L28's
+        //   two drills are stepped, so the walk no longer meets an unseen drill and re-arrives on an EXACT repeat — it CROSSES.
+        { name: 'residue L28', at: [28, 96, 16], goal: exit(28, [[0, 6]], 'out_teleporter_0_96'), expect: 'cross', producer: 'solver' },
         { name: 'L30 past the BobSoldier', at: [30, 16, 128], goal: exit(30, [[12, 3]], 'out_stairsdown_192_48'), expect: 'cross', producer: 'solver',
             verbs: ['detour'], ticks: 167 },
         { name: 'residue L45', at: [45, 112, 288], goal: exit(45, [[7, 0]], 'out_teleporter_112_0'), expect: 'declined',
             // ⛓ wave-12 harvest (fidelity LEASH, `baitForecast` ON by default, user-licensed; clause by js-planning-5): the
             // ladder now refuses at the BAIT rung — no jellyfish stance survives the forecast — before the FIRE clause.
             clause: 'no bait stance for jellyfish@224,176 survives the chaser forecast' },
-        { name: 'residue L88 a', at: [88, 96, 288], goal: exit(88, [[2, 0]], 'out_teleporter_32_0'), expect: 'declined', clause: 'the re-planned corridor failed too' },
-        { name: 'residue L88 b', at: [88, 96, 288], goal: exit(88, [[12, 0]], 'out_teleporter_192_0'), expect: 'declined', clause: 'the re-planned corridor failed too' },
+        // ⛓ planning-10's DRILL flip: the danger map prices L88's drill as a STEPPED drill at its live box, so the decline
+        //   names it (drillMixedRooms OFF: 'the re-planned corridor failed too').
+        { name: 'residue L88 a', at: [88, 96, 288], goal: exit(88, [[2, 0]], 'out_teleporter_32_0'), expect: 'declined', clause: 'enemy:drill@128,160 (a stepped drill' },
+        { name: 'residue L88 b', at: [88, 96, 288], goal: exit(88, [[12, 0]], 'out_teleporter_192_0'), expect: 'declined', clause: 'enemy:drill@128,160 (a stepped drill' },
     ],
 };
 

@@ -1,0 +1,3 @@
+L28	enemies=3 [drill@80,96 drill@128,96 bobsoldier@264,168]	hazards=[]
+L88	enemies=1 [drill@128,160]	hazards=[]
+L91	enemies=4 [bob@128,64 bob@160,96 bob@192,80 drill@64,80]	hazards=[]

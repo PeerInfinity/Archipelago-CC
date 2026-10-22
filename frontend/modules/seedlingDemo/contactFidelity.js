@@ -886,6 +886,23 @@ export const CONTACT_FIDELITY = {
      * by name on the unstepped-drill INTERIM (`unsteppedDrills`) until fidelity DRILL models mixed-room drills.
      */
     ropeCutAnyWeapon: true,
+    /**
+     * fidelity DRILL (wave 24) — EVERY DRILL OF A ROOM IS STEPPED, BESIDE ITS OTHER ENEMIES (`levelRun.drillStateFor`).
+     * `drillLive` admits a drill only where it is the room's ONE census enemy (L88), because `Drill.solids` adds
+     * "Enemy" (`Drill.as:35`) and a lone drill's "Enemy" term meets nothing. The atlas holds two other drill rooms: L28
+     * (two drills and a bobsoldier) and L91 (one drill and three bobs), whose drills the model never moved (measured on
+     * p4g by ROPESTANCE: `drill@128,96` hopped onto the player at t59, the model saw nothing). ON: those drills are
+     * stepped too, in the game's update order (the LAST placement first), and a hop's `collideTypes(solids, …)` reads
+     * the "Enemy" bodies at their live positions (the other drills where this tick left them, the chasers where the
+     * previous tick did, the static census boxes); a census body the run does not step is refused by name when a hop
+     * asks for it. A chaser whose list carries "Enemy" (the bobs) meets the live drills too. `solverBot.unsteppedDrills`
+     * (ROPESTANCE's interim) returns none. OFF: byte-identical. `SEEDLING_DRILL_MIXED_ROOMS=0|1` for a node measurement.
+     * ⛓ planning-10's flip (⚖ user, 2026-10-21, DRILL "Harvest + flip ON") turns it ON. Measured movers (CI, wave-24
+     * A/B): the route survey (full) only step 127 (L88)'s refusal WORDING (REFUSED → REFUSED, now naming the drill); the
+     * 19 drill-room sweep legs ×2: 0 verdict movers. The escape cache needs no digest move (hammer's reach analysis; XC
+     * verify 0 mismatches on the hammer producers ON).
+     */
+    drillMixedRooms: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1065,6 +1082,9 @@ if (globalThis.process?.env?.SEEDLING_IGNEOUS_DEAD_FRAMES === '0') CONTACT_FIDEL
 // ⛓ fidelity ROPESTANCE: `SEEDLING_ROPE_CUT_ANY_WEAPON=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_ROPE_CUT_ANY_WEAPON === '1') CONTACT_FIDELITY.ropeCutAnyWeapon = true;
 if (globalThis.process?.env?.SEEDLING_ROPE_CUT_ANY_WEAPON === '0') CONTACT_FIDELITY.ropeCutAnyWeapon = false;
+// ⛓ fidelity DRILL: `SEEDLING_DRILL_MIXED_ROOMS=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '1') CONTACT_FIDELITY.drillMixedRooms = true;
+if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '0') CONTACT_FIDELITY.drillMixedRooms = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
