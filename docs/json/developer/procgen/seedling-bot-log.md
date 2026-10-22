@@ -24508,3 +24508,47 @@ The L28 spear cut from the L25 side therefore refuses by name until the drills a
   modelled ROOM. Ask whether the run steps the body in THIS room before trusting a 0-hit plan near it.
 - A spear stance's face tap can nudge the player a fraction of a pixel into water; preview the tap with the executor's
   own terrain test.
+
+### Seedling fidelity DRILL — every drill of a mixed room stepped (`drillMixedRooms`, OFF); ROPESTANCE's drill interim retires
+
+Planner `seedling-fidelity-planning-10`, wave 24 (⚖ the user picked "Drill-model cloud slice" after ROPESTANCE found the
+gap). The report is `CC/docs/cloud-reports/seedling-fidelity-drill.md`.
+
+**W0.** The atlas holds three drill rooms: L88 (the drill alone — stepped since TERRAIN W3), L28 (`drill@80,96`,
+`drill@128,96`, `bobsoldier@264,168`) and L91 (`drill@64,80` and three bobs). `Drill.solids` is `Mobile.solids` plus
+"Enemy" (`Drill.as:35`): a hop's `collideTypes(solids, tox, y)` meets every "Enemy" body's hitbox where it stands when the
+drill updates. `loadlevel` adds the drills after the bobs and bobsoldiers and `addUpdate` prepends, so a drill reads a
+chaser where the PREVIOUS tick left it and the other drill where THIS tick did if that one updated first (the last
+placement updates first). In L28 the drills and the bobsoldier are in different walkable components (the planner's tile
+graph), so that term meets only the other drill there; in L91 it meets the bobs.
+
+**The model (switch ON).** `drillStateFor` admits every drill of the room; `stepDrillsNow` walks them in that order and
+the hop reads the other drills live, the chasers, the static census boxes, the wallflyers and the spinners; a moving
+"Enemy" body the run does not step is refused by name when a hop asks; a hop onto water, lava or a pit is refused by
+name (no terrain switch in `drill.js`). A chaser whose list carries "Enemy" (Bob) meets the live drills. Three things the
+witnesses found that the brief did not expect:
+- **the sight line meets pixelmasks.** `collideLine("Solid", …)` samples POINTS, and L28's CliffSide at (160,112) blocks
+  `drill@128,96`'s line to a player 46.9 px away on the game; `collideLineSolid` walked boxes only. It takes an optional
+  `{masks: true}` now (`maskHitsBox` with a 1x1 box), used by the drill alone.
+- **the spear's T+3 / T+5 tests reach a drill.** `drill@80,96` hops into the thrust two ticks after the first test.
+- **the spear's rect is `int`-origined and its collide inclusive** (`spearX`/`spearY` are `int` getters;
+  `Entity.collideRect` is `>=`/`<=`): the player at x 125.13 facing east hits a drill whose box ends at x 125.
+  `spearRect` carries neither; the drill's tests use the game's rule (`spearTouchesDrill`) — handed over for the rest.
+
+**Witnesses (p4g, 0 px on the player, both drills' position and anim, and every chaser; `probe-seedling-drill-mixed.mjs`,
+`fixtures/drill-witness/`).** L28: a drill's hop refused by the other drill (`drill-l28-pair`); no hop through the
+CliffSide (`drill-l28-cliffside`); ROPESTANCE's failing spear plan from the L25 arrival, the game's t59 hit and the T+3
+spear hit (`drill-l28-spear-l25`). L91: the drill's hop refused by a bob (`drill-l91-bob`); a bob's sweep stopped by the
+drill (`drill-l91-bob-wall`).
+
+**D3.** With the switch ON `unsteppedDrills` returns none, `ropeStanceAdmit` is `pullStanceAdmit` and the corridor check
+is a no-op; a rope cut that fails after a drill's contact refuses naming that drill. L28's spear from the L25 arrival:
+refused, `drill@128,96` at run tick 59 — the game's tick. OFF: the interim, byte-identical.
+
+**Trap candidates.**
+- A sight line is a raycast of POINTS: a box-only `collideLine` sees through a pixelmask's transparent half and is blind
+  to its opaque half. A class whose trigger is a line (the drill, the crusher) needs the masks.
+- A weapon test the model runs once can run three times on the game (`spearDelayMax` 1): a body that MOVES into the rect
+  between the tests is hit by a test the model never ran.
+- An AS3 getter typed `int` truncates: a rect built from it is not the float rect, and FlashPunk's `collideRect` is
+  inclusive where `collide` is strict.
