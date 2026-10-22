@@ -117,11 +117,13 @@ describe('fidelity ROPE — D2: the clear-tag on a rope\'s own tag (the switch O
     it.each([
         ['no item', [], /holds NOTHING/],
         ['the Spear alone', ['hasSpear'], /fires `spear`/],
-    ])('%s: `cannot-act`, naming the sword swing this verb drives', (_, items, why) => ON(() => {
+    // ⛓ planning-10's ROPESTANCE flip: `ropeCutAnyWeapon` is ON by default (the Spear and Fire cut too —
+    //   fidelityRopeStance's rows), so the sword-only refusal is read with it OFF.
+    ])('%s: `cannot-act`, naming the sword swing this verb drives (ropeCutAnyWeapon OFF)', (_, items, why) => ON(() => withContactFidelity({ ropeCutAnyWeapon: false }, () => {
         const { refusal } = solve(FROM_L15, L16, { items });
         expect(refusal.obstacle).toMatchObject({ kind: 'clear-tag', id: 'rope@32,16', reason: 'cannot-act' });
         expect(refusal.message).toMatch(why);
-    }));
+    })));
 });
 
 describe('fidelity ROPE — D1: the verb\'s plans on the game (p4g), at 0 px', () => {

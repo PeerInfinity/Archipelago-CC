@@ -871,6 +871,21 @@ export const CONTACT_FIDELITY = {
      * node seam sweep of its captured request).
      */
     igneousDeadFrames: true,
+    /**
+     * fidelity ROPESTANCE (wave 23) — A ROPE IS CUT BY THE SPEAR AND BY FIRE TOO (`solverBot.ropeCutWeapons`). The game
+     * cuts a `RopeStart` from all three weapons through `Player.genericHit` → `RopeStart.hit()` (`Player.as:1095-1097`):
+     * the sword's slash (reach gate, LOS waived for a Rope), the spear's 32x5 thrust rect (`spear()`: no reach gate and NO
+     * line test at all) and fire's 32x32 area with its 16 px radius cut (`fire()`). The run models all three
+     * (`levelRun.pullRope`). ON: with the selected slot NOT the sword, the `rope` verb and the PULL rung derive a spear
+     * stance (a facing whose `spearRect` covers the rope) or a fire stance (`auditFire` reaches it, nothing else), and
+     * press through the existing executors (`runSpear` / `runFire`), selecting a held weapon's slot when the selected one
+     * cannot cut. OFF: a swordless run refuses by name, byte-identical. With the SWORD selected nothing changes either
+     * way. `SEEDLING_ROPE_CUT_ANY_WEAPON=0|1` for a node measurement.
+     * ⛓ planning-10's flip (⚖ user, 2026-10-21, ROPESTANCE "Harvest + flip ON") turns it ON. Measured movers (CI, wave-23
+     * A/B): the route survey (full) 0; the 28 rope-level sweep legs ×2: 0. The L28 Spear from the L25 side still refuses
+     * by name on the unstepped-drill INTERIM (`unsteppedDrills`) until fidelity DRILL models mixed-room drills.
+     */
+    ropeCutAnyWeapon: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1047,6 +1062,9 @@ if (globalThis.process?.env?.SEEDLING_ENCLOSED_PIT_CORNER === '0') CONTACT_FIDEL
 // ⛓ fidelity IGFADE: `SEEDLING_IGNEOUS_DEAD_FRAMES=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_IGNEOUS_DEAD_FRAMES === '1') CONTACT_FIDELITY.igneousDeadFrames = true;
 if (globalThis.process?.env?.SEEDLING_IGNEOUS_DEAD_FRAMES === '0') CONTACT_FIDELITY.igneousDeadFrames = false;
+// ⛓ fidelity ROPESTANCE: `SEEDLING_ROPE_CUT_ANY_WEAPON=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_ROPE_CUT_ANY_WEAPON === '1') CONTACT_FIDELITY.ropeCutAnyWeapon = true;
+if (globalThis.process?.env?.SEEDLING_ROPE_CUT_ANY_WEAPON === '0') CONTACT_FIDELITY.ropeCutAnyWeapon = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
