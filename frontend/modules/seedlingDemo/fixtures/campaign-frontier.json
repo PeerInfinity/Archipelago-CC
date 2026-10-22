@@ -67,7 +67,7 @@
     32
   ],
   "sources": {
-    "frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json": "38366d55a06a2ec86aeb2e845cdd89e2",
+    "frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json": "a4d679073a9009f84b37096817b6bdcb",
     "frontend/modules/flashPanel/atlases/seedling-map.json": "647bd46a7ff6f1eacb0d956b81344a44",
     "frontend/modules/flashPanel/atlases/seedling-sphere-order.json": "525c3b32d65564a3483d382787a4c6a8"
   },
