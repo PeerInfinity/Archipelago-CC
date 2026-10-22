@@ -20,7 +20,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { realRoomPlaybackMap, resolveSeedlingAtlasGoal } from './seedlingPlaybackController.js';
+import { BOUND_BOSS_FIGHTS, realRoomPlaybackMap, resolveSeedlingAtlasGoal } from './seedlingPlaybackController.js';
+import { CONTACT_FIDELITY } from '../seedlingDemo/contactFidelity.js';
 import { loadSeedlingRandomizer } from './seedlingRandomizerWiring.js';
 
 const abs = (rel) => fileURLToPath(new URL(rel, import.meta.url));
@@ -82,12 +83,16 @@ const EXPORT_LOAD = await pageLoad(EXPORT);
 describe('the seedling_playthrough seed-1 export drives the wasm page as AP_1 does', () => {
     // ⛓ R4b (rules-boss-locations): every location a goal BUT the seven boss kills, which the vanilla arm refuses
     //   by name until the bot has a fight executor (`BOSS_REPORT_REFUSAL`; R4b part 2 / fidelity).
-    it('the premise: AP_1 loads eligible, with a bot map and every location a goal but the seven boss kills', () => {
+    // ⛓ planning-10's kingOfFireFight flip (⚖ user, 2026-10-21): a boss whose `BOUND_BOSS_FIGHTS` switch is ON by default
+    //   is a goal, so the refused count is seven less those (one: the King of Fire).
+    it('the premise: AP_1 loads eligible, with a bot map and every location a goal but the boss kills with no default-ON fight', () => {
         expect(AP1_LOAD.verdict).toBe('eligible');
         expect(AP1_LOAD.mapRegions).toBeGreaterThan(0);
         expect(AP1_LOAD.mapLinks).toBeGreaterThan(0);
         const [goals, real] = AP1_LOAD.locationGoals.split('/');
-        expect(Number(real) - Number(goals)).toBe(7);
+        const wiredByDefault = Object.values(BOUND_BOSS_FIGHTS).filter((sw) => CONTACT_FIDELITY[sw] === true).length;
+        expect(wiredByDefault).toBe(1);
+        expect(Number(real) - Number(goals)).toBe(7 - wiredByDefault);
     });
 
     it.each(PAGE_BLOCKS)('the export carries AP_1\'s `%s` for its slot, as a per-slot map', (key) => {

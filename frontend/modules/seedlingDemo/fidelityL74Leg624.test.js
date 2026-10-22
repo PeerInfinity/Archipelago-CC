@@ -118,8 +118,10 @@ describe('L74LEG624 D2 — a cleared non-arena FallRock is built FALLEN (ON) or 
             expect(() => buildLevelWorld(rec74(), { cleared: [2] })).toThrow(/clears tag 2, which is a "fallrock"/);
         });
     });
+    // ⛓ planning-10's kingOfFireFight flip: with the fight ON, L82's `fallrocklarge` is the ARENA rock (bosskills D2,
+    //   built fallen when {82,1} is cleared), so the non-arena refusal is read with the fight OFF.
     it('ON: the rock is a `postFall` roster row; L82\'s non-arena `fallrocklarge` stays refused', () => {
-        withContactFidelity({ fallRockPostFall: true }, () => {
+        withContactFidelity({ fallRockPostFall: true, kingOfFireFight: false }, () => {
             const w = buildLevelWorld(rec74(), { cleared: [2] });
             expect(w.fallRocks.filter((r) => r.postFall)).toEqual([expect.objectContaining({
                 id: 'fallrock@288,144', persistTag: 2 })]);

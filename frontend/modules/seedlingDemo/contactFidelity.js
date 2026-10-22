@@ -805,8 +805,10 @@ export const CONTACT_FIDELITY = {
      * and the death's report `{82,0}`; the body leaves the solids at its removal; a WandShot flies through it; the
      * `solid:lavaboss` → `lavaboss` strategy executes the fight. OFF: no fight is built, the census body stays the
      * wall it always was, a press on it refuses as before and the strategy refuses by name — byte-identical.
+     * ⛓ planning-10's flip (⚖ user, 2026-10-21, "Flip kingOfFireFight") turns it ON. Measured movers (CI, wave-22 A/B
+     * at BOSSFORK): the 8 boss sweep legs (505–508, 664–667) done ×2; the route survey (full): L82 199/220 SOLVED.
      */
-    kingOfFireFight: false,
+    kingOfFireFight: true,
     /**
      * seedling-fidelity-bosskills D3 — THE TENTACLED BEAST (`tentacleBeast.js`, L57): the wake, the seeded
      * `Math.random` spawns (the run's declared `rng` stream, as the Owl's), the tentacles' sit window and their

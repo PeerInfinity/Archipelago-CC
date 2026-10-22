@@ -18,6 +18,12 @@
  * The shared-world ownership comes from the playthrough atlas's OWN persisted partition
  * (`atlases/seedling-subregion-partition.json`, keyed by the SOURCE atlas id).
  *
+ * ⛓ THE GRID IS THE ATLAS'S OWN (session tile-primitives-levels-gap3; ⚖ the user, 2026-10-21: "Atlas's own
+ * grid"). The playthrough atlas was analysed on its generator's OVERLAY grid over the DELIVERED (set-patched)
+ * rooms, so the projection recomputes on exactly that (`playthroughGridFor` + `playthroughAnalyzerOptions`,
+ * the pair the partition generator re-runs) and reads the entity rows off the delivered rooms too. On the
+ * raw transcription 45 of the 115 regions disagreed with their own atlas (overlay cells, pruned pockets).
+ *
  * Deterministic, so `--check` is an exact byte gate.
  *
  * Usage:
@@ -31,6 +37,9 @@ import { compileRegionAtlas, formatCompileReport } from '../../frontend/modules/
 import { stampAtlasIdentity } from '../../frontend/modules/procgenPipeline/regionAtlasValidator.js';
 import { stringifyRulesJson } from '../../frontend/modules/shared/rulesJsonBuilder.js';
 import { seedlingMazeProjectionDeps } from '../../frontend/modules/flashPanel/seedlingAtlasAnalysis.js';
+import {
+    PLAYTHROUGH_MAP, playthroughGridFor, playthroughAnalyzerOptions,
+} from './make-seedling-playthrough-rules.mjs';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 
 argvHelp(import.meta.url);
@@ -39,7 +48,7 @@ const ATLAS_DIR = resolve(REPO, 'frontend/modules/flashPanel/atlases');
 export const OUT_FILE = resolve(REPO, 'frontend/presets/seedling_playthrough_maze/AP_1/AP_1_rules.json');
 
 /** ⚖ The levels this preset carries, in atlas order. It GROWS (the user's ruling above). */
-export const LEVELS = Object.freeze(['level_15']);
+export const LEVELS = Object.freeze(['level_14', 'level_15', 'level_16']);
 
 const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
 
@@ -79,7 +88,16 @@ export function buildPlaythroughMaze() {
     if (!partition) {
         throw new Error(`the sub-region partition has no entry for "${atlas.atlas_id}" — run make-seedling-subregion-partition.mjs`);
     }
-    const mazeProjection = seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds: { partition } });
+    const mazeProjection = seedlingMazeProjectionDeps({
+        mapDoc: PLAYTHROUGH_MAP,
+        gameConfig,
+        levelWorlds: { partition },
+        analysis: {
+            gridForLevel: (level) => playthroughGridFor(level),
+            conditionKey: playthroughAnalyzerOptions.conditionKey,
+            resolveCondition: playthroughAnalyzerOptions.resolveCondition,
+        },
+    });
     const { rules, report } = compileRegionAtlas(restrictAtlas(atlas, LEVELS), {
         mapDoc,
         embedSphereLog: true,

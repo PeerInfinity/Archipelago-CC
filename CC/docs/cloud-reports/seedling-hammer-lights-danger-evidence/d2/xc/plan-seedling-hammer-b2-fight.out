@@ -1,0 +1,9 @@
+PASS: ⛓ the clock is at residue 40, moved by -45 from the committed 40 — seam.time 9940 → 9895
+PASS: ⛓⛓ with the switch OFF this staging solves to the committed walk's length — 518 ticks
+PASS: ⛓⛓ with it ON the walk is shorter, and the whole fight is ONE certificate, followed to its end — 342 ticks; 1 search(es), 1 found, 0 left; goal +207, 21243 expansion(s)
+PASS: ⛓ every landing the walk makes is one of the six the fight needs (two bodies × hitsMax) — spinner@48,96@55 spinner@112,48@114 spinner@112,48@166 spinner@48,96@168 spinner@112,48@203 spinner@48,96@205
+PASS: ⛓ the walk takes ZERO hits and crosses to L19 — hits 0; transitions [{"t":342,"from_level":18,"to_level":19}]
+PASS: ⛓ the committed hammer-b2-l18-fight40 is what this script produces today — byte-identical
+## hammer-b2-l18-fight40: 342 ticks (OFF 518), residue 40, one fight certificate (goal +207), landings 55/114/166/168/203/205, {18,0}@317
+
+all checks green

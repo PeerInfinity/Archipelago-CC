@@ -194,8 +194,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             igneousLava: true,
             // ⛓ fidelity LIGHTS (wave 20): the L69 fight's model and verb, OFF.
             lightsBossFight: false,
-            // ⛓ seedling-fidelity-bosskills: the King of Fire's and the Tentacled Beast's fights ship OFF.
-            kingOfFireFight: false, tentacleBeastFight: false,
+            // ⛓ seedling-fidelity-bosskills: the King of Fire's and the Tentacled Beast's fights ship OFF;
+            // ⛓ planning-10's flip (⚖ user "Flip kingOfFireFight", 2026-10-21) turns `kingOfFireFight` ON.
+            kingOfFireFight: true, tentacleBeastFight: false,
             // ⛓ fidelity ROPE (wave 22): the `rope` verb ships OFF.
             // ⛓ planning-9's flip (⚖ user "Yes, flip it", 2026-10-21) turns `ropeCutVerb` ON.
             ropeCutVerb: true,
