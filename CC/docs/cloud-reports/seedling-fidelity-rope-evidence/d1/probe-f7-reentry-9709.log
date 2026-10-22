@@ -1,0 +1,11 @@
+# box lock: TAKEN by probe-seedling-f7-reentry.mjs (browser, pid 3450) — head 85a5c1a25, 2 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+PASS: f7-l16-reentry declares {16,0}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: WITNESS-REENTRY: the game walks the committed recording (61 observations) — worst 0, 61 rows
+PASS: WITNESS-REENTRY: the game's stream is the model's — worst 0
+PASS: CONTROL-REENTRY: without {16,0} the traps fire and the game's stream LEAVES the witness's — worst 32.000000000000014, first differing row 6
+PASS: f7-l16-walkin declares {16,0}
+PASS: WITNESS-WALKIN: the game walks the committed recording (61 observations) — worst 0, 61 rows
+PASS: WITNESS-WALKIN: the game's stream is the model's — worst 0
+PASS: CONTROL-WALKIN: without {16,0} the traps fire and the game's stream LEAVES the witness's — worst 34.97668216363317, first differing row 13
+ALL CHECKS PASSED

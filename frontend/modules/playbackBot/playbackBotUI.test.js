@@ -1859,6 +1859,59 @@ describe('PlaybackBotUI — obstacle events (break before first use)', () => {
         expect(bot.getStatus()).toMatch(/breaking breakablerock@64,16 first \(flag:L9:2\) — the route to Vault/);
     });
 
+    // ⛓ ROPE GOAL — the game collects a broken obstacle's event as a LOCAL check (no user:locationCheck, no region
+    // move), so the BREAK walk's end is heard off the snapshot (`onSnapshotUpdated`). Measured before this: the
+    // whole-game walk cut L16's rope, the flag was collected, and the bot stayed silent to the budget.
+    // Mutants (each reds a row below by name): `_takeBreakStep` never records `_pendingBreak` → "collected → the
+    // next walk"; `onSnapshotUpdated` skips the checked test → "a snapshot WITHOUT the check"; `_publishWalkTo`
+    // never drops it → "another target".
+    const flush = async () => { for (let i = 0; i < 5; i += 1) await Promise.resolve(); };
+    it('BREAK → collected → the next walk: the snapshot that holds the event checked re-plans the gated route', async () => {
+        const { bot, controller, snapshot } = makeBot({ sphere: sphereOf('Loc V') });
+        bot.onRegionMove({ targetRegion: 'Start' });
+        await bot.play();
+        expect(walkTos(controller)).toEqual([{ kind: 'location', name: WALL }]);
+        // the game breaks the wall: its flag is collected (inventory gains the event item, the location is checked)
+        snapshot.inventory[WALL] = 1;
+        snapshot.checkedLocations = [WALL];
+        bot.onSnapshotUpdated();
+        await flush();
+        expect(walkTos(controller)).toEqual([{ kind: 'location', name: WALL }, { kind: 'exit', name: 'Start -> Far2' }]);
+        expect(bot.getLog()).toContain(`"${WALL}" collected by the game — re-planning the route`);
+        // once answered, a later snapshot is a no-op
+        bot.onSnapshotUpdated();
+        await flush();
+        expect(walkTos(controller)).toHaveLength(2);
+    });
+
+    it('a snapshot WITHOUT the check (the flag not collected yet) changes nothing — no walk is re-issued', async () => {
+        const { bot, controller, snapshot } = makeBot({ sphere: sphereOf('Loc V') });
+        bot.onRegionMove({ targetRegion: 'Start' });
+        await bot.play();
+        snapshot.checkedLocations = ['Odd'];
+        bot.onSnapshotUpdated();
+        await flush();
+        expect(walkTos(controller)).toEqual([{ kind: 'location', name: WALL }]);
+        expect(bot.getStatus()).toMatch(/breaking breakablerock@64,16 first/);
+        // no re-plan was even asked (the dedupe alone would hide a re-plan to the same break walk)
+        expect(bot.getLog().some((l) => /collected by the game/.test(l))).toBe(false);
+    });
+
+    it('another target ends the pending BREAK step: a later collection of it does not re-plan', async () => {
+        const { bot, controller, snapshot } = makeBot({ sphere: sphereOf('Loc V') });
+        bot.onRegionMove({ targetRegion: 'Start' });
+        await bot.play();
+        bot._publishWalkTo({ kind: 'tile', x: 3, y: 3 });
+        const before = walkTos(controller).length;
+        snapshot.inventory[WALL] = 1;
+        snapshot.checkedLocations = [WALL];
+        bot.onSnapshotUpdated();
+        await flush();
+        expect(walkTos(controller)).toHaveLength(before);
+        bot.reset();
+        expect(bot._pendingBreak).toBe(null);
+    });
+
     it('CROSSING CREDIT: Start → Pocket passes through the rock at its own cost — walked, credited, and the gated landing is taken later', async () => {
         const { bot, controller } = makeBot({ sphere: sphereOf('Loc V2') });
         bot.onRegionMove({ targetRegion: 'Start' });

@@ -244,6 +244,9 @@ export class PlaybackBotUI {
         // ⛓ OBSTACLE EVENTS — game-state event ITEMS a hop the bot took CREDITED (it passed through the obstacle at the
         // event's own cost, so the game breaks it on that walk): held for routing until the collector sees the flag.
         this._creditedEvents = new Set();
+        // ⛓ ROPE GOAL — the event location a goal-first BREAK step is walking to (`_takeBreakStep`), until a snapshot
+        // holds it checked (`onSnapshotUpdated`) or the bot publishes another target. null = no break step pending.
+        this._pendingBreak = null;
         // The game-state event rows the queue left to the game (never walked eagerly), for readouts.
         this._leftToGame = [];
         this._getSphereData = getSphereData;
@@ -454,6 +457,7 @@ export class PlaybackBotUI {
         this._lastArrivalExit = null;
         this._escapes = [];
         this._creditedEvents = new Set();
+        this._pendingBreak = null;
         this._dispatcherLog = [];       // dispatcher event log is run-scoped
         this._cancelDirectTimer();
         this._directOnce = false;
@@ -1389,6 +1393,25 @@ export class PlaybackBotUI {
         this._setStatus(`${sphereTag}breaking ${ev.obstacle?.class ?? 'an obstacle'}@${ev.obstacle?.x},${ev.obstacle?.y} `
             + `first (${ev.eventId ?? ev.name}) — the route to ${toward} needs it`);
         this._publishWalkTo({ kind: 'location', name: ev.name });
+        this._pendingBreak = ev.name;
+    }
+
+    /**
+     * ⛓ ROPE GOAL — `stateManager:snapshotUpdated`: the re-plan after a goal-first BREAK step. The game's flag collects
+     * the event as a LOCAL check (`seedlingRegionGlue._eventCollect`), never a `user:locationCheck`, so neither of the
+     * two events that advance the bot (`onLocationCheck`, `onRegionMove`) comes — the walk ended on the broken obstacle
+     * and nothing asked for the next one (measured: L16's rope cut and collected, then the bot silent to the budget).
+     * The snapshot that holds the event location checked is the signal; any other snapshot is a no-op.
+     */
+    onSnapshotUpdated() {
+        const name = this._pendingBreak;
+        if (!name || !this._walking()) return;
+        const checked = this._stateManagerProxy?.getLatestStateSnapshot?.()?.checkedLocations;
+        if (!Array.isArray(checked) || !checked.includes(name)) return;
+        this._pendingBreak = null;
+        this._log.push(`"${name}" collected by the game — re-planning the route`);
+        this._publishNextWalkTo();
+        this._render();
     }
 
     /** ⛓ OBSTACLE EVENTS — the queue rows left to the game, and the events the bot's hops credited. */
@@ -1503,6 +1526,8 @@ export class PlaybackBotUI {
     }
 
     _publishWalkTo(target) {
+        // ⛓ ROPE GOAL — any other target ends the pending BREAK step (the route moved on without it).
+        if (this._pendingBreak !== null && !(target.kind === 'location' && target.name === this._pendingBreak)) this._pendingBreak = null;
         // De-dupe identical consecutive walkTo: an event mid-leg can
         // re-enter _publishNextWalkTo without changing the head, and
         // re-issuing the same walkTo would just have the controller
