@@ -11167,15 +11167,17 @@ export function createLevelRun({
         const toX = Math.trunc(toXf);
         const toY = Math.trunc(toYf);
         const boxes = world.solidBoxesForMover(normalizeLiveOpts(liveSolidOpts()));
+        // a sample's 1x1 box spans [p, p + 1) for p in [min, max]; a mask's integer origin meets it iff origin <= max
         const lx0 = Math.min(fromX, toX);
-        const lx1 = Math.max(fromX, toX) + 1;
+        const lx1 = Math.max(fromX, toX);
         const ly0 = Math.min(fromY, toY);
-        const ly1 = Math.max(fromY, toY) + 1;
+        const ly1 = Math.max(fromY, toY);
         // ⛔ an `OpenTree` is NOT "Solid": it extends `Tree`, whose ctor writes `type = "Tree"` (`Scenery/Tree.as:22`;
         // `OpenTree.as` never re-types it) — measured on p4g (`mask-l65-opentree`: the swing through its opaque pixels
         // lands). `ENTITY_CLASSES.opentree` says "Solid"; the line reads the AS3 type (fidelity MASKS, handed over).
         const masks = withMasks ? (world.pixelmasks ?? []).filter((p) => p.cls?.type === 'Solid'
-            && p.cls.as3 !== 'OpenTree' && p.maskX < lx1 && p.maskX + p.mask.w > lx0 && p.maskY < ly1 && p.maskY + p.mask.h > ly0) : [];
+            && p.cls.as3 !== 'OpenTree'
+            && p.maskX <= lx1 && p.maskX + p.mask.w > lx0 && p.maskY <= ly1 && p.maskY + p.mask.h > ly0) : [];
         const at = (px, py) => {
             for (const s of boxes) {
                 if (px >= s.x && px < s.right && py >= s.y && py < s.bottom) return s;
