@@ -26,7 +26,6 @@ Core rule evaluation engine for Archipelago JSON rules.
 ```javascript
 evaluateRule(rule, context, depth, localScope)  // Evaluate rule against snapshot
 resolveHelperScope(helperDefinition, args, staticData, playerIdStr)  // Resolve helper params
-debugRule(rule, indent)  // Debug rule tree
 ```
 
 ### snapshotInterface.js

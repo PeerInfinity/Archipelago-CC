@@ -34,6 +34,13 @@ class HelperStatementMixin:
     _current_entrance: Optional[str]
     _current_helper_params: Set[str]
 
+    # The statement kinds `_generate_statement` writes (the registry's `statement: true` kinds,
+    # frontend/schema/rule-kinds.json).
+    _STATEMENT_TYPES = frozenset({
+        'assign', 'aug_assign', 'tuple_assign', 'return', 'for_range', 'for_iter',
+        'if_statement', 'while_loop', 'break', 'continue',
+    })
+
     def _indent(self, code: str, level: int = 1) -> str:
         """Indent code by the specified number of levels (4 spaces each)."""
         indent = '    ' * level
@@ -54,6 +61,11 @@ class HelperStatementMixin:
         # Handle block (multi-statement body)
         if rule_type == 'block':
             return self._generate_block(rule)
+
+        # A body that IS one statement (kh1 has_x_worlds: `if ...: return True else: ...`) is a
+        # one-statement block, not an expression to return.
+        if rule_type in self._STATEMENT_TYPES:
+            return self._generate_statement(rule)
 
         # For single expressions, wrap in return
         expr = self._generate_expression(rule)
@@ -783,6 +795,15 @@ class HelperStatementMixin:
                     group_expr = self._generate_expression(group)
                     return f'state.count_group({group_expr}, player)'
                 return f'state.count_group({repr(group)}, player)'
+
+            # Any other `AST_<type>` node the AST→RB converter wrapped (kh2's AST_comparison): its
+            # args ARE the AST node, so unwrap it and generate that (the JS engine does the same with
+            # `_original_ast_type`). An AST type with no handler still fails loudly, by its own name.
+            args = expr.get('args')
+            if rule_type.startswith('AST_') and isinstance(args, dict) and args.get('_original_ast_type'):
+                unwrapped = {k: v for k, v in args.items() if k != '_original_ast_type'}
+                unwrapped['type'] = args['_original_ast_type']
+                return self._generate_expression(unwrapped)
 
         # Unknown type: loud (⚖ D3); lossy mode keeps the always-true placeholder
         return unknown_kind('helper body', expr.get('type') or expr.get('rule') or repr(expr)[:60], 'True')

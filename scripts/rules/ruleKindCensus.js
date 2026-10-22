@@ -200,6 +200,9 @@ export async function census({ registry, python, presets } = {}) {
     const astOf = (k) => (k.startsWith('AST_') ? k.slice(4) : null);
     // the engine's default branch rebuilds `AST_<t>` (with `_original_ast_type`) as an AST node
     const jsHandlesRb = (k) => rbSwitch.has(k) || (astOf(k) !== null && jsAst.has(astOf(k)));
+    // so does the helper-body generator (`_generate_expression` unwraps `AST_<t>` and generates `t`)
+    const helperHandlesRb = (k) => py['world_generator.helper_rb'].has(k)
+        || (astOf(k) !== null && py['world_generator.helper_ast'].has(astOf(k)));
 
     const obligations = {
         'js.ast': [producedAst, (t) => jsAst.has(t)],
@@ -207,7 +210,7 @@ export async function census({ registry, python, presets } = {}) {
         'world_generator.rb': [producedRb, (k) => py['world_generator.rb'].has(k)],
         'world_generator.rb_map_without_handler': [py['world_generator.rb_map_without_handler'], () => false],
         'helper_codegen.ast': [producedAst, (t) => py['world_generator.helper_ast'].has(t)],
-        'helper_codegen.rb': [producedRb, (k) => py['world_generator.helper_rb'].has(k)],
+        'helper_codegen.rb': [producedRb, helperHandlesRb],
         'converter.rb_to_ast': [new Set([...producedRb].filter((k) => !k.startsWith('AST_'))),
             (k) => py['converter.rb_to_ast.converts'].has(k)],
     };

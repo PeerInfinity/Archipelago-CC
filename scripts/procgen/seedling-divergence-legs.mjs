@@ -58,9 +58,36 @@ import { argvHelp, isEntryPoint } from './argvHelp.js';
 argvHelp(import.meta.url);
 
 /**
+ * ⚖ D3 (rule-node-registry R2b): a kind these readers do not know needs no event only when no event item appears
+ * anywhere in it (`True_`, a `Has` of an ordinary item, …). One that names an event item is REFUSED by name: reading
+ * it as "needs none" was fail-open, and a decider never guesses.
+ */
+function refuseUnknownKindWithEvents(rule, byItem, reader) {
+    // the item names anywhere in `rule`, by arg (the keys procgenCore/ruleItemNames.js reads)
+    const events = new Set();
+    const walk = (node) => {
+        if (Array.isArray(node)) { node.forEach(walk); return; }
+        if (!node || typeof node !== 'object') return;
+        const holder = typeof node.rule === 'string' ? node.args : node;
+        for (const [key, value] of Object.entries(holder ?? {})) {
+            const names = (key === 'item_name' || key === 'item') ? [value]
+                : (key === 'item_names' || key === 'items') && Array.isArray(value) ? value : [];
+            for (const n of names) if (typeof n === 'string' && byItem.has(n)) events.add(n);
+        }
+        Object.values(node).forEach(walk);
+    };
+    walk(rule);
+    if (events.size) {
+        throw new Error(`${reader}: rule kind ${JSON.stringify(rule.rule ?? rule.type)} names event item(s) `
+            + `${JSON.stringify([...events])} and this reader cannot tell which it needs; handle the kind here`);
+    }
+}
+
+/**
  * The `game_state` event items a rule CANNOT hold without: `Has` / `HasAll` of an event item; `And` = the union;
  * `Or` = none when some branch needs none, else the union of every branch's (fail-closed: each branch needs one).
- * `byItem` maps an event ITEM name to its event (`procgenCore/eventRoute.gameStateEventsOf`).
+ * Any other kind: none, unless it names an event item (then it is refused by name). `byItem` maps an event ITEM name
+ * to its event (`procgenCore/eventRoute.gameStateEventsOf`).
  */
 export function requiredEvents(rule, byItem) {
     if (!rule || typeof rule !== 'object') return [];
@@ -74,7 +101,9 @@ export function requiredEvents(rule, byItem) {
             const branches = (rule.children ?? []).map((c) => requiredEvents(c, byItem));
             return branches.some((b) => b.length === 0) ? [] : uniq(branches.flat());
         }
-        default: return [];
+        default:
+            refuseUnknownKindWithEvents(rule, byItem, 'requiredEvents');
+            return [];
     }
 }
 
@@ -82,7 +111,8 @@ export function requiredEvents(rule, byItem) {
  * The `game_state` events the cheapest satisfied branch of `rule` needs, given what the AP route holds (`holds(rule)` →
  * true when the inventory satisfies that rule); `null` when the inventory does not satisfy it. `Has` / `HasAll` = its
  * event items (when held); `And` = the union (null if any child is); `Or` = the held branch with the FEWEST events, the
- * first in rule order on a tie (null when none holds); anything else = none when it holds. `byItem` as `requiredEvents`.
+ * first in rule order on a tie (null when none holds); anything else = none when it holds, unless it names an event
+ * item (refused by name, as in `requiredEvents`). `byItem` as `requiredEvents`.
  */
 export function goalEventsHeld(rule, byItem, holds) {
     if (!rule || typeof rule !== 'object') return [];
@@ -101,7 +131,9 @@ export function goalEventsHeld(rule, byItem, holds) {
             return best;
         }
         case 'Has': case 'HasAll': return holds(rule) ? requiredEvents(rule, byItem) : null;
-        default: return holds(rule) ? [] : null;
+        default:
+            refuseUnknownKindWithEvents(rule, byItem, 'goalEventsHeld');
+            return holds(rule) ? [] : null;
     }
 }
 

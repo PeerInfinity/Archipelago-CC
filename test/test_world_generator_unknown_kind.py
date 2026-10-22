@@ -84,3 +84,45 @@ class TestKindsGivenCodegen(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class TestR2bHelperBodies(unittest.TestCase):
+    """rule-kind R2b: the last two committed presets that needed --lossy in the helper body (kh1, kh2)."""
+
+    def test_a_body_that_is_one_statement_is_a_block(self) -> None:
+        # kh1 has_x_worlds: the body's root is `if ...: return True else: ...`, not a block
+        body = {'type': 'if_statement',
+                'test': {'type': 'compare', 'left': {'type': 'name', 'name': 'x'}, 'op': '>=',
+                         'right': {'type': 'constant', 'value': 15}},
+                'body': [{'type': 'return', 'value': {'type': 'constant', 'value': True}}],
+                'orelse': [{'type': 'return', 'value': {'type': 'constant', 'value': False}}]}
+        self.assertEqual(HelperCodeGenerator('Test')._generate_body(body),
+                         'if (x >= 15):\n    return True\nelse:\n    return False')
+
+    def test_statement_types_are_the_registrys_statement_kinds(self) -> None:
+        import json
+        import pathlib
+        registry = json.loads((pathlib.Path(__file__).resolve().parents[1]
+                               / 'frontend/schema/rule-kinds.json').read_text(encoding='utf-8'))
+        statements = set()
+
+        def collect(node) -> None:
+            if isinstance(node, dict):
+                for key, value in node.items():
+                    if isinstance(value, dict) and value.get('statement') is True:
+                        statements.add(key)
+                    collect(value)
+        collect(registry)
+        self.assertEqual(set(HelperCodeGenerator._STATEMENT_TYPES), statements)
+
+    def test_a_wrapped_ast_node_generates_as_its_ast_type(self) -> None:
+        # kh2: the AST→RB converter's AST_comparison inside an RB Conditional's test
+        wrapped = {'rule': 'AST_comparison', 'args': {
+            'op': '!=', 'left': {'type': 'name', 'name': 'logic'}, 'right': {'type': 'constant', 'value': 0},
+            '_original_ast_type': 'comparison'}, '_converted_from_ast': True}
+        self.assertEqual(HelperCodeGenerator('Test')._generate_expression(wrapped), '(logic != 0)')
+
+    def test_a_wrapped_ast_type_with_no_codegen_still_fails_by_its_own_name(self) -> None:
+        wrapped = {'rule': 'AST_no_such_kind_r2b', 'args': {'_original_ast_type': 'no_such_kind_r2b'}}
+        with self.assertRaisesRegex(UnknownRuleKindError, 'no_such_kind_r2b'):
+            HelperCodeGenerator('Test')._generate_expression(wrapped)

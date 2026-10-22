@@ -34,10 +34,18 @@ export const WALK_ORDER_LABELS = Object.freeze({
     'reachable-cheapest': 'Cheapest reachable location',
 });
 
-/** The completion condition's item (`game_info[p].completion_condition`, `item_check`), or null. */
+/**
+ * The completion condition's item (`game_info[p].completion_condition`), or null: the exporter's `item_check`, or a
+ * Rule Builder `Has` of ONE copy (apquest, toem_rule_builder). A `Has` of several copies (musedash's 7 Music Sheets)
+ * or any other shape has no single goal row, so it is null and no row is held back.
+ */
 export function goalItemOf(rules, playerId = '1') {
     const cond = rules?.game_info?.[String(playerId)]?.completion_condition;
-    return cond?.type === 'item_check' && typeof cond.item === 'string' ? cond.item : null;
+    if (cond?.type === 'item_check') return typeof cond.item === 'string' ? cond.item : null;
+    if (cond?.rule === 'Has' && typeof cond.args?.item_name === 'string' && (cond.args.count ?? 1) === 1) {
+        return cond.args.item_name;
+    }
+    return null;
 }
 
 /** `{item, progression, goal}` per location name, off the rules' regions. */

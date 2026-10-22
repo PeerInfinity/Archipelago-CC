@@ -54,6 +54,14 @@ describe('walkOrder — pure', () => {
         expect(choose(true, ['Y'])).toMatchObject({ entry: { locationName: 'X' }, swept: false });
     });
 
+    it('goalItemOf reads a Rule Builder Has of one copy too; several copies or another shape name no goal row', () => {
+        const cc = (completion_condition) => ({ game_info: { 1: { completion_condition } } });
+        expect(goalItemOf(cc({ rule: 'Has', args: { item_name: 'Victory' } }))).toBe('Victory');
+        expect(goalItemOf(cc({ rule: 'Has', args: { item_name: 'Victory', count: 1 } }))).toBe('Victory');
+        expect(goalItemOf(cc({ rule: 'Has', args: { item_name: 'Music Sheet', count: 7 } }))).toBeNull();
+        expect(goalItemOf(cc({ type: 'and', conditions: [] }))).toBeNull();
+        expect(goalItemOf({})).toBeNull();
+    });
     it('rowMetaOf / goalItemOf read the rules', () => {
         const rules = { regions: { 1: { R: { locations: [{ name: 'L', item: { name: 'Victory', advancement: true } }, { name: 'M', item: 'Coin' }] } } },
             game_info: { 1: { completion_condition: { type: 'item_check', item: 'Victory' } } } };

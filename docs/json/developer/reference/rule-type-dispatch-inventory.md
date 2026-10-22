@@ -27,6 +27,27 @@
 > `false` for a Rule Builder name the switch does not handle (`ruleEvaluator.js` `executeHelper`), and
 > world_generator's helper codegen writes `'True'`.
 
+> **2026-10-21 (R2b) — the sites that re-audit found outside this list, brought into line with the
+> unknown-kind policy:**
+> - **apworld editor rename cascades** (`apworldEditor/rulesUtils.js` `rename{Item,Region,Location}InRules`,
+>   reached from `rulesDocOps.js`) and **`regionContent.js` `referencesTo`** now find a name by its ARG
+>   (`RULE_NAME_ARGS` / `ownRuleNames`), as the validator already did for items. Keyed on six kinds,
+>   they left stale names in `HasFromListUnique`, `AST_region_check`, `AST_location_rule_ref`,
+>   `AST_placement_lookup` and typed `item_check` / `region_check` nodes. `validateRules` reads region
+>   and location names the same way.
+> - **`scripts/procgen/seedling-divergence-legs.mjs` `requiredEvents` / `goalEventsHeld`** (a decider): a
+>   kind they do not know still needs no event when it names no event item; one that does is refused by
+>   name. It used to read as "needs none". Today only `And`/`Or`/`Has`/`True_` reach them.
+> - **`procgenPipeline/regionAtlasPool.js` `requirementDnf`**: unchanged. An out-of-vocabulary rule is
+>   `null`, which `entryRequirement` declines with a reason. `sphereAtlasSorter` `envelopeFor` gives it
+>   `gate: []` but `wave: null`, and the engine never hosts a child on a null-wave door. It is not free.
+> - **Retired (⚖ D5):** `debugRuleEvaluation` and its only caller `debugCriticalRegions` (#17),
+>   `shared/ruleEngine/debug.js` (#19), and pathAnalyzer's `HasCount` / `CanReach` / `CanAccess` /
+>   `GroupCheck` cases (#13's switch; no layer, emitter or preset knows those names). commonUI had no
+>   dead case left. The Rule Converter's Quick engine STAYS.
+> - **`playbackBot/walkOrder.js` `goalItemOf`** reads a Rule Builder `Has` of one copy (apquest,
+>   toem_rule_builder). Several copies (musedash) or any other shape still name no goal row.
+
 ---
 
 ## 0. What `AtLeast` looks like
@@ -138,9 +159,9 @@ path doesn't forget them.
 | # | File:line | Dispatches on | Unknown behavior | Note |
 |---|-----------|---------------|------------------|------|
 | 16 | `frontend/modules/shared/ruleEngine/core.js:140` | `rule.type` | warn + `undefined` (`:148`) | AST registry; native AtLeast never enters. **[V]** |
-| 17 | `frontend/modules/stateManager/core/ruleEvaluator.js:376` (`debugRuleEvaluation`) | `rule.type` | **silent `false`** (`:645`) | Debug-only; AST format. Silent-false trap noted. **[V]** |
+| 17 | ~~`frontend/modules/stateManager/core/ruleEvaluator.js` (`debugRuleEvaluation`)~~ | — | — | **RETIRED (R2b, ⚖ D5):** no caller; its only caller `debugCriticalRegions` had none either, so both went. |
 | 18 | `frontend/modules/shared/gameLogic/smz3/smz3Logic.js:880` (`evaluateSimpleRule`) | `rule.type` | warn + `false` **[A]** | SMZ3-specific; doesn't use AtLeast. |
-| 19 | `frontend/modules/shared/ruleEngine/debug.js:23,268` | `rule.type` | log JSON | Debug viz only. **[V]** |
+| 19 | ~~`frontend/modules/shared/ruleEngine/debug.js`~~ | — | — | **RETIRED (R2b, ⚖ D5):** no consumer of `debugRule` / `extractFunctionPath` / `debugPythonAST` in this repo, its submodules or the sibling repos under `~/CC`. |
 | 20 | `world_generator/_rule_converters.py` (`_convert_count_true*`, unknown→`True_` `:515`) | `type` / `ast_type` | `True_` fallback | AST path; handles `count_true` (AtLeast twin) already. **[V]** |
 | 21 | `rule_builder/world_mixin.py:163` (`rule_from_dict`) → `rule_builder/rules.py:96` (`get_rule_cls`) | `data['rule']` | **ValueError** on unknown | AtLeast **already auto-handled** via `DEFAULT_RULES` (class is registered). Deserialization works today. **[V]** |
 | 22 | `frontend/modules/apworldEditor/rulesUtils.js:65`, `ruleConverter/ruleConverterUI.js:417`, `helpers/helperUI.js:200`, `mazeRoom/mazeRoomEngine.js:1278` | various single-type checks | n/a | Minimal/irrelevant single-type guards (Compare-only, Constant-only, True_-only). No AtLeast work. **[A]/[V]** |

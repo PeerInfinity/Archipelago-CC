@@ -6,9 +6,12 @@
  * the one graph walker (§15 D7). `walkRules` is re-exported from there under
  * its old name so every caller and cascade here is unchanged.
  *
- * Rule format: Rule Builder ({ rule: "Has", args: {...}, children?: [...] }).
- * Unknown rule types are walked for structural children but their args are
- * left untouched — we don't know their reference shape.
+ * Rule format: Rule Builder ({ rule: "Has", args: {...}, children?: [...] }),
+ * with the exporter's typed nodes ({ type: "item_check", item }) inside them.
+ * References are found by ARG, never by rule kind (⚖ D3, rule-node-registry
+ * R2b): `RULE_NAME_ARGS` says which keys name an item, region or location, so a
+ * kind nobody listed (`AST_region_check`, `HasFromListUnique`, …) is renamed
+ * and validated like the ones that were.
  */
 
 /**
@@ -33,7 +36,7 @@ import {
   walkRulesGraph,
   walkRuleTrees,
 } from '../procgenCore/rulesGraph.js';
-import { ownItemNames } from '../procgenCore/ruleItemNames.js';
+import { ownItemNames, ITEM_NAME_KEYS, ITEM_LIST_KEYS } from '../procgenCore/ruleItemNames.js';
 
 export function cloneFullRulesDoc(rulesDoc) {
   return JSON.parse(JSON.stringify(rulesDoc));
@@ -53,58 +56,89 @@ export function cloneFullRulesDoc(rulesDoc) {
  */
 export const walkRules = walkRuleTrees;
 
+// ---------- Name references, by arg ----------
+
+/**
+ * ⛓ The keys whose string value names an item / region / location: `one` holds
+ * one name, `many` a list. Rule Builder nodes carry them under `args`; the
+ * exporter's typed nodes (`item_check.item`, `region_check.region`, …) carry
+ * them on the node. Items share `ruleItemNames`' keys, so the validator, the
+ * referenced-items reader and the rename cascade agree.
+ */
+export const RULE_NAME_ARGS = Object.freeze({
+  item: Object.freeze({ one: ITEM_NAME_KEYS, many: ITEM_LIST_KEYS }),
+  region: Object.freeze({ one: Object.freeze(['region_name', 'region']), many: Object.freeze([]) }),
+  location: Object.freeze({ one: Object.freeze(['location_name', 'location']), many: Object.freeze([]) }),
+});
+
+const isPlainObject = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
+
+/** The object holding a node's own name args: RB `args`, or a typed node itself. */
+function nameHolderOf(node) {
+  if (!isPlainObject(node)) return null;
+  if (typeof node.rule === 'string') return isPlainObject(node.args) ? node.args : null;
+  return typeof node.type === 'string' ? node : null;
+}
+
+/** The `kind` names ONE node carries itself (not its children). */
+export function ownRuleNames(node, kind) {
+  const holder = nameHolderOf(node);
+  const keys = RULE_NAME_ARGS[kind];
+  const out = [];
+  if (!holder || !keys) return out;
+  for (const [key, value] of Object.entries(holder)) {
+    if (keys.one.includes(key) && typeof value === 'string' && value) out.push(value);
+    else if (keys.many.includes(key) && Array.isArray(value)) {
+      for (const name of value) if (typeof name === 'string' && name) out.push(name);
+    }
+  }
+  return out;
+}
+
+/** Renames `kind` references in `node` and everything nested in it. */
+function renameNamesDeep(node, kind, oldName, newName) {
+  if (Array.isArray(node)) {
+    for (const child of node) renameNamesDeep(child, kind, oldName, newName);
+    return;
+  }
+  if (!isPlainObject(node)) return;
+  const holder = nameHolderOf(node);
+  if (holder) {
+    const keys = RULE_NAME_ARGS[kind];
+    for (const [key, value] of Object.entries(holder)) {
+      if (keys.one.includes(key) && value === oldName) holder[key] = newName;
+      else if (keys.many.includes(key) && Array.isArray(value)) {
+        holder[key] = value.map((name) => (name === oldName ? newName : name));
+      }
+    }
+  }
+  for (const value of Object.values(node)) {
+    if (value && typeof value === 'object') renameNamesDeep(value, kind, oldName, newName);
+  }
+}
+
 // ---------- Rename cascades ----------
 
-/**
- * Update every item reference in access rules. Targets the item-name args
- * of Has, CountItem, HasAll, HasAny, and HasFromList. Returns nothing;
- * mutates in place.
- */
+// Each walked rule is renamed deep, so a typed sub-tree the walker treats as one
+// node is covered too; a node reached twice is unchanged the second time.
+function renameInRules(rulesDoc, playerId, kind, oldName, newName) {
+  if (!oldName || !newName || oldName === newName) return;
+  walkRules(rulesDoc, playerId, (node) => renameNamesDeep(node, kind, oldName, newName));
+}
+
+/** Update every item reference in access rules (by arg; see RULE_NAME_ARGS). Mutates in place. */
 export function renameItemInRules(rulesDoc, playerId, oldName, newName) {
-  if (!oldName || !newName || oldName === newName) return;
-  walkRules(rulesDoc, playerId, (node) => {
-    if (!node || !node.rule) return;
-    if (node.rule === 'Has' || node.rule === 'CountItem') {
-      if (node.args && node.args.item_name === oldName) {
-        node.args.item_name = newName;
-      }
-    } else if (
-      node.rule === 'HasAll' || node.rule === 'HasAny' || node.rule === 'HasFromList'
-    ) {
-      // Upstream key is `item_names`; accept legacy `items` and write back to whichever exists.
-      const key = node.args && Array.isArray(node.args.item_names) ? 'item_names'
-        : (node.args && Array.isArray(node.args.items) ? 'items' : null);
-      if (key) {
-        node.args[key] = node.args[key].map(i => i === oldName ? newName : i);
-      }
-    }
-  });
+  renameInRules(rulesDoc, playerId, 'item', oldName, newName);
 }
 
-/**
- * Update region references in access rules (CanReachRegion.region_name).
- */
+/** Update every region reference in access rules (by arg; see RULE_NAME_ARGS). */
 export function renameRegionInRules(rulesDoc, playerId, oldName, newName) {
-  if (!oldName || !newName || oldName === newName) return;
-  walkRules(rulesDoc, playerId, (node) => {
-    if (node && node.rule === 'CanReachRegion'
-      && node.args && node.args.region_name === oldName) {
-      node.args.region_name = newName;
-    }
-  });
+  renameInRules(rulesDoc, playerId, 'region', oldName, newName);
 }
 
-/**
- * Update location references in access rules (CanReachLocation.location_name).
- */
+/** Update every location reference in access rules (by arg; see RULE_NAME_ARGS). */
 export function renameLocationInRules(rulesDoc, playerId, oldName, newName) {
-  if (!oldName || !newName || oldName === newName) return;
-  walkRules(rulesDoc, playerId, (node) => {
-    if (node && node.rule === 'CanReachLocation'
-      && node.args && node.args.location_name === oldName) {
-      node.args.location_name = newName;
-    }
-  });
+  renameInRules(rulesDoc, playerId, 'location', oldName, newName);
 }
 
 // ---------- Validation ----------
@@ -199,17 +233,16 @@ export function validateRules(rulesDoc, playerId) {
         });
       }
     }
-    if (node.rule === 'CanReachRegion') {
-      const name = node.args?.region_name;
-      if (name && !regionNames.has(name)) {
+    for (const name of ownRuleNames(node, 'region')) {
+      if (!regionNames.has(name)) {
         issues.push({
           severity: 'error', tab: 'regions',
           message: `${where} references unknown region "${name}".`,
         });
       }
-    } else if (node.rule === 'CanReachLocation') {
-      const name = node.args?.location_name;
-      if (name && !locationNames.has(name)) {
+    }
+    for (const name of ownRuleNames(node, 'location')) {
+      if (!locationNames.has(name)) {
         issues.push({
           severity: 'error', tab: 'regions',
           message: `${where} references unknown location "${name}".`,
