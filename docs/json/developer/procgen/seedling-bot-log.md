@@ -24433,3 +24433,40 @@ The page then plays 3,124 / 2,924 ticks at the runner's 28.8 ticks/s.
   nothing says so. Grep every `STRATEGY_EXECUTORS[…](` / `clearTagExecutor(…)(` call for the context keys a verb reads.
 - A runtime teleporter built lazily (on the first step) misses the arrival's latch. An arrival that lands on it then
   teleports straight back. Build what the game's ctor builds at the build.
+
+### Seedling fidelity ROPE — a `rope` verb that cuts a rope to clear its flag (`ropeCutVerb`, OFF)
+
+Planner `seedling-fidelity-planning-9`, wave 22. rules-2's `rules-rope-events` makes a cut rope a cross-visit EVENT
+(`flag:L16:0` `rope@32,16`, `flag:L28:0` `rope@160,64`), and the JS mapping turns each into the solver's `clear-tag`,
+which refused it `no-verb` ("no strategy row exists for solid:rope"). The verb ships behind a new switch,
+`CONTACT_FIDELITY.ropeCutVerb` (OFF). The report is `CC/docs/cloud-reports/seedling-fidelity-rope.md`.
+
+**The verb.** `OBSTACLE_STRATEGIES['solid:rope'] = 'rope'` and `STRATEGY_EXECUTORS.rope = execRope`, switch-gated
+(non-enumerable) rows. It is the PULL rung's cut, not a second one: the stance is `deriveSwingStance` with the rung's
+danger-free admission (hoisted unchanged as `pullStanceAdmit`), and the act is `execPull`. `resolveRopeStrategy` refuses
+by name (`held: false`) a rope already pulled, a primary that is not the sword, and a rope with no group. The goal shape
+is `{kind: 'clear-tag', tag: {level, tag}, at: {x, y}, obstacle: 'rope@x,y'}`; with the switch ON,
+`jsRuntimeSolver.clearTagVerbOf('solid:rope')` answers `{verb: 'rope', registered: true}` with no JS edit.
+
+**Why a switch.** A rope is `type = "Rope"`, which is in the player's solids, so the frontier names its span
+`solid:rope`. The route survey's four L39 steps (`rope@96,384`) refuse "No strategy row exists" on main; with the row
+they move (REFUSED → REFUSED past the cut, a walk stall at `wandlock@144,64`). So the row cannot ship unconditional.
+
+**Measured: a cut is no `earnedClears` row.** `pullRope` banks the flag for the next build (`pendingEarnedClears`) and
+writes a `ropePulls` row, and `levelRun.earnedClearsNow` has no rope arm. So a rope's clear-tag finishes on the run's
+`ropePulls` row for its flag, past its tick. A rope that booted pulled (`check()` re-hit it) is `already-clear`.
+
+**Witnesses (p4g, 0 px).** rules-2's rope-events game probe (7 tapes; it lands with its `rules-rope-events` slice) and F7's re-entry probe, re-run on this
+session's port. Three of the verb's own plans (`probe-seedling-rope-verb.mjs --record`, `fixtures/rope-witness/`): the L16
+cut and the crossing to L18 with 0 hits, the verb's own swing (`execPull` pressed t26, the flag at t28), and L28's cut
+(`{28,0}` and the rock's `{28,1}` on the same tick, t45).
+
+**Trap candidates.**
+- A goal "finished when the flag is in `earnedClears`" is not a property every writer has: the rope's write never
+  reaches that ledger. Ask the run which ledger carries a family's write before naming a finish.
+- A probe that drops a tape's final tick cannot see a write that lands on the plan's last tick (`rope-l16-verb`'s first
+  run: the flag at t28 of a 28-tick plan). Pad the tape, or gate on the write's tick being inside the window.
+
+**Hand-overs.** The Spear's thrust and Fire also cut (`Player.as:989,1032`; rules-2's `l28-fire` tape), and this verb
+drives only the sword: a Spear-only or Fire-only bag refuses `cannot-act` by name. The L39 frontier cut is ON-only and
+stalls next at `wandlock@144,64`; its Pulser (the rope's group) is the next question there.

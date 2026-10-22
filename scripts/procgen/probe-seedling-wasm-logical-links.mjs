@@ -537,6 +537,28 @@ async function main() {
             check('B: the walk ends FINISHED, with a NAMED refusal, or on the budget — never a silent stall',
                 (end?.status ?? '').startsWith('finished') || (end?.status ?? '').startsWith('error') || Date.now() - t0 >= BUDGET_MS,
                 end?.status ?? '');
+            // ⛓ ROPE GOAL — a goal-first BREAK step is answered: the walk never ENDS on "breaking X first (<event id>)" once the
+            // game has collected that event (a local check, no user:locationCheck — measured before the fix: L16's rope cut
+            // and collected at +222 s, the status frozen on its break step to the 900 s budget). Read off the bot's final
+            // status and the rules' own event row, not the fix's state.
+            const brk = await page.evaluate(async (status) => {
+                const id = /breaking \S+ first \((flag:L\d+:\d+)\)/.exec(status)?.[1] ?? null;
+                if (!id) return { eventId: null };
+                const { getActivePanel } = await import('./modules/playbackBot/index.js');
+                const bot = getActivePanel()?.getBot?.();
+                const rules = bot?._getRulesJson?.() ?? null;
+                const pid = String(bot?._getPlayerId?.() ?? '1');
+                const names = Object.values(rules?.regions?.[pid] ?? {}).flatMap((r) => r.locations ?? [])
+                    .filter((l) => l.event_id === id).map((l) => l.name);
+                const checked = window.stateManagerProxy?.getLatestStateSnapshot?.()?.checkedLocations ?? [];
+                return { eventId: id, names, collected: names.some((n) => checked.includes(n)) };
+            }, end?.status ?? '');
+            out('B break steps', { ...brk, replans: (await page.evaluate(async () => {
+                const { getActivePanel } = await import('./modules/playbackBot/index.js');
+                return (getActivePanel()?.getBot?.()?.getLog?.() ?? []).filter((l) => /collected by the game — re-planning/.test(l));
+            })) });
+            check('B: no walk ends on a BREAK step whose event the game already collected (the bot re-plans after the break)',
+                !(brk.eventId && brk.collected), JSON.stringify(brk));
         }
 
         try {
