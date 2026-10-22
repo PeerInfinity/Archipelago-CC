@@ -49,6 +49,7 @@ import {
 } from './combatVerbs.js';
 import { PROFILE } from './seedlingProfile.js';
 import { GHOSTSWORD_PRESS, ghostSlashHitTicksFor } from './ghostSword.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
 
 export class PressError extends Error {
     constructor(message) {
@@ -339,6 +340,63 @@ export function spearRect(x, y, direction) {
 }
 
 /**
+ * ⛓⛓ fidelity SPEARRECT (`CONTACT_FIDELITY.spearGameTest`) — `Player.spear()`'s test AS THE GAME RUNS IT. Two things
+ * `spearRect` does not carry (measured on p4g by fidelity DRILL: the player at x 125.13 facing east, a box ending at
+ * x 125 — the game hit it):
+ *   · `spearX` / `spearY` are `int` getters (`Player.as:1341-1348`): the rect's origin is TRUNCATED;
+ *   · `World.collideRectInto` → `Entity.collideRect` is INCLUSIVE on all four edges (`>=` / `<=`, `Entity.as:263`).
+ * The four cases are `spear()`'s (`Player.as:971-980`), `thick/2` the Number 2.5. The rect carries `inclusive: true`,
+ * which `pressRectTouches` reads, so every consumer of a press rect asks the one rule.
+ * ⚠ A body with a pixelmask is tested by its mask in the game (`collideRect`'s `_mask.collide`); the model's responders
+ * are boxes, as they were for `spearRect`.
+ */
+export function spearGameRect(x, y, direction) {
+    const o = spearOrigin(x, y, direction);
+    const sx = Math.trunc(o.x);
+    const sy = Math.trunc(o.y);
+    const L = SPEAR_LENGTH;
+    const T = SPEAR_THICK;
+    let r;
+    switch (direction) {
+        case RIGHT: r = rect(sx, sy - T / 2 + 1, L, T); break;
+        case UP: r = rect(sx - T / 2 + 1, sy - L, T, L); break;
+        case LEFT: r = rect(sx - L, sy - T / 2, L, T); break;
+        case DOWN: r = rect(sx - T / 2, sy, T, L); break;
+        default:
+            throw new PressError(`spearGameRect: direction ${direction} is not 0..3`);
+    }
+    return { ...r, inclusive: true };
+}
+
+/**
+ * The spear's press rect under the switches: `spearGameRect` with `spearGameTest` ON, `spearRect` OFF (byte-identical).
+ * Every spear arm and every spear stance asks this, and tests a body against it with `pressRectTouches`.
+ */
+export function spearHitRect(x, y, direction) {
+    return CONTACT_FIDELITY.spearGameTest ? spearGameRect(x, y, direction) : spearRect(x, y, direction);
+}
+
+/**
+ * Does a press rect collect this box? `Entity.collideRect`'s inclusive edges for a rect that says so
+ * (`spearGameRect`), else the model's strict `rectsOverlap` (every other press rect, unchanged).
+ */
+export function pressRectTouches(r, box) {
+    if (r.inclusive === true) {
+        return box.right >= r.x && box.bottom >= r.y && box.x <= r.right && box.y <= r.bottom;
+    }
+    return rectsOverlap(r, box);
+}
+
+/**
+ * ⛓ fidelity SPEARRECT: `spearDelayMax` is 1, so a thrust's test runs on T+1, T+3 and T+5 (`SPEAR_HIT_TICKS_UNMODELLED`
+ * names the three). The first is the press window's fire; these are the other two, as offsets from it. fidelity LIGHTS
+ * (the fliers) and DRILL (the drills) ran them for their own bodies; with `spearGameTest` ON they run for every arm.
+ */
+export const SPEAR_REPEAT_OFFSETS = Object.freeze(
+    SPEAR_HIT_TICKS_UNMODELLED.ticks.slice(1).map((t) => t - SPEAR_HIT_TICKS_UNMODELLED.ticks[0]),
+);
+
+/**
  * `Player.getSlashRect()` (`Player.as:911-932`), for a plain sword.
  *
  * `sprSlash` is a 16x32 Spritemap frame at scale 1, so `h` is 32 and the
@@ -418,7 +476,7 @@ export function pressRespondersIn(world, rect, {
         if (live && r.pushableId && live.has(r.pushableId)) {
             const now = live.get(r.pushableId);
             if (now.removed) continue;
-            if (rectsOverlap(rect, now.rect)) hits.push({ ...r, rect: now.rect, live: true });
+            if (pressRectTouches(rect, now.rect)) hits.push({ ...r, rect: now.rect, live: true });
             continue;
         }
         /**
@@ -445,7 +503,7 @@ export function pressRespondersIn(world, rect, {
         if (turrets && r.turretId && turrets.has(r.turretId)) {
             const now = turrets.get(r.turretId);
             if (now.removed) continue;
-            if (rectsOverlap(rect, now.rect)) {
+            if (pressRectTouches(rect, now.rect)) {
                 hits.push({ ...r, rect: now.rect, live: true, dead: now.dead === true });
             }
             continue;
@@ -468,7 +526,7 @@ export function pressRespondersIn(world, rect, {
         if (shieldBosses && r.shieldBossId && shieldBosses.has(r.shieldBossId)) {
             const now = shieldBosses.get(r.shieldBossId);
             if (now.removed) continue;
-            if (rectsOverlap(rect, now.rect ?? r.rect)) {
+            if (pressRectTouches(rect, now.rect ?? r.rect)) {
                 hits.push({ ...r, rect: now.rect ?? r.rect, live: true });
             }
             continue;
@@ -505,7 +563,7 @@ export function pressRespondersIn(world, rect, {
         if (finalBosses && r.finalBossId && finalBosses.has(r.finalBossId)) {
             const now = finalBosses.get(r.finalBossId);
             if (now.removed) continue;
-            if (rectsOverlap(rect, now.rect ?? r.rect)) {
+            if (pressRectTouches(rect, now.rect ?? r.rect)) {
                 hits.push({ ...r, rect: now.rect ?? r.rect, live: true, dead: now.dead === true });
             }
             continue;
@@ -534,12 +592,12 @@ export function pressRespondersIn(world, rect, {
         if (spinners && r.spinnerId && spinners.has(r.spinnerId)) {
             const now = spinners.get(r.spinnerId);
             if (now.removed) continue;
-            if (rectsOverlap(rect, now.rect ?? r.rect)) {
+            if (pressRectTouches(rect, now.rect ?? r.rect)) {
                 hits.push({ ...r, rect: now.rect ?? r.rect, live: true });
             }
             continue;
         }
-        if (rectsOverlap(rect, r.rect)) hits.push(r);
+        if (pressRectTouches(rect, r.rect)) hits.push(r);
     }
     /**
      * ⛓⛓⛓ R9 SLICE 12 — THE SIXTH NON-CONSTANT RECT, AND THE FIRST WITH NO
@@ -579,7 +637,7 @@ export function pressRespondersIn(world, rect, {
     if (chasers) {
         for (const [id, c] of chasers) {
             if (c.removed) continue;
-            if (!rectsOverlap(rect, c.rect)) continue;
+            if (!pressRectTouches(rect, c.rect)) continue;
             hits.push({
                 tag: c.tag,
                 as3: 'Enemy',
@@ -609,7 +667,7 @@ export function pressRespondersIn(world, rect, {
     if (statics) {
         for (const [id, b] of statics) {
             if (b.removed) continue;
-            if (!rectsOverlap(rect, b.rect)) continue;
+            if (!pressRectTouches(rect, b.rect)) continue;
             hits.push({
                 tag: b.tag,
                 as3: 'Enemy',
@@ -631,7 +689,7 @@ export function pressRespondersIn(world, rect, {
     // asking "what does this thrust touch" gets one answer rather than two
     // lists it has to remember to consult.
     for (const tile of world.bridgeTiles) {
-        if (!rectsOverlap(rect, tile.rect)) continue;
+        if (!pressRectTouches(rect, tile.rect)) continue;
         hits.push({
             tag: `tile:${tile.name}`,
             as3: 'Tile',

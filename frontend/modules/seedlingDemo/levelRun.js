@@ -75,7 +75,7 @@ import {
     SLASH_HIT_TICKS, SLASH_REACH, SPEAR_DAMAGE, SWORD_DAMAGE, auditFire, auditPress,
     slashReachFor, swordWindowReplace, swordWindowSchedule, swordWindowStep,
     distanceRectPoint, slashRect, spearRect,
-    SPEAR_LENGTH, SPEAR_THICK, spearOrigin,
+    SPEAR_REPEAT_OFFSETS, pressRectTouches, spearGameRect, spearHitRect,
 } from './presses.js';
 import { FIRE_PRESS_CADENCE, FIRE_WINDOW, fireRect } from './fireVerb.js';
 import { PUSH_SPEAR_DIRECTION, hitPushableFromPoint } from './pushables.js';
@@ -4696,6 +4696,7 @@ export function createLevelRun({
         lightsSpearRepeats.length = 0;
         // ⛓ fidelity DRILL D2: and a spear thrust's pending drill repeats (the Player is reconstructed).
         drillSpearRepeats.length = 0;
+        spearRepeats.length = 0;
         // ⛓ U14-swim D1: a new `Game` constructs the moonrock again, from `rockSet`.
         moonrockStates.delete(n);
         // ⛓ U15-swim D1: and every turret (angle 0, `shootTimer` 0) and no spit.
@@ -6354,10 +6355,20 @@ export function createLevelRun({
         }
         const reachLimit = ghost ? GHOST_SWORD_REACH
             : (weapon === 'spear' ? SLASH_REACH : slashReachFor(scale));
+        /**
+         * ⛓⛓ fidelity SPEARRECT (`CONTACT_FIDELITY.spearGameTest`): `Player.spear()` as the game runs it — the rect from
+         * the `int` origin with inclusive edges (`presses.spearGameRect`, read by the audit through `pressRectTouches`),
+         * NO reach gate and NO line test (`spearReach` / `lineWaived` below, for every arm this slice owns), and the
+         * T+3 / T+5 tests (`spearRepeatsNow`, scheduled at the end of the first). OFF: `spearRect`, `slash()`'s gates
+         * and one test, byte-identical. ⛔ The hammer arc's static arm keeps `reachLimit` (a hand-over).
+         */
+        const gameSpear = weapon === 'spear' && CONTACT_FIDELITY.spearGameTest;
+        const spearReach = gameSpear ? Infinity : reachLimit;
+        const lineWaived = ghost || gameSpear;
         const rect = ghost ? ghostSlashRect(state.x, state.y, direction)
             : (weapon === 'sword'
                 ? slashRect(state.x, state.y, direction, scale)
-                : spearRect(state.x, state.y, direction));
+                : spearHitRect(state.x, state.y, direction));
         const pushState = pushableStateFor(level);
         const audit = auditPress(world, rect, {
             weapon: weapon === 'spear' || ghost ? 'spear' : 'sword',
@@ -6778,15 +6789,15 @@ export function createLevelRun({
                 }
                 const body = shieldBossBodyRect(b);
                 const reach = distanceRectPoint(state.x, state.y, body);
-                if (reach > reachLimit) {
+                if (reach > spearReach) {
                     hits.push({
                         as3: 'ShieldBoss', id: b.id, landed: false, killed: false,
-                        why: `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit} — `
+                        why: `distanceRectPoint ${reach.toFixed(3)} > ${spearReach} — `
                             + 'the rect reached him and `slash()`\'s own gate did not',
                     });
                 } else {
                     // ⛓ GHOSTSWORD: the line is waived for a ghost swing (`|| hasGhostSword`, `Player.as:917`).
-                    if (!ghost) assertShieldBossLineOfSight(b);
+                    if (!lineWaived) assertShieldBossLineOfSight(b);
                     const type = pressHitType(weapon);
                     const before = { hits: b.hits, activated: b.activated, anim: b.anim };
                     const verdict = shieldBossTakesHit(b, {
@@ -6908,15 +6919,15 @@ export function createLevelRun({
                 }
                 const body = spinnerRect(sp);
                 const reach = distanceRectPoint(state.x, state.y, body);
-                if (reach > reachLimit) {
+                if (reach > spearReach) {
                     spinnerPressHits.push({
                         t: ticksCompleted, level, id: sp.id, weapon, landed: false,
                         killed: false, reach, hits: sp.hits, hitsTimer: sp.hitsTimer,
-                        why: `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit} — `
+                        why: `distanceRectPoint ${reach.toFixed(3)} > ${spearReach} — `
                             + 'the rect reached it and `slash()`\'s own gate did not',
                     });
                     hits.push({ as3: 'Spinner', id: sp.id, landed: false, killed: false });
-                } else if (!ghost && spinnerSwingBlockedNow(sp)) {
+                } else if (!lineWaived && spinnerSwingBlockedNow(sp)) {
                     // ⛓ fidelity L40GUARD D4 (`spinnerSwingLineOfSight`, OFF): the gate's refusal, as the game runs it.
                     const blocker = spinnerSwingBlockedNow(sp);
                     spinnerPressHits.push({
@@ -6927,7 +6938,7 @@ export function createLevelRun({
                     hits.push({ as3: 'Spinner', id: sp.id, landed: false, killed: false });
                 } else {
                     // ⛓ GHOSTSWORD: the line is waived for a ghost swing (`|| hasGhostSword`, `Player.as:917`).
-                    if (!ghost) assertSpinnerLineOfSight(sp);
+                    if (!lineWaived) assertSpinnerLineOfSight(sp);
                     const before = { hits: sp.hits, hitsTimer: sp.hitsTimer,
                         destroy: sp.destroy };
                     const after = hitSpinner(sp, {
@@ -7015,11 +7026,11 @@ export function createLevelRun({
                 }
                 const body = finalBossBox(b.x, b.y);
                 const reach = distanceRectPoint(state.x, state.y, body);
-                if (reach > reachLimit) {
+                if (reach > spearReach) {
                     finalBossShoves.push({
                         t: ticksCompleted, level, id: b.id, landed: false,
                         reach, force: 0, vx: b.vx, vy: b.vy, x: b.x, y: b.y,
-                        why: `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit} — `
+                        why: `distanceRectPoint ${reach.toFixed(3)} > ${spearReach} — `
                             + 'the shove has carried him out of his own hit rect',
                     });
                     hits.push({ as3: 'FinalBoss', id: b.id, landed: false, killed: false });
@@ -7040,7 +7051,7 @@ export function createLevelRun({
                     hits.push({ as3: 'FinalBoss', id: b.id, landed: false, killed: false });
                 } else {
                     // ⛓ GHOSTSWORD: the line is waived for a ghost swing (`|| hasGhostSword`, `Player.as:917`).
-                    if (!ghost) assertFinalBossLineOfSight(b);
+                    if (!lineWaived) assertFinalBossLineOfSight(b);
                     const before = { x: b.x, y: b.y, vx: b.vx, vy: b.vy, hits: b.hits };
                     const verdict = finalBossHit(b, {
                         force: SWORD_FORCE,
@@ -7106,16 +7117,16 @@ export function createLevelRun({
                     bottom: w.ey - WATCHER.box.originY + WATCHER.box.h,
                 };
                 const reach = distanceRectPoint(state.x, state.y, body);
-                if (reach > reachLimit) {
+                if (reach > spearReach) {
                     watcherHits.push({
                         t: ticksCompleted, level, id: w.id, landed: false,
                         hits: w.hits, hitsTimer: w.hitsTimer,
-                        why: `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit} — `
+                        why: `distanceRectPoint ${reach.toFixed(3)} > ${spearReach} — `
                             + 'the rect reached him and `slash()`\'s own gate did not',
                     });
                     hits.push({ as3: 'Watcher', id: w.id, landed: false });
                 } else {
-                    const blocker = ghost ? null : collideLineSolid(state.x, state.y, w.ex, w.ey);
+                    const blocker = lineWaived ? null : collideLineSolid(state.x, state.y, w.ex, w.ey);
                     if (blocker) {
                         throw new Error(`levelRun: the ${weapon} press at tick `
                             + `${pressTick} reaches ${w.id} through ${blocker}. `
@@ -7145,9 +7156,9 @@ export function createLevelRun({
                 // ⛓ fidelity DRILL D2: `spear()` tests the rect and nothing else (`Player.as:960-990`) — no reach gate and
                 // no line (OFF: `slash()`'s two gates, as before).
                 const rectOnly = CONTACT_FIDELITY.drillMixedRooms && weapon === 'spear';
-                const blocker = rectOnly || reach > reachLimit || ghost ? null : collideLineSolid(state.x, state.y, d.x, d.y);
+                const blocker = rectOnly || reach > spearReach || lineWaived ? null : collideLineSolid(state.x, state.y, d.x, d.y);
                 let verdict = { landed: false, killed: false };
-                if (rectOnly ? spearTouchesDrill(state.x, state.y, direction, d) : (reach <= reachLimit && !blocker)) {
+                if (rectOnly ? spearTouchesDrill(state.x, state.y, direction, d) : (reach <= spearReach && !blocker)) {
                     verdict = hitDrill(d, {
                         damage: pressHitDamage(weapon),
                         t: pressHitType(weapon),
@@ -7161,7 +7172,7 @@ export function createLevelRun({
                     t: ticksCompleted, level, id: d.id, tag: 'drill', weapon,
                     landed: verdict.landed, killed: verdict.killed === true, reach,
                     hits: (verdict.d ?? d).hits, hitsTimer: (verdict.d ?? d).hitsTimer,
-                    why: reach > reachLimit ? `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit}`
+                    why: reach > spearReach ? `distanceRectPoint ${reach.toFixed(3)} > ${spearReach}`
                         : (blocker ? `collideLine("Solid") meets ${blocker.tag ?? 'a Solid'}` : null),
                 });
                 hits.push({ as3: 'Enemy', id: d.id, landed: verdict.landed, killed: verdict.killed === true });
@@ -7179,9 +7190,9 @@ export function createLevelRun({
                         + `${r.chaserId} in level ${level}, which is not in the run's wallflyer state.`);
                 }
                 const reach = distanceRectPoint(state.x, state.y, wallFlyerRect(w));
-                const blocker = reach > reachLimit || ghost ? null : collideLineSolid(state.x, state.y, w.x, w.y);
+                const blocker = reach > spearReach || lineWaived ? null : collideLineSolid(state.x, state.y, w.x, w.y);
                 let verdict = { landed: false, killed: false };
-                if (reach <= reachLimit && !blocker) {
+                if (reach <= spearReach && !blocker) {
                     verdict = hitWallFlyer(w, {
                         damage: pressHitDamage(weapon),
                         t: pressHitType(weapon),
@@ -7202,7 +7213,7 @@ export function createLevelRun({
                     t: ticksCompleted, level, id: w.id, tag: 'wallflyer', weapon,
                     landed: verdict.landed, killed: verdict.killed === true, reach,
                     hits: (verdict.w ?? w).hits, hitsTimer: (verdict.w ?? w).hitsTimer,
-                    why: reach > reachLimit ? `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit}`
+                    why: reach > spearReach ? `distanceRectPoint ${reach.toFixed(3)} > ${spearReach}`
                         : (blocker ? `collideLine("Solid") meets ${blocker.tag ?? 'a Solid'}` : null),
                 });
                 hits.push({ as3: 'Enemy', id: w.id, landed: verdict.landed, killed: verdict.killed === true });
@@ -7323,12 +7334,12 @@ export function createLevelRun({
                  * receiver culls its own hit tests) arriving at a new class.
                  */
                 const reach = distanceRectPoint(state.x, state.y, body);
-                if (reach > reachLimit) {
+                if (reach > spearReach) {
                     chaserPressHits.push({
                         t: ticksCompleted, level, id: c.id, tag: c.tag, weapon,
                         landed: false, killed: false, reach,
                         hits: c.hits, hitsTimer: c.hitsTimer,
-                        why: `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit} — `
+                        why: `distanceRectPoint ${reach.toFixed(3)} > ${spearReach} — `
                             + 'the rect reached it and `slash()`\'s own gate did not',
                     });
                     hits.push({ as3: 'Enemy', id: c.id, landed: false, killed: false });
@@ -7449,11 +7460,13 @@ export function createLevelRun({
             }
         }
         // ⛓⛓ Swim U5: the BobBoss, a runtime `Enemy` no census holds.
-        bobBossSlashNow({ rect, reachLimit, weapon, pressTick, hits });
+        bobBossSlashNow({ rect, reachLimit: spearReach, weapon, pressTick, hits, lineWaived: gameSpear });
         // ⛓ fidelity LIGHTS D2: the six LightBoss fliers — runtime `Enemy`s no census holds, as the BobBoss is.
         lightsSlashNow({ rect, reachLimit, weapon, pressTick, hits, ghost, direction, repeat: thrust.repeat ?? null });
         // ⛓ fidelity DRILL D2: a spear thrust's T+3 / T+5 tests against the drills (`drillSpearRepeatsNow`).
-        if (weapon === 'spear' && !ghost && CONTACT_FIDELITY.drillMixedRooms && drillStateFor(level).size > 0) {
+        // ⛓ fidelity SPEARRECT: with `spearGameTest` ON the audit already asked the game's rect and the repeats are
+        // `spearRepeatsNow`'s, so this pass (and its list) stays empty.
+        if (weapon === 'spear' && !ghost && !gameSpear && CONTACT_FIDELITY.drillMixedRooms && drillStateFor(level).size > 0) {
             // The first test, for a drill the audit's (`spearRect`, strict) rect missed and the game's touches.
             const audited = new Set(audit.live.filter((r) => r.family === 'drill').map((r) => r.chaserId));
             const dst = drillStateFor(level);
@@ -7468,11 +7481,19 @@ export function createLevelRun({
             for (const k of DRILL_SPEAR_REPEATS) drillSpearRepeats.push({ at: ticksCompleted + k, direction, pressTick });
         }
         // ⛓ bosskills D2: the King of Fire's balls and body (no-op OFF).
-        lavaBossSlashNow({ rect, reachLimit, weapon, ghost, pressTick, hits });
+        lavaBossSlashNow({ rect, reachLimit: spearReach, weapon, ghost, pressTick, hits, lineWaived });
         // ⛓ bosskills D3: the Tentacled Beast's tentacles (no-op OFF).
-        tentacleSlashNow({ rect, reachLimit, weapon, ghost, pressTick, hits });
+        tentacleSlashNow({ rect, reachLimit: spearReach, weapon, ghost, pressTick, hits, lineWaived });
+        // ⛓ fidelity SPEARRECT: the first test schedules the thrust's T+3 / T+5 tests, the whole thrust re-run.
+        if (gameSpear && (thrust.repeat ?? null) === null) {
+            for (const k of SPEAR_REPEAT_OFFSETS) {
+                spearRepeats.push({ at: ticksCompleted + k, thrust: { weapon, direction, pressTick, repeat: k } });
+            }
+        }
         presses.push({
             t: pressTick, fired: ticksCompleted, level, weapon, direction, rect, hits,
+            // ⛓ fidelity SPEARRECT: a spear repeat's row says which (absent for every other row).
+            ...(gameSpear && thrust.repeat != null ? { repeat: thrust.repeat } : {}),
             // ⛓ GHOSTSWORD: what the 24 x 48 rect collected and the 24 px reach dropped (absent for every other weapon).
             ...(ghost ? { outOfReach: ghostOutOfReach } : {}),
         });
@@ -15916,7 +15937,7 @@ export function createLevelRun({
      * @returns {?{reach: number, gate: ?string}} null when the rect does not
      *   collect the body; `gate` names the first refusing test, or null.
      */
-    function bobBossSlashGeometry(b, px, py, r, reachLimit) {
+    function bobBossSlashGeometry(b, px, py, r, reachLimit, lineWaived = false) {
         const box = bobBossBox(b);
         const touches = box.right >= r.x && box.bottom >= r.y
             && box.x <= r.x + r.w && box.y <= r.y + r.h;
@@ -15925,7 +15946,8 @@ export function createLevelRun({
         if (reach > reachLimit) {
             return { reach, gate: `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit}` };
         }
-        if (collideLineSolid(px, py, b.x, b.y)) return { reach, gate: 'collideLine Solid' };
+        // ⛓ fidelity SPEARRECT: `spear()` has no line test (`lineWaived`, the game-rule spear only).
+        if (!lineWaived && collideLineSolid(px, py, b.x, b.y)) return { reach, gate: 'collideLine Solid' };
         return { reach, gate: null };
     }
 
@@ -16154,6 +16176,23 @@ export function createLevelRun({
     const drillSpearRepeats = [];
     const DRILL_SPEAR_REPEATS = LIGHTS_SPEAR_REPEATS;
     /**
+     * ⛓⛓ fidelity SPEARRECT (`CONTACT_FIDELITY.spearGameTest`) — THE SPEAR'S OTHER TWO TESTS, FOR EVERY ARM. `{at, thrust}`
+     * rows the first test schedules (`applyThrust`, `presses.SPEAR_REPEAT_OFFSETS`); each re-runs the whole thrust from
+     * the live position in the latched direction, so a body that moved INTO the rect after the first test is hit (a
+     * chaser, a drill, a flier, a spinner) and an arm the game refuses inside five ticks refuses here by its own state
+     * (an i-frame, a moving block, a pole's `hitsTimer`, an opening bridge). The fliers' and the drills' own lists above
+     * stay empty while it is ON. Cleared with the level, like theirs.
+     */
+    const spearRepeats = [];
+    function spearRepeatsNow() {
+        if (spearRepeats.length === 0) return;
+        const due = spearRepeats.filter((r) => r.at === ticksCompleted);
+        for (let i = spearRepeats.length - 1; i >= 0; i -= 1) {
+            if (spearRepeats[i].at <= ticksCompleted) spearRepeats.splice(i, 1);
+        }
+        for (const r of due) applyThrust(r.thrust);
+    }
+    /**
      * ⛓ fidelity DRILL D2: does `Player.spear()`'s test, AS THE GAME RUNS IT, touch this drill? Two things `spearRect`
      * does not carry (measured on p4g, the L28 spear from the L25 arrival: the player at x 125.13 facing east, the drill's
      * box ending at x 125 — the game hit it):
@@ -16161,19 +16200,8 @@ export function createLevelRun({
      *   · `World.collideRectInto` → `Entity.collideRect` is INCLUSIVE on all four edges (`>=` / `<=`).
      * The four cases are `spear()`'s (`Player.as:971-980`), with `thick/2` the Number 2.5.
      */
-    const spearTouchesDrill = (x, y, direction, d) => {
-        const o = spearOrigin(x, y, direction);
-        const sx = Math.trunc(o.x);
-        const sy = Math.trunc(o.y);
-        const L = SPEAR_LENGTH;
-        const T = SPEAR_THICK;
-        const r = direction === 0 ? { x: sx, y: sy - T / 2 + 1, w: L, h: T }
-            : direction === 1 ? { x: sx - T / 2 + 1, y: sy - L, w: T, h: L }
-                : direction === 2 ? { x: sx - L, y: sy - T / 2, w: L, h: T }
-                    : { x: sx - T / 2, y: sy, w: T, h: L };
-        const b = drillRect(d);
-        return b.right >= r.x && b.bottom >= r.y && b.x <= r.x + r.w && b.y <= r.y + r.h;
-    };
+    // ⛓ fidelity SPEARRECT: the rule is `presses.spearGameRect` + `pressRectTouches` now, the one copy every spear arm asks.
+    const spearTouchesDrill = (x, y, direction, d) => pressRectTouches(spearGameRect(x, y, direction), drillRect(d));
     function drillSpearRepeatsNow() {
         if (drillSpearRepeats.length === 0) return;
         const due = drillSpearRepeats.filter((r) => r.at === ticksCompleted);
@@ -16431,13 +16459,14 @@ export function createLevelRun({
         const fight = CONTACT_FIDELITY.lightsBossFight ? (lightsFights.get(level) ?? null) : null;
         if (!fight) return;
         // The spear's first test schedules its two repeats (`lightsSpearRepeatsNow`): T+3 and T+5.
-        if (weapon === 'spear' && repeat === null) {
+        // ⛓ fidelity SPEARRECT: with `spearGameTest` ON the whole thrust repeats (`spearRepeatsNow`), this list stays empty.
+        if (weapon === 'spear' && repeat === null && !CONTACT_FIDELITY.spearGameTest) {
             for (const k of LIGHTS_SPEAR_REPEATS) lightsSpearRepeats.push({ at: ticksCompleted + k, direction, pressTick });
         }
         for (const f of fight.bodies) {
             if (f.removed) continue;
             const box = lightBossRect(f);
-            if (!rectsOverlap(r, box)) continue;
+            if (!pressRectTouches(r, box)) continue;
             let gate = null;
             let reach = null;
             if (weapon !== 'spear') {
@@ -16462,11 +16491,11 @@ export function createLevelRun({
         }
     }
 
-    function bobBossSlashNow({ rect: r, reachLimit, weapon, pressTick, hits }) {
+    function bobBossSlashNow({ rect: r, reachLimit, weapon, pressTick, hits, lineWaived = false }) {
         const a = bobArena;
         if (!a || a.none || a.level !== level || !a.boss) return;
         const b = a.boss;
-        const geo = bobBossSlashGeometry(b, state.x, state.y, r, reachLimit);
+        const geo = bobBossSlashGeometry(b, state.x, state.y, r, reachLimit, lineWaived);
         if (!geo) return;
         let verdict = { landed: false, killed: false, refusedAt: null };
         if (geo.gate) {
@@ -16588,13 +16617,13 @@ export function createLevelRun({
      * the box, with the line of sight (`collideLine("Solid", …)` to the body's ORIGIN; the ghost sword waives it).
      * A ball is reflected (`genericHit` → `LavaBall.hit`); the body takes `Enemy.hit(f, p, d, t)`.
      */
-    function lavaBossSlashNow({ rect: r, reachLimit, weapon, ghost, pressTick, hits }) {
+    function lavaBossSlashNow({ rect: r, reachLimit, weapon, ghost, pressTick, hits, lineWaived = ghost }) {
         const f = lavaBossFightFor(level);
         if (f === null || noclip) return;
         const t = (weapon === 'sword' && !ghost) ? 'Sword' : 'Spear';
-        const reaches = (box, ox, oy) => rectsOverlap(r, box)
+        const reaches = (box, ox, oy) => pressRectTouches(r, box)
             && distanceRectPoint(state.x, state.y, box) <= reachLimit
-            && (ghost || !collideLineSolid(state.x, state.y, ox, oy));
+            && (lineWaived || !collideLineSolid(state.x, state.y, ox, oy));
         for (const s of f.balls) {
             if (s.removed || !reaches(lavaBallRect(s), s.x, s.y)) continue;
             const reflected = reflectLavaBall(s);
@@ -16714,7 +16743,7 @@ export function createLevelRun({
         }
     }
 
-    function tentacleSlashNow({ rect: r, reachLimit, weapon, ghost, pressTick, hits }) {
+    function tentacleSlashNow({ rect: r, reachLimit, weapon, ghost, pressTick, hits, lineWaived = ghost }) {
         const f = tentacleFightFor(level);
         if (f === null || noclip) return;
         const t0 = (weapon === 'sword' && !ghost) ? 'Sword' : 'Spear';
@@ -16727,7 +16756,7 @@ export function createLevelRun({
             // `collideRectInto` (inclusive), then the reach, then the line of sight.
             if (!(box.right >= r.x && box.bottom >= r.y && box.x <= r.right && box.y <= r.bottom)) continue;
             if (distanceRectPoint(state.x, state.y, box) > reachLimit) continue;
-            if (!ghost) {
+            if (!lineWaived) {
                 const lx0 = Math.min(state.x, t.x);
                 const lx1 = Math.max(state.x, t.x);
                 const ly0 = Math.min(state.y, t.y);
@@ -21770,6 +21799,8 @@ export function createLevelRun({
                 lightsSpearRepeatsNow();
                 // ⛓ fidelity DRILL D2: and against the drills (none scheduled OFF).
                 drillSpearRepeatsNow();
+                // ⛓ fidelity SPEARRECT: the whole thrust's T+3 / T+5 tests (none scheduled OFF).
+                spearRepeatsNow();
             }
             // ── ⛓ THE FIRE WINDOW'S HIT TICKS ────────────────────────
             // `Player.update` calls `fire()` in the same place it calls

@@ -27,8 +27,8 @@
 
 import {
     LIGHT_BOSS, LIGHTS_SPEAR_FORCE, SCREEN_H, SCREEN_W, cloneLightsFight, collideLineSolid, distanceRectPoint, lightBossFlierHit,
-    lightBossRect, playerBoxAt, rectsOverlap, slashRect, spearRect, stepLightBossFlier, stepLightBossFlierGraphic,
-    stepLightBossShot, stepLightsController,
+    lightBossRect, playerBoxAt, pressRectTouches, slashRect, spearHitRect, stepLightBossFlier,
+    stepLightBossFlierGraphic, stepLightBossShot, stepLightsController,
 } from './solverView.js';
 // ⛓ fidelity LIGHTSARR D2: the shield's shove, forecast as the run steps it (`levelRun.lightsShieldBumpNow`).
 import { lightsShieldBump } from './solverView.js';
@@ -129,11 +129,11 @@ function forecastTick(s, held, env) {
     const due = s.tests.filter((t) => t.k === 0);
     s.tests = s.tests.filter((t) => t.k > 0).map((t) => ({ ...t, k: t.k - 1 }));
     for (const t of due) {
-        const r = s.weapon === 'spear' ? spearRect(s.player.x, s.player.y, t.dir) : slashRect(s.player.x, s.player.y, t.dir);
+        const r = s.weapon === 'spear' ? spearHitRect(s.player.x, s.player.y, t.dir) : slashRect(s.player.x, s.player.y, t.dir);
         for (const b of F.bodies) {
             if (b.removed || b.dieAnim) continue;
             const bx = lightBossRect(b);
-            if (!rectsOverlap(r, bx)) continue;
+            if (!pressRectTouches(r, bx)) continue;
             if (s.weapon !== 'spear') {
                 if (distanceRectPoint(s.player.x, s.player.y, bx) > env.reach) continue;
                 if (collideLineSolid(env.solids, s.player.x, s.player.y, b.x, b.y)) continue;
