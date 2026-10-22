@@ -961,7 +961,7 @@ export const CONTACT_FIDELITY = {
      * a far edge, a truncated origin).
      * OFF: byte-identical. `SEEDLING_SPEAR_GAME_TEST=0|1` for a node measurement.
      */
-    spearGameTest: false,
+    spearGameTest: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
