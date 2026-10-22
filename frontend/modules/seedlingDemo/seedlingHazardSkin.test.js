@@ -33,6 +33,7 @@ import { createJsRuntime } from './jsRuntimeCore.js';
 import { md5 } from './md5.js';
 import { runTape as runFixtureTape } from './tapeRunner.js';
 import { atlasLevelSource } from './levelSource.js';
+import { withContactFidelity } from './contactFidelity.js';
 import { formatOp } from './seedlingSkinRenderer.js';
 import { formatPlayerOp } from './seedlingPlayerSkin.js';
 import { ENEMY_COVERAGE, ENEMY_HIT_TINT } from './seedlingEnemySkin.js';
@@ -70,7 +71,12 @@ export const TAPES = Object.freeze([
     { name: 'axe-L61', fixture: 'axe-l61-reach-l62', family: 'SpinningAxe', keys: ['seedling:puzzlement/spinningaxe'], want: ['a:red'] },
     { name: 'axe-L48', fixture: 'axe-l48-reach-l49', family: 'SpinningAxe', keys: ['seedling:puzzlement/spinningaxe'], want: ['a:plain'] },
     // beside the chain's arm (L76 `lavachain@128,64`, dir 3: the arm runs down x 134..138), out of its reach
-    { name: 'chain-L76', level: 76, at: [152, 92], n: 200, family: 'LavaChain', keys: [KEYS.chain], want: ['c:sit', 'c:extend', 'c:hit', 'c:retract'] },
+    // ⛓ planning-9's igneousLava flip (⚖ user, 2026-10-21; js-7's review): this stand arrives within 11.31 px of L76's
+    // Igneous-to-Lava tile (10,6), and with `igneousLava` ON levelRun refuses that arrival by name (`IGNEOUS_UNMODELLED`,
+    // fidelity IGNEOUS's named INTERIM: the load fade's renders would count and are not stepped). These rows test the
+    // CHAIN's art, not the tile, so they run with the switch OFF. ⚠ On the game a stand in (10,6)'s range really does
+    // crumble it to lava; this pin is about the interim, not a claim that the tile is inert.
+    { name: 'chain-L76', level: 76, at: [152, 92], n: 200, family: 'LavaChain', keys: [KEYS.chain], want: ['c:sit', 'c:extend', 'c:hit', 'c:retract'], fidelity: { igneousLava: false } },
     { name: 'crusher-L42', fixture: 'crusher-l42-round-trip', family: 'Crusher', keys: [KEYS.crusher], want: ['k:moving', 'k:rest'] },
     { name: 'totem-kill-L43', fixture: 'r6-totem-kill', family: 'BossTotem', keys: [KEYS.totem, KEYS.totemShot],
         want: ['t:asleep', 't:ramp', 't:rest', 't:walk', 't:attack', 't:destroy', 't:flash', 't:laser', 'shot'] },
@@ -124,11 +130,12 @@ function drive(tape, each = () => {}) {
 function runTape(tape, opts = {}) {
     const rows = [];
     let skin = null;
-    drive(tape, (tick, run) => {
+    // ⛓ a tape may pin switches (`fidelity`, e.g. chain-L76's igneousLava OFF — see its row)
+    withContactFidelity(tape.fidelity ?? {}, () => drive(tape, (tick, run) => {
         const view = hazardSkinView(run);
         skin = stepHazardSkin(skin, view, tick, opts);
         rows.push({ tick, view, skin, ops: hazardOps(view, art, { skin, ...opts }) });
-    });
+    }));
     return rows;
 }
 
@@ -283,7 +290,8 @@ describe('3. the independent stratum (by hand from the AS3, and the clocks again
         expect(agree(1)).toBeLessThan(billed.size);
     }, 120_000);
 
-    it('⛓ the chain\'s clock is the one the model bills (L76, standing in the arm through its death rebuilds)', () => {
+    // ⛓ igneousLava OFF for this stand, as chain-L76's row (the arrival is in tile (10,6)'s range: IGNEOUS_UNMODELLED).
+    it('⛓ the chain\'s clock is the one the model bills (L76, standing in the arm through its death rebuilds)', () => withContactFidelity({ igneousLava: false }, () => {
         const rt = boot(76, [128, 92]);
         let skin = null;
         const reach = new Map();
@@ -301,7 +309,7 @@ describe('3. the independent stratum (by hand from the AS3, and the clocks again
         const billed = rt.run.playerHits.filter((h) => h.source === 'lavachain').map((h) => h.t);
         expect(billed.length).toBeGreaterThan(3);
         for (const t of billed) expect(reach.get(t), `t${t}`).toBe(true);
-    }, 120_000);
+    }), 120_000);
 
     it('the chain (LavaChain.as:39-42,46,52-56): sit until Game.time % 90 < 1.5, then extend [1,2] / hit / retract at fps 15/15/25; turned 90·dir; layer −(y + 8)', () => {
         const ch = { id: 'c', x: 136, y: 72, dir: 3 };

@@ -156,6 +156,8 @@ export {
     LIGHT_BOSS, SPEAR_FORCE as LIGHTS_SPEAR_FORCE, cloneLightsFight, lightBossFlierHit, lightBossRect,
     stepLightBossFlier, stepLightBossFlierGraphic, stepLightBossShot, stepLightsController,
 } from './lightBoss.js';
+// ⛓ fidelity LIGHTSARR D2: the shield's shove on a flier, forecast as the run steps it.
+export { lightsShieldBump } from './lightBoss.js';
 // levelWorld.js — botDriverV2, dangerMap, hazards, solverBot, strikePolicy · seedling 3, physics 6
 export {
     assertRect, isNormalizedLiveOpts, LIVE_GEOMETRY_KEYS, normalizeLiveOpts, PRE_R5_ROLES, rect, rectsOverlap,
@@ -194,6 +196,9 @@ export { createWandShot, stepWandShot, wandShotRect } from './wandShot.js';
 export { MAGICAL_LOCK_OPEN_TICK_OFFSET } from './magicalLock.js';
 // ⛓ seedling-fidelity-bosskills D3: the tentacle's body and its swipe, for `tentacleBeastPolicy`.
 export { tentacleRect, tentacleSwipeRect } from './tentacleBeast.js';
+// ⛓ fidelity BOSSFORK D1b: the beast's anims and their length, for the wait on the mouth (`awaitTentacleMouth`).
+export { TENTACLE_BEAST_ANIMS } from './tentacleBeast.js';
+export { animTicks } from './chasers.js';
 // spinner.js — botDriverV2, dangerMap, solverBot · seedling 5
 export {
     enemiesUnseenByBlockSweep, hammerHitsPlayer, MODELLED_ENEMY_CLASSES, SPINNER, spinnerRect,

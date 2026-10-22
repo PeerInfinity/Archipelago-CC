@@ -248,6 +248,8 @@ import {
     lightsExitRow, lightsFightView, stepLightBossFlier, stepLightBossFlierGraphic, stepLightBossShot,
     stepLightsController, withLightsExit,
 } from './lightBoss.js';
+// ⛓ fidelity LIGHTSARR D2: the moving shield's shove on a flier (`lightsShieldBumpNow`).
+import { lightsShieldBump } from './lightBoss.js';
 import { DRILL, drillRect, hitDrill, newDrill, stepDrill, stepDrillGraphic } from './drill.js';
 // ⚠ `SWORD_FORCE` ONLY. `combatVerbs` owns the swing GEOMETRY, which this
 // file does not use — the press rect comes from `presses.slashRect` — but
@@ -2065,6 +2067,22 @@ export function createLevelRun({
             if (fight?.mouth && n === level) world = visitWorld(level);
         }
         return tentacleFights.get(n);
+    };
+    /**
+     * ⛓⛓ fidelity BOSSFORK D2 (`CONTACT_FIDELITY.tentacleBeastFight`; OFF never asks) — **A CLEARED ROOM'S MOUTH STANDS AT
+     * THE BUILD.** `tentacleFightFor` is lazy: the steppers ask it on the first `advance`, so a run that BUILDS L57 with
+     * its beast's tag cleared held no mouth Teleporter in `run.world` until then, and a solver (or a reader) that asked
+     * the world at the build saw the plain room. The game's ctor builds the beast dead with the mouth already standing
+     * (`TentacleBeast.as:52-60`; BOSSKILLS D1 witnessed the revisit: "built dead with the mouth standing; into L58 at
+     * t162"). So a build (the boot, `enterWorld`) asks the fight at once — ONLY for the cleared arm: a live beast's fight
+     * still opens its draw stream when a step first asks for it, where it always has.
+     */
+    const tentacleMouthAtBuild = () => {
+        if (!CONTACT_FIDELITY.tentacleBeastFight || tentacleFights.has(level)) return;
+        const e = (levelSource(level)?.entities ?? []).filter((x) => x.type === 'tentaclebeast');
+        if (e.length !== 1) return;
+        const tag = Number(e[0].attrs?.tag ?? -1);
+        if (tag >= 0 && (clearedByLevel.get(level) ?? []).includes(tag)) tentacleFightFor(level);
     };
     /**
      * The live boxes, for `collidesSolid`'s `shieldBosses` arm and for the
@@ -5266,6 +5284,8 @@ export function createLevelRun({
         // shield lock earns, which `applyEarnedClears` above has just
         // cashed. Two families, two lifetimes, three lines apart on purpose.
         if (!noclip) freshVisitState(level);
+        // ⛓ fidelity BOSSFORK D2: a cleared Tentacled Beast's mouth is part of the build (ON only).
+        tentacleMouthAtBuild();
         // A thrust cannot outlive its level either: `spear()` collides the
         // rect against `FP.world`, and by the time it fires the world is the
         // destination's.
@@ -15714,6 +15734,7 @@ export function createLevelRun({
     function shieldBumpNow() {
         bobShieldBumpNow();
         if (!inventory?.hasShield) return;
+        lightsShieldBumpNow();
         const slashing = slashState.slashing;
         const rendered = shieldRenderState ?? state;
         const p = { x: state.x, y: state.y };
@@ -15862,6 +15883,23 @@ export function createLevelRun({
         for (const r of due) {
             lightsSlashNow({ rect: spearRect(state.x, state.y, r.direction), reachLimit: Infinity, weapon: 'spear',
                 pressTick: r.pressTick, hits: [], ghost: false, direction: r.direction, repeat: 'lights' });
+        }
+    }
+
+    /**
+     * ⛓⛓ SEEDLING FIDELITY LIGHTSARR D2 — `Player.shieldBump` against the L69 fliers (`lightBoss.lightsShieldBump`),
+     * from `shieldBumpNow` (the player's update, after the fight stepped this tick; the shield is held). The box is
+     * where the previous frame's render left it (`shieldRenderState`), the gate and the shove's point the live `state`.
+     * Rows go to `shieldBumpLedger` (family `lightboss`) and the fight's ledger (`shield-bump`).
+     */
+    function lightsShieldBumpNow() {
+        const fight = CONTACT_FIDELITY.lightsBossFight ? (lightsFights.get(level) ?? null) : null;
+        if (!fight) return;
+        const rows = lightsShieldBump(fight, { player: state, rendered: shieldRenderState ?? state,
+            slashing: slashState.slashing, dark: inventory?.hasDarkShield === true });
+        for (const r of rows) {
+            shieldBumpLedger.push({ t: ticksCompleted + 1, level, family: 'lightboss', ...r });
+            lightsEvents.push({ t: ticksCompleted + 1, level, what: 'shield-bump', ...r });
         }
     }
 
@@ -17269,6 +17307,9 @@ export function createLevelRun({
                 NEAREST_TILE_INDEX, SOLID_GRID }),
         };
     };
+
+    // ⛓ fidelity BOSSFORK D2: and the boot's build, here because every binding the fight's build reads is now made.
+    tentacleMouthAtBuild();
 
     return {
         get level() { return level; },

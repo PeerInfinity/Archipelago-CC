@@ -104,7 +104,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 9,
+            "count": 11,
             "id": "make"
         },
         {
@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 86,
-            "count": 133,
+            "browser": 89,
+            "count": 136,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 439,
-        "browser": 151,
-        "cited": 229,
-        "files": 452,
-        "lineStyle": 13,
-        "withDocblock": 452,
-        "withFlags": 369
+        "blockStyle": 443,
+        "browser": 154,
+        "cited": 234,
+        "files": 457,
+        "lineStyle": 14,
+        "withDocblock": 457,
+        "withFlags": 374
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -4806,6 +4806,7 @@ export const INSTRUMENTS = frz({
             "category": "check",
             "citedBy": [
                 "docs/json/developer/procgen/concepts.md",
+                "docs/json/developer/procgen/maze.md",
                 "docs/json/developer/procgen/substrate-registry.md",
                 "docs/json/developer/procgen/text-adventure.md"
             ],
@@ -5255,6 +5256,7 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "audit",
+                "changed",
                 "host",
                 "json",
                 "plan",
@@ -5272,6 +5274,12 @@ export const INSTRUMENTS = frz({
                         "flag"
                     ],
                     "name": "audit"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "changed"
                 },
                 {
                     "how": [
@@ -6823,6 +6831,78 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling entity colliders — the MODEL's hitbox of every entity tag, as a leaf module the traversal transcription can import (`frontend/modules/flashPanel/seedlingEntityColliders.js`).",
             "path": "scripts/procgen/make-seedling-entity-colliders.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "make",
+            "citedBy": [],
+            "docblockStyle": "line",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "make-seedling-font.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling font maker — writes the glyph sheet behind the JS runtime's font seam (`seedlingEffectSkin.KEYS.font` = `seedling:font/default`, frame = char code − 32) from the GLYPHS table below.",
+            "path": "scripts/procgen/make-seedling-font.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "make",
+            "citedBy": [
+                "docs/json/developer/procgen/maze.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "make-seedling-playthrough-maze.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "quiet"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "charge-crossings"
+                },
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "masks"
+                },
+                {
+                    "from": "make-seedling-playthrough-rules.mjs",
+                    "name": "no-directional-locks"
+                }
+            ],
+            "oneLiner": "The `seedling_playthrough_maze` preset: Seedling's PLAYTHROUGH atlas, restricted to a growing list of levels, projected into the MAZE substrate (tile-primitives Stage 2, session tile-primitives-stage2-l15).",
+            "path": "scripts/procgen/make-seedling-playthrough-maze.mjs"
         },
         {
             "argvHelpers": [],
@@ -12235,6 +12315,106 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "out"
+            ],
+            "file": "probe-seedling-l15-chest-line.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L15 CHEST PROBE LINE, ON THE GAME (fidelity L1516 D1/D2, `CONTACT_FIDELITY.chestProbeLineEnd`).",
+            "path": "scripts/procgen/probe-seedling-l15-chest-line.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "out"
+            ],
+            "file": "probe-seedling-l16-corner-pit.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L16 ENCLOSED PIT, ON THE GAME (fidelity L1516 D3, sweep leg 206 `level_16__r1c1 <- in_L15_144_16 -> exit:out_pit_8_3`).",
+            "path": "scripts/procgen/probe-seedling-l16-corner-pit.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -14057,6 +14237,45 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling's ROPE CUTS, ON THE GAME (rules `rules-rope-events`).",
             "path": "scripts/procgen/probe-seedling-rope-events.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-rope-verb.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-rope-verb — ⛓⛓⛓ seedling-fidelity-rope: THE SOLVER'S `rope` VERB (`CONTACT_FIDELITY.ropeCutVerb`), ITS PLANS PLAYED ON THE GAME.",
+            "path": "scripts/procgen/probe-seedling-rope-verb.mjs"
         },
         {
             "argvHelpers": [
@@ -16818,7 +17037,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": false,
             "category": "replay",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
                 "every",

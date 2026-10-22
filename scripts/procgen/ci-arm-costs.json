@@ -1,814 +1,406 @@
 {
   "why": "What each CI arm COST THE RUNNER, keyed by the CI key its `##   ms | … | here=` line is printed under. `planCiShards` prices the shard partition off THIS and never off a standing row's `ms`, which is what it cost to ANSWER that row — for a CI-sourced row, a network call (trap 1068). `ms` is the MAX across the runs below, because a bin-packer fed the fastest sample packs a bin that does not fit; `minMs` is the MIN, and a shard is packed to the budget minus the widest `ms − minMs` among its arms (F2). Written by `node scripts/procgen/ci-gates.mjs --write-costs`.",
-  "measuredAt": "2026-10-18T01:36:47.139Z",
+  "measuredAt": "2026-10-21T18:13:52.178Z",
   "budgetMs": 600000,
-  "repricedSet": "headless",
+  "repricedSet": "browser",
   "runs": [
     {
-      "id": 39085495243,
-      "headSha": "c991fad9757b9b36bbc9b51e28a7e0950d83534a",
-      "createdAt": "2026-10-18T01:10:18Z",
-      "arms": 131
+      "id": 39546330548,
+      "headSha": "f0870c308bc34f886c63e6c4337fb9deed4afc9a",
+      "createdAt": "2026-10-21T04:51:36Z",
+      "arms": 162
     },
     {
-      "id": 39085485474,
-      "headSha": "4c1b77d723b9c4ca9ee877f1e3959d0ae6b17bdc",
-      "createdAt": "2026-10-18T01:10:10Z",
-      "arms": 115
+      "id": 39624022287,
+      "headSha": "8bff230abf2fbbbec7a4552bdee0f93ea8b5c7a5",
+      "createdAt": "2026-10-21T15:15:42Z",
+      "arms": 162
     },
     {
-      "id": 39081866066,
-      "headSha": "06b6b754a61928a296e13afa714ff19530aed1a2",
-      "createdAt": "2026-10-18T00:11:49Z",
-      "arms": 100
+      "id": 39626631129,
+      "headSha": "b0eeb4fd187211222e9c9beae8b5764db1df28a5",
+      "createdAt": "2026-10-21T15:32:34Z",
+      "arms": 162
+    },
+    {
+      "id": 39627357139,
+      "headSha": "bf259ff199aa3abdc55e70c9cacac3ba9106ccfd",
+      "createdAt": "2026-10-21T15:37:31Z",
+      "arms": 160
+    },
+    {
+      "id": 39630186472,
+      "headSha": "dfaa06e2400ecdcb972e20bc8cd738f07ee5a079",
+      "createdAt": "2026-10-21T15:56:09Z",
+      "arms": 162
     }
   ],
   "arms": {
     "gate: canonical-placements": {
       "ms": 500,
-      "minMs": 300,
-      "samples": 3,
-      "maxFrom": 39085495243
+      "minMs": 400,
+      "samples": 5,
+      "maxFrom": 39626631129
     },
     "gate: concept-trial-play": {
-      "ms": 7200,
-      "minMs": 6100,
-      "samples": 3,
-      "maxFrom": 36779317758
+      "ms": 9400,
+      "minMs": 8300,
+      "samples": 5,
+      "maxFrom": 39627357139
     },
     "gate: jta-managed-zone-skip": {
       "ms": 300,
       "minMs": 200,
-      "samples": 3,
-      "maxFrom": 39085485474
+      "samples": 5,
+      "maxFrom": 39624022287
     },
     "gate: loop-costs-one-model": {
       "ms": 300,
-      "minMs": 100,
-      "samples": 3,
-      "maxFrom": 39085485474
+      "minMs": 200,
+      "samples": 5,
+      "maxFrom": 39624022287
     },
     "gate: maze-lab": {
-      "ms": 38900,
-      "minMs": 33400,
-      "samples": 3,
-      "maxFrom": 36778423044
+      "ms": 42600,
+      "minMs": 40900,
+      "samples": 5,
+      "maxFrom": 39630186472
     },
     "gate: omsi-mana-leg": {
-      "ms": 17900,
-      "minMs": 17800,
-      "samples": 3,
-      "maxFrom": 36779863130
+      "ms": 18000,
+      "minMs": 17900,
+      "samples": 5,
+      "maxFrom": 39624022287
     },
     "gate: preset-bundle-load": {
-      "ms": 11100,
-      "minMs": 8600,
-      "samples": 3,
-      "maxFrom": 36779863130
+      "ms": 12600,
+      "minMs": 12300,
+      "samples": 5,
+      "maxFrom": 39627357139
     },
     "gate: procgen-demos": {
-      "ms": 46700,
-      "minMs": 38500,
-      "samples": 3,
-      "maxFrom": 36779863130
+      "ms": 53400,
+      "minMs": 51600,
+      "samples": 5,
+      "maxFrom": 39546330548
     },
     "gate: procgen-docs": {
-      "ms": 3600,
-      "minMs": 2600,
-      "samples": 3,
-      "maxFrom": 36779863130
+      "ms": 4300,
+      "minMs": 3300,
+      "samples": 5,
+      "maxFrom": 39546330548
     },
     "gate: procgen-help": {
-      "ms": 398500,
-      "minMs": 336900,
-      "samples": 3,
-      "maxFrom": 39085495243
+      "ms": 380600,
+      "minMs": 324700,
+      "samples": 5,
+      "maxFrom": 39630186472
     },
     "gate: procgen-lab-hosting": {
-      "ms": 9600,
-      "minMs": 7800,
-      "samples": 3,
-      "maxFrom": 36779863130
+      "ms": 11300,
+      "minMs": 10800,
+      "samples": 5,
+      "maxFrom": 39630186472
     },
     "gate: procgen-maze-recipe": {
       "ms": 800,
-      "minMs": 400,
-      "samples": 3,
-      "maxFrom": 39085485474
+      "minMs": 600,
+      "samples": 5,
+      "maxFrom": 39626631129
     },
     "gate: procgen-reference": {
-      "ms": 4700,
-      "minMs": 3800,
-      "samples": 3,
-      "maxFrom": 36779863130
+      "ms": 7500,
+      "minMs": 4200,
+      "samples": 5,
+      "maxFrom": 39626631129
     },
     "gate: regenerate-region-control": {
       "ms": 3700,
-      "minMs": 2000,
-      "samples": 3,
-      "maxFrom": 39085485474
+      "minMs": 2800,
+      "samples": 5,
+      "maxFrom": 39626631129
     },
     "gate: region-step-editing": {
       "ms": 2600,
-      "minMs": 1400,
-      "samples": 3,
-      "maxFrom": 39085485474
+      "minMs": 2000,
+      "samples": 5,
+      "maxFrom": 39624022287
     },
     "gate: seedling-ap-placement": {
-      "ms": 107400,
-      "minMs": 94300,
-      "samples": 3,
-      "maxFrom": 36778423044
+      "ms": 110900,
+      "minMs": 103800,
+      "samples": 5,
+      "maxFrom": 39624022287
     },
     "gate: seedling-editor-arm": {
-      "ms": 44200,
-      "minMs": 41700,
-      "samples": 3,
-      "maxFrom": 36778423044
+      "ms": 46000,
+      "minMs": 45000,
+      "samples": 5,
+      "maxFrom": 39624022287
     },
     "gate: seedling-editor-boot": {
-      "ms": 5800,
-      "minMs": 4900,
-      "samples": 3,
-      "maxFrom": 36779863130
+      "ms": 7500,
+      "minMs": 5500,
+      "samples": 5,
+      "maxFrom": 39546330548
     },
     "gate: seedling-editor-edit": {
-      "ms": 9700,
-      "minMs": 7600,
-      "samples": 3,
-      "maxFrom": 36779863130
+      "ms": 11200,
+      "minMs": 10600,
+      "samples": 5,
+      "maxFrom": 39546330548
     },
     "gate: seedling-editor-export": {
-      "ms": 33500,
-      "minMs": 30700,
-      "samples": 3,
-      "maxFrom": 36778423044
+      "ms": 35600,
+      "minMs": 35200,
+      "samples": 5,
+      "maxFrom": 39546330548
     },
     "gate: seedling-editor-generate": {
-      "ms": 46900,
-      "minMs": 36200,
-      "samples": 3,
-      "maxFrom": 36778423044
+      "ms": 58200,
+      "minMs": 56000,
+      "samples": 5,
+      "maxFrom": 39546330548
     },
     "gate: seedling-editor-generate (own server)": {
-      "ms": 46400,
-      "minMs": 36500,
-      "samples": 3,
-      "maxFrom": 36778423044
+      "ms": 58000,
+      "minMs": 55200,
+      "samples": 5,
+      "maxFrom": 39630186472
     },
     "gate: seedling-editor-lanes": {
-      "ms": 3600,
+      "ms": 5600,
       "minMs": 2500,
-      "samples": 3,
-      "maxFrom": 36779863130
+      "samples": 5,
+      "maxFrom": 39546330548
     },
     "gate: seedling-editor-manual": {
-      "ms": 7400,
-      "minMs": 6300,
-      "samples": 3,
-      "maxFrom": 36778423044
+      "ms": 8500,
+      "minMs": 8100,
+      "samples": 5,
+      "maxFrom": 39627357139
     },
     "gate: seedling-editor-overlays": {
-      "ms": 2900,
-      "minMs": 2100,
-      "samples": 3,
-      "maxFrom": 36779863130
+      "ms": 3500,
+      "minMs": 2200,
+      "samples": 5,
+      "maxFrom": 39626631129
     },
     "gate: seedling-editor-phases": {
-      "ms": 7700,
-      "minMs": 6000,
-      "samples": 3,
-      "maxFrom": 36779863130
+      "ms": 16400,
+      "minMs": 9300,
+      "samples": 5,
+      "maxFrom": 39546330548
     },
     "gate: seedling-editor-refusal": {
-      "ms": 2700,
-      "minMs": 2100,
-      "samples": 3,
-      "maxFrom": 36779863130
+      "ms": 5900,
+      "minMs": 3500,
+      "samples": 5,
+      "maxFrom": 39624022287
     },
     "gate: seedling-editor-sequence": {
-      "ms": 6200,
-      "minMs": 4700,
-      "samples": 3,
-      "maxFrom": 36779863130
+      "ms": 10800,
+      "minMs": 6300,
+      "samples": 5,
+      "maxFrom": 39546330548
     },
     "gate: seedling-editor-shapes": {
-      "ms": 7100,
-      "minMs": 5500,
-      "samples": 3,
-      "maxFrom": 36779863130
+      "ms": 9000,
+      "minMs": 5400,
+      "samples": 5,
+      "maxFrom": 39546330548
     },
     "gate: seedling-editor-solve": {
-      "ms": 1500,
-      "minMs": 1200,
-      "samples": 3,
-      "maxFrom": 36779863130
+      "ms": 2000,
+      "minMs": 1100,
+      "samples": 5,
+      "maxFrom": 39546330548
     },
     "gate: seedling-editor-switch": {
-      "ms": 6300,
-      "minMs": 4300,
-      "samples": 3,
-      "maxFrom": 36778423044
+      "ms": 7600,
+      "minMs": 5100,
+      "samples": 5,
+      "maxFrom": 39626631129
     },
     "gate: seedling-editor-world": {
-      "ms": 10500,
-      "minMs": 8000,
-      "samples": 3,
-      "maxFrom": 36778423044
+      "ms": 9800,
+      "minMs": 9500,
+      "samples": 5,
+      "maxFrom": 39624022287
     },
     "gate: seedling-full-tier-owed": {
       "ms": 300,
-      "minMs": 100,
-      "samples": 3,
-      "maxFrom": 39085485474
+      "minMs": 200,
+      "samples": 5,
+      "maxFrom": 39626631129
     },
     "gate: seedling-generated-set": {
-      "ms": 30700,
-      "minMs": 27500,
-      "samples": 3,
-      "maxFrom": 36779863130
-    },
-    "gate: seedling-hammer-monotonicity": {
-      "ms": 0,
-      "minMs": 0,
-      "samples": 3,
-      "maxFrom": 39085495243
+      "ms": 33400,
+      "minMs": 30700,
+      "samples": 5,
+      "maxFrom": 39624022287
     },
     "gate: seedling-rerecord-rehearsal": {
-      "ms": 8000,
-      "minMs": 5600,
-      "samples": 3,
-      "maxFrom": 39085495243
-    },
-    "gate: seedling-rewind-exactness": {
-      "ms": 0,
-      "minMs": 0,
-      "samples": 3,
-      "maxFrom": 39085495243
+      "ms": 8500,
+      "minMs": 5000,
+      "samples": 5,
+      "maxFrom": 39626631129
     },
     "gate: seedling-save-stamp": {
-      "ms": 16300,
-      "minMs": 14200,
-      "samples": 3,
-      "maxFrom": 36779863130
+      "ms": 18400,
+      "minMs": 16400,
+      "samples": 5,
+      "maxFrom": 39624022287
     },
     "gate: seedling-source-pin": {
       "ms": 100,
       "minMs": 0,
-      "samples": 3,
-      "maxFrom": 39085485474
+      "samples": 5,
+      "maxFrom": 39546330548
+    },
+    "gate: seedling-string-pull-fast": {
+      "ms": 124100,
+      "minMs": 97100,
+      "samples": 5,
+      "maxFrom": 39630186472
     },
     "gate: seedling-vanilla-manifest": {
-      "ms": 6500,
-      "minMs": 5900,
-      "samples": 3,
-      "maxFrom": 36778423044
+      "ms": 6700,
+      "minMs": 5400,
+      "samples": 5,
+      "maxFrom": 39630186472
     },
     "gate: seedling-wasm-element": {
-      "ms": 17700,
-      "minMs": 17300,
-      "samples": 3,
-      "maxFrom": 36779863130
+      "ms": 18300,
+      "minMs": 18100,
+      "samples": 5,
+      "maxFrom": 39546330548
     },
     "gate: seedling-wasm-pages": {
-      "ms": 27700,
-      "minMs": 22400,
-      "samples": 3,
-      "maxFrom": 36778423044
+      "ms": 33000,
+      "minMs": 29900,
+      "samples": 5,
+      "maxFrom": 39624022287
     },
     "gate: seedling-wasm-pins": {
-      "ms": 1400,
-      "minMs": 900,
-      "samples": 3,
-      "maxFrom": 39085495243
+      "ms": 1500,
+      "minMs": 1100,
+      "samples": 5,
+      "maxFrom": 39624022287
     },
     "gate: seedling-wasm-ship": {
-      "ms": 662100,
-      "minMs": 544900,
-      "samples": 3,
-      "maxFrom": 36779317758
+      "ms": 1014500,
+      "minMs": 643200,
+      "samples": 5,
+      "maxFrom": 39624022287
     },
     "gate: sidecar-fields": {
-      "ms": 2800,
-      "minMs": 1700,
-      "samples": 3,
-      "maxFrom": 39085495243
+      "ms": 2900,
+      "minMs": 1600,
+      "samples": 5,
+      "maxFrom": 39624022287
     },
     "gate: ta-mana-leg": {
-      "ms": 4000,
-      "minMs": 3000,
-      "samples": 3,
-      "maxFrom": 36778423044
+      "ms": 4400,
+      "minMs": 2900,
+      "samples": 5,
+      "maxFrom": 39546330548
     },
     "gate: worldgen-package-sidecars": {
       "ms": 200,
-      "minMs": 100,
-      "samples": 3,
-      "maxFrom": 39085495243
+      "minMs": 200,
+      "samples": 5,
+      "maxFrom": 39546330548
     },
     "identity: acceptance batch": {
-      "ms": 66400,
-      "minMs": 35100,
-      "samples": 3,
-      "maxFrom": 39085485474
+      "ms": 65700,
+      "minMs": 50900,
+      "samples": 5,
+      "maxFrom": 39630186472
     },
     "identity: AREA census default": {
       "ms": 1000,
-      "minMs": 600,
-      "samples": 3,
-      "maxFrom": 39085485474
-    },
-    "identity: carved pairs c4": {
-      "ms": 112900,
-      "minMs": 59100,
-      "samples": 3,
-      "maxFrom": 39085485474
-    },
-    "identity: empty pairs c3": {
-      "ms": 119400,
-      "minMs": 74900,
-      "samples": 3,
-      "maxFrom": 39085495243
-    },
-    "identity: empty pairs c6": {
-      "ms": 153700,
-      "minMs": 80500,
-      "samples": 3,
-      "maxFrom": 39085485474
+      "minMs": 800,
+      "samples": 5,
+      "maxFrom": 39624022287
     },
     "identity: ENEMY census default": {
-      "ms": 11900,
-      "minMs": 6100,
-      "samples": 3,
-      "maxFrom": 39085485474
+      "ms": 12100,
+      "minMs": 6800,
+      "samples": 5,
+      "maxFrom": 39624022287
     },
     "identity: generate-procgen-reference.mjs": {
-      "ms": 4200,
-      "minMs": 2300,
-      "samples": 3,
-      "maxFrom": 39085485474
-    },
-    "identity: generated set": {
-      "ms": 31100,
-      "minMs": 27300,
-      "samples": 3,
-      "maxFrom": 36778423044
+      "ms": 5300,
+      "minMs": 2900,
+      "samples": 5,
+      "maxFrom": 39546330548
     },
     "identity: guard census (elements)": {
       "ms": 1500,
-      "minMs": 700,
-      "samples": 3,
-      "maxFrom": 39085485474
+      "minMs": 1100,
+      "samples": 5,
+      "maxFrom": 39626631129
     },
     "identity: killgate s2": {
-      "ms": 2700,
-      "minMs": 1800,
-      "samples": 3,
-      "maxFrom": 39085495243
+      "ms": 2800,
+      "minMs": 1600,
+      "samples": 5,
+      "maxFrom": 39624022287
     },
     "identity: killgate s5": {
-      "ms": 5800,
-      "minMs": 3700,
-      "samples": 3,
-      "maxFrom": 39085495243
+      "ms": 5700,
+      "minMs": 4900,
+      "samples": 5,
+      "maxFrom": 39627357139
     },
     "identity: killgate s9": {
-      "ms": 6800,
-      "minMs": 3600,
-      "samples": 3,
-      "maxFrom": 39085485474
+      "ms": 6700,
+      "minMs": 5800,
+      "samples": 5,
+      "maxFrom": 39630186472
     },
     "identity: level post-sword s1": {
       "ms": 800,
-      "minMs": 400,
-      "samples": 3,
-      "maxFrom": 39085485474
+      "minMs": 600,
+      "samples": 5,
+      "maxFrom": 39626631129
     },
     "identity: level pre-sword s1": {
       "ms": 700,
-      "minMs": 500,
-      "samples": 3,
-      "maxFrom": 39085495243
+      "minMs": 400,
+      "samples": 5,
+      "maxFrom": 39624022287
     },
     "identity: maze byte-identity": {
       "ms": 1100,
-      "minMs": 600,
-      "samples": 3,
-      "maxFrom": 39085485474
-    },
-    "identity: solve-seedling-r8-battery --check": {
-      "ms": 600,
-      "minMs": 400,
-      "samples": 3,
-      "maxFrom": 39085495243
-    },
-    "identity: solve-seedling-r8-l18 --check": {
-      "ms": 1800,
-      "minMs": 1100,
-      "samples": 3,
-      "maxFrom": 39085495243
-    },
-    "identity: solve-seedling-r9-campaign --check": {
-      "ms": 7900,
-      "minMs": 5000,
-      "samples": 3,
-      "maxFrom": 36779317758
-    },
-    "identity: solve-seedling-r9-l3 --check": {
-      "ms": 400,
-      "minMs": 300,
-      "samples": 3,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-axe-witness --check": {
-      "ms": 8000,
-      "minMs": 4300,
-      "samples": 3,
-      "maxFrom": 39085485474
-    },
-    "producer: plan-seedling-bobsoldier --check": {
-      "ms": 200,
-      "minMs": 100,
-      "samples": 3,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-bobsoldier2 --check": {
-      "ms": 1600,
-      "minMs": 800,
-      "samples": 3,
-      "maxFrom": 39085485474
-    },
-    "producer: plan-seedling-bulb --check": {
-      "ms": 300,
-      "minMs": 200,
-      "samples": 3,
-      "maxFrom": 39085485474
-    },
-    "producer: plan-seedling-burn-witness --check": {
-      "ms": 600,
-      "minMs": 300,
-      "samples": 3,
-      "maxFrom": 39085485474
-    },
-    "producer: plan-seedling-c1-static-sword --check": {
-      "ms": 10400,
-      "minMs": 5700,
-      "samples": 3,
-      "maxFrom": 39085485474
-    },
-    "producer: plan-seedling-crusher-witness --check": {
-      "ms": 6600,
-      "minMs": 3400,
-      "samples": 3,
-      "maxFrom": 39085485474
-    },
-    "producer: plan-seedling-encounters --check": {
-      "ms": 11800,
-      "minMs": 7400,
-      "samples": 3,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-f1-l5-lock --check": {
-      "ms": 300,
-      "minMs": 200,
-      "samples": 3,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-f1-l5-open-lock --check": {
-      "ms": 600,
-      "minMs": 300,
-      "samples": 3,
-      "maxFrom": 39085485474
-    },
-    "producer: plan-seedling-f1c-l18-lock --check": {
-      "ms": 400,
-      "minMs": 200,
-      "samples": 3,
-      "maxFrom": 39085485474
-    },
-    "producer: plan-seedling-f1c-l18-phase --check": {
-      "ms": 10000,
-      "minMs": 5900,
-      "samples": 3,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-f4-l8-sandtraps --check": {
-      "ms": 800,
-      "minMs": 500,
-      "samples": 3,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-f6-reentry --check": {
-      "ms": 200,
-      "minMs": 200,
-      "samples": 3,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-f7-reentry --check": {
-      "ms": 200,
-      "minMs": 200,
-      "samples": 3,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-frontier3-witness --check": {
-      "ms": 800,
-      "minMs": 500,
-      "samples": 3,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-ghostmotion --check": {
-      "ms": 200,
-      "minMs": 100,
-      "samples": 3,
-      "maxFrom": 39085485474
-    },
-    "producer: plan-seedling-ghostsword --check": {
-      "ms": 200,
-      "minMs": 100,
-      "samples": 3,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-hammer-a-escape --check": {
-      "ms": 7400,
-      "minMs": 4300,
-      "samples": 3,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-hammer-b1-approach --check": {
-      "ms": 4700,
-      "minMs": 2900,
-      "samples": 3,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-hammer-b2-fight --check": {
-      "ms": 6400,
-      "minMs": 4000,
-      "samples": 3,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-hammer-bw-bombstand --check": {
-      "ms": 515500,
-      "minMs": 264900,
-      "samples": 3,
-      "maxFrom": 39085485474
-    },
-    "producer: plan-seedling-hammer-c2-ghost --check": {
-      "ms": 200,
-      "minMs": 100,
-      "samples": 3,
-      "maxFrom": 39085485474
-    },
-    "producer: plan-seedling-hammer-d-ghostwall --check": {
-      "ms": 500,
-      "minMs": 200,
-      "samples": 3,
-      "maxFrom": 39085485474
-    },
-    "producer: plan-seedling-hammer-dd-walkkill --check": {
-      "ms": 1700,
-      "minMs": 1100,
-      "samples": 3,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-hammer-g1-ghostkill --check": {
-      "ms": 88000,
-      "minMs": 55200,
-      "samples": 3,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-hammer-sf-strikefloor --check": {
-      "ms": 137700,
-      "minMs": 87500,
-      "samples": 3,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-l12keyline-witness --check": {
-      "ms": 30700,
-      "minMs": 16400,
-      "samples": 3,
-      "maxFrom": 39085485474
-    },
-    "producer: plan-seedling-l14-swordless --check": {
-      "ms": 1000,
       "minMs": 700,
-      "samples": 3,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-l30keylock --check": {
-      "ms": 9900,
-      "minMs": 5100,
-      "samples": 3,
-      "maxFrom": 39085485474
-    },
-    "producer: plan-seedling-l40button-witness --check": {
-      "ms": 156800,
-      "minMs": 156800,
-      "samples": 1,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-ladder2-witness --check": {
-      "ms": 1300,
-      "minMs": 1200,
-      "samples": 2,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-proximity-witness --check": {
-      "ms": 900,
-      "minMs": 900,
-      "samples": 1,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-pushblock-witness --check": {
-      "ms": 1400,
-      "minMs": 1300,
-      "samples": 2,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-r1-dark-suit --check": {
-      "ms": 200,
-      "minMs": 200,
-      "samples": 1,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-r2-singles --check": {
-      "ms": 200,
-      "minMs": 200,
-      "samples": 2,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-r2-wallflyer --check": {
-      "ms": 100,
-      "minMs": 100,
-      "samples": 1,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-r3-death --check": {
-      "ms": 200,
-      "minMs": 200,
-      "samples": 2,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-r4 --check": {
-      "ms": 100,
-      "minMs": 100,
-      "samples": 1,
-      "maxFrom": 39085495243
+      "samples": 5,
+      "maxFrom": 39546330548
     },
     "producer: plan-seedling-r7-attribution --check": {
-      "ms": 5500,
-      "minMs": 5500,
-      "samples": 1,
-      "maxFrom": 39085495243
+      "ms": 12400,
+      "minMs": 8600,
+      "samples": 5,
+      "maxFrom": 39630186472
     },
     "producer: plan-seedling-r7-ends-meet --check": {
-      "ms": 7600,
-      "minMs": 6400,
-      "samples": 3,
-      "maxFrom": 36779863130
-    },
-    "producer: plan-seedling-r8-hammer-pair --check": {
-      "ms": 400,
-      "minMs": 400,
-      "samples": 1,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-r8-l18-spinner --check": {
-      "ms": 400,
-      "minMs": 400,
-      "samples": 2,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-r9-l0-sword-dash --check": {
-      "ms": 200,
-      "minMs": 200,
-      "samples": 2,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-r9-l6-bob-press --check": {
-      "ms": 100,
-      "minMs": 100,
-      "samples": 1,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-r9-l6-harmless-window --check": {
-      "ms": 200,
-      "minMs": 200,
-      "samples": 1,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-r9-l6-sword-dash-hit --check": {
-      "ms": 300,
-      "minMs": 300,
-      "samples": 2,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-return-l15 --check": {
-      "ms": 200,
-      "minMs": 200,
-      "samples": 2,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-sealdoor-witness --check": {
-      "ms": 200,
-      "minMs": 200,
-      "samples": 1,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-slots-witness --check": {
-      "ms": 900,
-      "minMs": 900,
-      "samples": 2,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-stance-witness --check": {
-      "ms": 3100,
-      "minMs": 3100,
-      "samples": 1,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-u10-puncher-dwell --check": {
-      "ms": 300,
-      "minMs": 300,
-      "samples": 2,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-u11-dark-shield --check": {
-      "ms": 100,
-      "minMs": 100,
-      "samples": 1,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-u11-facing --check": {
-      "ms": 200,
-      "minMs": 200,
-      "samples": 2,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-u12-pull --check": {
-      "ms": 100,
-      "minMs": 100,
-      "samples": 1,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-u14-moonrock --check": {
-      "ms": 200,
-      "minMs": 200,
-      "samples": 2,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-u15-turret --check": {
-      "ms": 100,
-      "minMs": 100,
-      "samples": 1,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-u7-puncher --check": {
-      "ms": 200,
-      "minMs": 200,
-      "samples": 2,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-u9-shield-bump --check": {
-      "ms": 100,
-      "minMs": 100,
-      "samples": 1,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-wallflyer --check": {
-      "ms": 300,
-      "minMs": 300,
-      "samples": 2,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-wand-witness --check": {
-      "ms": 300,
-      "minMs": 300,
-      "samples": 1,
-      "maxFrom": 39085495243
-    },
-    "producer: plan-seedling-watcher-witness --check": {
-      "ms": 1400,
-      "minMs": 1300,
-      "samples": 2,
-      "maxFrom": 39085495243
-    },
-    "producer: solve-seedling-r8-d2 --check": {
-      "ms": 500,
-      "minMs": 500,
-      "samples": 2,
-      "maxFrom": 39085495243
+      "ms": 9100,
+      "minMs": 8100,
+      "samples": 5,
+      "maxFrom": 39546330548
     },
     "smoke: seedling-bot-differential": {
-      "ms": 5200,
-      "minMs": 4500,
-      "samples": 3,
-      "maxFrom": 36778423044
+      "ms": 5000,
+      "minMs": 4300,
+      "samples": 5,
+      "maxFrom": 39630186472
     },
     "structure: seedling-producer-boundaries": {
       "ms": 100,
       "minMs": 100,
-      "samples": 3,
-      "maxFrom": 39085495243
+      "samples": 5,
+      "maxFrom": 39546330548
     }
   }
 }

@@ -44,11 +44,10 @@ import { getPanelInstance } from './index.js';
 import { describeMazeAction } from './mazeKeys.js';
 import { drawMazeCompositeRegion } from './mazeCompositeMap.js';
 import { mazeRegionRoundTrip } from './mazeRegionRoundTrip.js';
-import { TILE_GRID_SIDECAR_FIELDS, tileGridApLocationNames } from './mazeSerializer.js';
+import { TILE_GRID_SIDECAR_FIELDS, tileGridApLocationNames, tileGridApExitNames } from './mazeSerializer.js';
 import { mazeCapacityAt } from './mazeLocationCapacity.js';
 import { MAZE_CONCEPT_REALISATIONS } from './mazeConcepts.js';
 import { LOCATION_CAPACITY_KINDS } from '../procgenCore/locationCapacity.js';
-import { envelopeExitNames } from '../procgenCore/sidecarFields.js';
 import {
     DEFAULT_MAZE_PROCGEN_PARAMS,
     renderMazeProcgenParams,
@@ -282,7 +281,7 @@ export const substrateRegistryEntry = Object.freeze({
     // the engine's re-attached one; the atlas projection may DROP a colliding
     // crossing by name (`exit_tile_collision`), which the report then shows.
     apLocationNamesOf: tileGridApLocationNames,
-    apExitNamesOf: envelopeExitNames,
+    apExitNamesOf: tileGridApExitNames,
     // ⛓ APWORLD SUBSTRATE CHANGE C2 — how many locations a room holds at a
     // size (`mazeLocationCapacity.js`): an OPEN room's floor, of which the
     // gated ones may take the percolation share; `null` for a walled room.

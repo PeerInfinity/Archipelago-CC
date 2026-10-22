@@ -8,13 +8,18 @@
  *   push  — a block on that cell moves one further   condition: tileLib.block.may_enter (asked of the cell BEYOND)
  *   hold  — a pressed button derives its token        condition: tileLib.button.pressed
  *   latch — an item cell is picked up on arrival      (no condition; flags are items)
+ *   strike — ITEM ACTIONS: `USE:<id>` breaks the FACING cell for this visit
+ *            condition: the `action_lib` entry's `condition` helper (`strikes`); the entry's `item`
+ *            must be in the effective inventory (data, not a condition). `TURN_<dir>` sets facing.
  *
  * Helpers are called as `f(cell, tile)` with `state`/`player` ambient (⚖ Q4 v1): `state.has` reads
  * the EFFECTIVE inventory — carried plus held tokens — through the context's `hasItem`.
  */
 
 import { evaluateRule } from '../../shared/ruleEngine/index.js';
-import { INPUT_WAIT, getObstacle, getItem, isFloor, posKey } from '../mazeRoomEngine.js';
+import {
+    INPUT_WAIT, TURN_PREFIX, USE_PREFIX, getObstacle, getItem, isFloor, posKey,
+} from '../mazeRoomEngine.js';
 
 const DELTAS = { N: { dx: 0, dy: -1 }, S: { dx: 0, dy: 1 }, E: { dx: 1, dy: 0 }, W: { dx: -1, dy: 0 } };
 const PLAYER = '1';
@@ -47,8 +52,11 @@ function callHelper(context, name, cell, tile) {
     return result;
 }
 
-/** The facts a v1 (cell-local) helper sees about one cell. */
-function tileAt(world, x, y, blocks, playerPos) {
+/**
+ * The facts a v1 (cell-local) helper sees about one cell. `broken` is the state's per-visit list;
+ * `actionId` is the use being asked about (`struck` = the obstacle lists it in `struck_by`).
+ */
+function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = null) {
     const key = posKey(x, y);
     const obstacle = getObstacle(world, x, y) ?? null;
     let clearSet = null;
@@ -66,6 +74,9 @@ function tileAt(world, x, y, blocks, playerPos) {
         button: world.buttons?.get(key) ?? null,
         obstacle,
         clear_set: clearSet,
+        broken: broken?.includes(key) ?? false,
+        struck: actionId !== null && obstacle !== null
+            && (world.obstacleLib?.[obstacle]?.struck_by ?? []).includes(actionId),
     };
 }
 
@@ -111,13 +122,43 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
     if (input === INPUT_WAIT) {
         return { next: { ...cloneState(state), turn: state.turn + 1 }, refused: null };
     }
+    const noInput = { next: null, refused: { primitive: 'input', cell: null, helper: null } };
+    if (typeof input === 'string' && input.startsWith(TURN_PREFIX)) {
+        const dir = input.slice(TURN_PREFIX.length);
+        if (state.facing === undefined || !DELTAS[dir]) return noInput;
+        const next = cloneState(state);
+        next.facing = dir;
+        next.turn += 1;
+        return { next, refused: null };
+    }
+    if (typeof input === 'string' && input.startsWith(USE_PREFIX)) {
+        const actionId = input.slice(USE_PREFIX.length);
+        const entry = state.facing === undefined ? undefined : world.actionLib?.[actionId];
+        if (!entry) return noInput;
+        const inv = scriptedEffectiveInventory(world, state.inventory, state.player_pos, state.blocks, tileLib, helpers);
+        if (entry.item && !inv.has(entry.item)) {
+            return { next: null, refused: { primitive: 'strike', cell: null, helper: null, item: entry.item } };
+        }
+        const d = DELTAS[state.facing];
+        const fx = state.player_pos.x + d.dx;
+        const fy = state.player_pos.y + d.dy;
+        const facing = tileAt(world, fx, fy, state.blocks, state.player_pos, state.broken, actionId);
+        const next = cloneState(state);
+        next.turn += 1;
+        // ⚖ "use at air" is legal: the condition only decides whether the facing cell BREAKS.
+        if (callHelper(makeContext(helpers, inv), entry.condition, { x: fx, y: fy }, facing)) {
+            next.broken.push(posKey(fx, fy));
+            next.broken.sort();
+        }
+        return { next, refused: null };
+    }
     const delta = DELTAS[input];
-    if (!delta) return { next: null, refused: { primitive: 'input', cell: null, helper: null } };
+    if (!delta) return noInput;
     const nx = state.player_pos.x + delta.dx;
     const ny = state.player_pos.y + delta.dy;
     const inv = scriptedEffectiveInventory(world, state.inventory, state.player_pos, state.blocks, tileLib, helpers);
     const ctx = makeContext(helpers, inv);
-    const target = tileAt(world, nx, ny, state.blocks, state.player_pos);
+    const target = tileAt(world, nx, ny, state.blocks, state.player_pos, state.broken);
     if (!callHelper(ctx, tileLib.cell.enter, { x: nx, y: ny }, target)) {
         return { next: null, refused: { primitive: 'enter', cell: { x: nx, y: ny }, helper: tileLib.cell.enter } };
     }
@@ -126,7 +167,7 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
     if (target.block) {
         const bx = nx + delta.dx;
         const by = ny + delta.dy;
-        const beyond = tileAt(world, bx, by, state.blocks, state.player_pos);
+        const beyond = tileAt(world, bx, by, state.blocks, state.player_pos, state.broken);
         if (!callHelper(ctx, tileLib.block.may_enter, { x: bx, y: by }, beyond)) {
             return { next: null, refused: { primitive: 'push', cell: { x: bx, y: by }, helper: tileLib.block.may_enter } };
         }
@@ -136,6 +177,7 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
     const next = cloneState(state);
     next.player_pos = { x: nx, y: ny };
     next.turn += 1;
+    if (next.facing !== undefined) next.facing = input;
     if (pushedFrom !== null) {
         next.blocks[next.blocks.indexOf(pushedFrom)] = pushedTo;
         next.blocks.sort();
@@ -152,5 +194,7 @@ function cloneState(state) {
         inventory: new Set(state.inventory),
     };
     if (state.blocks !== undefined) next.blocks = state.blocks.slice();
+    if (state.facing !== undefined) next.facing = state.facing;
+    if (state.broken !== undefined) next.broken = state.broken.slice();
     return next;
 }

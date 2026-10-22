@@ -1,0 +1,46 @@
+{
+ "tape": "inner",
+ "set_id": "seedling-vanilla-record-f5bdb07d",
+ "mounted": "seedling-vanilla-record-f5bdb07d",
+ "observations": 301,
+ "clears": [
+  "10,0",
+  "11,0",
+  "15,1",
+  "3,0",
+  "5,0",
+  "8,0",
+  "8,1"
+ ],
+ "game": {
+  "opened": true,
+  "final": {
+   "t": 300,
+   "x": 40,
+   "y": 60.849999999999994,
+   "level": 16
+  }
+ },
+ "modelOff": {
+  "opened": true,
+  "final": {
+   "t": 300,
+   "x": 40,
+   "y": 60.849999999999994,
+   "level": 16
+  },
+  "maxDrift": 0,
+  "firstDrift": null
+ },
+ "modelOn": {
+  "opened": true,
+  "final": {
+   "t": 300,
+   "x": 40,
+   "y": 60.849999999999994,
+   "level": 16
+  },
+  "maxDrift": 0,
+  "firstDrift": null
+ }
+}

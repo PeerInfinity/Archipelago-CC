@@ -185,7 +185,10 @@ describe('⚖ F7b — the override has no instance in the tree, and no channel t
         // ⛓ 8 since rules-playthrough-blocks (2026-10-14): the `seedling_playthrough`
         //   seed-1 EXPORT, whose block world_generator now carries through the
         //   Python round trip (the package's `_worldgen_region_atlas.json`).
-        expect(named).toHaveLength(8);
+        // ⛓ 9 since tile-primitives Stage 2 (2026-10-21): `seedling_playthrough_maze`,
+        //   the playthrough atlas cut to its growing level list and played in the
+        //   maze, carries the compiled atlas's block the same way.
+        expect(named).toHaveLength(9);
         for (const doc of named) expect(doc).toBe(DEFAULT_MAP_DOCUMENT);
     });
 

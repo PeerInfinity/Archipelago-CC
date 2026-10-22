@@ -248,7 +248,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `arrowsInFlight` | `emitter` | `dangerMap`, `solverBot` |
 | `burnedTrees` | — | `botDriverV2`, `solverBot` |
 | `latchedGroups` | `channel` | `solverBot` |
-| `pulledRopes` | — | `botDriverV2` |
+| `pulledRopes` | — | `botDriverV2`, `solverBot` |
 | `turretDamage` | `hp`, `emitter` | `botDriverV2` |
 | `turretsSettled` | `pushable` | `botDriverV2` |
 | `arrowFlights` | `emitter` | `dangerMap` |
@@ -262,7 +262,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `bombPushers` | `stationary`, `emitter`, `proximity` | `dangerMap`, `solverBot` |
 | `bombs` | `explode` | `dangerMap`, `solverBot` |
 | `igneousTiles` | `stationary`, `proximity` | `dangerMap` |
-| `lightsFight` | `hp`, `emitter`, `contact` | `lightsVerb` |
+| `lightsFight` | `hp`, `emitter`, `contact` | `dangerMap`, `lightsVerb` |
 | `lavaBossFight` | — | `solverBot` |
 | `tentacleBeastFight` | — | `solverBot` |
 | `volume:crusher` | `lane-charge`, `contact` | `encounters` |

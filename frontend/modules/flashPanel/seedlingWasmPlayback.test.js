@@ -1008,6 +1008,20 @@ describe('W7 — continuations from a held room, and their named fallbacks', () 
         expect(e.service.seen).toHaveLength(2); // chest at the cold start, door at the re-arrival
     });
 
+    it('⛓ DELIVERY DEFERRAL — a held game whose SPAWN PAIR the shadow does not hold is not the shadow (the tape would rebuild the room): shadow-mismatch', () => {
+        const e = engineOver(A);
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        const live = e.game.readState;
+        e.game.readState = () => JSON.stringify({ ...JSON.parse(live()), playerPositionX: A.state.playerPositionX + 8 });
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
+        expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ equal: false })]);
+        expect(e.engine.stats.fallbacks.map((f) => f.kind)).toEqual(['shadow-mismatch']);
+        expect(e.engine.stats.fallbacks[0].why).toMatch(/playerPosition/);
+        expect(e.engine.stats.continuations).toBe(0);
+    });
+
     it('stop() RELEASES a held room (a held room ignores the keyboard): botReset, the room dropped, idle', () => {
         const e = engineOver(A);
         e.engine.walkTo(CHEST);
