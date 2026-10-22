@@ -282,7 +282,9 @@ OFF is byte-identical to the base:
 - The run is marked failure by three browser gate shards (`seedling-wasm-ship`, `seedling-editor-world +14`,
   `seedling-ap-placement +17`). Each failed at **"Install Chromium for Playwright"** in 0 s, so the gates never ran.
 - The MASKS and Lights-flip branches' runs in the same window are red too.
-- This is not this branch's code, and I could not re-run it (no dispatch). The report commit's push re-runs it.
+- This is not this branch's code, and I could not re-run it (no dispatch). The report commit is docs-only and the path
+  filter does not trigger the workflow (`ci-vitest-summary.mjs 5ac863437f`: no run). **The planner should re-run the
+  three gate shards of run 39822720911** (or read them on the harvest).
 
 ## Records
 
