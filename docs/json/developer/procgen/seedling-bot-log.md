@@ -24470,3 +24470,39 @@ cut and the crossing to L18 with 0 hits, the verb's own swing (`execPull` presse
 **Hand-overs.** The Spear's thrust and Fire also cut (`Player.as:989,1032`; rules-2's `l28-fire` tape), and this verb
 drives only the sword: a Spear-only or Fire-only bag refuses `cannot-act` by name. The L39 frontier cut is ON-only and
 stalls next at `wandlock@144,64`; its Pulser (the rope's group) is the next question there.
+
+### Seedling fidelity IGFADE — the Igneous-to-Lava tiles count the dead frames' renders (`igneousDeadFrames`, OFF)
+
+⚖ The user (2026-10-21) picked "IGNEOUS load-fade renders": retire IGNEOUS's named interim (`IGNEOUS_UNMODELLED` on an
+arrival in range and on a dead span while a tile counts). Report: `CC/docs/cloud-reports/seedling-fidelity-igfade.md`.
+
+**The count, from the AS3.** `Main.update` is `Bot.update(); super.update();` and `Engine.onEnterFrame` is
+`update(); render();`, so a frame the bot counts dead still renders. `FP.world = new Game(…)` writes `_goto` only;
+`Engine.checkWorld` swaps at the END of that frame's update, so the same frame's render is already the new world's, under
+the camera `loadlevel` wrote raw. Then the fade's 20 dead updates each run `view()` (outside the `blackCover` gate) and a
+render. ⇒ **21 renders** at the arrival before a visit's first live one, for a boot and for a death restart alike.
+
+**On the game** (p4g headless, `CC/docs/cloud-reports/seedling-fidelity-igfade-evidence/drivers/probe-igfade.mjs`: the encounter-ticks probe plus `botStatus().dead_frames` per tick).
+A boot at (160,100), 8.94 px from L76's (10,6), standing: the tile turns at the t15 render (36 − 21), the death restarts at
+t46, the restart's own fade turns the rebuilt tile at t61, restart t92 (`igneous-l76-fade-stand`; the `-86` stand by
+(8,6) is the same). 20 renders would put both a tick later; the mutant says so.
+
+**The model.** `levelRun.renderIgneousStepped` (ON only; OFF is the interim, byte-identical): the fade's 21 renders at the
+arrival under the settle's own cameras, then `clock.spans` since the last render. A Help is drained at the top of its
+tick, so it renders BEFORE that tick's render at the previous render's position; a pickup's phase A and the wand / seed
+fades render after it, at this tick's position, the camera stepped per dead frame. Staged witness on p4g:
+`igneous-l74-phase-a` (the Dark Shield's phase A turns a breaking (5,3); the walk back dies on it), 0 px.
+
+**Measured: on the game's content the frozen spans change nothing a player can see.** The only frozen span on a type-31
+level is L74's phase A, and its stance is 26 px from the nearest tile, a round trip longer than the 27 renders a breaking
+tile has left. The spans that DO touch a tile move the player inside them and stay refused by name: L74's button fall
+(the button stands 11.31 px from (18,7), exactly the radius) and L71's chest seal ceremony.
+
+**Movers ON:** the 15 type-31 survey steps and the 49 type-31 sweep legs in node: 0. Bounded vitest ON: the two env
+artifacts plus `fidelityIgneous`'s interim row (the arrival refusal, which the switch retires).
+
+**Trap candidates.**
+- A "dead frame" is dead to the BOT's gate, not to `render()`: anything render-driven (`Tile.render`, the totem's head)
+  counts it. Ask which half of the frame a mechanism lives in before pricing a span.
+- A death respawning at the same spot is invisible in the position stream: read `dead_frames` (or a death ledger), not
+  x/y, for a stand witness.
