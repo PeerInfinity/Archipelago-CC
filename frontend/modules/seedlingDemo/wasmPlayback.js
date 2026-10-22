@@ -120,6 +120,58 @@ export function crossLevelEnd(goal, plan) {
 }
 
 /**
+ * ⛓ ARRIVAL HOLD (§5.124) — what a begin record seen while a CROSSING plan plays (an exit plan, or a cross-level
+ * location plan) IS: the crossing's `landing`, a `planned-respawn` (a death the plan's own rows bill, whose new Game
+ * the tape plays through), or `unplanned` (named). A begin in the level the crossing is LEAVING, when the plan ends
+ * elsewhere, is never the landing (L22: `wasm-exit-22` plans 2 deaths; its first respawn was held as the landing).
+ *
+ * The plan's rows ARE the shadow (`{level, x, y, deaths}` per tick, `deaths` = `playerDeaths.length`). Death n of
+ * the plan is planned when its rows rise to `base + n` deaths, and its respawn when one of THOSE rows stands in
+ * `landing.level` at the game's spawn pair (`landing.x/y` = `readState().playerPositionX/Y` at the begin). Its
+ * timing is the divergence watch's (row by row), as for every other tick of the tape.
+ * `redirected` = the glue pushed a teleport since the plan shipped: its landing may be the level the crossing left
+ * (a redirect to another entrance of it), and it IS the landing.
+ *
+ * @param {{fromLevel:number, expected:Array<{level:number,x:number,y:number,deaths?:number}>, respawns?:number,
+ *          landing:{level:number,x:number,y:number}, redirected?:boolean}} a
+ * @returns {{kind:'landing'}|{kind:'planned-respawn', death:number, row:number}|{kind:'unplanned', why:string}}
+ */
+export function crossingArrivalVerdict({ fromLevel, expected, respawns = 0, landing, redirected = false }) {
+    const end = expected?.at?.(-1);
+    if (redirected || !landing || landing.level !== fromLevel || !end || end.level === fromLevel) return { kind: 'landing' };
+    const base = expected[0]?.deaths ?? 0;
+    const planned = (end.deaths ?? base) - base;
+    const n = respawns + 1;
+    const at = `a new Game in level ${landing.level} at (${landing.x},${landing.y}), the level the crossing is leaving `
+        + `(its plan ends in level ${end.level})`;
+    if (n > planned) {
+        return { kind: 'unplanned', why: `${at}: the plan bills ${planned} death(s) and ${respawns} respawned already — `
+            + 'not the landing, and no planned respawn' };
+    }
+    const row = expected.findIndex((r) => (r.deaths ?? base) - base === n && r.level === landing.level
+        && r.x === landing.x && r.y === landing.y);
+    if (row < 0) {
+        return { kind: 'unplanned', why: `${at}: death ${n} of the ${planned} the plan bills, but no row of it stands at `
+            + 'that spawn — the respawn is not the shadow\'s' };
+    }
+    return { kind: 'planned-respawn', death: n, row };
+}
+
+/**
+ * ⛓ ARRIVAL HOLD (§5.124) — the pin on `done`: a leg whose plan ENDS in another level than `fromLevel` and whose
+ * end is still IN `fromLevel` never left the room, so it is not done (the why), else null. Levels only: the end's
+ * x/y are `botStatus`'s, rounded against the plan's float rows (and a glue redirect lands a crossing off the plan's
+ * own level legitimately); the position is the divergence watch's, tick by tick. `redirected` (the glue pushed a
+ * teleport since the plan shipped) exempts: a redirect may land in the level the crossing left.
+ */
+export function legEndRefusal({ fromLevel, end, expectedEnd, redirected = false }) {
+    if (redirected || !Number.isInteger(expectedEnd?.level) || expectedEnd.level === fromLevel) return null;
+    if (end?.level !== fromLevel) return null;
+    return `the leg ends in level ${fromLevel}, the level it was leaving — its plan ends in level ${expectedEnd.level} `
+        + `(${expectedEnd.x},${expectedEnd.y}): not done`;
+}
+
+/**
  * ⛓ W8 — ADOPT the cold start (plan `seedling-js-solver-walk-plan.md` §5.13;
  * ⚖ the user 2026-10-03: the solver must not need to exit and re-enter a room
  * to solve it). The bot's first goal finds a room that ran UNWATCHED: no
