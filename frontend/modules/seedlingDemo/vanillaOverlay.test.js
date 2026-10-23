@@ -378,8 +378,11 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         // ⛓ rules-rope-events (63fa26d6… -> 1c38afee): a rope cut is an event; L16 splits at its silenced lanes
         //   (r1c9, r3c7, r6c8) and L28's lock is entered from both sides once the rope's rock holds the button; a rope
         //   is cut by Fire too (⚖ 2026-10-21). No location moves (the overlay fixture rewrites byte-identical).
+        // ⛓ rules-l39 (1c38afee… -> 32dd7cf1): a rope's whole run is solid until cut (L39 splits at its corridor),
+        //   a Pulser is a static Solid (L38/L40/L107 lose their pulser pockets), and L39's chain is a lock RUN priced
+        //   Fire. No location moves (the overlay fixture rewrites byte-identical).
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('1c38afee9b0ee1bf1e0370879c85f3c4');
+            .toBe('32dd7cf16b15ae1848f39ff47b77604d');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
