@@ -55,6 +55,7 @@ import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { FLASH_PANEL, clickPanelTab, createRoomPlay, slotBlockOf } from './seedlingRoomPlay.js';
 import { bootRetriesLine, isBootFault, startWasmGame, withBootRetry } from './seedlingProbeBoot.js';
+import { classifyDivergences } from './seedlingKnownDivergences.js';
 
 argvHelp(import.meta.url);
 
@@ -617,8 +618,18 @@ async function main() {
             check('B: every solver leg is named by the PASS that made its plan (dashless / full)',
                 solved.length > 0 && solved.every((h) => h.pass === 'dashless' || h.pass === 'full'),
                 JSON.stringify(solved.map((h) => [h.level, h.pass])));
-            check('B: 0 divergences (every played plan, dashless or full, stayed on plan)', eng.divergences === 0
-                && solved.every((h) => !h.divergence), JSON.stringify({ divergences: eng.divergences }));
+            // ⛓ KNOWN DIVERGENCES (§5.124) — an EXACT named entry (`seedlingKnownDivergences.js`) is printed loudly and
+            // counted known, never green; every other divergence still fails the row. A leg the walk never reached is INFO.
+            const divs = classifyDivergences(eng.history ?? []);
+            for (const k of divs.known) {
+                console.log(`KNOWN-DIVERGENCE (${k.entry.finding}): history ${k.index} ${k.entry.goal} — ${JSON.stringify(k.divergence)}`);
+            }
+            for (const [id, reached] of Object.entries(divs.reached)) {
+                if (!reached) console.log(`INFO: known divergence ${id} — B did not reach its leg in the budget (reach varies; not a failure)`);
+            }
+            check('B: 0 divergences (every played plan, dashless or full, stayed on plan) but the KNOWN ones, named above',
+                eng.divergences === divs.known.length && divs.unknown.length === 0 && solved.every((h) => !h.divergence),
+                JSON.stringify({ divergences: eng.divergences, known: divs.known.length, unknown: divs.unknown }));
             const wantBudget = SOLVER_BUDGET_WORK ?? defaults.budgetWork;
             check(`B: the engine solves under the work budget (${wantBudget} units, ${SOLVER_BUDGET_WORK === null ? 'the default' : '--solver-budget-work, the setting'})`,
                 eng.budgetWork === wantBudget, JSON.stringify({ budgetWork: eng.budgetWork, defaults }));

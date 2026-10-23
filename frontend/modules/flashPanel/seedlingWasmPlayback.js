@@ -104,7 +104,7 @@ import {
     arrivalSolveRequest, arrivalSolverGoal, continuationSolveRequest, isArrival, stagingFromWasmArrival,
 } from '../seedlingDemo/wasmArrival.js';
 import {
-    adoptedClockStaging, heldArrivalClockStaging, adoptionRefusal, adoptRefusalIsTransient, arrivalHoldBlocker, queuedSwapPush, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, crossLevelEnd, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
+    adoptedClockStaging, heldArrivalClockStaging, adoptionRefusal, adoptRefusalIsTransient, arrivalHoldBlocker, queuedSwapPush, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, crossLevelEnd, crossingArrivalVerdict, endsHeld, exactDeclarationRefusal, legEndRefusal, FALLBACK_POLICY,
     firstDivergence, foldDrain, goalAction, keysHeldAtReset, latchExpired, latchWatch, locationGoalServed, encounterReportServed, liveDeclarations, MAX_RECOVERIES, newGameBeginEntry, newGameCeremony,
     observeLatch,
     primarySplitRefusal, shadowMismatch, ctorMismatch, bootAtCtor, talkCircleGuard, talkCirclesAt, TUTORIAL_DISMISS_KEY, TUTORIAL_FADE_FRAMES,
@@ -396,6 +396,9 @@ export function createWasmPlayback({
         // ⛓ CROSS-LEVEL END — location legs whose plan ends in another level: `{goal, from, to, outcome}` (`held-arrival`,
         // or the fallbacks `held-end` (no arrival watch: re-entered in one turn) / `unheld-end`)
         crossLevelEnds: [],
+        // ⛓ ARRIVAL HOLD (§5.124) — a crossing plan's PLANNED deaths whose respawn (a begin record in the level it was
+        // leaving) the tape played through, never held as the landing: `{level, death, row, tick, time}`
+        respawnsPlayed: [],
         // ⛓ CROSS-LEVEL END (an instrument, never acted on) — the engine's goal-level events with the game's clock:
         // begin / solve / finish / hold / release / self-check / adoption refusal / re-arrival. A ring of TIMELINE_ROWS.
         timeline: [] };
@@ -1032,6 +1035,12 @@ export function createWasmPlayback({
         stats.swapPushes.push({ level, time: null, late: false, pushed, at });
     }
 
+    /** ⛓ ARRIVAL HOLD (§5.124) — the glue pushed a teleport since the playing plan shipped (its count moved). */
+    function redirectedSinceShip() {
+        const p = swapState()?.pushes;
+        return Number.isInteger(p) && Number.isInteger(play?.swapPushes) && p > play.swapPushes;
+    }
+
     /**
      * ⛓ W7 — HOLD the arrival `se`: stage it (`botStatus` + `readState` in this
      * turn), ship the zero-tick freeze, and keep the staging as `room`. A plan
@@ -1039,6 +1048,9 @@ export function createWasmPlayback({
      * room) is replaced; its held keys are released (W3's pair). Ends the exit
      * leg as done, then serves the goal waiting for this room, if any.
      * Returns false when the arrival cannot be staged exactly (named; the watch goes on).
+     * ⛓ ARRIVAL HOLD (§5.124) — a crossing plan's begin record in the level it is LEAVING is never its landing: a
+     * death the plan bills is played through (`crossingArrivalVerdict`; returns false, the watch goes on), any other
+     * fails by name.
      */
     function holdArrival(se) {
         const st = status();
@@ -1048,6 +1060,18 @@ export function createWasmPlayback({
         if (phase === 'await-arrival' && goal && goal.level !== level) {
             stats.holdBlocked.push({ level, why: `not the goal's room (level ${goal.level}) — the bot plans one goal in one room` });
             return false;
+        }
+        if (phase === 'playing' && play?.plan && goal) {
+            const v = crossingArrivalVerdict({ fromLevel: goal.level, expected: play.plan.expected, respawns: play.respawns ?? 0,
+                landing: { level, x: state.playerPositionX, y: state.playerPositionY }, redirected: redirectedSinceShip() });
+            if (v.kind === 'planned-respawn') {
+                play.respawns = v.death;
+                stats.respawnsPlayed.push({ level, death: v.death, row: v.row, tick: st?.tick ?? null, time: be['save.time'] });
+                tl('respawn', { level, death: v.death, row: v.row });
+                watchRow('respawn', { landed: beginTag(be) });
+                return false;
+            }
+            if (v.kind === 'unplanned') { fail(v.why); return true; }
         }
         if (!st || st.game_time !== be['save.time']) {
             stats.holdBlocked.push({ level, why: `read after a stepped tick (game_time ${st?.game_time}, begin ${be['save.time']})` });
@@ -1067,6 +1091,10 @@ export function createWasmPlayback({
         if (decl) { stats.holdBlocked.push({ level, why: `the hold tape was not shipped — ${decl}` }); return false; }
         // The exit plan that crossed: its tape may still be armed (the trailing ticks after the crossing).
         const exitLeg = phase === 'playing' && play?.plan ? play : null;
+        // ⛓ ARRIVAL HOLD (§5.124) — the pin: a landing in the level the leg was leaving is never its `done`.
+        const notDone = exitLeg ? legEndRefusal({ fromLevel: goal?.level, end: { level }, expectedEnd: exitLeg.plan.expected.at(-1),
+            redirected: redirectedSinceShip() }) : null;
+        if (notDone) { fail(notDone); return true; }
         const held = exitLeg && st.armed && !st.finished ? keysHeldAtReset({ status: st, solution: exitLeg.plan.solution }) : [];
         if (exitLeg) {
             const d = J(game()?.botDrain?.());
@@ -1614,6 +1642,9 @@ export function createWasmPlayback({
         play.ticks = plan.solution.length;
         play.hold = hold;
         play.crossing = crossing ? { from: goal.level, to: crossTo } : null;
+        // ⛓ ARRIVAL HOLD (§5.124) — the glue's push count at the ship (a redirect since then lands where it likes)
+        play.swapPushes = glueQuery ? swapState()?.pushes ?? null : null;
+        play.respawns = 0;
         play.equips = equips;
         play.progress = foldDrain(null, null);
         play.divergence = null;
@@ -1681,7 +1712,7 @@ export function createWasmPlayback({
         if (action === 'done') {
             log(`[wasm playback] ${goal.name ?? goal.kind}: its clear already landed — done despite the divergence`, 'warn');
             release(st); // the tape is still armed; the room is the player's again
-            finish(st ?? {});
+            finish(st ?? {}, { served: true });
             return;
         }
         if (action === 'fail') { fail(divergenceFailure({ goal, recoveries, divergence: d })); return; }
@@ -1700,7 +1731,11 @@ export function createWasmPlayback({
         reArrive(`left the plan at tick ${d.t} — recovery ${recoveries}/${MAX_RECOVERIES}: re-entering level ${goal.level} to re-solve`, 'recovery');
     }
 
-    function finish(st) {
+    function finish(st, { served = false } = {}) {
+        // ⛓ ARRIVAL HOLD (§5.124) — the pin: a tape that finished in the level its plan was leaving is not done.
+        const notDone = served ? null : legEndRefusal({ fromLevel: goal?.level, end: { level: st.level }, expectedEnd: play.plan.expected.at(-1),
+            redirected: redirectedSinceShip() });
+        if (notDone) { fail(notDone); return; }
         const done = { goal, producer: play.plan.producer ?? 'solver', ticks: play.ticks, drained: play.progress.ticks, verbs: play.plan.verbs,
             solvedMs: play.solvedMs, divergence: play.divergence, recoveries, end: { level: st.level, x: st.x, y: st.y },
             expectedEnd: play.plan.expected.at(-1), continuation: play.continuation ?? false, prefix: play.prefix ?? 0, heldEnd: !!(play.hold && st.held),
@@ -2247,7 +2282,7 @@ export function createWasmPlayback({
                 adoptClock: stats.adoptClock.map((r) => ({ ...r })), arrivalClock: stats.arrivalClock.map((r) => ({ ...r })),
                 latchWaits: stats.latchWaits.map((r) => ({ ...r, first: { ...r.first }, last: { ...r.last } })), selfChecks: stats.selfChecks.map((r) => ({ ...r })),
                 timeline: stats.timeline.map((r) => ({ ...r })), staleGoals: stats.staleGoals.map((r) => ({ ...r })),
-                crossLevelEnds: stats.crossLevelEnds.map((r) => ({ ...r })) };
+                crossLevelEnds: stats.crossLevelEnds.map((r) => ({ ...r })), respawnsPlayed: stats.respawnsPlayed.map((r) => ({ ...r })) };
         },
         /** ⛓ WG — the last arrivals' raw reads (`{seam, status, state}`), for a fixture recorder. */
         get arrivalReads() { return arrivalReads.map((a) => structuredClone(a)); },
