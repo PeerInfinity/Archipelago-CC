@@ -24841,3 +24841,31 @@ keeps consecutive nodes unchecked) — `planWaypoints`' region, not edited here.
 - A refusal that guards a race the model already resolves (the physics crossed; the lookup refused) hides the next
   obstacle: lifting it moved three survey refusals' WORDS, not their verdicts.
 - A door a run arrives LATCHED on is not the door it walks onto: the same tile answers "door" or "pit" by the latch.
+
+### Seedling fidelity PITLATCH — one latch predicate for a door on a Pit tile (behind `pitTeleporterCrossing`, OFF)
+
+Planner `seedling-fidelity-planning-11`, wave 27 (PITPORT's review condition, js-8). The report is
+`CC/docs/cloud-reports/seedling-fidelity-pitlatch.md`.
+
+**The split.** PITPORT's `findExit` admitted a live pit door only when the run was not latched on it, but the
+planner's pit arm (`liveDoorPitTile(level, index)`) ignored the latch. Measured at the base with the switch ON:
+`stepOffCellFor` on a run latched on L43's door planned a walk to (152,56), on L100's to (296,88) — across the very
+tile the game lets the Pit take.
+
+**The game (`probe-seedling-pit-doors.mjs` `l43-latched` / `l100-latched`, p4g headless, 0 px).** Booted ON the door
+(the boot latches it, `Teleporter.check()`), the step off held from the first tick: after 0.72 px the Pit takes the
+player at t0, it respawns ON the door at t20, t40, t60, and the door never fires — a death loop, as PITPORT read off
+the AS3. `stepOffMinimalFor` already said "falls" in every direction, at the game's own t1 position.
+
+**The model.** `liveDoorPitTile(level, index, latched)` → null when `latched.has(index)`; `findExit` asks it (meaning
+unchanged); `plannerObstacleAt` reads `latched` from its opts; `pitLatchOpts(run)` (`{latched}` ON, `{}` OFF) is
+spread into `solverPlanOpts` (now exported), the walker's `planNow`, and the crusher bait search's per-config opts.
+The planner's own memo (SP) is per call and keys on nothing but the point, so no memo key moves. OFF: byte-identical.
+ON vs PITPORT's ON: 0 survey movers (239 steps) — no real arrival lands on a pit door, so only the step-off planner
+ever saw the hole.
+
+**Trap candidates.**
+- Two readers of one rule with two predicates drift: the lookup carried the latch, the planner did not, and the
+  only caller that could tell them apart (the step-off) is one the lookup's refusal hides in every staged room.
+- A guard whose only witness is a staged boot (no atlas arrival lands on a pit door) is still a game witness: stage
+  it on the game, do not argue it from the AS3.

@@ -12,6 +12,10 @@
  * player at t0 (after 0.72 px), it respawns ON the door at t20, t40, t60, and the door never fires. The model
  * reproduces both at 0 px (`fidelityPitPort`'s D1 rows), and `stepOffMinimalFor` already said "falls" for every
  * direction. So the planner must refuse that tile: `liveDoorPitTile(level, index, latched)` → null when latched.
+ *
+ * ⚠ Two threadings carry no row of their own, by construction: `crusherBait.searchBaitOrdering`'s `latchOpts` (no
+ * crusher room holds a pit door — its mutant survives) and the walker's `planNow` (its door call follows `findExit`,
+ * which refuses a latched pit door first). Report: `CC/docs/cloud-reports/seedling-fidelity-pitlatch.md`.
  */
 
 import { describe, expect, it } from 'vitest';
