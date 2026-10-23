@@ -1,0 +1,28 @@
+# box lock: TAKEN by probe-seedling-drill-kill.mjs (browser, pid 6587) — head 8807aa7a6, 1 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+PASS: drillkill-l28-sword-l25: the model (key ON) replays the tape to its end
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: drillkill-l28-sword-l25: the game reproduces the model at 0 px (player, drills with hits, chasers) on all 174 sampled tick(s)
+      drillkill-l28-sword-l25: the game's hits land at []; its drills at the end [{"x":88,"y":104,"anim":"sit","hits":0,"hitsTimer":0,"hitByFire":false}]; model drill events: 43:drill@128,96:hop 58:drill@128,96:hop 59:drill@128,96:struck 90:drill@128,96:struck 122:drill@128,96:killed 121:drill@128,96:struck; model rope pulls [{"id":"rope@160,64","t":155}]
+recorded frontend/modules/seedlingDemo/fixtures/drillkill-witness/drillkill-l28-sword-l25.json — 174 tick(s)
+PASS: drillkill-l28-spear-l25: the model (key ON) replays the tape to its end
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: drillkill-l28-spear-l25: the game reproduces the model at 0 px (player, drills with hits, chasers) on all 180 sampled tick(s)
+      drillkill-l28-spear-l25: the game's hits land at []; its drills at the end [{"x":88,"y":104,"anim":"sit","hits":0,"hitsTimer":0,"hitByFire":false}]; model drill events: 72:drill@128,96:hop 87:drill@128,96:hop 88:drill@128,96:struck 120:drill@128,96:killed 119:drill@128,96:struck; model rope pulls [{"id":"rope@160,64","t":174}]
+recorded frontend/modules/seedlingDemo/fixtures/drillkill-witness/drillkill-l28-spear-l25.json — 180 tick(s)
+PASS: drillkill-l28-sword-l26: the model (key ON) replays the tape to its end
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: drillkill-l28-sword-l26: the game reproduces the model at 0 px (player, drills with hits, chasers) on all 307 sampled tick(s)
+      drillkill-l28-sword-l26: the game's hits land at []; its drills at the end []; model drill events: 14:drill@80,96:hop 29:drill@80,96:hop 30:drill@80,96:struck 61:drill@80,96:struck 93:drill@80,96:killed 92:drill@80,96:struck 158:drill@128,96:hop 173:drill@128,96:hop 174:drill@128,96:struck 205:drill@128,96:struck 237:drill@128,96:killed 236:drill@128,96:struck; model rope pulls [{"id":"rope@160,64","t":290}]
+recorded frontend/modules/seedlingDemo/fixtures/drillkill-witness/drillkill-l28-sword-l26.json — 307 tick(s)
+PASS: drillkill-l28-spear-l26: the model (key ON) replays the tape to its end
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: drillkill-l28-spear-l26: the game reproduces the model at 0 px (player, drills with hits, chasers) on all 269 sampled tick(s)
+      drillkill-l28-spear-l26: the game's hits land at []; its drills at the end []; model drill events: 16:drill@80,96:hop 31:drill@80,96:hop 32:drill@80,96:struck 64:drill@80,96:killed 63:drill@80,96:struck 136:drill@128,96:hop 151:drill@128,96:hop 152:drill@128,96:struck 184:drill@128,96:killed 183:drill@128,96:struck; model rope pulls [{"id":"rope@160,64","t":263}]
+recorded frontend/modules/seedlingDemo/fixtures/drillkill-witness/drillkill-l28-spear-l26.json — 269 tick(s)
+PASS: drillkill-l28-fire-l26: the model (key ON) replays the tape to its end
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: drillkill-l28-fire-l26: the game reproduces the model at 0 px (player, drills with hits, chasers) on all 110 sampled tick(s)
+      drillkill-l28-fire-l26: the game's hits land at []; its drills at the end [{"x":136,"y":104,"anim":"sit","hits":0,"hitsTimer":0,"hitByFire":false},{"x":40,"y":104,"anim":"sit","hits":0,"hitsTimer":0,"hitByFire":false}]; model drill events: 15:drill@80,96:hop 30:drill@80,96:hop 45:drill@80,96:hop; model rope pulls []
+recorded frontend/modules/seedlingDemo/fixtures/drillkill-witness/drillkill-l28-fire-l26.json — 110 tick(s)
+
+ALL CHECKS PASSED

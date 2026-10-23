@@ -17214,8 +17214,11 @@ export function createLevelRun({
         }))
         : null);
     /** ⛓ fidelity DRILL D2: every drill the run steps in this level, `{id, x, y, rect, removed}` (`[]` under noclip). */
+    // ⛓ fidelity DRILLKILL D2: and the fight's own reads — the anim (a hop from "sit" only), `hits`/`hitsTimer` (a
+    // landing needs `hitsTimer <= 0`) and `destroy` (the "die" anim's end) — for `solverBot.execDrillKill`.
     const drillBodiesNow = () => (noclip ? [] : [...drillStateFor(level).values()]
-        .map((d) => ({ id: d.id, x: d.x, y: d.y, rect: drillRect(d), removed: d.removed })));
+        .map((d) => ({ id: d.id, x: d.x, y: d.y, rect: drillRect(d), removed: d.removed, anim: d.anim, hits: d.hits,
+            hitsTimer: d.hitsTimer, destroy: d.destroy })));
     const ENTITY_FAMILIES = Object.freeze({
         openActivators: openActivatorsNow,
         pushables: pushablesNow,

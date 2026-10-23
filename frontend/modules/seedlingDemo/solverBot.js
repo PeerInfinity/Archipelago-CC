@@ -18041,9 +18041,13 @@ function execRopeCut(run, perTick, resolved, ctx) {
         if (!(e instanceof SolverRefusal)) throw e;
         const hit = (run.ledger('playerHits') ?? []).slice(hitsBefore).find((h) => h.source === 'drill');
         if (!hit) throw e;
+        // ⛓ fidelity DRILLKILL: with the kill ON, a run that could not fight the drill first is told why.
+        const noKill = CONTACT_FIDELITY.drillKillFirst && drillKillWeapon(run) === null
+            ? ' — and this run holds no weapon that kills a drill first: FIRE CANNOT (`Enemy.hit`: `hitByFire` is false '
+                + 'for a Drill, `fireDamage` 0), only a sword or a spear' : '';
         throw new SolverRefusal(`${ctx.what}: cutting ${resolved.rope} with the ${resolved.weapon} — the stepped `
-            + `${hit.id} hopped onto the player at run tick ${hit.t ?? '?'} on the way to (or at) the stance, and the cut `
-            + `failed after it: ${e.message.split('\n')[0].slice(0, 240)}`,
+            + `${hit.id} hopped onto the player at run tick ${hit.t ?? '?'} on the way to (or at) the stance${noKill}, `
+            + `and the cut failed after it: ${e.message.split('\n')[0].slice(0, 240)}`,
         { obstacle: { kind: 'solid', id: resolved.rope, drill: hit.id }, perTick: e.perTick });
     }
 }
@@ -18227,6 +18231,301 @@ function resolveRopeStrategy(run, obstacle, contacts, blocked = []) {
         discharged,
         rejected: hypothesisRejection(discharged),
     };
+}
+
+/**
+ * ⛓⛓ fidelity DRILLKILL (wave 26) — THE DRILLS ARE FOUGHT FIRST (`CONTACT_FIDELITY.drillKillFirst`, OFF).
+ *
+ * ⚖ The user (2026-10-22): *"The intended solution is to fight the drills first."* L28's rope cut (`rope@160,64`) is
+ * met from the L25 arrival (104,24) and the L26 arrival (24,104), and with every drill stepped (`drillMixedRooms`) the
+ * spear's stances and Fire's walk from L26 give a drill its trigger: `Drill.update` hops one tile toward a player within
+ * `runRange` (48 px) on a clear "Solid" line, and the next hop lands on them. ON, before a `rope` clear-tag, every live
+ * drill the planned walk to the cut's stance would wake is killed first:
+ *
+ *   · THE WEAPON — the primary if it is the sword or the spear, else a held spear's or sword's slot (`equip`, restored
+ *     after). `Enemy.hit`: `hits += d` per landing, `hitsMax` 3, `hitsTimer` 30 between landings; `swordDamage` 1 (3
+ *     landings), `spearDamage` 2 (2). FIRE CANNOT KILL A DRILL: `genericHit(e, "Fire", fireForce, fireDamage)` reaches
+ *     `Enemy.hit`'s `if (hitByFire || t != "Fire")`, `hitByFire` is false and `Drill` never sets it — only `knockback`
+ *     runs, and `Drill.knockback` is EMPTY (`fireDamage` is 0 besides). A Fire-only run is refused BY NAME on that.
+ *   · THE PRE-STANCE — `runRange` (48 px) out on one axis from the drill's centre, plannable, the walk to it keeping
+ *     outside this drill's range until its end and waking no other (`drillWakes`: the range, the masked line), the
+ *     cells the drill hops into free floor, and no other drill woken from the stance or the creep. Nearest walk first.
+ *   · THE CREEP — one key toward the drill from rest until it hops (`Drill.update`: `|dx| > Tile.w/2` → ±16), unless
+ *     the arrival already woke it: it lands ~32 px out, the player coasts to rest, and its next hop (`drill` 15 ticks +
+ *     `undrill` 12) lands ~12-16 px out.
+ *   · THE FIGHT — a press whenever the drill is within `pressReach` on the axis and its `hitsTimer` runs out on this
+ *     tick (≤ 1 at the start: the drill updates BEFORE the player, so `hitUpdate` zeroes it and the landing is the
+ *     player's): `Drill.update` plays "hit" while `hitsTimer > 0` and hops only from "sit", which it reaches 12 ticks
+ *     ("undrill") after the timer runs out — so each landing re-arms the lock before the next hop. `hitPlayer` is gated
+ *     on `hitsTimer <= 0`, so a drill being hit never touches the player.
+ *   · THE END — the drill REMOVED (`die` 6 frames at 10 fps, then `Mobile.death`'s fade), not merely dying: the danger
+ *     map prices a live body where it stands.
+ * Any player hit, a drill that does not wake, a press that does not land: refused by name. The cut is then planned as
+ * before (its stances were ranked with the drills where they stood; the removal only frees them).
+ */
+export const DRILL_KILL = Object.freeze({
+    /**
+     * The pre-stance's distance from the drill's centre on its axis: `DRILL.runRange` itself, a tile centre three tiles
+     * out — the drill wakes as the player arrives (or on the creep), and an approach that keeps outside the range
+     * until then (along the axis, or across it) wakes it nowhere else. L28's upper hall is three tiles high, so a
+     * stance outside the range (56) does not exist above its drills.
+     */
+    preStance: 48,
+    /** The walk to the pre-stance must keep this far outside the target drill's range until its end. */
+    selfWakeMargin: 0.5,
+    /** Another drill counts as woken within `runRange` plus this (the walker's overshoot). */
+    wakeSlack: 2,
+    /** The creep's bound, ticks from rest (16 px at ~1.2 px a tick, with room). */
+    creepBound: 40,
+    /** The creep must have woken the drill by this distance on the axis (it hops at 48). */
+    creepFloor: 38,
+    /** The perpendicular offset a stance may carry: a drill hops on an axis only past `Tile.w / 2` (8). */
+    perpMax: 6,
+    /** A press is made with the drill within this on the axis (its second hop lands ~12-16 px out). */
+    pressReach: 20,
+    /** The fight's bound from the drill's first hop: three landings 30+ ticks apart and the slack around them. */
+    fightBound: 160,
+    /** The removal's bound once the drill dies: `die` (36 ticks) and the fade (10). */
+    removalBound: 80,
+    /** The settle's bound at the pre-stance. */
+    settleBound: 40,
+    /** At most this many drills are killed before one goal. */
+    maxKills: 4,
+});
+
+/** The run's live stepped drills (dying or fading ones are not a threat: `hitPlayer` is gated on the anim). */
+function liveDrills(run) {
+    return (run.entities('drillBodies') ?? []).filter((d) => !d.removed && !d.destroy && d.anim !== 'die');
+}
+
+/** Would a player at `q` wake drill `d`? `Drill.update`'s trigger, from where it sits: range and the masked line. */
+function drillWakes(run, d, q, slack = DRILL_KILL.wakeSlack) {
+    if (Math.hypot(q.x - d.x, q.y - d.y) > DRILL.runRange + slack) return false;
+    return !run.collideLineSolid(d.x, d.y, q.x, q.y, { masks: true });
+}
+
+/** The planned walk from `from` to `to`, sampled every 2 px (both ends included), or null when no corridor plans. */
+function plannedWalkSamples(run, from, to, opts) {
+    const wps = planWaypointsOrNull(run.world, from, to, null, opts);
+    if (wps === null) return null;
+    const pts = [{ x: from.x, y: from.y }, ...wps.map((w) => ({ x: w.x, y: w.y })), { x: to.x, y: to.y }];
+    const out = [];
+    for (let i = 1; i < pts.length; i += 1) {
+        const a = pts[i - 1];
+        const b = pts[i];
+        const n = Math.max(1, Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / 2));
+        for (let k = 0; k <= n; k += 1) out.push({ x: a.x + ((b.x - a.x) * k) / n, y: a.y + ((b.y - a.y) * k) / n });
+    }
+    return out;
+}
+
+/** The weapon the run kills a drill with, or null: the primary sword or spear, else a held spear's or sword's slot. */
+function drillKillWeapon(run) {
+    const primary = run.progress('primaryWeapon');
+    if (primary === 'sword' || primary === 'spear') return { weapon: primary, slot: null };
+    const slots = run.progress('inventorySlots') ?? [];
+    for (const weapon of ['spear', 'sword']) {
+        const slot = slots.indexOf(INVENTORY_ITEM_IDS[weapon]);
+        if (slot >= 0) return { weapon, slot };
+    }
+    return null;
+}
+
+/** The four sides of a drill: `s` points from the drill to the pre-stance; `key` creeps the player back toward it. */
+const DRILL_KILL_SIDES = Object.freeze([
+    Object.freeze({ side: 'north', sx: 0, sy: -1, key: 'down' }),
+    Object.freeze({ side: 'south', sx: 0, sy: 1, key: 'up' }),
+    Object.freeze({ side: 'west', sx: -1, sy: 0, key: 'right' }),
+    Object.freeze({ side: 'east', sx: 1, sy: 0, key: 'left' }),
+]);
+
+/** Drill `d`'s pre-stances, nearest walk first, or `{why}` per side. */
+function drillKillStances(run, d, opts) {
+    const others = liveDrills(run).filter((o) => o.id !== d.id);
+    const ok = [];
+    const whys = [];
+    for (const s of DRILL_KILL_SIDES) {
+        const at = (k) => ({ x: d.x + s.sx * k, y: d.y + s.sy * k });
+        const pre = at(DRILL_KILL.preStance);
+        const lane = [DRILL_KILL.preStance, DRILL_KILL.creepFloor, 32, 16].map(at);
+        const blocked = lane.find((q) => plannerObstacleAt(run.world, q.x, q.y, null, opts) !== null);
+        if (blocked) { whys.push(`${s.side}: (${blocked.x},${blocked.y}) is not plannable floor`); continue; }
+        if (run.collideLineSolid(d.x, d.y, at(DRILL_KILL.creepFloor).x, at(DRILL_KILL.creepFloor).y, { masks: true })) {
+            whys.push(`${s.side}: the drill's line to the creep's end is blocked, so it would not wake`);
+            continue;
+        }
+        const walk = plannedWalkSamples(run, run.state, pre, opts);
+        if (walk === null) { whys.push(`${s.side}: no corridor to (${pre.x},${pre.y})`); continue; }
+        const selfWake = walk.find((q) => drillWakes(run, d, q, -DRILL_KILL.selfWakeMargin));
+        if (selfWake) {
+            whys.push(`${s.side}: the walk wakes ${d.id} at (${selfWake.x.toFixed(1)},${selfWake.y.toFixed(1)})`);
+            continue;
+        }
+        const stood = [pre, at(DRILL_KILL.creepFloor)];
+        const otherWake = others.find((o) => [...walk, ...stood].some((q) => drillWakes(run, o, q)));
+        if (otherWake) { whys.push(`${s.side}: the walk or the creep wakes ${otherWake.id}`); continue; }
+        let len = 0;
+        for (let i = 1; i < walk.length; i += 1) len += Math.hypot(walk[i].x - walk[i - 1].x, walk[i].y - walk[i - 1].y);
+        ok.push({ ...s, pre, len });
+    }
+    ok.sort((a, b) => a.len - b.len || a.pre.y - b.pre.y || a.pre.x - b.pre.x);
+    return { ok, whys };
+}
+
+/**
+ * Executor: one drill, killed (see `DRILL_KILL`). `kw` is `drillKillWeapon`'s; the stance is `drillKillStances`' best.
+ * @returns the kill's record
+ */
+function execDrillKill(run, perTick, id, kw, stance, ctx) {
+    const from = perTick.length;
+    const refuse = (why) => {
+        throw new SolverRefusal(`${ctx.what} -> drill kill ${id}: ${why}`, {
+            goal: ctx.goal, obstacle: { kind: 'drill', id }, perTick: [...perTick] });
+    };
+    const body = () => (run.entities('drillBodies') ?? []).find((b) => b.id === id) ?? null;
+    const NO_KEYS = new Set();
+    const hitsBefore = (run.ledger('playerHits') ?? []).length;
+    const step = (keys, why) => {
+        perTick.push(keys);
+        const { transition } = run.advance(keys);
+        if (transition) refuse(`${why} crossed to level ${transition.to_level}`);
+        const hits = run.ledger('playerHits') ?? [];
+        if (hits.length !== hitsBefore) {
+            const h = hits.at(-1);
+            refuse(`the player was HIT ${why} at run tick ${run.ticksCompleted} (source ${h?.source ?? '?'}`
+                + `${h?.id ? ` ${h.id}` : ''}) at (${run.state.x.toFixed(2)},${run.state.y.toFixed(2)})`);
+        }
+    };
+    const d0 = body();
+    ctx.walkTo(ctx.goal, { x: stance.pre.x, y: stance.pre.y },
+        { what: `${ctx.what} -> drill kill ${id} pre-stance (${stance.side})` });
+    if ((run.ledger('playerHits') ?? []).length !== hitsBefore) refuse('the player was hit on the walk to the pre-stance');
+    const still = () => Math.abs(run.state.vx ?? 0) < 1e-9 && Math.abs(run.state.vy ?? 0) < 1e-9;
+    for (let k = 0; k < DRILL_KILL.settleBound && !still(); k += 1) step(NO_KEYS, 'settling at the pre-stance');
+    const d1 = body();
+    // The arrival may have woken it already: one hop toward the stance, on the axis, is the creep's own outcome.
+    const woke = d1 && d1.x === d0.x + stance.sx * DRILL.tile && d1.y === d0.y + stance.sy * DRILL.tile;
+    if (!d1 || !(woke || (d1.x === d0.x && d1.y === d0.y && d1.anim === 'sit'))) {
+        refuse(`the drill moved off its axis before the creep (now ${d1 ? `(${d1.x},${d1.y}) "${d1.anim}"` : 'gone'})`);
+    }
+    const along = () => (run.state.x - d0.x) * stance.sx + (run.state.y - d0.y) * stance.sy;
+    const perp = () => Math.abs(stance.sx !== 0 ? run.state.y - d0.y : run.state.x - d0.x);
+    if (!still() || perp() > DRILL_KILL.perpMax) {
+        refuse(`the pre-stance (${stance.pre.x},${stance.pre.y}) settled at (${run.state.x.toFixed(2)},`
+            + `${run.state.y.toFixed(2)}) — ${still() ? `${perp().toFixed(2)} px off the drill's axis` : 'still moving'}`);
+    }
+    /**
+     * Facing the drill: the press goes where the player faces, and the walk's last correction can leave them facing
+     * away (measured: the spear from the L26 arrival, `drill@128,96`'s west stance — the walker's overshoot fix
+     * pressed "left"). One tap of the creep key turns them (~0.8 px toward the drill), then the settle again.
+     */
+    const toward = { right: RIGHT, left: LEFT, up: UP, down: DOWN }[stance.key];
+    if (run.state.direction !== toward) {
+        step(new Set([stance.key]), 'on the face tap');
+        for (let k = 0; k < DRILL_KILL.settleBound && !still(); k += 1) step(NO_KEYS, 'settling after the face tap');
+    }
+    if (run.state.direction !== toward) refuse(`the face tap left the player facing ${run.state.direction}, not ${toward}`);
+    const prior = run.progress('primary');
+    if (kw.slot !== null && prior !== kw.slot) {
+        if (typeof ctx.equip !== 'function') refuse(`the ${kw.weapon} is slot ${kw.slot}, and this caller hands no \`equip\``);
+        ctx.equip(kw.slot);
+    }
+    // ── the creep: one key toward the drill until it hops ──
+    const creepKeys = new Set([stance.key]);
+    let hopAt = woke ? run.ticksCompleted : null;
+    for (let k = 0; hopAt === null && k < DRILL_KILL.creepBound; k += 1) {
+        const b = body();
+        if (b.x !== d0.x || b.y !== d0.y) { hopAt = run.ticksCompleted; break; }
+        if (along() < DRILL_KILL.creepFloor) break;
+        step(creepKeys, 'on the creep');
+    }
+    if (hopAt === null) {
+        refuse(`the creep from (${stance.pre.x},${stance.pre.y}) reached ${along().toFixed(2)} px on the axis and the `
+            + 'drill never hopped');
+    }
+    // ── the fight: a press whenever the drill is in reach and its hitsTimer runs out on this tick ──
+    const PRESS = new Set(['primary']);
+    const slashTimer = () => run.progress('slashInfo')?.state?.slashTimer ?? 0;
+    let presses = 0;
+    let landed = 0;
+    let last = false;
+    let killedAt = null;
+    for (let k = 0; k < DRILL_KILL.fightBound; k += 1) {
+        const b = body();
+        if (!b || b.removed || b.destroy || b.anim === 'die') { killedAt = run.ticksCompleted; break; }
+        const ax = (run.state.x - b.x) * stance.sx + (run.state.y - b.y) * stance.sy;
+        const px = Math.abs(stance.sx !== 0 ? run.state.y - b.y : run.state.x - b.x);
+        const ready = !last && slashTimer() <= 0 && b.hitsTimer <= 1 && b.anim !== 'sit'
+            && ax > 0 && ax <= DRILL_KILL.pressReach && px <= DRILL_KILL.perpMax;
+        const hitsWas = b.hits;
+        step(ready ? PRESS : NO_KEYS, ready ? 'on a press' : 'in the fight');
+        if (ready) presses += 1;
+        last = ready;
+        const after = body();
+        if (after && after.hits > hitsWas) landed += 1;
+        // A press lands on the tick after it (the drill updates first); two unanswered presses are a stance finding.
+        if (presses - landed > 2) {
+            refuse(`${presses} press(es) with the ${kw.weapon} and ${landed} landed — the player at (`
+                + `${run.state.x.toFixed(2)},${run.state.y.toFixed(2)}) facing ${run.state.direction}, the drill at `
+                + `(${after?.x},${after?.y}) "${after?.anim}"`);
+        }
+    }
+    if (killedAt === null) {
+        const b = body();
+        refuse(`${DRILL_KILL.fightBound} ticks after its hop the drill is alive (hits ${b?.hits}, "${b?.anim}") — `
+            + `${presses} press(es), ${landed} landed, with the ${kw.weapon}`);
+    }
+    for (let k = 0; k < DRILL_KILL.removalBound && !body()?.removed; k += 1) step(NO_KEYS, 'waiting out the death');
+    if (!body()?.removed) refuse(`the drill died at run tick ${killedAt} and is not removed ${DRILL_KILL.removalBound} ticks on`);
+    if (kw.slot !== null && prior !== kw.slot) ctx.equip(prior);
+    return {
+        verb: 'drill-kill', drill: id, weapon: kw.weapon, slot: kw.slot, side: stance.side,
+        preStance: { ...stance.pre }, hopAt, presses, killedAt, ticks: perTick.length - from,
+    };
+}
+
+/**
+ * Before a `rope` clear-tag (`execClearTag`, ahead of the stance walk): the drills the planned walk to the cut's
+ * stance would wake, killed (nearest walk first). Null when the switch is OFF or no live drill is woken.
+ */
+function execDrillKillsFirst(run, perTick, resolved, ctx) {
+    if (!(CONTACT_FIDELITY.drillKillFirst && CONTACT_FIDELITY.drillLive && CONTACT_FIDELITY.drillMixedRooms)) return null;
+    if (liveDrills(run).length === 0) return null;
+    const aim = resolved.stance ?? resolved.approach?.[0] ?? { x: run.state.x, y: run.state.y };
+    const kills = [];
+    for (let n = 0; ; n += 1) {
+        const opts = solverPlanOpts(run, senseContacts(run));
+        const walk = plannedWalkSamples(run, run.state, aim, opts) ?? [{ x: run.state.x, y: run.state.y }, aim];
+        const woken = liveDrills(run).filter((d) => walk.some((q) => drillWakes(run, d, q, 0)));
+        if (woken.length === 0) break;
+        const names = woken.map((d) => d.id).join(', ');
+        if (n >= DRILL_KILL.maxKills) {
+            throw new SolverRefusal(`${ctx.what}: ${DRILL_KILL.maxKills} drill kills and the walk to (${aim.x},${aim.y}) `
+                + `still wakes [${names}]`, { goal: ctx.goal, obstacle: { kind: 'drill', id: woken[0].id } });
+        }
+        const kw = drillKillWeapon(run);
+        /**
+         * No sword and no spear: FIRE CANNOT KILL A DRILL (`Enemy.hit`: `hitByFire` is false for a Drill, `fireDamage`
+         * 0). The cut is planned as before — its stance may be one the drill never reaches (Fire from the L25 arrival
+         * is: `ropestance-l28-fire`), and where it is not, the cut's own refusal names the drill (`execRopeCut`).
+         */
+        if (!kw) break;
+        const whys = [];
+        let done = null;
+        for (const d of [...woken].sort((a, b) => Math.hypot(a.x - run.state.x, a.y - run.state.y)
+            - Math.hypot(b.x - run.state.x, b.y - run.state.y))) {
+            const st = drillKillStances(run, d, opts);
+            if (st.ok.length === 0) { whys.push(`${d.id}: ${st.whys.join(' | ')}`); continue; }
+            done = execDrillKill(run, perTick, d.id, kw, st.ok[0], ctx);
+            break;
+        }
+        if (!done) {
+            throw new SolverRefusal(`${ctx.what}: the walk to (${aim.x},${aim.y}) wakes [${names}] and no drill has a `
+                + `kill stance — ${whys.join(' || ')}`, { goal: ctx.goal, obstacle: { kind: 'drill', id: woken[0].id } });
+        }
+        kills.push(done);
+    }
+    return kills.length > 0 ? kills : null;
 }
 
 /**
@@ -25277,6 +25576,9 @@ function solveSegmentUnder({
             trapsArmed: run.entities('armedArrowTraps') ?? new Set(),
             chests: run.entities('openChests'),
         };
+        // ⛓ fidelity DRILLKILL D2: the drills the walk to the cut's stance would wake, killed first (null OFF).
+        const drillKills = verb === 'rope'
+            ? execDrillKillsFirst(run, perTick, resolved, { what: `${whatCT} -> ${verb}`, walkTo, goal, equip }) : null;
         if (resolved.stance) {
             walkTo(goal, resolved.stance, {
                 what: `${whatCT} -> ${verb} stance`,
@@ -25288,7 +25590,8 @@ function solveSegmentUnder({
             // The walk to the stance struck it (its strike policy swings at what it passes).
             const waited = waitForWrite('the walk to the stance cleared it');
             done('cleared-in-passing', { waited, during: 'stance walk', strategy: verb,
-                why: `the walk to ${verb}'s stance cleared ${id} on its way — the verb is not run again` });
+                why: `the walk to ${verb}'s stance cleared ${id} on its way — the verb is not run again`,
+                ...(drillKills ? { drillKills } : {}) });
             return;
         }
         const record = clearTagExecutor(verb)(run, perTick, resolved, {
@@ -25309,7 +25612,7 @@ function solveSegmentUnder({
         // The verb's own finish is the WORLD's (the solid gone, the lock open);
         // the GAME's write can land later (a lock's `turnOff` closes its fade).
         const waited = waitForWrite(`'${verb}' ran (${JSON.stringify(record).slice(0, 160)})`);
-        done('verb', { strategy: verb, waited, ...record });
+        done('verb', { strategy: verb, waited, ...record, ...(drillKills ? { drillKills } : {}) });
     };
 
     // ── the goals, in order ───────────────────────────────────────────
