@@ -370,11 +370,16 @@ const TRANSCRIBED_ENTITY_SEMANTICS = Object.freeze({
     // so every arm that reaches genericHit cuts it: the Sword's slash (`:917`),
     // the Spear's thrust (`:989`) and Fire (`:1032`) — ⚖ the user, 2026-10-21:
     // "Yes, fire should count too" (RULES rope-events).
-    // Constructed specially at Game.as:2201-2209 with the rope's far end, and
-    // its hitbox spans that whole run. ⚠ The extract carries the far end in
-    // `nodes[]`, not as an `xend` attribute, so `spanAttr` finds nothing and
-    // every rope is ONE tile here (rules-rope-events F1, named, not fixed).
-    rope: G(anyOf(flag('hasSword'), flag('hasSpear'), flag('hasFire')), { class: 'RopeStart', spanAttr: 'xend' }),
+    // Constructed specially at Game.as:2419-2427 with the rope's far end (the
+    // x of its LAST node: the `for each` keeps the last), and until the cut its
+    // hitbox spans that whole run (`setHitbox(_xend - _x + 16, 16, 8, 8)`,
+    // RopeStart.as:26) — so the whole run is solid at the cut's condition. The
+    // extract carries the far end in `nodes[]`, not as an attribute, so
+    // `spanNode` reads it there (RULES rules-l39 F1). After the cut only the
+    // pulley tile stays solid (`:40-47`); a cut on another visit is the rope's
+    // event (`seedlingObstacleEvents`), and AP items never leave, so the run's
+    // own condition is the crossing's price either way.
+    rope: G(anyOf(flag('hasSword'), flag('hasSpear'), flag('hasFire')), { class: 'RopeStart', spanAttr: 'xend', spanNode: true }),
 
     // --- puzzle-state blockers: solid until a protocol is satisfied ----------
     // Activators subclasses that start `type = normType` ("Solid") and clear to
@@ -604,11 +609,13 @@ export function entityPixelRect(entity, semantics) {
     const ph = box ? box.h : Math.max(1, h) * SEEDLING_TILE_SIZE;
     const x = entity.x + (box?.left ?? 0);
     const y = entity.y + (box?.top ?? 0);
-    // RopeStart's hitbox spans from its x to the rope's far end (Game.as:2209,
-    // RopeStart.as:25), so its width is a per-placement attribute.
+    // RopeStart's hitbox spans from its x to the rope's far end (Game.as:2419-2427,
+    // RopeStart.as:26), so its width is per placement: an attribute, or (`spanNode`)
+    // the x of the entity's LAST node.
     if (semantics?.spanAttr) {
-        const end = Number(entity.attrs?.[semantics.spanAttr]);
-        if (Number.isInteger(end) && end >= entity.x) pw = end - entity.x + SEEDLING_TILE_SIZE;
+        const raw = entity.attrs?.[semantics.spanAttr] ?? (semantics.spanNode ? entity.nodes?.at(-1)?.x : undefined);
+        const end = Number(raw);
+        if (raw !== undefined && Number.isInteger(end) && end >= entity.x) pw = end - entity.x + SEEDLING_TILE_SIZE;
     }
     return { x, y, w: pw, h: ph };
 }
@@ -1087,6 +1094,13 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
         const closedCells = new Set(reclosing.flatMap(({ tiles }) => tiles
             .filter(([tx, ty]) => inside(tx - bounds.x, ty - bounds.y))
             .map(([tx, ty]) => (ty - bounds.y) * width + (tx - bounds.x))));
+        // Each closed cell's GROUP (its buttons), for the lock runs below.
+        const groupOfCell = new Map();
+        for (const { tiles, opensFrom } of reclosing) {
+            for (const [tx, ty] of tiles) {
+                if (inside(tx - bounds.x, ty - bounds.y)) groupOfCell.set((ty - bounds.y) * width + (tx - bounds.x), JSON.stringify(opensFrom));
+            }
+        }
         for (const { tiles, opensFrom, heldBy } of reclosing) {
             const lockCells = new Set(tiles.filter(([tx, ty]) => inside(tx - bounds.x, ty - bounds.y))
                 .map(([tx, ty]) => (ty - bounds.y) * width + (tx - bounds.x)));
@@ -1185,17 +1199,45 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
                     const ny = y - dy;
                     const n = ny * width + nx;
                     if (inside(nx, ny) && lockCells.has(n)) continue;
+                    // ⛓ RULES rules-l39 — A LOCK RUN. Where the neighbour is
+                    // ANOTHER re-closing lock (L39's chain (9,4)/(9,3)/(9,2):
+                    // three groups crossed in one walk), the player stands in
+                    // no cell between them, so this lock is priced from the
+                    // run's OUTER cell — the first non-lock cell back along the
+                    // walk — like every other lock of the run, and the walk
+                    // through them costs the AND. Every group of the run must be
+                    // held at once, by DIFFERENT bodies: a run with more groups
+                    // than the room has bodies is walled. That count is the
+                    // only simultaneity checked (a lower bound, named): the
+                    // order the bodies are placed in, the Covers over their
+                    // buttons and a lock a body would have to pass are not.
+                    let start = n;
+                    let runGoal;
+                    let runWalled = false;
+                    if (verdict?.decided && inside(nx, ny) && closedCells.has(n)) {
+                        const groups = new Set([JSON.stringify(opensFrom)]);
+                        let [rx, ry] = [nx, ny];
+                        while (inside(rx, ry) && closedCells.has(ry * width + rx)) {
+                            groups.add(groupOfCell.get(ry * width + rx));
+                            rx -= dx;
+                            ry -= dy;
+                        }
+                        const bodies = (heldBy?.blocks?.length ?? 0) + (heldBy?.fallers?.length ?? 0);
+                        start = inside(rx, ry) ? ry * width + rx : null;
+                        runWalled = start === null || groups.size > bodies;
+                        runGoal = new Set([start]);
+                    }
                     // Decided: the block paths REPLACE the player-reach labels,
                     // except from a button beside the lock, which the player
                     // holds and steps off into it (none = no holder from here,
                     // priced as below).
-                    const sets = !inside(nx, ny) ? []
-                        : verdict?.decided && !verdict.search.entries(n).refused ? [
-                            ...verdict.search.entries(n).sets.map((set) => set.map((k) => {
+                    const sets = !inside(nx, ny) || runWalled ? []
+                        : verdict?.decided && !verdict.search.entries(start, runGoal).refused ? [
+                            ...verdict.search.entries(start, runGoal).sets.map((set) => set.map((k) => {
                                 byKey.set(k, verdict.search.byKey.get(k));
                                 return k;
                             })),
-                            ...(selfHold.has(n) ? labels.get(n) ?? [] : []),
+                            ...(selfHold.has(start) ? labels.get(start) ?? [] : []),
                         ]
                             : labels.get(n) ?? [];
                     if (sets.some((set) => set.length === 0)) continue;

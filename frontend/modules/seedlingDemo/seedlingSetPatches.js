@@ -63,7 +63,8 @@
  * `provenance.set_patches`). No move works in any of them: each rock sits in a
  * one-tile neck, and every neighbouring tile seals the same neck or lands on an
  * arrival (ROCKMOVE's game witnesses). L43's three wand-dropped rocks are LEFT:
- * in the AP delivery the wand is an `apitem`, and no rock falls.
+ * in the AP delivery the wand is an `apitem`, and no rock falls (edit 10 below
+ * removes the VANILLA delivery's doorway rock after all).
  *
  *   4–5. `l74-fallrock-removed` + `l74-button-removed` — L74 (`Dungeon7/3`):
  *      L73's `teleporter@64,0` lands ON `button@288,128` (tset 0), which drops
@@ -105,6 +106,22 @@
  *      `levelRun.bobArenaRockRect()` is what reads the rock's own world row.
  *      Measured: fidelity APFLIP D1 (`seedling-fidelity-apflip.md`, the cloud
  *      reports); game witness `probe-seedling-l32-rock-move.mjs`.
+ *
+ * ⚖ The user (2026-10-22, RULES rules-l39's fallrock corridor census): **"Remove
+ * that rock"** — the doorway rock only:
+ *
+ *  10. `l43-fallrock-removed` — L43 (`Dungeon4/Boss`) loses `fallrock@176,384`
+ *      (tset 0, tag 3). Picking up the VANILLA Wand (`Pickups/Wand.as:53-68`,
+ *      `doBossActions`) drops all three tset-0 rocks, and they are rebuilt
+ *      fallen on every later entry (`FallRock.as:42-47`). This one lands in the
+ *      south doorway (11,24), between the arena (`level_43__r13c7`, the Wand)
+ *      and `stairsup@176,464` → L40, the room's only way in; the rules price
+ *      `level_43__r13c7 <-> level_40` open. A death after the Wand sealed the
+ *      arena for good, losing the Totem of Lacste and the L37 link. The two
+ *      other rocks (6,21)/(12,21) seal pockets holding only orbs and STAY. In
+ *      the AP delivery the Wand is an `apitem` (`Pickups/APItem.as`: no
+ *      Activators), so nothing falls there either way. Game witness:
+ *      `probe-seedling-l39-pulser.mjs` (its `l43-*` tapes).
  *
  * ── ⛔ WHERE THIS APPLIES, AND WHERE IT DOES NOT ─────────────────────────────
  *
@@ -153,6 +170,7 @@ export const SET_PATCH_IDS = Object.freeze({
     l29FallrockRemoved: 'l29-fallrock-removed',
     l29ButtonRemoved: 'l29-button-removed',
     l32BossrockMoved: 'l32-bossrock-moved',
+    l43FallrockRemoved: 'l43-fallrock-removed',
 });
 
 /**
@@ -243,6 +261,13 @@ export const PATCH_L32_BOSSROCK_MOVED = Object.freeze({
         + 'price it. The trigger, the fight and the kill are unchanged (the arm test reads y alone)',
 });
 
+export const PATCH_L43_FALLROCK_REMOVED = removeRow(SET_PATCH_IDS.l43FallrockRemoved, 43, 'fallrock', 176, 384,
+    { tset: '0', tag: '3' },
+    'picking up the vanilla Wand dropped this rock into L43\'s south doorway (11,24), between the arena and '
+    + '`stairsup@176,464` → L40, the only way in, and it is rebuilt fallen on every later entry: a death after the '
+    + 'Wand sealed the arena, losing the Totem of Lacste and the L37 link. With no rock the doorway stays open, as '
+    + 'the rules price it; the two pocket rocks (orbs only) stay');
+
 /** L110's control, repointed so its pit's fall arrives at L2 (`x`, `y`) — `xOff`/`yOff` solved from (64,64). */
 const l110RepointTo = (id, x, y, why) => Object.freeze({
     id,
@@ -264,7 +289,7 @@ export const PATCH_L110_FALL_OFF_STAIRS = l110RepointTo(SET_PATCH_IDS.l110FallOf
     + 'fall-from-ceiling descent does not cross L2\'s `stairsup@48,16`');
 
 /**
- * ⚖ THE TABLE THE DELIVERY CARRIES. Edits 1, 3, 4–8 and 9: edit 2 is STOPPED (the
+ * ⚖ THE TABLE THE DELIVERY CARRIES. Edits 1, 3, 4–8, 9 and 10: edit 2 is STOPPED (the
  * header above) — `PATCH_L110_FALL_TO_L2` and `PATCH_L110_FALL_OFF_STAIRS` stand
  * ready for the user's choice.
  */
@@ -273,6 +298,7 @@ export const SEEDLING_SET_PATCHES = Object.freeze([
     PATCH_L37_FALLROCK_REMOVED,
     ...ROCKMOVE_REMOVE_BUNDLE,
     PATCH_L32_BOSSROCK_MOVED,
+    PATCH_L43_FALLROCK_REMOVED,
 ]);
 
 const sameAttrs = (have, want) => Object.entries(want)
