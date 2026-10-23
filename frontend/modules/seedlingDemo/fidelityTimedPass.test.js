@@ -11,6 +11,14 @@
  * every tick, so a pass is a position question at each hop: it is SEARCHED on the run's forecast (`corridorBodyForecast`
  * asked with `drillPass`, `previewStepper`), certified on a fork with the cut, then played.
  *
+ * D1 (the game, p4g, `probe-seedling-timed-pass.mjs --record` → `fixtures/timedpass-witness/`): both plans play hit-free
+ * through the cut, and the model reproduces them at 0 px ONLY with the D1 transcription the witnesses found — a
+ * `FallRock`'s frozen span (L28's rope publishes its group to `fallrock@112,240`) steps the drills' GRAPHICS (their
+ * entity update is frozen, their anim is not, so each reaches "sit") and the CAMERA (it pans to the rock and holds,
+ * `Game.shake = 30` on the landing, and returns after the release), and the release frame runs the drills live (a
+ * drill in "sit" hops — onto the stance). Its contact lands when the returning camera brings it on screen: 2 ticks
+ * after the goal at L26 (t134), 1 at L25 (t71). OFF the model kept the anims and the camera: a 1-tick divergence.
+ *
  * ON: Fire from L26 SOLVES (pass to (152,56), 121 t, then the cut: 132 t, 0 hits); Fire from L25 plans a pass too
  * (its walk wakes `drill@128,96`: 89 → 70 t, 0 hits — a measured mover); every Sword and Spear plan is the kill's,
  * tick-identical to OFF. OFF: byte-identical (DRILLKILL's own refusal for Fire from L26).
@@ -37,6 +45,12 @@
  *                                                                                    during the fire cut, so the stand
  *                                                                                    and the certificate are the guard
  *                                                                                    (4 red, on the 0-hit asserts)
+ *   d1a the frozen span steps no drill graphic                                    → both 0-px replays red (the parked
+ *                                                                                    drill never reaches "sit"; as
+ *                                                                                    predicted, 2 red)
+ *   d1b the span's camera stepped AFTER the rock's target write                   → both 0-px replays red (the camera
+ *                                                                                    returns a frame early, the contact a
+ *                                                                                    tick early; as predicted, 2 red)
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -47,7 +61,8 @@ import { createRunForStaging } from './tapeRunner.js';
 import { arrivalStaging } from './fidelityArrival.js';
 import { CONTACT_FIDELITY, CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
 import { solveSegment, SolverRefusal, DRILL_TIMED_PASS } from './solverBot.js';
-import { DRILLKILL_WITNESS_DIR } from './fidelityDrillKill.js';
+import { DRILLKILL_WITNESS_DIR, compareDrillKillWitness, drillKillModelSamples } from './fidelityDrillKill.js';
+import { TIMEDPASS_SWITCHES, TIMEDPASS_WITNESS_DIR, TIMEDPASS_WITNESSES, timedPassTape } from './fidelityTimedPass.js';
 
 const SRC = atlasLevelSource();
 const L28_CUT = Object.freeze({ kind: 'clear-tag', tag: { level: 28, tag: 0 }, at: { x: 160, y: 64 },
@@ -192,4 +207,42 @@ describe('fidelity TIMEDPASS — D2: the pass (L28 rope cut `{28,0}`)', () => {
         expect(refusal.obstacle).toMatchObject({ kind: 'solid', id: 'rope@160,64', drill: 'drill@80,96' });
         expect(refusal.message).toMatch(/drill@80,96 hopped onto the player at run tick 31 .*FIRE CANNOT/);
     }), 120000);
+});
+
+describe('fidelity TIMEDPASS — D1: the game witnesses (p4g), replayed against the model at 0 px', () => {
+    const load = (name) => JSON.parse(readFileSync(join(TIMEDPASS_WITNESS_DIR, `${name}.json`), 'utf8'));
+    it('every witness is recorded, on the default build, and plays hit-free through the cut', () => {
+        for (const w of TIMEDPASS_WITNESSES) {
+            const rec = load(w.name);
+            expect(rec.page).toBe('seedling_bot_ap_p4g');
+            const cutEnd = { 'timedpass-l28-fire-l26': 132, 'timedpass-l28-fire-l25': 70 }[w.name];
+            expect(rec.samples.filter((g) => g.t <= cutEnd).every((g) => g.hits === 0)).toBe(true);
+        }
+    });
+    it.each(TIMEDPASS_WITNESSES.map((w) => [w.name]))('%s: the model (key ON) reproduces the game on every sampled tick',
+        async (name) => {
+            const rec = load(name);
+            const m = await drillKillModelSamples(rec.tape, TIMEDPASS_SWITCHES);
+            expect(m.error).toBeNull();
+            expect(compareDrillKillWitness(rec.samples, m.samples, rec.tape.boot.level)).toEqual([]);
+            expect(m.pulls.map((p) => p.id)).toEqual(['rope@160,64']);
+        }, 120000);
+    it.each([['timedpass-l28-fire-l26', 126, 133], ['timedpass-l28-fire-l25', 64, 71]])(
+        '%s: OFF the model misses the frozen span — the parked drill does not hop at t%i, and the contact lands at t%i',
+        async (name, hopAt, offHitAt) => {
+            const rec = load(name);
+            const game = rec.samples.find((g) => g.t === hopAt);
+            expect(game.drills.some((d) => d.x === 152 && d.y === 56)).toBe(true);
+            const m = await drillKillModelSamples(rec.tape, { drillTimedPass: false });
+            const bad = compareDrillKillWitness(rec.samples, m.samples, rec.tape.boot.level);
+            expect(bad.length).toBeGreaterThan(0);
+            expect(bad[0]).toMatch(new RegExp(`^t ${hopAt} drill@128,96: game \\(152, 56\\) model \\(152, 72\\)`));
+            const firstHit = rec.samples.find((g) => g.hits > 0);
+            expect(firstHit.t).toBe(offHitAt + 1);
+        }, 120000);
+    it.each(TIMEDPASS_WITNESSES.map((w) => [w.name]))('%s: the solver still plans the recorded tape', async (name) => {
+        const rec = load(name);
+        const { tape } = await timedPassTape(TIMEDPASS_WITNESSES.find((w) => w.name === name));
+        expect(tape.inputs).toEqual(rec.tape.inputs);
+    }, 180000);
 });
