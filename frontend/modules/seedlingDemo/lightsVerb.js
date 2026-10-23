@@ -169,8 +169,11 @@ function forecastTick(s, held, env) {
     return { damaged, landed, killed };
 }
 
-/** Forecast `plan` then `tail` idle ticks from `s` (cloned). */
-function forecastPlan(s0, plan, tail, env) {
+/**
+ * Forecast `plan` then `tail` idle ticks from `s` (cloned). ⛓ slowfix D-A: `landBy` (the plan index of its last swing
+ * test) ends a forecast that has landed nothing by then — the caller rejects it either way (`landed === 0`).
+ */
+function forecastPlan(s0, plan, tail, env, landBy = null) {
     const s = cloneForecast(s0);
     let landed = 0;
     let killed = 0;
@@ -180,6 +183,7 @@ function forecastPlan(s0, plan, tail, env) {
         landed += r.landed;
         killed += r.killed;
         if (r.damaged) return { damaged: k, landed, killed, end: null };
+        if (landBy !== null && k === landBy && landed === 0) return { damaged: null, landed, killed, end: null };
         if (k === plan.length - 1) s.atPlanEnd = fightDigest(s);
     }
     return { damaged: null, landed, killed, end: s.atPlanEnd ?? fightDigest(s) };
@@ -215,7 +219,8 @@ export function planLightsSortie(s0, env) {
                     plan.push(new Set(['primary']));
                     if (back) for (let i = 0; i < n; i += 1) plan.push(new Set([OPP[d]]));
                     while (plan.length < n + 1 + V.swingTests) plan.push(IDLE);
-                    const r = forecastPlan(sw, plan, V.safeTail, env);
+                    // ⛓ slowfix D-A (`lightsSortiePortfolio`): the press is plan index n, its tests land by n + swingTests
+                    const r = forecastPlan(sw, plan, V.safeTail, env, env.exactPrune ? n + V.swingTests : null);
                     if (r.damaged !== null || r.landed === 0) continue;
                     const cost = w + plan.length;
                     if (!best || r.landed > best.landed || (r.landed === best.landed && cost < best.cost)) {
@@ -249,6 +254,9 @@ export function planLightsDodge(s0, env) {
                     if (survive < plan.length + V.safeTail) continue;
                     const score = survive - plan.length;
                     if (!best || score > best.score) best = { keys: plan, score, d, n, d2, n2, end: r.end };
+                    // ⛓ slowfix D-A (`lightsSortiePortfolio`): a dodge unhit to the horizon scores Infinity, which no
+                    // later candidate beats (`>`): the first one is the answer
+                    if (env.exactPrune && best.score === Infinity) return best;
                 }
             }
         }
@@ -325,6 +333,9 @@ export function execLights(run, perTick, resolved, ctx) {
         hitType: weapon === 'spear' ? 'Spear' : 'Sword',
         // ⛓ fidelity LIGHTSARR D2: `Player.shieldBump` shoves a flier the moving shield touches.
         shield: run.progress('inventory')?.hasShield === true,
+        // ⛓ slowfix D-A: the two exact prunes (a sortie that has landed nothing by its last test; the first dodge unhit
+        // to the horizon) — they change no answer and pay for the portfolio's second rollout
+        exactPrune: CONTACT_FIDELITY.lightsSortiePortfolio,
     };
     if (env.shield && run.progress('inventory')?.hasDarkShield === true) {
         refuse('cannot-act', 'the dark shield is held: `Player.shieldBump` HITS a flier whose `hitsTimer <= 0` '

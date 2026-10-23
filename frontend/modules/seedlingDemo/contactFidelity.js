@@ -986,6 +986,10 @@ export const CONTACT_FIDELITY = {
      * sets neither (`Player.as:810-822`), so ON the spear's press leaves both alone. Measured at the committed staging:
      * the spear solve 303 t (rollouts 421 | 239; `lights-solve-spear-portfolio`, recorded on p4g at 0 px), the sword's
      * two rollouts tie (507 | 507) and it plays `lights-solve-sword` unchanged.
+     * Two EXACT prunes ride the switch and pay for the second rollout (a sortie that has landed nothing by its last test
+     * is rejected either way; the first dodge unhit to the horizon scores Infinity, which nothing beats): the same answers
+     * on all twenty perturbed solves, and the portfolio solve costs less than the greedy alone (15 s vs 23-27 s, node).
+     * Without them both L69 sweep legs ran out the 90 s leg budget ON (×2, local).
      * OFF: byte-identical. `SEEDLING_LIGHTS_SORTIE_PORTFOLIO=0|1` for a node measurement.
      */
     lightsSortiePortfolio: false,
