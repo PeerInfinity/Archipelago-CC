@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 95,
-            "count": 142,
+            "browser": 96,
+            "count": 143,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 449,
-        "browser": 160,
-        "cited": 241,
-        "files": 463,
+        "blockStyle": 450,
+        "browser": 161,
+        "cited": 242,
+        "files": 464,
         "lineStyle": 14,
-        "withDocblock": 463,
-        "withFlags": 380
+        "withDocblock": 464,
+        "withFlags": 381
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -13163,6 +13163,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling: DOES A STAGED PERSISTENCE FLAG REACH THE ENTITIES, PER BOOT PATH? (slice `seedling-js-persistence`, after the rules arc's W0 finding: several tapes on ONE page leaked bosslock state across `botStart`).",
             "path": "scripts/procgen/probe-seedling-persistence-rebuild.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "out"
+            ],
+            "file": "probe-seedling-pit-doors.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "plan-seedling-watcher-witness.mjs",
+                    "name": "check"
+                },
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's PIT DOORS, ON THE GAME (fidelity PITPORT D1; `CONTACT_FIDELITY.pitTeleporterCrossing`).",
+            "path": "scripts/procgen/probe-seedling-pit-doors.mjs"
         },
         {
             "argvHelpers": [],

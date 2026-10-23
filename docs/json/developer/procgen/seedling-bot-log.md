@@ -24805,3 +24805,39 @@ with the Sword and the Spear from the L25 and L26 arrivals (both drills from L26
 - A weapon that "hits" an enemy may not DAMAGE it: `Enemy.hit` has a per-type gate (`hitByFire`), so "every weapon can kill
   it" must be read off the receiver, not the rules.
 - A stance rule written in px ("outside the range") can have no solution in a small room: measure the room before the rule.
+
+### Seedling fidelity PITPORT — a live teleporter on a Pit tile is an exit the walk ends on (`pitTeleporterCrossing`, OFF)
+
+Planner `seedling-fidelity-planning-10`, wave 26 (⚖ the user picked "PIT-TELEPORTER slice", 2026-10-22). The report is
+`CC/docs/cloud-reports/seedling-fidelity-pitport.md`.
+
+**W0 — the game's order.** `Teleporter.update()` (`Teleporter.as:89-118`) has no fall guard: a live door fires on the
+first frame the player box overlaps its 16x16 rect (`!playerTouching`). The doors update BEFORE the player
+(`addUpdate` prepends; the player is added at `Game.as:2040`, the doors at `:2169`), and `checkFallingInPit`
+(`Player.as:745-771`) fades for 20 frames before its own `FP.world =` / `die()`. The pit edge reads the tile under
+`(x, y + checkOffsetY)`, a point INSIDE the 4x5 box, so on a door that is its own pit tile the box overlaps the door
+no later than the edge fires: the door wins on every approach. Only a door that cannot fire loses: a SHUT one, or one
+the run stands LATCHED on (its arrival overlapped it). The atlas holds exactly three pit doors, each on its own tile
+in a room with no fallthrough: L43 `teleporter@144,64` → L37 (9,4), L58 `teleporter@80,16` → L46 (5,1; the Yeti's
+tag 1), L100 `teleporter@288,96` → L101 (18,6). No room's arrival lands on one. The physics already crossed them
+(YETI's `talk` at 0 px); only the walker's door lookup refused.
+
+**The model (switch ON).** `botDriverV2.liveDoorPitTile`; `findExit` admits a LIVE door on its pit tile that the run
+is not latched on; `plannerObstacleAt`'s pit arm exempts that one tile only while `allowTeleporter` is that door (the
+ring of pits around L100's door stays forbidden). A shut door stays DEACTIVATED; a latched one keeps
+`unmodelled-pit-teleporter`. OFF: byte-identical.
+
+**Witnesses (p4g, `probe-seedling-pit-doors.mjs`, `fixtures/pitdoor-witness/`, all 0 px every tick):** `l43-south`
+(the solver's plan; crosses t360), `l43-north` (down onto the door), `l100-west` (the solver's plan), `l100-east`
+(left onto it), `l58-east` (both flags cleared; diagonally, corner first): each crosses the tick after the box first
+overlaps the door. `l58-shut-east`: the shut door does not cross, the Pit takes the player (respawn t150).
+
+**The next gap (handed over).** L58 after the Yeti's talk: the door is admitted, but the planner's A* edge
+(56,56) → (72,56) passes 0.07 px into `yeti@56,56`'s 10x12 Solid (y 58..70) and the walk holds `right` alone at
+y 55.93 and stalls. An A* edge between two clear tile centres is not checked against a sub-tile Solid (`stringPull`
+keeps consecutive nodes unchecked) — `planWaypoints`' region, not edited here.
+
+**Trap candidates.**
+- A refusal that guards a race the model already resolves (the physics crossed; the lookup refused) hides the next
+  obstacle: lifting it moved three survey refusals' WORDS, not their verdicts.
+- A door a run arrives LATCHED on is not the door it walks onto: the same tile answers "door" or "pit" by the latch.

@@ -9122,10 +9122,12 @@ function execHold(run, perTick, resolved, ctx) {
  * ⛓ housekeep D1 — a `reach-exit` goal's door, with `findExit`'s PIT-tile throw named: the teleporter's tile is a pit
  * (`level.pitTiles`, `findExit`'s own test), whose trigger and fall edge fire on one tick — FlashPunk bookkeeping the
  * physics does not transcribe (survey steps 113 / 191: L43's door to L37, L100's to L101).
+ * ⛓ fidelity PITPORT (`CONTACT_FIDELITY.pitTeleporterCrossing`): ON, `findExit` admits a LIVE door on a pit that the
+ * run is not latched on (the door wins the race), so this names only a latched one (the pit takes the player).
  */
-function findExitNamed(level, exit) {
+function findExitNamed(level, exit, latched = null) {
     try {
-        return findExit(level, exit);
+        return findExit(level, exit, { latched });
     } catch (e) {
         if (!(e instanceof BotDriverV2Error)) throw e;
         const tp = level.teleporters.find((t) => t.x === exit.x && t.y === exit.y);
@@ -25818,7 +25820,7 @@ function solveSegmentUnder({
         }
         if (goal.kind === 'reach-exit') {
             awaitTentacleMouth(goal);
-            const { index, teleporter } = findExitNamed(run.world, goal.exit);
+            const { index, teleporter } = findExitNamed(run.world, goal.exit, run.state.latched ?? null);
             const centre = {
                 x: teleporter.rect.x + TILE_SIZE / 2,
                 y: teleporter.rect.y + TILE_SIZE / 2,

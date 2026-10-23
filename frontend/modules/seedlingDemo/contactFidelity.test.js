@@ -227,7 +227,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             spearGameTest: true,
             // ⛓ fidelity DRILLKILL (wave 26): the solver kills L28's drills before the rope cut; shipped OFF;
             // ⛓ planning-11's flip (⚖ user "Harvest + flip ON", 2026-10-23) turns it ON.
-            drillKillFirst: true });
+            drillKillFirst: true,
+            // ⛓ fidelity PITPORT (wave 26): a live door on a Pit tile is an exit the walk ends on; ships OFF.
+            pitTeleporterCrossing: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
