@@ -851,6 +851,11 @@ export function facingCell(state) {
  * a turn passes). It breaks the facing cell's obstacle iff that obstacle's
  * library entry lists the action in `struck_by` and it is not broken already.
  *
+ * ⛓ rules-l39 (⚖ 2026-10-23 "(a) One obstacle"): an obstacle spanning several
+ * cells (a rope's run) names its ONE canonical cell in `at`, and a strike on
+ * any of its cells is recorded THERE — one cut state, whichever cell was hit.
+ * An obstacle without `at` (a rock) records the struck cell, as before.
+ *
  * ⚠ The entry's `condition` names the HELPER the scripted step asks
  * (`tileSpike/`, ⚖ Q2 iii); this native path is that helper's built-in
  * default (⚖ Q6 "native default") and the parity suite holds the two equal.
@@ -862,7 +867,7 @@ export function strikeTarget(world, state, actionId) {
     if (!obstacleId) return null;
     const struckBy = world.obstacleLib?.[obstacleId]?.struck_by;
     if (!Array.isArray(struckBy) || !struckBy.includes(actionId)) return null;
-    const key = posKey(cell.x, cell.y);
+    const key = world.obstacleLib?.[obstacleId]?.at ?? posKey(cell.x, cell.y);
     if (state.broken?.includes(key)) return null;
     return key;
 }

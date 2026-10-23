@@ -892,6 +892,8 @@ export function projectLevelWorld(region, grid, ctx, entities) {
                 clear_set: [[groupToken(group)]],
                 struck_by: actions,
                 activates: groupToken(group),
+                // The rope's ONE cut state: a strike on any run cell is recorded here (`strikeTarget`).
+                at: keyOf(...tiles[0]),
                 ...(e.event ? { event: e.event } : {}),
                 color: '#b08a4a',
             };

@@ -1305,6 +1305,7 @@
                 "fire"
               ],
               "activates": "sw_0",
+              "at": "2,1",
               "event": "L16 flag 0: rope@32,16 cleared",
               "color": "#b08a4a"
             },
