@@ -8511,6 +8511,8 @@ export function createLevelRun({
                 }
                 // ⛓ fidelity-bobsoldier D3: this tick's CORPSE swords (absent unless one swings).
                 let corpseSwords = null;
+                // ⛓ fidelity REMBODY D2: `stepChasersNow`'s set, on the clones — removed this frame, still a wall.
+                const removedThisFrame = CONTACT_FIDELITY.removedBodyBlocks ? new Set() : null;
                 for (const id of ids) {
                     const c = bodies.get(id);
                     if (!c || c.removed) continue;
@@ -8529,6 +8531,7 @@ export function createLevelRun({
                         const tail = bobSoldierSwordTail(c.sword, c, playerPos);
                         (corpseSwords ??= []).push({ id: c.id, tag: c.tag, lines: tail.lines });
                         if (c.alpha <= 0) c.removed = true;
+                        if (removedThisFrame !== null && c.removed) removedThisFrame.add(c.id);
                         continue;
                     }
                     const box = chaserBoxAt(c.tag, c.x, c.y);
@@ -8558,7 +8561,7 @@ export function createLevelRun({
                             // ⛓ fidelity-bobsoldier: siblings are "Enemy" (`stepChaserEntity`'s rule).
                             if (!chaserSolids(c.tag).includes('Enemy')) return false;
                             for (const o of bodies.values()) {
-                                if (o.id === c.id || o.removed) continue;
+                                if (o.id === c.id || (o.removed && !removedThisFrame?.has(o.id))) continue;
                                 if (rectsOverlap(r, chaserBoxAt(o.tag, o.x, o.y))) return true;
                             }
                             return false;
@@ -8593,6 +8596,7 @@ export function createLevelRun({
                         const ev = stepBulbGraphic(c.tag, c);
                         if (ev?.event === 'lava') { c.lavaTile = ev.tile; c.lavaAt = tickOffset + 1; }
                         if (ev?.event === 'removed') c.removed = true;
+                        if (removedThisFrame !== null && c.removed) removedThisFrame.add(c.id);
                         continue;
                     }
                     /**
@@ -12691,6 +12695,14 @@ export function createLevelRun({
         // forwards, and it is observable the moment two bobs can block each
         // other, which is exactly L5's and L6's case.
         const ids = [...st.keys()].reverse();
+        /**
+         * ⛓⛓ fidelity REMBODY D2 (`CONTACT_FIDELITY.removedBodyBlocks`, OFF) — THE BODIES THIS FRAME REMOVES. `World.remove`
+         * only queues (`World.as:118-124`) and `updateLists` drains the queue after every entity has updated (`:895-911`),
+         * so a body whose fade (or bulb "die") ends in its own update is still in the "Enemy" type list for every body
+         * that updates after it IN THIS FRAME, and gone the next. Per CALL, not per model tick: a ceremony's stepped dead
+         * frames call this once per frame. Witnessed by SKINSWING's `skinswing-l71-resite` (t63). OFF: `null`.
+         */
+        const removedThisFrame = CONTACT_FIDELITY.removedBodyBlocks ? new Set() : null;
         for (const id of ids) {
             const c = st.get(id);
             if (c.removed) continue;
@@ -12708,12 +12720,14 @@ export function createLevelRun({
              * out of the entity half still owes the graphic half.
              */
             const stop = stepChaserEntity(c, {
-                st, playerPoint, solidOpts, staticEnemyBoxes,
+                st, playerPoint, solidOpts, staticEnemyBoxes, removedThisFrame,
             });
+            if (removedThisFrame !== null && c.removed) removedThisFrame.add(c.id);
             if (hasDropDeath(c.tag)) {
                 // ⛓ fidelity-bulb: `Bulb.update`'s last statement, and the graphic half that follows it.
                 if (c.bulbPhase === 'armed') startBulbDrop(c);
                 stepBulbGraphicNow(c);
+                if (removedThisFrame !== null && c.removed) removedThisFrame.add(c.id);
                 if (stop === 'player-died') return;
                 continue;
             }
@@ -12861,7 +12875,7 @@ export function createLevelRun({
      *   killed the player, which ends the whole family's tick as it did when
      *   this was a `return` inside the loop.
      */
-    function stepChaserEntity(c, { st, playerPoint, solidOpts, staticEnemyBoxes }) {
+    function stepChaserEntity(c, { st, playerPoint, solidOpts, staticEnemyBoxes, removedThisFrame = null }) {
         // ⛓ bosskills D2: a King of Fire's runner in its jump (or landing: `collidable = true` from its grounded update).
         if (c.spawnedBy === 'lavaboss') {
             if (stepLavaRunnerAirNow(c)) return null;
@@ -12908,7 +12922,9 @@ export function createLevelRun({
                     // here it is not a bounded vacuity: L5 holds three and L6
                     // holds two.
                     for (const o of st.values()) {
-                        if (o.id === c.id || o.removed) continue;
+                        // ⛓ fidelity REMBODY D2 (`removedBodyBlocks`): a sibling removed THIS frame is still in the
+                        // "Enemy" type list (`World.updateLists` drains `_remove` after the frame) — still a wall.
+                        if (o.id === c.id || (o.removed && !removedThisFrame?.has(o.id))) continue;
                         // ⛓ bosskills D2: `Entity.collide` skips a non-collidable body (an airborne runner).
                         if (o.collidable === false) continue;
                         if (rectsOverlap(r, chaserBoxAt(o.tag, o.x, o.y))) return true;
