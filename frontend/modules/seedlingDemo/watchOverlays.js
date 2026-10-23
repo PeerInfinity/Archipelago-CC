@@ -121,7 +121,7 @@ import { detectionRects } from './crusher.js';
  * ⚠ THE SPEAR IS THE ONE PLACE THE PICTURE IS SHORT OF THE GAME, and it is
  * short because the MODEL is, by a named decision and not by an oversight:
  * `spearDelayMax` is 1, so the game tests on T+1, T+3 and T+5, and
- * `presses.SPEAR_HIT_TICKS_UNMODELLED` records that the ladder fires ONE.
+ * `presses.SPEAR_HIT_TICKS` records that the ladder fires ONE.
  * A layer that drew three rects for a spear would be showing hit tests this
  * run never made — so it draws the one the run made, and the readout says
  * which fact the absence of the other two is.
@@ -135,7 +135,7 @@ import { detectionRects } from './crusher.js';
  * make the sword easier to see would be answering "when did the game swing?"
  * with a number the page picked.
  */
-import { SLASH_HIT_TICKS, SPEAR_HIT_TICKS_UNMODELLED } from './presses.js';
+import { SLASH_HIT_TICKS, SPEAR_HIT_TICKS } from './presses.js';
 
 /**
  * ⛔ THE LAYER ROSTER — kickoff §3.2's table, transcribed once.
@@ -1697,13 +1697,13 @@ export const SWING_WINDOW_NOTE = Object.freeze({
         + 'from where they are',
     // ⛓ planning-10's SPEARRECT flip (`CONTACT_FIDELITY.spearGameTest`, ON by default): the spear's three tests are the
     // game's, so the note says so; the OFF bound is named WITH its switch (js-planning-8's review).
-    spear: `a spear press fires ${SPEAR_HIT_TICKS_UNMODELLED.ticks.length} hit tests, on ticks `
-        + `T+${SPEAR_HIT_TICKS_UNMODELLED.ticks.join(', T+')} of the same animation (\`Player.spear()\`: `
+    spear: `a spear press fires ${SPEAR_HIT_TICKS.ticks.length} hit tests, on ticks `
+        + `T+${SPEAR_HIT_TICKS.ticks.join(', T+')} of the same animation (\`Player.spear()\`: `
         + '`spearDelayMax` 1, so the test runs on alternate ticks while `spearing` is up), and the run records a '
         + 'press row for each — the thrust\'s row, then two `repeat` rows. Each test rebuilds the int-origined 32x5 '
         + 'rect (inclusive edges) from the live position, with no reach gate and no line test, so a body that moves '
         + 'INTO the thrust after the first test is hit. With `spearGameTest` OFF the model fires the first test only '
-        + `(${SPEAR_HIT_TICKS_UNMODELLED.why}) — a bound on the MODEL, and the two extra rects are then absent`,
+        + `(${SPEAR_HIT_TICKS.why}) — a bound on the MODEL, and the two extra rects are then absent`,
     hold: 'the HOLD is a DISPLAY CHOICE of this page and not the game\'s timing — a rect '
         + 'kept on screen for N ticks after the engine stopped swinging, drawn dimmer and '
         + 'outline-only so it can never be read as a hit test. Set it to 0 for the raw '

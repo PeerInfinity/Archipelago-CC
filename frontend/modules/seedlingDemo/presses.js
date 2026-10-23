@@ -155,8 +155,7 @@ if (SLASH_ANIM_TICKS.slash !== SLASH_HIT_TICKS) {
     throw new Error(`presses: SLASH_HIT_TICKS ${SLASH_HIT_TICKS} (measured) is not the plain `
         + `swing's derived animation length ${SLASH_ANIM_TICKS.slash}`);
 }
-// ⛓ planning-10's SPEARRECT flip: MODELLED when `CONTACT_FIDELITY.spearGameTest` is ON (the default) — the name is the OFF bound's; a rename to `SPEAR_HIT_TICKS` is queued (js-planning-8).
-export const SPEAR_HIT_TICKS_UNMODELLED = Object.freeze({
+export const SPEAR_HIT_TICKS = Object.freeze({
     ticks: Object.freeze([1, 3, 5]),
     why: '`spearDelayMax` is 1, so the test runs on alternate ticks of the same '
         + 'six-advance animation. Not modelled — see `SLASH_HIT_TICKS`.',
@@ -212,7 +211,7 @@ export const EMPTY_SWORD_WINDOW = Object.freeze({
  * position AT THAT TICK, never from the press's.
  *
  * ⚠ ONLY A SWORD BUYS REPEATS. A spear press schedules one thrust and nothing
- * else (`SPEAR_HIT_TICKS_UNMODELLED`), so the branch is on the thrust's own
+ * else (`SPEAR_HIT_TICKS`), so the branch is on the thrust's own
  * `weapon` rather than on the caller knowing which it handed over.
  *
  * ⚠ `at > tick` AND NOT `>= tick`: a repeat that has fired is dropped, and one
@@ -389,12 +388,12 @@ export function pressRectTouches(r, box) {
 }
 
 /**
- * ⛓ fidelity SPEARRECT: `spearDelayMax` is 1, so a thrust's test runs on T+1, T+3 and T+5 (`SPEAR_HIT_TICKS_UNMODELLED`
+ * ⛓ fidelity SPEARRECT: `spearDelayMax` is 1, so a thrust's test runs on T+1, T+3 and T+5 (`SPEAR_HIT_TICKS`
  * names the three). The first is the press window's fire; these are the other two, as offsets from it. fidelity LIGHTS
  * (the fliers) and DRILL (the drills) ran them for their own bodies; with `spearGameTest` ON they run for every arm.
  */
 export const SPEAR_REPEAT_OFFSETS = Object.freeze(
-    SPEAR_HIT_TICKS_UNMODELLED.ticks.slice(1).map((t) => t - SPEAR_HIT_TICKS_UNMODELLED.ticks[0]),
+    SPEAR_HIT_TICKS.ticks.slice(1).map((t) => t - SPEAR_HIT_TICKS.ticks[0]),
 );
 
 /**

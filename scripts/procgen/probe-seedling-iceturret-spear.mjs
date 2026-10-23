@@ -21,7 +21,7 @@
  *                          two thrusts east at the 31-tick cadence. The game: landed t4 / t35 (2 + 2 of `hitsMax`
  *                          3), "dead" t36, the corpse drowns on its own Water tile (removed t47).
  *                          ⚠ `jellyfish@56,48` reaches the player meanwhile, and the second thrust's REPEAT hit
- *                          (`presses.SPEAR_HIT_TICKS_UNMODELLED`) lands on it in the game at t39, past its i-frame
+ *                          (`presses.SPEAR_HIT_TICKS`) lands on it in the game at t39, past its i-frame
  *                          (a dark-shield bump latched `hitByDarkStuff`): the model carries one landing a thrust,
  *                          so that body's rows disagree from t39. Named, not fixed here (fidelity's region).
  *   c3-l98-spear-l93       PLANNED (D2): sweep leg 745's arrival (L98 from L93, (112,176)) on the same staging

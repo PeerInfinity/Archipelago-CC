@@ -572,7 +572,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `MOONROCK` | seedlingDemo/moonrock.js | 11 | 11 | physics/rule | magnitude/sentinel | Main.as:FPS Scenery/Moonrock.as:fallRate Scenery/Moonrock.as:cameraTimerMax |
 | `DESTROYING_TILE_TYPES` | seedlingDemo/pushables.js | 3 | 3 | rule | sentinel |  |
 | `PUSH_STEP` | seedlingDemo/pushables.js | 8 | 8 | physics | sign | Player.as:1103 |
-| `SPEAR_HIT_TICKS_UNMODELLED` | seedlingDemo/presses.js | 3 | 3 | rule | magnitude |  |
+| `SPEAR_HIT_TICKS` | seedlingDemo/presses.js | 3 | 3 | rule | magnitude |  |
 | `SPEAR_REPEAT_OFFSETS` | seedlingDemo/presses.js | 2 | 2 | rule | derivation |  |
 | `FIRE_SPRITE` | seedlingDemo/fireVerb.js | 6 | 6 | physics/rule | count/magnitude | Player.as:53 |
 | `FIRE_PRESS_CADENCE` | seedlingDemo/fireVerb.js | 1 | 1 | rule | derivation |  |

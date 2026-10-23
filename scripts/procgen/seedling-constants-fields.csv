@@ -1430,7 +1430,7 @@ frontend/modules/seedlingDemo/pulser.js|stepPulser|h6127a716|0|0,rule,bound,,pul
 frontend/modules/seedlingDemo/pulser.js|stepPulser|stepPulser|-1,rule,sentinel,,pulseTimer -1 = pulsing / idle
 frontend/modules/seedlingDemo/pulser.js|distanceRectPoint|distanceRectPoint,structural,,,
 frontend/modules/seedlingDemo/pulser.js|(module)|h42f319fa|20|0,rule,magnitude,Puzzlements/Pulser.as:pulseTimerMax,pause between pulses
-frontend/modules/seedlingDemo/presses.js|SPEAR_HIT_TICKS_UNMODELLED|(module),rule,magnitude,,spear hit tick offsets (spearDelayMax 1); documented as unmodelled
+frontend/modules/seedlingDemo/presses.js|SPEAR_HIT_TICKS|(module),rule,magnitude,,spear hit tick offsets (spearDelayMax 1); documented as unmodelled
 frontend/modules/seedlingDemo/presses.js|swordWindowStep|swordWindowStep,structural,,,repeat loop start / emptiness tests
 frontend/modules/seedlingDemo/presses.js|spearOrigin|spearOrigin,physics,sign,,direction-parity arithmetic folding spearOffset (-1 2)
 frontend/modules/seedlingDemo/presses.js|spearRect|spearRect,physics,derivation,,SPEAR_THICK / 2 (+ 1 on cases 0 and 1) rect offsets
