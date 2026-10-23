@@ -84,15 +84,16 @@ describe('the seedling_playthrough seed-1 export drives the wasm page as AP_1 do
     // ⛓ R4b (rules-boss-locations): every location a goal BUT the seven boss kills, which the vanilla arm refuses
     //   by name until the bot has a fight executor (`BOSS_REPORT_REFUSAL`; R4b part 2 / fidelity).
     // ⛓ planning-10's kingOfFireFight flip (⚖ user, 2026-10-21): a boss whose `BOUND_BOSS_FIGHTS` switch is ON by default
-    //   is a goal, so the refused count is seven less those (the King of Fire; the Lights since its flip).
+    //   is a goal, so the refused count is seven less those (the King of Fire; the Lights and the Tentacled Beast since their flips).
     it('the premise: AP_1 loads eligible, with a bot map and every location a goal but the boss kills with no default-ON fight', () => {
         expect(AP1_LOAD.verdict).toBe('eligible');
         expect(AP1_LOAD.mapRegions).toBeGreaterThan(0);
         expect(AP1_LOAD.mapLinks).toBeGreaterThan(0);
         const [goals, real] = AP1_LOAD.locationGoals.split('/');
         const wiredByDefault = Object.values(BOUND_BOSS_FIGHTS).filter((sw) => CONTACT_FIDELITY[sw] === true).length;
-        // ⛓ planning-10's lightsBossFight flip (2026-10-22): two default-ON fights (the King of Fire, the Lights).
-        expect(wiredByDefault).toBe(2);
+        // ⛓ planning-10's lightsBossFight flip (2026-10-22): two default-ON fights (the King of Fire, the Lights);
+        //   its tentacleBeastFight flip (2026-10-22): three (+ the Tentacled Beast).
+        expect(wiredByDefault).toBe(3);
         expect(Number(real) - Number(goals)).toBe(7 - wiredByDefault);
     });
 

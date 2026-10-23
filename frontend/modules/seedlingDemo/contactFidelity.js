@@ -816,8 +816,13 @@ export const CONTACT_FIDELITY = {
      * seedling-fidelity-bosskills D3 — THE TENTACLED BEAST (`tentacleBeast.js`, L57): the wake, the seeded
      * `Math.random` spawns (the run's declared `rng` stream, as the Owl's), the tentacles' sit window and their
      * `hitRect`, the whirlpools, the death's report `{57,0}` and the mouth Teleporter. OFF: byte-identical.
+     * ⛓ planning-10's flip (⚖ user, 2026-10-22, "Flip now, hitless later") turns it ON. Measured movers (CI, A/B at main
+     * 3ac4f7751d): the route survey (full) L57 83/114 NO-EDGE → SOLVED 2060 t; L58 84/115 NO-ARRIVAL → REFUSED on the
+     * tag-1 teleporter (the Yeti's; the talk goal and PITPORT pending); sweep 492–495 done ×2 (budget 240 s); probes
+     * standard 11/11. ⚠ The committed variant may take one swipe (only deaths are rejected): a HITLESS-preference slice
+     * is queued (⚖ user).
      */
-    tentacleBeastFight: false,
+    tentacleBeastFight: true,
     /**
      * fidelity ROPE (wave 22) — A ROPE IS CUT ON PURPOSE (`solverBot.resolveRopeStrategy` / `execRope`): the solver's
      * `solid:rope` row (`rope`), the PULL rung's swing stance and `execPull` asked by a `clear-tag` on the rope's own

@@ -7047,7 +7047,10 @@
             "name": "level_58__r1c4 -> level_46__r6c24",
             "connected_region": "level_46__r6c24",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "L58 flag 1: yeti@56,56 cleared"
+              }
             }
           }
         ],
@@ -7239,7 +7242,46 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L58 flag 1: yeti@56,56 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "L58 flag 1: yeti@56,56 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L58:1",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 58,
+              "tag": 1,
+              "class": "yeti",
+              "x": 56,
+              "y": 56
+            },
+            "action": {
+              "verb": "talk",
+              "item": null,
+              "gates": [
+                {
+                  "level": 58,
+                  "class": "teleporter",
+                  "x": 80,
+                  "y": 16
+                }
+              ]
+            },
+            "side": "level_58__r3c3",
+            "across": []
+          }
+        ]
       },
       "level_58__r4c1": {
         "name": "level_58__r4c1",
@@ -11933,6 +11975,17 @@
         "type": "Event",
         "max_count": 1
       },
+      "L58 flag 1: yeti@56,56 cleared": {
+        "name": "L58 flag 1: yeti@56,56 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
+      },
       "L63 flag 1: lightpole@64,88 cleared": {
         "name": "L63 flag 1: lightpole@64,88 cleared",
         "id": null,
@@ -12048,6 +12101,7 @@
       "L39 flag 8: wandlock@144,592 cleared": 1,
       "L40 flag 8: bosslock@480,352 cleared": 1,
       "L48 flag 1: bosslock@48,144 cleared": 1,
+      "L58 flag 1: yeti@56,56 cleared": 1,
       "L62 flag 0: lightpole@120,200 cleared": 1,
       "L63 flag 1: lightpole@64,88 cleared": 1,
       "L68 flag 0: bosslock@16,32 cleared": 1,
@@ -12126,6 +12180,7 @@
       "Level 049 - Conch": "Progressive Swim",
       "Level 089 - Feather": "Progressive Swim",
       "Level 055 - Boss Key 3": "Blue Key",
+      "L58 flag 1: yeti@56,56 cleared": "L58 flag 1: yeti@56,56 cleared",
       "L63 flag 1: lightpole@64,88 cleared": "L63 flag 1: lightpole@64,88 cleared",
       "L62 flag 0: lightpole@120,200 cleared": "L62 flag 0: lightpole@120,200 cleared",
       "Level 064 - Ghostspear": "Ghost Spear",

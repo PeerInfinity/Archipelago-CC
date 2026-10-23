@@ -102,8 +102,9 @@ describe('the vanilla arm\'s map — seedling_playthrough, every name accounted 
         // ⛓ planning-10's kingOfFireFight flip (⚖ user, 2026-10-21): a boss whose BOUND_BOSS_FIGHTS switch is ON by
         //   default is a GOAL (the BOSS WIRING rows below pin each one ON and OFF); the rest stay refused.
         const wired = (r) => CONTACT_FIDELITY[BOUND_BOSS_FIGHTS[r.entityType]] === true;
-        // ⛓ planning-10's lightsBossFight flip (2026-10-22) adds the Lights (report order: L69 before L82).
-        expect(LOADED.reports.filter(wired).map((r) => r.entityType)).toEqual(['lightbosscontroller', 'lavaboss']);
+        // ⛓ planning-10's lightsBossFight flip (2026-10-22) adds the Lights, its tentacleBeastFight flip the Tentacled Beast
+        //   (report order: L57, L69, L82).
+        expect(LOADED.reports.filter(wired).map((r) => r.entityType)).toEqual(['tentaclebeast', 'lightbosscontroller', 'lavaboss']);
         expect(goals.map((g) => g.name).sort())
             .toEqual([...LOADED.entries, ...LOADED.encounters, ...LOADED.reports.filter(wired)].map((e) => e.location).sort());
         // ⛓ R4b (rules-boss-locations) — the boss kills with no default-ON fight are REFUSED BY NAME, never dropped.

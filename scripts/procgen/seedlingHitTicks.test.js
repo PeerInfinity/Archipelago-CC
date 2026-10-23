@@ -8,8 +8,8 @@
  * The row that first carries a hit taken in the frame that recorded row k is k + 1 (the model ledger's `t`).
  */
 import { describe, it, expect } from 'vitest';
-import { createHitRecorder, hitTickOf, HITS_TIMER_MAX, UNBILLED_GATE_KIND, unbilledHitOfRow, unbilledHitCensus, unbilledHitLine }
-    from './seedlingHitTicks.js';
+import { arrivalLatchVerdict, createHitRecorder, hitTickOf, HITS_TIMER_MAX, UNBILLED_GATE_KIND, unbilledHitOfRow, unbilledHitCensus,
+    unbilledHitLine } from './seedlingHitTicks.js';
 import { mergeVerdict } from './seedlingDivergenceMerge.js';
 
 const FRAME_MS = 1000 / 60;
@@ -139,5 +139,75 @@ describe('S5-2 hit ticks — defaults', () => {
         const clean = { id: 1, end: 'done', roomHits: { atArrival: 0, max: 0, samples: 9, hits: [] } };
         const skipped = { id: 2, end: 'skipped' };
         expect(unbilledHitCensus([clean, skipped]).lines).toEqual([]);
+    });
+});
+
+describe('⛓ ARRIVAL LATCH (§5.124) — a hold-tape hit against the model stepping the arrival staging', () => {
+    // Leg 209 (run 39623239529; fidelity L1516 D4 `d4/leg209-arrival-model.txt`): the refused leg's 0-tick
+    // `wasm-hold-16`; the model, stepping the arrival with nothing held, bills `arrowtrap@112,32#0.1` at tick 6 and
+    // reads (120, 51.25) hitsTimer 19 after it, (120, 46.75) 18, (120, 42.5) 17.
+    const MODEL_ROWS = [
+        ...Array.from({ length: 5 }, () => ({ x: 120, y: 56, hitsTimer: 0, hits: 0 })),
+        { x: 120, y: 51.25, hitsTimer: 19, hits: 1 }, { x: 120, y: 46.75, hitsTimer: 18, hits: 1 }, { x: 120, y: 42.5, hitsTimer: 17, hits: 1 },
+    ];
+    const ARRIVAL = { seamTime: 4887, frames: 8, rows: MODEL_ROWS, billed: [{ t: 6, source: 'arrow', id: 'arrowtrap@112,32#0.1' }] };
+    const HIT = { t: 0, hits: 1, d: 1, hits_timer: 19, x: 120, y: 51.25, clock: 'tape', tick: 0, exact: false,
+        why: 'the tape was not armed at the read', tape: 0, gt: 4893, arrival: ARRIVAL };
+    const row209 = (hit) => ({ id: 209, key: 'level_16__r1c1 <- in_L17_32_48 -> exit:out_stairsup_16_64', end: 'failed',
+        roomHits: { atArrival: 0, max: 1, samples: 40, hits: [hit] }, plans: [{ ok: false, kind: 'refusal' }] });
+
+    it('leg 209: the model bills the hit field for field → not UNBILLED; the census names it ARRIVAL-LATCH-BILLED', () => {
+        expect(arrivalLatchVerdict(HIT)).toEqual({ billed: { t: 6, source: 'arrow', id: 'arrowtrap@112,32#0.1', arrival: true }, row: 6 });
+        expect(unbilledHitOfRow(row209(HIT))).toMatchObject({ known: true, taken: 1, billed: 1, unbilled: 0 });
+        expect(unbilledHitLine(row209(HIT))).toBeNull();
+        expect(unbilledHitCensus([row209(HIT)]).lines).toEqual([
+            'ARRIVAL-LATCH-BILLED: 209 level_16__r1c1 <- in_L17_32_48 -> exit:out_stairsup_16_64 game read gt=4893 hits_timer=19 '
+                + '@120,51.25 (tape0) = model tick 6 (row 6, staged seam 4887): arrow arrowtrap@112,32#0.1',
+            'arrival-latch-billed: 1']);
+    });
+
+    it('⛓ every reclassification is LOUD: one line per billed hold-tape hit and its own bucket count, through the merge too', () => {
+        const two = { ...row209(HIT), id: 210, roomHits: { atArrival: 0, max: 2, samples: 40, hits: [HIT, { ...HIT, hits: 2, gt: 4895, hits_timer: 17, y: 42.5 }] } };
+        const lines = unbilledHitCensus([row209(HIT), two]).lines;
+        expect(lines.filter((l) => l.startsWith('ARRIVAL-LATCH-BILLED: '))).toHaveLength(3);
+        expect(lines.at(-1)).toBe('arrival-latch-billed: 3');
+        expect(lines.some((l) => l.includes('210 ') && l.includes('gt=4895 hits_timer=17') && l.includes('model tick 6 (row 8'))).toBe(true);
+        const v = mergeVerdict({ rows: [row209(HIT)], plan: { legs: 1, shards: [{ shard: 1, ids: [209] }] } });
+        expect(v.lines).toContain('arrival-latch-billed: 1');
+        expect(v.lines.some((l) => l.startsWith('UNBILLED-HIT: 209 '))).toBe(false);
+    });
+
+    it('a LATE read (hits_timer 17, two frames on) is carried to its own row: still billed', () => {
+        expect(arrivalLatchVerdict({ ...HIT, hits_timer: 17, x: 120, y: 42.5 })?.billed).toMatchObject({ t: 6, source: 'arrow' });
+    });
+
+    it('a model row one frame off (the read the model does NOT reach) stays UNBILLED, with the model\'s reading named', () => {
+        const off = { ...HIT, y: 46.75 }; // hitsTimer 19 but the position of the next frame
+        expect(arrivalLatchVerdict(off).billed).toBeNull();
+        expect(unbilledHitLine(row209(off))).toBe('UNBILLED-HIT: 209 level_16__r1c1 <- in_L17_32_48 -> exit:out_stairsup_16_64 '
+            + 'hits=[tape0:0~@120,46.75] billed=[-] div=- arrival=[the model\'s arrival bills 1 hit(s) in 8 frames, none the game\'s '
+            + 'read (120,46.75) hitsTimer 19: 6:arrow reads (120,51.25) hitsTimer 19]');
+    });
+
+    it('no model hit, a model error, a run-out timer, or a hit past the stepped frames: never billed, each named', () => {
+        expect(arrivalLatchVerdict({ ...HIT, arrival: { ...ARRIVAL, billed: [] } }).billed).toBeNull();
+        expect(arrivalLatchVerdict({ ...HIT, arrival: { error: 'Error: x' } }).why).toMatch(/could not step the arrival: Error: x/);
+        expect(arrivalLatchVerdict({ ...HIT, hits_timer: 0 }).why).toMatch(/hits_timer read 0/);
+        expect(arrivalLatchVerdict({ ...HIT, arrival: { ...ARRIVAL, rows: MODEL_ROWS.slice(0, 5) } }).why).toMatch(/past the 5 stepped frames/);
+    });
+
+    it('a hit with no arrival record is not asked: rows from before §5.124 read exactly as they did', () => {
+        const { arrival, gt, ...old } = HIT;
+        expect(arrivalLatchVerdict(old)).toBeNull();
+        expect(unbilledHitOfRow(row209(old))).toMatchObject({ billed: 0, unbilled: 1 });
+        expect(unbilledHitLine(row209(old))).toBe('UNBILLED-HIT: 209 level_16__r1c1 <- in_L17_32_48 -> exit:out_stairsup_16_64 '
+            + 'hits=[tape0:0~@120,51.25] billed=[-] div=-');
+    });
+
+    it('the recorder stamps the read\'s game_time as `gt` (and nothing when the status has none)', () => {
+        const rec = createHitRecorder({ atArrival: 0 });
+        expect(rec.observe({ hits: 1, hits_timer: 19, tick: 0, armed: false, x: 120, y: 51.25, game_time: 4893 }, { tape: 0 })[0].gt).toBe(4893);
+        const rec2 = createHitRecorder({ atArrival: 0 });
+        expect('gt' in rec2.observe({ hits: 1, hits_timer: 19, tick: 0, armed: true, x: 1, y: 2 })[0]).toBe(false);
     });
 });
