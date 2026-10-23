@@ -28,6 +28,12 @@
  *      search stops at it, and the pass returns a plan (a partial dash schedule, or dashless). Every leg whose
  *      pass tripped is listed by the site that tripped first and the bound that tripped (`ROW B passes` →
  *      `deadlines`), and checked to play on plan (0 divergences); 0 backstops.
+ *      A Restart B takes in its budget is checked as R's is (since rope events it takes none: R is the subject).
+ *   R  THE FORCED RESTART (§5.125) — the restart-hold check's GUARANTEED subject: the new game, a warm-up leg to
+ *      level_2 (the wasm engine is built by the first walk), then an AP move into a
+ *      Restart-only pocket (`--pocket=`, default `level_17`, probe-seedling-restart-route.mjs's), the bot plays from
+ *      there, its route BEGINS with RESTART, and it walks on from the start. The Restart is TAKEN (else a hard FAIL),
+ *      and its start-hop arrival is HELD: ≥ 1 expected arrival, each ends `held`, 0 `no-held-arrival` fallbacks.
  *
  * Prints `PASS:`/`FAIL:` rows, `ROW <tag> {json}` measurement rows, and `ALL CHECKS PASSED` /
  * `N CHECK(S) FAILED` (exit 1).
@@ -35,8 +41,8 @@
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build (the
  * `flashPanel/wasm` submodule), or this SKIPs (exit 0).
  *
- * Run: node scripts/procgen/probe-seedling-wasm-logical-links.mjs [--host=http://localhost:8000] [--only=H,B]
- *      [--budget-s=900] [--solver-budget-work=<units>] [--solver-upgrade-window-work=<units>] [--wait-for-box=<sec>]
+ * Run: node scripts/procgen/probe-seedling-wasm-logical-links.mjs [--host=http://localhost:8000] [--only=H,B,R]
+ *      [--budget-s=900] [--pocket=level_17] [--restart-budget-s=300] [--solver-budget-work=<units>] [--solver-upgrade-window-work=<units>] [--wait-for-box=<sec>]
  *      [--trace=<file>]   (B: every shipped tape + botHold, the deliveries, the history — the arrival-jitter instrument)
  */
 import { chromium } from 'playwright';
@@ -93,12 +99,15 @@ async function main() {
     const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
         ?.slice(name.length + 3) ?? fallback);
     const HOST = arg('host', 'http://localhost:8000').replace(/\/+$/, '');
-    const SESSIONS = arg('only', 'H,B').split(',').filter(Boolean);
+    const SESSIONS = arg('only', 'H,B,R').split(',').filter(Boolean);
     const BUDGET_MS = Number(arg('budget-s', '900')) * 1000;
     const SOLVER_BUDGET_WORK = arg('solver-budget-work', null) === null ? null : Number(arg('solver-budget-work', null));
     const UPGRADE_WINDOW_WORK = arg('solver-upgrade-window-work', null) === null ? null : Number(arg('solver-upgrade-window-work', null));
     /** ⛓ ARRIVAL JITTER — `--trace=<file>`: every tape the engine ships (its staging + keys), every botHold, the deliveries and the history, as JSON. */
     const TRACE = arg('trace', null);
+    /** R — the Restart-only pocket the forced Restart leaves from, and R's budget for the Restart and the walk on. */
+    const POCKET = arg('pocket', 'level_17');
+    const RESTART_BUDGET_MS = Number(arg('restart-budget-s', '300')) * 1000;
     const PRESET = JSON.parse(readFileSync(join(REPO, 'frontend', RULES_PATH), 'utf8'));
     const PARTITION = JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-subregion-partition.json'), 'utf8'));
     const REGIONS = PRESET.regions['1'];
@@ -298,8 +307,11 @@ async function main() {
                 gBack.stats.teleports === teleports0 && gOver.region === OUT, JSON.stringify({ t0: teleports0, t: gBack.stats.teleports }));
         }
 
-        /** Mount the Playback Bot in START with the DERIVED sphere log, and play. */
-        async function startBot() {
+        /**
+         * Mount the Playback Bot in `start` (default START) with the DERIVED sphere log, and play. R (`start` ≠ START)
+         * also reads the planner's own route out of `start` before anything moves (`plan`: its kind and first steps).
+         */
+        async function startBot(start = START) {
             await page.evaluate(async (rulesPath) => {
                 const rules = await (await fetch(rulesPath)).json();
                 const { generateSphereLog } = await import('./modules/shared/procgen/forwardSimulator.js');
@@ -307,7 +319,7 @@ async function main() {
                 const { getSphereStateSingleton } = await import('./modules/sphereState/singleton.js');
                 return getSphereStateSingleton().loadSphereLog('probe-seedling-wasm-logical-links:derived', text);
             }, RULES_PATH);
-            return page.evaluate(async (start) => {
+            return page.evaluate(async ({ start, planOut }) => {
                 const bus = (await import('./app/core/eventBus.js')).default;
                 bus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' }, 'tests');
                 const { getActivePanel } = await import('./modules/playbackBot/index.js');
@@ -322,10 +334,21 @@ async function main() {
                 bot._ensureQueueBuilt?.();
                 const head = bot._queue?.[0] ?? null;
                 const route = head ? bot._pathFinder?.findPath?.(start, head.regionName) ?? null : null;
+                let plan;
+                if (planOut) {
+                    // probe-seedling-restart-route.mjs's read: the cursor's head, then the planner's route to it.
+                    bot._seedCheckedFromSnapshot?.();
+                    bot._advanceCursor?.();
+                    const cur = bot._queue?.[bot._cursor] ?? null;
+                    await window.stateManagerProxy?.pingWorker?.('probe-logical-links-R');
+                    const p = cur && typeof bot._planRoute === 'function' ? bot._planRoute(start, cur.regionName) : null;
+                    plan = { goal: cur?.regionName ?? null, kind: p?.kind ?? null, why: p?.why ?? null, firstSteps: p?.route?.steps?.slice(0, 3) ?? null,
+                        mountedIn: bot.getCurrentRegion() };
+                }
                 await bot.play();
                 return { ok: true, region: bot.getCurrentRegion(), head: head && { location: head.locationName, region: head.regionName },
-                    route };
-            }, START);
+                    route, ...(planOut ? { plan } : {}) };
+            }, { start, planOut: start !== START });
         }
         const botStatus = () => page.evaluate(async () => {
             const { getActivePanel } = await import('./modules/playbackBot/index.js');
@@ -417,6 +440,98 @@ async function main() {
             out('B trace written', { file: TRACE, verbs: verbs?.length ?? null, tapes: (verbs ?? []).filter((v) => v.verb === 'botLoadTape').length,
                 solves: (solves ?? []).filter((x) => x.t === 'solve').length, workers: (solves ?? []).filter((x) => x.t === 'new').length });
             out('B self-checks', (eng?.selfChecks ?? []).map((r) => ({ location: r.location, tick: r.tick, settled: r.settled, delivered: r.delivered, waitedMs: r.waitedMs })));
+        }
+
+        /**
+         * ⛓ RESTART HOLD — every Restart's start-hop arrival is HELD: no `no-held-arrival` fallback, at least one
+         * expected arrival, and each expected arrival ends in a `held` row (measured before the fix: 3/10 runs fell back
+         * at the L19 Restart, whose route opens on a logical link, so its goal came in the landing's own turn and the
+         * watch was re-based over the landing). ⛔ An empty set is a FAIL here (expectedArrivals ≥ 1, held ≥ 1).
+         */
+        function restartHeld(tag, eng) {
+            const rows = eng.arrivalWatch ?? [];
+            const expect = rows.filter((r) => r.at === 'expect').length;
+            const held = rows.filter((r) => r.at === 'held').length;
+            check(`${tag}: every Restart's start-hop arrival is HELD (0 \`no-held-arrival\` fallbacks; ≥ 1 expected arrival, each ends \`held\`)`,
+                !(eng.forcedBy?.['no-held-arrival'] > 0) && (eng.expectedArrivals ?? 0) >= 1 && expect >= 1 && expect === held,
+                JSON.stringify({ forcedBy: eng.forcedBy, expectedArrivals: eng.expectedArrivals, expect, held, rows: rows.map((r) => r.at) }));
+        }
+
+        /**
+         * R — THE FORCED RESTART (§5.125): the restart-hold check's GUARANTEED subject. The new game at the start; the bot
+         * plays the first leg (B's own first move, `START -> level_2`) so the wasm engine EXISTS (it loads on the first walk:
+         * measured, a Restart before it is expected by nobody — `watching: 0`), then stops; an AP move into a Restart-only
+         * pocket (`--pocket=`, default `level_17`: probe-seedling-restart-route.mjs's pocket, whose planner route BEGINS with
+         * RESTART on a fresh game's inventory), then the bot plays the derived sphere queue from there: it
+         * takes the Menu panel's Restart (nothing playing, so in that turn), the glue stops the engines and EXPECTS the
+         * start hop's arrival, and the bot walks on from the start. Deterministic: a fresh page, a fixed pocket, a fresh
+         * game's inventory; no wall-clock trigger. A Restart that is not taken is a hard FAIL, never a skip.
+         */
+        async function runRestart() {
+            await rp.waitFor('the new game stands in the start region', async () => {
+                const g = await glue();
+                return g.region === START && (await rp.currentRegion()) === START ? g : null;
+            }, 60000);
+            await page.waitForTimeout(1500);
+            // The warm-up leg: the engine is built by the first walk, and the Restart below must find it.
+            const warm = await startBot();
+            out('R warm-up', warm);
+            const warmed = await rp.waitFor('the warm-up leg reached level_2 (the wasm engine built)', async () => {
+                const b = await botStatus();
+                if (b.status.startsWith('error')) return b;
+                return b.region === 'level_2' && (await engineStats()).engine ? b : null;
+            }, RESTART_BUDGET_MS).catch(() => null);
+            await page.evaluate(async () => {
+                const { getActivePanel } = await import('./modules/playbackBot/index.js');
+                getActivePanel()?.getBot?.()?.stop?.();
+            });
+            await page.waitForTimeout(1500);
+            const from = await rp.currentRegion();
+            check('R: the warm-up leg walked START -> level_2 and the wasm engine exists (then the bot stopped)',
+                !!warmed && !warmed.status.startsWith('error') && from === 'level_2', JSON.stringify({ warmed, from }));
+            await page.evaluate(async ({ from, to }) => {
+                const d = (await import('./modules/flashPanel/index.js')).getDispatcher();
+                d.publish('user:regionMove', { sourceRegion: from, targetRegion: to, exitName: null, source: 'probe-logical-links-R' },
+                    { initialTarget: 'bottom' });
+            }, { from, to: POCKET });
+            const inPocket = await rp.waitFor(`the player in ${POCKET}`, async () => {
+                const g = await glue();
+                return g.region === POCKET && (await rp.currentRegion()) === POCKET ? g : null;
+            }, 30000).catch(() => null);
+            await page.waitForTimeout(1000);
+            check(`R: the player is in the pocket ${POCKET} (the binding and gameState agree)`, !!inPocket, JSON.stringify(await glue()));
+            const booted = await startBot(POCKET);
+            out('R boot', booted);
+            check(`R: the bot is mounted in ${POCKET} and its route out BEGINS with RESTART (no walk out of the pocket)`,
+                booted.ok && booted.plan?.mountedIn === POCKET && booted.plan?.kind === 'restart' && booted.plan?.firstSteps?.[1]?.restart === true,
+                JSON.stringify(booted));
+            const t0 = Date.now();
+            const walked = await rp.waitFor('the bot walks on from the start after the Restart', async () => {
+                const b = await botStatus();
+                if (b.status.startsWith('error')) return b;
+                const restart = await page.evaluate(async () => (await import('./modules/flashPanel/index.js')).getSeedlingRegionGlue()?.lastRestart ?? null);
+                return restart?.taken && b.region && ![POCKET, START, 'Menu'].includes(b.region) ? { ...b, restart } : null;
+            }, RESTART_BUDGET_MS).catch(() => null);
+            const end = await botStatus();
+            const eng = await engineStats();
+            const g = await page.evaluate(async () => {
+                const gl = (await import('./modules/flashPanel/index.js')).getSeedlingRegionGlue();
+                return JSON.parse(JSON.stringify({ lastRestart: gl?.lastRestart ?? null, restarts: gl?.stats?.restarts ?? null,
+                    restartPushes: gl?.stats?.restartPushes ?? null }));
+            });
+            const moves = (await rp.glueMoves()).map((m) => `${m.logical ? '~' : ''}${m.exitName}`);
+            out('R engine', { expectedArrivals: eng.expectedArrivals, arrivalWatch: eng.arrivalWatch, forcedBy: eng.forcedBy,
+                held: eng.held, divergences: eng.divergences, history: eng.history, lastRefusal: eng.lastRefusal });
+            out('R walk', { seconds: Math.round((Date.now() - t0) / 1000), status: end.status, region: end.region, restartDeferrals: end.restartDeferrals,
+                glue: g, moves });
+            // ⛔ The SUBJECT: a Restart not taken is a hard FAIL (the check below would otherwise read an empty set).
+            check(`R: the bot TOOK the Restart out of ${POCKET} (the glue's Restart was taken and the start hop pushed)`,
+                g.lastRestart?.taken === true && (g.restarts ?? 0) >= 1, JSON.stringify(g));
+            check('R: the bot walks on from the start after the Restart (a region past the start, no error)',
+                !!walked && !walked.status.startsWith('error'), JSON.stringify(walked ?? end));
+            restartHeld('R', eng);
+            check('R: 0 divergences (the leg solved from the held start hop stayed on plan)', eng.divergences === 0,
+                JSON.stringify({ divergences: eng.divergences }));
         }
 
         /** B — the bot to the Sword on the rules' declared directed graph: doors only, no logical link. */
@@ -538,19 +653,13 @@ async function main() {
             // arrival ends in a `held` row (measured before the fix: 3/10 runs fell back at the L19 Restart, whose route opens
             // on a logical link, so its goal came in the landing's own turn and the watch was re-based over the landing).
             const watchRows = eng.arrivalWatch ?? [];
-            // ⛓ NO SUBJECT (interim, js gate ruling 2026-10-21): B no longer restarts once rope events land; restore a
-            // forced-Restart subject. A walk that took no Restart prints a LOUD named SKIP (never a PASS, never counted
-            // green); a `no-held-arrival` fallback, or a Restart whose expected arrivals are not all held, still FAILS.
+            // ⛓ RESTART SUBJECT (§5.125) — B's own walk no longer Restarts in its budget since rope events (L16's rope
+            // opens L17 → L16, so L19 → L36 needs no Restart). When it does, its Restart is checked here; the GUARANTEED
+            // subject is session R (a forced Restart out of a pocket), never an empty set read as green.
             if ((eng.expectedArrivals ?? 0) === 0 && watchRows.length === 0 && deferrals.length === 0
                 && !(eng.forcedBy?.['no-held-arrival'] > 0)) {
-                console.log('SKIP (no subject): B took no Restart in its budget — the restart-hold check did not run — '
-                    + JSON.stringify({ firstLegs: moves.slice(0, 5) }));
-            } else {
-                check('B: every Restart\'s start-hop arrival is HELD (0 `no-held-arrival` fallbacks; each expected arrival ends `held`)',
-                    !(eng.forcedBy?.['no-held-arrival'] > 0) && (eng.expectedArrivals ?? 0) >= 1
-                        && watchRows.filter((r) => r.at === 'expect').length === watchRows.filter((r) => r.at === 'held').length,
-                    JSON.stringify({ forcedBy: eng.forcedBy, expectedArrivals: eng.expectedArrivals, rows: watchRows.map((r) => r.at) }));
-            }
+                console.log(`INFO: B took no Restart in its budget — the restart-hold check's subject is session R${SESSIONS.includes('R') ? '' : ' (NOT selected: --only lacks R, so the check does not run)'}`);
+            } else restartHeld('B', eng);
             // ⛓ CROSS-LEVEL END — a location leg whose plan ends in another level (L32 Bob Boss → L30) is HELD at its
             // landing (no `held-end` / `unheld-end` fallback, no `cross-level-end` re-arrival), and its own check SETTLES.
             const cross = eng.crossLevelEnds ?? [];
@@ -616,6 +725,7 @@ async function main() {
             }), 20000);
             if (S === 'H') await runHuman();
             if (S === 'B') await runBot();
+            if (S === 'R') await runRestart();
             console.log(`INFO: ${logs.filter((l) => l.startsWith('[pageerror]')).length} page error(s) (the logic-only channel's device loss)`);
             console.log(`INFO: panel log: ${await panelLogTail().catch(() => '?')}`);
         } catch (e) {

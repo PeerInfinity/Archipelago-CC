@@ -14,7 +14,7 @@ describe('the committed batteries', () => {
     }
     it('standard is the brief\'s list, each probe with its own args', () => {
         expect(batteryMatrix('standard').map((e) => `${e.probe} ${e.args}`.trim())).toEqual([
-            'probe-seedling-wasm-logical-links.mjs --only=B',
+            'probe-seedling-wasm-logical-links.mjs --only=B,R',
             'probe-seedling-wasm-vanilla-map.mjs',
             'probe-seedling-wasm-arrival-composites.mjs',
             'probe-seedling-wasm-midroom-replan.mjs --only=D',

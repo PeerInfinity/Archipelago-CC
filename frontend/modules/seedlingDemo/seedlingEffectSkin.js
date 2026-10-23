@@ -41,8 +41,21 @@
  * every `nightBmp` copy (`Light.render` draws ONLY to `nightBmp` unless
  * `darkLight`: G5); the intro's dust (`Game.cutscene[0]` only, a clock the
  * model refuses); the Wand's kill explosion on a chaser and the LavaBall's
- * (no ledger row carries one); the NPC dialogues and their portraits (the run
- * carries the pickup ceremony's dialogue only).
+ * (no ledger row carries one); the FinalBoss owl's portrait (`FinalBoss.as:91`
+ * sets `Game.talkingPic` itself; the model holds no owl dialogue).
+ *
+ * THE NPC DIALOGUES (G4b-dialogue): the run's read-only `talkingNow` names the
+ * placed / temporary NPC whose `talk()` draws (a talker, the Watcher, the Bob
+ * Boss's NPC, the lights intro). Its portrait (`NPC.myPic`, `NPC_TALK_LOOK`)
+ * and its `ALIGN` are the CLASS's, from the AS3, not the model's. A run with
+ * no `talkingNow` is the named path `NO_TALKING_NPC_STATE`: only the
+ * ceremony's dialogue is drawn, as before.
+ *
+ * ⚖ ROOM MODE CLAMPS THE OVERLAYS (user, 2026-10-21, G4b F1): a room narrower
+ * than the screen on an axis has the 160 × 160 overlay screen fitted to the
+ * canvas on that axis (`overlayRect`, `fitOverlayOps`): scaled uniformly and
+ * centred, so every overlay stays on the canvas. A room 160 px or wider on
+ * both axes is untouched (the same op objects).
  *
  * THE FONT (G4b, ⚖ the user 2026-10-21: "let's make our own pixel font"): the
  * seedling pack names `KEYS.font`, an ORIGINAL glyph sheet authored in
@@ -54,6 +67,7 @@ import { cosmeticRand } from './seedlingSkinRenderer.js';
 import { ANIMS, ENEMY_COLOUR, familyOf, freshSprite, hashId, play, rectOp, spriteOp, updateSprite } from './seedlingEnemySkin.js';
 import { ENEMY_ART } from './seedlingEnemyArt.js';
 import { BOSS_TOTEM_DEATH_BLAST } from './bossTotemFight.js';
+import { PLACED_NPC_TALK } from './dialogue.js';
 
 export const KEYS = Object.freeze({
     explosion: 'seedling:fx/explosion',
@@ -63,16 +77,19 @@ export const KEYS = Object.freeze({
     spinner: 'seedling:enemy/spinner',
     /** THE FONT SEAM: a pack that names this key supplies the glyphs (frame = char code − 32, `glyphFrame`); the seedling pack's is authored (G4b). */
     font: 'seedling:font/default',
+    /** `NPC.myPic` by AS3 class (`seedlingEnemyArt.js`'s portrait rows); the Bob Boss's by form, `BobBoss0..2`. */
+    portrait: (who) => `seedling:portrait/${who}`,
 });
 
 /** WHAT G4 DRAWS. With G1–G3c's `drawn` this is the skinned paint's whole roster. */
 export const EFFECT_COVERAGE = Object.freeze({
     drawn: Object.freeze(['Explosion (totem shot, totem death, bomb)', 'SlashHit (press kills: chasers, spinners)', 'Droplet (rain)',
-        'BossTotem white-out cover', 'hearts (drawHealth)', 'blackCover (load fade)', 'talk() bars + typed text (pickup ceremonies; the authored SeedlingFont, G4b)']),
+        'BossTotem white-out cover', 'hearts (drawHealth)', 'blackCover (load fade)', 'talk() bars + typed text (pickup ceremonies; the authored SeedlingFont, G4b)',
+        'NPC dialogues + portraits + ALIGN (talkingNow: talkers, the Watcher, the Bob Boss NPC, the lights intro; G4b-dialogue)']),
     modelled: Object.freeze([]),
     remaining: Object.freeze(['Coin (dead code: never spawned)', 'the grenade light + every Light / nightBmp copy (G5)',
         'DustParticle (intro cutscene only)', 'the Wand-kill and LavaBall explosions (no ledger row)',
-        'NPC dialogues + portraits (no run state)', 'the fire / seed / death covers (no run state)']),
+        'the FinalBoss owl portrait (no run state)', 'the fire / seed / death covers (no run state)']),
 });
 
 // ── constants, each from the AS3 ────────────────────────────────────────
@@ -97,7 +114,27 @@ const RUMBLING_MAX = 240;
 /** `Game.as:519` `blackCoverRate`. */
 const BLACK_COVER_RATE = 0.05;
 /** `Game.as:485-486` the talk bars; `Game.as:1680-1684` `n`, `minM`, `textToImageMargin`. */
-const TALK = Object.freeze({ n: 6, alpha: 0.8, colour: '#000000', textToImageMargin: 8 });
+const TALK = Object.freeze({ n: 6, alpha: 0.8, colour: '#000000', textToImageMargin: 8, minM: 4 });
+/** Every `NPCs/*Pic.png` is a 16 × 16 `Image`, scale 1 (no class sets `myPic.scale`). */
+const PORTRAIT = Object.freeze({ w: 16, h: 16, frame: '#ffffff' });
+
+/**
+ * THE TALKING NPC'S LOOK, by AS3 class: whether its ctor assigns `myPic`
+ * (`NPCs/<Class>.as`; the bare `NPC`, `Sign`, `Totem` and `Statue` never do),
+ * and its `align` (`NPC.as:47` "LEFT"; `Statue.as:24` and
+ * `LightBossController.as:54` "CENTER"). Copied into `Game.ALIGN` /
+ * `Game.talkingPic` by the `talking` setter (`NPC.as:247-254`).
+ */
+export const NPC_TALK_LOOK = Object.freeze({
+    portraits: Object.freeze(['AdnanCharacter', 'ForestCharacter', 'Hermit', 'IntroCharacter', 'Karlore', 'Oracle',
+        'Rekcahdam', 'Sensei', 'Watcher', 'Witch', 'Yeti', 'BobBossNPC']),
+    center: Object.freeze(['Statue', 'LightBossController']),
+});
+/** `talkingNow.tag` → the AS3 class that speaks (a talker's by `PLACED_NPC_TALK`). */
+const SPEAKER_CLASS = Object.freeze({ watcher: 'Watcher', bobboss: 'BobBossNPC', lightboss: 'LightBossController' });
+
+/** The named path for a run that exposes no `talkingNow`: the NPC dialogues are not drawn (the ceremony's still are). */
+export const NO_TALKING_NPC_STATE = 'no talking-NPC state';
 /** `Game.as:1541` `cols`; the heart's 12 px, overlapping by one. */
 const HEART = Object.freeze({ cols: 2, w: 12, h: 12 });
 
@@ -172,11 +209,31 @@ export function effectSkinView(run, { record = null } = {}) {
         lastHit: (() => { const h = read(run, 'playerHits', []) ?? []; return h.length ? { ...h[h.length - 1] } : null; })(),
         deaths: deaths.length,
         loadSpans: (read(run, 'deadFrameSpans', []) ?? []).filter((s) => s.kind === 'load').map((s) => s.frames),
-        dialogue: cer?.dialogue && !cer.dialogue.done ? { text: cer.dialogue.text ?? '', currentCharacter: cer.dialogue.currentCharacter } : null,
+        dialogue: cer?.dialogue && !cer.dialogue.done ? { text: cer.dialogue.text ?? '', currentCharacter: cer.dialogue.currentCharacter }
+            : npcDialogueOf(run),
+        talkState: 'talkingNow' in run ? null : NO_TALKING_NPC_STATE,
         cutscene0: !!(read(run, 'cutscene', []) ?? [])[0],
         camera: read(run, 'cameraNow', null),
         rain: rainOf(record, room),
         world,
+    };
+}
+
+/**
+ * The talking NPC's page, portrait and ALIGN (`Game.talk()`'s `talkingText`,
+ * `talkingPic`, `ALIGN`), or null. ⛔ Without `talkingNow` this is null BY
+ * NAME (`NO_TALKING_NPC_STATE`, on the view's `talkState`).
+ */
+function npcDialogueOf(run) {
+    const now = read(run, 'talkingNow', null);
+    if (!now) return null;
+    const cls = SPEAKER_CLASS[now.tag] ?? PLACED_NPC_TALK[now.tag]?.as3 ?? null;
+    const who = cls === 'BobBossNPC' ? `BobBoss${now.form ?? 0}` : cls;
+    return {
+        text: now.text ?? '', currentCharacter: now.currentCharacter,
+        speaker: { source: now.source, tag: now.tag, cls },
+        align: NPC_TALK_LOOK.center.includes(cls) ? 'CENTER' : 'LEFT',
+        portrait: NPC_TALK_LOOK.portraits.includes(cls) ? KEYS.portrait(who) : null,
     };
 }
 
@@ -500,12 +557,15 @@ function textOps(text, x, y, font, art, colour, R, alpha = 1) {
 }
 
 /**
- * `Game.talk()` (`Game.as:1677-1758`) for a pickup ceremony: the two bars
- * (`Draw.rect` takes ints: 0..26 and 133..160), the text typed to the model's
- * `currentCharacter` (`substr(0, currentCharacter)` — the model has already
- * run this render's step), CENTER-aligned (`Pickup.as:103` sets `ALIGN` after
- * `setTemp` set the NPC's "LEFT"), no portrait, and the bold `<X>` once the
- * page is typed out (unless `cutscene[0]`).
+ * `Game.talk()` (`Game.as:1677-1758`): the two bars (`Draw.rect` takes ints:
+ * 0..26 and 133..160), the text typed to the model's `currentCharacter`
+ * (`substr(0, currentCharacter)` — the model has already run this render's
+ * step), and the bold `<X>` once the page is typed out (unless
+ * `cutscene[0]`). A pickup ceremony is CENTER-aligned (`Pickup.as:103` sets
+ * `ALIGN` after `setTemp` set the NPC's "LEFT") with no portrait; an NPC
+ * carries its class's `align` and `portrait`: a white frame at (minM,
+ * 160·5/6 + minM), `m·2 + w − minM·2` square, the picture at (m, 160·5/6 + m),
+ * and the text pushed right by `m + w` (`:1726-1736`, m = int((26 − 16)/2) = 5).
  */
 function talkOps(view, art, cam, font, R) {
     const d = view.dialogue;
@@ -518,8 +578,21 @@ function talkOps(view, art, cam, font, R) {
     ops.push(rect(cam.x, cam.y + Math.trunc((SCREEN * (n - 1)) / n), SCREEN, Math.trunc(SCREEN / n + 1), TALK.colour, TALK.alpha));
     const shown = R.typedText(d);
     const m = measureText(shown, font);
-    const w = TALK.textToImageMargin;
-    const alignOffsetX = Math.trunc((SCREEN - w - m.w) / 2);
+    let w = TALK.textToImageMargin;
+    if (d.portrait) {
+        const pm = Math.trunc((bar - PORTRAIT.h) / 2);
+        const top = (SCREEN * (n - 1)) / n;
+        const side = pm * 2 + PORTRAIT.w - TALK.minM * 2;
+        const fy = Math.trunc(top + TALK.minM);
+        ops.push(rect(cam.x + TALK.minM, cam.y + fy, side, side, PORTRAIT.frame, 1));
+        const at = { x: cam.x + pm, y: cam.y + Math.trunc(top + pm) };
+        const fallback = { rect: { x: at.x, y: at.y, w: PORTRAIT.w, h: PORTRAIT.h, right: at.x + PORTRAIT.w, bottom: at.y + PORTRAIT.h },
+            colour: ENEMY_COLOUR, alpha: 1, layer: 0 };
+        ops.push(art?.has(d.portrait) ? spriteOp(art, d.portrait, 0, at, { layer: 0, fallback }) : fallback);
+        w += pm + PORTRAIT.w;
+    }
+    const align = d.align ?? 'CENTER';
+    const alignOffsetX = align === 'CENTER' ? Math.trunc((SCREEN - w - m.w) / 2) : align === 'RIGHT' ? SCREEN - w - m.w : 0;
     const tx = Math.floor(w + alignOffsetX);
     const ty = Math.floor((SCREEN * (n - 1 / 2)) / n - m.h / 2 + 1);
     ops.push(...textOps(shown, cam.x + tx, cam.y + ty, font, art, '#ffffff', R));
@@ -539,7 +612,46 @@ function talkOps(view, art, cam, font, R) {
  * and the black fade (`cover()`). `cam` is the camera rect's top-left in room
  * pixels (⚖ the model's camera in room mode too).
  */
-export function screenOps(view, art, { skin, cam, font = resolveFont(art), rules = EFFECT_RULES } = {}) {
+export function screenOps(view, art, { skin, cam, font = resolveFont(art), rules = EFFECT_RULES, fitTo = null } = {}) {
+    const ops = screenOpsAt(view, art, { skin, cam, font, rules });
+    return fitTo && cam ? fitOverlayOps(ops, cam, overlayRect(cam, fitTo)) : ops;
+}
+
+/**
+ * ⚖ THE ROOM-MODE CLAMP (G4b F1): the rect the 160 × 160 overlay screen is
+ * fitted into. On an axis where the room (the canvas) is narrower than the
+ * screen, the whole room on that axis; elsewhere the camera's own span.
+ */
+export function overlayRect(cam, room) {
+    const axis = (c, size) => (size < SCREEN ? [0, size] : [c, SCREEN]);
+    const [x, w] = axis(cam.x, room.width);
+    const [y, h] = axis(cam.y, room.height);
+    return { x, y, w, h };
+}
+
+/**
+ * The overlay ops fitted into `rect`: scaled uniformly by min(w, h) / 160 and
+ * centred in it. A rect that IS the camera's screen returns `ops` itself, so a
+ * room 160 px or wider is untouched op for op.
+ */
+export function fitOverlayOps(ops, cam, rect) {
+    if (rect.x === cam.x && rect.y === cam.y && rect.w === SCREEN && rect.h === SCREEN) return ops;
+    const k = Math.min(rect.w, rect.h) / SCREEN;
+    const X = (x) => rect.x + (rect.w - SCREEN * k) / 2 + (x - cam.x) * k;
+    const Y = (y) => rect.y + (rect.h - SCREEN * k) / 2 + (y - cam.y) * k;
+    const fitRect = (r) => ({ x: X(r.x), y: Y(r.y), w: (r.w ?? r.right - r.x) * k, h: (r.h ?? r.bottom - r.y) * k,
+        right: X(r.right ?? r.x + r.w), bottom: Y(r.bottom ?? r.y + r.h) });
+    return ops.map((op) => {
+        if (!op.sheetRef) return { ...op, rect: fitRect(op.rect) };
+        // a sprite turns and scales about its pivot (`paintOps`): move the pivot, scale the picture
+        const px = op.dx + op.pivotX;
+        const py = op.dy + op.pivotY;
+        return { ...op, dx: X(px) - op.pivotX, dy: Y(py) - op.pivotY, scaleX: (op.scaleX ?? 1) * k, scaleY: (op.scaleY ?? 1) * k,
+            ...(op.fallback ? { fallback: { ...op.fallback, rect: fitRect(op.fallback.rect) } } : {}) };
+    });
+}
+
+function screenOpsAt(view, art, { skin, cam, font, rules }) {
     if (!view || !skin || !cam) return [];
     const R = rules === EFFECT_RULES ? rules : { ...EFFECT_RULES, ...rules };
     const ops = [...talkOps(view, art, cam, font, R)];
