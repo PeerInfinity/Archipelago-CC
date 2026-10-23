@@ -829,12 +829,15 @@ function cloneState(state) {
 /**
  * The obstacle id standing SHUT at (x, y) for this inventory, or `null` — the
  * one clearance question `step` and `whyBlocked` both ask. ⛓ An obstacle in
- * `state.broken` is open whatever its `clear_set` says.
+ * `state.broken` is open whatever its `clear_set` says — read at its canonical
+ * cell (`at`, where `strikeTarget` records a multi-cell obstacle's strike; the
+ * scripted `tileAt` reads the same key), so every cell of a struck rope run opens.
  */
 function shutObstacleAt(world, state, x, y, inv, clearanceOpts) {
     const obstacleId = getObstacle(world, x, y);
     if (!obstacleId) return null;
-    if (state.broken !== undefined && state.broken.includes(posKey(x, y))) return null;
+    const brokenAt = world.obstacleLib?.[obstacleId]?.at ?? posKey(x, y);
+    if (state.broken !== undefined && state.broken.includes(brokenAt)) return null;
     return isObstacleCleared(obstacleId, inv, world.obstacleLib, clearanceOpts) ? null : obstacleId;
 }
 
