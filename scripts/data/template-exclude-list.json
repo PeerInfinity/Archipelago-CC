@@ -47,7 +47,12 @@
     }
   ],
   "ut_fuzz_exclude_list_comment": "Excluded from UT fuzz tests (bundled worlds) -- typically hangs or timeouts.",
-  "ut_fuzz_exclude_list": [],
+  "ut_fuzz_exclude_list": [
+    {
+      "name": "SMZ3.yaml",
+      "reason": "Logic is TotalSMZ3's Progression object model (lambda items: …), which this system cannot evaluate: the JS reaches 107/316 locations with no items AND with all items (spoiler test fails at sphere 0: +70 locations), and world_generator needs --lossy (313 True_() placeholders). No Progression port (user ruling 2026-10-21)."
+    }
+  ],
   "main_test_exclude_list_comment": "Excluded from spoiler-minimal and multiclient tests, and from worldgen preset generation.",
   "main_test_exclude_list": [
     {
@@ -96,7 +101,7 @@
     },
     {
       "name": "SMZ3.yaml",
-      "reason": "Temporarily excluded. It takes too long to process. 186 seconds for the multiclient test, which also fails because of self-locking items."
+      "reason": "Logic is TotalSMZ3's Progression object model (lambda items: …), which this system cannot evaluate: the JS reaches 107/316 locations with no items AND with all items (spoiler test fails at sphere 0: +70 locations), and world_generator needs --lossy (313 True_() placeholders). No Progression port (user ruling 2026-10-21)."
     },
     {
       "name": "Yacht Dice.yaml",
