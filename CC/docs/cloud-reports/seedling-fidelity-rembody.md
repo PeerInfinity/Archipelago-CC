@@ -230,6 +230,14 @@ By construction, OFF is the old predicate (`o.removed && !undefined`). Measured 
 - the identity block equals the base (every row; the head file md5 `e484c3b2…` is the one MASKS and SKINSWING published);
 - constants PASS, surface line shifts only.
 
+## CI on this branch
+
+| head | `JavaScript Unit Tests` |
+|---|---|
+| `4de98f31` (D2) | **red**: vitest shard 2/3, headless gate shard 1, browser gate shard 1. The cause: the carried SKINSWING probe (`560cc596`) was not yet in the generated instruments index. The next head changes only the bot log and that regenerated index, and it is green. The model change is not the cause |
+| `db9e32fa` (the last code-bearing head) | **success**, run 39987203640. `ci-vitest-summary.mjs`: vitest (unfiltered) 22278 passed / 0 failed; slow battery 265 / 265; every gate shard green |
+| `4ce1ceee` and after (docs/evidence only) | the path filter does not trigger `JavaScript Unit Tests`; `unittests` success |
+
 ## Rows to BANK
 
 - `fidelityRemBody.test.js` (7 rows): the witness ON 0 px / OFF t63, the three ON = OFF tapes, the forecast pair, and the
