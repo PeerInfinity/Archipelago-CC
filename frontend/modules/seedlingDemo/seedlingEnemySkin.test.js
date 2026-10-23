@@ -60,12 +60,15 @@ const CHOP = ['primary', '', '', '', '', '', '', '', '', '', '', '', '', ''];
  * THE TAPES — one per family, in a room the census puts it in. `at` is the
  * `Game(level, x, y)` spawn; `want` is what the tape must really reach.
  */
-// ⛓ planning-10's MASKS flip (⚖ user, 2026-10-22; js-planning-8's ruling (a)): `lavarunner-L71` and `bulb-L74` run with
-//   `pixelMaskSightLines` OFF — these goldens pin the ART's walk/die frames, not fight fidelity. With it ON the stand's
-//   FIGHT swing never lands (the chaser line of sight, `Player.as:917`, against the walls near [96,200] L71 / [80,100]
-//   L74): 0 'die' frames (the ON row below pins that, so a model change shows). NOT game-witnessed — follow-ups: (1)
-//   fidelity witnesses those two swings on wasm; (2) js then re-sites the stands (if the game blocks them) or fidelity
-//   fixes the model (if it lands them), and this OFF pin goes.
+// ⛓ planning-10's MASKS flip (⚖ user, 2026-10-22; js-planning-8's ruling (a)), as fidelity SKINSWING witnessed it
+//   (CC/docs/cloud-reports/seedling-fidelity-skinswing.md): `lavarunner-L71` runs with `pixelMaskSightLines` OFF — this
+//   golden pins the ART's walk/die frames, not fight fidelity. Its boot [96,200] puts the player INSIDE a "Dark Stone"
+//   tile at (104,208) (game-witnessed): every swing line's first sample is the player's own tile, so with it ON the FIGHT
+//   swing never lands, on the game as in the model (the ON row below pins 0 'die' frames — game-true). The clean
+//   re-site (80,208) waits on fidelity's named gap: in the game a body removed this tick still blocks the bodies that
+//   update after it (`World.remove` only queues it), and the model does not do that — when that is modelled, re-site
+//   and drop this pin. `bulb-L74` was re-sited from [80,100] (the same Dark Stone boot, player (88,108)) to the
+//   game-measured [64,100], which reproduces at 0 px, and runs at the default (ON).
 export const TAPES = Object.freeze([
     { name: 'bob-L14', level: 14, at: [16, 112], n: 300, keys: FIGHT, family: 'Bob', want: { anims: ['walk', 'die'], tint: true, fade: true } },
     { name: 'lavarunner-L71', level: 71, at: [96, 200], n: 300, keys: FIGHT, family: 'LavaRunner', want: { anims: ['walk', 'die'], tint: true, mirror: true }, fidelity: { pixelMaskSightLines: false } },
@@ -73,7 +76,7 @@ export const TAPES = Object.freeze([
     { name: 'jellyfish-L98', level: 98, at: [100, 80], n: 200, keys: FIGHT, family: 'Jellyfish', want: { anims: ['walk'] } },
     { name: 'flyer-L101', level: 101, at: [120, 250], n: 120, keys: [''], family: 'Flyer', want: { anims: ['fall'] } },
     { name: 'flyer-walk-L101', level: 101, at: [112, 240], n: 120, keys: ['left'], family: 'Flyer', want: { anims: ['walk'] } },
-    { name: 'bulb-L74', level: 74, at: [80, 100], n: 300, keys: FIGHT, family: 'Bulb', want: { anims: ['walk', 'drop', 'die'] }, fidelity: { pixelMaskSightLines: false } },
+    { name: 'bulb-L74', level: 74, at: [64, 100], n: 300, keys: FIGHT, family: 'Bulb', want: { anims: ['walk', 'drop', 'die'] } },
     { name: 'puncher-L26', level: 26, at: [48, 160], n: 300, keys: FIGHT, family: 'Puncher', want: { anims: ['walk-up', 'walk-side', 'attack-up', 'stand-up'], tint: true, mirror: true } },
     { name: 'bobsoldier-L30', level: 30, at: [80, 80], n: 200, keys: FIGHT, family: 'BobSoldier', want: { anims: ['walk'], keys: ['seedling:enemy/lameSword'], tint: true } },
     { name: 'spinner-L18', level: 18, at: [80, 80], n: 200, keys: FIGHT, family: 'Spinner', want: { keys: ['seedling:enemy/spinner'], tint: true } },
@@ -161,9 +164,9 @@ describe('1–2. golden body ops (frame CHOICE, not pixels)', () => {
         });
     }
 
-    // ⛓ planning-10's MASKS flip: the two OFF-pinned stands, run with `pixelMaskSightLines` ON, reach 0 'die' frames
-    //   today (the swing never lands) — this row says so out loud, so a model change cannot drift past the OFF pin.
-    it.each(['lavarunner-L71', 'bulb-L74'])('the %s stand with pixelMaskSightLines ON: its FIGHT swing never lands (0 die frames)', (name) => {
+    // ⛓ the OFF-pinned L71 stand, run with `pixelMaskSightLines` ON, reaches 0 'die' frames — game-true (SKINSWING: the
+    //   player boots inside Dark Stone and the game lands no swing either). Said out loud so a model change shows.
+    it.each(['lavarunner-L71'])('the %s stand with pixelMaskSightLines ON: its FIGHT swing never lands (0 die frames)', (name) => {
         const tape = TAPES.find((t) => t.name === name);
         const rows = runTape({ ...tape, fidelity: { pixelMaskSightLines: true } });
         const anims = rows.flatMap((r) => [...r.skin.bodies.values()].map((b) => b.sprite?.anim));

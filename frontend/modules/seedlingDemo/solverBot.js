@@ -89,7 +89,7 @@ import {
     SPINNER, hammerHitsPlayer,
     KILL_ARM_POLICY,
     DOWN, EMPTY_SWORD_WINDOW, LEFT, RIGHT, SLASH_HIT_TICKS, SLASH_REACH, UP,
-    distanceRectPoint, slashReachFor, slashRect, SPEAR_HIT_TICKS_UNMODELLED, spearRect,
+    distanceRectPoint, slashReachFor, slashRect, SPEAR_HIT_TICKS, spearRect,
     pressRectTouches, spearHitRect,
     swordWindowReplace, swordWindowSchedule, swordWindowStep,
     /**
@@ -14337,7 +14337,7 @@ function boxGapFrom(h, box) {
 
 /**
  * A live chaser (`strikeBodies`) that could overlap the thrust's rect, from the player's position facing `dir`, by
- * the thrust's last repeat (`SPEAR_HIT_TICKS_UNMODELLED`, T+5) at its own `speed`: its id, or null. ⛔ The repeats are
+ * the thrust's last repeat (`SPEAR_HIT_TICKS`, T+5) at its own `speed`: its id, or null. ⛔ The repeats are
  * inert on the TURRET (a spear landing clears `hitByDarkStuff`, so the 30-tick i-frame holds them off — game-measured,
  * C3 D1), not on a body a dark-shield bump has latched.
  */
@@ -14345,7 +14345,7 @@ function spearRepeatReaches(run, dir) {
     // ⛓ fidelity SPEARRECT: with `spearGameTest` ON the run steps the repeats (`levelRun.spearRepeatsNow`), so a body
     // that walks into them is the model's answer, not a gap to plan around.
     if (CONTACT_FIDELITY.spearGameTest) return null;
-    const t = SPEAR_HIT_TICKS_UNMODELLED.ticks.at(-1) + 1;
+    const t = SPEAR_HIT_TICKS.ticks.at(-1) + 1;
     const thrust = spearRect(run.state.x, run.state.y, dir);
     for (const b of run.entities('strikeBodies') ?? []) {
         if (!b.rect) continue;
@@ -14504,8 +14504,8 @@ function killIceTurretBySpear(run, perTick, id, resolved, ctx) {
         const near = spearRepeatReaches(run, stance.dir);
         if (near) {
             refuse(`${near} could walk into the thrust's rect during its repeats (T+1/T+3/T+5 on the game, `
-                + '`presses.SPEAR_HIT_TICKS_UNMODELLED`): the game can hit a latched body there and the model would '
-                + 'not (C3 D1, `jellyfish@56,48` at t39)');
+                + '`presses.SPEAR_HIT_TICKS`, unmodelled on this arm): the game can hit a latched body there and the '
+                + 'model would not (C3 D1, `jellyfish@56,48` at t39)');
         }
         step(PRESS);
         presses += 1;

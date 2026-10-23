@@ -177,7 +177,7 @@ export { fallDestination, hazardFlagsFor, PhysicsV2Error, playerBoxAt, terrainPr
 // presses.js — botDriverV2, solverBot, strikePolicy · seedling 10, physics 5
 export {
     auditFire, DARK_SWORD_DAMAGE, distanceRectPoint, DOWN, EMPTY_SWORD_WINDOW, LEFT, RIGHT, SLASH_HIT_TICKS, SLASH_REACH,
-    slashReachFor, slashRect, SPEAR_HIT_TICKS_UNMODELLED, spearRect, SWORD_DAMAGE, swordWindowReplace, swordWindowSchedule,
+    slashReachFor, slashRect, SPEAR_HIT_TICKS, spearRect, SWORD_DAMAGE, swordWindowReplace, swordWindowSchedule,
     swordWindowStep, UP,
 } from './presses.js';
 // ⛓ fidelity SPEARRECT: the spear's rect and its test as the game runs them (`spearGameTest`), for the spear stances.
