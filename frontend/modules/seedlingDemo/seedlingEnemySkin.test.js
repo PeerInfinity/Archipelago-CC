@@ -61,17 +61,15 @@ const CHOP = ['primary', '', '', '', '', '', '', '', '', '', '', '', '', ''];
  * `Game(level, x, y)` spawn; `want` is what the tape must really reach.
  */
 // ⛓ planning-10's MASKS flip (⚖ user, 2026-10-22; js-planning-8's ruling (a)), as fidelity SKINSWING witnessed it
-//   (CC/docs/cloud-reports/seedling-fidelity-skinswing.md): `lavarunner-L71` runs with `pixelMaskSightLines` OFF — this
-//   golden pins the ART's walk/die frames, not fight fidelity. Its boot [96,200] puts the player INSIDE a "Dark Stone"
-//   tile at (104,208) (game-witnessed): every swing line's first sample is the player's own tile, so with it ON the FIGHT
-//   swing never lands, on the game as in the model (the ON row below pins 0 'die' frames — game-true). The clean
-//   re-site (80,208) waits on fidelity's named gap: in the game a body removed this tick still blocks the bodies that
-//   update after it (`World.remove` only queues it), and the model does not do that — when that is modelled, re-site
-//   and drop this pin. `bulb-L74` was re-sited from [80,100] (the same Dark Stone boot, player (88,108)) to the
-//   game-measured [64,100], which reproduces at 0 px, and runs at the default (ON).
+//   (CC/docs/cloud-reports/seedling-fidelity-skinswing.md): `lavarunner-L71` was booted at [96,200], which puts the
+//   player INSIDE a "Dark Stone" tile at (104,208) (game-witnessed), so with `pixelMaskSightLines` ON the FIGHT swing
+//   never lands, on the game as in the model. It is re-sited to the game-measured [80,208] and runs at the defaults:
+//   fidelity REMBODY (`removedBodyBlocks`) models the removal-tick body that still blocks, so SKINSWING's
+//   `skinswing-l71-resite` matches the game at 0 px (first 'die' at t33 on both). The OLD site's 0-die fact is kept by
+//   the row below. `bulb-L74` was re-sited the same way, from [80,100] (player (88,108)) to [64,100].
 export const TAPES = Object.freeze([
     { name: 'bob-L14', level: 14, at: [16, 112], n: 300, keys: FIGHT, family: 'Bob', want: { anims: ['walk', 'die'], tint: true, fade: true } },
-    { name: 'lavarunner-L71', level: 71, at: [96, 200], n: 300, keys: FIGHT, family: 'LavaRunner', want: { anims: ['walk', 'die'], tint: true, mirror: true }, fidelity: { pixelMaskSightLines: false } },
+    { name: 'lavarunner-L71', level: 71, at: [80, 208], n: 300, keys: FIGHT, family: 'LavaRunner', want: { anims: ['walk', 'die'], tint: true, mirror: true } },
     { name: 'lavarunner-L72', level: 72, at: [120, 200], n: 160, keys: CHOP, family: 'LavaRunner', want: { anims: ['swim'] } },
     { name: 'jellyfish-L98', level: 98, at: [100, 80], n: 200, keys: FIGHT, family: 'Jellyfish', want: { anims: ['walk'] } },
     { name: 'flyer-L101', level: 101, at: [120, 250], n: 120, keys: [''], family: 'Flyer', want: { anims: ['fall'] } },
@@ -164,11 +162,12 @@ describe('1–2. golden body ops (frame CHOICE, not pixels)', () => {
         });
     }
 
-    // ⛓ the OFF-pinned L71 stand, run with `pixelMaskSightLines` ON, reaches 0 'die' frames — game-true (SKINSWING: the
-    //   player boots inside Dark Stone and the game lands no swing either). Said out loud so a model change shows.
-    it.each(['lavarunner-L71'])('the %s stand with pixelMaskSightLines ON: its FIGHT swing never lands (0 die frames)', (name) => {
+    // ⛓ the L71 stand's OLD site [96,200], at the defaults, reaches 0 'die' frames — game-true (SKINSWING
+    //   `skinswing-l71-lavarunner`: the player boots inside Dark Stone and the game lands no swing either). Said out
+    //   loud so a model change shows.
+    it.each([['lavarunner-L71', [96, 200]]])('the %s stand at its old site %j: its FIGHT swing never lands (0 die frames)', (name, at) => {
         const tape = TAPES.find((t) => t.name === name);
-        const rows = runTape({ ...tape, fidelity: { pixelMaskSightLines: true } });
+        const rows = runTape({ ...tape, at });
         const anims = rows.flatMap((r) => [...r.skin.bodies.values()].map((b) => b.sprite?.anim));
         expect(anims.filter((a) => a === 'die')).toEqual([]);
     });
