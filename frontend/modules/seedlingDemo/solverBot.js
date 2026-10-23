@@ -16219,10 +16219,13 @@ const TENTACLE_BEAST_FIGHT_BOUND = 6000;
 function playTentacleBeastPolicy(r, perTick, params, ctx) {
     const mem = createTentacleBeastPolicy(params);
     const deathsBefore = (r.ledger('playerHits') ?? []).filter((h) => h.died).length;
+    // ⛓ fidelity HITLESS: the landed `Player.hit`s of this play (read by the ranking under `tentacleHitlessFirst`).
+    const hitsBefore = (r.ledger('playerHits') ?? []).length;
+    const hitsNow = () => (r.ledger('playerHits') ?? []).length - hitsBefore;
     for (let spent = 0; spent <= TENTACLE_BEAST_FIGHT_BOUND; spent += 1) {
         const view = r.entities('tentacleBeastFight');
         if (view === null) return { ok: false, why: `the room (level ${r.level}) holds no fight any more`, spent };
-        if (view.mouth) return { ok: true, spent, report: view.report, log: mem.log };
+        if (view.mouth) return { ok: true, spent, report: view.report, log: mem.log, hits: hitsNow() };
         const held = tentacleBeastPolicyStep(mem, { view, p: r.state, slashing: r.progress('slashInfo').state.slashing });
         if (perTick) perTick.push(held);
         const { transition } = r.advance(held);
@@ -16235,6 +16238,24 @@ function playTentacleBeastPolicy(r, perTick, params, ctx) {
     }
     return { ok: false, why: `the mouth is not open after ${TENTACLE_BEAST_FIGHT_BOUND} ticks`, spent: TENTACLE_BEAST_FIGHT_BOUND };
 }
+/**
+ * ⛓ fidelity HITLESS — the ranking of the variants a fork played (`tried`, in `TENTACLE_BEAST_POLICY_VARIANTS` order):
+ * of those that opened the mouth without a death (`ok`), no hit first, then the fewest hits, then the fewest ticks
+ * (`spent`), then list order. Null when none is `ok`. `rule` says which test decided ('hitless' | 'fewest-hits'),
+ * `tried` how many variants were played and `hitless` how many of them took no hit.
+ */
+export function chooseTentacleVariant(tried) {
+    let best = null;
+    for (const [i, t] of tried.entries()) {
+        if (!t.ok) continue;
+        if (best === null || t.hits < best.hits || (t.hits === best.hits && t.spent < best.spent)) {
+            best = { variant: i, hits: t.hits, spent: t.spent };
+        }
+    }
+    if (best === null) return null;
+    return { rule: best.hits === 0 ? 'hitless' : 'fewest-hits', variant: best.variant, hits: best.hits,
+        tried: tried.length, hitless: tried.filter((t) => t.ok && t.hits === 0).length };
+}
 function execTentacleBeast(run, perTick, resolved, ctx) {
     const obstacle = { kind: 'solid', id: resolved.boss, tag: 'tentaclebeast' };
     if (resolved.held === false) {
@@ -16244,7 +16265,40 @@ function execTentacleBeast(run, perTick, resolved, ctx) {
     const from = perTick.length;
     const tried = [];
     let params = TENTACLE_BEAST_POLICY_VARIANTS[0];
-    if (typeof ctx.fork === 'function') {
+    let choice = null;
+    if (typeof ctx.fork === 'function' && CONTACT_FIDELITY.tentacleHitlessFirst) {
+        /**
+         * ⛓⛓ fidelity HITLESS (`CONTACT_FIDELITY.tentacleHitlessFirst`; OFF the first-without-a-death loop below,
+         * byte-identical). Every variant is played on its own fork; among those that open the mouth without a death
+         * the committed one takes no hit if any does, else the fewest hits, then the fewest ticks, then list order.
+         * A hit stays acceptable when no variant is hitless — `choice` says which rule picked it, `tried` holds each
+         * variant's hits.
+         */
+        params = null;
+        for (const v of TENTACLE_BEAST_POLICY_VARIANTS) {
+            const f = ctx.fork();
+            if (!f) break;
+            let r;
+            try {
+                r = playTentacleBeastPolicy(f, null, v, ctx);
+            } catch (e) {
+                // A whirlpool's drown (`Player.drown()` from outside the player) is a DEATH the run refuses by name
+                // rather than steps (`levelRun.stepTentacleRuntimeNow`, bosskills D3): on a fork it rejects that
+                // variant as a death does. Playing every variant meets it more often than the first-without-a-death
+                // loop did, where it ended the whole solve. Anything else still throws.
+                if (!/calls `Player\.drown\(\)` from outside the player/.test(String(e?.message))) throw e;
+                r = { ok: false, why: `the player drowned: ${e.message}`, spent: null };
+            }
+            tried.push({ params: { ...v }, ok: r.ok, spent: r.spent, why: r.why ?? null, hits: r.hits ?? null });
+        }
+        choice = chooseTentacleVariant(tried);
+        if (choice === null) {
+            throw new SolverRefusal(`${ctx.what}: no Tentacled Beast policy variant opens the mouth of ${resolved.boss} `
+                + `without a death on a fork of this run — ${tried.map((t) => `${JSON.stringify(t.params)}: ${t.why}`).join('; ')}`,
+            { obstacle });
+        }
+        params = TENTACLE_BEAST_POLICY_VARIANTS[choice.variant];
+    } else if (typeof ctx.fork === 'function') {
         params = null;
         for (const v of TENTACLE_BEAST_POLICY_VARIANTS) {
             const f = ctx.fork();
@@ -16264,8 +16318,13 @@ function execTentacleBeast(run, perTick, resolved, ctx) {
         throw new SolverRefusal(`${ctx.what}: the Tentacled Beast policy ${JSON.stringify(params)} did not open the `
             + `mouth of ${resolved.boss}: ${r.why}`, { obstacle });
     }
+    if (choice !== null && r.hits !== choice.hits) {
+        // ⛓ HITLESS: the run plays what its fork played (the fork is the run's own replay); a different count is a bug.
+        throw new SolverRefusal(`${ctx.what}: the Tentacled Beast policy ${JSON.stringify(params)} took ${r.hits} hit(s) on `
+            + `the run where its fork took ${choice.hits}`, { obstacle });
+    }
     return { verb: 'tentaclebeast', target: resolved.boss, from, ticks: perTick.length - from, params: { ...params },
-        tried, report: r.report };
+        tried, report: r.report, ...(choice !== null ? { choice } : {}) };
 }
 
 function execFight(run, perTick, resolved, ctx) {

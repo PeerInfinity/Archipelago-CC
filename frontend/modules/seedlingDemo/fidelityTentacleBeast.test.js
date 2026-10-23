@@ -38,7 +38,7 @@ import {
     TENTACLE, TENTACLE_ANIMS, TENTACLE_BEAST, TENTACLE_BEAST_ANIMS, TentacleDrawStream, createTentacleBeastFight,
     hitTentacle, tentacleStreamRefusal, tentacleSwipeRect,
 } from './tentacleBeast.js';
-import { SolverRefusal, solveSegment } from './solverBot.js';
+import { SolverRefusal, chooseTentacleVariant, solveSegment } from './solverBot.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const WITNESS_DIR = join(HERE, 'fixtures', 'tentaclebeast-witness');
@@ -315,5 +315,71 @@ describe('bossfork D1b — a reach-exit at the mouth waits out "dying" (`awaitTe
             expect(run.level).toBe(58);
             expect(out.perTick.map((k) => [...k].sort().join('+'))).toEqual(per.map((k) => [...k].sort().join('+')));
         });
+    }, 120000);
+});
+
+/**
+ * ⛓⛓ fidelity HITLESS (wave 27, ⚖ user 2026-10-22 "Flip now, hitless later"; `CONTACT_FIDELITY.tentacleHitlessFirst`,
+ * OFF) — THE FORK RANKS THE VARIANTS: no hit first, then the fewest hits, then ticks. OFF the fork commits the first
+ * variant that opens the mouth without a death, and on `tb-solve-s2`'s own staging (seed 2) that is variant 0, which
+ * takes a swipe at t393 — the game took the same swipe playing that plan (the witness ends at `hits` 1). ON all five are
+ * played: 0 takes 1 hit, 1/3/4 none, 2 dies; the fewest-tick hitless one (1, 1485 t) is committed.
+ * Seed 7: variant 1's fork walks into a whirlpool's centre (the drown the run refuses by name, a death) — ON that
+ * variant is rejected as a death is, where playing it ended the whole solve.
+ *
+ * Mutants (predicted, copy + restore): H1 rank by ticks before hits → the seed-2 row reds (variant 0, 847 t, 1 hit);
+ * H2 drop the drown catch → the seed-7 row throws the levelRun drown error; H3 `hits` counted from the run's whole
+ * ledger (no `hitsBefore`) → nothing on these stagings (the arrival holds no earlier hit) — survives, named.
+ */
+describe('fidelity HITLESS — the Tentacled Beast\'s fork prefers a variant that takes no hit (`tentacleHitlessFirst`)', () => {
+    const w = witnesses.find((x) => x.name === 'tb-solve-s2');
+    const goals = [
+        { kind: 'clear-tag', tag: { level: 57, tag: 0 }, at: { x: 80, y: 48 }, obstacle: 'tentaclebeast@80,48' },
+        { kind: 'reach-exit', exit: { x: 96, y: 64 } },
+    ];
+    const solveAt = (seed, on) => withContactFidelity({ tentacleBeastFight: true, tentacleHitlessFirst: on }, () => {
+        const staging = stagingFromTape(parseTape(JSON.stringify({ ...w.tape, rng: { ...w.tape.rng, seed }, inputs: [],
+            tick_count: 0 })));
+        const run = createRunForStaging(staging, SRC);
+        const out = solveSegment({ run, goals, name: `hitless-s${seed}`, boot: staging.boot,
+            forkRun: () => createRunForStaging(staging, SRC) });
+        const rec = out.records.find((r) => r.verb === 'tentaclebeast');
+        return { run, out, rec, hits: (run.ledger('playerHits') ?? []).map((h) => `${h.t}:${h.source}`) };
+    });
+
+    it('ships OFF', () => {
+        expect(CONTACT_FIDELITY.tentacleHitlessFirst).toBe(false);
+    });
+
+    it('the ranking: hitless, then fewest hits, then ticks, then list order; a death never wins; none ok → null', () => {
+        const row = (ok, hits, spent) => ({ ok, hits, spent });
+        expect(chooseTentacleVariant([row(true, 1, 800), row(true, 0, 1500), row(false, null, 4000), row(true, 0, 1400)]))
+            .toEqual({ rule: 'hitless', variant: 3, hits: 0, tried: 4, hitless: 2 });
+        expect(chooseTentacleVariant([row(true, 2, 500), row(true, 1, 900), row(true, 1, 700)]))
+            .toEqual({ rule: 'fewest-hits', variant: 2, hits: 1, tried: 3, hitless: 0 });
+        expect(chooseTentacleVariant([row(true, 0, 900), row(true, 0, 900)]).variant).toBe(0);
+        expect(chooseTentacleVariant([row(false, null, 10), row(false, null, 20)])).toBeNull();
+        expect(chooseTentacleVariant([])).toBeNull();
+    });
+
+    it('seed 2 (tb-solve-s2\'s staging): OFF commits variant 0 and its swipe at t393, the game\'s plan; ON a hitless one', () => {
+        const off = solveAt(2, false);
+        expect([off.out.perTick.length, off.hits, off.rec.tried.length, off.rec.choice]).toEqual([w.tape.tick_count, ['393:tentacle'], 1, undefined]);
+        expect(w.samples.at(-1).hits).toBe(1);
+        const on = solveAt(2, true);
+        expect(on.hits).toEqual([]);
+        expect(on.rec.choice).toEqual({ rule: 'hitless', variant: 1, hits: 0, tried: 5, hitless: 3 });
+        expect(on.rec.tried.map((t) => [t.ok, t.hits, t.spent])).toEqual([[true, 1, 847], [true, 0, 1485],
+            [false, null, 4272], [true, 0, 2269], [true, 0, 1616]]);
+        expect([on.run.level, on.run.playerDeaths.length, on.out.perTick.length]).toEqual([58, 0, 1693]);
+        expect(on.run.earnedClears.map((c) => `${c.level}:${c.tag}`)).toContain('57:0');
+    }, 120000);
+
+    it('seed 7: ON, a variant whose fork drowns at a whirlpool\'s centre is rejected as a death, and a hitless one wins', () => {
+        const on = solveAt(7, true);
+        expect(on.rec.tried[1]).toMatchObject({ ok: false, hits: null });
+        expect(on.rec.tried[1].why).toMatch(/^the player drowned: .*calls `Player\.drown\(\)` from outside the player/);
+        expect(on.rec.choice).toEqual({ rule: 'hitless', variant: 0, hits: 0, tried: 5, hitless: 3 });
+        expect([on.hits, on.run.level, on.out.perTick.length]).toEqual([[], 58, 955]);
     }, 120000);
 });

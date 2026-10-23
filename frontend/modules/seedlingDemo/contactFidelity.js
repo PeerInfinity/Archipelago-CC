@@ -970,6 +970,17 @@ export const CONTACT_FIDELITY = {
      * standard ON/OFF + spearrect green. The press ledger gains the T+3 / T+5 rows (`repeat: 2|4`).
      */
     spearGameTest: true,
+    /**
+     * fidelity HITLESS (wave 27, ⚖ user 2026-10-22 "Flip now, hitless later") — THE TENTACLED BEAST'S FIGHT PREFERS A
+     * VARIANT THAT TAKES NO HIT (`solverBot.execTentacleBeast`). The fork (BOSSFORK) committed the FIRST
+     * `TENTACLE_BEAST_POLICY_VARIANTS` row that opened the mouth without a death, so a variant that took a swipe
+     * could win over a later hitless one. ON: every variant is played on its own fork and the committed one is ranked
+     * no hit first, then the fewest hits, then the fewest ticks (the list order breaks a tie); a hit stays ACCEPTABLE
+     * when no variant is hitless (the verb's record names how many were tried and each one's hits). Only deaths are
+     * refused, as before. OFF: byte-identical (first-without-a-death). `SEEDLING_TENTACLE_HITLESS_FIRST=0|1` for a
+     * node measurement.
+     */
+    tentacleHitlessFirst: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1161,6 +1172,9 @@ if (globalThis.process?.env?.SEEDLING_PIXEL_MASK_SIGHT_LINES === '0') CONTACT_FI
 // ⛓ fidelity SPEARRECT: `SEEDLING_SPEAR_GAME_TEST=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_SPEAR_GAME_TEST === '1') CONTACT_FIDELITY.spearGameTest = true;
 if (globalThis.process?.env?.SEEDLING_SPEAR_GAME_TEST === '0') CONTACT_FIDELITY.spearGameTest = false;
+// ⛓ fidelity HITLESS: `SEEDLING_TENTACLE_HITLESS_FIRST=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_TENTACLE_HITLESS_FIRST === '1') CONTACT_FIDELITY.tentacleHitlessFirst = true;
+if (globalThis.process?.env?.SEEDLING_TENTACLE_HITLESS_FIRST === '0') CONTACT_FIDELITY.tentacleHitlessFirst = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
