@@ -1745,6 +1745,9 @@ function* subsetsOfSize(items, k, from = 0, acc = []) {
 function blockWorldAccessRules(world) {
     const lib = world.obstacleLib ?? DEFAULT_OBSTACLES;
     const held = new Set(Object.values(world.buttonLib ?? {}).map((b) => b.holds).filter(Boolean));
+    // ⛓ rules-l39: a rope's `activates` token is derived per step from its cut (`ropeTokens`), never carried —
+    // like a button's held token it is not an item of the axis (a rope run's `clear_set` names it).
+    for (const entry of Object.values(lib)) if (entry?.activates) held.add(entry.activates);
     const axis = new Set();
     for (const id of new Set(world.obstacles.values())) {
         const entry = lib[id];

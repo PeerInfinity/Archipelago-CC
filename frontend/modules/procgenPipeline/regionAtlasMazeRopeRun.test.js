@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
-    createState, deserializeMazeWorld, INPUT_N, step, turnInput, useInput, whyBlocked,
+    createState, deserializeMazeWorld, extractPathsAndObstacles, INPUT_N, step, turnInput, useInput, whyBlocked,
 } from '../mazeRoom/mazeRoomEngine.js';
 import { MAZE_TILE_LIB, scriptedStep } from '../mazeRoom/tileSpike/tileStep.js';
 import { ropeEvents } from '../mazeRoom/tileSpike/deriveTileLogic.js';
@@ -98,4 +98,13 @@ describe('L16 rope@32,16 — the pulley plus its run is ONE rope obstacle', () =
     it('the rope is ONE event target, keyed at its canonical cell (ropeEvents)', () => {
         expect(ropeEvents(world)).toEqual([{ key: '2,1', x: 2, y: 1, event: EVENT }]);
     });
+
+    // ⛓ The run's `clear_set` names the cut's token (`sw_0`), which the block-world pricer must not take for an
+    // item: carried, it opened the run and silenced the lanes, and the search over L16 r1c1 exceeded its
+    // 200000-state bound (test-templates' in-app `seedling-playthrough-maze-l15-level-world`, 39990333711).
+    it('the block-world pricer prices L16 r1c1 within its bound, and no rule names the rope\'s token', () => {
+        const out = extractPathsAndObstacles(world);
+        expect(JSON.stringify(out)).not.toMatch(/"sw_\d+"/);
+        expect(out.exits.length).toBeGreaterThan(0);
+    }, 120_000);
 });
