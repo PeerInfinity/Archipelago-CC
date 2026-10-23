@@ -984,7 +984,7 @@ export const CONTACT_FIDELITY = {
      * measurement. NOT here (named in the REMBODY report): the other families' removals (drill, wallflyer, turret,
      * spinner, the static bodies) as walls to a mover stepped after them in the same frame.
      */
-    removedBodyBlocks: false,
+    removedBodyBlocks: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
