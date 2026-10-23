@@ -18290,7 +18290,7 @@ export const DRILL_KILL = Object.freeze({
 
 /** The run's live stepped drills (dying or fading ones are not a threat: `hitPlayer` is gated on the anim). */
 function liveDrills(run) {
-    return (run.drills?.bodies ?? []).filter((d) => !d.removed && !d.destroy && d.anim !== 'die');
+    return (run.entities('drillBodies') ?? []).filter((d) => !d.removed && !d.destroy && d.anim !== 'die');
 }
 
 /** Would a player at `q` wake drill `d`? `Drill.update`'s trigger, from where it sits: range and the masked line. */
@@ -18377,7 +18377,7 @@ function execDrillKill(run, perTick, id, kw, stance, ctx) {
         throw new SolverRefusal(`${ctx.what} -> drill kill ${id}: ${why}`, {
             goal: ctx.goal, obstacle: { kind: 'drill', id }, perTick: [...perTick] });
     };
-    const body = () => (run.drills?.bodies ?? []).find((b) => b.id === id) ?? null;
+    const body = () => (run.entities('drillBodies') ?? []).find((b) => b.id === id) ?? null;
     const NO_KEYS = new Set();
     const hitsBefore = (run.ledger('playerHits') ?? []).length;
     const step = (keys, why) => {
