@@ -310,6 +310,73 @@ describe('cross-room prerequisites (deriveTalkEvents) — RULES watcher-event', 
     });
 });
 
+describe('a talk that opens a portal in the writer\'s own room (crossRoomPrerequisitesOf flag.room / gatedReads) — RULES yeti-event', () => {
+    const MAP = JSON.parse(readFileSync(new URL('./atlases/seedling-map.json', import.meta.url), 'utf8'));
+    const NAMED = JSON.parse(readFileSync(
+        new URL('../seedlingDemo/fixtures/seedling-vanilla-set.json', import.meta.url), 'utf8')).named_rooms;
+    const YETI = { gated: 'teleporter', gatedReads: 'ownTag', flag: { room: 'writer', tag: 1 }, writer: 'yeti', verb: 'talk', cite: 'Yeti.as:48' };
+    const WATCHER = { gated: 'finaldoor', flag: { namedRoom: 'watcher_text', tag: 0 }, writer: 'watcher', verb: 'talk', cite: 'FinalDoor.as:50' };
+    const yeti = { level: 58, type: 'yeti', x: 56, y: 56 };
+    const portal = { level: 58, type: 'teleporter', x: 80, y: 16 };
+    const withL58 = (f) => ({ ...MAP, levels: MAP.levels.map((l) => (l.level === 58 ? { ...l, entities: f(l.entities) } : l)) });
+
+    it('L58: the speaking Yeti writes {58,1} in its own room, and the tag-1 portal there reads it through its own tag', () => {
+        const rows = crossRoomPrerequisitesOf(MAP, [YETI], NAMED);
+        expect(rows).toEqual([{ flag: { level: 58, tag: 1 }, writers: [yeti], gated: [portal], closes: [], verb: 'talk', cite: 'Yeti.as:48' }]);
+        // the Yeti's OWN tag is 0: the flag's tag is the class's constant, not the writer's
+        const own = MAP.levels.find((l) => l.level === 58).entities.find((e) => e.type === 'yeti');
+        expect(Number(own.attrs.tag)).toBe(0);
+        // the room's other teleporters (tag -1, to L57) never read it
+        expect(MAP.levels.find((l) => l.level === 58).entities.filter((e) => e.type === 'teleporter')).toHaveLength(3);
+    });
+
+    it('control: the Watcher row is unchanged by the generalisation (the named room, the writer\'s own tag, every finaldoor)', () => {
+        const [row] = crossRoomPrerequisitesOf(MAP, [WATCHER], NAMED);
+        expect(row).toEqual({ flag: { level: 114, tag: 0 }, writers: [{ level: 114, type: 'watcher', x: 72, y: 72 }],
+            gated: [{ level: 113, type: 'finaldoor', x: 112, y: 0 }], closes: [], verb: 'talk', cite: 'FinalDoor.as:50' });
+    });
+
+    it('one row PER writer: a second speaking Yeti mints its own flag in its own room; a silent one writes nothing', () => {
+        const extra = { ...MAP, levels: MAP.levels.map((l) => (l.level === 46
+            ? { ...l, entities: [...l.entities, { type: 'yeti', x: 8, y: 8, attrs: { tag: '0', text: 'hi' } },
+                { type: 'yeti', x: 24, y: 8, attrs: { tag: '0', text: '' } }] } : l)) };
+        const rows = crossRoomPrerequisitesOf(extra, [YETI], NAMED);
+        expect(rows.map((r) => `${r.flag.level}:${r.writers.map((w) => `${w.x},${w.y}`)}:${r.gated.length}`)).toEqual(['46:8,8:0', '58:56,56:1']);
+        // L46 has no tag-1 portal, so that row is refused by name
+        expect(() => deriveTalkEvents(rows, { place: (w) => ({ region_id: `level_${w.level}`, side: `level_${w.level}` }), reach: () => null,
+            gates: () => [{ region_id: 'level_58', exit_id: 'out_teleporter_80_16' }] })).toThrow(/\{46,1\}: no solid reads it/);
+    });
+
+    it('refused by name: no speaking Yeti anywhere, and an INVERTED portal the talk would close', () => {
+        const mute = withL58((es) => es.map((e) => (e.type === 'yeti' ? { ...e, attrs: { ...e.attrs, text: '' } } : e)));
+        const ctx = { place: (w) => ({ region_id: `level_${w.level}`, side: `level_${w.level}` }), reach: () => null, gates: () => [] };
+        expect(() => deriveTalkEvents(crossRoomPrerequisitesOf(mute, [YETI], NAMED), ctx)).toThrow(/<no yeti>,1\}: 0 writer\(s\)/);
+        const inverted = withL58((es) => es.map((e) => (e.type === 'teleporter' && e.x === 80 ? { ...e, attrs: { ...e.attrs, invert: '1' } } : e)));
+        const [row] = crossRoomPrerequisitesOf(inverted, [YETI], NAMED);
+        expect(row.closes).toEqual([portal]);
+        expect(() => deriveTalkEvents([row], ctx)).toThrow(/\{58,1\}: the talk CLOSES L58 teleporter@80,16/);
+    });
+
+    it('the event sits at the Yeti and gates the portal\'s own crossing', () => {
+        const out = deriveTalkEvents(crossRoomPrerequisitesOf(MAP, [YETI], NAMED), {
+            place: () => ({ region_id: 'level_58', sub_region: 'r3c3', side: 'level_58__r3c3' }),
+            reach: () => null,
+            gates: () => [{ region_id: 'level_58', exit_id: 'out_teleporter_80_16' }],
+        });
+        expect(out.events).toHaveLength(1);
+        expect(out.events[0]).toMatchObject({ region_id: 'level_58', sub_region: 'r3c3', name: 'L58 flag 1: yeti@56,56 cleared', access_rule: null });
+        expect(out.events[0].fields).toEqual({
+            event_id: 'flag:L58:1', event_kind: OBSTACLE_EVENT_KIND,
+            obstacle: { level: 58, tag: 1, class: 'yeti', x: 56, y: 56 },
+            action: { verb: 'talk', item: null, gates: [{ level: 58, class: 'teleporter', x: 80, y: 16 }] },
+            side: 'level_58__r3c3', across: [],
+        });
+        expect(out.exitGates).toEqual([{ region_id: 'level_58', exit_id: 'out_teleporter_80_16',
+            rule: { rule: 'Has', args: { item_name: 'L58 flag 1: yeti@56,56 cleared' } } }]);
+        expect(out.eventGates).toEqual([]);
+    });
+});
+
 describe('a cross-room press that LIGHTS a pole (deriveButtonEvents ctx.kills / ctx.inRoom) — RULES darktrap-events', () => {
     const MAP = JSON.parse(readFileSync(new URL('./atlases/seedling-map.json', import.meta.url), 'utf8'));
     const MODEL = { buildLevelWorld, combatCensusOf, contactRect, DARKTRAP_LIGHT_DEATH };

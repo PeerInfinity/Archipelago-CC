@@ -1018,7 +1018,7 @@ export const COMPLETION = Object.freeze({
  * own event and every crossing standing on its footprint need it, and the event sits where the WRITER stands
  * (`seedlingObstacleEvents.deriveTalkEvents` holds the schema).
  *
- * One row today, read at source:
+ * Two rows today, read at source (the second, the L58 Yeti, is commented at its row):
  *   - `Scenery/FinalDoor.as:50`: `talkedToWatcher = !Game.checkPersistence(0,
  *     LevelSet.active().namedLevel("watcher_text"))`. The tag 0 is the class's constant; the ROOM is the level
  *     set's `watcher_text` named room (vanilla 114), so it is read off the set's manifest, never typed here.
@@ -1037,6 +1037,28 @@ export const CROSS_ROOM_PREREQUISITES = Object.freeze([
         cite: 'Scenery/FinalDoor.as:50 + NPCs/Watcher.as:126-135 + NPCs/NPC.as:188',
         why: 'the FinalDoor opens on all sixteen seals AND the Watcher\'s talk; without the talk the ceremony says '
             + '"Face the Watcher and return" and the door stays shut.',
+    }),
+    // ⛓ RULES yeti-event — the same rule, generalised in two ways (no room is special-cased): the flag's room is
+    // the WRITER's own room with a tag constant to its class (`flag.room: 'writer'`), and the gated entity reads it
+    // through its OWN tag (`gatedReads: 'ownTag'`).
+    //   - `NPCs/Yeti.as:41-49`: `doneTalking()` clears its own tag AND `setPersistence(1, false)` — no level
+    //     argument, so `Main.level` (`Game.as:1902-1904`): "the portal in DeadBoss.oel must have tag 1". The vanilla
+    //     map has one speaking Yeti, L58 @56,56 (tag 0), and L58's `teleporter@80,16 {to 46}` carries tag 1.
+    //   - `Teleporter.as:86`: `deactivated = tag >= 0 && (!checkPersistence(tag) == invert)`, re-read every update,
+    //     so with `invert` 0 the portal is shut on a fresh room and opens on the frame the talk ends.
+    //   - ⚠ KEY-PRESS, NOT AUTO-TALK: the Yeti keeps `NPC.keyNeeded = true` (`NPCs/NPC.as:41`), so its dialogue opens
+    //     on the talk key released inside the 24 px circle (`NPC.as:190-191,225`), unlike the Watcher's
+    //     `keyNeeded = !checkPersistence(tag)`. Either way nothing is HELD, so the event's item is null; the press
+    //     is the walker's to model (fidelity's `yetiTalk`), not the logic's.
+    Object.freeze({
+        gated: 'teleporter',
+        gatedReads: 'ownTag',
+        flag: Object.freeze({ room: 'writer', tag: 1 }),
+        writer: 'yeti',
+        verb: 'talk',
+        cite: 'NPCs/Yeti.as:41-49 + Teleporter.as:86 + Game.as:1902-1904 + NPCs/NPC.as:41,188,225',
+        why: 'the L58 portal to L46 is shut until the Yeti\'s dialogue ends; its doneTalking clears tag 1 of its own '
+            + 'room, the tag the portal reads.',
     }),
 ]);
 

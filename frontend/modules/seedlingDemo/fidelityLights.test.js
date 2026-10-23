@@ -129,11 +129,14 @@ describe('fidelity LIGHTS — the switch (OFF: byte-identical)', () => {
 
     it('the world build: OFF no `lightsControllers` key and no totem; ON the totem, or (cleared) the exit', () => {
         const tape = parseTape(JSON.stringify(witness('lights-stand').tape));
-        const off = createRunForStaging(solveStaging(stagingFromTape(tape)), levelSource);
-        expect(CONTACT_FIDELITY.lightsBossFight).toBe(false);
-        expect('lightsControllers' in off.world).toBe(false);
-        expect(off.world.solids.some((s) => s.tag === 'lightbosstotem')).toBe(false);
-        expect(off.entities('lightsFight')).toBeNull();
+        // ⛓ planning-10's flip: `lightsBossFight` is ON by default, so the OFF build is named.
+        const off = withContactFidelity({ lightsBossFight: false }, () => createRunForStaging(solveStaging(stagingFromTape(tape)), levelSource));
+        expect(withContactFidelity({ lightsBossFight: false }, () => CONTACT_FIDELITY.lightsBossFight)).toBe(false);
+        withContactFidelity({ lightsBossFight: false }, () => {
+            expect('lightsControllers' in off.world).toBe(false);
+            expect(off.world.solids.some((s) => s.tag === 'lightbosstotem')).toBe(false);
+            expect(off.entities('lightsFight')).toBeNull();
+        });
         const rows = lightsWorldRows({ attrs: { fliernum: '6' } }, 72, 72, 0, null);
         expect(rows.totem.rect).toMatchObject({ x: 72, y: 72, right: 88, bottom: 88 });
         const cleared = lightsWorldRows({ attrs: { fliernum: '6' } }, 72, 72, 0, new Set([0]));

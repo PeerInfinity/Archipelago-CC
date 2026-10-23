@@ -436,7 +436,7 @@ export function deriveRequires(world, startState, actions) {
         // ran is the one that used this stance (see step's own comment — the
         // button under the player's FEET is still pressed at the instant the
         // move is attempted).
-        const inv = effectiveInventory(world, engine.inventory, from, engine.blocks);
+        const inv = effectiveInventory(world, engine.inventory, from, engine.blocks, engine.broken);
         const { next, faced } = executeMazeEntry(world, engine, entry);
         if (next === null) { if (faced) engine = faced; turn += 1; continue; }
         // ⛓ ITEM ACTIONS: an accepted USE needed its item in hand (a use is

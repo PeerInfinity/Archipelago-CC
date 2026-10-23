@@ -1723,6 +1723,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_entrance("level_58__r1c4 -> level_46__r6c24", player),
+        Has('L58 flag 1: yeti@56,56 cleared', 1)
+    )
+
+    world.set_rule(
         multiworld.get_entrance("level_58__r2c1 -> level_58__r1c2", player),
         Has('Progressive Swim', 1)
     )

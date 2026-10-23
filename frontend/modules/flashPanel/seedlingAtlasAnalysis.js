@@ -13,6 +13,10 @@
 
 import { analyzeRegion, applyRegionAnalysis } from '../procgenPipeline/regionAtlasAnalyzer.js';
 import { indexLevels } from '../seedlingDemo/atlasSource.js';
+import { arrowLane, arrowTrapEntityPoint } from '../seedlingDemo/arrowTrap.js';
+import {
+    ropesOf, ropeVerdict, ropeEventName, ropeEventCondition, ropeLaneCharges,
+} from './seedlingObstacleEvents.js';
 
 import {
     buildSeedlingRegionGrid,
@@ -22,6 +26,7 @@ import {
     entitySemantics,
     entitySealedTiles,
     entityFootprint,
+    SEEDLING_TILE_SIZE as TILE,
 } from './seedlingSemantics.js';
 
 /**
@@ -190,9 +195,9 @@ export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = n
         // interaction as one world; every other compile — the starter
         // `seedling_atlas_maze` preset among them — is byte-identical.
         ...(levelWorlds ? {
-            levelEntitiesFor: (region) => {
+            levelEntitiesFor: (region, grid) => {
                 const level = levels.get(levelKeyOf(region.map_ref));
-                return level ? seedlingLevelEntities(level, options.resolveCondition) : null;
+                return level ? seedlingLevelEntities(level, options.resolveCondition, { grid }) : null;
             },
             partitionFor: (region) => levelWorlds.partition?.regions?.[region.region_id] ?? null,
         } : {}),
@@ -215,7 +220,11 @@ export const SEEDLING_LEVEL_WORLD_CLASSES = Object.freeze({
     Button: 'button',
     Lock: 'lock',
     BreakableRock: 'rock',
+    // ⛓ ARROW TRAPS + ROPES (session tile-primitives-arrow-rope, ⚖ 2026-10-22).
+    RopeStart: 'rope',
+    ArrowTrap: 'trap',
 });
+
 
 /** `hasSword` → `sword`: an action id from the engine flag the semantics row names. */
 const actionIdOfFlag = (flagName) => flagName.replace(/^has/, '').toLowerCase();
@@ -230,21 +239,40 @@ const actionIdOfFlag = (flagName) => flagName.replace(/^has/, '').toLowerCase();
  *           holders — the room-clear half of Lock is not modelled)
  *   rock    a BreakableRock's sealed tiles; `strike` = one action per flag its
  *           condition names, the flag's AP item through the engine binding
+ *   rope    a RopeStart the rules MINT (`ropeVerdict`: every peer of its group is
+ *           silenced or held) — struck like a rock (Sword | Spear | Fire), its cut
+ *           activating `group` and being the AP `event` (`ropeEventName`); a
+ *           refused rope is no row (its cell keeps the transcription's)
+ *   trap    an ArrowTrap: `group`, `fires` (`shoot="1"` → 'unless_active', else
+ *           'while_active', ArrowTrap.as:30-40) and its `lane` — the game's own
+ *           lane (`arrowLane` → `ropeLaneCharges`: its columns down to the first
+ *           wall, rocks included, doors INCLUDED: an arrival there is in the lane)
+ *           over `grid`; `charges` = the conditions the atlas charged that lane
+ *           with (a minted rope's event), which the trap now MODELS
  *
- * A rock whose condition is not a flag or an any-of flags is REFUSED by name —
- * a strike is one item, so an And has no action to bind to.
+ * A rock (or rope) whose condition is not a flag or an any-of flags is REFUSED by
+ * name — a strike is one item, so an And has no action to bind to.
  *
  * @param {object} level a map-document level
  * @param {(condition:object)=>object|null} resolveCondition
+ * @param {{grid?: object}} [opts] the level's analysis grid (whole level, origin 0) — a trap's lane needs it
  * @returns {Array<{kind:string, tiles:number[][], group?:string, strike?:object[], label:string}>}
  */
-export function seedlingLevelEntities(level, resolveCondition) {
+export function seedlingLevelEntities(level, resolveCondition, { grid = null } = {}) {
     const rows = [];
+    const ropes = ropesOf({ levels: [level] }).map((r) => ({ ...r, verdict: ropeVerdict(r, level) }));
+    const minted = ropes.filter((r) => !r.verdict.refuse);
     for (const entity of level.entities ?? []) {
         const sem = entitySemantics(entity);
         const kind = SEEDLING_LEVEL_WORLD_CLASSES[sem?.class];
         if (!kind) continue;
         const label = `${entity.type}@${entity.x},${entity.y}`;
+        if (kind === 'trap') {
+            rows.push(trapRow(entity, label, minted, grid));
+            continue;
+        }
+        const rope = kind === 'rope' ? minted.find((r) => r.x === entity.x && r.y === entity.y) : null;
+        if (kind === 'rope' && !rope) continue;
         const sealed = entitySealedTiles(entity, sem);
         const tiles = sealed.length > 0 ? sealed : (() => {
             const f = entityFootprint(entity, sem);
@@ -253,8 +281,9 @@ export function seedlingLevelEntities(level, resolveCondition) {
             return out;
         })();
         const row = { kind, tiles, label };
-        if (kind === 'button' || kind === 'lock') row.group = String(entity.attrs?.tset ?? '0');
-        if (kind === 'rock') {
+        if (kind === 'button' || kind === 'lock' || kind === 'rope') row.group = String(entity.attrs?.tset ?? '0');
+        if (rope) row.event = ropeEventName(rope);
+        if (kind === 'rock' || kind === 'rope') {
             const flags = sem.condition?.flag !== undefined ? [sem.condition]
                 : Array.isArray(sem.condition?.any) ? sem.condition.any : null;
             if (!flags || flags.some((c) => typeof c?.flag !== 'string')) {
@@ -273,4 +302,28 @@ export function seedlingLevelEntities(level, resolveCondition) {
         rows.push(row);
     }
     return rows;
+}
+
+/** One ArrowTrap's level-world row (see `seedlingLevelEntities`). */
+function trapRow(entity, label, minted, grid) {
+    if (!grid) throw new Error(`${label}: an arrow trap's lane needs the level's grid`);
+    if ((grid.origin?.x ?? 0) !== 0 || (grid.origin?.y ?? 0) !== 0) {
+        throw new Error(`${label}: the lane is read on a whole-level grid (origin 0), got ${JSON.stringify(grid.origin)}`);
+    }
+    const group = String(entity.attrs?.tset ?? '0');
+    const lane = ropeLaneCharges(grid,
+        [arrowLane({ id: label, t: Number(group), ...arrowTrapEntityPoint(entity.x, entity.y) })], null, new Set(), TILE)
+        .map((c) => c.tile);
+    // The ropes whose cut silences THIS trap: the atlas charged its lane their event.
+    const charges = minted.filter((r) => r.verdict.effects.some((e) => e.effect === 'silences'
+        && e.peer.type === entity.type && e.peer.x === entity.x && e.peer.y === entity.y)).map(ropeEventCondition);
+    return {
+        kind: 'trap',
+        tiles: [[Math.floor(entity.x / TILE), Math.floor(entity.y / TILE)]],
+        group,
+        fires: Number(entity.attrs?.shoot) === 1 ? 'unless_active' : 'while_active',
+        lane,
+        charges,
+        label,
+    };
 }

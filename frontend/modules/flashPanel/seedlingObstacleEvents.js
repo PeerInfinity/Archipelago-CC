@@ -479,7 +479,10 @@ export function persistenceEffect(target, response) {
  *   - every departure `ctx.gates(gated, name)` returns gets `Has(<event>)`, and so does every event already
  *     minted for a gated solid (`ctx.existing` whose `obstacle` is it: its own flag cannot clear before it opens);
  *   - refused by name: no writer or several (the flag is never written, or the event cannot say which), no gated
- *     solid, a gated solid with no departure on it, or an `event_id` already minted under another name or side.
+ *     solid, a gated solid with no departure on it, a gated entity the write CLOSES (`closes`), or an `event_id`
+ *     already minted under another name or side.
+ * ⛓ RULES yeti-event: the gated entity may be a TELEPORTER in the writer's own room (the L58 Yeti opens the portal
+ * to L46); `ctx.gates` is the same footprint rule, the teleporter's footprint being its own tile.
  *
  * @param {object[]} rows `crossRoomPrerequisitesOf(...)`
  * @param {object} ctx
@@ -496,8 +499,13 @@ export function deriveTalkEvents(rows, ctx) {
     const exitGates = [];
     const eventGates = [];
     const refused = [];
-    for (const { flag, writers, gated, verb } of rows) {
+    for (const { flag, writers, gated, closes = [], verb } of rows) {
         const who = `{${flag.level},${flag.tag}}`;
+        if (closes.length > 0) {
+            refused.push(`${who}: the ${verb} CLOSES ${closes.map((g) => `L${g.level} ${g.type}@${g.x},${g.y}`).join(', ')} `
+                + '(invert set) — the gate would need NOT(event)');
+            continue;
+        }
         if (writers.length !== 1) {
             refused.push(`${who}: ${writers.length} writer(s) [${writers.map((w) => `${w.type}@${w.x},${w.y}`).join(', ')}] — `
                 + 'exactly one entity must clear it');
@@ -549,22 +557,55 @@ export function deriveTalkEvents(rows, ctx) {
 }
 
 /**
- * Every `CROSS_ROOM_PREREQUISITES` row against a map extract: the flag's level is the level set's named room
- * (`namedRooms[flag.namedRoom].level`), the writers are the `writer`-class entities of that level carrying the tag
- * AND a non-empty `text` (`NPC.as:188`: a silent NPC never talks, so never writes), and the gated solids are every
- * `gated`-class entity of the map. Returns `{flag: {level, tag}, writers, gated, verb, cite}` per row.
+ * Every `CROSS_ROOM_PREREQUISITES` row against a map extract. Returns `{flag: {level, tag}, writers, gated, closes,
+ * verb, cite}` per row; a declaration may yield several rows (one per writer) or a refusal row.
+ *
+ * The FLAG's room is one of two kinds:
+ *   - `flag.namedRoom`: the level set's named room (`namedRooms[flag.namedRoom].level`); the writers are the
+ *     `writer`-class entities of that level carrying the flag's tag (the writer clears its OWN tag);
+ *   - `flag.room === 'writer'` (⛓ RULES yeti-event): the writer's OWN room, the tag a constant of its class (a
+ *     `setPersistence(<tag>, false)` with no level argument writes `Main.level`, `Game.as:1902-1904`); every
+ *     `writer`-class entity of the map is a writer, ONE ROW EACH, so a second writer mints its own event. No
+ *     writer anywhere is one refusal row (the flag is never written).
+ * In both, a writer must carry a non-empty `text` (`NPC.as:188`: a silent NPC never talks, so never writes).
+ *
+ * The GATED entities read the flag one of two ways:
+ *   - by default, the class reads the flag as a constant (the FinalDoor): every `gated`-class entity of the map;
+ *   - `gatedReads === 'ownTag'` (⛓ RULES yeti-event): an entity reads its OWN tag (`Teleporter.as:86`,
+ *     `deactivated = tag >= 0 && (!checkPersistence(tag) == invert)`), so the gated ones are the `gated`-class
+ *     entities of the flag's room whose tag is the flag's; one with `invert` set is CLOSED by the write
+ *     (`closes`, refused by `deriveTalkEvents`: its gate would need `Not(event)`).
  */
 export function crossRoomPrerequisitesOf(map, declarations, namedRooms) {
-    return declarations.map((d) => {
+    const levelEntities = (level) => map.levels.find((l) => l.level === level)?.entities ?? [];
+    const speaks = (e) => String(e.attrs?.text ?? '').length > 0;
+    return declarations.flatMap((d) => {
+        const rowFor = (level, writers) => {
+            const all = d.gatedReads === 'ownTag'
+                ? levelEntities(level).filter((e) => e.type === d.gated && Number(e.attrs?.tag) === d.flag.tag)
+                    .map((e) => ({ level, type: e.type, x: e.x, y: e.y, invert: Number(e.attrs?.invert ?? 0) !== 0 }))
+                : map.levels.flatMap((l) => (l.entities ?? []).filter((e) => e.type === d.gated)
+                    .map((e) => ({ level: l.level, type: e.type, x: e.x, y: e.y, invert: false })));
+            const strip = ({ invert, ...g }) => g;
+            return {
+                flag: { level, tag: d.flag.tag }, writers,
+                gated: all.filter((g) => !g.invert).map(strip), closes: all.filter((g) => g.invert).map(strip),
+                verb: d.verb, cite: d.cite,
+            };
+        };
+        if (d.flag.room === 'writer') {
+            const writers = map.levels.flatMap((l) => (l.entities ?? []).filter((e) => e.type === d.writer && speaks(e))
+                .map((e) => ({ level: l.level, type: e.type, x: e.x, y: e.y })));
+            if (writers.length === 0) return [{ flag: { level: `<no ${d.writer}>`, tag: d.flag.tag }, writers, gated: [], closes: [], verb: d.verb, cite: d.cite }];
+            return writers.map((w) => rowFor(w.level, [w]));
+        }
         const room = namedRooms?.[d.flag.namedRoom];
         if (!Number.isInteger(room?.level)) throw new Error(`talk events: the level set names no room "${d.flag.namedRoom}"`);
         const level = room.level;
-        const writers = (map.levels.find((l) => l.level === level)?.entities ?? [])
-            .filter((e) => e.type === d.writer && Number(e.attrs?.tag) === d.flag.tag && String(e.attrs?.text ?? '').length > 0)
+        const writers = levelEntities(level)
+            .filter((e) => e.type === d.writer && Number(e.attrs?.tag) === d.flag.tag && speaks(e))
             .map((e) => ({ level, type: e.type, x: e.x, y: e.y }));
-        const gated = map.levels.flatMap((l) => (l.entities ?? []).filter((e) => e.type === d.gated)
-            .map((e) => ({ level: l.level, type: e.type, x: e.x, y: e.y })));
-        return { flag: { level, tag: d.flag.tag }, writers, gated, verb: d.verb, cite: d.cite };
+        return [rowFor(level, writers)];
     });
 }
 

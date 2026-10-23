@@ -221,6 +221,59 @@ describe('the atlas\'s own grid — every playthrough region, compiled alone', (
     });
 });
 
+/**
+ * ⛓⛓ ARROW TRAPS + ROPES (session tile-primitives-arrow-rope, ⚖ 2026-10-22 "New `traps` primitive", "Strike the
+ * facing rope"). The rows come from the game's own tables and lane function; the projected lane must be the
+ * atlas's — every cell the atlas charged with the rope's event, plus only the door tiles the analyzer leaves open.
+ */
+describe('arrow traps and ropes — the game\'s rows, the atlas\'s lane', () => {
+    const ROPE = 'L16 flag 0: rope@32,16 cleared';
+    const levelOf = (n) => PLAYTHROUGH_MAP.levels.find((l) => l.level === n);
+    const rowsOf = (n) => seedlingLevelEntities(levelOf(n), playthroughAnalyzerOptions.resolveCondition,
+        { grid: playthroughGridFor(levelOf(n)) });
+
+    it('L16: the minted rope (sword | spear | fire, its event) and three shoot=1 traps silenced by it', () => {
+        const rows = rowsOf(16);
+        const rope = rows.find((r) => r.kind === 'rope');
+        expect(rope).toMatchObject({ tiles: [[2, 1]], group: '0', event: ROPE, label: 'rope@32,16' });
+        expect(rope.strike.map((s) => s.item)).toEqual(['Progressive Sword', 'Ghost Spear', 'Fire']);
+        const traps = rows.filter((r) => r.kind === 'trap');
+        expect(traps.map((t) => [t.label, t.fires, t.group])).toEqual([
+            ['arrowtrap@96,32', 'unless_active', '0'], ['arrowtrap@112,32', 'unless_active', '0'], ['arrowtrap@128,32', 'unless_active', '0'],
+        ]);
+        for (const t of traps) expect(t.charges).toEqual([{ event: ROPE }]);
+    });
+
+    it('the CLASS beyond the preset: shoot=0 traps arm while pressed (L4), L67\'s shoot=1 trap has no rope, L39\'s refused rope is no row', () => {
+        expect(rowsOf(4).filter((r) => r.kind === 'trap').map((t) => [t.fires, t.charges])).toEqual([['while_active', []], ['while_active', []]]);
+        expect(rowsOf(67).filter((r) => r.kind === 'trap').map((t) => [t.fires, t.charges])).toEqual([['unless_active', []]]);
+        expect(rowsOf(39).some((r) => r.kind === 'rope')).toBe(false);
+    });
+
+    it('the projected L16 lane = the cells the atlas charged with the rope\'s event + the door tiles it leaves open', () => {
+        const p = buildPlaythroughMaze({ levels: ['level_15', 'level_16', 'level_17'] }).text;
+        const payload = JSON.parse(p).preset_sidecars['1'].level_16__r1c1.playable_payload;
+        const lane = new Set(payload.traps.flatMap((t) => t.lane.map((c) => `${c.x},${c.y}`)));
+        const grid = playthroughGridFor(levelOf(16));
+        const charged = new Set();
+        grid.cells.forEach((c, i) => {
+            if ((c.conditions ?? []).some((k) => k?.event === ROPE)) charged.add(`${i % grid.width},${Math.floor(i / grid.width)}`);
+        });
+        expect(charged.size).toBeGreaterThan(0);
+        for (const k of charged) expect(lane.has(k), k).toBe(true);
+        const doors = new Set(ATLAS.regions.find((r) => r.region_id === 'level_16').exits.map((e) => `${e.entrance_tile[0]},${e.entrance_tile[1]}`));
+        const extra = [...lane].filter((k) => !charged.has(k));
+        expect(extra.length).toBeGreaterThan(0);
+        for (const k of extra) expect(doors.has(k), `${k} is in the lane but neither charged nor a door`).toBe(true);
+        // The trap MODELS the charge: no obstacle of the world names the rope's event; the rope is struck.
+        for (const o of payload.obstacles) expect(JSON.stringify(payload.obstacleLib[o.id].clear_rule ?? null)).not.toContain(ROPE);
+        expect(payload.obstacleLib.rope_2_1).toMatchObject({ kind: 'rope', struck_by: ['sword', 'spear', 'fire'], activates: 'sw_0', event: ROPE });
+        expect(payload.action_lib.fire).toMatchObject({ item: 'Fire', primitive: 'strike', key: 'c' });
+        // …and the rope's cell is r1c1's, the one sub-region it borders (the rules' PLACE rule).
+        expect(payload.shared_world.rows[1][2]).toBe(SHARED_WORLD_ALPHABET[payload.shared_world.regions.indexOf('level_16__r1c1')]);
+    }, 120_000);
+});
+
 describe('the committed seedling_playthrough_maze preset', () => {
     it('is byte-identical to its compile (make-seedling-playthrough-maze.mjs --check)', () => {
         expect(LEVELS).toContain('level_15');

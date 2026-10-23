@@ -89,7 +89,9 @@
  * screen-anchored overlays on top: the talk bars and typed text (a placeholder
  * font — ⚖ the font is open), the totem's white-out, the hearts and the load
  * fade (`seedlingEffectSkin.js`). ⚖ The overlays sit on the MODEL's camera rect
- * in room mode too, and follow mode jiggles inside a shake band on the
+ * in room mode too (⚖ CLAMPED to the canvas for a room narrower than the
+ * screen, G4b F1; the talking NPC's box with its portrait and ALIGN from the
+ * run's `talkingNow`, G4b-dialogue), and follow mode jiggles inside a shake band on the
  * renderer's own draw (user, 2026-10-21). ⛓ THE FADE HOLD: a room build's
  * dead frames are SPENT by the run, never ticked, so with a stack on the page
  * holds its clock for them — each owed frame is one tick slot that steps the
@@ -452,12 +454,16 @@ export function mountJsRuntimePage(win = window) {
         // ⚖ follow mode jiggles inside a shake band on the renderer's own draw; the band's edges are the model's
         const view = cameraView(graphics.camera, world, state, runtime.run,
             { jiggle: (now) => jiggleCam(now, level, runtime.ticks) });
-        // ⚖ the overlays: on the displayed screen in follow mode, on the model's camera rect (its middle) in room mode
-        const cam = graphics.camera === 'follow' ? view : cameraView('follow', world, state, runtime.run);
-        const overlays = fv ? screenOps(fv, art, { skin: graphics.effectSkin, cam }) : [];
+        // ⚖ the overlays: on the displayed screen in follow mode, on the model's camera rect (its middle) in room mode,
+        // ⚖ CLAMPED to the canvas there when the room is narrower than the screen (G4b F1, `overlayRect`)
+        const roomMode = graphics.camera !== 'follow';
+        const cam = roomMode ? cameraView('follow', world, state, runtime.run) : view;
+        const overlays = fv ? screenOps(fv, art, { skin: graphics.effectSkin, cam, fitTo: roomMode ? world.world : null }) : [];
         graphics.effects = fv
             ? { explosions: graphics.effectSkin.explosions.length, slashes: graphics.effectSkin.slashes.length, droplets: graphics.effectSkin.droplets.length,
                 hearts: { ...graphics.effectSkin.hearts }, cover: graphics.effectSkin.cover, owed: graphics.effectSkin.fadeQueue.length,
+                talk: fv.dialogue ? { speaker: fv.dialogue.speaker ?? null, align: fv.dialogue.align ?? 'CENTER', portrait: fv.dialogue.portrait ?? null } : null,
+                talkState: fv.talkState,
                 ops: effectSprites.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, pack: o.key ? art.packOf(o.key) : null })),
                 screen: overlays.map((o) => ({ key: o.key ?? null, frame: o.frame ?? null, colour: o.colour ?? null, alpha: o.alpha ?? 1, glyph: o.glyph ?? null })) }
             : null;

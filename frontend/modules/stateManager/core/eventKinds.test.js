@@ -100,6 +100,9 @@ describe('the committed events — measured and pinned', () => {
         expect(carrying).toEqual([
             'seedling_playthrough/AP_14089154938208861744/AP_14089154938208861744_rules.json',
             'seedling_playthrough/AP_1/AP_1_rules.json',
+            // ⛓ The maze projection of the playthrough carries its rope event (session tile-primitives-arrow-rope):
+            // NOT auto-collected, because the player cuts the rope in the maze and the cut checks it.
+            'seedling_playthrough_maze/AP_1/AP_1_rules.json',
         ].sort());
         for (const f of carrying) {
             const d = JSON.parse(readFileSync(join(PRESETS, f), 'utf8'));

@@ -108,6 +108,17 @@ export const ENEMY_ART = Object.freeze([
         as3: 'Game.as:393-394 sprDroplet Spritemap(9, 5); :802 centerOO; Scenery/Droplet.as:92-101 frame/alpha/colour per render' },
     { pack: 'seedling', key: 'seedling:hud/heart', file: 'Health.png', fw: 12, fh: 12, origin: [0, 0],
         as3: 'Game.as:396-397 sprHealth Spritemap(12, 12); :1537-1546 drawHealth: frame int(i > healthc), screen-anchored' },
+    // ── G4b-dialogue: the talking NPC's portrait (`NPC.myPic` → `Game.talkingPic`, `NPCs/NPC.as:253`), a plain
+    //    16×16 `Image` (no centerOO), drawn by `Game.talk()` at (m, 160·5/6 + m) (`Game.as:1726-1731`). ──
+    ...[['AdnanCharacter', 'AdnanCharacterPic', 'NPCs/AdnanCharacter.as:21'], ['ForestCharacter', 'ForestCharacterPic', 'NPCs/ForestCharacter.as:21'],
+        ['Hermit', 'HermitPic', 'NPCs/Hermit.as:23'], ['IntroCharacter', 'IntroCharacterPic', 'NPCs/IntroCharacter.as:22'],
+        ['Karlore', 'KarlorePic', 'NPCs/Karlore.as:21'], ['Oracle', 'OraclePic', 'NPCs/Oracle.as:52'],
+        ['Rekcahdam', 'RekcahdamPic', 'NPCs/Rekcahdam.as:22'], ['Sensei', 'SenseiPic', 'NPCs/Sensei.as:23'],
+        ['Watcher', 'WatcherPic', 'NPCs/Watcher.as:44'], ['Witch', 'WitchPic', 'NPCs/Witch.as:27'], ['Yeti', 'YetiPic', 'NPCs/Yeti.as:24'],
+        ['BobBoss0', 'BobBoss1Pic', 'NPCs/BobBossNPC.as:21 pics[0]'], ['BobBoss1', 'BobBoss2Pic', 'NPCs/BobBossNPC.as:21 pics[1]'],
+        ['BobBoss2', 'BobBoss3Pic', 'NPCs/BobBossNPC.as:21 pics[2]']]
+        .map(([who, file, as3]) => ({ pack: 'seedling', key: `seedling:portrait/${who}`, file: `NPCs/${file}.png`, origin: [0, 0],
+            as3: `${as3} myPic = new Image(${file}); Game.as:1726-1731 talk() draws it screen-anchored` })),
     // ── AP item looks: `Pickups/APItem.as:52-66,94-104` (the sheet and frame size each look binds; 0x0 = an Image,
     //    i.e. the whole file) and `:160-172` (`centerOO`, frame 0 — an APItem never advances its frame) ──
     ...[['sword', 'Sword.png', 16, 16], ['shield', 'Shield.png', 7, 7], ['darkshield', 'DarkShield.png', 9, 9, 'Image'],

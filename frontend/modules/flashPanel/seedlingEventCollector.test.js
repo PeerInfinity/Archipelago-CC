@@ -36,7 +36,7 @@ describe('the events the collector reads', () => {
         //   holds L28's button)
         expect(EVENTS.map((e) => e.eventId)).toEqual(['flag:L0:1', 'flag:L0:4', 'flag:L12:4', 'flag:L12:5', 'flag:L12:11',
             'flag:L12:3', 'flag:L12:7', 'flag:L12:12', 'flag:L16:0', 'flag:L19:1', 'flag:L24:0', 'flag:L28:0', 'flag:L30:0', 'flag:L30:2', 'flag:L31:0',
-            'flag:L39:8', 'flag:L40:8', 'flag:L48:1', 'flag:L63:1', 'flag:L62:0', 'flag:L68:0', 'flag:L71:2', 'flag:L112:1',
+            'flag:L39:8', 'flag:L40:8', 'flag:L48:1', 'flag:L58:1', 'flag:L63:1', 'flag:L62:0', 'flag:L68:0', 'flag:L71:2', 'flag:L112:1',
             'flag:L113:0', 'flag:L114:0']);
         expect(ROCK).toMatchObject({ location: 'L0 flag 1: breakablerock@288,176 cleared', level: 0, tag: 1 });
     });

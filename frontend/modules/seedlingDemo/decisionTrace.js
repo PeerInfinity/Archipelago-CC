@@ -128,6 +128,12 @@ export const KNOWN_STRATEGY_VERBS = Object.freeze([
     // ⛓ Seedling fidelity BOSSKILLS (planning-10's flip): the `lavaboss` verb (`solverBot.execLavaBoss`, L82's King of
     // Fire fought on the frontier), listed at its flip for `break`'s reason.
     'lavaboss',
+    // ⛓ Seedling fidelity LIGHTS (planning-10's flip): the `lights` verb (`solverBot.execLights`, L69's Lights fight on the
+    // frontier), listed at its flip for `break`'s reason.
+    'lights',
+    // ⛓ Seedling fidelity BOSSKILLS (planning-10's flip): the `tentaclebeast` verb (`solverBot.execTentacleBeast`, L57's
+    // Tentacled Beast fought on the frontier), listed at its flip for `break`'s reason.
+    'tentaclebeast',
     // ⛓ Seedling fidelity WATCHER: the `talk` verb (`solverBot.execTalk`, a
     // speaking watcher's circle on the frontier), listed in the slice that
     // first drives it, for `break`'s reason.

@@ -1,0 +1,30 @@
+L0	masks=2 [Building]	targets=0	mask-only lines at 0 target(s)	crushers=0
+L12	masks=98 [CliffSide,Building]	targets=16	mask-only lines at 0 target(s)	crushers=0
+L28	masks=32 [CliffSide]	targets=3	mask-only lines at 1 target(s)	crushers=0
+  drill	drill@128,96	pt(136,104)	free=6010	maskOnly=307	minD=37.5	by=cliffside2@160,112×136 cliffside2@144,128×171
+L37	masks=32 [CliffSide]	targets=1	mask-only lines at 0 target(s)	crushers=0
+L47	masks=1 [SnowHill]	targets=0	mask-only lines at 0 target(s)	crushers=0
+L57	masks=1 [TentacleBeast]	targets=2	mask-only lines at 1 target(s)	crushers=0
+  swing	tentaclebeast@80,48	pt(104,72) (box guessed 16x16)	free=463	maskOnly=14	minD=15.6	by=tentaclebeast@80,48×14
+L62	masks=1 [Building]	targets=3	mask-only lines at 0 target(s)	crushers=0
+L66	masks=1 [Building]	targets=2	mask-only lines at 2 target(s)	crushers=0
+  swing	lightpole@96,80	pt(104,80)	free=753	maskOnly=190	minD=5.0	by=building8@48,16×190
+  swing	lightpole@48,80	pt(56,80)	free=753	maskOnly=190	minD=5.0	by=building8@48,16×190
+L83	masks=9 [CliffSide]	targets=0	mask-only lines at 0 target(s)	crushers=0
+L87	masks=8 [CliffSide]	targets=0	mask-only lines at 0 target(s)	crushers=0
+L88	masks=6 [CliffSide]	targets=1	mask-only lines at 1 target(s)	crushers=0
+  drill	drill@128,160	pt(136,168)	free=4921	maskOnly=1	minD=47.4	by=cliffside1@96,128×1
+L89	masks=5 [CliffSide]	targets=1	mask-only lines at 0 target(s)	crushers=0
+L91	masks=18 [CliffSide]	targets=4	mask-only lines at 1 target(s)	crushers=0
+  drill	drill@64,80	pt(72,88)	free=3083	maskOnly=18	minD=30.7	by=cliffside1@64,96×18
+L92	masks=38 [CliffSide]	targets=3	mask-only lines at 0 target(s)	crushers=0
+L93	masks=1 [Building]	targets=2	mask-only lines at 0 target(s)	crushers=0
+L94	masks=10 [CliffSide,TreeLarge]	targets=1	mask-only lines at 1 target(s)	crushers=0
+  swing	watcher@152,128	pt(160,136)	free=943	maskOnly=11	minD=13.4	by=treelarge@80,0×11
+L95	masks=4 [CliffSide]	targets=0	mask-only lines at 0 target(s)	crushers=0
+L99	masks=3 [CliffSide]	targets=4	mask-only lines at 0 target(s)	crushers=0
+L100	masks=12 [CliffSide]	targets=5	mask-only lines at 0 target(s)	crushers=0
+L111	masks=26 [CliffSide]	targets=0	mask-only lines at 0 target(s)	crushers=0
+L112	masks=14 [CliffSide]	targets=5	mask-only lines at 0 target(s)	crushers=0
+L115	masks=10 [CliffSide]	targets=0	mask-only lines at 0 target(s)	crushers=0
+TOTAL levels=116 maskLevels=22 targetsWithMaskOnlyLines=7 (reach 16)

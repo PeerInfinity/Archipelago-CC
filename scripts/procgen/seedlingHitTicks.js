@@ -31,6 +31,15 @@
  * evidence. The model's billed rows carry `source`; the game's do not.
  *
  * ⛓ An old row has no `roomHits.hits` array: that is UNKNOWN, never 0 hits (`hitsOfRow` → null).
+ *
+ * ── ⛓ ARRIVAL LATCH (§5.124) ──────────────────────────────────────────────────────────────────────────────────
+ * A hit on a 0-tick HOLD tape (the arrival's freeze, waiting ~19 frames for its latch) has no plan row to be billed
+ * against: a refused leg has no plan at all (leg 209). The lab steps the MODEL from that hold's arrival staging, nothing
+ * held, over the frames the game ran (the read's `gt` − the staged `seam.time`, +1), and records it on the hit as
+ * `arrival: {rows, billed, frames, seamTime}` (`rows[i]` = the state after model tick i + 1). `arrivalLatchVerdict`
+ * bills the hit when a model hit's state, `HITS_TIMER_MAX − 1 − hits_timer` rows on (the frames since the hit at
+ * the read), is the game's read FIELD FOR FIELD (`x`, `y`, `hitsTimer`). The model's stepping is its own
+ * (`createRunForStaging` + `advance`); the harness only compares.
  */
 
 /** `Player.hitsTimerMax` (`Player.as:336`; `playerDamage.PLAYER_DAMAGE.hitsTimerMax`). */
@@ -83,6 +92,8 @@ export function createHitRecorder({ atArrival = null, tickOf = hitTickOf } = {})
         else if (c.clock === 'tape' && s.armed === false) why = 'the tape was not armed at the read';
         const t = tickOf(s);
         const e = { t, hits: s.hits, d: s.hits - before, hits_timer: timer, x: s.x ?? null, y: s.y ?? null,
+            // ⛓ ARRIVAL LATCH (§5.124) — the game's clock at the read (the latch's frames step no tape tick)
+            ...(typeof s.game_time === 'number' ? { gt: s.game_time } : {}),
             clock: c?.clock ?? null, tick: c?.tick ?? null, exact: why === null, ...(why ? { why } : {}), ...ctx };
         hits.push(e);
         return [e];
@@ -96,9 +107,39 @@ export function hitsOfRow(row) {
     return Array.isArray(h) ? h : null;
 }
 
-/** A row's billed hits: every plan's `forcedHits[].billed[]` (model ledger rows, `t` on the plan's run clock). */
+/**
+ * ⛓ ARRIVAL LATCH (§5.124) — a hold-tape hit against the model stepping its arrival staging (see the head):
+ * `{billed: {t, source, id, arrival: true}, row}` when a model hit, carried to the read, is the game's read field for
+ * field; else `{billed: null, why}`. A hit with no `arrival` record is not asked (null).
+ */
+export function arrivalLatchVerdict(hit) {
+    const a = hit?.arrival;
+    if (!a) return null;
+    if (a.error) return { billed: null, why: `the model could not step the arrival: ${a.error}` };
+    const timer = typeof hit.hits_timer === 'number' ? hit.hits_timer : 0;
+    if (timer <= 0) return { billed: null, why: 'hits_timer read 0 (the hit\'s frame is not fixed)' };
+    const since = HITS_TIMER_MAX - 1 - timer;
+    const near = [];
+    for (const b of a.billed ?? []) {
+        const row = a.rows?.[b.t - 1 + since];
+        if (!row) { near.push(`${b.t}:${b.source ?? '?'} past the ${a.rows?.length ?? 0} stepped frames`); continue; }
+        if (row.x === hit.x && row.y === hit.y && row.hitsTimer === timer) {
+            return { billed: { t: b.t, source: b.source ?? null, id: b.id ?? null, arrival: true }, row: b.t + since };
+        }
+        near.push(`${b.t}:${b.source ?? '?'} reads (${row.x},${row.y}) hitsTimer ${row.hitsTimer}`);
+    }
+    return { billed: null, why: `the model's arrival bills ${a.billed?.length ?? 0} hit(s) in ${a.rows?.length ?? 0} frames`
+        + `${near.length ? `, none the game's read (${hit.x},${hit.y}) hitsTimer ${timer}: ${near.join('; ')}` : ''}` };
+}
+
+/**
+ * A row's billed hits: every plan's `forcedHits[].billed[]` (model ledger rows, `t` on the plan's run clock), and
+ * ⛓ ARRIVAL LATCH (§5.124) each hold-tape hit the model's arrival bills (`arrival: true`).
+ */
 export function billedOfRow(row) {
-    return (row?.plans ?? []).flatMap((p) => (p.forcedHits ?? []).flatMap((f) => f.billed ?? []));
+    const planned = (row?.plans ?? []).flatMap((p) => (p.forcedHits ?? []).flatMap((f) => f.billed ?? []));
+    const latch = (hitsOfRow(row) ?? []).map((h) => arrivalLatchVerdict(h)?.billed).filter(Boolean);
+    return [...planned, ...latch];
 }
 
 /** The plans' refusals of kind `UNBILLED_GATE_KIND` (their `obstacle`, as the lab copies it). */
@@ -143,9 +184,11 @@ export function unbilledHitLine(row) {
     if (!v.unbilled && !v.gate) return null;
     const hs = v.hits.map((h) => `${h.tape !== undefined ? `tape${h.tape}:` : ''}${h.t ?? `<=${h.tick}`}${h.exact ? '' : '~'}`
         + `@${h.x},${h.y}`).join(' ');
-    const billed = billedOfRow(row).map((b) => `${b.t}:${b.source ?? '?'}`).join(' ') || '-';
+    const billed = billedOfRow(row).map((b) => `${b.arrival ? 'arrival' : ''}${b.t}:${b.source ?? '?'}`).join(' ') || '-';
+    // ⛓ ARRIVAL LATCH (§5.124) — a hold-tape hit the model's arrival did NOT bill says why
+    const latchWhy = v.hits.map((h) => arrivalLatchVerdict(h)).filter((x) => x && !x.billed).map((x) => x.why);
     return `UNBILLED-HIT: ${name} hits=[${hs}] billed=[${billed}] div=${v.div === null ? '-' : `${v.divTape !== null ? `tape${v.divTape}:` : ''}${v.div}`}`
-        + `${v.relation ? ` relation=${v.relation}` : ''}${gate}`;
+        + `${v.relation ? ` relation=${v.relation}` : ''}${gate}${latchWhy.length ? ` arrival=[${latchWhy.join(' | ')}]` : ''}`;
 }
 
 /**
@@ -168,5 +211,13 @@ export function unbilledHitCensus(rows) {
     }
     if (unknown.length) lines.push(`UNBILLED-HIT-UNKNOWN: ${unknown.length} row(s) carry no hit ticks (rows from before S5-2): ids ${unknown.join(',')}`);
     if (gate) lines.push(`UNBILLED-GATE: ${gate} refusal(s) of kind ${UNBILLED_GATE_KIND}`);
+    // ⛓ ARRIVAL LATCH (§5.124) — every hold-tape hit the model's arrival bills is RECLASSIFIED (no longer UNBILLED): a check
+    // whose answer removes a line must be loud, so each one prints its own line (the leg, the game's frame, the model
+    // tick and row it matched) and the count is its own bucket (`arrival-latch-billed: N`), never folded into "billed".
+    const latch = rows.flatMap((r) => (hitsOfRow(r) ?? []).map((h) => ({ h, v: arrivalLatchVerdict(h) }))
+        .filter(({ v }) => v?.billed).map(({ h, v }) => `ARRIVAL-LATCH-BILLED: ${`${r.id ?? '?'} ${r.key ?? ''}`.trim()} `
+            + `game read gt=${h.gt ?? '?'} hits_timer=${h.hits_timer} @${h.x},${h.y} (tape${h.tape ?? '?'}) = model tick ${v.billed.t} `
+            + `(row ${v.row}, staged seam ${h.arrival?.seamTime ?? '?'}): ${v.billed.source ?? '?'} ${v.billed.id ?? ''}`.trim()));
+    if (latch.length) lines.push(...latch, `arrival-latch-billed: ${latch.length}`);
     return { lines, unknown };
 }

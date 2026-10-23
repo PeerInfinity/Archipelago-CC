@@ -67,7 +67,8 @@ const LEVEL_WORLD_PROJECTION = '`projectLevelWorld` (`procgenPipeline/regionAtla
  *
  * ⛓ SHARED LEVEL WORLDS (tile-primitives Stage 2) — a third writer: the atlas
  * projection's `projectLevelWorld` emits `blocks`, `buttons`, `buttonLib`,
- * `action_lib` and `shared_world` on the ONE payload a level world carries
+ * `action_lib`, `traps`, `trapLib` (arrow traps, session tile-primitives-arrow-rope)
+ * and `shared_world` on the ONE payload a level world carries
  * (every other sub-region of that level is a payload-less alias entry — see
  * `rules.schema.json` `presetSidecarEntry.shared_world`). Each is omitted on
  * every other payload, so the corpus they were measured on is unmoved.
@@ -194,6 +195,26 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
             + 'an obstacle whose lib entry lists the id in `struck_by` breaks when struck. Read through '
             + '`checkActionLib`. Written by `projectLevelWorld` from the game\'s rock rows; omitted when empty.',
     }),
+    traps: Object.freeze({
+        type: 'array', required: false,
+        description: 'Arrow traps (session tile-primitives-arrow-rope) `{x, y, id, label, lane: [{x, y}…]}` — `id` keys '
+            + '`trapLib`; a `lane` cell refuses the player while the trap is ARMED. Read through `checkTraps`. Written '
+            + 'by `projectLevelWorld` from the game\'s trap rows (the lane is the game\'s own, down to the first wall); '
+            + 'omitted when there are none.',
+        schema: Object.freeze({
+            items: atXY({
+                id: Object.freeze({ type: 'string' }),
+                label: Object.freeze({ type: 'string' }),
+                lane: Object.freeze({ type: 'array', items: atXY() }),
+            }, ['id', 'lane']),
+        }),
+    }),
+    trapLib: Object.freeze({
+        type: 'object', required: false,
+        description: 'Trap id → `{kind, name, active, fires}`: armed while its group token `active` is absent '
+            + '(`fires: \'unless_active\'`) or present (`\'while_active\'`). A held button derives the token, and so '
+            + 'does a cut rope (an obstacle whose lib entry `activates` it). Written beside `traps`.',
+    }),
     shared_world: Object.freeze({
         type: 'object', required: false, derived: true,
         description: `A SHARED LEVEL WORLD, written by ${LEVEL_WORLD_PROJECTION}: \`{key, regions, rows, entrances, links}\` — which AP `
@@ -251,8 +272,15 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
  */
 export function tileGridApLocationNames(payload) {
     if (!Array.isArray(payload?.items)) return null;
-    return payload.items.map((i) => i?.locationName)
+    const names = payload.items.map((i) => i?.locationName)
         .filter((n) => typeof n === 'string' && n !== '');
+    // ⛓ A placed ROPE's `event` is an AP event location its cut checks (session tile-primitives-arrow-rope).
+    const lib = payload.obstacleLib ?? {};
+    for (const o of payload.obstacles ?? []) {
+        const event = lib[o?.id]?.activates ? lib[o.id].event : null;
+        if (typeof event === 'string' && event !== '' && !names.includes(event)) names.push(event);
+    }
+    return names;
 }
 
 /**

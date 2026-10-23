@@ -797,8 +797,11 @@ export const CONTACT_FIDELITY = {
      * `LightBossTotem` Solid, and `endState()` (the {69,0} report and the exit Teleporter to L36). The solver's
      * `solid:lightbosscontroller` row (`lights`) fights it. OFF: nothing here runs, byte-identical.
      * `SEEDLING_LIGHTS_BOSS_FIGHT=0|1` for a node measurement.
+     * ⛓ planning-10's flip (⚖ user, 2026-10-22, "Flip lightsBossFight") turns it ON. Measured movers (CI, A/B at main
+     * e2b0f2b63f): the route survey (full) only L69 159 NO-EDGE → SOLVED 826 t (0 hits, hammer LD) and L36 160 NO-ARRIVAL →
+     * SOLVED 50; sweep legs 607/608 done ×2 at leg_budget 240 s (OFF failed/unresolved); probes standard green.
      */
-    lightsBossFight: false,
+    lightsBossFight: true,
     /**
      * seedling-fidelity-bosskills D2 — THE KING OF FIRE (`lavaBoss.js`, L82) IS STEPPED: the 99-update cycle, the
      * LavaRunners (bridged chasers once they land), the LavaBalls and their reflection, the 120-update damage window
@@ -813,8 +816,13 @@ export const CONTACT_FIDELITY = {
      * seedling-fidelity-bosskills D3 — THE TENTACLED BEAST (`tentacleBeast.js`, L57): the wake, the seeded
      * `Math.random` spawns (the run's declared `rng` stream, as the Owl's), the tentacles' sit window and their
      * `hitRect`, the whirlpools, the death's report `{57,0}` and the mouth Teleporter. OFF: byte-identical.
+     * ⛓ planning-10's flip (⚖ user, 2026-10-22, "Flip now, hitless later") turns it ON. Measured movers (CI, A/B at main
+     * 3ac4f7751d): the route survey (full) L57 83/114 NO-EDGE → SOLVED 2060 t; L58 84/115 NO-ARRIVAL → REFUSED on the
+     * tag-1 teleporter (the Yeti's; the talk goal and PITPORT pending); sweep 492–495 done ×2 (budget 240 s); probes
+     * standard 11/11. ⚠ The committed variant may take one swipe (only deaths are rejected): a HITLESS-preference slice
+     * is queued (⚖ user).
      */
-    tentacleBeastFight: false,
+    tentacleBeastFight: true,
     /**
      * fidelity ROPE (wave 22) — A ROPE IS CUT ON PURPOSE (`solverBot.resolveRopeStrategy` / `execRope`): the solver's
      * `solid:rope` row (`rope`), the PULL rung's swing stance and `execPull` asked by a `clear-tag` on the rope's own
@@ -903,6 +911,45 @@ export const CONTACT_FIDELITY = {
      * verify 0 mismatches on the hammer producers ON).
      */
     drillMixedRooms: true,
+    /**
+     * fidelity YETI (wave 25) — THE YETI'S `doneTalking()` OPENS L58's TAG-1 TELEPORTER (`levelRun`'s talker arm,
+     * `solverBot`'s clear-tag `yeti` arm).
+     *
+     *     NPCs/Yeti.as:40-50   doneTalking(): super; if (!createdPortal) { createdPortal = true;
+     *                          Game.setPersistence(tag, false); Game.setPersistence(1, false); }
+     *     Teleporter.as:89-94  update(): checkDeactivated() EVERY frame — a cleared tag opens it in the same visit
+     *     NPCs/NPC.as:119-126  check(): a cleared tag REMOVES the NPC — but only when a `Game` is built (a revisit)
+     *
+     * ON: the talk is run (no longer refused by name): both writes land on the run's ledger at the close (`done` OR
+     * `left`, the `talking` setter's two callers), `{58,1}` is applied MID-VISIT (the teleporter re-reads it) and the
+     * Yeti's own `{58,0}` is banked for the next build (`NPC.check()`, which also needs the `despawn` response the
+     * switch adds for `yeti`); the solver's clear-tag on `{58,1}` / `{58,0}` naming `yeti@56,56` talks it out. OFF:
+     * `PLACED_NPC_TALK.yeti` stays REFUSED and every build/run is byte-identical. `SEEDLING_YETI_TALK=0|1` for a node
+     * measurement.
+     * ⛓ planning-10's flip (⚖ user, 2026-10-22, "Yes, please do the flip") turns it ON. Measured movers (CI, wave-25 A/B):
+     * the route survey (full) 0; the L58 sweep leg ×2: 0 (done both arms); probes standard 11/11. Inert on the route until
+     * rules-2's Yeti talk goal exists, and L58's door then refuses `unmodelled-pit-teleporter` (a queued model row).
+     */
+    yetiTalk: true,
+    /**
+     * fidelity MASKS (wave 25) — THE RUN'S `collideLine("Solid", …)` SAMPLES THE "Solid" PIXELMASKS, AND THE SWING AT A
+     * CHASER ASKS IT (`levelRun.collideLineSolid`'s `{masks}`, DRILL's sampler). FlashPunk's `World.collideLine` asks
+     * `collidePoint` per sample, and an entity with a `Pixelmask` answers from its opaque pixels: a `CliffSide`, a
+     * `Building`, a `TreeLarge`, a `SnowHill` and the `TentacleBeast` body are type "Solid" (an `OpenTree` is NOT: it
+     * extends `Tree`, type "Tree" — measured on p4g). ON: the lone drill's trigger (`Drill.as:86`) and the swing's line
+     * at a drill, a wallflyer, a tentacle (the beast's by-name interim retires) and in the corridor body forecast sample
+     * the masks, as the solver's chaser / drill mirrors do; and the chaser arm of `applyThrust` (bob, jellyfish,
+     * bobsoldier, puncher, lavarunner…) gains `Player.slash`'s line (`Player.as:917`), boxes and masks, which it never
+     * asked (measured on p4g: `mask-l65-wall`). OFF: byte-identical. `SEEDLING_PIXEL_MASK_SIGHT_LINES=0|1` for a node
+     * measurement. NOT here: the spinner family (the hammer arc's forecast and strike line and the executor that must
+     * agree with them; L92 holds a spinner beside CliffSides — handed over), the other boss arms (no mask in their rooms),
+     * and every "Player"-type line (a spinner's hammer, a wallflyer's ray, the BobBoss swords, a chest's probe), which
+     * never meets a mask. No crusher shares a level with a mask (`assertCrusherSolidsBound` still refuses that case).
+     * ⛓ planning-10's flip (⚖ user, 2026-10-22, MASKS "Harvest + flip ON") turns it ON. Measured movers (CI, wave-25 A/B
+     * on ubuntu-24.04): the route survey (full) 0; the 356 chaser-room sweep legs ×2: 0 settled (a 240 s keyed re-run
+     * settled 201/210/387/404/776 as noise or slow); probes standard ON 11/11. seedlingRobust's {sword} L16 plan 878 → 882 t.
+     */
+    pixelMaskSightLines: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1085,6 +1132,12 @@ if (globalThis.process?.env?.SEEDLING_ROPE_CUT_ANY_WEAPON === '0') CONTACT_FIDEL
 // ⛓ fidelity DRILL: `SEEDLING_DRILL_MIXED_ROOMS=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '1') CONTACT_FIDELITY.drillMixedRooms = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_MIXED_ROOMS === '0') CONTACT_FIDELITY.drillMixedRooms = false;
+// ⛓ fidelity YETI: `SEEDLING_YETI_TALK=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_YETI_TALK === '1') CONTACT_FIDELITY.yetiTalk = true;
+if (globalThis.process?.env?.SEEDLING_YETI_TALK === '0') CONTACT_FIDELITY.yetiTalk = false;
+// ⛓ fidelity MASKS: `SEEDLING_PIXEL_MASK_SIGHT_LINES=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PIXEL_MASK_SIGHT_LINES === '1') CONTACT_FIDELITY.pixelMaskSightLines = true;
+if (globalThis.process?.env?.SEEDLING_PIXEL_MASK_SIGHT_LINES === '0') CONTACT_FIDELITY.pixelMaskSightLines = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
