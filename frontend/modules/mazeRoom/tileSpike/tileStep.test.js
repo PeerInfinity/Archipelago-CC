@@ -10,9 +10,11 @@ import {
     createWorld, createState, step, whyBlocked, mazeVisitedKey, setTile, setBlock, setButton, setObstacle,
     setItem, TILE_WALL, INPUTS, INPUT_WAIT,
 } from '../mazeRoomEngine.js';
-import { worldInputs, useInput } from '../mazeRoomEngine.js';
-import { itemActionPicture, ROCK_CORRIDOR } from '../mazeItemActions.fixtures.js';
-import { scriptedStep } from './tileStep.js';
+import { worldInputs, useInput, standsInArmedLane } from '../mazeRoomEngine.js';
+import {
+    itemActionPicture, ROCK_CORRIDOR, arrowTrapPicture, ARROW_ROPE, ARROW_BUTTON, ROPE_EVENT,
+} from '../mazeItemActions.fixtures.js';
+import { scriptedStep, scriptedStandsInArmedLane } from './tileStep.js';
 import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
 
 const DOOR_A = { name: 'Door A', id: 'door_A', clear_set_type: 'combo_list', clear_set: [['sw_A']] };
@@ -241,6 +243,93 @@ describe('tile-primitives — scripted step ≡ engine step with ITEM ACTIONS', 
 
         it('(control) the unmutated helpers find nothing on the same three fixtures', () => {
             for (const name of Object.keys(ACTION_FIXTURES)) expect(findings(HELPERS, name)).toBe(0);
+        });
+    });
+});
+
+// ⛓⛓ ARROW TRAPS + ROPES (slice tile-primitives-arrow-rope): the LANE and CUT primitives, scripted ≡ native,
+// over the engine's own trap fixtures, from a start that holds nothing, the sword (picked up), or the event.
+const TRAP_FIXTURES = {
+    'rope lane, sword on the floor': [['#######', '#c.T..#', '#PS...X', '#.....#', '#######'], 'unless_active', []],
+    'rope lane, event carried': [ARROW_ROPE, 'unless_active', [ROPE_EVENT]],
+    'button lane, unless_active': [ARROW_BUTTON, 'unless_active', []],
+    'button lane, while_active': [ARROW_BUTTON, 'while_active', []],
+};
+
+function trapDisagreements(name, helpers) {
+    const [rows, fires, items] = TRAP_FIXTURES[name];
+    const world = arrowTrapPicture(rows, { fires });
+    const start = createState(world);
+    start.inventory = new Set(items);
+    const seen = new Map([[mazeVisitedKey(start), start]]);
+    const frontier = [start];
+    while (frontier.length) {
+        const s = frontier.pop();
+        for (const input of worldInputs(world)) {
+            const n = step(world, s, input);
+            if (n === null || seen.has(mazeVisitedKey(n))) continue;
+            seen.set(mazeVisitedKey(n), n);
+            frontier.push(n);
+        }
+    }
+    const out = [];
+    let lanes = 0;
+    for (const s of seen.values()) {
+        if (scriptedStandsInArmedLane(world, s, helpers) !== standsInArmedLane(world, s)) out.push(`stance@${mazeVisitedKey(s)}`);
+        for (const input of [...worldInputs(world), INPUT_WAIT]) {
+            const oracle = step(world, s, input);
+            const { next, refused } = scriptedStep(world, s, input, helpers);
+            if (refused?.primitive === 'lane') lanes += 1;
+            const at = `${input}@${mazeVisitedKey(s)}`;
+            if ((oracle === null) !== (next === null)) out.push(`${at} legality oracle=${oracle !== null} scripted=${next !== null}`);
+            else if (oracle !== null && mazeVisitedKey(oracle) !== mazeVisitedKey(next)) out.push(`${at} state`);
+        }
+    }
+    return { out, lanes };
+}
+
+describe('tile-primitives — scripted step ≡ engine step with ARROW TRAPS + ROPES', () => {
+    for (const name of Object.keys(TRAP_FIXTURES)) {
+        it(`agrees over every reachable (state, input) of ${name}`, () => {
+            const { out, lanes } = trapDisagreements(name, HELPERS);
+            expect(out).toEqual([]);
+            if (name !== 'rope lane, event carried') expect(lanes).toBeGreaterThan(0);   // the lane refuses somewhere
+        });
+    }
+
+    describe('mutants are caught', () => {
+        const mutate = (name, body) => ({ ...HELPERS, [name]: { ...HELPERS[name], body } });
+        const findings = (h, name) => trapDisagreements(name, h).out.length;
+        const [unless, whileActive] = HELPERS.lane_armed.body.conditions;
+        const [broken, eventHeld] = HELPERS.rope_cut.body.conditions;
+
+        it('the mutant bodies are the real helpers minus one disjunct (shape check)', () => {
+            expect(HELPERS.lane_armed.body.type).toBe('or');
+            expect(unless.iterator_info.iterator.attr).toBe('lane_unless');
+            expect(whileActive.iterator_info.iterator.attr).toBe('lane_while');
+            expect(HELPERS.rope_cut.body.type).toBe('or');
+            expect(broken).toEqual({ type: 'attribute', object: { type: 'name', name: 'tile' }, attr: 'broken' });
+            expect(eventHeld.type).toBe('and');
+        });
+
+        it("lane_armed that forgets 'while_active' traps is caught by the while_active button lane", () => {
+            expect(findings(mutate('lane_armed', unless), 'button lane, while_active')).toBeGreaterThan(0);
+        });
+
+        it("lane_armed that forgets 'unless_active' traps is caught by the rope lane", () => {
+            expect(findings(mutate('lane_armed', whileActive), 'rope lane, sword on the floor')).toBeGreaterThan(0);
+        });
+
+        it('rope_cut that forgets the CARRIED event is caught by "event carried"', () => {
+            expect(findings(mutate('rope_cut', broken), 'rope lane, event carried')).toBeGreaterThan(0);
+        });
+
+        it("rope_cut that forgets THIS visit's cut is caught by the sword fixture", () => {
+            expect(findings(mutate('rope_cut', eventHeld), 'rope lane, sword on the floor')).toBeGreaterThan(0);
+        });
+
+        it('(control) the unmutated helpers find nothing on every trap fixture', () => {
+            for (const name of Object.keys(TRAP_FIXTURES)) expect(findings(HELPERS, name)).toBe(0);
         });
     });
 });

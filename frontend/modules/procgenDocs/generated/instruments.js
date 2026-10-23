@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 91,
-            "count": 138,
+            "browser": 94,
+            "count": 141,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 445,
-        "browser": 156,
-        "cited": 238,
-        "files": 459,
+        "blockStyle": 448,
+        "browser": 159,
+        "cited": 240,
+        "files": 462,
         "lineStyle": 14,
-        "withDocblock": 459,
-        "withFlags": 376
+        "withDocblock": 462,
+        "withFlags": 379
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -12871,6 +12871,51 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-mask-lines.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-mask-lines — ⛓⛓⛓ seedling-fidelity-masks: THE SWING'S LINE OF SIGHT SAMPLES THE \"Solid\" PIXELMASKS (`CONTACT_FIDELITY.pixelMaskSightLines`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-mask-lines.mjs"
+        },
+        {
+            "argvHelpers": [
                 "ONLY",
                 "VARIANTS",
                 "WORLDS",
@@ -14244,6 +14289,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling ROCKMOVE's \"Remove bundle\", ON THE GAME (rules `rules-rock-remove`).",
             "path": "scripts/procgen/probe-seedling-rock-remove.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "out"
+            ],
+            "file": "probe-seedling-rope-events.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's ROPE CUTS, ON THE GAME (rules `rules-rope-events`).",
+            "path": "scripts/procgen/probe-seedling-rope-events.mjs"
         },
         {
             "argvHelpers": [
@@ -15677,6 +15775,8 @@ export const INSTRUMENTS = frz({
                 "budget-s",
                 "host",
                 "only",
+                "pocket",
+                "restart-budget-s",
                 "solver-budget-work",
                 "solver-upgrade-window-work",
                 "trace",
@@ -15701,6 +15801,18 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "pocket"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "restart-budget-s"
                 },
                 {
                     "how": [
@@ -15938,6 +16050,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-watch-page — does `watch.html` actually DRAW a tape, all the way through, without dying?",
             "path": "scripts/procgen/probe-seedling-watch-page.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "out"
+            ],
+            "file": "probe-seedling-yeti.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "plan-seedling-watcher-witness.mjs",
+                    "name": "check"
+                },
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's YETI, ON THE GAME (fidelity YETI D1; `CONTACT_FIDELITY.yetiTalk`).",
+            "path": "scripts/procgen/probe-seedling-yeti.mjs"
         },
         {
             "argvHelpers": [

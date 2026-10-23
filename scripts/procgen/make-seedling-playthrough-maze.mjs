@@ -38,8 +38,11 @@ import { compileRegionAtlas, formatCompileReport } from '../../frontend/modules/
 import { stampAtlasIdentity } from '../../frontend/modules/procgenPipeline/regionAtlasValidator.js';
 import { stringifyRulesJson } from '../../frontend/modules/shared/rulesJsonBuilder.js';
 import { seedlingMazeProjectionDeps } from '../../frontend/modules/flashPanel/seedlingAtlasAnalysis.js';
+import { apRegionName } from '../../frontend/modules/procgenPipeline/regionAtlasValidator.js';
+import { SHARED_WORLD_ALPHABET } from '../../frontend/modules/procgenPipeline/regionAtlasMazeProjection.js';
+import { SEEDLING_TILE_SIZE } from '../../frontend/modules/flashPanel/seedlingSemantics.js';
 import {
-    PLAYTHROUGH_MAP, playthroughGridFor, playthroughAnalyzerOptions,
+    PLAYTHROUGH_MAP, playthroughGridFor, playthroughAnalyzerOptions, playthroughRopeEvents,
 } from './make-seedling-playthrough-rules.mjs';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 
@@ -87,6 +90,41 @@ export function restrictAtlas(atlas, levels, { start: fallback } = {}) {
     return stampAtlasIdentity(restricted, 'seedling');
 }
 
+/**
+ * ⛓ ARROW TRAPS + ROPES (session tile-primitives-arrow-rope, ⚖ 2026-10-22 "Both: this visit + event item") — the
+ * playthrough rules' ROPE EVENTS for `levels`: each minted rope's event location (cut in the sub-region its tile
+ * borders) and the exit gates of the game landings in its lane (L17's stairs land in L16's lane: that departure
+ * costs the cut). Derived by the rules producer (`playthroughRopeEvents`); PLACE is read off the atlas's persisted
+ * partition, the same rule, since this compile does not run the producer's analysis pass. A gate or event whose
+ * ends are not all in `levels` is left out (its exit is not wired here).
+ */
+export function ropeEventsFor(atlas, partition, levels) {
+    const keep = new Set(levels);
+    const place = (row) => {
+        const region = atlas.regions.find((r) => r.map_ref === row.level);
+        const part = partition.regions?.[region?.region_id];
+        if (!region?.subgraph?.sub_regions) return { region_id: region.region_id, side: apRegionName(region.region_id) };
+        if (!part) throw new Error(`rope events: the partition has no entry for ${region.region_id}`);
+        const [x, y] = [Math.floor(row.x / SEEDLING_TILE_SIZE), Math.floor(row.y / SEEDLING_TILE_SIZE)];
+        const [px, py] = part.origin ?? [0, 0];
+        const beside = new Set([[x, y - 1], [x + 1, y], [x, y + 1], [x - 1, y]]
+            .map(([nx, ny]) => part.rows[ny - py]?.[nx - px]).filter((ch) => ch && ch !== '.')
+            .map((ch) => part.sub_regions[SHARED_WORLD_ALPHABET.indexOf(ch)]));
+        if (beside.size !== 1) {
+            throw new Error(`rope events: L${row.level} rope@${row.x},${row.y} borders sub-regions [${[...beside].join(', ')}] — one was expected`);
+        }
+        const [sub] = beside;
+        return { region_id: region.region_id, sub_region: sub, side: apRegionName(region.region_id, sub) };
+    };
+    const { events, exitGates } = playthroughRopeEvents(atlas, { place });
+    const conns = atlas.vanilla_layout?.connections ?? [];
+    return {
+        events: events.filter((e) => keep.has(e.region_id)),
+        exitGates: exitGates.filter((g) => keep.has(g.region_id) && conns.some((c) => c.from[0] === g.region_id
+            && c.from[1] === g.exit_id && keep.has(c.to[0]))),
+    };
+}
+
 /** Compile the preset (or, for a measurement, the playthrough restricted to `levels`). Returns `{text, report}`. */
 export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
     const atlas = readJson(resolve(ATLAS_DIR, 'seedling-playthrough.json'));
@@ -107,11 +145,14 @@ export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
             resolveCondition: playthroughAnalyzerOptions.resolveCondition,
         },
     });
+    const ropes = ropeEventsFor(atlas, partition, levels);
     const { rules, report } = compileRegionAtlas(restrictAtlas(atlas, levels, { start: START_LEVEL }), {
         mapDoc,
         embedSphereLog: true,
         sidecarFlavor: 'maze',
         mazeProjection,
+        events: ropes.events,
+        exitGates: ropes.exitGates,
     });
     return { text: `${stringifyRulesJson(rules)}\n`, report, unresolved: mazeProjection.unresolved ?? [] };
 }

@@ -213,5 +213,120 @@
         }
       ]
     }
+  },
+  "lane_armed": {
+    "params": [
+      "cell",
+      "tile"
+    ],
+    "body": {
+      "type": "or",
+      "conditions": [
+        {
+          "type": "any_of",
+          "element_rule": {
+            "type": "not",
+            "condition": {
+              "type": "item_check",
+              "item": {
+                "type": "name",
+                "name": "t"
+              }
+            }
+          },
+          "iterator_info": {
+            "type": "comprehension_details",
+            "target": {
+              "type": "name",
+              "name": "t"
+            },
+            "iterator": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "tile"
+              },
+              "attr": "lane_unless"
+            }
+          }
+        },
+        {
+          "type": "any_of",
+          "element_rule": {
+            "type": "item_check",
+            "item": {
+              "type": "name",
+              "name": "t"
+            }
+          },
+          "iterator_info": {
+            "type": "comprehension_details",
+            "target": {
+              "type": "name",
+              "name": "t"
+            },
+            "iterator": {
+              "type": "attribute",
+              "object": {
+                "type": "name",
+                "name": "tile"
+              },
+              "attr": "lane_while"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "rope_cut": {
+    "params": [
+      "cell",
+      "tile"
+    ],
+    "body": {
+      "type": "or",
+      "conditions": [
+        {
+          "type": "attribute",
+          "object": {
+            "type": "name",
+            "name": "tile"
+          },
+          "attr": "broken"
+        },
+        {
+          "type": "and",
+          "conditions": [
+            {
+              "type": "compare",
+              "left": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "tile"
+                },
+                "attr": "event"
+              },
+              "op": "is not",
+              "right": {
+                "type": "constant",
+                "value": null
+              }
+            },
+            {
+              "type": "item_check",
+              "item": {
+                "type": "attribute",
+                "object": {
+                  "type": "name",
+                  "name": "tile"
+                },
+                "attr": "event"
+              }
+            }
+          ]
+        }
+      ]
+    }
   }
 }

@@ -40,7 +40,7 @@ import {
 } from './levelWorld.js';
 import {
     INITIAL_FRAMES_THIS_CHARACTER, PICKUP_CEREMONY, PICKUP_CEREMONY_BY_KEYTYPE,
-    HELP_DISMISS_KEYS, PICKUP_TEXT_FROM_ATTRIBUTE, PLACED_NPC_TALK, TALK_KEY,
+    HELP_DISMISS_KEYS, PICKUP_TEXT_FROM_ATTRIBUTE, PLACED_NPC_TALK, TALK_KEY, YETI_PORTAL_TAG,
     beginDialogue, stepDialogue,
 } from './dialogue.js';
 // ⛓⛓⛓ R6 SLICE 6c: the ENDING's own transcription — the placed NPC's
@@ -515,6 +515,8 @@ export const LEDGER_KIND_NAMES = Object.freeze([
     'bombEvents',
     // ⛓ fidelity BEAMTOWER D1: the towers' stepped `y` (ON only).
     'beamTowerTrace',
+    // ⛓ fidelity YETI D2: the Yeti's talk and its two writes (`CONTACT_FIDELITY.yetiTalk` ON only).
+    'yetiEvents',
 ]);
 
 /**
@@ -3068,6 +3070,20 @@ export function createLevelRun({
      * A new `Game` destroys it, as it does every runtime entity.
      */
     let witchSword = null;
+    /**
+     * ⛓⛓ fidelity YETI D2 (`CONTACT_FIDELITY.yetiTalk`): the Yeti's ledger, `run.ledger('yetiEvents')` —
+     * `yeti-open` / `yeti-close` (with `cause`, and `wrote` false when `createdPortal` already held) and one `yeti-write`
+     * per `setPersistence(tag, false)` `doneTalking()` makes. Empty in every room without a speaking Yeti, and OFF.
+     */
+    const yetiLedger = [];
+    /**
+     * ⛓⛓ fidelity YETI D2: the two writes `Yeti.doneTalking()` makes (`NPCs/Yeti.as:43-49`), `"<level>:<tag>" ->
+     * {id, level, tag, t, bootCleared}` — an `earnedClears` feeder. `bootCleared` is whether the flag was already off
+     * when the Yeti wrote it (a staged boot): the write is real, the clear is not EARNED. A run-long ledger like
+     * `watcherFlags` (never reset per visit); what the escape reads is the write's effect, `clearedByLevel` /
+     * `pendingEarnedClears`, both in `stateDigestParts`' `persist`.
+     */
+    const yetiFlags = new Map();
     /** The `{114,0}` write `doneTalking()` makes — keyed like `bossFlags`. */
     const watcherFlags = new Map();
     /**
@@ -7160,7 +7176,8 @@ export function createLevelRun({
                 // ⛓ fidelity DRILL D2: `spear()` tests the rect and nothing else (`Player.as:960-990`) — no reach gate and
                 // no line (OFF: `slash()`'s two gates, as before).
                 const rectOnly = CONTACT_FIDELITY.drillMixedRooms && weapon === 'spear';
-                const blocker = rectOnly || reach > spearReach || lineWaived ? null : collideLineSolid(state.x, state.y, d.x, d.y);
+                const blocker = rectOnly || reach > spearReach || lineWaived ? null
+                    : collideLineSolid(state.x, state.y, d.x, d.y, { masks: CONTACT_FIDELITY.pixelMaskSightLines });
                 let verdict = { landed: false, killed: false };
                 if (rectOnly ? spearTouchesDrill(state.x, state.y, direction, d) : (reach <= spearReach && !blocker)) {
                     verdict = hitDrill(d, {
@@ -7194,7 +7211,8 @@ export function createLevelRun({
                         + `${r.chaserId} in level ${level}, which is not in the run's wallflyer state.`);
                 }
                 const reach = distanceRectPoint(state.x, state.y, wallFlyerRect(w));
-                const blocker = reach > spearReach || lineWaived ? null : collideLineSolid(state.x, state.y, w.x, w.y);
+                const blocker = reach > spearReach || lineWaived ? null
+                    : collideLineSolid(state.x, state.y, w.x, w.y, { masks: CONTACT_FIDELITY.pixelMaskSightLines });
                 let verdict = { landed: false, killed: false };
                 if (reach <= spearReach && !blocker) {
                     verdict = hitWallFlyer(w, {
@@ -7338,12 +7356,23 @@ export function createLevelRun({
                  * receiver culls its own hit tests) arriving at a new class.
                  */
                 const reach = distanceRectPoint(state.x, state.y, body);
-                if (reach > spearReach) {
+                /**
+                 * ⛓ fidelity MASKS D2 (`pixelMaskSightLines`): and `slash()`'s LINE, which this arm never asked —
+                 * `!collideLine("Solid", x, y, v[i].x, v[i].y) || hasGhostSword || … || v[i] is Flyer`
+                 * (`Player.as:917`), the boxes and the "Solid" pixelmasks (a bob beside L65's OpenTree). The spear's
+                 * thrust has no line (`spear()`), and a ghost swing and a Flyer waive it. OFF: no line, as before.
+                 */
+                const lineBlocker = CONTACT_FIDELITY.pixelMaskSightLines && reach <= reachLimit && weapon === 'sword'
+                    && !ghost && c.tag !== 'flyer'
+                    ? collideLineSolid(state.x, state.y, c.x, c.y, { masks: true }) : null;
+                if (reach > spearReach || lineBlocker) {
                     chaserPressHits.push({
                         t: ticksCompleted, level, id: c.id, tag: c.tag, weapon,
                         landed: false, killed: false, reach,
                         hits: c.hits, hitsTimer: c.hitsTimer,
-                        why: `distanceRectPoint ${reach.toFixed(3)} > ${spearReach} — `
+                        why: lineBlocker ? `collideLine("Solid") meets ${lineBlocker.tag ?? 'a Solid'} at `
+                            + `(${lineBlocker.at.x}, ${lineBlocker.at.y})`
+                            : `distanceRectPoint ${reach.toFixed(3)} > ${spearReach} — `
                             + 'the rect reached it and `slash()`\'s own gate did not',
                     });
                     hits.push({ as3: 'Enemy', id: c.id, landed: false, killed: false });
@@ -11165,6 +11194,12 @@ export function createLevelRun({
      * crosses the opaque half of the CliffSide at (160,112); the boxes alone see a clear line. Default OFF: every other
      * caller reads the boxes alone, as before (`assertCrusherSolidsBound` still refuses the crusher's case by name).
      *
+     * ⛓ fidelity MASKS D2: the readers whose game line can meet a mask pass `{masks: CONTACT_FIDELITY.
+     * pixelMaskSightLines}`; the default stays the boxes, so a reader nobody re-read (the hammer
+     * arc's spinner forecast and strike line, handed over) is unchanged. The masks a line can meet are those whose rect
+     * meets the line's own bounding box (every sample lies inside it, and `maskHitsBox` fails outside a mask's rect
+     * first): the same answer, without asking L12's hundred masks per sample.
+     *
      * @returns {?{tag: ?string, at: {x, y}}} the first blocker, or null
      */
     function collideLineSolid(fromXf, fromYf, toXf, toYf, { masks: withMasks = false } = {}) {
@@ -11173,7 +11208,17 @@ export function createLevelRun({
         const toX = Math.trunc(toXf);
         const toY = Math.trunc(toYf);
         const boxes = world.solidBoxesForMover(normalizeLiveOpts(liveSolidOpts()));
-        const masks = withMasks ? (world.pixelmasks ?? []).filter((p) => p.cls?.type === 'Solid') : [];
+        // a sample's 1x1 box spans [p, p + 1) for p in [min, max]; a mask's integer origin meets it iff origin <= max
+        const lx0 = Math.min(fromX, toX);
+        const lx1 = Math.max(fromX, toX);
+        const ly0 = Math.min(fromY, toY);
+        const ly1 = Math.max(fromY, toY);
+        // ⛔ an `OpenTree` is NOT "Solid": it extends `Tree`, whose ctor writes `type = "Tree"` (`Scenery/Tree.as:22`;
+        // `OpenTree.as` never re-types it) — measured on p4g (`mask-l65-opentree`: the swing through its opaque pixels
+        // lands). `ENTITY_CLASSES.opentree` says "Solid"; the line reads the AS3 type (fidelity MASKS, handed over).
+        const masks = withMasks ? (world.pixelmasks ?? []).filter((p) => p.cls?.type === 'Solid'
+            && p.cls.as3 !== 'OpenTree'
+            && p.maskX <= lx1 && p.maskX + p.mask.w > lx0 && p.maskY <= ly1 && p.maskY + p.mask.h > ly0) : [];
         const at = (px, py) => {
             for (const s of boxes) {
                 if (px >= s.x && px < s.right && py >= s.y && py < s.bottom) return s;
@@ -12295,7 +12340,9 @@ export function createLevelRun({
                 playerBox: playerBoxAt(state.x, state.y),
                 player: { x: state.x, y: state.y },
                 // ⛓ fidelity DRILL D2: `collideLine("Solid", …)` meets the pixelmasks too (OFF: the boxes alone).
-                lineBlocked: (x0, y0, x1, y1) => !!collideLineSolid(x0, y0, x1, y1, { masks: mixed }),
+                // ⛓ fidelity MASKS D2: and every drill's, a lone one's too, with `pixelMaskSightLines` ON.
+                lineBlocked: (x0, y0, x1, y1) => !!collideLineSolid(x0, y0, x1, y1,
+                    { masks: mixed || CONTACT_FIDELITY.pixelMaskSightLines }),
                 collides: (rect) => base.collides(rect) || (enemyAt !== null && enemyAt(rect)),
                 hitPlayer: (d) => {
                     let cur = d;
@@ -12426,7 +12473,7 @@ export function createLevelRun({
                         frozen: false, onScreen: onScreen(id), playerBox,
                         player: { x: playerPos.x, y: playerPos.y },
                         lineBlocked: (x0, y0, x1, y1) => !!collideLineSolid(x0, y0, x1, y1,
-                            { masks: CONTACT_FIDELITY.drillMixedRooms }),
+                            { masks: CONTACT_FIDELITY.drillMixedRooms || CONTACT_FIDELITY.pixelMaskSightLines }),
                         collides: (rect) => sctx.collides(rect) || (enemyAt !== null && enemyAt(rect)),
                         hitPlayer: (d) => { contact = true; return d; },
                     });
@@ -12478,7 +12525,7 @@ export function createLevelRun({
                     if (map === fl && !CONTACT_FIDELITY.wallFlyerSwordHits) continue;
                     for (const [id, b] of map) {
                         if (b.removed || !inSwing(rectOf(b), id)) continue;
-                        if (collideLineSolid(playerPos.x, playerPos.y, b.x, b.y)) continue;
+                        if (collideLineSolid(playerPos.x, playerPos.y, b.x, b.y, { masks: CONTACT_FIDELITY.pixelMaskSightLines })) continue;
                         const v = hitOf(b, { damage: pressHitDamage('sword'), t: pressHitType('sword') });
                         map.set(id, v[field]);
                         if (v.landed) landed.push(id);
@@ -15080,6 +15127,50 @@ export function createLevelRun({
         }
         return talkerStates.get(n);
     };
+    /**
+     * ⛓⛓⛓ fidelity YETI D2 (`CONTACT_FIDELITY.yetiTalk`) — `Yeti.doneTalking()`, run from the `talking` setter's false
+     * branch on BOTH causes (the pages exhausted, or the player out of the 24 px circle — `NPC.as:230-236`):
+     *
+     *     NPCs/Yeti.as:42-49   super.doneTalking(); if (!createdPortal) { createdPortal = true;
+     *                          Game.setPersistence(tag, false); Game.setPersistence(1, false); }
+     *
+     * `createdPortal` is an INSTANCE field, so it lives on this visit's talker row (`talkerStates`, rebuilt per
+     * visit); a second close in the same visit (out of the circle and back, `talked` reset) writes nothing.
+     *
+     * ⛔ THE TWO WRITES LAND AT DIFFERENT TIMES IN THE MODEL, BECAUSE THEIR READERS DO.
+     *   · `{level, 1}` — the DeadBoss portal (`teleporter@80,16`, tag 1). `Teleporter.update()` runs
+     *     `checkDeactivated()` EVERY frame (`Teleporter.as:89-94`), so the door opens IN THIS VISIT: applied now,
+     *     `applyClearNow` (the declared mid-visit clear's one write, which rebuilds the world and rebinds `world`).
+     *     The Yeti is added after the teleporters (`Game.as:2274` vs the Teleporter's earlier spawn line) and so
+     *     updates before them: the game's door is live on this very frame. The player cannot stand on it now (the
+     *     circle's 24 px and the door's rect are > 30 px apart in L58), so the fencepost is unobservable either way.
+     *   · `{level, tag}` — the Yeti's OWN tag. Only `NPC.check()` reads it, and only on a `Game`'s first frame: the
+     *     Yeti stays in the room for the rest of the visit and is gone from the next build. Banked, as the
+     *     Watcher's write is (`pendingEarnedClears`), and despawned by `YETI_PERSISTENCE_RESPONSE`.
+     * Both are recorded at the write's tick (`clearTagLanded`: the game's array holds the flag from the next).
+     */
+    const yetiDoneTalking = (w, cause) => {
+        const wrote = !w.createdPortal;
+        yetiLedger.push({ t: ticksCompleted, level: w.level, what: 'yeti-close', id: w.id, cause, wrote });
+        if (!wrote) return;
+        w.createdPortal = true;
+        const record = (tag) => {
+            const bootCleared = (clearedByLevel.get(w.level) ?? []).includes(tag)
+                || (pendingEarnedClears.get(w.level)?.has(tag) ?? false);
+            const key = `${w.level}:${tag}`;
+            if (!yetiFlags.has(key)) {
+                yetiFlags.set(key, { id: w.id, level: w.level, tag, t: ticksCompleted, bootCleared });
+            }
+            yetiLedger.push({ t: ticksCompleted, level: w.level, what: 'yeti-write', id: w.id, tag, bootCleared });
+        };
+        if (w.persistTag >= 0) {
+            record(w.persistTag);
+            if (!pendingEarnedClears.has(w.level)) pendingEarnedClears.set(w.level, new Set());
+            pendingEarnedClears.get(w.level).add(w.persistTag);
+        }
+        record(YETI_PORTAL_TAG);
+        applyClearNow({ level: w.level, tag: YETI_PORTAL_TAG });
+    };
     const stepTalkersNow = (released) => {
         const st = talkerStateFor(level);
         if (st.size === 0) return { frozen: false };
@@ -15127,6 +15218,7 @@ export function createLevelRun({
                                 ...(report ? { tag: DARK_SWORD_WITCH_TAG } : {}) };
                         }
                     }
+                    if (w.tag === 'yeti' && CONTACT_FIDELITY.yetiTalk) yetiDoneTalking(w, r.left ? 'left' : 'done');
                 }
                 continue;
             }
@@ -15144,7 +15236,9 @@ export function createLevelRun({
                 continue;
             }
             if (!released || w.talked || open) continue;
-            if (w.doneTalking === 'REFUSED') {
+            // ⛓ fidelity YETI D2: ON, the Yeti's `doneTalking()` IS transcribed (the close arm above); OFF the row's
+            // REFUSED stands and the open throws by name, as before.
+            if (w.doneTalking === 'REFUSED' && !(w.tag === 'yeti' && CONTACT_FIDELITY.yetiTalk)) {
                 const row = PLACED_NPC_TALK[w.tag];
                 throw new Error(`levelRun: the walk opens \`${w.tag}\`'s dialogue at tick `
                     + `${ticksCompleted} in level ${w.level} (an X release `
@@ -15165,6 +15259,9 @@ export function createLevelRun({
             if (w.tag === 'witch') {
                 witchLedger.push({ t: ticksCompleted, level: w.level, what: 'witch-open', id: w.id,
                     extra: spoken !== w.text });
+            }
+            if (w.tag === 'yeti' && CONTACT_FIDELITY.yetiTalk) {
+                yetiLedger.push({ t: ticksCompleted, level: w.level, what: 'yeti-open', id: w.id });
             }
             w.dialogue = beginNpcDialogue(spoken, {
                 talkingSpeed: w.talkingSpeed,
@@ -16768,12 +16865,14 @@ export function createLevelRun({
                 const lx1 = Math.max(state.x, t.x);
                 const ly0 = Math.min(state.y, t.y);
                 const ly1 = Math.max(state.y, t.y);
-                if (lx1 >= maskBox.x && lx0 <= maskBox.right && ly1 >= maskBox.y && ly0 <= maskBox.bottom) {
+                // ⛓ fidelity MASKS D2: with `pixelMaskSightLines` ON the line below samples the beast's mask itself.
+                if (!CONTACT_FIDELITY.pixelMaskSightLines
+                    && lx1 >= maskBox.x && lx0 <= maskBox.right && ly1 >= maskBox.y && ly0 <= maskBox.bottom) {
                     throw new Error(`levelRun: a swing at ${t.id} at tick ${ticksCompleted + 1} draws its line of sight across `
                         + 'the Tentacled Beast\'s pixelmask box; the game samples the mask and the model\'s line walks boxes. '
                         + 'Refused by name (bosskills D3).');
                 }
-                if (collideLineSolid(state.x, state.y, t.x, t.y)) continue;
+                if (collideLineSolid(state.x, state.y, t.x, t.y, { masks: CONTACT_FIDELITY.pixelMaskSightLines })) continue;
             }
             const v = hitTentacle(t, { d, t: t0, frozen: ceremony !== null });
             tentacleLedger.push({ t: ticksCompleted + 1, level, kind: 'tentacle-hit', id: t.id, pressTick, ...v });
@@ -17430,6 +17529,14 @@ export function createLevelRun({
             if (out.some((o) => o.level === n && o.tag === tag)) continue;
             out.push({ level: n, tag, by: r.id, t: r.t });
         }
+        // ⛓⛓ fidelity YETI D2: the Yeti's two writes. ⚠ Filtered on `bootCleared`, NOT on `clearedByLevel`: the portal's
+        // `{58,1}` is applied mid-visit INTO `clearedByLevel` (its teleporter re-reads it), so that filter would hide
+        // the very clear the run earned.
+        for (const r of yetiFlags.values()) {
+            if (r.bootCleared) continue;
+            if (out.some((o) => o.level === r.level && o.tag === r.tag)) continue;
+            out.push({ level: r.level, tag: r.tag, by: r.id, t: r.t });
+        }
         // ⛓⛓⛓ R6 SLICE 6c: THE FINAL DOOR — `removed()` is
         // `Game.setPersistence(tag, false)` with no test of the cause,
         // and `animEnd` is the only caller. Its own loop because the
@@ -17510,6 +17617,8 @@ export function createLevelRun({
     const staticBodyDeathsNow = () => staticBodyDeaths.map((d) => ({ ...d }));
     /** ⛓ ENCOUNTERS D3: `run.ledger('witchEvents')` — a copy of the Witch's rows. */
     const witchEventsNow = () => witchLedger.map((r) => ({ ...r, ...(r.flag ? { flag: { ...r.flag } } : {}) }));
+    /** ⛓ fidelity YETI D2: `run.ledger('yetiEvents')` — a copy of the Yeti's rows. */
+    const yetiEventsNow = () => yetiLedger.map((r) => ({ ...r }));
     /** ⛓ CROSSROOM D2: `run.ledger('unreadRoomWrites')` — the cross-room writes no entity of their level reads. */
     const unreadRoomWritesNow = () => unreadRoomWrites.map((u) => ({ ...u }));
     const PROGRESS_FIELDS = Object.freeze({
@@ -17566,6 +17675,8 @@ export function createLevelRun({
         bombEvents: bombEventsNow,
         // ⛓ fidelity BEAMTOWER D1: the towers' stepped `y`, ON only (empty OFF).
         beamTowerTrace: () => beamTowerTrace.map((r) => ({ ...r })),
+        // ⛓ fidelity YETI D2: the Yeti's rows (ON only).
+        yetiEvents: yetiEventsNow,
     });
 
     /**
@@ -18796,6 +18907,23 @@ export function createLevelRun({
          * report the one kind of ceremony that CANNOT be advanced by pressing
          * anything as a dialogue waiting for a press.
          */
+        /**
+         * ⛓ JS G4b-dialogue: the NPC whose `Game.talk()` draws NOW (`Game.talking`), or null.
+         * ⛔ READ-ONLY: `.get()` on the per-level maps as they stand — never the lazy
+         * `talkerStateFor`/`watcherStateFor`/`bobArenaNow` builders; writes nothing, builds
+         * nothing. The pickup ceremony's dialogue stays on `ceremonyNow`.
+         */
+        get talkingNow() {
+            const row = (source, id, tag, d, extra = {}) => ({ source, id, tag, ...extra, page: d.page, pages: d.pages.length,
+                text: d.pages[d.page] ?? '', currentCharacter: d.currentCharacter });
+            for (const w of talkerStates.get(level)?.values() ?? []) if (w.talking && w.dialogue && !w.dialogue.done) return row('talker', w.id, w.tag, w.dialogue);
+            for (const w of watcherStates.get(level)?.values() ?? []) if (w.talking && w.dialogue && !w.dialogue.done) return row('watcher', w.id, 'watcher', w.dialogue);
+            const a = bobArena && bobArena.level === level ? bobArena : null;
+            if (a?.npc?.d && !a.npc.d.done) return row('bobBoss', null, 'bobboss', a.npc.d, { form: a.npc.form });
+            const intro = lightsFights.get(level)?.intro;
+            if (intro?.talking && intro.d && !intro.d.done) return row('lightsIntro', null, 'lightboss', intro.d);
+            return null;
+        },
         get ceremonyNow() {
             if (ceremony === null) return null;
             const d = ceremony.dialogue;
@@ -19274,6 +19402,10 @@ export function createLevelRun({
         get staticBodyDeaths() { return staticBodyDeathsNow(); },
         /** ⛓ ENCOUNTERS D3: the Witch's encounter rows — see `witchEventsNow`. */
         get witchEvents() { return witchEventsNow(); },
+        /** ⛓ fidelity YETI D2: the Yeti's rows — see `yetiEventsNow`. */
+        get yetiEvents() { return yetiEventsNow(); },
+        /** ⛓ fidelity YETI D2: the two writes `Yeti.doneTalking()` made — see `yetiFlags`. */
+        get yetiFlags() { return [...yetiFlags.values()].map((f) => ({ ...f })); },
         /** ⛓ CROSSROOM D2: the unread cross-room writes — see `unreadRoomWrites`. */
         get unreadRoomWrites() { return unreadRoomWritesNow(); },
         /**
@@ -19718,9 +19850,11 @@ export function createLevelRun({
          * the same live geometry, the same truncating signature: the planner and
          * the executor agree by construction. A pure read — `advance` never
          * consults it. Returns the first blocker `{tag, at: {x, y}}`, or null.
+         * ⛓ fidelity MASKS D2: an optional fifth `{masks}` — a mirror of a reader that samples the pixelmasks passes
+         * what that reader passes; four arguments read the boxes, as before.
          */
-        collideLineSolid(fromX, fromY, toX, toY) {
-            return collideLineSolid(fromX, fromY, toX, toY);
+        collideLineSolid(fromX, fromY, toX, toY, opts = undefined) {
+            return collideLineSolid(fromX, fromY, toX, toY, opts);
         },
         /** One per block a pulse MOVED — link 3 of L38's chain. */
         get pulserPushes() { return pulserPushesNow(); },

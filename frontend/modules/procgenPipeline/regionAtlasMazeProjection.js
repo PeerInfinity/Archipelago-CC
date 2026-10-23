@@ -651,6 +651,14 @@ export function projectRegionToMaze(region, grid, ctx) {
 //   lock           an obstacle cleared by the HELD token of its group
 //   rock           an obstacle with `clear_set: []` and `struck_by` = one
 //                  action per item its condition names (`action_lib`)
+//   rope           a rock that, struck, ACTIVATES its group's token and is
+//                  the AP `event` (the rope's event location; its cell goes to
+//                  the one sub-region it borders)
+//   trap           `traps` + `trapLib`: its lane refuses the player while
+//                  armed (group token absent for 'unless_active', present for
+//                  'while_active'); the conditions the atlas charged that lane
+//                  with (`charges`) are DROPPED from its cells — the trap
+//                  models them (session tile-primitives-arrow-rope)
 //   ownership      `shared_world.rows`: which AP sub-region owns each cell, from
 //                  the atlas's own partition — walking from a cell of one into
 //                  a cell of another IS the crossing (`user:regionMove`), and
@@ -669,7 +677,7 @@ export function projectRegionToMaze(region, grid, ctx) {
 // which keeps it sound (never a solution the game refuses).
 
 /** The interaction primitives a level-world entity row may name. */
-export const LEVEL_WORLD_ENTITY_KINDS = Object.freeze(['block', 'button', 'lock', 'rock']);
+export const LEVEL_WORLD_ENTITY_KINDS = Object.freeze(['block', 'button', 'lock', 'rock', 'rope', 'trap']);
 
 /** The maze's default use keys, in order (mazeKeys DEFAULT_USE_KEYS — kept in sync by test). */
 export const LEVEL_WORLD_USE_KEYS = Object.freeze(['z', 'x', 'c', 'v']);
@@ -682,6 +690,8 @@ const groupToken = (group) => `sw_${group}`;
 const buttonId = (group) => `button_${group}`;
 const lockId = (group) => `lock_${group}`;
 const rockId = (actions) => `rock_${actions.join('_')}`;
+const ropeId = ([x, y]) => `rope_${x}_${y}`;
+const trapId = (group, fires) => `trap_${group}_${fires}`;
 
 /**
  * Does this level's entity list carry an interaction (a block, a button, a
@@ -690,7 +700,7 @@ const rockId = (actions) => `rock_${actions.join('_')}`;
  */
 export function levelHasInteraction(entities) {
     return Array.isArray(entities)
-        && entities.some((e) => e.kind === 'block' || e.kind === 'button' || e.kind === 'rock');
+        && entities.some((e) => ['block', 'button', 'rock', 'rope', 'trap'].includes(e.kind));
 }
 
 /**
@@ -751,6 +761,12 @@ export function projectLevelWorld(region, grid, ctx, entities) {
     const buttons = [];
     const buttonLib = {};
     const actionLib = {};
+    const traps = [];
+    const trapLib = {};
+    const ropeCells = [];
+    // The lane conditions a trap MODELS, by key: dropped from its lane cells below.
+    const condKey = ctx.conditionKey ?? ((c) => JSON.stringify(c));
+    const modelled = new Map(); // "x,y" → Set of condition keys
     const groupsWithButton = new Set();
     for (const e of entities) if (e.kind === 'button') groupsWithButton.add(String(e.group));
     const actionFor = (strike) => {
@@ -822,12 +838,46 @@ export function projectLevelWorld(region, grid, ctx, entities) {
             }
             continue;
         }
-        // rock
+        if (e.kind === 'trap') {
+            const group = String(e.group);
+            const id = trapId(group, e.fires);
+            trapLib[id] = { kind: 'arrow_trap', name: `arrow trap (group ${group}, fires ${e.fires})`, active: groupToken(group), fires: e.fires };
+            const lane = (e.lane ?? []).map(local).filter(inGrid);
+            traps.push({ x: tiles[0][0], y: tiles[0][1], id, label: e.label ?? id, lane: lane.map(([x, y]) => ({ x, y })) });
+            for (const [x, y] of lane) {
+                if (!modelled.has(keyOf(x, y))) modelled.set(keyOf(x, y), new Set());
+                for (const c of e.charges ?? []) modelled.get(keyOf(x, y)).add(condKey(c));
+            }
+            continue;
+        }
+        // rock / rope
         const strikes = e.strike ?? [];
         if (strikes.length === 0) {
-            throw new Error(`atlas region "${regionId}": ${e.label ?? 'a rock'} names no item that strikes it`);
+            throw new Error(`atlas region "${regionId}": ${e.label ?? `a ${e.kind}`} names no item that strikes it`);
         }
         const actions = strikes.map(actionFor);
+        if (e.kind === 'rope') {
+            if (tiles.length !== 1) {
+                throw new Error(`atlas region "${regionId}": ${e.label ?? 'a rope'} covers ${tiles.length} tiles; a maze rope is one cell`);
+            }
+            const id = ropeId(tiles[0]);
+            builder.obstacleLib[id] = {
+                id,
+                name: e.label ?? id,
+                kind: 'rope',
+                clear_set: [],
+                struck_by: actions,
+                activates: groupToken(String(e.group)),
+                ...(e.event ? { event: e.event } : {}),
+                color: '#b08a4a',
+            };
+            const [x, y] = tiles[0];
+            builder.floor(x, y);
+            claimed.add(keyOf(x, y));
+            builder.obstacles.set(keyOf(x, y), id);
+            ropeCells.push({ tile: tiles[0], label: e.label ?? id });
+            continue;
+        }
         const id = rockId(actions);
         builder.obstacleLib[id] = {
             id,
@@ -852,7 +902,10 @@ export function projectLevelWorld(region, grid, ctx, entities) {
             if (cell.kind === 'open') { builder.floor(x, y); continue; }
             if (cell.kind === 'wall') continue;
             if (cell.kind === 'gated') {
-                const own = occupancyRule(cell, resolveCondition);
+                const drop = modelled.get(keyOf(x, y));
+                const kept = drop ? (cell.conditions ?? []).filter((c) => !drop.has(condKey(c))) : null;
+                if (kept && kept.length === 0) { builder.floor(x, y); continue; }
+                const own = occupancyRule(kept ? { ...cell, conditions: kept } : cell, resolveCondition);
                 if (own.rule && own.unresolved.length === 0) {
                     builder.floor(x, y);
                     builder.gate(x, y, own.rule);
@@ -944,6 +997,20 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         });
     }
 
+    // ⛓ A ROPE's cell belongs to the ONE sub-region it borders (the rules' `place`
+    // rule for its event, `make-seedling-playthrough-rules` playthroughRopeEvents):
+    // it is cut from there, and its event location is that sub-region's.
+    for (const { tile: [x, y], label } of ropeCells) {
+        if (ownerOf([x + ox, y + oy]) !== -1) continue;
+        const beside = new Set([[x, y - 1], [x + 1, y], [x, y + 1], [x - 1, y]]
+            .filter(([nx, ny]) => inGrid([nx, ny]) && builder.isFloor(nx, ny))
+            .map(([nx, ny]) => ownerOf([nx + ox, ny + oy])).filter((o) => o !== -1));
+        if (beside.size !== 1) {
+            throw new Error(`atlas region "${regionId}": ${label} borders ${beside.size} sub-regions — one was expected`);
+        }
+        boundAt.set(keyOf(x, y), [...beside][0]);
+    }
+
     // --- ownership rows, entrances and the in-world crossings' AP names ------
     const rows = [];
     for (let y = 0; y < grid.height; y += 1) {
@@ -1003,6 +1070,7 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         ...(blocks.length > 0 ? { blocks: blocks.sort(sortRows) } : {}),
         ...(buttons.length > 0 ? { buttons: buttons.sort(sortRows), buttonLib } : {}),
         ...(Object.keys(actionLib).length > 0 ? { action_lib: actionLib } : {}),
+        ...(traps.length > 0 ? { traps: traps.sort(sortRows), trapLib } : {}),
         shared_world: {
             key: regionId,
             regions: bindings.map((b) => b.apName),
@@ -1024,7 +1092,8 @@ export function projectLevelWorld(region, grid, ctx, entities) {
     note({
         kind: 'level_world',
         message: `projected as ONE shared level world "${regionId}" (${bindings.length} AP region(s), carried by "${carrier}"): `
-            + `${blocks.length} block(s), ${buttons.length} button(s), ${Object.keys(actionLib).length} action(s)`,
+            + `${blocks.length} block(s), ${buttons.length} button(s), ${Object.keys(actionLib).length} action(s)`
+            + `${traps.length > 0 ? `, ${traps.length} arrow trap(s)` : ''}${ropeCells.length > 0 ? `, ${ropeCells.length} rope(s)` : ''}`,
     });
     return { sidecars, notes, analysis: null, sharedWorld: regionId };
 }

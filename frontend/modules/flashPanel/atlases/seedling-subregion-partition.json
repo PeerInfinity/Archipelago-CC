@@ -3,7 +3,7 @@
   "description": "GENERATED — do not edit. Which tile of a level is in which sub-region, per atlas; one character per tile, the sub-region's index in \"sub_regions\" over \"ABC…\", \".\" for none. Regenerate after either atlas changes.",
   "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
   "atlases": {
-    "seedling-7660a339": {
+    "seedling-78124631": {
       "atlas": "seedling-playthrough.json",
       "tile_size": 16,
       "regions": {
@@ -154,16 +154,16 @@
           "origin": [0,0],
           "width": 25,
           "height": 9,
-          "sub_regions": ["r1c1","r4c21"],
+          "sub_regions": ["r1c1","r1c9","r3c7","r4c21","r6c8"],
           "rows": [
             ".........................",
-            ".A.A.A...AAAAAAA.........",
-            ".AAA.AAAAAAAAAAA.........",
-            ".AAA.AAAA.AA...A.AAA.....",
-            ".AAA.A.A..AA...AAAA..BBB.",
-            ".AAA.A....AAA.AAAA.A.BBB.",
-            ".AAA.AAAA.AAAAAA.A.A.BBB.",
-            ".AAAAAAAA.AAAAAA.AAA.BBB.",
+            ".A.A.A...BBBBBBB.........",
+            ".AAA.A...BBBBBBB.........",
+            ".AAA.A.C..BB...B.BBB.....",
+            ".AAA.A.C..BB...BBBB..DDD.",
+            ".AAA.A....BBB.BBBB.B.DDD.",
+            ".AAA.A..E.BBBBBB.B.B.DDD.",
+            ".AAAAA..E.BBBBBB.BBB.DDD.",
             "........................."
           ]
         },

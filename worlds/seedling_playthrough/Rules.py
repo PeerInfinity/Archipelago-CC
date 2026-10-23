@@ -233,8 +233,73 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_16__r1c1 -> level_16__r4c21", player),
+        multiworld.get_entrance("level_16__r1c1 -> level_16__r1c9", player),
+        Has('L16 flag 0: rope@32,16 cleared', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_16__r1c1 -> level_16__r3c7", player),
+        Has('L16 flag 0: rope@32,16 cleared', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_16__r1c1 -> level_16__r6c8", player),
+        Has('L16 flag 0: rope@32,16 cleared', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_16__r1c9 -> level_16__r1c1", player),
+        Has('L16 flag 0: rope@32,16 cleared', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_16__r1c9 -> level_16__r3c7", player),
+        Has('L16 flag 0: rope@32,16 cleared', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_16__r1c9 -> level_16__r4c21", player),
         HasAny('Progressive Sword', 'Ghost Spear')
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_16__r1c9 -> level_16__r6c8", player),
+        And(HasAny('Progressive Sword', 'Ghost Spear'), Has('L16 flag 0: rope@32,16 cleared'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_16__r3c7 -> level_16__r1c1", player),
+        Has('L16 flag 0: rope@32,16 cleared', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_16__r3c7 -> level_16__r1c9", player),
+        Has('L16 flag 0: rope@32,16 cleared', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_16__r3c7 -> level_16__r6c8", player),
+        And(HasAny('Progressive Sword', 'Ghost Spear'), Has('L16 flag 0: rope@32,16 cleared'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_16__r6c8 -> level_16__r1c1", player),
+        Has('L16 flag 0: rope@32,16 cleared', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_16__r6c8 -> level_16__r1c9", player),
+        And(HasAny('Progressive Sword', 'Ghost Spear'), Has('L16 flag 0: rope@32,16 cleared'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_16__r6c8 -> level_16__r3c7", player),
+        And(HasAny('Progressive Sword', 'Ghost Spear'), Has('L16 flag 0: rope@32,16 cleared'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_17 -> level_16__r3c7", player),
+        Has('L16 flag 0: rope@32,16 cleared', 1)
     )
 
     world.set_rule(
@@ -325,6 +390,16 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("level_26__r13c8 -> level_26__r2c4", player),
         Or(Has('Progressive Shield', 2), HasAny('Ghost Spear', 'Progressive Sword', 'Wand'))
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_28__r1c18 -> level_28__r11c4", player),
+        Has('L28 flag 0: rope@160,64 cleared', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_entrance("level_28__r11c4 -> level_28__r1c18", player),
+        Has('L28 flag 0: rope@160,64 cleared', 1)
     )
 
     world.set_rule(
@@ -2728,6 +2803,11 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
+        multiworld.get_location("L16 flag 0: rope@32,16 cleared", player),
+        HasAny('Progressive Sword', 'Ghost Spear', 'Fire')
+    )
+
+    world.set_rule(
         multiworld.get_location("Level 019 - Shieldspire", player),
         Has('Progressive Sword', 1)
     )
@@ -2740,6 +2820,11 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_location("L24 flag 0: burnabletree@32,128 cleared", player),
         Has('Fire', 1)
+    )
+
+    world.set_rule(
+        multiworld.get_location("L28 flag 0: rope@160,64 cleared", player),
+        HasAny('Progressive Sword', 'Ghost Spear', 'Fire')
     )
 
     world.set_rule(

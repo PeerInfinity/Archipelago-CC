@@ -91,7 +91,8 @@ jobs:
   # Run canonical tests (--canonical-seed 1) - 10 parallel jobs
   run-canonical-tests:
     name: Canonical Test (Split ${{ matrix.split_num }})
-    runs-on: ubuntu-latest
+    # Pinned, not ubuntu-latest: Playwright refuses chromium on ubuntu-26.04 (2026-10-22). Un-pin once Playwright supports 26.04.
+    runs-on: ubuntu-24.04
     needs: setup
     if: ${{ inputs.test_mode == 'canonical' || inputs.test_mode == 'both' }}
     timeout-minutes: 180
@@ -203,7 +204,8 @@ jobs:
   # Run random tests (no --canonical-seed) - 10 parallel jobs
   run-random-tests:
     name: Random Test (Split ${{ matrix.split_num }})
-    runs-on: ubuntu-latest
+    # Pinned, not ubuntu-latest: Playwright refuses chromium on ubuntu-26.04 (2026-10-22). Un-pin once Playwright supports 26.04.
+    runs-on: ubuntu-24.04
     needs: [setup, run-canonical-tests]
     # Run if: random mode, OR both mode (after canonical completes)
     # The 'always()' ensures this runs even if canonical was skipped
