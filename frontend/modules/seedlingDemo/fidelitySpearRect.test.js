@@ -16,10 +16,11 @@ import {
 const box = (x, y, w, h) => ({ x, y, right: x + w, bottom: y + h });
 
 describe('fidelity SPEARRECT D2 — the rule', () => {
-    it('ships OFF, and OFF `spearHitRect` IS `spearRect` (byte-identical)', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.spearGameTest).toBe(false);
+    // ⛓ shipped OFF; planning-10's flip (⚖ user "Harvest + flip ON", 2026-10-22) turns it ON.
+    it('ships ON (flipped), and OFF `spearHitRect` IS `spearRect` (byte-identical)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.spearGameTest).toBe(true);
         if (!globalThis.process?.env?.SEEDLING_SPEAR_GAME_TEST && !globalThis.process?.env?.SEEDLING_CONTACT_FIDELITY) {
-            expect(CONTACT_FIDELITY.spearGameTest).toBe(false);
+            expect(CONTACT_FIDELITY.spearGameTest).toBe(true);
         }
         withContactFidelity({ spearGameTest: false }, () => {
             for (const d of [RIGHT, UP, LEFT, DOWN]) {

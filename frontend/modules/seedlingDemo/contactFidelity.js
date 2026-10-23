@@ -960,8 +960,11 @@ export const CONTACT_FIDELITY = {
      * same rect. Witnessed on p4g at 0 px (`fixtures/spearrect-witness/`: a T+3 hit, a hit past 16 px, a corner touch,
      * a far edge, a truncated origin).
      * OFF: byte-identical. `SEEDLING_SPEAR_GAME_TEST=0|1` for a node measurement.
+     * ⛓ planning-10's flip (⚖ user, 2026-10-22, SPEARRECT "Harvest + flip ON") turns it ON. Measured movers (CI, wave-25
+     * A/B on ubuntu-24.04): the route survey (full) ON = OFF; the 43 spear-holding sweep legs ×2: 0 settled; probes
+     * standard ON/OFF + spearrect green. The press ledger gains the T+3 / T+5 rows (`repeat: 2|4`).
      */
-    spearGameTest: false,
+    spearGameTest: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

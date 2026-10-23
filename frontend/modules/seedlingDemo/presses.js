@@ -155,6 +155,7 @@ if (SLASH_ANIM_TICKS.slash !== SLASH_HIT_TICKS) {
     throw new Error(`presses: SLASH_HIT_TICKS ${SLASH_HIT_TICKS} (measured) is not the plain `
         + `swing's derived animation length ${SLASH_ANIM_TICKS.slash}`);
 }
+// ⛓ planning-10's SPEARRECT flip: MODELLED when `CONTACT_FIDELITY.spearGameTest` is ON (the default) — the name is the OFF bound's; a rename to `SPEAR_HIT_TICKS` is queued (js-planning-8).
 export const SPEAR_HIT_TICKS_UNMODELLED = Object.freeze({
     ticks: Object.freeze([1, 3, 5]),
     why: '`spearDelayMax` is 1, so the test runs on alternate ticks of the same '
