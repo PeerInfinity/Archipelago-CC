@@ -63,9 +63,10 @@ const drills = (run) => Object.fromEntries(run.drills.bodies.map((d) => [d.id, {
     removed: d.removed }]));
 
 describe('fidelity DRILLKILL — the switch', () => {
-    it('is OFF by default, and its prerequisites are ON', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.drillKillFirst).toBe(false);
-        expect(CONTACT_FIDELITY.drillKillFirst).toBe(false);
+    // ⛓ planning-11's flip (⚖ user "Harvest + flip ON", 2026-10-23): ON by default.
+    it('is ON by default (flipped), and its prerequisites are ON', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.drillKillFirst).toBe(true);
+        expect(CONTACT_FIDELITY.drillKillFirst).toBe(true);
         expect(CONTACT_FIDELITY_DEFAULTS).toMatchObject({ drillLive: true, drillMixedRooms: true, ropeCutAnyWeapon: true });
     });
     it('the pre-stance is the run range itself, three tiles out', () => {

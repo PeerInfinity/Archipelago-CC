@@ -983,8 +983,11 @@ export const CONTACT_FIDELITY = {
      * stances a drill covers is refused BY NAME on that. The key also carries one transcription the p4g witnesses found:
      * `endAnim`'s "die" case plays `""` (`drill.stepDrillGraphic`), which the L88 skin golden reads. OFF: byte-identical.
      * `SEEDLING_DRILL_KILL_FIRST=0|1`.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, DRILLKILL "Harvest + flip ON") turns it ON. Measured movers (CI, main
+     * 45e27e95e8 + the slice): the route survey (full) ON = OFF; the 8 L28 sweep legs ×2 per arm (240 s): done in all four;
+     * probes standard ON green.
      */
-    drillKillFirst: false,
+    drillKillFirst: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
