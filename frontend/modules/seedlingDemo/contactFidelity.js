@@ -992,7 +992,7 @@ export const CONTACT_FIDELITY = {
      * Without them both L69 sweep legs ran out the 90 s leg budget ON (×2, local).
      * OFF: byte-identical. `SEEDLING_LIGHTS_SORTIE_PORTFOLIO=0|1` for a node measurement.
      */
-    lightsSortiePortfolio: false,
+    lightsSortiePortfolio: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
