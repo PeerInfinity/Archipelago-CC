@@ -316,6 +316,9 @@ export function nodeAt(x, y, pitch) {
 export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}) {
     const {
         noclip = false, noHazards = [], avoidVolumes = false, allowPit = null,
+        // ⛓ fidelity PITLATCH: the run's `state.latched` (door indices), read only by the pit arm's `liveDoorPitTile`.
+        // Planner callers carry it with `pitLatchOpts(run)`.
+        latched = null,
         contacts = EMPTY_CONTACTS, extraVolumes = EMPTY_VOLUMES,
         openActivators = null, margin = 0, triggerMargin = 0,
         // R4: the two other per-VISIT families, and they are LIVE STATE for
@@ -465,8 +468,9 @@ export function plannerObstacleAt(level, x, y, allowTeleporter = null, opts = {}
         if (rectsOverlap(box, v.rect)) return { kind: v.kind ?? 'persistence-effect', blocker: v };
     }
     const probe = grow(terrainProbeRect(x, y), margin);
-    // ⛓ fidelity PITPORT (`pitTeleporterCrossing`, OFF → null): the allowed exit's own pit tile, when the door is live.
-    const doorPit = allowTeleporter === null ? null : liveDoorPitTile(level, allowTeleporter);
+    // ⛓ fidelity PITPORT (`pitTeleporterCrossing`, OFF → null): the allowed exit's own pit tile, when the door is live
+    // and (PITLATCH) the run is not latched on it.
+    const doorPit = allowTeleporter === null ? null : liveDoorPitTile(level, allowTeleporter, latched);
     for (const tile of level.pitTiles) {
         if (allowPit && tile.tx === allowPit.tx && tile.ty === allowPit.ty) continue;
         if (tile === doorPit) continue;
@@ -1477,14 +1481,29 @@ export function planWaypoints(level, from, to, allowTeleporter = null, opts = {}
  * `level.teleporters[index]` when that door is LIVE and stands on its own pit tile, i.e. the one pit a walk to that
  * door may enter. The door fires on the first frame its rect overlaps the box (`Teleporter.as:96-110`, updated before
  * the player), and the pit edge's probe point lies inside the box, so the door always wins the race on that tile.
+ *
+ * ⛓ fidelity PITLATCH: `latched` (the run's `state.latched`, a set of door indices) — a door the run stands LATCHED on
+ * cannot fire (`playerTouching`, set by `Teleporter.check()` on a new `Game`'s first frame), so its tile is a Pit like
+ * any other: null. Witnessed on the game (`pitdoor-l43-latched`, `-l100-latched`): booted on the door, the step off
+ * held from the first tick, the Pit takes the player at t0 and respawns it ON the door every 20 ticks, never crossing.
+ * ONE predicate: `findExit` and `plannerObstacleAt`'s pit arm (its opts' `latched`) both ask it.
  */
-export function liveDoorPitTile(level, index) {
+export function liveDoorPitTile(level, index, latched = null) {
     if (!CONTACT_FIDELITY.pitTeleporterCrossing || index === null || index === undefined) return null;
+    if (latched?.has?.(index) === true) return null;
     const tp = level.teleporters[index];
     if (!tp || tp.deactivated) return null;
     const tx = Math.floor(tp.x / TILE_SIZE);
     const ty = Math.floor(tp.y / TILE_SIZE);
     return level.pitTiles.find((t) => t.tx === tx && t.ty === ty) ?? null;
+}
+
+/**
+ * ⛓ fidelity PITLATCH: the planner opts that carry the run's arrival latch to `plannerObstacleAt` — `{latched}` under
+ * `pitTeleporterCrossing`, `{}` OFF (so an OFF bag is the bag it was, key for key).
+ */
+export function pitLatchOpts(run) {
+    return CONTACT_FIDELITY.pitTeleporterCrossing ? { latched: run.state.latched ?? null } : {};
 }
 
 /**
@@ -1510,8 +1529,7 @@ function findExit(level, exit, { latched = null } = {}) {
     }
     const tx = Math.floor(tp.x / TILE_SIZE);
     const ty = Math.floor(tp.y / TILE_SIZE);
-    if (level.pitTiles.some((t) => t.tx === tx && t.ty === ty)
-        && !(liveDoorPitTile(level, i) !== null && !(latched?.has?.(i) ?? false))) {
+    if (level.pitTiles.some((t) => t.tx === tx && t.ty === ty) && liveDoorPitTile(level, i, latched) === null) {
         fail(`the teleporter at (${exit.x},${exit.y}) in level ${level.level} stands ON `
             + `a PIT tile (${tx},${ty}). Walking into it fires the trigger and the pit `
             + 'edge in the same tick, and which one wins is FlashPunk bookkeeping this '
@@ -6167,6 +6185,7 @@ export function synthesizeLegs(legs, opts = {}) {
             ...livePerVisitOpts(run),
             inventory: run.progress('inventory'),
             keys: run.progress('keys'),
+            ...pitLatchOpts(run),
             ...extra,
         });
 

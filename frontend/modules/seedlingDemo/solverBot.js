@@ -66,7 +66,7 @@ import {
 } from './botDriverV1.js';
 import {
     BotDriverV2Error, DEFAULT_LATTICE, coastThroughTransport, contactsAt, drive, findExit, waypointReached,
-    holdOneAxis, isWalkableTile, nodeCentre, nodeAt, plannerObstacleAt, planWaypoints, plansReach, runChest, runCollect,
+    holdOneAxis, isWalkableTile, nodeCentre, nodeAt, pitLatchOpts, plannerObstacleAt, planWaypoints, plansReach, runChest, runCollect,
     runHold,
     runShove, runDwell, SHOVE_STEP,
     CEREMONY_CADENCE_START, ceremonyCadenceStep, runFire,
@@ -934,7 +934,7 @@ function resolveBaitStrategy(run, obstacle, aim, allowTeleporter) {
     const aimRect = { x: aim.x - 4, y: aim.y - 4, right: aim.x + 4, bottom: aim.y + 4 };
     const found = searchBaitOrdering({
         run, liveOpts: run.liveGeometryOpts(), inventory: run.progress('inventory'),
-        aimRect, allowTeleporter,
+        aimRect, allowTeleporter, latchOpts: pitLatchOpts(run),
     });
     if (!found.ordering) {
         refuse(`the ordering search found nothing: ${found.why} (${found.stats.expanded} state(s) `
@@ -4783,7 +4783,7 @@ export function stepOffMinimalFor(run, index, tolerance = DEFAULT_TOLERANCE) {
     return [...STEP_OFF_DIAGONALS.map(tryDir).sort(byCost), ...cardinal];
 }
 
-function solverPlanOpts(run, contacts, extra = {}) {
+export function solverPlanOpts(run, contacts, extra = {}) {
     return {
         liveBag: run.liveGeometryOpts(),
         avoidVolumes: true,
@@ -4792,6 +4792,7 @@ function solverPlanOpts(run, contacts, extra = {}) {
         lattice: DEFAULT_LATTICE,
         inventory: run.progress('inventory'),
         noHazards: run.noHazards,
+        ...pitLatchOpts(run),
         ...extra,
     };
 }
