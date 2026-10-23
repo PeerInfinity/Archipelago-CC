@@ -27,7 +27,7 @@ import {
     pathPointsUpTo, sampleMovers, SWING_WINDOW_NOTE, traceRowFields, traceSidecarPath,
     visibleDialogueText, worldChangesAt,
 } from './watchOverlays.js';
-import { SLASH_HIT_TICKS, SPEAR_HIT_TICKS_UNMODELLED } from './presses.js';
+import { SLASH_HIT_TICKS, SPEAR_HIT_TICKS } from './presses.js';
 import { PUSHABLE_SPEED, TICKS_PER_TILE } from './pushables.js';
 import { formatTraceRow } from './decisionTrace.js';
 import { atlasLevelSource } from './levelSource.js';
@@ -1454,7 +1454,7 @@ describe('group B — the attack window and the held afterimage', () => {
     /**
      * ⚠ AND THE SPEAR IS THE MODEL'S BOUND, NOT THE GAME'S TIMING. The game
      * tests on T+1/T+3/T+5; the ladder fires ONE, by a named decision
-     * (`SPEAR_HIT_TICKS_UNMODELLED`). The layer draws the hit test this run
+     * (`SPEAR_HIT_TICKS`). The layer draws the hit test this run
      * MADE, and the readout carries the reason the other two are absent — an
      * absence with no written cause reads as a room where nothing happened.
      */
@@ -1485,7 +1485,7 @@ describe('group B — the attack window and the held afterimage', () => {
         expect(new Set(presses.map((p) => p.t)).size).toBe(presses.length);
         // the readout says WHICH fact the absence is, and it says it in the
         // engine's own numbers rather than in a page-side paraphrase
-        expect(SPEAR_HIT_TICKS_UNMODELLED.ticks).toEqual([1, 3, 5]);
+        expect(SPEAR_HIT_TICKS.ticks).toEqual([1, 3, 5]);
         // ⛓ the note names the OFF bound together with its switch (planning-10's SPEARRECT flip).
         expect(SWING_WINDOW_NOTE.spear).toMatch(/With `spearGameTest` OFF the model fires the first test only/);
         expect(SWING_WINDOW_NOTE.spear).toMatch(/a bound on the MODEL, and the two extra rects are then absent/);

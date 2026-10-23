@@ -16261,7 +16261,7 @@ export function createLevelRun({
     const lightsEvents = [];
     /**
      * ⛓ fidelity LIGHTS D2 — THE SPEAR'S OTHER TWO TESTS, against the fliers only. `spearDelayMax` is 1, so
-     * `Player.spear()` tests its 32x5 rect on T+1, T+3 and T+5 (`presses.SPEAR_HIT_TICKS_UNMODELLED`); the package's
+     * `Player.spear()` tests its 32x5 rect on T+1, T+3 and T+5 (`presses.SPEAR_HIT_TICKS`); the package's
      * press window carries T+1 alone, because every arm it reached is idempotent inside five ticks. Two DIFFERENT fliers
      * are not, so the two repeats run here — from the live position, in the latched direction — and nowhere else.
      */

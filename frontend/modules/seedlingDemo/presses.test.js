@@ -411,7 +411,7 @@ describe('the sword window — one stepper, both sides', () => {
     });
 
     it('⛔ ONLY A SWORD BUYS REPEATS — a spear press schedules ONE thrust and nothing '
-        + 'after it (`SPEAR_HIT_TICKS_UNMODELLED`)', () => {
+        + 'after it (`SPEAR_HIT_TICKS`)', () => {
         let win = swordWindowSchedule(EMPTY_SWORD_WINDOW,
             { weapon: 'spear', direction: RIGHT, pressTick: 0 });
         const step = swordWindowStep(win, 1);
