@@ -176,11 +176,11 @@ describe('PITPORT D1 — the game witnesses, reproduced by the model at 0 px', (
         });
     }
 
-    it('the game\'s verdicts: each live door crosses the tick after the box first overlaps it; the shut one never',
+    it('the game\'s verdicts: each live door crosses the tick after the box first overlaps it; the shut or latched one never',
         () => {
             for (const w of PIT_DOOR_WITNESSES) {
                 const g = witness(w.name).game;
-                if (w.shut) {
+                if (w.shut || w.latched) {
                     expect(g.crossedAt, w.name).toBe(null);
                     expect(g.respawns.length, w.name).toBeGreaterThan(0);
                 } else {

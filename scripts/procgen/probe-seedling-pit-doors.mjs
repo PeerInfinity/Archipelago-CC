@@ -21,6 +21,8 @@
  *   l58-east       L58 with `{58,0}`/`{58,1}` cleared at the boot (YETI's `revisit`): up through the island to the door's
  *                  south-east tile, then onto the door DIAGONALLY (up-left, its corner first)
  *   l58-shut-east  the same walk with the door SHUT (no clears; up beside the Yeti): the Pit takes the player
+ *   l43-latched    fidelity PITLATCH: booted ON L43's door (latched), `up` held 70 ticks toward the ring's north tile
+ *   l100-latched   the same on L100's door, `left` held toward its corridor
  * Every door walk ends with 10 ticks in the next room; the shut one with 60 still ticks (the fall and the respawn).
  *
  * The model replays each tape and is compared to the game tick by tick (0 px). Prints `PASS:`/`FAIL:` rows,
@@ -73,6 +75,14 @@ export const PIT_DOOR_WITNESSES = Object.freeze([
         clears: [{ level: 58, tag: 0 }, { level: 58, tag: 1 }], via: [[4, 6], [4, 2], [6, 2]] },
     { name: 'l58-shut-east', level: 58, boot: { x: 56, y: 96 }, items: ['canSwim'], clears: [], shut: true,
         via: [[3, 6], [3, 3, 'up'], [6, 2]] },
+    // ⛓ fidelity PITLATCH D1: ARRIVED ON the door (the boot latches it, `initialLatch` / `Teleporter.check()`), then
+    // the step off toward the ring's floor held from the first tick. No real arrival lands on a pit door (PITPORT's
+    // census), so the boot stages it.
+    { name: 'l43-latched', level: 43, boot: { x: 144, y: 64 }, items: [],
+        clears: [{ level: 43, tag: 0 }, { level: 43, tag: 4 }, { level: 43, tag: 5 }], latched: true,
+        hold: { keys: ['up'], ticks: 70 } },
+    { name: 'l100-latched', level: 100, boot: { x: 288, y: 96 }, items: [], clears: [], latched: true,
+        hold: { keys: ['left'], ticks: 70 } },
 ]);
 
 const centreOf = ([tx, ty]) => ({ x: tx * 16 + 8, y: ty * 16 + 8 });
@@ -106,6 +116,10 @@ export async function pitDoorTape(w) {
         const run = createRunForStaging(staging, levelSource);
         const perTick = [];
         const press = (held) => { perTick.push(held); return run.advance(held); };
+        if (w.hold) {
+            for (let k = 0; k < w.hold.ticks; k += 1) press(new Set(w.hold.keys));
+            return { staging, perTick };
+        }
         if (w.via === null) {
             const solved = solveSegment({ run: createRunForStaging(staging, levelSource), name: w.name,
                 boot: staging.boot, goals: [{ kind: 'reach-exit', exit: { x: door.x, y: door.y } }] });
@@ -273,7 +287,11 @@ async function main() {
             check(`${w.name}: the game ran the tape to its end on the delivered set`,
                 g.ticks.length === tape.tick_count + 1 && g.mounted?.active === set.set_id,
                 `${g.ticks.length} obs, ${g.mounted?.active}`);
-            if (w.shut) {
+            if (w.latched) {
+                check(`${w.name}: the LATCHED door does not cross; the Pit takes the player, again and again (respawn ON the door)`,
+                    row.game.crossedAt === null && respawns.length > 0 && row.game.final?.level === w.level,
+                    JSON.stringify({ respawns, final: row.game.final }));
+            } else if (w.shut) {
                 check(`${w.name}: the SHUT door does not cross; the Pit takes the player (respawn at the boot)`,
                     row.game.crossedAt === null && respawns.length > 0, JSON.stringify({ respawns, final: row.game.final }));
             } else {
