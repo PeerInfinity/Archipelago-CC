@@ -766,9 +766,9 @@
         "dangerMap.js": 2,
         "director.js": 4,
         "forcedHit.js": 2,
-        "solverBot.js": 81
+        "solverBot.js": 83
       },
-      "sites": 143,
+      "sites": 145,
       "seen": "both",
       "via": [
         "direct",
@@ -838,7 +838,7 @@
         "playerHits": {
           "botDriverV2.js": 6,
           "forcedHit.js": 1,
-          "solverBot.js": 33
+          "solverBot.js": 35
         },
         "presses": {
           "botDriverV2.js": 1,
@@ -4190,10 +4190,10 @@
         "botDriverV2.js": 3,
         "dangerMap.js": 1,
         "forcedHit.js": 4,
-        "solverBot.js": 67,
+        "solverBot.js": 68,
         "strikePolicy.js": 2
       },
-      "sites": 85,
+      "sites": 86,
       "seen": "static",
       "via": [
         "import"
