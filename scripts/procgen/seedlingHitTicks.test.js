@@ -160,7 +160,21 @@ describe('⛓ ARRIVAL LATCH (§5.124) — a hold-tape hit against the model step
         expect(arrivalLatchVerdict(HIT)).toEqual({ billed: { t: 6, source: 'arrow', id: 'arrowtrap@112,32#0.1', arrival: true }, row: 6 });
         expect(unbilledHitOfRow(row209(HIT))).toMatchObject({ known: true, taken: 1, billed: 1, unbilled: 0 });
         expect(unbilledHitLine(row209(HIT))).toBeNull();
-        expect(unbilledHitCensus([row209(HIT)]).lines).toEqual(['ARRIVAL-LATCH-BILLED: 1 hold-tape hit(s) the model\'s arrival bills: 209@6:arrow']);
+        expect(unbilledHitCensus([row209(HIT)]).lines).toEqual([
+            'ARRIVAL-LATCH-BILLED: 209 level_16__r1c1 <- in_L17_32_48 -> exit:out_stairsup_16_64 game read gt=4893 hits_timer=19 '
+                + '@120,51.25 (tape0) = model tick 6 (row 6, staged seam 4887): arrow arrowtrap@112,32#0.1',
+            'arrival-latch-billed: 1']);
+    });
+
+    it('⛓ every reclassification is LOUD: one line per billed hold-tape hit and its own bucket count, through the merge too', () => {
+        const two = { ...row209(HIT), id: 210, roomHits: { atArrival: 0, max: 2, samples: 40, hits: [HIT, { ...HIT, hits: 2, gt: 4895, hits_timer: 17, y: 42.5 }] } };
+        const lines = unbilledHitCensus([row209(HIT), two]).lines;
+        expect(lines.filter((l) => l.startsWith('ARRIVAL-LATCH-BILLED: '))).toHaveLength(3);
+        expect(lines.at(-1)).toBe('arrival-latch-billed: 3');
+        expect(lines.some((l) => l.includes('210 ') && l.includes('gt=4895 hits_timer=17') && l.includes('model tick 6 (row 8'))).toBe(true);
+        const v = mergeVerdict({ rows: [row209(HIT)], plan: { legs: 1, shards: [{ shard: 1, ids: [209] }] } });
+        expect(v.lines).toContain('arrival-latch-billed: 1');
+        expect(v.lines.some((l) => l.startsWith('UNBILLED-HIT: 209 '))).toBe(false);
     });
 
     it('a LATE read (hits_timer 17, two frames on) is carried to its own row: still billed', () => {

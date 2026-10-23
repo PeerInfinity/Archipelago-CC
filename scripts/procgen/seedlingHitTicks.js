@@ -211,9 +211,13 @@ export function unbilledHitCensus(rows) {
     }
     if (unknown.length) lines.push(`UNBILLED-HIT-UNKNOWN: ${unknown.length} row(s) carry no hit ticks (rows from before S5-2): ids ${unknown.join(',')}`);
     if (gate) lines.push(`UNBILLED-GATE: ${gate} refusal(s) of kind ${UNBILLED_GATE_KIND}`);
-    // ⛓ ARRIVAL LATCH (§5.124) — the hold-tape hits the model's arrival bills (no longer UNBILLED), by leg
-    const latch = rows.flatMap((r) => (hitsOfRow(r) ?? []).map((h) => arrivalLatchVerdict(h)?.billed)
-        .filter(Boolean).map((b) => `${r.id}@${b.t}:${b.source ?? '?'}`));
-    if (latch.length) lines.push(`ARRIVAL-LATCH-BILLED: ${latch.length} hold-tape hit(s) the model's arrival bills: ${latch.join(' ')}`);
+    // ⛓ ARRIVAL LATCH (§5.124) — every hold-tape hit the model's arrival bills is RECLASSIFIED (no longer UNBILLED): a check
+    // whose answer removes a line must be loud, so each one prints its own line (the leg, the game's frame, the model
+    // tick and row it matched) and the count is its own bucket (`arrival-latch-billed: N`), never folded into "billed".
+    const latch = rows.flatMap((r) => (hitsOfRow(r) ?? []).map((h) => ({ h, v: arrivalLatchVerdict(h) }))
+        .filter(({ v }) => v?.billed).map(({ h, v }) => `ARRIVAL-LATCH-BILLED: ${`${r.id ?? '?'} ${r.key ?? ''}`.trim()} `
+            + `game read gt=${h.gt ?? '?'} hits_timer=${h.hits_timer} @${h.x},${h.y} (tape${h.tape ?? '?'}) = model tick ${v.billed.t} `
+            + `(row ${v.row}, staged seam ${h.arrival?.seamTime ?? '?'}): ${v.billed.source ?? '?'} ${v.billed.id ?? ''}`.trim()));
+    if (latch.length) lines.push(...latch, `arrival-latch-billed: ${latch.length}`);
     return { lines, unknown };
 }
