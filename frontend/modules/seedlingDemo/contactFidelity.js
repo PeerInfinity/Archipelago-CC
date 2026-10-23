@@ -950,6 +950,26 @@ export const CONTACT_FIDELITY = {
      * settled 201/210/387/404/776 as noise or slow); probes standard ON 11/11. seedlingRobust's {sword} L16 plan 878 → 882 t.
      */
     pixelMaskSightLines: true,
+    /**
+     * fidelity SPEARRECT (wave 25) — THE SPEAR'S TEST AS THE GAME RUNS IT, FOR EVERY SPEAR ARM (`presses.spearHitRect`,
+     * `presses.pressRectTouches`). `Player.spear()` (`Player.as:954-992`) collects every hitable under a 32x5 rect
+     * whose origin is `int` (`spearX`/`spearY` are `int` getters) with `Entity.collideRect`'s INCLUSIVE edges, calls
+     * `genericHit` with NO reach gate and NO line test, and runs again on T+3 and T+5 (`spearDelayMax` 1). The model's
+     * spear used the float `spearRect` with strict edges, borrowed `slash()`'s 16 px reach and line of sight in most
+     * arms, and tested once (fidelity DRILL and LIGHTS modelled the game's rule for the drills and the fliers alone).
+     * ON: `levelRun.applyThrust` tests a spear thrust by the game's rect for every arm, waives the reach and the line
+     * for the spear (the hammer arc's static arm keeps its call site — a hand-over), and re-runs the whole thrust on
+     * T+3 / T+5 from the live position in the latched direction (DRILL's and LIGHTS' own repeat lists stay empty), and
+     * hands `genericHit` the spear's own `spearForce` 7 (every arm passed `swordForce` 5; the tentacle arm the sword's
+     * damage too); the solver's spear stances (the block push, `runSpear`, the rope, the light pole, the turret) ask the
+     * same rect. Witnessed on p4g at 0 px (`fixtures/spearrect-witness/`: a T+3 hit, a hit past 16 px, a corner touch,
+     * a far edge, a truncated origin).
+     * OFF: byte-identical. `SEEDLING_SPEAR_GAME_TEST=0|1` for a node measurement.
+     * ⛓ planning-10's flip (⚖ user, 2026-10-22, SPEARRECT "Harvest + flip ON") turns it ON. Measured movers (CI, wave-25
+     * A/B on ubuntu-24.04): the route survey (full) ON = OFF; the 43 spear-holding sweep legs ×2: 0 settled; probes
+     * standard ON/OFF + spearrect green. The press ledger gains the T+3 / T+5 rows (`repeat: 2|4`).
+     */
+    spearGameTest: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1138,6 +1158,9 @@ if (globalThis.process?.env?.SEEDLING_YETI_TALK === '0') CONTACT_FIDELITY.yetiTa
 // ⛓ fidelity MASKS: `SEEDLING_PIXEL_MASK_SIGHT_LINES=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_PIXEL_MASK_SIGHT_LINES === '1') CONTACT_FIDELITY.pixelMaskSightLines = true;
 if (globalThis.process?.env?.SEEDLING_PIXEL_MASK_SIGHT_LINES === '0') CONTACT_FIDELITY.pixelMaskSightLines = false;
+// ⛓ fidelity SPEARRECT: `SEEDLING_SPEAR_GAME_TEST=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_SPEAR_GAME_TEST === '1') CONTACT_FIDELITY.spearGameTest = true;
+if (globalThis.process?.env?.SEEDLING_SPEAR_GAME_TEST === '0') CONTACT_FIDELITY.spearGameTest = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

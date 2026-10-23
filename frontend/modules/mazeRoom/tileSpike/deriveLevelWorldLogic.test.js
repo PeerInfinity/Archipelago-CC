@@ -159,6 +159,13 @@ describe('L13–L17 — the doors and the second level world', () => {
         expect(lines).toContain(`level_17->level_16__r3c7=${JSON.stringify([[ROPE]])}`);
         const loose = structuredClone(RULES);
         loose.regions['1'].level_17.exits.find((e) => e.connected_region === 'level_16__r3c7').access_rule = { rule: 'True_' };
+        // ⛓ Two contexts (⚖ user 2026-10-23 "Both contexts", session tile-primitives-gated-tiles). In L13–L17 every AP
+        // route into L17 needs the cut, so the ungated crossing is ACCEPTED by name (⚖ "Accept if implied")…
+        const inPreset = certifyPlaythroughMaze(loose, HELPERS, L17);
+        expect(inPreset.problems).toEqual([]);
+        expect(inPreset.accepted).toEqual([{ label: 'level_17 → level_16__r3c7', source: 'level_17', by: ROPE }]);
+        // …and once L17 has a way in without the cut (as L18 will give it), the same rule is the exact problem.
+        loose.regions['1'].Menu.exits.push({ name: 'Menu -> level_17', connected_region: 'level_17', access_rule: { rule: 'True_' } });
         expect(certifyPlaythroughMaze(loose, HELPERS, L17).problems)
             .toEqual(['level_17 → level_16__r3c7 holding []: derived false, atlas true']);
     });

@@ -42,6 +42,7 @@ import {
     tileCentre,
     PRESS_GAP,
 } from './botDriverV2.js';
+import { withContactFidelity } from './contactFidelity.js';
 
 const levelSource = atlasLevelSource();
 const level0 = buildLevelWorld(levelSource(0));
@@ -432,7 +433,8 @@ describe('R4: the spear leg verb', () => {
             .toEqual([{ key: 'primary', from: out.spears[0].pressTick, to: out.spears[0].pressTick + 1 }]);
         // ...and the run's own press ledger says what the rect CONTAINED,
         // which is the other half: intent above, effect here.
-        expect(out.presses).toEqual([expect.objectContaining({
+        // ⛓ planning-10's SPEARRECT flip: the THRUST row (ON its T+3 / T+5 `repeat` rows follow; the bridge re-hit is a no-op).
+        expect(out.presses.filter((p) => !p.repeat)).toEqual([expect.objectContaining({
             weapon: 'spear', level: 63, hits: [{ as3: 'Tile', id: '2,9' }],
         })]);
         // The tape replays in the other consumer without throwing, which is
@@ -440,6 +442,20 @@ describe('R4: the spear leg verb', () => {
         expect(replay(out.tape).ticks.length).toBe(out.tape.tick_count + 1);
     });
 
+
+    // ⛓ planning-10's SPEARRECT flip (js-planning-8's review): the leg itself is unchanged with `spearGameTest` OFF —
+    //   the same tape, the same press, and ONE press row (no repeats).
+    it('the spear leg is unchanged with spearGameTest OFF: the same tape, one press row', () => {
+        const run = () => synthesizeLegs(task({ bridge: { tx: 2, ty: 9 }, facing: 'S' }), opts);
+        const on = run();
+        const off = withContactFidelity({ spearGameTest: false }, run);
+        expect(off.tape).toEqual(on.tape);
+        expect(off.spears).toEqual(on.spears);
+        expect(off.presses).toEqual([expect.objectContaining({
+            weapon: 'spear', level: 63, hits: [{ as3: 'Tile', id: '2,9' }],
+        })]);
+        expect(on.presses.filter((p) => p.repeat).map((p) => p.repeat)).toEqual([2, 4]);
+    });
     it('NUDGES a facing the approach did not leave the player in, and says so', () => {
         // `set spearing` captures `spearDirection = direction`, and
         // `sprites()` derives that from VELOCITY — so a leg that arrives

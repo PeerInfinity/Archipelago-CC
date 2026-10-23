@@ -1,0 +1,81 @@
+L63: 1 target(s) PushableBlockSpear@112,96
+  PushableBlockSpear@112,96 boot(72,84) tap down+right → stance (80,92.8) dir 0: OFF[] ON[PushableBlockSpear:pushableblockspear@112,96]
+      end OFF {pushableblockspear@112,96:112,96 jellyfish@160,64:0 jellyfish@192,56:0}
+      end ON  {pushableblockspear@112,96:128,96 jellyfish@160,64:0 jellyfish@192,56:0}
+  PushableBlockSpear@112,96 boot(72,85) tap up+right → stance (80,92.2) dir 0: OFF[] ON[PushableBlockSpear:pushableblockspear@112,96]
+      end OFF {pushableblockspear@112,96:112,96 jellyfish@160,64:0 jellyfish@192,56:0}
+      end ON  {pushableblockspear@112,96:128,96 jellyfish@160,64:0 jellyfish@192,56:0}
+  PushableBlockSpear@112,96 boot(73,83) tap down+right → stance (81,91.8) dir 0: OFF[PushableBlockSpear:pushableblockspear@112,96] ON[]
+      end OFF {pushableblockspear@112,96:128,96 jellyfish@160,64:0 jellyfish@192,56:0}
+      end ON  {pushableblockspear@112,96:112,96 jellyfish@160,64:0 jellyfish@192,56:0}
+  PushableBlockSpear@112,96 boot(74,82) tap down+right → stance (83.69999999999999,91.69999999999999) dir 0: OFF[PushableBlockSpear:pushableblockspear@112,96] ON[]
+      end OFF {pushableblockspear@112,96:128,96 jellyfish@160,64:0 jellyfish@192,56:0}
+      end ON  {pushableblockspear@112,96:112,96 jellyfish@160,64:0 jellyfish@192,56:0}
+  PushableBlockSpear@112,96 boot(138,103) tap down+left → stance (144.29999999999995,112.69999999999999) dir 2: OFF[] ON[PushableBlockSpear:pushableblockspear@112,96]
+      end OFF {pushableblockspear@112,96:112,96 jellyfish@160,64:0 jellyfish@192,56:0}
+      end ON  {pushableblockspear@112,96:96,96 jellyfish@160,64:0 jellyfish@192,56:0}
+  PushableBlockSpear@112,96 boot(139,103) tap down+left → stance (145.29999999999995,112.69999999999999) dir 2: OFF[] ON[PushableBlockSpear:pushableblockspear@112,96]
+      end OFF {pushableblockspear@112,96:112,96 jellyfish@160,64:0 jellyfish@192,56:0}
+      end ON  {pushableblockspear@112,96:96,96 jellyfish@160,64:0 jellyfish@192,56:0}
+L65: 1 target(s) PushableBlockSpear@176,128
+  PushableBlockSpear@176,128 boot(136,119) tap down+right → stance (144,127.8) dir 0: OFF[] ON[PushableBlockSpear:pushableblockspear@176,128]
+      end OFF {pushableblockspear@176,128:176,128 bob@208,80:0}
+      end ON  {pushableblockspear@176,128:192,128 bob@208,80:0}
+  PushableBlockSpear@176,128 boot(165,90) tap right+down → stance (174.70000000000005,99.69999999999999) dir 3: OFF[PushableBlockSpear:pushableblockspear@176,128] ON[]
+      end OFF {pushableblockspear@176,128:176,144 bob@208,80:0}
+      end ON  {pushableblockspear@176,128:176,128 bob@208,80:0}
+  PushableBlockSpear@176,128 boot(166,88) tap right+down → stance (174.8,96) dir 3: OFF[PushableBlockSpear:pushableblockspear@176,128] ON[]
+      end OFF {pushableblockspear@176,128:176,144 bob@208,80:0}
+      end ON  {pushableblockspear@176,128:176,128 bob@208,80:0}
+  PushableBlockSpear@176,128 boot(166,89) tap right+down → stance (174.8,97) dir 3: OFF[PushableBlockSpear:pushableblockspear@176,128] ON[]
+      end OFF {pushableblockspear@176,128:176,144 bob@208,80:0}
+      end ON  {pushableblockspear@176,128:176,128 bob@208,80:0}
+  PushableBlockSpear@176,128 boot(166,102) tap right+down → stance (174.8,110) dir 3: OFF[PushableBlockSpear:pushableblockspear@176,128] ON[]
+      end OFF {pushableblockspear@176,128:176,144 bob@208,80:0}
+      end ON  {pushableblockspear@176,128:176,128 bob@208,80:0}
+  PushableBlockSpear@176,128 boot(166,103) tap right+down → stance (174.8,111) dir 3: OFF[PushableBlockSpear:pushableblockspear@176,128] ON[]
+      end OFF {pushableblockspear@176,128:176,144 bob@208,80:0}
+      end ON  {pushableblockspear@176,128:176,128 bob@208,80:0}
+L67: 1 target(s) PushableBlockSpear@144,112
+  PushableBlockSpear@144,112 boot(104,98) tap down+right → stance (113.69999999999999,107.69999999999999) dir 0: OFF[PushableBlockSpear:pushableblockspear@144,112] ON[]
+      end OFF {pushableblockspear@144,112:160,112}
+      end ON  {pushableblockspear@144,112:144,112}
+  PushableBlockSpear@144,112 boot(104,103) tap left+right → stance (112,111) dir 0: OFF[] ON[PushableBlockSpear:pushableblockspear@144,112]
+      end OFF {pushableblockspear@144,112:144,112}
+      end ON  {pushableblockspear@144,112:160,112}
+  PushableBlockSpear@144,112 boot(104,104) tap left+right → stance (112,112) dir 0: OFF[] ON[PushableBlockSpear:pushableblockspear@144,112]
+      end OFF {pushableblockspear@144,112:144,112}
+      end ON  {pushableblockspear@144,112:160,112}
+  PushableBlockSpear@144,112 boot(104,105) tap left+right → stance (112,113) dir 0: OFF[] ON[PushableBlockSpear:pushableblockspear@144,112]
+      end OFF {pushableblockspear@144,112:144,112}
+      end ON  {pushableblockspear@144,112:160,112}
+  PushableBlockSpear@144,112 boot(104,106) tap left+right → stance (112,114) dir 0: OFF[] ON[PushableBlockSpear:pushableblockspear@144,112]
+      end OFF {pushableblockspear@144,112:144,112}
+      end ON  {pushableblockspear@144,112:160,112}
+  PushableBlockSpear@144,112 boot(104,107) tap left+right → stance (112,115) dir 0: OFF[] ON[PushableBlockSpear:pushableblockspear@144,112]
+      end OFF {pushableblockspear@144,112:144,112}
+      end ON  {pushableblockspear@144,112:160,112}
+L40: 1 target(s) IceTurret@472,400
+  IceTurret@472,400 boot(431,431) tap down+right → stance (440.70000000000005,440.70000000000005) dir 0: OFF[] ON[IceTurret:iceturret@472,400]
+      end OFF {pushableblockfire@480,480:480,480 pushableblockfire@576,576:576,576 pushableblock@576,560:576,560 iceturret@472,400:0 bob@320,112:0 bob@288,112:0 bob@288,80:0 bob@304,144:0 bob@272,112:0 bobsoldier@880,832:0 bob@736,752:0 bob@736,800:0 bob@192,480:0 bob@352,448:0 bob@352,416:0 bob@208,448:0 bob@224,496:0 puncher@128,624:0 puncher@816,128:0}
+      end ON  {pushableblockfire@480,480:480,480 pushableblockfire@576,576:576,576 pushableblock@576,560:576,560 iceturret@472,400:2 bob@320,112:0 bob@288,112:0 bob@288,80:0 bob@304,144:0 bob@272,112:0 bobsoldier@880,832:0 bob@736,752:0 bob@736,800:0 bob@192,480:0 bob@352,448:0 bob@352,416:0 bob@208,448:0 bob@224,496:0 puncher@128,624:0 puncher@816,128:0}
+  IceTurret@472,400 boot(431,434) tap up+right → stance (440.70000000000005,440.29999999999995) dir 0: OFF[] ON[IceTurret:iceturret@472,400]
+      end OFF {pushableblockfire@480,480:480,480 pushableblockfire@576,576:576,576 pushableblock@576,560:576,560 iceturret@472,400:0 bob@320,112:0 bob@288,112:0 bob@288,80:0 bob@304,144:0 bob@272,112:0 bobsoldier@880,832:0 bob@736,752:0 bob@736,800:0 bob@192,480:0 bob@352,448:0 bob@352,416:0 bob@208,448:0 bob@224,496:0 puncher@128,624:0 puncher@816,128:0}
+      end ON  {pushableblockfire@480,480:480,480 pushableblockfire@576,576:576,576 pushableblock@576,560:576,560 iceturret@472,400:2 bob@320,112:0 bob@288,112:0 bob@288,80:0 bob@304,144:0 bob@272,112:0 bobsoldier@880,832:0 bob@736,752:0 bob@736,800:0 bob@192,480:0 bob@352,448:0 bob@352,416:0 bob@208,448:0 bob@224,496:0 puncher@128,624:0 puncher@816,128:0}
+  IceTurret@472,400 boot(432,424) tap up+right → stance (440,431.2) dir 0: OFF[] ON[IceTurret:iceturret@472,400]
+      end OFF {pushableblockfire@480,480:480,480 pushableblockfire@576,576:576,576 pushableblock@576,560:576,560 iceturret@472,400:0 bob@320,112:0 bob@288,112:0 bob@288,80:0 bob@304,144:0 bob@272,112:0 bobsoldier@880,832:0 bob@736,752:0 bob@736,800:0 bob@192,480:0 bob@352,448:0 bob@352,416:0 bob@208,448:0 bob@224,496:0 puncher@128,624:0 puncher@816,128:0}
+      end ON  {pushableblockfire@480,480:480,480 pushableblockfire@576,576:576,576 pushableblock@576,560:576,560 iceturret@472,400:2 bob@320,112:0 bob@288,112:0 bob@288,80:0 bob@304,144:0 bob@272,112:0 bobsoldier@880,832:0 bob@736,752:0 bob@736,800:0 bob@192,480:0 bob@352,448:0 bob@352,416:0 bob@208,448:0 bob@224,496:0 puncher@128,624:0 puncher@816,128:0}
+  IceTurret@472,400 boot(432,424) tap down+right → stance (440,432.8) dir 0: OFF[] ON[IceTurret:iceturret@472,400]
+      end OFF {pushableblockfire@480,480:480,480 pushableblockfire@576,576:576,576 pushableblock@576,560:576,560 iceturret@472,400:0 bob@320,112:0 bob@288,112:0 bob@288,80:0 bob@304,144:0 bob@272,112:0 bobsoldier@880,832:0 bob@736,752:0 bob@736,800:0 bob@192,480:0 bob@352,448:0 bob@352,416:0 bob@208,448:0 bob@224,496:0 puncher@128,624:0 puncher@816,128:0}
+      end ON  {pushableblockfire@480,480:480,480 pushableblockfire@576,576:576,576 pushableblock@576,560:576,560 iceturret@472,400:2 bob@320,112:0 bob@288,112:0 bob@288,80:0 bob@304,144:0 bob@272,112:0 bobsoldier@880,832:0 bob@736,752:0 bob@736,800:0 bob@192,480:0 bob@352,448:0 bob@352,416:0 bob@208,448:0 bob@224,496:0 puncher@128,624:0 puncher@816,128:0}
+  IceTurret@472,400 boot(432,425) tap up+right → stance (440,432.2) dir 0: OFF[] ON[IceTurret:iceturret@472,400]
+      end OFF {pushableblockfire@480,480:480,480 pushableblockfire@576,576:576,576 pushableblock@576,560:576,560 iceturret@472,400:0 bob@320,112:0 bob@288,112:0 bob@288,80:0 bob@304,144:0 bob@272,112:0 bobsoldier@880,832:0 bob@736,752:0 bob@736,800:0 bob@192,480:0 bob@352,448:0 bob@352,416:0 bob@208,448:0 bob@224,496:0 puncher@128,624:0 puncher@816,128:0}
+      end ON  {pushableblockfire@480,480:480,480 pushableblockfire@576,576:576,576 pushableblock@576,560:576,560 iceturret@472,400:2 bob@320,112:0 bob@288,112:0 bob@288,80:0 bob@304,144:0 bob@272,112:0 bobsoldier@880,832:0 bob@736,752:0 bob@736,800:0 bob@192,480:0 bob@352,448:0 bob@352,416:0 bob@208,448:0 bob@224,496:0 puncher@128,624:0 puncher@816,128:0}
+  IceTurret@472,400 boot(432,426) tap up+right → stance (440,433.2) dir 0: OFF[] ON[IceTurret:iceturret@472,400]
+      end OFF {pushableblockfire@480,480:480,480 pushableblockfire@576,576:576,576 pushableblock@576,560:576,560 iceturret@472,400:0 bob@320,112:0 bob@288,112:0 bob@288,80:0 bob@304,144:0 bob@272,112:0 bobsoldier@880,832:0 bob@736,752:0 bob@736,800:0 bob@192,480:0 bob@352,448:0 bob@352,416:0 bob@208,448:0 bob@224,496:0 puncher@128,624:0 puncher@816,128:0}
+      end ON  {pushableblockfire@480,480:480,480 pushableblockfire@576,576:576,576 pushableblock@576,560:576,560 iceturret@472,400:2 bob@320,112:0 bob@288,112:0 bob@288,80:0 bob@304,144:0 bob@272,112:0 bobsoldier@880,832:0 bob@736,752:0 bob@736,800:0 bob@192,480:0 bob@352,448:0 bob@352,416:0 bob@208,448:0 bob@224,496:0 puncher@128,624:0 puncher@816,128:0}
+  IceTurret@472,400 boot(432,426) tap left+right → stance (440,434) dir 0: OFF[] ON[IceTurret:iceturret@472,400]
+      end OFF {pushableblockfire@480,480:480,480 pushableblockfire@576,576:576,576 pushableblock@576,560:576,560 iceturret@472,400:0 bob@320,112:0 bob@288,112:0 bob@288,80:0 bob@304,144:0 bob@272,112:0 bobsoldier@880,832:0 bob@736,752:0 bob@736,800:0 bob@192,480:0 bob@352,448:0 bob@352,416:0 bob@208,448:0 bob@224,496:0 puncher@128,624:0 puncher@816,128:0}
+      end ON  {pushableblockfire@480,480:480,480 pushableblockfire@576,576:576,576 pushableblock@576,560:576,560 iceturret@472,400:2 bob@320,112:0 bob@288,112:0 bob@288,80:0 bob@304,144:0 bob@272,112:0 bobsoldier@880,832:0 bob@736,752:0 bob@736,800:0 bob@192,480:0 bob@352,448:0 bob@352,416:0 bob@208,448:0 bob@224,496:0 puncher@128,624:0 puncher@816,128:0}
+
+25 disagreeing candidate(s)

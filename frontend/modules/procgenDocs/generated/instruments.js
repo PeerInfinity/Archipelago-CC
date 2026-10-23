@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 93,
-            "count": 140,
+            "browser": 94,
+            "count": 141,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 447,
-        "browser": 158,
-        "cited": 239,
-        "files": 461,
+        "blockStyle": 448,
+        "browser": 159,
+        "cited": 240,
+        "files": 462,
         "lineStyle": 14,
-        "withDocblock": 461,
-        "withFlags": 378
+        "withDocblock": 462,
+        "withFlags": 379
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -14780,6 +14780,45 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-span-ceiling — how many input SPANS can `botLoadTape` actually take before the recompiled runtime runs out of heap?",
             "path": "scripts/procgen/probe-seedling-span-ceiling.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-spearrect.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-spearrect — ⛓⛓ seedling-fidelity-spearrect: THE SPEAR'S TEST AS THE GAME RUNS IT (`CONTACT_FIDELITY.spearGameTest`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL.",
+            "path": "scripts/procgen/probe-seedling-spearrect.mjs"
         },
         {
             "argvHelpers": [
