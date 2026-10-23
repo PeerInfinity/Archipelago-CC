@@ -20322,6 +20322,27 @@ export function createLevelRun({
         },
 
         /**
+         * ⛓ seedling-fidelity-slowfix D-B — THE FRAMES A BOT HOLD COSTS THE SWIM CHANNEL. A held game (`botHold`, a
+         * tape's `hold: true` end) runs engine frames with the world frozen: `Game.time` does not move and nor does the
+         * player (measured on p4g: `game_time` 26912 and x 152.6 through a 300 ms hold), but `Bot.update` steps
+         * `Music.pinStep()` above the armed check (`crossSwapStatics` `Music.<swim channel>`), so the pinned Swim
+         * channel advances one frame per held frame (33 → 43 over that hold). Doors (`LOAD_DEAD_FRAMES`) and ceremonies
+         * already carry their frames; a hold is the third kind, and only its caller knows how many frames it ran.
+         * Steps the swim channel by `n` and touches nothing else. Nothing in the model calls it: a caller that stages
+         * the tick after a hold (the JS arc's continuation) hands it the held frames.
+         * @param {number} n the engine frames the hold ran (a non-negative integer)
+         * @returns {?object} the channel after the step (null when no swim sound has played this run)
+         */
+        stepHeldFrames(n) {
+            if (!Number.isInteger(n) || n < 0) {
+                throw new Error(`levelRun.stepHeldFrames: n must be a non-negative integer, got ${n}`);
+            }
+            if (!state.swim) return null;
+            state = { ...state, swim: stepChannel({ ...state.swim }, n) };
+            return { ...state.swim };
+        },
+
+        /**
          * Run one tick with `held` down, applying the end-of-tick swap if a
          * teleporter fired.
          *

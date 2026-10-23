@@ -24836,3 +24836,43 @@ reproduces the whole tape at 0 px. The other three SKINSWING tapes: ON = OFF = t
   game on the removal tick and the LIVE step did not. A mirror that "agrees" may be agreeing for another reason.
 - `addUpdate` PREPENDS: the update order is the REVERSE of the add order (the model already reversed the `.oel` order;
   the brief's "add order" was wrong).
+
+### Seedling fidelity SLOWFIX — the Lights sortie portfolio (`lightsSortiePortfolio`, OFF); the L15 post-chest walk is a hold seam (`run.stepHeldFrames`)
+
+Planner `seedling-fidelity-planning-11`, wave 27. The report is `CC/docs/cloud-reports/seedling-fidelity-slowfix.md`.
+
+**D-A — the L69 spear solve, 494 t ON vs 361 t OFF.** Not the forecast: the forecast equals the live run at every plan
+(both arms, every decision). ON and OFF part at t165 on two sorties of equal cost and equal hits (`left3`, back or stay)
+that only ON's spear rect admits, and the greedy keeps the first in its candidate order. The fight's length is chaotic in
+that choice: over ten arrival clocks (seam.time −24..+60) the spear solve runs 324..473 t and neither tie order wins on
+average (374 vs 367). With the switch ON the verb rolls the whole fight out in its forecast once per tie order
+(`LIGHTS_VERB.tieOrders`, `rolloutLightsFight`) and plays the shortest plan by plan, each still checked against the live
+run — never longer than the greedy, which is one of the rollouts (measured: min of the two on all twenty perturbed
+solves; the spear's mean 374 → 357, the sword's unchanged). Carrying the forecast across plans exposed one forecast fault
+the greedy never reads (it re-clones from the run): a spear press set the sword's `slashTimer`/`slashing`; `set spearing`
+sets neither (`Player.as:810-822`). At the committed staging: the spear 303 t (rollouts 421 | 239), recorded on p4g at
+0 px as `lights-solve-spear-portfolio`; the sword's rollouts tie (507 | 507) and it plays `lights-solve-sword` unchanged.
+Two rollouts cost twice the greedy (both L69 sweep legs ran out the 90 s leg budget ON); two EXACT prunes ride the switch
+— a sortie that has landed nothing by its last test stops forecasting, and the first dodge unhit to the horizon
+(`Infinity`, unbeatable under `>`) ends the dodge search — the same answers everywhere measured, and the portfolio now
+costs less than the greedy alone (L69 legs done/done ×2).
+
+**D-B — the L15 post-chest walk (`l15-post-chest-walk`, model 115.05 / game 115.30 at t18).** Not the chest and not the
+walk's sub-pixel. In AP play the chest is the page's `apitem` {tag 1, look chest}, and the player ends the chest leg
+swimming at (152.6, 103.45). Played as ONE tape the two legs are the model's at 0 px on p4g (343 observations; the game
+reads 115.05). Played as the engine ships them — the chest leg `hold: true`, a hold, then the continuation — `game_time`
+and the player stay frozen through the hold but the pinned Swim channel runs (33 → 44 over 300 ms: `Bot.update` steps
+`Music.pinStep()` above the armed check), the boost window `soundPosition("Swim") < 0.1` shifts, and the walk reads
+115.30 at t18. `levelRun.stepHeldFrames(n)` steps the swim channel by a hold's frames (doors and ceremonies already carry
+theirs); with the game's 10 the held continuation is the model's at 0 px (`fixtures/hold-seam-witness/`,
+`fidelityHoldSeam.test.js`). Nothing calls it yet: the continuation that holds the game must hand it the frames.
+
+**Trap candidates.**
+- A greedy search's result is a SAMPLE of a chaotic function of its tie order: a rule change that flips one tie can move
+  the result by 30 %, and the comparison of two single solves says nothing about either rule. Measure a distribution
+  (perturbed starts) before reading a "regression" into one solve.
+- A forecast that is re-cloned from the live run at every decision hides any state it mis-steps across a decision
+  boundary; a rollout that carries it exposes the fault (the spear's dash timer).
+- The swim pin is a mixer, and a mixer does not stop for a bot hold: any seam that holds the game (a held end, a held
+  arrival) costs the swim channel its frames while `Game.time` stands still, so a divergence after a wet seam is
+  measured against the HELD frames, not the ticks.

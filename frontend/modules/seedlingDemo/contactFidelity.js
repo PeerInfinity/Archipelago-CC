@@ -1006,6 +1006,29 @@ export const CONTACT_FIDELITY = {
      * probes standard ON green.
      */
     removedBodyBlocks: true,
+    /**
+     * ⛓ seedling-fidelity-slowfix D-A (wave 27) — THE LIGHTS VERB'S SORTIE PORTFOLIO (`lightsVerb.execLights`). The verb
+     * picks each sortie greedily (the earliest wait that lands, the most hits, the fewest ticks), and its ties fall to the
+     * candidate order (`back` before `!back`). The fight's length is chaotic in that choice: across ten arrival clocks
+     * (seam.time ±60) the spear solve runs 324..473 t either way and neither order wins on average (MEASURED; the
+     * forecast equals the live run at every plan — the forecast is not wrong, the greedy is). At the committed
+     * `lights-solve-spear` staging with `spearGameTest` ON the first tie (t165, `left3` back vs not) lands the 494 t fight
+     * where OFF's forecast had only the one candidate and ran 361 t.
+     * ON: before the fight's first decision the verb ROLLS OUT the whole fight in its own forecast once per tie order
+     * (`LIGHTS_VERB.tieOrders`), and executes the shortest (the current order wins a tie) — never longer than the greedy
+     * alone, since that greedy is one of the rollouts; each plan is still checked against the live run, as before.
+     * A rollout carries the forecast ACROSS plans, which exposed one forecast fault the greedy never reads (it re-clones
+     * from the run at every decision): a spear press set the sword's `slashTimer` (20) and `slashing`; `set spearing`
+     * sets neither (`Player.as:810-822`), so ON the spear's press leaves both alone. Measured at the committed staging:
+     * the spear solve 303 t (rollouts 421 | 239; `lights-solve-spear-portfolio`, recorded on p4g at 0 px), the sword's
+     * two rollouts tie (507 | 507) and it plays `lights-solve-sword` unchanged.
+     * Two EXACT prunes ride the switch and pay for the second rollout (a sortie that has landed nothing by its last test
+     * is rejected either way; the first dodge unhit to the horizon scores Infinity, which nothing beats): the same answers
+     * on all twenty perturbed solves, and the portfolio solve costs less than the greedy alone (15 s vs 23-27 s, node).
+     * Without them both L69 sweep legs ran out the 90 s leg budget ON (×2, local).
+     * OFF: byte-identical. `SEEDLING_LIGHTS_SORTIE_PORTFOLIO=0|1` for a node measurement.
+     */
+    lightsSortiePortfolio: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1203,6 +1226,9 @@ if (globalThis.process?.env?.SEEDLING_DRILL_KILL_FIRST === '0') CONTACT_FIDELITY
 // ⛓ fidelity REMBODY: `SEEDLING_REMOVED_BODY_BLOCKS=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_REMOVED_BODY_BLOCKS === '1') CONTACT_FIDELITY.removedBodyBlocks = true;
 if (globalThis.process?.env?.SEEDLING_REMOVED_BODY_BLOCKS === '0') CONTACT_FIDELITY.removedBodyBlocks = false;
+// ⛓ seedling-fidelity-slowfix D-A: `SEEDLING_LIGHTS_SORTIE_PORTFOLIO=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_LIGHTS_SORTIE_PORTFOLIO === '1') CONTACT_FIDELITY.lightsSortiePortfolio = true;
+if (globalThis.process?.env?.SEEDLING_LIGHTS_SORTIE_PORTFOLIO === '0') CONTACT_FIDELITY.lightsSortiePortfolio = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

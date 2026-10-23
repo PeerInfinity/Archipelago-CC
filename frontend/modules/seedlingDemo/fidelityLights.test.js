@@ -30,7 +30,7 @@ const replay = (w) => compareLightsWitness(w.samples,
 
 describe('fidelity LIGHTS — the game\'s witnesses, reproduced at 0 px (lightsBossFight ON)', () => {
     for (const [name, ticks] of [['lights-stand', 701], ['lights-revisit', 81], ['lights-solve-sword', 560],
-        ['lights-solve-spear', 362], ['lights-solve-spear-on', 495]]) {
+        ['lights-solve-spear', 362], ['lights-solve-spear-on', 495], ['lights-solve-spear-portfolio', 304]]) {
         it(`${name}: every sampled tick — the player (and its hits), the intro, the fliers, the shots, the level`, () => {
             const w = witness(name);
             expect(w.samples.length).toBe(ticks);
@@ -66,7 +66,7 @@ describe('fidelity LIGHTS — the game\'s witnesses, reproduced at 0 px (lightsB
 
     it('the solves: {69,0} lands on the game on the tick after the last flier leaves the world', () => {
         for (const [name, last, write] of [['lights-solve-sword', 548, 549], ['lights-solve-spear', 348, 349],
-            ['lights-solve-spear-on', 478, 479]]) {
+            ['lights-solve-spear-on', 478, 479], ['lights-solve-spear-portfolio', 296, 297]]) {
             const w = witness(name);
             const cleared = w.samples.find((s) => s.cleared.some((c) => c.level === 69 && c.tag === 0));
             expect(cleared.tick).toBe(write);

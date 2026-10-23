@@ -32,6 +32,8 @@ import {
 } from './solverView.js';
 // ⛓ fidelity LIGHTSARR D2: the shield's shove, forecast as the run steps it (`levelRun.lightsShieldBumpNow`).
 import { lightsShieldBump } from './solverView.js';
+// ⛓ seedling-fidelity-slowfix D-A: the sortie portfolio's switch (through the door).
+import { CONTACT_FIDELITY } from './solverView.js';
 
 /** The planner's numbers. Each is a search bound or a safety margin, not a game constant. */
 export const LIGHTS_VERB = Object.freeze({
@@ -56,6 +58,11 @@ export const LIGHTS_VERB = Object.freeze({
     introBound: 400,
     /** The whole fight's tick bound: six fliers, three landed hits each, at most this many ticks per landed hit. */
     ticksPerHit: 240,
+    /**
+     * ⛓ seedling-fidelity-slowfix D-A (`CONTACT_FIDELITY.lightsSortiePortfolio`): the tie orders the fight is rolled out
+     * under (a sortie's `back` candidates first, then the other way round); the first is the greedy's own order.
+     */
+    tieOrders: Object.freeze([Object.freeze([true, false]), Object.freeze([false, true])]),
     src: 'seedling-fidelity-lights D3 (search bounds, measured on the model: the full kill in 806 t from the arrival)',
 });
 
@@ -150,16 +157,23 @@ function forecastTick(s, held, env) {
         // the sword tests T+1 … T+5; the spear T+1, T+3, T+5 (`spearDelayMax` 1 — `levelRun.lightsSpearRepeatsNow`)
         const ks = s.weapon === 'spear' ? LIGHTS_VERB.spearTests : [0, 1, 2, 3, 4];
         for (const j of ks) s.tests.push({ k: j, dir: s.player.direction });
-        s.slashTimer = LIGHTS_VERB.pressGap - 1;
-        s.slashing = true;
+        // ⛓ seedling-fidelity-slowfix D-A (`lightsSortiePortfolio`): `set spearing` opens no dash window and is not
+        // `slashing` (`Player.as:810-822`): only the sword's press sets `slashTimer` and `slashing` (`:780-801`).
+        if (s.weapon !== 'spear' || !CONTACT_FIDELITY.lightsSortiePortfolio) {
+            s.slashTimer = LIGHTS_VERB.pressGap - 1;
+            s.slashing = true;
+        }
     }
     s.prevPrimary = held.has('primary');
     s.player = env.step(s.player, held);
     return { damaged, landed, killed };
 }
 
-/** Forecast `plan` then `tail` idle ticks from `s` (cloned). */
-function forecastPlan(s0, plan, tail, env) {
+/**
+ * Forecast `plan` then `tail` idle ticks from `s` (cloned). ⛓ slowfix D-A: `landBy` (the plan index of its last swing
+ * test) ends a forecast that has landed nothing by then — the caller rejects it either way (`landed === 0`).
+ */
+function forecastPlan(s0, plan, tail, env, landBy = null) {
     const s = cloneForecast(s0);
     let landed = 0;
     let killed = 0;
@@ -169,6 +183,7 @@ function forecastPlan(s0, plan, tail, env) {
         landed += r.landed;
         killed += r.killed;
         if (r.damaged) return { damaged: k, landed, killed, end: null };
+        if (landBy !== null && k === landBy && landed === 0) return { damaged: null, landed, killed, end: null };
         if (k === plan.length - 1) s.atPlanEnd = fightDigest(s);
     }
     return { damaged: null, landed, killed, end: s.atPlanEnd ?? fightDigest(s) };
@@ -198,13 +213,14 @@ export function planLightsSortie(s0, env) {
         for (const d of DIRS) {
             for (let n = 1; n <= V.legMax; n += 1) {
                 if (sw.slashTimer - n > 0 || sw.tests.length > 0) continue;
-                for (const back of [true, false]) {
+                for (const back of env.tieOrder ?? LIGHTS_VERB.tieOrders[0]) {
                     const plan = [];
                     for (let i = 0; i < n; i += 1) plan.push(new Set([d]));
                     plan.push(new Set(['primary']));
                     if (back) for (let i = 0; i < n; i += 1) plan.push(new Set([OPP[d]]));
                     while (plan.length < n + 1 + V.swingTests) plan.push(IDLE);
-                    const r = forecastPlan(sw, plan, V.safeTail, env);
+                    // ⛓ slowfix D-A (`lightsSortiePortfolio`): the press is plan index n, its tests land by n + swingTests
+                    const r = forecastPlan(sw, plan, V.safeTail, env, env.exactPrune ? n + V.swingTests : null);
                     if (r.damaged !== null || r.landed === 0) continue;
                     const cost = w + plan.length;
                     if (!best || r.landed > best.landed || (r.landed === best.landed && cost < best.cost)) {
@@ -238,11 +254,46 @@ export function planLightsDodge(s0, env) {
                     if (survive < plan.length + V.safeTail) continue;
                     const score = survive - plan.length;
                     if (!best || score > best.score) best = { keys: plan, score, d, n, d2, n2, end: r.end };
+                    // ⛓ slowfix D-A (`lightsSortiePortfolio`): a dodge unhit to the horizon scores Infinity, which no
+                    // later candidate beats (`>`): the first one is the answer
+                    if (env.exactPrune && best.score === Infinity) return best;
                 }
             }
         }
     }
     return best;
+}
+
+/**
+ * ⛓ seedling-fidelity-slowfix D-A — the whole fight from `s0`, in the forecast alone, as the verb's loop would play it
+ * (each decision a `planLightsSortie`, else a `planLightsDodge`; an idle tick while no flier is made), under one tie
+ * order. Each plan carries the digest the live run must match at its end.
+ * @returns {?{plans: object[], ticks: number}} null when a decision finds no plan, a body touches the player or the
+ * fight outruns `bound` (the verb then plays the greedy live and refuses there by name)
+ */
+export function rolloutLightsFight(s0, env, bound) {
+    const s = cloneForecast(s0);
+    const plans = [];
+    let ticks = 0;
+    while (!s.fight.totemDie) {
+        if (ticks > bound) return null;
+        if (!s.fight.madeFliers) {
+            if (forecastTick(s, IDLE, env).damaged) return null;
+            plans.push({ keys: [IDLE], idle: true });
+            ticks += 1;
+            continue;
+        }
+        const sortie = planLightsSortie(s, env);
+        const plan = sortie ?? planLightsDodge(s, env);
+        if (!plan) return null;
+        for (const k of plan.keys) if (forecastTick(s, k, env).damaged) return null;
+        // the next decision starts where the live loop's `lightsForecastState` would: no pending test, no held press
+        s.tests = [];
+        s.prevPrimary = false;
+        plans.push({ keys: plan.keys, sortie, end: fightDigest(s) });
+        ticks += plan.keys.length;
+    }
+    return { plans, ticks };
 }
 
 /**
@@ -282,6 +333,9 @@ export function execLights(run, perTick, resolved, ctx) {
         hitType: weapon === 'spear' ? 'Spear' : 'Sword',
         // ⛓ fidelity LIGHTSARR D2: `Player.shieldBump` shoves a flier the moving shield touches.
         shield: run.progress('inventory')?.hasShield === true,
+        // ⛓ slowfix D-A: the two exact prunes (a sortie that has landed nothing by its last test; the first dodge unhit
+        // to the horizon) — they change no answer and pay for the portfolio's second rollout
+        exactPrune: CONTACT_FIDELITY.lightsSortiePortfolio,
     };
     if (env.shield && run.progress('inventory')?.hasDarkShield === true) {
         refuse('cannot-act', 'the dark shield is held: `Player.shieldBump` HITS a flier whose `hitsTimer <= 0` '
@@ -310,6 +364,20 @@ export function execLights(run, perTick, resolved, ctx) {
     let dodges = 0;
     const bound = fightOf(run).flierNumber * LIGHT_BOSS.flier.hitsMax * LIGHTS_VERB.ticksPerHit;
     const start = perTick.length;
+    // ⛓ seedling-fidelity-slowfix D-A (`lightsSortiePortfolio`): the whole fight rolled out once per tie order; the
+    // shortest is played plan by plan (the greedy's own order wins a tie). No rollout finishing → the greedy, live.
+    let portfolio = null;
+    let queue = null;
+    if (CONTACT_FIDELITY.lightsSortiePortfolio) {
+        const s0 = lightsForecastState(run, { weapon });
+        portfolio = LIGHTS_VERB.tieOrders.map((order) => {
+            const r = rolloutLightsFight(s0, { ...env, tieOrder: order }, bound);
+            return { order: order.map((b) => (b ? 'back' : 'stay')).join('-'), ticks: r ? r.ticks : null, plans: r?.plans ?? null };
+        });
+        const best = portfolio.reduce((a, p) => (p.plans && (!a || p.ticks < a.ticks) ? p : a), null);
+        if (best) queue = [...best.plans];
+        portfolio = { tried: portfolio.map((p) => ({ order: p.order, ticks: p.ticks })), chose: best?.order ?? null };
+    }
     for (;;) {
         const F = fightOf(run);
         if (F.endedAt !== null) break;
@@ -317,10 +385,16 @@ export function execLights(run, perTick, resolved, ctx) {
             refuse('unresolved', `the fight ran its ${bound}-tick bound (${sorties.length} sorties, ${dodges} dodges; `
                 + `fliers [${F.bodies.map((b) => (b.removed ? 'X' : b.hits)).join(' ')}])`);
         }
+        const queued = queue ? queue.shift() : null;
+        if (queue && (!queued || (queued.idle === true) === F.madeFliers)) {
+            refuse('unresolved', `the live fight at tick ${run.ticksCompleted} left the portfolio's rollout (`
+                + `${queued ? `it planned ${queued.idle ? 'an idle tick' : 'a move'} where the fliers are `
+                    + `${F.madeFliers ? 'made' : 'not yet made'}` : 'it had ended'}) — the model and its forecast disagree`);
+        }
         if (!F.madeFliers) { drive(IDLE); continue; }
-        const s0 = lightsForecastState(run, { weapon });
-        const sortie = planLightsSortie(s0, env);
-        const plan = sortie ?? planLightsDodge(s0, env);
+        const s0 = queued ? null : lightsForecastState(run, { weapon });
+        const sortie = queued ? queued.sortie : planLightsSortie(s0, env);
+        const plan = queued ? { keys: queued.keys, end: queued.end } : (sortie ?? planLightsDodge(s0, env));
         if (!plan) {
             refuse('unresolved', `no sortie lands a hit and no dodge stays unhit for ${LIGHTS_VERB.safeTail} ticks from `
                 + `(${run.state.x.toFixed(2)},${run.state.y.toFixed(2)}) at tick ${run.ticksCompleted} (fliers `
@@ -328,7 +402,7 @@ export function execLights(run, perTick, resolved, ctx) {
         }
         const waitIdle = sortie ? sortie.w : 0;
         const executed = sortie ? sortie.keys.length : plan.keys.length;
-        const debug = globalThis.process?.env?.SEEDLING_LIGHTS_DEBUG === '1' ? cloneForecast(s0) : null;
+        const debug = globalThis.process?.env?.SEEDLING_LIGHTS_DEBUG === '1' && s0 ? cloneForecast(s0) : null;
         for (const k of plan.keys) {
             drive(k);
             if (debug) {
@@ -361,5 +435,6 @@ export function execLights(run, perTick, resolved, ctx) {
         verb: 'lights', target: resolved.obstacle?.id ?? 'lightbosscontroller', from, ticks: perTick.length - from,
         introTicks, paged, sorties: sorties.length, dodges, weapon,
         endedAt: fightOf(run).endedAt,
+        ...(portfolio ? { portfolio } : {}),
     };
 }
