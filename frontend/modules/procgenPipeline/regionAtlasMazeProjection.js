@@ -764,6 +764,16 @@ export function projectLevelWorld(region, grid, ctx, entities) {
     const traps = [];
     const trapLib = {};
     const ropeCells = [];
+    // A rope run's cells, by key → the items whose strike cuts it (its cut condition, dropped by the terrain pass).
+    const ropeRun = new Map();
+    /** True iff `c` resolves to exactly a Has, or an Or of Has, over the item set `items` (a rope's cut). */
+    const isCutOf = (c, items) => {
+        const rule = resolveCondition(c);
+        const has = rule?.rule === 'Has' ? [rule] : rule?.rule === 'Or' ? rule.children : null;
+        if (!has || has.some((h) => h?.rule !== 'Has' || (h.args?.count ?? 1) !== 1)) return false;
+        const names = new Set(has.map((h) => h.args.item_name));
+        return names.size === items.size && [...names].every((n) => items.has(n));
+    };
     // The lane conditions a trap MODELS, by key: dropped from its lane cells below.
     const condKey = ctx.conditionKey ?? ((c) => JSON.stringify(c));
     const modelled = new Map(); // "x,y" → Set of condition keys
@@ -857,25 +867,39 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         }
         const actions = strikes.map(actionFor);
         if (e.kind === 'rope') {
-            if (tiles.length !== 1) {
-                throw new Error(`atlas region "${regionId}": ${e.label ?? 'a rope'} covers ${tiles.length} tiles; a maze rope is one cell`);
+            // ⛓ rules-l39 F1 (⚖ the user 2026-10-23, "(a) One obstacle"): an UNCUT rope is solid over its
+            // whole RUN — `RopeStart`'s hitbox is `_xend - _x + 16` wide (`RopeStart.as:26`) — and the atlas
+            // row carries the run (`run`; its `tiles` is the pulley, the rope's own placement). Every cell of it is ONE obstacle (one id, the same `struck_by`); a hit on any
+            // of them cuts the rope, so the run's `clear_set` is the token the cut activates
+            // (`ropeTokens`: the struck cell is `broken`, or the rope's event is carried) and a cut anywhere
+            // clears every cell. The run's cells are NOT claimed: the terrain pass below lays each one as the
+            // atlas grid has it, less its CUT condition (the condition that resolves to exactly this rope's
+            // strike items — the rope obstacle models it, as a trap's lane drops what the trap models), so a
+            // run cell over water keeps its Swim gate and a wall in the run stays a wall. The obstacle is then
+            // set on every run cell the terrain floored. ⚠ After a cut the game keeps the PULLEY solid
+            // (`:40-47`); here it opens with the run, as the atlas's own cells do (one tile permissive, named).
+            const group = String(e.group);
+            if (groupsWithButton.has(group)) {
+                throw new Error(`atlas region "${regionId}": ${e.label ?? 'a rope'}'s group ${group} also has a button — `
+                    + 'its run would open on a hold, not a cut');
             }
+            const run = (e.run ?? tiles).map(local).filter(inGrid);
             const id = ropeId(tiles[0]);
             builder.obstacleLib[id] = {
                 id,
                 name: e.label ?? id,
                 kind: 'rope',
-                clear_set: [],
+                clear_set: [[groupToken(group)]],
                 struck_by: actions,
-                activates: groupToken(String(e.group)),
+                activates: groupToken(group),
+                // The rope's ONE cut state: a strike on any run cell is recorded here (`strikeTarget`).
+                at: keyOf(...tiles[0]),
                 ...(e.event ? { event: e.event } : {}),
                 color: '#b08a4a',
             };
-            const [x, y] = tiles[0];
-            builder.floor(x, y);
-            claimed.add(keyOf(x, y));
-            builder.obstacles.set(keyOf(x, y), id);
-            ropeCells.push({ tile: tiles[0], label: e.label ?? id });
+            const items = new Set(strikes.map((t) => t.item));
+            for (const [x, y] of run) ropeRun.set(keyOf(x, y), items);
+            ropeCells.push({ id, tiles: run, label: e.label ?? id });
             continue;
         }
         const id = rockId(actions);
@@ -903,7 +927,14 @@ export function projectLevelWorld(region, grid, ctx, entities) {
             if (cell.kind === 'wall') continue;
             if (cell.kind === 'gated') {
                 const drop = modelled.get(keyOf(x, y));
-                const kept = drop ? (cell.conditions ?? []).filter((c) => !drop.has(condKey(c))) : null;
+                const cut = ropeRun.get(keyOf(x, y));
+                const laneKept = drop ? (cell.conditions ?? []).filter((c) => !drop.has(condKey(c))) : null;
+                // A run cell whose ONLY remaining condition is the cut is the rope obstacle's; one that also
+                // carries another (L16's (4,1) is water) keeps the cut in its own gate — Swim AND the cut's
+                // items, which is what crossing it costs once cut — and takes no rope obstacle (one obstacle
+                // per cell: the gate is one).
+                const noCut = cut ? (laneKept ?? cell.conditions ?? []).filter((c) => !isCutOf(c, cut)) : null;
+                const kept = cut && noCut.length === 0 ? noCut : laneKept;
                 if (kept && kept.length === 0) { builder.floor(x, y); continue; }
                 const own = occupancyRule(kept ? { ...cell, conditions: kept } : cell, resolveCondition);
                 if (own.rule && own.unresolved.length === 0) {
@@ -919,6 +950,13 @@ export function projectLevelWorld(region, grid, ctx, entities) {
             if (cell.kind === 'directional' || cell.kind === 'sink') {
                 note({ kind: 'unmodelled_walled', tile: [x + ox, y + oy], message: `a ${cell.kind} cell at [${x + ox},${y + oy}] is not modelled in a level world — WALLED` });
             }
+        }
+    }
+
+    // The rope obstacle on every run cell the terrain floored (above).
+    for (const { id, tiles } of ropeCells) {
+        for (const [x, y] of tiles) {
+            if (builder.isFloor(x, y) && !builder.obstacles.has(keyOf(x, y))) builder.obstacles.set(keyOf(x, y), id);
         }
     }
 
@@ -997,18 +1035,20 @@ export function projectLevelWorld(region, grid, ctx, entities) {
         });
     }
 
-    // ⛓ A ROPE's cell belongs to the ONE sub-region it borders (the rules' `place`
+    // ⛓ A ROPE's cells belong to the ONE sub-region its run borders (the rules' `place`
     // rule for its event, `make-seedling-playthrough-rules` playthroughRopeEvents):
     // it is cut from there, and its event location is that sub-region's.
-    for (const { tile: [x, y], label } of ropeCells) {
-        if (ownerOf([x + ox, y + oy]) !== -1) continue;
-        const beside = new Set([[x, y - 1], [x + 1, y], [x, y + 1], [x - 1, y]]
-            .filter(([nx, ny]) => inGrid([nx, ny]) && builder.isFloor(nx, ny))
+    for (const { tiles, label } of ropeCells) {
+        const own = new Set(tiles.map(([x, y]) => keyOf(x, y)));
+        const unowned = tiles.filter(([x, y]) => ownerOf([x + ox, y + oy]) === -1);
+        if (unowned.length === 0) continue;
+        const beside = new Set(tiles.flatMap(([x, y]) => [[x, y - 1], [x + 1, y], [x, y + 1], [x - 1, y]])
+            .filter(([nx, ny]) => !own.has(keyOf(nx, ny)) && inGrid([nx, ny]) && builder.isFloor(nx, ny))
             .map(([nx, ny]) => ownerOf([nx + ox, ny + oy])).filter((o) => o !== -1));
         if (beside.size !== 1) {
             throw new Error(`atlas region "${regionId}": ${label} borders ${beside.size} sub-regions — one was expected`);
         }
-        boundAt.set(keyOf(x, y), [...beside][0]);
+        for (const [x, y] of unowned) boundAt.set(keyOf(x, y), [...beside][0]);
     }
 
     // --- ownership rows, entrances and the in-world crossings' AP names ------

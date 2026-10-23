@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 94,
-            "count": 141,
+            "browser": 95,
+            "count": 142,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 448,
-        "browser": 159,
+        "blockStyle": 449,
+        "browser": 160,
         "cited": 240,
-        "files": 462,
+        "files": 463,
         "lineStyle": 14,
-        "withDocblock": 462,
-        "withFlags": 379
+        "withDocblock": 463,
+        "withFlags": 380
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -12545,6 +12545,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling L37 FALLROCK, ON THE GAME (rules `rules-l37-fallrock-patch`).",
             "path": "scripts/procgen/probe-seedling-l37-fallrock.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "out"
+            ],
+            "file": "probe-seedling-l39-pulser.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L39 PULSER and ROPE SPAN, ON THE GAME (rules `rules-l39`). `rope@96,384` (tset 6, tag 9) arms `pulser@64,96` (tset 6): `RopeStart.set activate` publishes the rope's group (`RopeStart.as:79-91`) and a Pulser pulses only while `activate` (`Pulser.as:54-84`); on every later entry `check()` re-hits the rope f…",
+            "path": "scripts/procgen/probe-seedling-l39-pulser.mjs"
         },
         {
             "argvHelpers": [],

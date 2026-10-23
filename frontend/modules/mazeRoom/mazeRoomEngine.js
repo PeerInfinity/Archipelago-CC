@@ -829,12 +829,15 @@ function cloneState(state) {
 /**
  * The obstacle id standing SHUT at (x, y) for this inventory, or `null` — the
  * one clearance question `step` and `whyBlocked` both ask. ⛓ An obstacle in
- * `state.broken` is open whatever its `clear_set` says.
+ * `state.broken` is open whatever its `clear_set` says — read at its canonical
+ * cell (`at`, where `strikeTarget` records a multi-cell obstacle's strike; the
+ * scripted `tileAt` reads the same key), so every cell of a struck rope run opens.
  */
 function shutObstacleAt(world, state, x, y, inv, clearanceOpts) {
     const obstacleId = getObstacle(world, x, y);
     if (!obstacleId) return null;
-    if (state.broken !== undefined && state.broken.includes(posKey(x, y))) return null;
+    const brokenAt = world.obstacleLib?.[obstacleId]?.at ?? posKey(x, y);
+    if (state.broken !== undefined && state.broken.includes(brokenAt)) return null;
     return isObstacleCleared(obstacleId, inv, world.obstacleLib, clearanceOpts) ? null : obstacleId;
 }
 
@@ -851,6 +854,11 @@ export function facingCell(state) {
  * a turn passes). It breaks the facing cell's obstacle iff that obstacle's
  * library entry lists the action in `struck_by` and it is not broken already.
  *
+ * ⛓ rules-l39 (⚖ 2026-10-23 "(a) One obstacle"): an obstacle spanning several
+ * cells (a rope's run) names its ONE canonical cell in `at`, and a strike on
+ * any of its cells is recorded THERE — one cut state, whichever cell was hit.
+ * An obstacle without `at` (a rock) records the struck cell, as before.
+ *
  * ⚠ The entry's `condition` names the HELPER the scripted step asks
  * (`tileSpike/`, ⚖ Q2 iii); this native path is that helper's built-in
  * default (⚖ Q6 "native default") and the parity suite holds the two equal.
@@ -862,7 +870,7 @@ export function strikeTarget(world, state, actionId) {
     if (!obstacleId) return null;
     const struckBy = world.obstacleLib?.[obstacleId]?.struck_by;
     if (!Array.isArray(struckBy) || !struckBy.includes(actionId)) return null;
-    const key = posKey(cell.x, cell.y);
+    const key = world.obstacleLib?.[obstacleId]?.at ?? posKey(cell.x, cell.y);
     if (state.broken?.includes(key)) return null;
     return key;
 }
@@ -1737,6 +1745,9 @@ function* subsetsOfSize(items, k, from = 0, acc = []) {
 function blockWorldAccessRules(world) {
     const lib = world.obstacleLib ?? DEFAULT_OBSTACLES;
     const held = new Set(Object.values(world.buttonLib ?? {}).map((b) => b.holds).filter(Boolean));
+    // ⛓ rules-l39: a rope's `activates` token is derived per step from its cut (`ropeTokens`), never carried —
+    // like a button's held token it is not an item of the axis (a rope run's `clear_set` names it).
+    for (const entry of Object.values(lib)) if (entry?.activates) held.add(entry.activates);
     const axis = new Set();
     for (const id of new Set(world.obstacles.values())) {
         const entry = lib[id];
