@@ -1370,9 +1370,11 @@ export function playthroughButtonEvents(doc, { existing = [] } = {}) {
  * and the gated solids are derived; this answers the atlas-side questions:
  *   - PLACE: the writer's sub-region (the component its tile is in; none = a refusal by name);
  *   - REACH: True_ — a speaking Watcher opens its dialogue on entering its circle, with nothing held
- *     (`keyNeeded = !checkPersistence(tag)`, false until the talk);
+ *     (`keyNeeded = !checkPersistence(tag)`, false until the talk); the L58 Yeti (⛓ RULES yeti-event) on the talk
+ *     key inside the same circle (`NPC.keyNeeded` stays true), still with nothing held;
  *   - GATES: every departure of the gated solid's region whose entrance tile lies ON the solid's sealed footprint
- *     (the FinalDoor's two teleporters to L115 stand on its cells) — a crossing there passes through the solid.
+ *     (the FinalDoor's two teleporters to L115 stand on its cells; the Yeti's tag-1 portal IS its own footprint)
+ *     — a crossing there passes through the solid.
  * The atlas carries NO event or gate (a rules-layer projection, as for the other events).
  */
 export function playthroughTalkEvents(doc, { existing = [] } = {}) {
