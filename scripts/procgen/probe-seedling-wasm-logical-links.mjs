@@ -34,6 +34,15 @@
  *      Restart-only pocket (`--pocket=`, default `level_17`, probe-seedling-restart-route.mjs's), the bot plays from
  *      there, its route BEGINS with RESTART, and it walks on from the start. The Restart is TAKEN (else a hard FAIL),
  *      and its start-hop arrival is HELD: ≥ 1 expected arrival, each ends `held`, 0 `no-held-arrival` fallbacks.
+ *   B2 B ONWARD FROM ITS OWN RESTART (§5.128; opt-in, `--only=B2`, its own battery job and its own `--budget-s`). B's
+ *      900 s ends near the L15 chest: the game runs ~25 frames per page-second headless, so play is ~90 % of it.
+ *      B2 starts where B's walk Restarts. The checkpoint is DERIVED: the first goal of the bot's own sphere queue
+ *      whose planned route (from the goal before it, `_planRoute`) BEGINS with RESTART. Every location before it is
+ *      checked in AP (`checkLocation`, items delivered the ordinary way). The game is the NEW game at its own start
+ *      spawn, which is where that Restart lands; nothing in the game is staged. Then it runs B's walk rows under `B2:`.
+ *      It must check the checkpoint goal and ≥ 1 location past it. `--restart-state=<file>` (an instrument, off by
+ *      default): B writes the world state at its first Restart; B2 reads it and prints `ROW B2 vs B restart state`
+ *      (items, save arrays, slots, every `persistence_cleared` flag only one side has).
  *
  * Prints `PASS:`/`FAIL:` rows, `ROW <tag> {json}` measurement rows, and `ALL CHECKS PASSED` /
  * `N CHECK(S) FAILED` (exit 1).
@@ -42,7 +51,7 @@
  * `flashPanel/wasm` submodule), or this SKIPs (exit 0).
  *
  * Run: node scripts/procgen/probe-seedling-wasm-logical-links.mjs [--host=http://localhost:8000] [--only=H,B,R]
- *      [--budget-s=900] [--pocket=level_17] [--restart-budget-s=300] [--solver-budget-work=<units>] [--solver-upgrade-window-work=<units>] [--wait-for-box=<sec>]
+ *      [--budget-s=900] [--restart-state=<file>] [--pocket=level_17] [--restart-budget-s=300] [--solver-budget-work=<units>] [--solver-upgrade-window-work=<units>] [--wait-for-box=<sec>]
  *      [--trace=<file>]   (B: every shipped tape + botHold, the deliveries, the history — the arrival-jitter instrument)
  */
 import { chromium } from 'playwright';
@@ -108,6 +117,8 @@ async function main() {
     /** R — the Restart-only pocket the forced Restart leaves from, and R's budget for the Restart and the walk on. */
     const POCKET = arg('pocket', 'level_17');
     const RESTART_BUDGET_MS = Number(arg('restart-budget-s', '300')) * 1000;
+    /** ⛓ B2 STATE — `--restart-state=<file>`: B writes the world state at its own first Restart there; B2 compares its start with it. */
+    const RESTART_STATE = arg('restart-state', null);
     const PRESET = JSON.parse(readFileSync(join(REPO, 'frontend', RULES_PATH), 'utf8'));
     const PARTITION = JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-subregion-partition.json'), 'utf8'));
     const REGIONS = PRESET.regions['1'];
@@ -534,88 +545,57 @@ async function main() {
                 JSON.stringify({ divergences: eng.divergences }));
         }
 
-        /** B — the bot to the Sword on the rules' declared directed graph: doors only, no logical link. */
-        async function runBot() {
-            const routing = await page.evaluate(() => {
-                const b = window.stateManagerProxy.getEffectiveBidirectionalSetting();
-                return { assumeBidirectional: b.assumeBidirectional, source: b.source };
-            });
-            check('B: the proxy routes on the directed graph the RULES declare (exporter["1"], source `explicit`)',
-                routing.assumeBidirectional === false && routing.source === 'explicit', JSON.stringify(routing));
-            if (SOLVER_BUDGET_WORK !== null) {
-                await page.evaluate(async (n) => {
-                    const sm = (await import('./app/core/settingsManager.js')).default;
-                    await sm.updateSetting('moduleSettings.flashPanel.seedlingWasmSolverBudgetWork', n, { persist: false });
-                }, SOLVER_BUDGET_WORK);
-            }
-            if (UPGRADE_WINDOW_WORK !== null) {
-                await page.evaluate(async (n) => {
-                    const sm = (await import('./app/core/settingsManager.js')).default;
-                    await sm.updateSetting('moduleSettings.flashPanel.seedlingSolverUpgradeWindowWork', n, { persist: false });
-                }, UPGRADE_WINDOW_WORK);
-            }
-            // ⛓ DETERMINISTIC BUDGET — the defaults the knobs fall back to (the schema's, pinned to the solver's constants).
-            const defaults = await page.evaluate(async () => {
-                const m = await import('./modules/seedlingDemo/jsRuntimeSolver.js');
-                return { budgetWork: m.SOLVER_BUDGET_WORK, upgradeWindowWork: m.SOLVER_UPGRADE_WINDOW_WORK };
-            });
-            const booted = await startBot();
-            out('B boot', booted);
-            check(`B: the bot is mounted in ${START}, its first goal in level 10`, booted.ok && booted.region === START
-                && /^level_10(__|$)/.test(booted.head?.region ?? ''), JSON.stringify(booted));
-            check('B: the Sword\'s route is 9 hops, opening with r8c0\'s OWN stairs (`level_0__r8c0 -> level_2`), never through r1c6',
-                booted.route?.length === 9 && booted.route?.nextExit === `${START} -> level_2`
-                    && !(booted.route?.steps ?? []).some((r) => r.startsWith('level_0__r1c6')), JSON.stringify(booted.route));
-            await clickPanelTab(page, FLASH_PANEL).catch(() => null);
-            if (TRACE) await installTrace();
-            const sword = booted.head?.location;
+        /**
+         * ⛓ B2 STATE — the game's own world state, live off `botStatus` / `readState`: where the player stands, the
+         * items and save arrays, the slots, and EVERY persistence flag the game has turned off (`persistence_cleared`:
+         * the chests taken, pickups removed, locks opened — whoever turned them off). B2's start row compares it with
+         * B's at B's own Restart (`--restart-state=`).
+         */
+        const worldState = () => rp.gameFrame().evaluate(() => {
+            const g = window.__swfBridge.game;
+            const J = (v) => (typeof v === 'string' ? JSON.parse(v) : (v ?? {}));
+            const s = J(g.botStatus());
+            const r = J(g.readState?.());
+            return { level: s.level, x: s.x, y: s.y, items: s.items, save: s.save, primary: s.primary, secondary: s.secondary,
+                inventory_slots: s.inventory_slots, hits: s.hits, persistence_cleared: s.persistence_cleared, game_time: s.game_time,
+                readState: r };
+        });
+
+        /**
+         * The walk: the bot plays until it FINISHES, ends on a named refusal, or `BUDGET_MS` runs out (status lines as
+         * `INFO: <tag> +…`). `onPoll(t0)` runs after each status read (B's Sword clock; `--restart-state`).
+         */
+        async function walk(tag, onPoll = async () => {}) {
             const t0 = Date.now();
             const statuses = [];
             let end = null;
-            let swordAt = null;
             while (Date.now() - t0 < BUDGET_MS) {
                 // eslint-disable-next-line no-await-in-loop
                 end = await botStatus();
                 if (end.status !== statuses.at(-1)?.status) {
                     statuses.push({ s: Math.round((Date.now() - t0) / 1000), status: end.status, region: end.region });
-                    console.log(`INFO: B +${((Date.now() - t0) / 1000).toFixed(1)} s bot: ${end.status}`);
+                    console.log(`INFO: ${tag} +${((Date.now() - t0) / 1000).toFixed(1)} s bot: ${end.status}`);
                 }
                 // eslint-disable-next-line no-await-in-loop
-                const checks = await page.evaluate(() => window.__checks ?? []);
-                if (swordAt === null && checks.includes(sword)) swordAt = Math.round((Date.now() - t0) / 1000);
+                await onPoll(t0);
                 if (end.status.startsWith('error') || end.status.startsWith('finished')) break;
                 // eslint-disable-next-line no-await-in-loop
                 await page.waitForTimeout(500);
             }
-            const eng = await engineStats();
-            if (TRACE) await writeTrace();
-            const checks = await page.evaluate(() => window.__checks ?? []);
-            const moves = (await rp.glueMoves()).map((m) => `${m.logical ? '~' : ''}${m.exitName}`);
-            const g = await glue();
-            out('B engine', eng);
-            out('B reach', { seconds: Math.round((Date.now() - t0) / 1000), sword, swordAt, checks, moves,
-                logicalMoves: g.stats.logicalMoves, finalStatus: end?.status, region: end?.region, statuses: statuses.slice(-15) });
-            out('B next refusal', { status: (end?.status ?? '').startsWith('error') ? end.status : null, engineRefusal: eng.lastRefusal ?? null });
-            check(`B: the first move is the stairs walked straight from ${START} (\`${START} -> level_2\`, not logical)`,
-                moves[0] === `${START} -> level_2`, JSON.stringify(moves.slice(0, 6)));
-            check('B: nothing is credited at r1c6 (the sealed link is gone from the rules)',
-                !moves.some((m) => m.includes('level_0__r1c6')), JSON.stringify(moves.filter((m) => m.includes('r1c6'))));
-            // ⛓ The Sword (L10) lies past L8, whose sandtraps the solver declines on a base without fidelity F4
-            // ("the model computes a SandTrap's arrow death"): there the walk must end on THAT named decline.
-            const sandtrapDecline = /declined level_8 -> level_9 .*sandtrap/.test(end?.status ?? '');
-            out('B sword', { swordAt, sandtrapDecline });
-            check(`B: the bot CHECKED the Sword ("${sword}") — or, on a base without F4, ends on L8's named sandtrap decline`,
-                (swordAt !== null && checks.filter((c) => c === sword).length === 1) || (swordAt === null && sandtrapDecline),
-                JSON.stringify({ swordAt, checks, sandtrapDecline }));
-            check('B: every location checked once', new Set(checks).size === checks.length, JSON.stringify(checks));
+            return { t0, statuses, end };
+        }
+
+        /** The walk's rows B and B2 share, from "every location checked once" on (B's own, word for word, under `tag`). */
+        async function walkRows(tag, { eng, end, checks, t0, defaults }) {
+            check(`${tag}: every location checked once`, new Set(checks).size === checks.length, JSON.stringify(checks));
             // ⛓ ANYTIME (§5.20) — every solver plan named by its pass; nothing left the plan.
             const solved = (eng.history ?? []).filter((h) => h.outcome === 'done' && h.producer === 'solver');
-            out('B passes', { budgetWork: eng.budgetWork, backstopMs: eng.backstopMs, backstops: eng.backstops, expiries: eng.expiries,
+            out(`${tag} passes`, { budgetWork: eng.budgetWork, backstopMs: eng.backstopMs, backstops: eng.backstops, expiries: eng.expiries,
                 provisionalPlays: eng.provisionalPlays, retries: eng.retries,
                 passes: eng.passes, legs: solved.map((h) => `L${h.level} ${h.pass}${h.expired ? '*' : ''}${h.retries ? `+r${h.retries}` : ''} ${h.ticks}t w${h.work.join('/')}`),
                 // ⛓ SHOULD-STOP — every leg one of whose passes stopped at its deadline, by the site that tripped first and the bound
                 upgradeWindowWork: eng.upgradeWindowWork, deadlines: solved.filter((h) => h.tripped.length).map((h) => `L${h.level} ${h.tripped.join(',')}`) });
-            check('B: every solver leg is named by the PASS that made its plan (dashless / full)',
+            check(`${tag}: every solver leg is named by the PASS that made its plan (dashless / full)`,
                 solved.length > 0 && solved.every((h) => h.pass === 'dashless' || h.pass === 'full'),
                 JSON.stringify(solved.map((h) => [h.level, h.pass])));
             // ⛓ KNOWN DIVERGENCES (§5.124) — an EXACT named entry (`seedlingKnownDivergences.js`) is printed loudly and
@@ -625,29 +605,29 @@ async function main() {
                 console.log(`KNOWN-DIVERGENCE (${k.entry.finding}): history ${k.index} ${k.entry.goal} — ${JSON.stringify(k.divergence)}`);
             }
             for (const [id, reached] of Object.entries(divs.reached)) {
-                if (!reached) console.log(`INFO: known divergence ${id} — B did not reach its leg in the budget (reach varies; not a failure)`);
+                if (!reached) console.log(`INFO: known divergence ${id} — ${tag} did not reach its leg in the budget (reach varies; not a failure)`);
             }
-            check('B: 0 divergences (every played plan, dashless or full, stayed on plan) but the KNOWN ones, named above',
+            check(`${tag}: 0 divergences (every played plan, dashless or full, stayed on plan) but the KNOWN ones, named above`,
                 eng.divergences === divs.known.length && divs.unknown.length === 0 && solved.every((h) => !h.divergence),
                 JSON.stringify({ divergences: eng.divergences, known: divs.known.length, unknown: divs.unknown }));
             const wantBudget = SOLVER_BUDGET_WORK ?? defaults.budgetWork;
-            check(`B: the engine solves under the work budget (${wantBudget} units, ${SOLVER_BUDGET_WORK === null ? 'the default' : '--solver-budget-work, the setting'})`,
+            check(`${tag}: the engine solves under the work budget (${wantBudget} units, ${SOLVER_BUDGET_WORK === null ? 'the default' : '--solver-budget-work, the setting'})`,
                 eng.budgetWork === wantBudget, JSON.stringify({ budgetWork: eng.budgetWork, defaults }));
             const wantWindow = UPGRADE_WINDOW_WORK === null ? defaults.upgradeWindowWork : (UPGRADE_WINDOW_WORK > 0 ? UPGRADE_WINDOW_WORK : null);
-            check(`B: the engine solves under the upgrade window (${wantWindow ?? 'the whole budget'} units, ${UPGRADE_WINDOW_WORK === null ? 'the default' : '--solver-upgrade-window-work, the setting'})`,
+            check(`${tag}: the engine solves under the upgrade window (${wantWindow ?? 'the whole budget'} units, ${UPGRADE_WINDOW_WORK === null ? 'the default' : '--solver-upgrade-window-work, the setting'})`,
                 eng.upgradeWindowWork === wantWindow, JSON.stringify({ upgradeWindowWork: eng.upgradeWindowWork, defaults }));
             // ⛓ WALK IDENTITY (a) — the cold start's adoption is staged on the LIVE clock: its plan ships at the gap every
             // held arrival ships at (the model's boot), not begin-staged + the wall-clock idle frames.
             const gaps = (eng.shipGaps ?? []).filter(Number.isFinite);
             const modal = [...gaps.reduce((m, g) => m.set(g, (m.get(g) ?? 0) + 1), new Map())].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
-            out('B adopt clock', { adoptClock: eng.adoptClock, firstGap: gaps[0] ?? null, modalGap: modal, gaps: [...new Set(gaps)] });
-            check('B: every adoption is put on the LIVE clock (no refusal), and the adopted plan ships at the held arrivals\' gap',
+            out(`${tag} adopt clock`, { adoptClock: eng.adoptClock, firstGap: gaps[0] ?? null, modalGap: modal, gaps: [...new Set(gaps)] });
+            check(`${tag}: every adoption is put on the LIVE clock (no refusal), and the adopted plan ships at the held arrivals' gap`,
                 (eng.adoptClock ?? []).length >= 1 && eng.adoptClock.every((r) => r.refusal === null && r.shift >= 0) && gaps[0] === modal,
                 JSON.stringify({ adoptClock: eng.adoptClock, firstGap: gaps[0], modal }));
             // ⛓ WALK IDENTITY (b) — every Restart the bot took waited for the playing leg's end (none cut at a wall-clock tick).
             const deferrals = end?.restartDeferrals ?? [];
-            out('B restart deferrals', { deferrals });
-            check('B: every Restart that met a playing leg waited for its end (none cut)', deferrals.every((d) => d.ended),
+            out(`${tag} restart deferrals`, { deferrals });
+            check(`${tag}: every Restart that met a playing leg waited for its end (none cut)`, deferrals.every((d) => d.ended),
                 JSON.stringify(deferrals));
             // ⛓ RESTART HOLD — every Restart's start-hop arrival is HELD: no `no-held-arrival` fallback, and each expected
             // arrival ends in a `held` row (measured before the fix: 3/10 runs fell back at the L19 Restart, whose route opens
@@ -658,18 +638,18 @@ async function main() {
             // subject is session R (a forced Restart out of a pocket), never an empty set read as green.
             if ((eng.expectedArrivals ?? 0) === 0 && watchRows.length === 0 && deferrals.length === 0
                 && !(eng.forcedBy?.['no-held-arrival'] > 0)) {
-                console.log(`INFO: B took no Restart in its budget — the restart-hold check's subject is session R${SESSIONS.includes('R') ? '' : ' (NOT selected: --only lacks R, so the check does not run)'}`);
-            } else restartHeld('B', eng);
+                console.log(`INFO: ${tag} took no Restart in its budget — the restart-hold check's subject is session R${SESSIONS.includes('R') ? '' : ' (NOT selected: --only lacks R, so the check does not run)'}`);
+            } else restartHeld(tag, eng);
             // ⛓ CROSS-LEVEL END — a location leg whose plan ends in another level (L32 Bob Boss → L30) is HELD at its
             // landing (no `held-end` / `unheld-end` fallback, no `cross-level-end` re-arrival), and its own check SETTLES.
             const cross = eng.crossLevelEnds ?? [];
-            out('B cross-level ends', { cross, staleGoals: eng.staleGoals ?? [] });
-            check('B: every location leg that ends in another level is HELD at its landing, and its own check settles',
+            out(`${tag} cross-level ends`, { cross, staleGoals: eng.staleGoals ?? [] });
+            check(`${tag}: every location leg that ends in another level is HELD at its landing, and its own check settles`,
                 cross.every((r) => r.outcome === 'held-arrival') && !(eng.forcedBy?.['cross-level-end'] > 0)
                     && cross.every((r) => (eng.selfChecks ?? []).some((c) => c.location === r.goal && c.settled === true)),
                 JSON.stringify({ cross, forcedBy: eng.forcedBy, selfChecks: (eng.selfChecks ?? []).filter((c) => cross.some((r) => r.goal === c.location)) }));
-            check('B: 0 backstops (the wall clock never ended a solve)', eng.backstops === 0, JSON.stringify({ backstops: eng.backstops, backstopMs: eng.backstopMs }));
-            check('B: the walk ends FINISHED, with a NAMED refusal, or on the budget — never a silent stall',
+            check(`${tag}: 0 backstops (the wall clock never ended a solve)`, eng.backstops === 0, JSON.stringify({ backstops: eng.backstops, backstopMs: eng.backstopMs }));
+            check(`${tag}: the walk ends FINISHED, with a NAMED refusal, or on the budget — never a silent stall`,
                 (end?.status ?? '').startsWith('finished') || (end?.status ?? '').startsWith('error') || Date.now() - t0 >= BUDGET_MS,
                 end?.status ?? '');
             // ⛓ ROPE GOAL — a goal-first BREAK step is answered: the walk never ENDS on "breaking X first (<event id>)" once the
@@ -688,12 +668,217 @@ async function main() {
                 const checked = window.stateManagerProxy?.getLatestStateSnapshot?.()?.checkedLocations ?? [];
                 return { eventId: id, names, collected: names.some((n) => checked.includes(n)) };
             }, end?.status ?? '');
-            out('B break steps', { ...brk, replans: (await page.evaluate(async () => {
+            out(`${tag} break steps`, { ...brk, replans: (await page.evaluate(async () => {
                 const { getActivePanel } = await import('./modules/playbackBot/index.js');
                 return (getActivePanel()?.getBot?.()?.getLog?.() ?? []).filter((l) => /collected by the game — re-planning/.test(l));
             })) });
-            check('B: no walk ends on a BREAK step whose event the game already collected (the bot re-plans after the break)',
+            check(`${tag}: no walk ends on a BREAK step whose event the game already collected (the bot re-plans after the break)`,
                 !(brk.eventId && brk.collected), JSON.stringify(brk));
+        }
+
+        /** The routing + knob rows and settings every bot session runs before its walk; returns the knobs' defaults. */
+        async function botPreamble(tag) {
+            const routing = await page.evaluate(() => {
+                const b = window.stateManagerProxy.getEffectiveBidirectionalSetting();
+                return { assumeBidirectional: b.assumeBidirectional, source: b.source };
+            });
+            check(`${tag}: the proxy routes on the directed graph the RULES declare (exporter["1"], source \`explicit\`)`,
+                routing.assumeBidirectional === false && routing.source === 'explicit', JSON.stringify(routing));
+            if (SOLVER_BUDGET_WORK !== null) {
+                await page.evaluate(async (n) => {
+                    const sm = (await import('./app/core/settingsManager.js')).default;
+                    await sm.updateSetting('moduleSettings.flashPanel.seedlingWasmSolverBudgetWork', n, { persist: false });
+                }, SOLVER_BUDGET_WORK);
+            }
+            if (UPGRADE_WINDOW_WORK !== null) {
+                await page.evaluate(async (n) => {
+                    const sm = (await import('./app/core/settingsManager.js')).default;
+                    await sm.updateSetting('moduleSettings.flashPanel.seedlingSolverUpgradeWindowWork', n, { persist: false });
+                }, UPGRADE_WINDOW_WORK);
+            }
+            // ⛓ DETERMINISTIC BUDGET — the defaults the knobs fall back to (the schema's, pinned to the solver's constants).
+            return page.evaluate(async () => {
+                const m = await import('./modules/seedlingDemo/jsRuntimeSolver.js');
+                return { budgetWork: m.SOLVER_BUDGET_WORK, upgradeWindowWork: m.SOLVER_UPGRADE_WINDOW_WORK };
+            });
+        }
+
+        /** B — the bot to the Sword on the rules' declared directed graph: doors only, no logical link. */
+        async function runBot() {
+            const defaults = await botPreamble('B');
+            const booted = await startBot();
+            out('B boot', booted);
+            check(`B: the bot is mounted in ${START}, its first goal in level 10`, booted.ok && booted.region === START
+                && /^level_10(__|$)/.test(booted.head?.region ?? ''), JSON.stringify(booted));
+            check('B: the Sword\'s route is 9 hops, opening with r8c0\'s OWN stairs (`level_0__r8c0 -> level_2`), never through r1c6',
+                booted.route?.length === 9 && booted.route?.nextExit === `${START} -> level_2`
+                    && !(booted.route?.steps ?? []).some((r) => r.startsWith('level_0__r1c6')), JSON.stringify(booted.route));
+            await clickPanelTab(page, FLASH_PANEL).catch(() => null);
+            if (TRACE) await installTrace();
+            const sword = booted.head?.location;
+            let swordAt = null;
+            // ⛓ B2 STATE — `--restart-state=<file>` (an instrument, off by default): the world state the first time B's own
+            // Restart is taken (the glue's `lastRestart.taken`), read once, before the walk on changes anything.
+            let restartState = null;
+            const { t0, statuses, end } = await walk('B', async (t) => {
+                const checks = await page.evaluate(() => window.__checks ?? []);
+                if (swordAt === null && checks.includes(sword)) swordAt = Math.round((Date.now() - t) / 1000);
+                if (RESTART_STATE && !restartState) {
+                    const lr = await page.evaluate(async () => (await import('./modules/flashPanel/index.js')).getSeedlingRegionGlue()?.lastRestart ?? null);
+                    if (lr?.taken) restartState = { at: Math.round((Date.now() - t) / 1000), checks, region: (await botStatus()).region, state: await worldState() };
+                }
+            });
+            const eng = await engineStats();
+            if (TRACE) await writeTrace();
+            if (RESTART_STATE) {
+                const { writeFileSync, mkdirSync } = await import('node:fs');
+                mkdirSync(dirname(RESTART_STATE), { recursive: true });
+                writeFileSync(RESTART_STATE, JSON.stringify(restartState));
+                out('B restart state written', { file: RESTART_STATE, at: restartState?.at ?? null, checks: restartState?.checks?.length ?? null,
+                    cleared: restartState?.state?.persistence_cleared?.length ?? null });
+            }
+            const checks = await page.evaluate(() => window.__checks ?? []);
+            const moves = (await rp.glueMoves()).map((m) => `${m.logical ? '~' : ''}${m.exitName}`);
+            const g = await glue();
+            out('B engine', eng);
+            out('B reach', { seconds: Math.round((Date.now() - t0) / 1000), sword, swordAt, checks, moves,
+                logicalMoves: g.stats.logicalMoves, finalStatus: end?.status, region: end?.region, statuses: statuses.slice(-15) });
+            out('B next refusal', { status: (end?.status ?? '').startsWith('error') ? end.status : null, engineRefusal: eng.lastRefusal ?? null });
+            check(`B: the first move is the stairs walked straight from ${START} (\`${START} -> level_2\`, not logical)`,
+                moves[0] === `${START} -> level_2`, JSON.stringify(moves.slice(0, 6)));
+            check('B: nothing is credited at r1c6 (the sealed link is gone from the rules)',
+                !moves.some((m) => m.includes('level_0__r1c6')), JSON.stringify(moves.filter((m) => m.includes('r1c6'))));
+            // ⛓ The Sword (L10) lies past L8, whose sandtraps the solver declines on a base without fidelity F4
+            // ("the model computes a SandTrap's arrow death"): there the walk must end on THAT named decline.
+            const sandtrapDecline = /declined level_8 -> level_9 .*sandtrap/.test(end?.status ?? '');
+            out('B sword', { swordAt, sandtrapDecline });
+            check(`B: the bot CHECKED the Sword ("${sword}") — or, on a base without F4, ends on L8's named sandtrap decline`,
+                (swordAt !== null && checks.filter((c) => c === sword).length === 1) || (swordAt === null && sandtrapDecline),
+                JSON.stringify({ swordAt, checks, sandtrapDecline }));
+            await walkRows('B', { eng, end, checks, t0, defaults });
+        }
+
+        /**
+         * B2 — B ONWARD FROM ITS OWN RESTART (§5.128). The checkpoint is DERIVED, never named: walking the bot's own
+         * sphere queue in order from the start, each goal planned from the region of the goal before it (`_planRoute`,
+         * R's read), the first goal whose route BEGINS with RESTART is where B's walk Restarts (measured on B: Sphere 6.3,
+         * after the L49 Conch). Every location before it is checked in AP (`stateManagerProxy.checkLocation`, its item
+         * delivered the ordinary way); the game is the NEW game at its own start spawn — where that Restart lands.
+         * ⛔ Nothing in the game is staged: its world (`persistence_cleared`) is the new game's, and the start row says how
+         * it differs from B's at the same Restart.
+         */
+        async function stageCheckpoint() {
+            return page.evaluate(async ({ start }) => {
+                const { getActivePanel } = await import('./modules/playbackBot/index.js');
+                const bus = (await import('./app/core/eventBus.js')).default;
+                bus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' }, 'tests');
+                for (let i = 0; i < 50 && !getActivePanel()?.getBot?.(); i++) {
+                    // eslint-disable-next-line no-await-in-loop
+                    await new Promise((r) => { setTimeout(r, 100); });
+                }
+                const bot = getActivePanel()?.getBot?.();
+                if (!bot) return { ok: false, why: 'no playback bot panel' };
+                const proxy = window.stateManagerProxy;
+                bot.onRegionMove({ targetRegion: start });
+                bot.refresh();
+                bot._ensureQueueBuilt?.();
+                const queue = bot._queue ?? [];
+                let here = start;
+                const plans = [];
+                for (let i = 0; i < queue.length; i++) {
+                    const e = queue[i];
+                    // eslint-disable-next-line no-await-in-loop
+                    await proxy?.pingWorker?.('probe-logical-links-B2');
+                    const p = e.regionName === here ? { kind: 'here' } : bot._planRoute(here, e.regionName);
+                    plans.push({ i, location: e.locationName, from: here, to: e.regionName, kind: p?.kind ?? null, why: p?.why ?? null });
+                    if (p?.kind === 'restart') {
+                        return { ok: true, index: i, goal: { location: e.locationName, region: e.regionName, sphere: e.sphereIndex ?? null },
+                            from: here, prefix: queue.slice(0, i).map((x) => x.locationName), plans, queueLength: queue.length };
+                    }
+                    if (!p || (p.kind !== 'here' && !p.route)) return { ok: false, why: `no route ${here} -> ${e.regionName}`, plans };
+                    // eslint-disable-next-line no-await-in-loop
+                    await proxy.checkLocation(e.locationName);
+                    here = e.regionName;
+                }
+                return { ok: false, why: 'no queue goal is planned with a Restart', plans };
+            }, { start: START });
+        }
+
+        async function runBotFromRestart() {
+            await rp.waitFor('the new game stands in the start region', async () => {
+                const g = await glue();
+                return g.region === START && (await rp.currentRegion()) === START ? g : null;
+            }, 60000);
+            const defaults = await botPreamble('B2');
+            const fresh = await worldState();
+            // The derived sphere log, as startBot loads it (the queue the checkpoint is read off).
+            await page.evaluate(async (rulesPath) => {
+                const rules = await (await fetch(rulesPath)).json();
+                const { generateSphereLog } = await import('./modules/shared/procgen/forwardSimulator.js');
+                const text = generateSphereLog(rules).map((e) => JSON.stringify(e)).join('\n');
+                const { getSphereStateSingleton } = await import('./modules/sphereState/singleton.js');
+                return getSphereStateSingleton().loadSphereLog('probe-seedling-wasm-logical-links:derived', text);
+            }, RULES_PATH);
+            const cp = await stageCheckpoint();
+            out('B2 checkpoint', { ...cp, plans: (cp.plans ?? []).map((p) => `${p.i} ${p.kind} ${p.from} -> ${p.to}`) });
+            check('B2: the checkpoint is B\'s own Restart — the first queue goal whose planned route from the goal before it BEGINS with RESTART',
+                cp.ok === true && cp.index >= 1 && cp.prefix.length === cp.index, JSON.stringify({ ok: cp.ok, why: cp.why ?? null, index: cp.index, goal: cp.goal, from: cp.from }));
+            if (!cp.ok) return;
+            const staged = await rp.waitFor('the prefix is checked in AP and its items reach the game', async () => {
+                const snap = await page.evaluate(() => {
+                    const s = window.stateManagerProxy?.getLatestStateSnapshot?.();
+                    return { checked: [...(s?.checkedLocations ?? [])] };
+                });
+                const st = await worldState();
+                return cp.prefix.every((n) => snap.checked.includes(n)) && JSON.stringify(st.items) !== JSON.stringify(fresh.items)
+                    ? { checked: snap.checked.length, items: st.items } : null;
+            }, 30000).catch(() => null);
+            await page.waitForTimeout(1500);
+            const start = await worldState();
+            out('B2 start state', { fresh: { items: fresh.items, cleared: fresh.persistence_cleared }, start });
+            check(`B2: the ${cp.index} locations before the checkpoint are checked in AP and their items reached the game, none by the game itself`,
+                !!staged && (await page.evaluate(() => window.__checks ?? [])).length === 0, JSON.stringify({ staged, gameChecks: await page.evaluate(() => window.__checks ?? []) }));
+            if (RESTART_STATE && existsSync(RESTART_STATE)) {
+                const b = JSON.parse(readFileSync(RESTART_STATE, 'utf8'));
+                const key = (r) => `${r.level}:${r.tag}`;
+                const bSet = new Set((b?.state?.persistence_cleared ?? []).map(key));
+                const b2Set = new Set(start.persistence_cleared.map(key));
+                const itemDiff = Object.keys({ ...b?.state?.items, ...start.items }).filter((k) => JSON.stringify(b?.state?.items?.[k]) !== JSON.stringify(start.items[k]));
+                out('B2 vs B restart state', { b: { at: b?.at, region: b?.region, checks: b?.checks, level: b?.state?.level, x: b?.state?.x, y: b?.state?.y },
+                    b2: { level: start.level, x: start.x, y: start.y },
+                    itemDiff: itemDiff.map((k) => ({ k, b: b?.state?.items?.[k], b2: start.items[k] })),
+                    save: { b: b?.state?.save, b2: start.save }, slots: { b: b?.state?.inventory_slots, b2: start.inventory_slots },
+                    primary: { b: b?.state?.primary, b2: start.primary }, secondary: { b: b?.state?.secondary, b2: start.secondary },
+                    onlyB: [...bSet].filter((k) => !b2Set.has(k)), onlyB2: [...b2Set].filter((k) => !bSet.has(k)),
+                    checksOnlyB: (b?.checks ?? []).filter((n) => !cp.prefix.includes(n)), prefixOnlyB2: cp.prefix.filter((n) => !(b?.checks ?? []).includes(n)),
+                    readState: Object.keys({ ...b?.state?.readState, ...start.readState }).filter((k) => JSON.stringify(b?.state?.readState?.[k]) !== JSON.stringify(start.readState[k]))
+                        .map((k) => ({ k, b: b?.state?.readState?.[k], b2: start.readState[k] })) });
+            }
+            await clickPanelTab(page, FLASH_PANEL).catch(() => null);
+            const booted = await page.evaluate(async () => {
+                const { getActivePanel } = await import('./modules/playbackBot/index.js');
+                const bot = getActivePanel()?.getBot?.();
+                await bot.play();
+                return { region: bot.getCurrentRegion(), head: bot._queue?.[bot._cursor]?.locationName ?? null, cursor: bot._cursor ?? null };
+            });
+            out('B2 boot', booted);
+            check(`B2: the bot is mounted in ${START} and its first goal is the checkpoint ("${cp.goal.location}")`,
+                booted.region === START && booted.head === cp.goal.location && booted.cursor === cp.index, JSON.stringify(booted));
+            const { t0, statuses, end } = await walk('B2');
+            const eng = await engineStats();
+            const checks = await page.evaluate(() => window.__checks ?? []);
+            const moves = (await rp.glueMoves()).map((m) => `${m.logical ? '~' : ''}${m.exitName}`);
+            out('B2 engine', eng);
+            out('B2 reach', { seconds: Math.round((Date.now() - t0) / 1000), checkpoint: cp.goal.location, checks, moves,
+                finalStatus: end?.status, region: end?.region, statuses: statuses.slice(-15) });
+            out('B2 next refusal', { status: (end?.status ?? '').startsWith('error') ? end.status : null, engineRefusal: eng.lastRefusal ?? null });
+            // ⛓ ONWARD — B2's reason to exist: it checks a location PAST its checkpoint goal (B's walk ends near it).
+            const past = checks.filter((n) => n !== cp.goal.location);
+            check(`B2: the walk checks the checkpoint goal and at least one location PAST it (${cp.goal.location} → …)`,
+                checks.includes(cp.goal.location) && past.length >= 1, JSON.stringify({ checks }));
+            check('B2: no location of the staged prefix is checked again by the game', !checks.some((n) => cp.prefix.includes(n)),
+                JSON.stringify(checks.filter((n) => cp.prefix.includes(n))));
+            await walkRows('B2', { eng, end, checks, t0, defaults });
         }
 
         try {
@@ -726,6 +911,7 @@ async function main() {
             if (S === 'H') await runHuman();
             if (S === 'B') await runBot();
             if (S === 'R') await runRestart();
+            if (S === 'B2') await runBotFromRestart();
             console.log(`INFO: ${logs.filter((l) => l.startsWith('[pageerror]')).length} page error(s) (the logic-only channel's device loss)`);
             console.log(`INFO: panel log: ${await panelLogTail().catch(() => '?')}`);
         } catch (e) {
