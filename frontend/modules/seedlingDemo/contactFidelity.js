@@ -1027,8 +1027,11 @@ export const CONTACT_FIDELITY = {
      * on all twenty perturbed solves, and the portfolio solve costs less than the greedy alone (15 s vs 23-27 s, node).
      * Without them both L69 sweep legs ran out the 90 s leg budget ON (×2, local).
      * OFF: byte-identical. `SEEDLING_LIGHTS_SORTIE_PORTFOLIO=0|1` for a node measurement.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, SLOWFIX "Harvest + flip ON") turns it ON. Measured movers (CI, main
+     * b749d62c4a + the slice): survey full ON = OFF; the L69 legs ×2 per arm done (ON 38–85 s vs the 90 s budget —
+     * thin headroom); probes standard ON green; the L69 spear solve 494 → 303 t (`lights-solve-spear-portfolio`).
      */
-    lightsSortiePortfolio: false,
+    lightsSortiePortfolio: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

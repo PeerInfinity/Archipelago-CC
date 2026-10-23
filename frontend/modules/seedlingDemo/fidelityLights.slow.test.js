@@ -20,7 +20,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { parseTape } from './tapeFormat.js';
 import { atlasLevelSource } from './levelSource.js';
-import { withContactFidelity } from './contactFidelity.js';
+import { CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
 import { createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner.js';
 import { twoPassSolve } from './twoPassSolve.js';
 import { buildStagedTape } from './botDriverV1.js';
@@ -45,11 +45,15 @@ async function solveLike(name, switches = {}) {
 }
 
 describe('fidelity LIGHTS D3 — the solves are the tapes the game witnessed', () => {
-    for (const [name, switches] of [['lights-solve-sword', {}], ['lights-solve-spear-on', {}],
-        ['lights-solve-spear', { spearGameTest: false }],
-        ['lights-solve-spear-portfolio', { lightsSortiePortfolio: true }],
-        ['lights-solve-sword', { lightsSortiePortfolio: true }]]) {
-        it(`${name}${switches.spearGameTest === false ? ' (spearGameTest OFF)' : ''}${switches.lightsSortiePortfolio ? ' (lightsSortiePortfolio ON)' : ''}: the solver's tape equals the recorded one, key for key`, async () => {
+    // ⛓ planning-11's flip (⚖ user "Harvest + flip ON", 2026-10-23): `lightsSortiePortfolio` ON by default — the
+    // portfolio rows run at the defaults; the greedy's tapes are pinned with the switch OFF.
+    const OFF = { lightsSortiePortfolio: false };
+    for (const [name, switches] of [['lights-solve-sword', OFF], ['lights-solve-spear-on', OFF],
+        ['lights-solve-spear', { spearGameTest: false, ...OFF }],
+        ['lights-solve-spear-portfolio', {}],
+        ['lights-solve-sword', {}]]) {
+        const portfolio = switches.lightsSortiePortfolio ?? CONTACT_FIDELITY_DEFAULTS.lightsSortiePortfolio;
+        it(`${name}${switches.spearGameTest === false ? ' (spearGameTest OFF)' : ''}${portfolio ? '' : ' (lightsSortiePortfolio OFF)'}: the solver's tape equals the recorded one, key for key`, async () => {
             const { solved, staging } = await solveLike(name, switches);
             const rebuilt = buildStagedTape({ staging, perTick: [...solved.out.perTick], name: 'lights-solve' });
             expect(rebuilt.inputs).toEqual(witness(name).tape.inputs);
@@ -57,7 +61,7 @@ describe('fidelity LIGHTS D3 — the solves are the tapes the game witnessed', (
             const lights = solved.out.records.find((r) => r.goal === 'clear-tag');
             expect(lights).toMatchObject({ arm: 'verb', strategy: 'lights', flag: { level: 69, tag: 0 } });
             // the portfolio's ledger rides on the record only while its switch is ON
-            if (switches.lightsSortiePortfolio) {
+            if (portfolio) {
                 expect(lights.portfolio).toEqual(name === 'lights-solve-sword'
                     ? { tried: [{ order: 'back-stay', ticks: 507 }, { order: 'stay-back', ticks: 507 }], chose: 'back-stay' }
                     : { tried: [{ order: 'back-stay', ticks: 421 }, { order: 'stay-back', ticks: 239 }], chose: 'stay-back' });

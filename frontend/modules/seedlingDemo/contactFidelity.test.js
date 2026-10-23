@@ -232,8 +232,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity REMBODY (wave 27): a body removed this frame still blocks the bodies stepped after it — shipped OFF;
             // ⛓ planning-11's flip (⚖ user "Harvest + flip ON", 2026-10-23) turns it ON.
             removedBodyBlocks: true,
-            // ⛓ seedling-fidelity-slowfix D-A (wave 27): the Lights verb's sortie portfolio ships OFF.
-            lightsSortiePortfolio: false });
+            // ⛓ seedling-fidelity-slowfix D-A (wave 27): the Lights verb's sortie portfolio — shipped OFF;
+            // ⛓ planning-11's flip (⚖ user "Harvest + flip ON", 2026-10-23) turns it ON.
+            lightsSortiePortfolio: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
