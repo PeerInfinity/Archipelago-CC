@@ -268,7 +268,8 @@ describe('the committed playthrough\'s leg list', () => {
             .filter((x) => x.action?.presser || x.action?.gates || x.action?.opens).map((x) => x.event_id));
         // ⛓ RULES darktrap-events: + the two presses that light Dungeon 6's poles (their barrier is a darktrap's
         //   contact, never a solid, so their arrivals are never inside one either)
-        expect([...PRESS].sort()).toEqual(['flag:L114:0', 'flag:L16:0', 'flag:L28:0', 'flag:L39:8', 'flag:L62:0', 'flag:L63:1']);
+        // ⛓ RULES yeti-event: + the L58 Yeti's talk (`action.gates`: the portal to L46, never a solid)
+        expect([...PRESS].sort()).toEqual(['flag:L114:0', 'flag:L16:0', 'flag:L28:0', 'flag:L39:8', 'flag:L58:1', 'flag:L62:0', 'flag:L63:1']);
         // the ARRIVAL's staging only (a goal event stages for the goal, never for the landing)
         const arrivalStaged = legs.filter((l) => l.arrive.events && l.stagedEvents)
             .map((l) => ({ ...l, stagedEvents: l.stagedEvents.filter((e) => !l.goalEvents?.includes(e.eventId)) }));

@@ -188,7 +188,7 @@ describe('the playthrough\'s obstacle events', () => {
     });
 
     it('rules watcher-event: the Watcher\'s talk is ONE event in L114\'s flag, gating the FinalDoor\'s event and its two crossings', () => {
-        expect(talks.events.map((e) => e.fields.event_id)).toEqual(['flag:L114:0']);
+        expect(talks.events.map((e) => e.fields.event_id)).toEqual(['flag:L114:0', 'flag:L58:1']);
         const [e] = talks.events;
         expect(e.name).toBe('L114 flag 0: watcher@72,72 cleared');
         expect(e.fields).toMatchObject({ side: 'level_114', across: [],
@@ -196,7 +196,8 @@ describe('the playthrough\'s obstacle events', () => {
             action: { verb: 'talk', item: null, gates: [{ level: 113, class: 'finaldoor', x: 112, y: 0 }] } });
         expect(e.access_rule).toBe(null);
         // the departures standing ON the door's footprint: its two teleporters to L115, nothing else
-        expect(talks.exitGates.map((g) => `${g.region_id}/${g.exit_id}`)).toEqual(['level_113/out_teleporter_112_0', 'level_113/out_teleporter_128_0']);
+        expect(talks.exitGates.filter((g) => g.rule.args.item_name === e.name).map((g) => `${g.region_id}/${g.exit_id}`))
+            .toEqual(['level_113/out_teleporter_112_0', 'level_113/out_teleporter_128_0']);
         expect(gatesOf(RULES, new Set([e.name])).map((g) => `${g.from}->${g.to}`))
             .toEqual(['level_113->level_115__r9c4', 'level_113->level_115__r9c4']);
         // the door's own event needs the talk as well as the seals
@@ -204,6 +205,21 @@ describe('the playthrough\'s obstacle events', () => {
         const door = eventsOf(RULES).find((x) => x.event_id === 'flag:L113:0');
         expect(door.access_rule).toEqual({ rule: 'And', children: [
             { rule: 'Has', args: { item_name: 'Seal', count: 16 } }, { rule: 'Has', args: { item_name: e.name } }] });
+    });
+
+    it('rules yeti-event: the L58 Yeti\'s talk is ONE event in L58\'s flag 1, on its own island, gating the portal to L46', () => {
+        const e = talks.events.find((x) => x.fields.event_id === 'flag:L58:1');
+        expect(e.name).toBe('L58 flag 1: yeti@56,56 cleared');
+        // the Yeti stands on tile (3,3), the r3c3 island — not the portal's r1c4, not the mouth arrival's r4c1
+        expect(e).toMatchObject({ region_id: 'level_58', sub_region: 'r3c3', access_rule: null });
+        expect(e.fields).toMatchObject({ side: 'level_58__r3c3', across: [],
+            obstacle: { level: 58, tag: 1, class: 'yeti', x: 56, y: 56 },
+            action: { verb: 'talk', item: null, gates: [{ level: 58, class: 'teleporter', x: 80, y: 16 }] } });
+        // the portal's own crossing, nothing else in the room (its two tag -1 teleporters to L57 are untouched)
+        expect(talks.exitGates.filter((g) => g.rule.args.item_name === e.name).map((g) => `${g.region_id}/${g.exit_id}`))
+            .toEqual(['level_58/out_teleporter_80_16']);
+        expect(gatesOf(RULES, new Set([e.name])).map((g) => `${g.from}->${g.to}`)).toEqual(['level_58__r1c4->level_46__r6c24']);
+        expect(eventsOf(RULES).find((x) => x.event_id === 'flag:L58:1').access_rule).toEqual({ rule: 'True_' });
     });
 
     it('the L0↔L1 binding: the door in the house\'s doorway is charged the rock under it', () => {
