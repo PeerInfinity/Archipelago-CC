@@ -318,6 +318,8 @@ async function main() {
         sourceItems: source.items?.['1'] ?? null,
         sourceItemGroups: source.item_groups?.['1'] ?? null,
         sourceLocations: sourceLocationsOf(source, '1'),
+        // ⛓ F3 — the rules ride in verbatim, so the blocks they read do too.
+        source,
         menuRegion,
         procgenMetadata: {
             driver: enriched ? 'top-down-sphere' : 'top-down',
