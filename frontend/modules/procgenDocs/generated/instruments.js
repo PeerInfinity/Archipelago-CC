@@ -231,7 +231,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 448,
         "browser": 159,
-        "cited": 240,
+        "cited": 241,
         "files": 462,
         "lineStyle": 14,
         "withDocblock": 462,
@@ -10806,7 +10806,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "probe",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "probe-seedling-bosskills.mjs",

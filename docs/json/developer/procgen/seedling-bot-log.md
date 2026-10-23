@@ -24777,3 +24777,37 @@ all five. The line waiver has no witness (no witnessed arm tests a line; m5 surv
   inclusivity decides the hit, and the strict comparison misses it on alternate ticks.
 - A probe that measured ONE effect per press (R4's bridge: one decrement) does not prove one TEST per press; two game
   witnesses show the T+3 test landing on a mover. The bridge's single decrement stays an open question.
+
+### Seedling fidelity HITLESS — the Tentacled Beast's fork prefers a variant that takes no hit (`tentacleHitlessFirst`, OFF)
+
+Planner `seedling-fidelity-planning-11`, wave 27 (⚖ the user, 2026-10-22: *"Flip now, hitless later"*). The report is
+`CC/docs/cloud-reports/seedling-fidelity-hitless.md`.
+
+**What it was.** BOSSFORK's fork (`execTentacleBeast`) played `TENTACLE_BEAST_POLICY_VARIANTS` in order and committed
+the FIRST that opened the mouth without a death. Variant 0 often takes a swipe where a later one takes none: on
+`tb-solve-s2`'s staging (seed 2) it swipes at t393 — and the game's own witness of that plan ends at `hits` 1 — and on
+the divergence sweep's L57 pit legs (492/493) the game takes one hit at t1257.
+
+**The model (switch ON).** Every variant is played on its own fork; `chooseTentacleVariant` (exported, pure) commits no
+hit first, then the fewest hits, then the fewest ticks, then list order. A hit stays acceptable when no variant is
+hitless (the door staging at seed 35: 0 of 5 hitless, one swipe committed). The verb's record gains `choice` {rule,
+variant, hits, tried, hitless} and each `tried` row its `hits`. Two consequences of playing all five, both ON only:
+- a fork whose play meets the whirlpool drown (`Player.drown()` from outside the player, which the run refuses by name)
+  rejects that variant as a death, where the throw ended the whole solve;
+- the verb SETTLES: once the mouth stands it holds out of every live whirlpool's keep-out until none is left (≤ 300 t;
+  the beast spawns none after its death). Measured: the faster hitless variant on leg 494 (L58 door → the mouth) left
+  one alive and the walk to the mouth drowned in it at t928.
+OFF: byte-identical.
+
+**Witnesses (p4g, 0 px; `probe-seedling-bosskills.mjs --record --dir=tentaclebeast-witness`).** The solver's ON answer
+from the route's pit arrival (`tb-hitless-pit`, survey step 110's staging), the L58 door's arrival (`tb-hitless-door`)
+and `tb-solve-s2`'s staging (`tb-hitless-s2`): the game takes no hit on any sampled tick, writes {57,0}, and leaves into
+L58; ON re-plans each witness's tape tick for tick.
+
+**Trap candidates.**
+- "Only deaths are rejected" plus "first that passes" is a ranking by list order: a search that stops at the first
+  acceptable answer inherits whatever order its list was written in.
+- Playing MORE candidates on forks meets MORE of the model's refused-by-name interactions (here the drown): a refusal
+  that was rare when one candidate was played becomes common, and a throw that is not a `SolverRefusal` ends the solve.
+- A verb's finish is not the room's: the mouth stands while the whirlpools the fight left still drown, so a faster fight
+  can hand the next walk a hazard the slower one had outlived.
