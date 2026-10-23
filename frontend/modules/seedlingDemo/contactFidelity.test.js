@@ -228,8 +228,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity DRILLKILL (wave 26): the solver kills L28's drills before the rope cut; shipped OFF;
             // ⛓ planning-11's flip (⚖ user "Harvest + flip ON", 2026-10-23) turns it ON.
             drillKillFirst: true,
-            // ⛓ fidelity REMBODY (wave 27): a body removed this frame still blocks the bodies stepped after it — ships OFF.
-            removedBodyBlocks: false });
+            // ⛓ fidelity REMBODY (wave 27): a body removed this frame still blocks the bodies stepped after it — shipped OFF;
+            // ⛓ planning-11's flip (⚖ user "Harvest + flip ON", 2026-10-23) turns it ON.
+            removedBodyBlocks: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

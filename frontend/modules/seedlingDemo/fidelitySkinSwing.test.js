@@ -52,7 +52,8 @@ describe('fidelity SKINSWING — the witnesses are the skin test\'s stands', () 
         }
     });
 
-    it.each(['skinswing-l71-lavarunner', 'skinswing-l74-bulb'])('%s: the staged tape run IS the stand\'s createJsRuntime boot, tick for tick (key ON)', async (name) => {
+    // ⛓ js skin-stands moved `bulb-L74` to [64,100]: its stand witness is `skinswing-l74-resite` now (planning-11).
+    it.each(['skinswing-l71-lavarunner', 'skinswing-l74-resite'])('%s: the staged tape run IS the stand\'s createJsRuntime boot, tick for tick (key ON)', async (name) => {
         const w = W[name];
         const MAP = JSON.parse(readFileSync(join(ROOT, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
         const GAME = JSON.parse(readFileSync(join(ROOT, 'frontend/modules/flashPanel/games/seedling.json'), 'utf8'));
@@ -105,17 +106,22 @@ describe('fidelity SKINSWING — D1: the game (p4g) against the model, key ON an
         }
     });
 
-    // ⛓ a KNOWN MODEL GAP, pinned so a fix turns this row red (then re-pin it to 0 px): not the line (ON = OFF).
-    it('skinswing-l71-resite (L71 (80,208)): the game lands and kills; ON and OFF agree, and both leave the game at t63 — the removal-tick body still blocks', async () => {
+    // ⛓ was a KNOWN MODEL GAP (the removal-tick body still blocks): fixed by fidelity REMBODY (`removedBodyBlocks`);
+    // ⛓ planning-11's flip (⚖ user "Harvest + flip ON", 2026-10-23) re-pins it to 0 px at the default. The gap's fact
+    // (both arms leave the game at t63) is kept with `removedBodyBlocks` OFF.
+    it('skinswing-l71-resite (L71 (80,208)): the game lands and kills; at the defaults ON = OFF = the game at 0 px; removedBodyBlocks OFF leaves it at t63', async () => {
         const rec = load('skinswing-l71-resite');
         expect(rec.samples.some((s) => s.chasers.some((c) => c.anim === 'die'))).toBe(true);
-        const [on, off] = [await skinSwingModelSamples(rec.tape, ON), await skinSwingModelSamples(rec.tape, OFF)];
-        expect(compareSkinSwing(rec.samples, off.samples)).toEqual(compareSkinSwing(rec.samples, on.samples));
-        const bad = compareSkinSwing(rec.samples, on.samples);
+        for (const arm of [ON, OFF]) {
+            const m = await skinSwingModelSamples(rec.tape, arm);
+            expect(compareSkinSwing(rec.samples, m.samples)).toEqual([]);
+        }
+        const gap = await skinSwingModelSamples(rec.tape, { ...ON, removedBodyBlocks: false });
+        const bad = compareSkinSwing(rec.samples, gap.samples);
         expect(bad[0]).toBe('t 63 lavarunner@64,192: game (89.99974125240814, 203.3031481193856) model '
             + '(89.99974125240814, 204.46697188284412)');
         // t62 → t63: three bodies are removed on both sides; the game's survivor did not move in y, the model's did
         expect([rec.samples[62].chasers.length, rec.samples[63].chasers.length]).toEqual([5, 2]);
-        expect(compareSkinSwing(rec.samples.slice(0, 63), on.samples)).toEqual([]);
+        expect(compareSkinSwing(rec.samples.slice(0, 63), gap.samples)).toEqual([]);
     });
 });

@@ -38,8 +38,9 @@ const T63 = 't 63 lavarunner@64,192: game (89.99974125240814, 203.3031481193856)
     + '(89.99974125240814, 204.46697188284412)';
 
 describe('fidelity REMBODY — the switch', () => {
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.removedBodyBlocks).toBe(false);
+    // ⛓ planning-11's flip (⚖ user "Harvest + flip ON", 2026-10-23).
+    it('is ON by default (flipped)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.removedBodyBlocks).toBe(true);
     });
 });
 

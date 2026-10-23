@@ -1001,8 +1001,11 @@ export const CONTACT_FIDELITY = {
      * held at y 203.303 — ON reproduces it to the end of the tape at 0 px). `SEEDLING_REMOVED_BODY_BLOCKS=0|1` for a node
      * measurement. NOT here (named in the REMBODY report): the other families' removals (drill, wallflyer, turret,
      * spinner, the static bodies) as walls to a mover stepped after them in the same frame.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, REMBODY "Harvest + flip ON") turns it ON. Measured movers (CI, main
+     * b749d62c4a + the slice): the route survey (full) ON = OFF; 220 chaser-pair-room sweep legs ×2 per arm: 0 settled;
+     * probes standard ON green.
      */
-    removedBodyBlocks: false,
+    removedBodyBlocks: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
