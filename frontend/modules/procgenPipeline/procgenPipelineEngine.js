@@ -7301,6 +7301,56 @@ export function priceSubstrateRegions(scaffold, { playerId = '1', params = null 
     }
 }
 
+/**
+ * ⛓ rule-node F3 — what a top-down compile carries from its SOURCE rules.json.
+ * The compile copies the source's exit/location rules verbatim, and those rules
+ * name the source's helpers, which read its options and world attributes, its
+ * progression mapping and its dungeons (`parent_region.dungeon`). Measured over
+ * an alttp source (I1): all items reach 111 of 268 locations from the bare
+ * scaffold, and 268 with every block below — the source's own count.
+ *  - `slotBlocks`: per-player blocks written verbatim as `{[playerId]: block}`
+ *    (an empty one is not written, so a source without one keeps its bytes).
+ *  - `worldIdentityKeys`: `world[playerId]` keys the compiled world keeps ITS
+ *    own of; every other key of the source's world block is carried.
+ *  - `regionGraphKeys`: region keys that are the compiled graph itself; every
+ *    OTHER key a source region of the same name has and the compiled one lacks
+ *    is carried (alttp: `dungeon`, `is_light_world`, `type`, `hint_text`, …).
+ * NOT carried, by reason — the compile writes its own: `regions`,
+ * `start_regions`, `items`, `itempool_counts`, `canonical_placements`,
+ * `preset_sidecars`, the identity keys (`game_name`, `seed_name`, …); carried by
+ * their own opts: `item_groups`, `starting_items`, `exporter`'s
+ * `assume_bidirectional_exits`. `game_info`: its completion condition names the
+ * source's goal, which the compiled world inherits as the scaffold default (see
+ * `completionConditionItem`). The rest of `exporter` (alttp's
+ * `use_auto_indirect_conditions`): a hint to the Python exporter about the
+ * SOURCE world's entrances, which the compile re-cut.
+ */
+export const TOPDOWN_SOURCE_CARRY = Object.freeze({
+    slotBlocks: Object.freeze(['helpers', 'progression_mapping', 'dungeons']),
+    worldIdentityKeys: Object.freeze(['game', 'world_class_name', 'world_directory']),
+    regionGraphKeys: Object.freeze(['name', 'exits', 'locations', 'entrances']),
+});
+
+/** Write the `TOPDOWN_SOURCE_CARRY` blocks of `source` onto `scaffold` (slot `playerId`). */
+function carrySourceBlocks(scaffold, source, playerId) {
+    const { slotBlocks, worldIdentityKeys, regionGraphKeys } = TOPDOWN_SOURCE_CARRY;
+    for (const key of slotBlocks) {
+        const block = source[key]?.[playerId];
+        if (block && Object.keys(block).length) {
+            scaffold[key] = { ...scaffold[key], [playerId]: structuredClone(block) };
+        }
+    }
+    for (const [key, value] of Object.entries(source.world?.[playerId] ?? {})) {
+        if (!worldIdentityKeys.includes(key)) scaffold.world[playerId][key] = structuredClone(value);
+    }
+    const sourceRegions = regionsOf(source, playerId);
+    for (const [name, region] of Object.entries(scaffold.regions[playerId])) {
+        for (const [key, value] of Object.entries(sourceRegions[name] ?? {})) {
+            if (!regionGraphKeys.includes(key) && !Object.hasOwn(region, key)) region[key] = structuredClone(value);
+        }
+    }
+}
+
 export function buildRulesJson(grid, opts = {}) {
     const {
         startCell,
@@ -7371,6 +7421,10 @@ export function buildRulesJson(grid, opts = {}) {
         // The SOURCE world's locations, name → location (`sourceLocationsOf`):
         // a source event location compiles as one (`compileRegionGraph`).
         sourceLocations = null,
+        // ⛓ rule-node F3 — the SOURCE rules.json a top-down compile copied its
+        // rules from: its `TOPDOWN_SOURCE_CARRY` blocks ride along. null (every
+        // driver with no source world) carries nothing.
+        source = null,
         // Item names whose canonical placement is ALWAYS held
         // (compiled location gets pinned:true → world_generator uses
         // place_locked_item on every seed). The sphere-growth bounce start passes
@@ -7468,6 +7522,7 @@ export function buildRulesJson(grid, opts = {}) {
     // list is empty, and a single-entry list suffices.
     scaffold.item_groups[playerId] = Array.isArray(sourceItemGroups)
         ? [...sourceItemGroups] : ['Everything'];
+    if (source) carrySourceBlocks(scaffold, source, String(playerId));
 
     // Starting items: keep names that exist in the compiled items
     // pool. For names that don't, backfill the definition from

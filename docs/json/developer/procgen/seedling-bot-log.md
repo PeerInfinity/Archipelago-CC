@@ -24740,6 +24740,31 @@ defaults table and dashShape's stamp row.
 - A collider's TYPE comes from the constructor chain, not the asset: an `OpenTree` draws a mask and is still a "Tree".
 - A gate the game runs on every target of a swing can be missing from ONE arm of the model's dispatch: read every arm.
 
+### Seedling hammer-phase GF — the press-kill guards flipped ON
+
+⚖ User, 2026-10-23: *"Yes, please go ahead with that plan"* — both press-kill guards ON first, as a small harvest;
+`STRIKE_ETA_FLOOR` after, in its own slice (still OFF here). The report is
+`CC/docs/cloud-reports/seedling-hammer-guards-flip.md`; GS's whole-route A/B (`seedling-hammer-guards-sweep.md`) and
+SF3's re-measure (`seedling-hammer-strike-floor-remeasure.md`) land with it.
+
+**The flip.** `pressKillGuards.PRESS_KILL_SHAKE_GUARD` and `PRESS_KILL_REBOOT_GUARD` read `… !== '0'` (the page's
+worker has no `process`, so it is ON there; `=0` opts a node process out), both `_DEFAULT`s `true`.
+
+**What moved, and how each was kept honest.**
+- `hammerGhostKillRung` and `hammerStrikeEtaFloor`'s witness rows (*"the solve's executed prefix IS the witness"*) are
+  ABOUT the kill across the chaser's death, which the reboot guard refuses. Each row now pins the guards OFF (2195 /
+  1629, unchanged), and a sibling row pins the measured ON answer: refused by `PRESS_KILL_REBOOT_GUARD` at the death,
+  the executed prefix the witness's own first **1216** / **778** ticks.
+- The producers `plan-seedling-hammer-g1-ghostkill` and `-sf-strikefloor` pin their solves to the guards OFF: both
+  game-witnessed tapes are byte-identical (no re-record).
+- The gate's "ship OFF" row is "ship ON".
+
+**Gates.** Bounded vitest (12 files) OFF 274 / 274 → ON 276 / 276. Producer roster 93 run / 0 red OFF, ON, and ON
+with `=0`. Censuses unmoved.
+
+**Trap candidates.**
+- A witness row that reproduces a solve pins every switch its premise needs, not only the one it is named for: a
+  later default flip moves the solve under it, and the honest fix is to pin, not to re-record a game-witnessed tape.
 ### Seedling fidelity SPEARRECT — the spear's test as the game runs it, for every spear arm (`spearGameTest`, OFF)
 
 Planner `seedling-fidelity-planning-10`, wave 25 (⚖ the user picked "SPEAR-RECT slice" from DRILL's hand-over). The

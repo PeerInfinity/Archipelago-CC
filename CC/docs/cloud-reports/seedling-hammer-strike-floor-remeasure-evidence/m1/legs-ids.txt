@@ -1,0 +1,2 @@
+387 level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest
+404 level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest

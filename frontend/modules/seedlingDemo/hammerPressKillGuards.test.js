@@ -1,5 +1,6 @@
 /**
- * ⛓⛓ SEEDLING HAMMER-PHASE LB (HX) — the press kill's two guards (`pressKillGuards.js`), both OFF.
+ * ⛓⛓ SEEDLING HAMMER-PHASE LB (HX) — the press kill's two guards (`pressKillGuards.js`), both ON since hammer-phase GF
+ * (the user's flip, 2026-10-23).
  *
  * The state is fidelity L40CONTACT D4's: leg 414's atlas boot (`fixtures/hammer-lb-hx/boot-414.json`, the ghost sword,
  * goal the chest (880,816)), at the shipped defaults.
@@ -30,7 +31,7 @@ import {
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FIX = join(HERE, 'fixtures', 'hammer-lb-hx');
 const ENV = globalThis.process?.env ?? {};
-const OPTED = ENV.SEEDLING_PRESS_KILL_SHAKE_GUARD === '1' || ENV.SEEDLING_PRESS_KILL_REBOOT_GUARD === '1';
+const OPTED = ENV.SEEDLING_PRESS_KILL_SHAKE_GUARD === '0' || ENV.SEEDLING_PRESS_KILL_REBOOT_GUARD === '0';
 
 /** 414's atlas boot with the ghost sword, as fidelity's `cw-solve.mjs --view=… --ghost=1` stages it. */
 function stagingOf() {
@@ -50,11 +51,11 @@ function runAtHo1() {
 const TARGET = 'spinner@880,848';
 
 describe('hammer-phase LB — the press kill guards', () => {
-    it.skipIf(OPTED)('ship OFF', () => {
-        expect(PRESS_KILL_SHAKE_GUARD.enabled).toBe(false);
-        expect(PRESS_KILL_SHAKE_GUARD_DEFAULT).toBe(false);
-        expect(PRESS_KILL_REBOOT_GUARD.enabled).toBe(false);
-        expect(PRESS_KILL_REBOOT_GUARD_DEFAULT).toBe(false);
+    it.skipIf(OPTED)('ship ON (the user\'s flip, hammer-phase GF, 2026-10-23)', () => {
+        expect(PRESS_KILL_SHAKE_GUARD.enabled).toBe(true);
+        expect(PRESS_KILL_SHAKE_GUARD_DEFAULT).toBe(true);
+        expect(PRESS_KILL_REBOOT_GUARD.enabled).toBe(true);
+        expect(PRESS_KILL_REBOOT_GUARD_DEFAULT).toBe(true);
     });
 
     it('isShakeBandThrow names the forecast\'s throw and nothing else', () => {

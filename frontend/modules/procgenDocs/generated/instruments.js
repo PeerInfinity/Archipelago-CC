@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 98,
-            "count": 145,
+            "browser": 99,
+            "count": 146,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 452,
-        "browser": 163,
+        "blockStyle": 453,
+        "browser": 164,
         "cited": 243,
-        "files": 466,
+        "files": 467,
         "lineStyle": 14,
-        "withDocblock": 466,
-        "withFlags": 383
+        "withDocblock": 467,
+        "withFlags": 384
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -12515,6 +12515,52 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling's L16 ENCLOSED PIT, ON THE GAME (fidelity L1516 D3, sweep leg 206 `level_16__r1c1 <- in_L15_144_16 -> exit:out_pit_8_3`).",
             "path": "scripts/procgen/probe-seedling-l16-corner-pit.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only"
+            ],
+            "file": "probe-seedling-l19-bosskey.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L19 BOSS KEY, ON THE GAME (slice tile-l19-bosskey, W0): can the player take `bosskey@96,64` (keyType 0) WITHOUT A SWORD?",
+            "path": "scripts/procgen/probe-seedling-l19-bosskey.mjs"
         },
         {
             "argvHelpers": [

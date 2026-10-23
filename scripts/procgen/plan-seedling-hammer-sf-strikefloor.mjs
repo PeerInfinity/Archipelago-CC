@@ -23,6 +23,12 @@
  *
  * ⛔ NOT the roster: a witness kept beside its samples (`fixtures/hammer-sf-strikefloor-witness/`, G1's shape).
  *
+ * ⚖ THE PRESS-KILL GUARDS ARE PINNED OFF HERE (hammer-phase GF, 2026-10-23). The user flipped
+ * `pressKillGuards.PRESS_KILL_SHAKE_GUARD` / `PRESS_KILL_REBOOT_GUARD` ON; ON, the reboot guard refuses the press kill
+ * at the chaser's death (t778), so the kill this witness is ABOUT never lands. The witness stays the OFF kill the game
+ * played, and this script's solves run with both guards OFF (`withPressKillShakeGuard(false, …)`,
+ * `withPressKillRebootGuard(false, …)`). The ON answer is pinned in `hammerStrikeEtaFloor.test.js` beside the witness row.
+ *
  * Run (each solve takes a few minutes):
  *   node scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs            # write the tape
  *   node scripts/procgen/plan-seedling-hammer-sf-strikefloor.mjs --check    # exit 1 on drift
@@ -61,8 +67,10 @@ export async function strikeFloorSolve(staging, enabled) {
     const { solveSegment, withStrikeEtaFloor } = await import(join(MODULE, 'solverBot.js'));
     const { createRunForStaging } = await import(join(MODULE, 'tapeRunner.js'));
     const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
+    const { withPressKillRebootGuard, withPressKillShakeGuard } = await import(join(MODULE, 'pressKillGuards.js'));
     const run = createRunForStaging(staging, atlasLevelSource());
-    return withStrikeEtaFloor(enabled, () => {
+    const guardsOff = (fn) => withPressKillShakeGuard(false, () => withPressKillRebootGuard(false, fn));
+    return guardsOff(() => withStrikeEtaFloor(enabled, () => {
         try {
             const out = solveSegment({ run, goals: [JSON.parse(JSON.stringify(GOAL))], name: NAME, boot: staging.boot,
                 dashMode: 'all' });
@@ -71,7 +79,7 @@ export async function strikeFloorSolve(staging, enabled) {
             return { verdict: 'REFUSED', perTick: e.perTick ?? [], message: String(e?.message ?? e),
                 obstacle: e.obstacle?.id ?? null };
         }
-    });
+    }));
 }
 
 /** The model's account of a walk: the landings, each body's removal tick, the player's hits. */

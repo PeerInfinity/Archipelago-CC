@@ -30,6 +30,7 @@ import { PROFILE } from './seedlingProfile.js';
 import { createRunForStaging, createTapeStepper, solveStaging, stagingFromTape } from './tapeRunner.js';
 import { parseTape } from './tapeFormat.js';
 import { atlasLevelSource } from './levelSource.js';
+import { withPressKillRebootGuard, withPressKillShakeGuard } from './pressKillGuards.js';
 
 /** A hand-built run: the floor reads `run.state` (position, velocity, the sticky hazard flags) and `run.world`. */
 const stub = ({ x = 0, y = 0, vx = 0, vy = 0, onIce = false, tiles = [] } = {}) => ({
@@ -274,20 +275,39 @@ describe(`${WNAME} — the strike the admissible floor lets the scan see, on the
         expect(Math.max(...wgame.rows.map((r) => r[3]))).toBe(4);
     });
 
-    it('⛓⛓⛓ ON: the solve\'s executed prefix IS the witness, key for key', () => {
+    /**
+     * The floor ON from staging A, with the press kill's two guards at `guards`. ⚖ The witness is ABOUT the kill,
+     * which crosses the chaser's death at t778: hammer-phase GF (2026-10-23) flipped the guards ON, and ON the reboot
+     * guard refuses the kill at that death, so the row that reproduces the witness pins the guards OFF, and a sibling
+     * row pins the ON answer (the witness's own first 778 ticks, then the guard's refusal).
+     */
+    const solveOn = (guards) => {
         const staging = solveStaging(stagingFromTape(parseTape(readFileSync(join(HERE, 'fixtures',
             'hammer-p1-l40-south-boot.json'), 'utf8'))));
         staging.seam = { ...staging.seam, items: { ...staging.seam.items, hasSword: true, hasGhostSword: true } };
         const run = createRunForStaging(staging, atlasLevelSource());
-        const perTick = withStrikeEtaFloor(true, () => {
+        return withPressKillShakeGuard(guards, () => withPressKillRebootGuard(guards, () => withStrikeEtaFloor(true, () => {
             try {
-                return solveSegment({ run, goals: [{ kind: 'collect-placement', placement: { x: 880, y: 816 } }],
-                    name: WNAME, boot: staging.boot, dashMode: 'all' }).perTick;
+                return { perTick: solveSegment({ run, goals: [{ kind: 'collect-placement', placement: { x: 880, y: 816 } }],
+                    name: WNAME, boot: staging.boot, dashMode: 'all' }).perTick, message: null };
             } catch (e) {
-                return e.perTick ?? [];
+                return { perTick: e.perTick ?? [], message: String(e?.message ?? e) };
             }
-        });
+        })));
+    };
+
+    it('⛓⛓⛓ ON: the solve\'s executed prefix IS the witness, key for key (the press-kill guards OFF: the witness is '
+        + 'the kill across the death)', () => {
+        const { perTick } = solveOn(false);
         expect(perTick.length).toBe(1629);
         expect(perTick.map((k) => [...k].sort())).toEqual(w.keys.slice(0, 1629).map((k) => [...k].sort()));
+    }, 900_000);
+
+    it('⛓⛓ ON, with the press-kill guards at their shipped ON: the kill is refused at the death (t778), and the '
+        + 'executed prefix is the witness\'s first 778 ticks', () => {
+        const { perTick, message } = solveOn(true);
+        expect(message).toContain('PRESS_KILL_REBOOT_GUARD');
+        expect(perTick.length).toBe(778);
+        expect(perTick.map((k) => [...k].sort())).toEqual(w.keys.slice(0, 778).map((k) => [...k].sort()));
     }, 900_000);
 });
