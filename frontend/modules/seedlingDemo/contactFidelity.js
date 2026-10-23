@@ -980,7 +980,7 @@ export const CONTACT_FIDELITY = {
      * refused, as before. OFF: byte-identical (first-without-a-death). `SEEDLING_TENTACLE_HITLESS_FIRST=0|1` for a
      * node measurement.
      */
-    tentacleHitlessFirst: false,
+    tentacleHitlessFirst: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
