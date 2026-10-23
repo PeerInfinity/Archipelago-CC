@@ -24802,3 +24802,31 @@ all five. The line waiver has no witness (no witnessed arm tests a line; m5 surv
   inclusivity decides the hit, and the strict comparison misses it on alternate ticks.
 - A probe that measured ONE effect per press (R4's bridge: one decrement) does not prove one TEST per press; two game
   witnesses show the T+3 test landing on a mover. The bridge's single decrement stays an open question.
+
+### Seedling fidelity DRILLKILL — the solver kills L28's drills first, then cuts the rope (`drillKillFirst`, OFF)
+
+Planner `seedling-fidelity-planning-10`, wave 26 (⚖ the user, 2026-10-22: *"The intended solution is to fight the drills
+first."*). The report is `CC/docs/cloud-reports/seedling-fidelity-drillkill.md`.
+
+**W0 — what kills a drill.** `Drill extends Enemy`: `hitsMax` 3, `hitsTimer` 30 per landing, `knockback` EMPTY, no
+persistence and no `removed()` write (its `dropCoins` is commented out). `swordDamage` 1 (3 landings), `spearDamage` 2 (2).
+**FIRE CANNOT KILL A DRILL**: `fire()` calls `genericHit(e, "Fire", fireForce, fireDamage)`, `Enemy.hit` runs
+`if (hitByFire || t != "Fire")`, a Drill's `hitByFire` is false (only `knockback`, empty, runs) — and `fireDamage` is 0.
+L28 holds no `tset == -1` lock, so `stageDrillKill`'s ledger never refuses there.
+
+**The strategy (switch ON).** Before a `rope` clear-tag, every live stepped drill the PLANNED walk to the cut's stance would
+wake (`runRange` 48, the masked "Solid" line) is killed with the primary sword/spear or a held one (`equip`, restored): a
+pre-stance 48 px out on one axis (L28's upper hall is three tiles high — a stance outside the range does not exist above its
+drills), a creep until the drill hops (~32 px out, then ~12-16 px), a face tap if the walk's last correction turned the
+player, a press each time the drill's `hitsTimer` runs out (the drill updates BEFORE the player, so `hitsTimer <= 1` at the
+start of the tick), the removal waited out. A drill being hit never touches the player (`hitPlayer` needs `hitsTimer <= 0`)
+and never hops (it plays "hit", then "undrill" for 12 ticks). A Fire-only run keeps the cut's own refusal, now naming why.
+
+**Witnesses (p4g, 0 px; `probe-seedling-drill-kill.mjs`, `fixtures/drillkill-witness/`).** The solver's kill-then-cut plans
+with the Sword and the Spear from the L25 and L26 arrivals (both drills from L26, `drill@128,96` from L25), and Fire burning
+`drill@80,96` point-blank (its `hits` stay 0). One model fix they found: `endAnim`'s "die" case plays `""` (`drill.js`, behind the key: the L88 skin golden reads the name).
+
+**Trap candidates.**
+- A weapon that "hits" an enemy may not DAMAGE it: `Enemy.hit` has a per-type gate (`hitByFire`), so "every weapon can kill
+  it" must be read off the receiver, not the rules.
+- A stance rule written in px ("outside the range") can have no solution in a small room: measure the room before the rule.

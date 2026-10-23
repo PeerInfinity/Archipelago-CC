@@ -252,17 +252,17 @@ t=251 [d:die,d:shown] | seedling:enemy/drill#9 drawImage(seedling/Drill, 144, 0,
 t=252 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192)
 t=253 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192)
 t=254 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192)
-t=255 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192)
-t=256 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.9
-t=257 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.8
-t=258 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.7
-t=259 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.6
-t=260 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.5
-t=261 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.4
-t=262 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.3
-t=263 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.2
-t=264 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.1
-t=265 [d:die,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0
+t=255 [d:,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192)
+t=256 [d:,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.9
+t=257 [d:,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.8
+t=258 [d:,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.7
+t=259 [d:,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.6
+t=260 [d:,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.5
+t=261 [d:,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.4
+t=262 [d:,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.3
+t=263 [d:,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.2
+t=264 [d:,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0.1
+t=265 [d:,d:shown] | seedling:enemy/drill#10 drawImage(seedling/Drill, 160, 0, 128, 192) alpha=0
 t=266 [] |
 t=267 [] |
 t=268 [] |
