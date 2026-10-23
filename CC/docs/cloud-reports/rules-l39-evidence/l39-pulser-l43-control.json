@@ -1,0 +1,31 @@
+{
+ "tape": "l43-control",
+ "set_id": "seedling-vanilla-record-f5bdb07d",
+ "mounted": "seedling-vanilla-record-f5bdb07d",
+ "observations": 201,
+ "boot": {
+  "level": 43,
+  "x": 180,
+  "y": 352
+ },
+ "persistence": [
+  "43,1",
+  "43,2",
+  "43,3"
+ ],
+ "maxY43": 380.95000000000005,
+ "transitions": [],
+ "clears": [
+  "43,1",
+  "43,2",
+  "43,3"
+ ],
+ "hits": 0,
+ "minY39": null,
+ "final": {
+  "t": 200,
+  "x": 188,
+  "y": 380.95000000000005,
+  "level": 43
+ }
+}

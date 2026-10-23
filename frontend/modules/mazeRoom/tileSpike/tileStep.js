@@ -81,7 +81,9 @@ function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = n
         button: world.buttons?.get(key) ?? null,
         obstacle,
         clear_set: clearSet,
-        broken: broken?.includes(key) ?? false,
+        // ⛓ rules-l39: an obstacle's cut is recorded at its canonical cell (`at`, a rope's run), so that is where
+        // this cell's `broken` is read — the native `strikeTarget` / `isOpen` agree.
+        broken: broken?.includes(rope?.at ?? key) ?? false,
         struck: actionId !== null && obstacle !== null
             && (world.obstacleLib?.[obstacle]?.struck_by ?? []).includes(actionId),
         // ARROW TRAPS: the group tokens of the traps whose lane holds this cell, by how they fire.
@@ -198,7 +200,9 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
         next.turn += 1;
         // ⚖ "use at air" is legal: the condition only decides whether the facing cell BREAKS.
         if (callHelper(makeContext(helpers, inv), entry.condition, { x: fx, y: fy }, facing)) {
-            next.broken.push(posKey(fx, fy));
+            // ⛓ rules-l39: an obstacle's canonical cell (`at`, a rope's run) takes the strike — the native
+            // `strikeTarget`'s key, so the two paths hold one cut state.
+            next.broken.push(world.obstacleLib?.[getObstacle(world, fx, fy)]?.at ?? posKey(fx, fy));
             next.broken.sort();
         }
         return { next, refused: null };

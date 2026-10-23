@@ -280,7 +280,10 @@ export function seedlingLevelEntities(level, resolveCondition, { grid = null } =
             for (let y = f.y; y < f.y + f.h; y += 1) for (let x = f.x; x < f.x + f.w; x += 1) out.push([x, y]);
             return out;
         })();
-        const row = { kind, tiles, label };
+        // ⛓ rules-l39 F1: a rope's sealed tiles are its whole RUN (`RopeStart.as:26`); the row keeps the
+        // PULLEY as its `tiles` (the rope's own placement, what a cut is made at and binds by) and carries
+        // the run as `run`, so the maze projection lays the run as one obstacle (⚖ 2026-10-23 "(a) One obstacle").
+        const row = kind === 'rope' ? { kind, tiles: tiles.slice(0, 1), run: tiles, label } : { kind, tiles, label };
         if (kind === 'button' || kind === 'lock' || kind === 'rope') row.group = String(entity.attrs?.tset ?? '0');
         if (rope) row.event = ropeEventName(rope);
         if (kind === 'rock' || kind === 'rope') {

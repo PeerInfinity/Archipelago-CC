@@ -175,7 +175,7 @@ export function blockHolderSearch(grid, {
     const refused = keys.length > BLOCK_SEARCH_MAX_KEYS
         ? `${keys.length} distinct conditions in the room (bound ${BLOCK_SEARCH_MAX_KEYS})` : null;
 
-    const solveUnder = (held, start) => {
+    const solveUnder = (held, start, goal = lockAdjacent) => {
         const has = (ks) => ks.every((k) => held.has(k));
         const standable = (i) => !BLOCKING.has(cells[i].kind) && !closedCells.has(i) && has(cellKeys[i]);
         const blockOk = (i) => {
@@ -225,7 +225,7 @@ export function blockHolderSearch(grid, {
                 })));
             if (!cut) continue;
             const after = reach(start, new Set([...startBlocks, landing]));
-            if ([...after].some((i) => lockAdjacent.has(i))) return { ok: true, states: 1 };
+            if ([...after].some((i) => goal.has(i))) return { ok: true, states: 1 };
         }
         const seenStates = new Set();
         const queue = [[startBlocks, start]];
@@ -241,7 +241,7 @@ export function blockHolderSearch(grid, {
             seenStates.add(sk);
             states += 1;
             if (states > BLOCK_SEARCH_MAX_STATES) return { ok: false, states, overflow: true };
-            if (pos.some((p) => holderSet.has(p)) && [...region].some((i) => lockAdjacent.has(i))) return { ok: true, states };
+            if (pos.some((p) => holderSet.has(p)) && [...region].some((i) => goal.has(i))) return { ok: true, states };
             pos.forEach((p, bi) => {
                 if (!movable[bi]) return;
                 const x = p % width;
@@ -264,7 +264,9 @@ export function blockHolderSearch(grid, {
         return { ok: false, states };
     };
 
-    const entries = (start) => {
+    // `goal`: the cells the player must still reach with a block on a holder —
+    // beside THIS lock by default; a lock RUN passes its outer cell (rules-l39).
+    const entries = (start, goal = lockAdjacent) => {
         if (refused) return { sets: [], refused };
         const found = [];
         let overflow = null;
@@ -278,7 +280,7 @@ export function blockHolderSearch(grid, {
             pick(0, []);
             for (const set of combos) {
                 if (found.some((f) => f.every((k) => set.includes(k)))) continue;
-                const r = solveUnder(new Set(set), start);
+                const r = solveUnder(new Set(set), start, goal);
                 if (r.overflow) overflow = `over ${BLOCK_SEARCH_MAX_STATES} states under {${set.join(', ')}}`;
                 if (r.ok) found.push(set);
             }
@@ -303,9 +305,18 @@ export function blockHolderSearch(grid, {
  * room with neither has NO holder: every entry is priced as "no button reachable",
  * which the caller turns into a wall (or a free way back out of a pocket only
  * the held lock enters). Undecided, and the player-reach price kept:
- *   - `pulser-arm` — a fire block shares the room with a Pulser, which moves
- *                    it with no item (`Pulser.as:100`); its pulses are not
- *                    placed by this model;
+ *   - `pulser-arm` — a fire block STARTS within a Pulser's reach, so the
+ *                    pulser moves it with no item (`Pulser.as:100`); its pulses
+ *                    are not placed by this model. ⛓ RULES rules-l39: the reach
+ *                    is the 8 tiles round the pulser — a pulse hits what lies
+ *                    within `radiusHit` 22 px of its centre (`Pulser.as:23,92-99`),
+ *                    which takes in every neighbour (a diagonal one is 11.3 px
+ *                    away) and nothing two tiles out (24 px). A fire block moves
+ *                    only on a "Fire" or "Pulse" hit (`PushableBlockFire.as:280`),
+ *                    so where none STARTS in reach every pulse follows a Fire
+ *                    push, the pulser adds no item-free move, and the search
+ *                    decides the room (L39). L40, where one does start beside
+ *                    its pulser, stays undecided;
  *   - `refused`    — the search's bounds.
  *
  * @returns {{ decided: boolean, why: string|null, search: {entries:(i:number)=>{sets:string[][]}, byKey:Map}|null }}
@@ -314,7 +325,8 @@ export function blockHolderVerdict(grid, { heldBy, holders, lockCells, closedCel
     if (!heldBy || (heldBy.blocks.length === 0 && (heldBy.fallers ?? []).length === 0)) {
         return { decided: true, why: 'no-block', search: { entries: () => ({ sets: [], refused: null }), byKey: new Map() } };
     }
-    if (heldBy.pulser && heldBy.blocks.some((b) => b.kind === 'pushableblockfire')) {
+    const inPulserReach = (b) => (heldBy.pulsers ?? []).some((p) => Math.abs(p.tx - b.tx) <= 1 && Math.abs(p.ty - b.ty) <= 1);
+    if (heldBy.pulser && heldBy.blocks.some((b) => b.kind === 'pushableblockfire' && (!heldBy.pulsers || inPulserReach(b)))) {
         return { decided: false, why: 'pulser-arm', search: null };
     }
     const search = blockHolderSearch(grid, {
