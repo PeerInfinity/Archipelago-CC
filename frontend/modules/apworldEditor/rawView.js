@@ -23,8 +23,9 @@
  * documents re-emit to within 4 bytes of their own file size.
  *
  * ⚠ The other **13** are written COMPACT (`compactJsonFile`), so for those the
- * view — and the download — is up to **1.74×** the file on disk
- * (`procgen_topdown/AP_8`: 1,811,130 B → 3,157,914 B). That is deliberate: the
+ * view — and the download — is up to **1.84×** the file on disk; the largest,
+ * `procgen_topdown/AP_8`, is 1,917,739 B → 3,264,523 B (re-measured at rule-node
+ * F3, when the top-down compile began carrying its source's blocks). That is deliberate: the
  * majority formatting is what a person reading or diffing a saved file expects,
  * and no loader cares. But it is why every size in this module is in PRETTY
  * bytes and why the arc plan's file-size census is not this module's corpus.
