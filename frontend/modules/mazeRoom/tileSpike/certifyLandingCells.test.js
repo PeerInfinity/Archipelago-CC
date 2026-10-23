@@ -61,6 +61,20 @@ describe('the game\'s landing cell (L56 → L57, a pit into water)', () => {
         expect(problems).toContain(`${CROSSING}: the game lands on (${wall[0]},${wall[1]}) in level_57, which the maze world walls`);
     });
 
+    it('a landing on a COMBO-LIST obstacle reads its items: the crossing opens once the item is held', () => {
+        // The same water as a combo_list (an array of item COMBINATIONS, as a door, rope or button token is written).
+        const combo = structuredClone(RULES);
+        const payload = combo.preset_sidecars['1'].level_57.playable_payload;
+        const id = getObstacle(l57, 6 - origin.x, 10 - origin.y);
+        payload.obstacleLib[id] = { ...payload.obstacleLib[id], clear_set_type: 'combo_list', clear_set: [[SWIM]] };
+        delete payload.obstacleLib[id].clear_rule;
+        const { problems, lines } = certifyPlaythroughMaze(combo, HELPERS, { native: true, regions: ['level_56'], atlas: ATLAS });
+        expect(problems).toEqual([]);
+        const minimal = JSON.parse(lines.find((l) => l.startsWith('level_56->level_57=')).split('=')[1]);
+        expect(minimal.length).toBeGreaterThan(0);
+        for (const set of minimal) expect(set).toContain(SWIM);
+    });
+
     it('refuses to certify without the atlas (an unjudged arrival is how the looser rows hid)', () => {
         expect(() => certifyPlaythroughMaze(RULES, HELPERS, { native: true })).toThrow(/atlas/);
     });

@@ -30,7 +30,9 @@
  * entrance a region is priced from: whole game, 299 of 304 crossings land on a third cell. `arrivalBlocked` judges
  * the crossing there, from the ATLAS (`atlasLandings`): it is refused at an inventory for which that cell is shut,
  * whatever the obstacle (L56's pit drops into L57's Swim water; the world crossed free, LOOSER than its landing gate),
- * and a landing on a cell the maze world walls is a problem by name. The trap-lane check reads the same cell. An exit
+ * and a landing on a cell the maze world walls is a problem by name. The cell is judged on the target world's ARRIVAL
+ * state (`effectiveInventory` at the landing, fresh): a derived token (a button's `holds`, a rope's `activates`) counts
+ * only when that state produces it, and never joins the item axis. The trap-lane check reads the same cell. An exit
  * between two sub-regions of ONE level (the atlas's `internal_exits`, no connection) keeps `resolveMazeArrival`.
  *
  * ⛔ A counted Has (count ≥ 2) in an AP rule is a PROBLEM by name: the truth table enumerates SETS, which
@@ -45,7 +47,9 @@
  * LOOSER row, stays a problem. The reach is optimistic (a counted Has asks for one; an unknown kind passes), so it
  * can only under-state what is necessary — never accept a row it should not.
  */
-import { deserializeMazeWorld, createState, step, standsInArmedLane, getObstacle, isFloor } from '../mazeRoomEngine.js';
+import {
+    deserializeMazeWorld, createState, step, standsInArmedLane, getObstacle, isFloor, effectiveInventory,
+} from '../mazeRoomEngine.js';
 import { resolveMazeArrival } from '../mazeArrival.js';
 import { ropeEvents } from './deriveTileLogic.js';
 import { evaluateRuleAgainstInventory, isObstacleCleared } from '../../shared/procgen/library.js';
@@ -89,6 +93,21 @@ function apReach(REGIONS, starts, inv) {
     }
     return seen;
 }
+
+/**
+ * The ITEMS that clear obstacle `id` of `world`: its `clear_rule`'s, or every item of its `clear_set` combinations
+ * (a combo_list is an array of arrays), less the tokens the world DERIVES (a button's `holds`, an obstacle's
+ * `activates`), as `blockWorldAccessRules` excludes them.
+ */
+const obstacleItems = (world, id) => {
+    const lib = world.obstacleLib ?? {};
+    const entry = lib[id] ?? {};
+    const derived = new Set(Object.values(world.buttonLib ?? {}).map((b) => b.holds).filter(Boolean));
+    for (const e of Object.values(lib)) if (e?.activates) derived.add(e.activates);
+    const items = (entry.clear_set_type ?? 'combo_list') === 'rule' ? [...ruleItems(entry.clear_rule)]
+        : (entry.clear_set ?? []).flat();
+    return items.filter((i) => !derived.has(i));
+};
 
 /** The sidecar that carries `name`'s playable payload (a level world's first sub-region carries it for all). */
 const carrierOf = (SIDECARS, name) => {
@@ -204,11 +223,9 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas 
                 }
                 const ob = at && !inWorld ? getObstacle(into, at.x, at.y) : null;
                 if (ob || tw.trapLanes) {
-                    const lib = ob ? into.obstacleLib?.[ob] ?? {} : null;
                     found = {
                         world: into, at: at ?? into.entrance, ob,
-                        items: [...(lib ? [...ruleItems(lib.clear_rule), ...(lib.clear_set ?? []).filter((i) => typeof i === 'string')] : []),
-                            ...(tw.trapLanes ? ropeEvents(tw).map((r) => r.event) : [])],
+                        items: [...(ob ? obstacleItems(into, ob) : []), ...(tw.trapLanes ? ropeEvents(tw).map((r) => r.event) : [])],
                     };
                 }
             }
@@ -218,10 +235,13 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas 
         const blocked = (exit, inv) => {
             const a = arrivalOf(exit);
             if (!a) return false;
-            if (a.ob && !isObstacleCleared(a.ob, new Set(inv), a.world.obstacleLib)) return true;
-            if (!a.world.trapLanes) return false;
             const s = createState(a.world);
             s.player_pos = { ...a.at };
+            if (a.ob) {
+                const eff = effectiveInventory(a.world, new Set(inv), s.player_pos, s.blocks, s.broken);
+                if (!isObstacleCleared(a.ob, eff, a.world.obstacleLib)) return true;
+            }
+            if (!a.world.trapLanes) return false;
             return standsInArmedLane(a.world, s, new Set(inv));
         };
         const exits = [...worldOf(source).exits.values()].filter((e) => e.targetRegion);
