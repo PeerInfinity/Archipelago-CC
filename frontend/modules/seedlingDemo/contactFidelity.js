@@ -970,6 +970,24 @@ export const CONTACT_FIDELITY = {
      * standard ON/OFF + spearrect green. The press ledger gains the T+3 / T+5 rows (`repeat: 2|4`).
      */
     spearGameTest: true,
+    /**
+     * fidelity DRILLKILL (wave 26) — THE SOLVER KILLS L28's DRILLS FIRST, THEN CUTS THE ROPE (`solverBot.
+     * execDrillKillsFirst`). ⚖ The user (2026-10-22): *"The intended solution is to fight the drills first."* With
+     * `drillMixedRooms` every L28 drill is stepped, and the rope cut's stances from the L25/L26 arrivals lie in a drill's
+     * 48 px run range: the spear refused from both (`drill@128,96` t59, `drill@80,96` t31), Fire from L26. ON: before a
+     * `rope` clear-tag whose stance (or the planned walk to it) gives a live stepped drill its trigger (`runRange`, the
+     * masked "Solid" line), the solver kills that drill with a held sword or spear — a pre-stance 56 px out on one axis,
+     * a creep until the drill hops (once to 32 px, once to 16 px), a press each time `hitsTimer` runs out (sword 3
+     * hits, spear 2: `Enemy.hitsMax` 3, `spearDamage` 2), the removal waited out — and then plans the cut. FIRE CANNOT
+     * KILL A DRILL (`Enemy.hit`: `hitByFire` is false and `Drill` never sets it; `fireDamage` 0) — a Fire-only run whose
+     * stances a drill covers is refused BY NAME on that. The key also carries one transcription the p4g witnesses found:
+     * `endAnim`'s "die" case plays `""` (`drill.stepDrillGraphic`), which the L88 skin golden reads. OFF: byte-identical.
+     * `SEEDLING_DRILL_KILL_FIRST=0|1`.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, DRILLKILL "Harvest + flip ON") turns it ON. Measured movers (CI, main
+     * 45e27e95e8 + the slice): the route survey (full) ON = OFF; the 8 L28 sweep legs ×2 per arm (240 s): done in all four;
+     * probes standard ON green.
+     */
+    drillKillFirst: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1161,6 +1179,9 @@ if (globalThis.process?.env?.SEEDLING_PIXEL_MASK_SIGHT_LINES === '0') CONTACT_FI
 // ⛓ fidelity SPEARRECT: `SEEDLING_SPEAR_GAME_TEST=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_SPEAR_GAME_TEST === '1') CONTACT_FIDELITY.spearGameTest = true;
 if (globalThis.process?.env?.SEEDLING_SPEAR_GAME_TEST === '0') CONTACT_FIDELITY.spearGameTest = false;
+// ⛓ fidelity DRILLKILL: `SEEDLING_DRILL_KILL_FIRST=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_DRILL_KILL_FIRST === '1') CONTACT_FIDELITY.drillKillFirst = true;
+if (globalThis.process?.env?.SEEDLING_DRILL_KILL_FIRST === '0') CONTACT_FIDELITY.drillKillFirst = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
