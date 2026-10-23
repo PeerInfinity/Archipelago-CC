@@ -955,7 +955,9 @@ export const CONTACT_FIDELITY = {
      * a creep until the drill hops (once to 32 px, once to 16 px), a press each time `hitsTimer` runs out (sword 3
      * hits, spear 2: `Enemy.hitsMax` 3, `spearDamage` 2), the removal waited out — and then plans the cut. FIRE CANNOT
      * KILL A DRILL (`Enemy.hit`: `hitByFire` is false and `Drill` never sets it; `fireDamage` 0) — a Fire-only run whose
-     * stances a drill covers is refused BY NAME on that. OFF: byte-identical. `SEEDLING_DRILL_KILL_FIRST=0|1`.
+     * stances a drill covers is refused BY NAME on that. The key also carries one transcription the p4g witnesses found:
+     * `endAnim`'s "die" case plays `""` (`drill.stepDrillGraphic`), which the L88 skin golden reads. OFF: byte-identical.
+     * `SEEDLING_DRILL_KILL_FIRST=0|1`.
      */
     drillKillFirst: false,
 };

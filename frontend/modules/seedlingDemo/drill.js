@@ -36,6 +36,7 @@
  */
 
 import { createSpriteAnim, stepSpriteAnim } from './chasers.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
 
 export const DRILL = Object.freeze({
     /** `super(_x + Tile.w/2, _y + Tile.h/2)`. */
@@ -158,9 +159,14 @@ export function stepDrillGraphic(s) {
             const a = DRILL.anims.hit;
             return { ...d, sprite: createSpriteAnim(a.frames, a.rate) };
         }
-        // ⛓ fidelity DRILLKILL D1: `endAnim`'s "die" case is `destroy = true; sprDrill.play("")` — the game's row reads
-        // anim "" through the fade (measured on p4g: `drillkill-l28-sword-l25` t141-151); nothing gates on the name.
-        case 'die': d = { ...d, destroy: true, anim: '', sprite: null }; return d;
+        /**
+         * ⛓ fidelity DRILLKILL D1: `endAnim`'s "die" case is `destroy = true; sprDrill.play("")` — the game's row reads
+         * anim "" through the fade (measured on p4g: `drillkill-l28-sword-l25` t141-151). No model gate reads the name
+         * (`destroy` gates them), but the L88 skin golden (`seedlingRoomBodySkin`, `roombody-drill-L88.txt`) draws from
+         * it, so the transcription rides `drillKillFirst` (OFF: the name stays "die", byte-identical).
+         */
+        case 'die': d = { ...d, destroy: true, sprite: null, ...(CONTACT_FIDELITY.drillKillFirst ? { anim: '' } : {}) };
+            return d;
         default: return play(d, 'sit');
     }
 }
