@@ -1,0 +1,40 @@
+== p1 (no pass call)
+1
+     × ON: Fire alone from L26 SOLVES — a certified pass to (152,56) past both drills, then the cut, 0 hits 199ms
+     × ON, without a fork: the same pass, played as found (uncertified), the same plan 217ms
+     × ON: Fire from L25 plans a pass too — its walk wakes `drill@128,96` (89 → 70 t, 0 hits; a mover) 74ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  3 failed | 13 passed (16)
+== p2 (tail 0)
+1
+     × the search asks a stand long enough for the fire cut (11 ticks from arrival to its end at L26) 11ms
+     × ON: Fire alone from L26 SOLVES — a certified pass to (152,56) past both drills, then the cut, 0 hits 8013ms
+     × ON, without a fork: the same pass, played as found (uncertified), the same plan 8269ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  3 failed | 13 passed (16)
+== p3 (fork shares drill map)
+1
+     × `fork()` is independent: stepping the fork leaves the original where it was 27ms
+     × ON: Fire alone from L26 SOLVES — a certified pass to (152,56) past both drills, then the cut, 0 hits 534ms
+     × ON, without a fork: the same pass, played as found (uncertified), the same plan 544ms
+     × ON: Fire from L25 plans a pass too — its walk wakes `drill@128,96` (89 → 70 t, 0 hits; a mover) 783ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  4 failed | 12 passed (16)
+== p4 (no certificate, tail 0)
+1
+     × the search asks a stand long enough for the fire cut (11 ticks from arrival to its end at L26) 25ms
+     × ON: Fire alone from L26 SOLVES — a certified pass to (152,56) past both drills, then the cut, 0 hits 3187ms
+     × ON, without a fork: the same pass, played as found (uncertified), the same plan 4094ms
+     × ON: Fire from L25 plans a pass too — its walk wakes `drill@128,96` (89 → 70 t, 0 hits; a mover) 229ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  4 failed | 12 passed (16)
+== d1a (no frozen drill graphic)
+     × timedpass-l28-fire-l26: the model (key ON) reproduces the game on every sampled tick 106ms
+     × timedpass-l28-fire-l25: the model (key ON) reproduces the game on every sampled tick 29ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 5 passed | 16 skipped (23)
+== d1b (camera after the write)
+     × timedpass-l28-fire-l26: the model (key ON) reproduces the game on every sampled tick 124ms
+     × timedpass-l28-fire-l25: the model (key ON) reproduces the game on every sampled tick 20ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 5 passed | 16 skipped (23)

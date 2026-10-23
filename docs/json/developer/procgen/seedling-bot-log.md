@@ -24805,3 +24805,44 @@ with the Sword and the Spear from the L25 and L26 arrivals (both drills from L26
 - A weapon that "hits" an enemy may not DAMAGE it: `Enemy.hit` has a per-type gate (`hitByFire`), so "every weapon can kill
   it" must be read off the receiver, not the rules.
 - A stance rule written in px ("outside the range") can have no solution in a small room: measure the room before the rule.
+
+### Seedling fidelity TIMEDPASS — the solver walks past a hopping drill it cannot kill (`drillTimedPass`, OFF)
+
+Planner `seedling-fidelity-planning-11`, wave 27 (⚖ the user, 2026-10-23: *"Keep Fire; timed pass."*). The report is
+`CC/docs/cloud-reports/seedling-fidelity-timedpass.md`.
+
+**W0 — what a pass has to beat.** `Drill.update` hops one tile toward a player within `runRange` (48) on a clear "Solid"
+line, from "sit" only; awake, it reaches "sit" every **15** ticks ("drill" 7 + "undrill" 7, then the check — measured on
+the game, `drillkill-l28-fire-l26`: hops at t15, t30, t45), not the 27 a 60 fps frame count gives. `Enemy.hitPlayer` runs
+inside `super.update()`, ABOVE the hop, on every tick the drill is not dying and its `hitsTimer` is out: the 10x10 box
+(origin 5,5) against the player's 4x5 (origin 2,2). So there is no timing window in the contact — a pass is a POSITION
+question at each hop: a player 8-9 px off on the hop's axis is jumped over (the drill lands 7-8 px past, outside the boxes'
+7 px overlap; the game's 8.05 → 7.95), and a player walking away gains ~2 px a cycle (1.2 px a tick against 16 per 15).
+
+**The pass (switch ON).** Where DRILLKILL finds no killing weapon (the kill stays first), `execDrillTimedPass` SEARCHES a
+tick-by-tick walk to one of the cut's stances on the run's own forecast — the player by `previewStepper`, every drill by
+`corridorBodyForecast({drillPass: true})` (the CORRIDOR forecast, asked with `corridorBodyPricing` OFF; it gained `fork()`
+and `drills()`) — a beam over the nine key sets (400 states a tick, kept two per 8 px cell and drill configuration so that
+waiting survives rushing, ranked by the floor distance to the stance), with a 14-tick contact-free stand at the stance for
+the cut. One search per stance in the cut's own order (a joint beam aimed at the nearest stance chased the drills into a
+configuration the farther stance could not stand in). The found walk is certified on the segment's fork WITH the cut
+itself, then played; the cut starts from its stance (`drillPass` on the clear-tag record). Fire alone from L26: the pass to
+(152,56) past both drills, 121 t, the cut done at 132 t, 0 hits (~13 s of search: (152,88) and (152,72) have none).
+
+**D1 — the witnesses found a model gap (p4g, 0 px; `probe-seedling-timed-pass.mjs`, `fixtures/timedpass-witness/`).**
+L28's rope publishes its group to `fallrock@112,240`, whose frozen span (181 dead frames, one tape tick) the model resolved
+stepping the rock alone. On the game the drills' ENTITY update is frozen but their GRAPHIC is not, so each anim plays on to
+"sit"; the camera pans to the rock and holds (`Game.cameraTarget` every falling frame, `Game.shake = 30` on the landing)
+and returns after the release; and the release frame runs the drills live (the rock updates first and clears the freeze),
+so the drill parked under the stance hops onto it in the pull's own tick. Its contact waits for the returning camera
+(`Enemy.update`'s off-screen return): 2 ticks after the L26 goal, 1 after L25's. `dropRock` now steps those per frame
+behind the key (`view()` first: the camera reads the previous frame's target — the other order lands the contact a tick
+early, mutant d1b). A `fallRockLanding` shake writer is named in `camera.SHAKE_WRITERS`.
+
+**Trap candidates.**
+- A frozen span is not a stopped clock: `Game.freezeObjects` gates an entity's `update()`, not its graphic, so every anim
+  (and anything an `endAnim` callback drives) runs through it — a body comes out of a ceremony in a different state than it
+  went in, and acts on the first live frame.
+- A ceremony's camera is gameplay where an enemy is `onScreen`-gated: the pan decides WHEN a contact can land.
+- "Pass between hops" reads as a timing window; read the contact first — here it is geometric on every tick, and the
+  window is a 2 px band at each hop.
