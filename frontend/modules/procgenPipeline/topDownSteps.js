@@ -139,6 +139,8 @@ function stepCompile(env, { onProgress = null } = {}) {
         sourceItemGroups: env.source?.item_groups?.['1'] ?? null,
         // The source's locations: a source event location compiles as one.
         sourceLocations: sourceLocationsOf(env.source, '1'),
+        // ⛓ F3 — the rules ride in verbatim, so the blocks they read do too.
+        source: env.source ?? null,
         procgenMetadata: {
             driver: enriched ? 'top-down-sphere' : 'top-down',
             source_game: c.sourceGameName ?? null,
