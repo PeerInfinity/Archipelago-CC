@@ -64,6 +64,7 @@ item_table: Dict[str, ItemData] = {
     "L62 flag 0: lightpole@120,200 cleared": ItemData(None, ItemClassification.progression),
     "L63 flag 1: lightpole@64,88 cleared": ItemData(None, ItemClassification.progression),
     "L114 flag 0: watcher@72,72 cleared": ItemData(None, ItemClassification.progression),
+    "L58 flag 1: yeti@56,56 cleared": ItemData(None, ItemClassification.progression),
     "L16 flag 0: rope@32,16 cleared": ItemData(None, ItemClassification.progression),
     "L28 flag 0: rope@160,64 cleared": ItemData(None, ItemClassification.progression),
     "Nothing": ItemData(30000019, ItemClassification.filler),

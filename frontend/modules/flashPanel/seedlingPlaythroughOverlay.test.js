@@ -484,7 +484,8 @@ describe('the charged doors and the completion condition', () => {
         // ⛓ RULES watcher-event: the Watcher's talk is CARRIED (an event), no longer implied
         expect(COMPLETION.implied).toEqual([]);
         expect(COMPLETION.carried.join(' ')).toMatch(/Watcher.*flag:L114:0/);
-        expect(CROSS_ROOM_PREREQUISITES.map((p) => `${p.gated} <- ${p.writer} ${p.verb} {${p.flag.namedRoom},${p.flag.tag}}`))
-            .toEqual(['finaldoor <- watcher talk {watcher_text,0}']);
+        expect(CROSS_ROOM_PREREQUISITES.map((p) => `${p.gated}${p.gatedReads ? `(${p.gatedReads})` : ''} <- ${p.writer} ${p.verb} `
+            + `{${p.flag.namedRoom ?? p.flag.room},${p.flag.tag}}`))
+            .toEqual(['finaldoor <- watcher talk {watcher_text,0}', 'teleporter(ownTag) <- yeti talk {writer,1}']);
     });
 });

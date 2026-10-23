@@ -197,7 +197,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             lightsBossFight: true,
             // ⛓ seedling-fidelity-bosskills: the King of Fire's and the Tentacled Beast's fights ship OFF;
             // ⛓ planning-10's flip (⚖ user "Flip kingOfFireFight", 2026-10-21) turns `kingOfFireFight` ON.
-            kingOfFireFight: true, tentacleBeastFight: false,
+            // ⛓ planning-10's flip (⚖ user "Flip now, hitless later", 2026-10-22) turns `tentacleBeastFight` ON.
+            kingOfFireFight: true, tentacleBeastFight: true,
             // ⛓ fidelity ROPE (wave 22): the `rope` verb ships OFF.
             // ⛓ planning-9's flip (⚖ user "Yes, flip it", 2026-10-21) turns `ropeCutVerb` ON.
             ropeCutVerb: true,
