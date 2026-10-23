@@ -7368,6 +7368,16 @@ export function buildRulesJson(grid, opts = {}) {
         // this document's; null (every driver with no source world) keeps the
         // synthetic `['Everything']`.
         sourceItemGroups = null,
+        // I1 SCRATCH — the SOURCE world's helper bodies `helpers[playerId]`,
+        // carried verbatim: the compiled regions keep the source's rules,
+        // which name them.
+        sourceHelpers = null,
+        // I1 SCRATCH — the SOURCE world's resolved options: helper bodies
+        // read them (`option_value`, e.g. alttp `retro_bow`).
+        sourceOptions = null,
+        // I1 SCRATCH — the SOURCE world's `progression_mapping[playerId]`
+        // (alttp `Progressive Glove` → `Power Glove`, which helper bodies test).
+        sourceProgressionMapping = null,
         // The SOURCE world's locations, name → location (`sourceLocationsOf`):
         // a source event location compiles as one (`compileRegionGraph`).
         sourceLocations = null,
@@ -7468,6 +7478,19 @@ export function buildRulesJson(grid, opts = {}) {
     // list is empty, and a single-entry list suffices.
     scaffold.item_groups[playerId] = Array.isArray(sourceItemGroups)
         ? [...sourceItemGroups] : ['Everything'];
+    if (sourceHelpers && Object.keys(sourceHelpers).length) {
+        scaffold.helpers[playerId] = structuredClone(sourceHelpers);
+    }
+    // `sourceOptions` = the source's whole `world[playerId]` block: options AND
+    // the world attributes helper bodies read (`world_attribute`). The compiled
+    // world keeps its own identity keys.
+    if (sourceOptions && Object.keys(sourceOptions).length) {
+        const { game, world_class_name, world_directory, ...carried } = sourceOptions;
+        Object.assign(scaffold.world[playerId], structuredClone(carried));
+    }
+    if (sourceProgressionMapping && Object.keys(sourceProgressionMapping).length) {
+        scaffold.progression_mapping[playerId] = structuredClone(sourceProgressionMapping);
+    }
 
     // Starting items: keep names that exist in the compiled items
     // pool. For names that don't, backfill the definition from

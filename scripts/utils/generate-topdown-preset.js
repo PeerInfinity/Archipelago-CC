@@ -317,6 +317,9 @@ async function main() {
         startingItems: source.starting_items?.['1'] ?? [],
         sourceItems: source.items?.['1'] ?? null,
         sourceItemGroups: source.item_groups?.['1'] ?? null,
+        sourceHelpers: source.helpers?.['1'] ?? null,
+        sourceOptions: source.world?.['1'] ?? null,
+        sourceProgressionMapping: source.progression_mapping?.['1'] ?? null,
         sourceLocations: sourceLocationsOf(source, '1'),
         menuRegion,
         procgenMetadata: {
@@ -327,6 +330,21 @@ async function main() {
             ...(enriched ? { sphere_tree: sphereTree, sphere_plan: spherePlan } : {}),
         },
     });
+    // I1 SCRATCH (patch 5) — the source's `dungeons[1]` block and each compiled
+    // region's source-side fields (alttp: `dungeon`, `is_light_world`, …) that
+    // rules reach through `parent_region.dungeon` / region attributes.
+    if (process.env.I1_PATCH5) {
+        if (source.dungeons?.['1']) rulesJson.dungeons = { '1': structuredClone(source.dungeons['1']) };
+        const srcRegions = source.regions?.['1'] ?? {};
+        for (const [name, reg] of Object.entries(rulesJson.regions['1'])) {
+            const src = srcRegions[name];
+            if (!src) continue;
+            for (const [k, v] of Object.entries(src)) {
+                if (k === 'exits' || k === 'locations' || k === 'entrances' || k in reg) continue;
+                reg[k] = structuredClone(v);
+            }
+        }
+    }
     const text = stringifyRulesJson(rulesJson);
 
     fs.mkdirSync(path.dirname(args.out), { recursive: true });
