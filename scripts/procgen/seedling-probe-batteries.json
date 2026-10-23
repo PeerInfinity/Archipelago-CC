@@ -1,5 +1,5 @@
 {
-  "$comment": "Named Seedling probe batteries for .github/workflows/seedling-probe.yml (input battery=<name>): one CI job per entry, each with ITS OWN args, each run in full. Read and validated by seedlingProbeBatteries.js (vitest: every probe exists, every flag is one the probe parses, no duplicate ids). --host is set by the job and refused here.",
+  "$comment": "Named Seedling probe batteries for .github/workflows/seedling-probe.yml (input battery=<name>): one CI job per entry, each with ITS OWN args, each run in full. Read and validated by seedlingProbeBatteries.js (vitest: every probe exists, every flag is one the probe parses, no duplicate ids). --host is set by the job and refused here. `standard` gates every landing. `long` is dispatched by hand only (model/rules landings, fidelity A/Bs; no schedule): logical-links B walked on past standard's 900 s, with a budget MEASURED to reach the walk's next named refusal (§5.128: L39 Totem Part 72,40 at +1039–1054 s on CI, so 1200 s).",
   "batteries": {
     "standard": [
       { "probe": "probe-seedling-wasm-logical-links.mjs", "args": "--only=B,R" },
@@ -13,6 +13,9 @@
       { "probe": "probe-seedling-wasm-generated-playback.mjs", "args": "" },
       { "probe": "probe-seedling-loop-restart.mjs", "args": "" },
       { "probe": "probe-seedling-seal-delivery.mjs", "args": "--only=A" }
+    ],
+    "long": [
+      { "probe": "probe-seedling-wasm-logical-links.mjs", "args": "--only=B --budget-s=1200" }
     ]
   }
 }

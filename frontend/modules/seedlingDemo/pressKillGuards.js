@@ -1,5 +1,5 @@
 /**
- * ⛓⛓ SEEDLING HAMMER-PHASE LB (HX) — TWO GUARDS ON THE PRESS KILL, EACH BEHIND ITS OWN SWITCH, BOTH OFF.
+ * ⛓⛓ SEEDLING HAMMER-PHASE LB (HX) — TWO GUARDS ON THE PRESS KILL, EACH BEHIND ITS OWN SWITCH, BOTH ON.
  *
  * Fidelity's L40CONTACT D4 handed the hammer arc two ways the press kill (`execKillByPress`) leaves a solve by
  * something other than an answer, both measured on leg 414's atlas boot (`d4/boot-414.json`, ghost sword, the chest):
@@ -22,18 +22,24 @@
  *
  * ⛔ NEITHER CHANGES ANYTHING OFF: the shake guard's catch rethrows every error when OFF, and the reboot guard reads
  * a ledger length and compares it, deciding nothing. No budget, deadline site, `shouldStop` or work unit is touched.
- * `SEEDLING_PRESS_KILL_SHAKE_GUARD=1` / `SEEDLING_PRESS_KILL_REBOOT_GUARD=1` opt a process in.
+ *
+ * ON by default since the user's flip (hammer-phase GF, 2026-10-23: *"Yes, please go ahead with that plan"* — both
+ * guards ON first, `STRIKE_ETA_FLOOR` after, in its own slice). GS's whole-route A/B (`seedling-hammer-guards-sweep`)
+ * found 0 of 850 legs and 0 of 878 replayed requests turning a solve into a refusal; the reboot guard fires on the L40
+ * chest leg (L40 ← L39 → Chest), the shake guard on no request. `SEEDLING_PRESS_KILL_SHAKE_GUARD=0` /
+ * `SEEDLING_PRESS_KILL_REBOOT_GUARD=0` opt a node process out (the page's worker has no `process`, so it is ON there);
+ * `withPressKillShakeGuard(false, …)` / `withPressKillRebootGuard(false, …)` for a test or a witness about the OFF kill.
  */
 
 export const PRESS_KILL_SHAKE_GUARD = {
-    enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_SHAKE_GUARD === '1',
+    enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_SHAKE_GUARD !== '0',
 };
-export const PRESS_KILL_SHAKE_GUARD_DEFAULT = false;
+export const PRESS_KILL_SHAKE_GUARD_DEFAULT = true;
 
 export const PRESS_KILL_REBOOT_GUARD = {
-    enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_REBOOT_GUARD === '1',
+    enabled: globalThis.process?.env?.SEEDLING_PRESS_KILL_REBOOT_GUARD !== '0',
 };
-export const PRESS_KILL_REBOOT_GUARD_DEFAULT = false;
+export const PRESS_KILL_REBOOT_GUARD_DEFAULT = true;
 
 /** What the guards did in this process (measurement only; nothing reads it back). */
 export const PRESS_KILL_GUARD_COUNTS = { shakeRefused: 0, rebootRefused: 0 };
