@@ -1,0 +1,12 @@
+probe-seedling-wasm-logical-links.mjs --only=B,R rc=0 964s :: ALL CHECKS PASSED
+probe-seedling-wasm-vanilla-map.mjs  rc=0 888s :: ALL CHECKS PASSED
+probe-seedling-wasm-arrival-composites.mjs  rc=0 133s :: ALL CHECKS PASSED
+probe-seedling-wasm-midroom-replan.mjs --only=D rc=0 34s :: ALL CHECKS PASSED
+probe-seedling-restart-route.mjs --only=W,J rc=0 63s :: ALL CHECKS PASSED
+probe-seedling-restart-warp.mjs --only=W,J rc=0 86s :: ALL CHECKS PASSED
+probe-seedling-wasm-adopt.mjs  rc=0 180s :: ALL CHECKS PASSED
+probe-seedling-obstacle-events.mjs --only=W,J rc=0 80s :: ALL CHECKS PASSED
+probe-seedling-wasm-generated-playback.mjs  rc=0 46s :: ALL CHECKS PASSED
+probe-seedling-loop-restart.mjs  rc=0 72s :: ALL CHECKS PASSED
+probe-seedling-seal-delivery.mjs --only=A rc=0 11s :: ALL CHECKS PASSED
+DONE

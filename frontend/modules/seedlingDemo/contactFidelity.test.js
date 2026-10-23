@@ -234,7 +234,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             removedBodyBlocks: true,
             // ⛓ seedling-fidelity-slowfix D-A (wave 27): the Lights verb's sortie portfolio — shipped OFF;
             // ⛓ planning-11's flip (⚖ user "Harvest + flip ON", 2026-10-23) turns it ON.
-            lightsSortiePortfolio: true });
+            lightsSortiePortfolio: true,
+            // ⛓ fidelity HITLESS (wave 27): the Tentacled Beast's fork ranks hitless variants first — ships OFF.
+            tentacleHitlessFirst: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

@@ -1032,6 +1032,17 @@ export const CONTACT_FIDELITY = {
      * thin headroom); probes standard ON green; the L69 spear solve 494 → 303 t (`lights-solve-spear-portfolio`).
      */
     lightsSortiePortfolio: true,
+    /**
+     * fidelity HITLESS (wave 27, ⚖ user 2026-10-22 "Flip now, hitless later") — THE TENTACLED BEAST'S FIGHT PREFERS A
+     * VARIANT THAT TAKES NO HIT (`solverBot.execTentacleBeast`). The fork (BOSSFORK) committed the FIRST
+     * `TENTACLE_BEAST_POLICY_VARIANTS` row that opened the mouth without a death, so a variant that took a swipe
+     * could win over a later hitless one. ON: every variant is played on its own fork and the committed one is ranked
+     * no hit first, then the fewest hits, then the fewest ticks (the list order breaks a tie); a hit stays ACCEPTABLE
+     * when no variant is hitless (the verb's record names how many were tried and each one's hits). Only deaths are
+     * refused, as before. OFF: byte-identical (first-without-a-death). `SEEDLING_TENTACLE_HITLESS_FIRST=0|1` for a
+     * node measurement.
+     */
+    tentacleHitlessFirst: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1232,6 +1243,9 @@ if (globalThis.process?.env?.SEEDLING_REMOVED_BODY_BLOCKS === '0') CONTACT_FIDEL
 // ⛓ seedling-fidelity-slowfix D-A: `SEEDLING_LIGHTS_SORTIE_PORTFOLIO=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_LIGHTS_SORTIE_PORTFOLIO === '1') CONTACT_FIDELITY.lightsSortiePortfolio = true;
 if (globalThis.process?.env?.SEEDLING_LIGHTS_SORTIE_PORTFOLIO === '0') CONTACT_FIDELITY.lightsSortiePortfolio = false;
+// ⛓ fidelity HITLESS: `SEEDLING_TENTACLE_HITLESS_FIRST=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_TENTACLE_HITLESS_FIRST === '1') CONTACT_FIDELITY.tentacleHitlessFirst = true;
+if (globalThis.process?.env?.SEEDLING_TENTACLE_HITLESS_FIRST === '0') CONTACT_FIDELITY.tentacleHitlessFirst = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
