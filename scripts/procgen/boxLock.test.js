@@ -507,7 +507,8 @@ describe('who takes the box', () => {
          * witnesses, `probe-seedling-mask-lines.mjs`; fidelity DRILLKILL the drill-kill witnesses,
          * `probe-seedling-drill-kill.mjs`;
          * fidelity SKINSWING the art-stand swing witnesses,
-         * `probe-seedling-skin-swing.mjs`.)
+         * `probe-seedling-skin-swing.mjs`;
+         * fidelity TIMEDPASS the timed-pass witnesses, `probe-seedling-timed-pass.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -546,7 +547,8 @@ describe('who takes the box', () => {
             'probe-seedling-yeti.mjs',
             'probe-seedling-mask-lines.mjs',
             'probe-seedling-spearrect.mjs', 'probe-seedling-drill-kill.mjs',
-            'probe-seedling-skin-swing.mjs'];
+            'probe-seedling-skin-swing.mjs',
+            'probe-seedling-timed-pass.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

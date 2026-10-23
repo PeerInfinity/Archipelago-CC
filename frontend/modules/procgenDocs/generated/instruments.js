@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 97,
-            "count": 144,
+            "browser": 98,
+            "count": 145,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 451,
-        "browser": 162,
-        "cited": 242,
-        "files": 465,
+        "blockStyle": 452,
+        "browser": 163,
+        "cited": 243,
+        "files": 466,
         "lineStyle": 14,
-        "withDocblock": 465,
-        "withFlags": 382
+        "withDocblock": 466,
+        "withFlags": 383
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -15196,6 +15196,51 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling L57's DEATH-SPAWNED EXIT, THE GAME'S WAY (rules `rules-game-truth-gaps`, the L57 lift: ⚖ the user 2026-10-06, \"lift L57 like L82\").",
             "path": "scripts/procgen/probe-seedling-tentacle-mouth.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-timed-pass.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-timed-pass — ⛓⛓⛓ seedling-fidelity-timedpass: THE SOLVER WALKS PAST L28's HOPPING DRILLS WITH FIRE ALONE (`CONTACT_FIDELITY.drillTimedPass`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-timed-pass.mjs"
         },
         {
             "argvHelpers": [],

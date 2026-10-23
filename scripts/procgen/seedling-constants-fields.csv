@@ -912,6 +912,7 @@ frontend/modules/seedlingDemo/camera.js|stepCamera|stepCamera|-1,rule,sentinel,,
 frontend/modules/seedlingDemo/camera.js|stepCamera|h0a9e6a2c|0|0,rule,bound,,camera clamp to level
 frontend/modules/seedlingDemo/camera.js|stepCamera|hd9f8f300|0|0,rule,bound,,camera clamp to level
 frontend/modules/seedlingDemo/camera.js|SHAKE_WRITERS|(module),rule,magnitude,,Game.shake amounts; shake moves onScreen verdicts
+frontend/modules/seedlingDemo/camera.js|(module)|h2dcaf8e1|30|0,rule,magnitude,,FallRock.as:88 Game.shake = 30 on the landing (SHAKE_WRITERS.fallRockLanding; fidelity TIMEDPASS); shake moves onScreen verdicts
 frontend/modules/seedlingDemo/camera.js|RANDOM_RANGE|(module),rule,bound,,Math.random range [0 1)
 frontend/modules/seedlingDemo/camera.js|stepCameraBand|stepCameraBand|-1,rule,sentinel,,cameraTarget (-1 -1) = none
 frontend/modules/seedlingDemo/camera.js|stepCameraBand|axis,rule,bound,,camera clamp to level

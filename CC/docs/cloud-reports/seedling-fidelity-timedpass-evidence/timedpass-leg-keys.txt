@@ -1,0 +1,8 @@
+level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_0_96
+level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_96_0
+level_28__r0c6 <- in_L25_96_128 -> location:L28 flag 0: rope@160,64 cleared
+level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_0_96
+level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_96_0
+level_28__r0c6 <- in_L26_144_208 -> location:L28 flag 0: rope@160,64 cleared
+level_28__r1c18 <- in_L30_0_128 -> exit:out_teleporter_304_16
+level_28__r11c4 <- in_L27_168_16 -> exit:out_teleporter_128_304

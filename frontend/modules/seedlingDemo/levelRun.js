@@ -3693,16 +3693,62 @@ export function createLevelRun({
      * is the same arithmetic and the two are asserted against each other in
      * `fallRock.test.js` rather than one calling the other here.
      */
+    /**
+     * ⛓ fidelity TIMEDPASS D1 (`CONTACT_FIDELITY.drillTimedPass`; OFF this is a no-op) — ONE FROZEN FRAME OF EVERY LIVE
+     * DRILL'S GRAPHIC. `Drill.update` returns at its first line under `Game.freezeObjects`, but `World.update` runs each
+     * entity's graphic outside that gate, so through a rock's frozen span a drill's "drill" / "undrill" anim plays on
+     * to "sit" (`endAnim`) and the drill hops on the first live update after the release. Measured on p4g
+     * (`timedpass-l28-fire-l26`: `dead_frames` 20 → 201 at t127; `drill@80,96` "drill" → "sit", `drill@128,96` on to
+     * "sit" and hopping (152,72) → (152,56) onto the stance; the model kept both anims where the live tick left them).
+     */
+    const stepDrillGraphicsFrozen = () => {
+        if (!(CONTACT_FIDELITY.drillTimedPass && CONTACT_FIDELITY.drillLive)) return;
+        const st = drillStateFor(level);
+        for (const [id, d] of st) if (!d.removed) st.set(id, stepDrillGraphic(d));
+    };
+    /**
+     * ⛓ fidelity TIMEDPASS D1 — ONE FRAME OF A `FallRock`'s FROZEN SPAN, for what the span changes besides the rock
+     * (`r` is `stepFallRock`'s answer for the frame). The rock is added last and `addUpdate` prepends, so it updates
+     * first; then every other entity, frozen; then `view()`:
+     *   · `Game.cameraTarget` — the rock writes the landing's centre every falling frame (`FallRock.as:66`), so the
+     *     camera leaves the player for the rock and holds there; the landing writes `Game.shake = 30` (`:88`);
+     *   · the drills' GRAPHIC (`stepDrillGraphicsFrozen`) — their entity update is frozen, the anim is not;
+     *   · THE RELEASE FRAME is live below the rock: `Game.resetCamera()` (`:96`), then the drills update unfrozen —
+     *     one off-screen now, the camera being at the rock, so no contact (`Enemy.update`'s gate), but a drill whose
+     *     anim reached "sit" during the span HOPS (`Drill.update` runs its hop below `super.update()`).
+     * Measured on p4g (`timedpass-l28-fire-l26` / `-l25`): the drill parked under the stance hops onto it in the pull's
+     * own tick, and its contact lands only when the returning camera brings it on screen (t134, seven ticks on).
+     * ⚠ Not modelled, named: the player's own release-frame step (a player at rest takes none) and the span's other
+     * entities (this is reached only with the switch ON; L28's only other bodies are its drills and the bobsoldier).
+     */
+    const fallRockFrozenFrame = (r) => {
+        // ⚠ `view()` reads the target the PREVIOUS frame's rock wrote (measured: the release frame's camera still
+        // stands at the rock; the return starts a tick later — one frame earlier puts the contact a tick early).
+        stepCameraNow(state, worldFor(level).world);
+        if (r.cameraTarget !== null) bossCameraTarget = { ...r.cameraTarget };
+        if (r.landed) shake = applyShakeWriter(shake, 'fallRockLanding');
+        if (r.unfroze) {
+            bossCameraTarget = { x: -1, y: -1 };
+            stepDrillsNow();
+        } else {
+            stepDrillGraphicsFrozen();
+        }
+    };
     const dropRock = (rockState, id) => {
         const pub = publishActivate(rockState, true);
         if (!pub.fell) return { state: rockState, fell: false };
         let s = pub.state;
         let frames = 0;
         let snapY = null;
+        // ⛓ fidelity TIMEDPASS D1 (`drillTimedPass`; OFF none of this runs): the span's frames are stepped for what
+        // reads them — see `fallRockFrozenFrame`.
+        const spanOn = CONTACT_FIDELITY.drillTimedPass && CONTACT_FIDELITY.drillLive;
         for (let i = 1; i <= 1000; i += 1) {
-            const r = stepFallRock(s, playerBoxAt(state.x, state.y), { cleared: true });
+            const r = stepFallRock(s, playerBoxAt(state.x, state.y),
+                { cleared: true, ...(spanOn ? { screen: { width: SCREEN_W, height: SCREEN_H } } : {}) });
             s = r.state;
             frames = i;
+            if (spanOn) fallRockFrozenFrame(r);
             // ⛔ THE SNAP. `FallRock.update`'s first arm writes the player's
             // `y` on every tick from the landing, and the player cannot move
             // out from under it — the whole span is frozen. So the LAST snap
@@ -3771,6 +3817,7 @@ export function createLevelRun({
                 // per-rock loop that runs to its own end.
                 if (r.unfroze) unfroze = true;
             }
+            stepDrillGraphicsFrozen();
             for (const b of bosses) {
                 // ⛓ R6 SLICE 4: and `render()` runs on every frozen frame
                 // too — it is outside `Game.update` entirely. Without this
@@ -12404,8 +12451,13 @@ export function createLevelRun({
      *
      * `null` while the switch is OFF, under `noclip`/`noDamage` (nothing is stepped), or in a room with neither class.
      */
-    function corridorBodyForecastNow() {
-        if (noclip || noDamage || !CONTACT_FIDELITY.corridorBodyPricing) return null;
+    function corridorBodyForecastNow({ drillPass = false } = {}) {
+        /**
+         * ⛓ fidelity TIMEDPASS D2: `drillPass` — the solver's timed pass past a stepped drill
+         * (`CONTACT_FIDELITY.drillTimedPass`) asks this forecast with `corridorBodyPricing` OFF; the forecast is the same
+         * one. Without it (every other caller) the gate is the switch's, byte-identical.
+         */
+        if (noclip || noDamage || !(CONTACT_FIDELITY.corridorBodyPricing || drillPass)) return null;
         // The live order: the LAST wallflyer placement updates first; the drills in placement order.
         const flyers = [...wallFlyerStateFor(level)].reverse().filter(([, w]) => !w.removed)
             .map(([id, w]) => [id, { ...w, dieAnim: w.dieAnim ? { ...w.dieAnim } : null }]);
@@ -12419,14 +12471,20 @@ export function createLevelRun({
         const sctx = spinnerCtx();
         const shieldOn = CONTACT_FIDELITY.wallFlyerShieldBump && inventory?.hasShield === true;
         const dark = inventory?.hasDarkShield === true;
-        let iframe = damage?.hitsTimer ?? 0;
-        // The camera, seeded from the live one and stepped by this forecast alone (`chaserForecastNow`'s).
-        let fcam = cam ? { ...cam } : null;
-        let fband = camBand ? { x: { ...camBand.x }, y: { ...camBand.y } } : null;
-        let fshake = shake;
         const worldRec = world.world;
         const target = bossCameraTarget;
-        let first = true;
+        return corridorBodyForecastFrom({ fl, dr, iframe: damage?.hitsTimer ?? 0,
+            // The camera, seeded from the live one and stepped by this forecast alone (`chaserForecastNow`'s).
+            fcam: cam ? { ...cam } : null,
+            fband: camBand ? { x: { ...camBand.x }, y: { ...camBand.y } } : null,
+            fshake: shake, first: true }, { sctx, shieldOn, dark, worldRec, target });
+    }
+    /**
+     * ⛓ fidelity TIMEDPASS D2: the forecast's body, over its own state — so `fork()` hands out an independent copy (the
+     * timed pass's search branches on it). The state's members are `corridorBodyForecastNow`'s former locals, unchanged.
+     */
+    function corridorBodyForecastFrom(S, { sctx, shieldOn, dark, worldRec, target }) {
+        let { fl, dr, iframe, fcam, fband, fshake, first } = S;
         const advanceCamera = (player) => {
             if (fband === null && fshake === 0) {
                 fcam = stepCamera(fcam, player, worldRec, { cameraTarget: target });
@@ -12536,6 +12594,24 @@ export function createLevelRun({
                     }
                 }
                 return landed;
+            },
+            /**
+             * ⛓ fidelity TIMEDPASS D2: an independent copy of this forecast as it stands (its bodies, camera, shake,
+             * i-frame and first-step flag) — the timed pass branches its search on it. Bodies are stepped as new objects
+             * (`stepDrill`/`stepWallFlyer` spread them), so a shallow copy of each map is a deep one for every step.
+             */
+            fork() {
+                return corridorBodyForecastFrom({
+                    fl: new Map([...fl].map(([id, w]) => [id, { ...w, dieAnim: w.dieAnim ? { ...w.dieAnim } : null }])),
+                    dr: new Map(dr), iframe,
+                    fcam: fcam ? { ...fcam } : null,
+                    fband: fband ? { x: { ...fband.x }, y: { ...fband.y } } : null,
+                    fshake, first,
+                }, { sctx, shieldOn, dark, worldRec, target });
+            },
+            /** ⛓ fidelity TIMEDPASS D2: the forecast's drills as they stand (`{id, x, y, anim, sprite, hitsTimer, …}`). */
+            drills() {
+                return [...dr.values()].filter((d) => !d.removed);
             },
         };
     }
@@ -19803,8 +19879,8 @@ export function createLevelRun({
          * ⛓ fidelity CORRIDOR D2: THE WALLFLYERS AND DRILLS, FORECAST — see `corridorBodyForecastNow`. `null` while
          * `CONTACT_FIDELITY.corridorBodyPricing` is OFF, so every preview is byte-identical then.
          */
-        corridorBodyForecast() {
-            return corridorBodyForecastNow();
+        corridorBodyForecast(opts) {
+            return corridorBodyForecastNow(opts);
         },
         /**
          * ⛓ U15-swim D2: THE TURRET SUBSYSTEM, FORECAST — see `spitForecastNow`.
