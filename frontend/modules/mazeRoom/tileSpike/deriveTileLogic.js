@@ -29,6 +29,7 @@ import {
     createState, getExitAt, getObstacle, mazeVisitedKey, hasItemActions, worldInputs, USE_PREFIX, TURN_PREFIX, INPUTS, turnInput,
 } from '../mazeRoomEngine.js';
 import { MAZE_TILE_LIB, ruleToClearSet, scriptedStep, scriptedStandsInArmedLane } from './tileStep.js';
+import { isObstacleCleared } from '../../shared/procgen/library.js';
 
 /**
  * The rope obstacles that are AP events: `[{key, x, y, event}]` (their `event` named, the cut latches it) —
@@ -47,6 +48,61 @@ export function ropeEvents(world) {
         out.push({ key, x, y, event: entry.event });
     }
     return out;
+}
+
+/**
+ * ⛓ EVENTS AS LOCATIONS (session tile-primitives-events-as-locations) — every STRUCK obstacle that is an AP event:
+ * the ropes (`ropeEvents`) and the rocks the projection bound an event to (`bindWorldEvents`: `events` + `struck_by`),
+ * `[{key, x, y, event, side?}]`, keyed at the obstacle's canonical cell. Reached by its CUT, as a rope's.
+ */
+export function cutEvents(world) {
+    const out = ropeEvents(world);
+    const seen = new Set();
+    for (const [cell, id] of world.obstacles) {
+        const entry = world.obstacleLib?.[id];
+        if (!entry?.events || !entry.struck_by || seen.has(id)) continue;
+        seen.add(id);
+        const key = entry.at ?? cell;
+        const [x, y] = key.split(',').map(Number);
+        for (const ev of entry.events) out.push({ key, x, y, event: ev.name, side: ev.side });
+    }
+    return out;
+}
+
+/**
+ * ⛓ EVENTS AS LOCATIONS — every event bound to a NON-struck obstacle (a gated cell, a latched lock):
+ * `[{event, side, cells: ["x,y"…]}]`. The game opens such an obstacle from beside it (a burn, a wand shot, a key
+ * line), so its event is reached when the player stands on a cell 4-adjacent to one of `cells` while that cell's
+ * obstacle is CLEARED for the inventory (`eventAdjacentCell`) — never with the event itself in hand.
+ */
+export function gateEvents(world) {
+    const byEvent = new Map();
+    for (const [cell, id] of world.obstacles) {
+        const entry = world.obstacleLib?.[id];
+        if (!entry?.events || entry.struck_by) continue;
+        for (const ev of entry.events) {
+            if (!byEvent.has(ev.name)) byEvent.set(ev.name, { event: ev.name, side: ev.side, cells: [] });
+            byEvent.get(ev.name).cells.push(cell);
+        }
+    }
+    for (const g of byEvent.values()) g.cells.sort();
+    return [...byEvent.values()];
+}
+
+/** The reached cell beside gate event `t` from which its obstacle opens for `set` (`gateEvents`), or `null`. */
+export function eventAdjacentCell(world, reach, t, set) {
+    const inv = new Set(set);
+    if (inv.has(t.event)) return null;
+    const own = new Set(t.cells);
+    for (const cell of t.cells) {
+        if (!isObstacleCleared(world.obstacles.get(cell), inv, world.obstacleLib)) continue;
+        const [x, y] = cell.split(',').map(Number);
+        for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
+            const n = `${x + dx},${y + dy}`;
+            if (!own.has(n) && reach.cells.has(n)) return n;
+        }
+    }
+    return null;
 }
 
 /** Per reached state: the rope events it has cut (`cuts`: rope posKey → the first visited key that cut it). */
@@ -78,6 +134,7 @@ export function regionItems(world) {
             if (item && !held.has(item)) out.add(item);
         }
         if (entry.activates && entry.event) out.add(entry.event);
+        for (const ev of entry.events ?? []) out.add(ev.name);
     }
     return [...out].sort();
 }
@@ -136,8 +193,18 @@ export function regionTargets(world) {
         const [x, y] = key.split(',').map(Number);
         out.push({ id: `${item}@${key}`, kind: 'location', item, x, y });
     }
-    for (const r of ropeEvents(world)) {
-        out.push({ id: `event:${r.event}@${r.key}`, kind: 'location', event: r.event, locationName: r.event, x: r.x, y: r.y });
+    for (const r of cutEvents(world)) {
+        out.push({
+            id: `event:${r.event}@${r.key}`, kind: 'location', event: r.event, locationName: r.event, x: r.x, y: r.y,
+            ...(r.side ? { side: r.side } : {}),
+        });
+    }
+    for (const g of gateEvents(world)) {
+        const [x, y] = g.cells[0].split(',').map(Number);
+        out.push({
+            id: `event:${g.event}@${g.cells[0]}`, kind: 'location', event: g.event, locationName: g.event, x, y,
+            side: g.side, adjacent: true, cells: g.cells,
+        });
     }
     for (const exit of world.exits.values()) out.push({ id: `exit:${exit.exit_id}`, kind: 'exit', x: exit.x, y: exit.y });
     return out;
@@ -151,7 +218,7 @@ export function reachUnder(world, inventory, helpers, { pickups = 'ap', tileLib 
     const start = createState(world);
     start.inventory = new Set(inventory);
     if (scriptedStandsInArmedLane(world, start, helpers, tileLib)) return NOTHING_REACHED;
-    const ropes = ropeEvents(world);
+    const ropes = cutEvents(world);
     const cuts = new Map();
     const seen = new Map([[reachKey(start), null]]);
     const cells = new Map([[`${start.player_pos.x},${start.player_pos.y}`, reachKey(start)]]);
@@ -193,13 +260,25 @@ export function reachUnder(world, inventory, helpers, { pickups = 'ap', tileLib 
     };
 }
 
-/** Did `reach` get to target `t`: a rope event by its cut, anything else by standing on its cell. */
-export function reachedTarget(reach, t) {
+/**
+ * Did `reach` (holding `set`) get to target `t`: a struck event by its cut, a gate event from beside its obstacle
+ * (`eventAdjacentCell`, which needs `world` and `set`), anything else by standing on its cell. An event is never
+ * reached holding its own item.
+ */
+export function reachedTarget(reach, t, set = null, world = null) {
+    if (t.event && set?.includes(t.event)) return false;
+    if (t.adjacent) return eventAdjacentCell(world, reach, t, set ?? []) !== null;
     return t.event ? reach.cuts.has(`${t.x},${t.y}`) : reach.cells.has(`${t.x},${t.y}`);
 }
 
-/** The witness plan to target `t` in `reach`. */
-export function planToTarget(reach, t) {
+/** The cell a witness to target `t` ends on (a gate event's: the cell beside it; else `t`'s own). */
+export function targetCell(reach, t, set = null, world = null) {
+    return t.adjacent ? eventAdjacentCell(world, reach, t, set ?? []) : `${t.x},${t.y}`;
+}
+
+/** The witness plan to target `t` in `reach` (holding `set`). */
+export function planToTarget(reach, t, set = null, world = null) {
+    if (t.adjacent) return reach.planTo(eventAdjacentCell(world, reach, t, set ?? []));
     return t.event ? reach.planToCut(`${t.x},${t.y}`) : reach.planTo(`${t.x},${t.y}`);
 }
 
@@ -226,7 +305,7 @@ export function deriveRegionLogic(world, helpers, { pickups = 'ap', tileLib = MA
     // of the covering test, or it would keep every set of the lattice alive.
     const full = reachUnder(world, items, helpers, { pickups, tileLib });
     const targets = regionTargets(world).map((t) => ({
-        ...t, minimal: [], witnesses: [], unreachable: !reachedTarget(full, t),
+        ...t, minimal: [], witnesses: [], unreachable: !reachedTarget(full, t, items.filter((i) => i !== t.event), world),
     }));
     const live = targets.filter((t) => !t.unreachable);
     const covered = (t, set) => t.minimal.some((m) => m.every((i) => set.includes(i)));
@@ -240,9 +319,9 @@ export function deriveRegionLogic(world, helpers, { pickups = 'ap', tileLib = MA
             searched += 1;
             states += reach.states;
             for (const t of live) {
-                if (covered(t, set) || !reachedTarget(reach, t)) continue;
+                if (covered(t, set) || !reachedTarget(reach, t, set, world)) continue;
                 t.minimal.push(set);
-                t.witnesses.push({ inventory: set, plan: planToTarget(reach, t) });
+                t.witnesses.push({ inventory: set, plan: planToTarget(reach, t, set, world) });
             }
         }
     }

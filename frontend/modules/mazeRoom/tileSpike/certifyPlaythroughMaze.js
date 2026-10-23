@@ -94,6 +94,18 @@ function apReach(REGIONS, starts, inv) {
     return seen;
 }
 
+/** Does `rule` hold for the item set `inv`, OPTIMISTICALLY: a counted Has asks for one, an unknown kind passes. */
+const optimistic = (rule, inv) => {
+    switch (rule?.rule) {
+    case undefined: case 'True_': return true;
+    case 'False_': return false;
+    case 'Has': return inv.has(rule.args.item_name);
+    case 'And': return rule.children.every((c) => optimistic(c, inv));
+    case 'Or': return rule.children.some((c) => optimistic(c, inv));
+    default: return true;
+    }
+};
+
 /**
  * The ITEMS that clear obstacle `id` of `world`: its `clear_rule`'s, or every item of its `clear_set` combinations
  * (a combo_list is an array of arrays), less the tokens the world DERIVES (a button's `holds`, an obstacle's
@@ -171,6 +183,43 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas 
         for (const e of r.exits ?? []) ruleItems(e.access_rule, everyItem);
         for (const l of r.locations ?? []) ruleItems(l.access_rule, everyItem);
     }
+    // ⛓ EVENTS AS LOCATIONS (⚖ 2026-10-23 "Carry + name"): an AP event no maze world binds (a cross-room press, a
+    // talk, an obstacle the world does not lay) is carried in the AP layer all the same; its location and every row
+    // whose rule needs it are problems that SAY so.
+    const bound = new Set();
+    const boundIn = new Map(); // a projection-bound event → the worlds that lay its obstacle
+    for (const [name, sc] of Object.entries(SIDECARS)) {
+        for (const entry of Object.values(sc.playable_payload?.obstacleLib ?? {})) {
+            if (entry.event) bound.add(entry.event);
+            for (const ev of entry.events ?? []) {
+                bound.add(ev.name);
+                if (!boundIn.has(ev.name)) boundIn.set(ev.name, new Set());
+                for (const r of sc.playable_payload.shared_world?.regions ?? [name]) boundIn.get(ev.name).add(r);
+            }
+        }
+    }
+    const unproducible = new Map();
+    for (const r of Object.values(REGIONS)) {
+        for (const l of r.locations ?? []) {
+            if (!l.event || bound.has(l.name) || !l.obstacle) continue;
+            const why = l.action?.presser ? `a press in L${l.action.presser.level}, another level`
+                : l.action?.verb === 'talk' ? 'a talk' : `its ${l.obstacle.class} is not in the maze world`;
+            unproducible.set(l.item?.name ?? l.name, why);
+        }
+    }
+    // ⛓ An inventory holding an EVENT whose location's own rule it fails is no AP state: the event was collected
+    // when that rule held, and items only grow (the rule is read optimistically, so this skips no real state).
+    // L24 → L12 r40c4 holding the tree's event without the Fire: the world walks through, AP says Fire — nobody does.
+    const eventRule = new Map();
+    for (const r of Object.values(REGIONS)) {
+        for (const l of r.locations ?? []) if (l.event) eventRule.set(l.item?.name ?? l.name, l.access_rule ?? { rule: 'True_' });
+    }
+    const impossible = (inv) => {
+        const held = new Set(inv);
+        return inv.some((i) => eventRule.has(i) && !optimistic(eventRule.get(i), held));
+    };
+    const unproducibleIn = (rule) => [...ruleItems(rule)].filter((i) => unproducible.has(i));
+    const explain = (rule) => unproducibleIn(rule).map((i) => ` — needs "${i}", which the maze world cannot produce (${unproducible.get(i)})`).join('');
     const reachWithout = new Map();
     /** Does every AP route into `region` need `item`? */
     const needs = (region, item) => {
@@ -183,16 +232,16 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas 
      * Compare one row at every subset of `axis`: the first mismatch that is not stricter-and-implied (by entry into
      * `source`) is its problem; a row with none is accepted by every item that excused a mismatch.
      */
-    const compareRow = (label, source, axis, derivedAt, atlasAt, notHere = null) => {
+    const compareRow = (label, source, axis, derivedAt, atlasAt, notHere = null, why = '') => {
         const by = new Set();
         for (const inv of subsets(axis)) {
-            if (notHere?.(inv)) continue;
+            if (impossible(inv) || notHere?.(inv)) continue;
             const derived = derivedAt(inv);
             const atlas = atlasAt(inv);
             if (derived === atlas) continue;
             const held = new Set(inv);
             const excuse = derived ? null : axis.find((i) => !held.has(i) && needs(source, i));
-            if (!excuse) { problems.push(`${label} holding [${inv}]: derived ${derived}, atlas ${atlas}`); return; }
+            if (!excuse) { problems.push(`${label} holding [${inv}]: derived ${derived}, atlas ${atlas}${why}`); return; }
             by.add(excuse);
         }
         for (const item of by) accepted.push({ label, source, by: item });
@@ -225,7 +274,10 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas 
                 if (ob || tw.trapLanes) {
                     found = {
                         world: into, at: at ?? into.entrance, ob,
-                        items: [...(ob ? obstacleItems(into, ob) : []), ...(tw.trapLanes ? ropeEvents(tw).map((r) => r.event) : [])],
+                        items: [
+                            ...(ob ? obstacleItems(into, ob) : []), ...(ob ? (into.obstacleLib[ob].events ?? []).map((e) => e.name) : []),
+                            ...(tw.trapLanes ? ropeEvents(tw).map((r) => r.event) : []),
+                        ],
                     };
                 }
             }
@@ -240,6 +292,10 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas 
             if (a.ob) {
                 const eff = effectiveInventory(a.world, new Set(inv), s.player_pos, s.blocks, s.broken);
                 if (!isObstacleCleared(a.ob, eff, a.world.obstacleLib)) return true;
+                // ⛓ EVENTS AS LOCATIONS: an obstacle bound to AP events is open to an ARRIVAL only once they are carried —
+                // the game lands inside the solid, from where nothing opens it (the producer gates that departure on the
+                // event, not on the item that opens it from beside: L12 → L24 lands in the tree).
+                if ((a.world.obstacleLib[a.ob].events ?? []).some((e) => !eff.has(e.name))) return true;
             }
             if (!a.world.trapLanes) return false;
             return standsInArmedLane(a.world, s, new Set(inv));
@@ -248,11 +304,11 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas 
         blocked.items = [...new Set(exits.flatMap((e) => arrivalOf(e)?.items ?? []))];
         return blocked;
     };
-    const agree = (label, source, atlas, minimal, items, { notHere = null } = {}) => {
+    const agree = (label, source, atlas, minimal, items, { notHere = null, why = '' } = {}) => {
         if (counted(atlas)) { problems.push(`${label}: the AP rule counts an item — a set truth table cannot certify it`); return; }
         const derived = ruleFromMinimalSets(minimal);
         compareRow(label, source, [...new Set([...items, ...ruleItems(atlas)])].sort(),
-            (inv) => holds(derived, inv), (inv) => holds(atlas, inv), notHere);
+            (inv) => holds(derived, inv), (inv) => holds(atlas, inv), notHere, `${explain(atlas)}${why}`);
     };
     /** The atlas's reach over the AP exits BETWEEN `members` (one level world's sub-regions), per inventory. */
     const inWorldClosure = (members) => {
@@ -283,7 +339,8 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas 
         const asked = new Set(items);
         for (const e of closure.edges) ruleItems(e.rule, asked);
         compareRow(label, pair.from, [...asked].sort(),
-            (inv) => holds(derived, inv), (inv) => closure.reaches(pair.from, pair.to, inv));
+            (inv) => holds(derived, inv), (inv) => closure.reaches(pair.from, pair.to, inv), null,
+            [...new Set(closure.edges.map((e) => explain(e.rule)))].join(''));
     };
     const replay = (label, world, inventory, plan, cell, { cut = false } = {}) => {
         const w = { ...world, items: new Map() };
@@ -337,7 +394,9 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas 
         const byTarget = new Map();
         for (const t of out.targets) {
             const label = `${name} @ ${t.exitName ?? t.locationName}`;
-            for (const w of t.witnesses) replay(label, entered, w.inventory, w.plan, `${t.x},${t.y}`, { cut: Boolean(t.event) });
+            for (const w of t.witnesses) {
+                replay(label, entered, w.inventory, w.plan, t.adjacent ? w.cell : `${t.x},${t.y}`, { cut: Boolean(t.event) && !t.adjacent });
+            }
             if (t.kind === 'exit') {
                 const to = exitTo.get(t.exitName);
                 if (to === undefined) { problems.push(`${label}: no AP exit of that name`); continue; }
@@ -347,7 +406,10 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas 
             }
             const loc = (REGIONS[name].locations ?? []).find((l) => l.name === t.locationName);
             if (!loc) { problems.push(`${label}: no AP location of that name`); continue; }
-            agree(label, name, loc.access_rule ?? { rule: 'True_' }, t.minimal, out.items);
+            // Two events on ONE cell (L12's magical lock under its boss lock): the world opens it only with both items.
+            const stacked = t.adjacent ? (entered.obstacleLib[entered.obstacles.get(t.cells[0])]?.events ?? []) : [];
+            const why = stacked.length > 1 ? ` — its cell carries ${stacked.length} events, which the world opens only together` : '';
+            agree(label, name, loc.access_rule ?? { rule: 'True_' }, t.minimal, out.items, { why });
             lines.push(`${name}@${t.locationName}=${JSON.stringify(t.minimal)}`);
         }
         const inWorld = new Set(world.sharedWorld?.regions ?? []);
@@ -360,7 +422,13 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas 
         }
         const priced = new Set(out.targets.map((t) => t.locationName).filter(Boolean));
         for (const l of REGIONS[name].locations ?? []) {
-            if (!priced.has(l.name)) problems.push(`${name}: location ${l.name} is not priced`);
+            if (priced.has(l.name)) continue;
+            const item = l.item?.name ?? l.name;
+            const elsewhere = boundIn.get(item);
+            const why = unproducible.has(item) ? ` — the maze world cannot produce it (${unproducible.get(item)})`
+                : elsewhere && !elsewhere.has(name) ? ` — its obstacle is laid only in ${[...elsewhere].sort().join(', ')}, not in this region's world`
+                    : '';
+            problems.push(`${name}: location ${l.name} is not priced${why}`);
         }
     }
     return { problems, lines, accepted };

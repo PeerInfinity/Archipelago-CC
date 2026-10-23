@@ -815,6 +815,8 @@ export function compileRegionAtlas(atlas, options = {}) {
             };
         },
         internalExitName: (regionId, from, to) => internalInfo.get(`${regionId}|${from}|${to}`),
+        // The re-priced rule of a one-way internal exit (`options.internalExitRules`), else undefined.
+        internalExitRule: (regionId, from, to) => internalRules.get(`${regionId}|${from}|${to}`)?.rule,
         tileSize: atlas.tile_space?.tile_size ?? 1,
     };
 
