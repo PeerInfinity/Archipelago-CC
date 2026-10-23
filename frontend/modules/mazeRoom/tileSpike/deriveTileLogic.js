@@ -30,12 +30,19 @@ import {
 } from '../mazeRoomEngine.js';
 import { MAZE_TILE_LIB, ruleToClearSet, scriptedStep, scriptedStandsInArmedLane } from './tileStep.js';
 
-/** The rope obstacles that are AP events: `[{key, x, y, event}]` (their `event` named, the cut latches it). */
+/**
+ * The rope obstacles that are AP events: `[{key, x, y, event}]` (their `event` named, the cut latches it) —
+ * ONE per rope obstacle id, keyed at its canonical cell (`at`, where a strike on any run cell is recorded;
+ * rules-l39, ⚖ "(a) One obstacle"), else at its own cell.
+ */
 export function ropeEvents(world) {
     const out = [];
-    for (const [key, id] of world.obstacles) {
+    const seen = new Set();
+    for (const [cell, id] of world.obstacles) {
         const entry = world.obstacleLib?.[id];
-        if (!entry?.activates || !entry.event) continue;
+        if (!entry?.activates || !entry.event || seen.has(id)) continue;
+        seen.add(id);
+        const key = entry.at ?? cell;
         const [x, y] = key.split(',').map(Number);
         out.push({ key, x, y, event: entry.event });
     }

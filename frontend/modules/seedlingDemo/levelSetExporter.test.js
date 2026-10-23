@@ -900,7 +900,8 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
         expect(stableStringify(derivedFacts(fromXml.atlas)))
             .toBe(stableStringify(derivedFacts(committed)));
         // ⛓ RULES re-closing locks: 52 -> 54 (L16 and L39 split at their button-only locks).
-        expect(committed.regions.filter((r) => r.subgraph)).toHaveLength(54);
+        // ⛓ rules-l39: 54 -> 52 (a Pulser is a static Solid: L38's and L107's pulser pockets are gone).
+        expect(committed.regions.filter((r) => r.subgraph)).toHaveLength(52);
         // ⛓ SWIM T4 D4: 285 -> 286, L12's two-way Or(Swim, Red Key) row split by the one-sided locks.
         // ⛓ RULES (A): 286 -> 295, the nine return rows through the OPENED one-sided locks.
         // ⛓ RULES logical-links: 295 -> 289, five model-sealed True_ rows + one Swim row between two pruned pockets.
@@ -908,7 +909,8 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
         // ⛓ RULES re-closing locks: 295 -> 304, the crossings through the six button-only locks that split a level.
         // ⛓ RULES footprints: 304 -> 286, L94's 20 swim rows to the pockets behind TreeLarge go, L43 and L94 gain one.
         // ⛓ RULES rope-events: 286 -> 292, L16 split at its rope-silenced arrow lanes, L28's lock entered from r1c18.
-        expect(committed.regions.flatMap((r) => r.subgraph?.internal_exits ?? [])).toHaveLength(292);
+        // ⛓ rules-l39: 292 -> 288, the static pulsers' empty pockets go (L38 -1, L107 -1, L40 -3), L39's rope run adds one.
+        expect(committed.regions.flatMap((r) => r.subgraph?.internal_exits ?? [])).toHaveLength(288);
         expect(fromXml.atlas.regions.filter((r) => r.subgraph)).toHaveLength(0);
         const exitKeys = new Set(committed.regions.flatMap((r) => (r.exits ?? [])
             .flatMap((e) => Object.keys(e))));
@@ -918,7 +920,7 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
             .flatMap((e) => Object.keys(e))));
         expect([...derivedExitKeys].sort()).toEqual(
             ['entrance_tile', 'exit_id', 'exit_tiles', 'kind']);
-        expect(committed.atlas_id).toBe('seedling-78124631');   // ⛓ RULES (A)+(B) + logical-links + burnable-trees + patched-set + re-closing-locks + footprints + obstacle-events + kill-locks + game-truth-gaps (L57) + R4b boss locations (L69) + L32 rock move (Bob's location tile [4,8] -> [5,8]) + r4b pit centre + block-path (L15/L16/L41 lock entries) + rope-events (L16 lanes, L28 lock, Fire cuts) restamps
+        expect(committed.atlas_id).toBe('seedling-9570dca8');   // ⛓ RULES (A)+(B) + logical-links + burnable-trees + patched-set + re-closing-locks + footprints + obstacle-events + kill-locks + game-truth-gaps (L57) + R4b boss locations (L69) + L32 rock move (Bob's location tile [4,8] -> [5,8]) + r4b pit centre + block-path (L15/L16/L41 lock entries) + rope-events (L16 lanes, L28 lock, Fire cuts) + rules-l39 (rope runs, static pulsers, L39 lock run) restamps
         expect(fromXml.atlas.atlas_id).toBe('seedling');   // D1 §20.6: DELIBERATELY unstamped
     }, 60000);
 

@@ -12547,6 +12547,59 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/probe-seedling-l37-fallrock.mjs"
         },
         {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "out"
+            ],
+            "file": "probe-seedling-l39-pulser.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L39 PULSER and ROPE SPAN, ON THE GAME (rules `rules-l39`). `rope@96,384` (tset 6, tag 9) arms `pulser@64,96` (tset 6): `RopeStart.set activate` publishes the rope's group (`RopeStart.as:79-91`) and a Pulser pulses only while `activate` (`Pulser.as:54-84`); on every later entry `check()` re-hits the rope f…",
+            "path": "scripts/procgen/probe-seedling-l39-pulser.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": false,
             "category": "probe",

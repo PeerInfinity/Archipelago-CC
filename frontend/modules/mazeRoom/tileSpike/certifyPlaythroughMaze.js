@@ -26,6 +26,15 @@
  *
  * ⛔ A counted Has (count ≥ 2) in an AP rule is a PROBLEM by name: the truth table enumerates SETS, which
  * cannot hold two of anything, so it would certify the rule vacuously (⚖ "Refuse counted rules").
+ *
+ * ⛓ STRICTER BUT IMPLIED (session tile-primitives-gated-tiles, ⚖ 2026-10-22 "Accept if implied"). A row where the
+ * world needs MORE than its AP rule (derived false, atlas true) is accepted when the inventory lacks an item that
+ * every AP route into the SOURCE region already needs (AP reach from the start with every rule item but that one
+ * misses the source): no AP state holding that inventory stands in the source, so the looser AP rule admits nothing
+ * the world refuses. L8 → L9 in the whole game is one (the dry corridor's block needs the Swim to get round; every
+ * way into L8 needs it too). Accepted rows are returned by name (`accepted`); any other stricter row, and every
+ * LOOSER row, stays a problem. The reach is optimistic (a counted Has asks for one; an unknown kind passes), so it
+ * can only under-state what is necessary — never accept a row it should not.
  */
 import { deserializeMazeWorld, createState, step, standsInArmedLane } from '../mazeRoomEngine.js';
 import { resolveMazeArrival } from '../mazeArrival.js';
@@ -47,6 +56,31 @@ const counted = (rule) => (rule?.rule === 'Has' && (rule.args.count ?? 1) > 1)
 const holds = (rule, inv) => evaluateRuleAgainstInventory(rule, new Set(inv));
 const anyOf = (rules) => (rules.length === 1 ? rules[0] : { rule: 'Or', children: rules });
 
+/** The AP regions reachable from the start holding `inv` (every item in it at any count). Optimistic, see above. */
+function apReach(REGIONS, starts, inv) {
+    const seen = new Set(starts);
+    const ok = (rule) => {
+        switch (rule?.rule) {
+        case undefined: case 'True_': return true;
+        case 'False_': return false;
+        case 'Has': return inv.has(rule.args.item_name);
+        case 'And': return rule.children.every(ok);
+        case 'Or': return rule.children.some(ok);
+        case 'CanReachRegion': return seen.has(rule.args.region_name);
+        default: return true;
+        }
+    };
+    for (let grew = true; grew;) {
+        grew = false;
+        for (const from of [...seen]) {
+            for (const e of REGIONS[from]?.exits ?? []) {
+                if (!seen.has(e.connected_region) && ok(e.access_rule)) { seen.add(e.connected_region); grew = true; }
+            }
+        }
+    }
+    return seen;
+}
+
 /**
  * @param {object} rules a compiled rules document (player '1')
  * @param {object} helpers the tile helpers (`maze_tiles.helpers.json`)
@@ -58,6 +92,39 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions } = {})
     const SIDECARS = rules.preset_sidecars['1'];
     const problems = [];
     const lines = [];
+    const accepted = [];
+    const starts = rules.start_regions?.['1']?.default ?? ['Menu'];
+    const everyItem = new Set();
+    for (const r of Object.values(REGIONS)) {
+        for (const e of r.exits ?? []) ruleItems(e.access_rule, everyItem);
+        for (const l of r.locations ?? []) ruleItems(l.access_rule, everyItem);
+    }
+    const reachWithout = new Map();
+    /** Does every AP route into `region` need `item`? */
+    const needs = (region, item) => {
+        if (!reachWithout.has(item)) {
+            reachWithout.set(item, apReach(REGIONS, starts, new Set([...everyItem].filter((i) => i !== item))));
+        }
+        return !reachWithout.get(item).has(region);
+    };
+    /**
+     * Compare one row at every subset of `axis`: the first mismatch that is not stricter-and-implied (by entry into
+     * `source`) is its problem; a row with none is accepted by every item that excused a mismatch.
+     */
+    const compareRow = (label, source, axis, derivedAt, atlasAt, notHere = null) => {
+        const by = new Set();
+        for (const inv of subsets(axis)) {
+            if (notHere?.(inv)) continue;
+            const derived = derivedAt(inv);
+            const atlas = atlasAt(inv);
+            if (derived === atlas) continue;
+            const held = new Set(inv);
+            const excuse = derived ? null : axis.find((i) => !held.has(i) && needs(source, i));
+            if (!excuse) { problems.push(`${label} holding [${inv}]: derived ${derived}, atlas ${atlas}`); return; }
+            by.add(excuse);
+        }
+        for (const item of by) accepted.push({ label, source, by: item });
+    };
     const worldOf = (name) => {
         const own = SIDECARS[name];
         const carrier = own.playable_payload ? own
@@ -96,16 +163,11 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions } = {})
         blocked.items = [...new Set(exits.flatMap((e) => arrivalOf(e)?.items ?? []))];
         return blocked;
     };
-    const agree = (label, atlas, minimal, items, { notHere = null } = {}) => {
+    const agree = (label, source, atlas, minimal, items, { notHere = null } = {}) => {
         if (counted(atlas)) { problems.push(`${label}: the AP rule counts an item — a set truth table cannot certify it`); return; }
         const derived = ruleFromMinimalSets(minimal);
-        for (const inv of subsets([...new Set([...items, ...ruleItems(atlas)])].sort())) {
-            if (notHere?.(inv)) continue;
-            if (holds(derived, inv) !== holds(atlas, inv)) {
-                problems.push(`${label} holding [${inv}]: derived ${holds(derived, inv)}, atlas ${holds(atlas, inv)}`);
-                return;
-            }
-        }
+        compareRow(label, source, [...new Set([...items, ...ruleItems(atlas)])].sort(),
+            (inv) => holds(derived, inv), (inv) => holds(atlas, inv), notHere);
     };
     /** The atlas's reach over the AP exits BETWEEN `members` (one level world's sub-regions), per inventory. */
     const inWorldClosure = (members) => {
@@ -135,13 +197,8 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions } = {})
         const derived = ruleFromMinimalSets(pair.minimal);
         const asked = new Set(items);
         for (const e of closure.edges) ruleItems(e.rule, asked);
-        for (const inv of subsets([...asked].sort())) {
-            const atlas = closure.reaches(pair.from, pair.to, inv);
-            if (holds(derived, inv) !== atlas) {
-                problems.push(`${label} holding [${inv}]: derived ${holds(derived, inv)}, atlas ${atlas}`);
-                return;
-            }
-        }
+        compareRow(label, pair.from, [...asked].sort(),
+            (inv) => holds(derived, inv), (inv) => closure.reaches(pair.from, pair.to, inv));
     };
     const replay = (label, world, inventory, plan, cell, { cut = false } = {}) => {
         const w = { ...world, items: new Map() };
@@ -205,7 +262,7 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions } = {})
             }
             const loc = (REGIONS[name].locations ?? []).find((l) => l.name === t.locationName);
             if (!loc) { problems.push(`${label}: no AP location of that name`); continue; }
-            agree(label, loc.access_rule ?? { rule: 'True_' }, t.minimal, out.items);
+            agree(label, name, loc.access_rule ?? { rule: 'True_' }, t.minimal, out.items);
             lines.push(`${name}@${t.locationName}=${JSON.stringify(t.minimal)}`);
         }
         const inWorld = new Set(world.sharedWorld?.regions ?? []);
@@ -213,7 +270,7 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions } = {})
             if (inWorld.has(to)) continue;
             if (!byTarget.has(to)) { problems.push(`${name}: its exit(s) to ${to} are not priced`); continue; }
             const atlas = anyOf(REGIONS[name].exits.filter((e) => e.connected_region === to).map((e) => e.access_rule ?? { rule: 'True_' }));
-            agree(`${name} → ${to}`, atlas, byTarget.get(to), out.items, { notHere });
+            agree(`${name} → ${to}`, name, atlas, byTarget.get(to), out.items, { notHere });
             lines.push(`${name}->${to}=${JSON.stringify(byTarget.get(to))}`);
         }
         const priced = new Set(out.targets.map((t) => t.locationName).filter(Boolean));
@@ -221,5 +278,5 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions } = {})
             if (!priced.has(l.name)) problems.push(`${name}: location ${l.name} is not priced`);
         }
     }
-    return { problems, lines };
+    return { problems, lines, accepted };
 }
