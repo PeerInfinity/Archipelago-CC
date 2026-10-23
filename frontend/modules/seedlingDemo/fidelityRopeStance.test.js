@@ -98,12 +98,14 @@ describe('fidelity ROPESTANCE — D2: the clear-tag on a rope\'s own tag, no swo
         expect(cutRow(out)).toMatchObject({ weapon: 'spear', slot: 1, restoredSlot: 0, pressTick: 26 });
         expect(out.equips).toEqual([{ t: 26, slot: 1 }, { t: 29, slot: 0 }]);
     }));
-    it('L28 from the L25 arrival, Fire: (152,56), cut t82 (the rock\'s fall on the same write)', () => ON(() => {
+    // ⛓ TIMEDPASS's flip (⚖ user "Harvest + flip ON", 2026-10-23): ON this run plans a drill PASS (cut t63, 70 t;
+    // `fidelityTimedPass.test.js`) — the stance's own plan is read with drillTimedPass OFF.
+    it('L28 from the L25 arrival, Fire: (152,56), cut t82 (the rock\'s fall on the same write; drillTimedPass OFF)', () => ON(() => withContactFidelity({ drillTimedPass: false }, () => {
         const { run, out, refusal } = solve(FROM_L25, L28, ['hasFire']);
         expect(refusal).toBeNull();
         expect(cutRow(out)).toMatchObject({ weapon: 'fire', stance: { x: 152, y: 56 }, pulledAt: 82 });
         expect(run.damage.hits).toBe(0);
-    }));
+    })));
     // ⛓ planning-10's DRILL flip: with `drillMixedRooms` ON (the default) no drill is unstepped and the refusal names the
     //   drill's t59 hit instead (fidelityDrill's D3 row); this row is the interim's control, read with the key OFF.
     it('L28 from the L25 arrival, the Spear: refused by name — every stance is in the UNSTEPPED drill\'s trigger (drillMixedRooms OFF)', () => ON(() => withContactFidelity({ drillMixedRooms: false }, () => {
@@ -143,7 +145,8 @@ describe('fidelity ROPESTANCE — D1: the plans on the game (p4g), at 0 px', () 
     for (const w of ROPESTANCE_WITNESSES) {
         it(`${w.name}: the solver plans the recorded tape today, and the model is the game on every tick`, async () => {
             const r = recorded[w.name];
-            const { tape } = await ropeStancePlan(w);
+            // ⛓ TIMEDPASS's flip: the recorded Fire tape is the plan WITHOUT a drill pass (its 89 t) — planned drillTimedPass OFF.
+            const { tape } = await withContactFidelity({ drillTimedPass: false }, () => ropeStancePlan(w));
             expect(tape.inputs).toEqual(r.tape.inputs);
             expect(tape.equips ?? []).toEqual(r.tape.equips ?? []);
             expect(tape.tick_count).toBe(r.tape.tick_count);
