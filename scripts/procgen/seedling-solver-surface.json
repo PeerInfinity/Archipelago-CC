@@ -30,9 +30,9 @@
     "files": 82
   },
   "runObject": {
-    "properties": 231,
+    "properties": 232,
     "getter": 203,
-    "method": 26,
+    "method": 27,
     "shorthand": 2
   },
   "dynamicRoutes": [
@@ -146,7 +146,7 @@
       "surface": "run",
       "name": "advance",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 20322,
+      "line": 20343,
       "class": "physics",
       "form": "stepper",
       "files": {
@@ -1325,10 +1325,10 @@
       "files": {
         "botDriverV2.js": 3,
         "dangerMap.js": 10,
-        "lightsVerb.js": 6,
+        "lightsVerb.js": 7,
         "solverBot.js": 104
       },
-      "sites": 123,
+      "sites": 124,
       "seen": "both",
       "via": [
         "direct",
@@ -4190,10 +4190,11 @@
         "botDriverV2.js": 3,
         "dangerMap.js": 1,
         "forcedHit.js": 4,
+        "lightsVerb.js": 2,
         "solverBot.js": 67,
         "strikePolicy.js": 2
       },
-      "sites": 85,
+      "sites": 87,
       "seen": "static",
       "via": [
         "import"
