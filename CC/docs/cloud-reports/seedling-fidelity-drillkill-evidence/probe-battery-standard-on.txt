@@ -1,0 +1,55 @@
+### probe-seedling-wasm-logical-links.mjs --only=B
+INFO: panel log: teleport queued: {"level":30,"x":224,"y":80} | [region atlas] arrival in "level_30__r2c10": teleport to level 30 (224, 80) | [region atlas] level 32 -> 30: crossing "level_32 -> level_30__r2c10" -> region "level_30__r2c10" | [region atlas] "level_30__r0c4" entered by a logical link — no teleport | [region atlas] level 30: logical link "level_30__r2c10 -> level_30__r0c4" -> region "level_30__r0c4" (the Playback Bot's route) | [obstacle event] the game's flag {30,0} is set (live) — collected "L30 flag 0: bosslock@64,32 cleared" (flag:L30:0) | inventory changed (14 owned): Fire, Green Key, L0 flag 1: breakablerock@288,176 cleared, L12 flag 5: bosslock@432,240 cleared, L16 flag 0: rope@32,16 cleared, L19 flag 1: bosslock@48,32 cleared, L30 flag 0: bosslock@64,32 cleared, L30 flag 2: bosslock@224,208 cleared, L31 flag 0: bosslock@192,432 cleared, Light, Progressive Shield, Progressive Sword, Red Key, Seal | items not in ap_items config: L0 flag 1: breakablerock@288,176 cleared, L12 flag 5: bosslock@432,240 cleared, L16 flag 0: rope@32,16 cleared, L19 flag 1: bosslock@48,32 cleared, L30 flag 0: bosslock@64,32 cleared, L30 flag 2: bosslock@224,208 cleared, L31 flag 0: bosslock@192,432 cleared | teleport queued: {"level":22,"x":96,"y":176} | [region atlas] arrival in "level_22": teleport to level 22 (96, 176) | [region atlas] level 30 -> 22: crossing "level_30__r0c4 -> level_22" -> region "level_22" | 
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+rc=0
+### probe-seedling-wasm-vanilla-map.mjs 
+INFO: 0 page error(s) (the logic-only channel's device loss)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+rc=0
+### probe-seedling-wasm-arrival-composites.mjs 
+PASS: F burn L24 → L12 (Fire, then the Sword): nothing of ours left armed or held — {"armed":false,"held":false}
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+rc=0
+### probe-seedling-wasm-midroom-replan.mjs --only=D
+INFO: panel log: [ap placement] 116 room(s) mounted in 9 chunk(s) — seedling-ap-record-65b8aa0c | teleport queued: {"level":0,"x":16,"y":128} | AP placement owns 50 location(s) — the property path stands down on those (no undo, no second check) | [ap placement] 116 randomized room(s) mounted in 9 chunk(s); 39 location(s) replaced; started at level 0 (explicit-start) | inventory changed (1 owned): Progressive Shield | teleport queued: {"level":2,"x":48,"y":32} | [region atlas] arrival in "level_2": teleport to level 2 (48, 32) | [region atlas] level 0 -> 2: crossing "level_0__r8c0 -> level_2" -> region "level_2" | teleport queued: {"level":3,"x":64,"y":16} | [region atlas] arrival in "level_3__r0c4": teleport to level 3 (64, 16) | [region atlas] level 2 -> 3: crossing "level_2 -> level_3__r0c4" -> region "level_3__r0c4" | 
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+rc=0
+### probe-seedling-restart-route.mjs --only=W,J
+INFO: 0 page error(s)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+rc=0
+### probe-seedling-restart-warp.mjs --only=W,J
+INFO: 0 page error(s)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+rc=0
+### probe-seedling-wasm-adopt.mjs 
+INFO: 1 page error(s) (the logic-only channel's device loss)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+rc=0
+### probe-seedling-obstacle-events.mjs --only=W,J
+INFO: 0 page error(s)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+rc=0
+### probe-seedling-wasm-generated-playback.mjs 
+  [warning] [01:18:29.270] [WARN] [flashPanelModule] [playback] the wasm playback failed: the game left the plan on region_0_0__key_blue_pickup in level 0 at the SAME tick with the SAME game row 3 times in a row (gave up after 2 forced re-arrivals: an exact repeat is a deterministic model/game residue, which a re-solve from the same arrival replays); at tick 7: expected {"level":0,"x":136,"y":47.55}, game {"level":0,"x":136.8,"y":47.55}
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+rc=0
+### probe-seedling-loop-restart.mjs 
+INFO: 0 page error(s)
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+rc=0
+### probe-seedling-seal-delivery.mjs --only=A
+PASS: A: ⚖ the removal AWARDS the check — the binding marked "Starting House - Chest" checked — ["Starting House - Chest"]
+BOOT-RETRIES: 0
+ALL CHECKS PASSED
+rc=0
