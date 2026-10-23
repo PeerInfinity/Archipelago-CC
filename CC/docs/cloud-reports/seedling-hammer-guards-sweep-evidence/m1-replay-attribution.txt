@@ -1,0 +1,58 @@
+per changed leg: does the guard change the answer of either arm's requests? (replayed in node, guards OFF vs ON)
+leg 94
+  OFF arm requests: i0: guardsOFF ok/4u/0s guardsON ok/4u/0s fired(shake 0, reboot 0) SAME page=True/None/4u; i1: guardsOFF ok/12u/0s guardsON ok/12u/0s fired(shake 0, reboot 0) SAME page=True/None/12u
+  ON  arm requests: i0: guardsOFF ok/4u/0s guardsON ok/4u/0s fired(shake 0, reboot 0) SAME page=True/None/4u; i1: guardsOFF ok/12u/0s guardsON ok/12u/0s fired(shake 0, reboot 0) SAME page=True/None/12u
+leg 269
+  OFF arm requests: i0: guardsOFF ok/27u/0s guardsON ok/27u/0s fired(shake 0, reboot 0) SAME page=True/None/27u; i1: guardsOFF ok/9u/0s guardsON ok/9u/0s fired(shake 0, reboot 0) SAME page=True/None/9u
+  ON  arm requests: i0: guardsOFF ok/27u/0s guardsON ok/27u/0s fired(shake 0, reboot 0) SAME page=True/None/27u; i1: guardsOFF ok/9u/0s guardsON ok/9u/0s fired(shake 0, reboot 0) SAME page=True/None/9u
+leg 273
+  OFF arm requests: i0: guardsOFF ok/96u/0s guardsON ok/96u/1s fired(shake 0, reboot 0) SAME page=True/None/96u; i1: guardsOFF ok/9u/0s guardsON ok/9u/0s fired(shake 0, reboot 0) SAME page=True/None/9u
+  ON  arm requests: i0: guardsOFF ok/96u/1s guardsON ok/96u/1s fired(shake 0, reboot 0) SAME page=True/None/96u; i1: guardsOFF ok/9u/0s guardsON ok/9u/0s fired(shake 0, reboot 0) SAME page=True/None/9u
+leg 276
+  OFF arm requests: i0: guardsOFF ok/52u/0s guardsON ok/52u/0s fired(shake 0, reboot 0) SAME page=True/None/52u; i1: guardsOFF ok/81u/0s guardsON ok/81u/0s fired(shake 0, reboot 0) SAME page=True/None/81u
+  ON  arm requests: i0: guardsOFF ok/52u/1s guardsON ok/52u/1s fired(shake 0, reboot 0) SAME page=True/None/52u; i1: guardsOFF ok/73u/1s guardsON ok/73u/1s fired(shake 0, reboot 0) SAME page=True/None/73u
+leg 298
+  OFF arm requests: i0: guardsOFF ok/108u/1s guardsON ok/108u/1s fired(shake 0, reboot 0) SAME page=True/None/108u; i1: guardsOFF ok/45u/0s guardsON ok/45u/0s fired(shake 0, reboot 0) SAME page=True/None/45u
+  ON  arm requests: i0: guardsOFF ok/108u/1s guardsON ok/108u/1s fired(shake 0, reboot 0) SAME page=True/None/108u; i1: guardsOFF ok/44u/0s guardsON ok/44u/0s fired(shake 0, reboot 0) SAME page=True/None/44u
+leg 336
+  OFF arm requests: i0: guardsOFF ok/102u/23s guardsON ok/102u/22s fired(shake 0, reboot 0) SAME page=True/None/102u; i1: guardsOFF ok/55u/0s guardsON ok/55u/0s fired(shake 0, reboot 0) SAME page=True/None/55u
+  ON  arm requests: i0: guardsOFF ok/102u/17s guardsON ok/102u/19s fired(shake 0, reboot 0) SAME page=True/None/102u; i1: guardsOFF ok/103u/0s guardsON ok/103u/0s fired(shake 0, reboot 0) SAME page=True/None/103u
+leg 355
+  OFF arm requests: i0: guardsOFF ok/161u/0s guardsON ok/161u/0s fired(shake 0, reboot 0) SAME page=True/None/161u; i1: guardsOFF ok/20u/0s guardsON ok/20u/0s fired(shake 0, reboot 0) SAME page=True/None/20u
+  ON  arm requests: i0: guardsOFF ok/161u/1s guardsON ok/161u/0s fired(shake 0, reboot 0) SAME page=True/None/161u; i1: guardsOFF ok/20u/0s guardsON ok/20u/0s fired(shake 0, reboot 0) SAME page=True/None/20u
+leg 358
+  OFF arm requests: i0: guardsOFF ok/171u/1s guardsON ok/171u/0s fired(shake 0, reboot 0) SAME page=True/None/171u; i1: guardsOFF ok/64u/0s guardsON ok/64u/0s fired(shake 0, reboot 0) SAME page=True/None/64u
+  ON  arm requests: i0: guardsOFF ok/171u/0s guardsON ok/171u/0s fired(shake 0, reboot 0) SAME page=True/None/171u; i1: guardsOFF ok/105u/0s guardsON ok/105u/0s fired(shake 0, reboot 0) SAME page=True/None/105u
+leg 387
+  OFF arm requests: i0: guardsOFF refusal/642u/496s guardsON refusal/114u/110s fired(shake 0, reboot 2) DIFFERS page=False/budget/Noneu
+  ON  arm requests: i0: guardsOFF refusal/470u/517s guardsON refusal/114u/98s fired(shake 0, reboot 2) DIFFERS page=False/refusal/114u
+leg 404
+  OFF arm requests: i0: guardsOFF refusal/144u/146s guardsON refusal/144u/143s fired(shake 0, reboot 0) SAME page=False/budget/Noneu
+  ON  arm requests: i0: guardsOFF refusal/72u/10s guardsON refusal/72u/11s fired(shake 0, reboot 0) SAME page=False/refusal/72u
+leg 594
+  OFF arm requests: i0: guardsOFF ok/76u/96s guardsON ok/76u/87s fired(shake 0, reboot 0) SAME page=True/None/76u; i1: guardsOFF ok/9u/0s guardsON ok/9u/0s fired(shake 0, reboot 0) SAME page=True/None/9u
+  ON  arm requests: i0: guardsOFF ok/76u/95s guardsON ok/76u/94s fired(shake 0, reboot 0) SAME page=True/None/76u; i1: guardsOFF ok/9u/0s guardsON ok/9u/0s fired(shake 0, reboot 0) SAME page=True/None/9u
+leg 595
+  OFF arm requests: i0: guardsOFF ok/71u/186s guardsON ok/71u/186s fired(shake 0, reboot 0) SAME page=False/budget/Noneu
+  ON  arm requests: i0: guardsOFF ok/68u/139s guardsON ok/68u/140s fired(shake 0, reboot 0) SAME page=True/None/68u
+leg 620
+  OFF arm requests: i0: guardsOFF refusal/643u/2s guardsON refusal/643u/2s fired(shake 0, reboot 0) SAME page=False/refusal/643u; i1: guardsOFF refusal/2562u/11s guardsON refusal/2562u/10s fired(shake 0, reboot 0) SAME page=False/refusal/2562u
+  ON  arm requests: i0: guardsOFF refusal/643u/2s guardsON refusal/643u/2s fired(shake 0, reboot 0) SAME page=False/refusal/643u; i1: guardsOFF refusal/1479u/4s guardsON refusal/1479u/4s fired(shake 0, reboot 0) SAME page=False/refusal/1479u
+leg 634
+  OFF arm requests: i0: guardsOFF refusal/641u/2s guardsON refusal/641u/2s fired(shake 0, reboot 0) SAME page=False/refusal/641u; i1: guardsOFF refusal/1916u/9s guardsON refusal/1916u/10s fired(shake 0, reboot 0) SAME page=False/refusal/1916u
+  ON  arm requests: i0: guardsOFF refusal/641u/3s guardsON refusal/641u/3s fired(shake 0, reboot 0) SAME page=False/refusal/641u; i1: guardsOFF refusal/1901u/7s guardsON refusal/1901u/7s fired(shake 0, reboot 0) SAME page=False/refusal/1901u
+leg 636
+  OFF arm requests: i0: guardsOFF ok/535u/3s guardsON ok/535u/3s fired(shake 0, reboot 0) SAME page=True/None/535u
+  ON  arm requests: i0: guardsOFF ok/527u/3s guardsON ok/527u/2s fired(shake 0, reboot 0) SAME page=True/None/527u
+leg 637
+  OFF arm requests: i0: guardsOFF refusal/642u/5s guardsON refusal/642u/5s fired(shake 0, reboot 0) SAME page=False/refusal/642u; i1: guardsOFF ok/2561u/15s guardsON ok/2561u/15s fired(shake 0, reboot 0) SAME page=True/None/2561u
+  ON  arm requests: i0: guardsOFF refusal/642u/3s guardsON refusal/642u/4s fired(shake 0, reboot 0) SAME page=False/refusal/642u; i1: guardsOFF refusal/2563u/13s guardsON refusal/2563u/12s fired(shake 0, reboot 0) SAME page=False/refusal/2563u
+leg 653
+  OFF arm requests: i0: guardsOFF ok/174u/1s guardsON ok/174u/1s fired(shake 0, reboot 0) SAME page=True/None/174u
+  ON  arm requests: i0: guardsOFF ok/174u/1s guardsON ok/174u/1s fired(shake 0, reboot 0) SAME page=True/None/174u; i1: guardsOFF ok/174u/1s guardsON ok/174u/1s fired(shake 0, reboot 0) SAME page=True/None/174u
+leg 775
+  OFF arm requests: i0: guardsOFF ok/218u/1s guardsON ok/218u/0s fired(shake 0, reboot 0) SAME page=True/None/218u
+  ON  arm requests: i0: guardsOFF ok/216u/1s guardsON ok/216u/1s fired(shake 0, reboot 0) SAME page=True/None/216u
+leg 776
+  OFF arm requests: i0: guardsOFF refusal/152u/1s guardsON refusal/152u/1s fired(shake 0, reboot 0) SAME page=False/refusal/152u
+  ON  arm requests: i0: guardsOFF ok/130u/1s guardsON ok/130u/1s fired(shake 0, reboot 0) SAME page=True/None/130u
