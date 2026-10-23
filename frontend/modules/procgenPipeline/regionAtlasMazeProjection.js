@@ -161,6 +161,53 @@ function createWorldBuilder(grid) {
 }
 
 /**
+ * ⛓ EVENTS AS LOCATIONS (session tile-primitives-events-as-locations, ⚖ 2026-10-23 "All AP; world rocks+locks").
+ * Bind the compile's AP EVENTS to the obstacles standing on their entity's cells (`ctx.eventsFor(region)` →
+ * `[{name, side, mode, tiles}]`, atlas tiles). Each bound cell gets its OWN library entry — the obstacle it had plus
+ * `events: [{name, side}]` (the location that prices it, see `tileSpike/deriveTileLogic.js` `eventTargets`):
+ *   mode 'open'   the event is the obstacle CLEARED on an earlier visit, so carrying it opens the cell: a struck rock
+ *                 gets `clear_set: [[<event>]]` (as a rope's token), a rule cell `Or(<its rule>, And(<its events>))`
+ *                 (two events on one cell — L12's magical lock under its boss lock — open it only together);
+ *   mode 'latch'  a latched lock: the far side's crossing already costs the event (the compile's `internalExitRules`),
+ *                 so the cell's rule stays; the entry only names the event its open side prices.
+ * A cell with no obstacle binds nothing; an event none of whose cells holds one is left unmodelled (the certifier
+ * names it). A rope keeps its own event (`activates`).
+ */
+function bindWorldEvents(builder, events, local, inGrid) {
+    const byCell = new Map();
+    for (const ev of events ?? []) {
+        for (const [x, y] of ev.tiles.map(local).filter(inGrid)) {
+            const key = `${x},${y}`;
+            const base = builder.obstacleLib[builder.obstacles.get(key)];
+            if (!base || base.activates) continue;
+            if (!byCell.has(key)) byCell.set(key, []);
+            byCell.get(key).push(ev);
+        }
+    }
+    // The cells of one event that share an obstacle are one cut state (a multi-cell rock), as a rope's run. An event's
+    // tiles are ONE entity's (`ctx.eventsFor`), so one cut state never joins two separate game objects.
+    const firstCell = new Map();
+    for (const [key, evs] of byCell) {
+        const base = builder.obstacleLib[builder.obstacles.get(key)];
+        const id = `${base.id}~${evs.map((e) => e.name).join('~')}`;
+        if (!builder.obstacleLib[id]) {
+            const names = evs.filter((e) => e.mode === 'open').map((e) => ({ rule: 'Has', args: { item_name: e.name } }));
+            const entry = { ...base, id, name: `${base.name}: ${evs.map((e) => e.name).join(' + ')}`, events: evs.map((e) => ({ name: e.name, side: e.side })) };
+            if (names.length > 0 && base.struck_by) {
+                entry.clear_set = [names.map((n) => n.args.item_name)];
+                if (!firstCell.has(id)) firstCell.set(id, key);
+                entry.at = firstCell.get(id);
+            } else if (names.length > 0 && base.clear_set_type === 'rule') {
+                if (!base.clear_rule) throw new Error(`event "${evs[0].name}": obstacle "${base.id}" at ${key} is rule-typed with no clear_rule`);
+                entry.clear_rule = { rule: 'Or', children: [base.clear_rule, names.length === 1 ? names[0] : { rule: 'And', children: names }] };
+            }
+            builder.obstacleLib[id] = entry;
+        }
+        builder.obstacles.set(key, id);
+    }
+}
+
+/**
  * Force a tile to floor, carving a corridor to `component` when the tile is not
  * adjacent to it. Carving never crosses a `wall` cell — a real wall stays a wall
  * — and a carved cell that gates its own occupancy keeps that gate.
@@ -276,7 +323,7 @@ function openTileTowards(builder, grid, component, tile, label, resolveCondition
  * the compiler makes it a FREE AP exit (the format's default), but a free AP
  * exit must never become a free WALK, so the projection WALLS it and says so.
  */
-function planCrossings(region, crossings) {
+function planCrossings(region, crossings, internalExitRule = null) {
     const byDirected = new Map(crossings.map((c) => [directedKey(c.from, c.to), c]));
     const planned = new Map(); // "from>to" -> { from, to, tile, rule }
     const notes = [];
@@ -287,7 +334,11 @@ function planCrossings(region, crossings) {
         for (const [from, to] of directions) {
             const key = directedKey(from, to);
             if (planned.has(key)) continue; // a duplicate row; the first one stands
-            const rule = row.access_rule ?? null;
+            // ⛓ EVENTS AS LOCATIONS (session tile-primitives-events-as-locations): a one-way row the compile
+            // re-priced (`internalExitRules`: a latched lock's far-side return costs its EVENT, not the reach of
+            // its open side) gates its tile with that rule — the AP exit's own — not the atlas row's.
+            const replaced = row.bidirectional === true ? undefined : internalExitRule?.(region.region_id, from, to);
+            const rule = replaced ?? row.access_rule ?? null;
             if (!rule && internalExitSource(row) !== 'analyzer') {
                 notes.push({
                     kind: 'walled_unlabelled', from, to,
@@ -428,7 +479,7 @@ export function projectRegionToMaze(region, grid, ctx) {
     }
 
     const componentById = new Map(components.map((c) => [c.id, c]));
-    const { planned, notes: crossingNotes } = planCrossings(region, analysis.crossings);
+    const { planned, notes: crossingNotes } = planCrossings(region, analysis.crossings, ctx.internalExitRule);
     const notes = crossingNotes.map((n) => ({ region_id: region.region_id, ...n }));
     for (const c of pockets) {
         notes.push({
@@ -584,6 +635,8 @@ export function projectRegionToMaze(region, grid, ctx) {
                 locationName: loc.name,
             });
         }
+
+        bindWorldEvents(builder, ctx.eventsFor?.(region), local, ([x, y]) => x >= 0 && y >= 0 && x < grid.width && y < grid.height);
 
         // --- assemble --------------------------------------------------------
         const [ex, ey] = component.tiles[0];
@@ -1088,6 +1141,8 @@ export function projectLevelWorld(region, grid, ctx, entities) {
             if (!(key in links)) links[key] = name;
         }
     }
+
+    bindWorldEvents(builder, ctx.eventsFor?.(region), local, inGrid);
 
     // --- assemble: ONE payload, carried by the first sub-region --------------
     const carrier = bindings[0].apName;

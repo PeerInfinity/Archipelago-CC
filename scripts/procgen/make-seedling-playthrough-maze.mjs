@@ -43,7 +43,7 @@ import { SHARED_WORLD_ALPHABET } from '../../frontend/modules/procgenPipeline/re
 import { SEEDLING_TILE_SIZE } from '../../frontend/modules/flashPanel/seedlingSemantics.js';
 import {
     PLAYTHROUGH_MAP, playthroughGridFor, playthroughAnalyzerOptions, playthroughRopeEvents,
-    setPlaythroughLandingAtlas, playthroughLandingGates,
+    setPlaythroughLandingAtlas, playthroughLandingGates, buildPlaythroughAtlas, playthroughEventLayer,
 } from './make-seedling-playthrough-rules.mjs';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 
@@ -142,6 +142,64 @@ export function landingGatesFor(atlas, levels) {
         || (c.one_way !== true && c.to[0] === g.region_id && c.to[1] === g.exit_id && keep.has(c.from[0])))));
 }
 
+/** The rules producer's event layer over the WHOLE playthrough atlas, built once per process (its analysis pass). */
+let producerLayer = null;
+function wholeEventLayer(atlas) {
+    if (!producerLayer) {
+        const doc = buildPlaythroughAtlas();
+        if (JSON.stringify(doc) !== JSON.stringify(atlas)) {
+            throw new Error('the playthrough atlas is stale against its producer — run make-seedling-playthrough-rules.mjs');
+        }
+        setPlaythroughLandingAtlas(doc);
+        producerLayer = playthroughEventLayer(doc);
+    }
+    return producerLayer;
+}
+
+/**
+ * ⛓ EVENTS AS LOCATIONS (session tile-primitives-events-as-locations, ⚖ 2026-10-23 "All AP; world rocks+locks" +
+ * "Carry + name") — the playthrough rules' OBSTACLE, LOCK, BUTTON and TALK events for `levels`, with the exit gates
+ * and the latched locks' internal exit rules they bring. Derived by the rules producer (`playthroughEventLayer`, the
+ * one function its own compile calls), never hand-coded: without them the preset's AP layer was looser than the game
+ * wherever a crossing depends on an event (whole game: 24 event locations, 18 gated exits, 10 lock returns). An event
+ * the maze world cannot produce (a cross-room button, a talk) is carried all the same, so the AP layer is never looser
+ * than the game; the certifier names it. A row whose region (or, for a gate, whose crossing) is not in `levels` is
+ * left out, as `ropeEventsFor` does; a kept rule naming an event this compile does not mint throws by name.
+ */
+export function eventLayerFor(atlas, levels, { minted = [] } = {}) {
+    const keep = new Set(levels);
+    const layer = wholeEventLayer(atlas);
+    const conns = atlas.vanilla_layout?.connections ?? [];
+    const out = {
+        events: layer.events.filter((e) => keep.has(e.region_id)),
+        internalExitRules: layer.internalExitRules.filter((r) => keep.has(r.region_id)),
+        exitGates: layer.exitGates.filter((g) => keep.has(g.region_id) && conns.some((c) => c.from[0] === g.region_id
+            && c.from[1] === g.exit_id && keep.has(c.to[0]))),
+    };
+    // The events the maze WORLD models (⚖ "All AP; world rocks+locks"): an obstacle's opens it once carried, a latched
+    // lock's is what its far side's crossing costs. A cross-room press or a talk has no world mechanism (⚖ "Carry + name").
+    const mode = new Map([...layer.obstacle.events.map((e) => [e.name, 'open']), ...layer.locks.events.map((e) => [e.name, 'latch'])]);
+    out.world = out.events.filter((e) => mode.has(e.name)).map((e) => ({
+        name: e.name, side: e.fields.side, mode: mode.get(e.name), obstacle: e.fields.obstacle,
+    }));
+    const all = new Set(layer.events.map((e) => e.name));
+    const have = new Set([...out.events.map((e) => e.name), ...minted]);
+    const named = (rule, acc = []) => {
+        if (rule?.rule === 'Has' && all.has(rule.args.item_name)) acc.push(rule.args.item_name);
+        for (const c of rule?.children ?? []) named(c, acc);
+        return acc;
+    };
+    for (const [what, rule] of [
+        ...out.events.map((e) => [`event "${e.name}"`, e.access_rule]),
+        ...out.internalExitRules.map((r) => [`${r.region_id} ${r.from} -> ${r.to}`, r.rule]),
+        ...out.exitGates.map((g) => [`${g.region_id}/${g.exit_id}`, g.rule]),
+    ]) {
+        const stray = named(rule).filter((n) => !have.has(n));
+        if (stray.length) throw new Error(`events: ${what} needs ${stray.join(', ')}, whose region is not in the levels`);
+    }
+    return out;
+}
+
 /** Compile the preset (or, for a measurement, the playthrough restricted to `levels`). Returns `{text, report}`. */
 export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
     const atlas = readJson(resolve(ATLAS_DIR, 'seedling-playthrough.json'));
@@ -152,8 +210,11 @@ export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
     if (!partition) {
         throw new Error(`the sub-region partition has no entry for "${atlas.atlas_id}" — run make-seedling-subregion-partition.mjs`);
     }
+    const ropes = ropeEventsFor(atlas, partition, levels);
+    const layer = eventLayerFor(atlas, levels, { minted: ropes.events.map((e) => e.name) });
     const mazeProjection = seedlingMazeProjectionDeps({
         mapDoc: PLAYTHROUGH_MAP,
+        events: layer.world,
         gameConfig,
         levelWorlds: { partition },
         analysis: {
@@ -162,14 +223,14 @@ export function buildPlaythroughMaze({ levels = LEVELS } = {}) {
             resolveCondition: playthroughAnalyzerOptions.resolveCondition,
         },
     });
-    const ropes = ropeEventsFor(atlas, partition, levels);
     const { rules, report } = compileRegionAtlas(restrictAtlas(atlas, levels, { start: START_LEVEL }), {
         mapDoc,
         embedSphereLog: true,
         sidecarFlavor: 'maze',
         mazeProjection,
-        events: ropes.events,
-        exitGates: [...landingGatesFor(atlas, levels), ...ropes.exitGates],
+        events: [...layer.events, ...ropes.events],
+        internalExitRules: layer.internalExitRules,
+        exitGates: [...layer.exitGates, ...landingGatesFor(atlas, levels), ...ropes.exitGates],
     });
     return { text: `${stringifyRulesJson(rules)}\n`, report, unresolved: mazeProjection.unresolved ?? [] };
 }

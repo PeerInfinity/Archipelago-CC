@@ -93,6 +93,22 @@ class BaseVisitorMixin(ast.NodeVisitor):
             if args_with_nodes and helper_func is not None:
                 self._detect_and_register_param_mappings(helper_name, helper_func, args_with_nodes)
 
+    def _cached_helper_differs(self, helper_name: str, definition: Dict[str, Any]) -> bool:
+        """
+        True when the handler already cached a DIFFERENT body under ``helper_name``.
+
+        The auto-preserve cache is keyed by bare name, so two functions sharing a
+        name (e.g. nested defs in two region builders) would otherwise have the
+        later body silently replace the earlier one for every reference.
+        """
+        get_cached = getattr(self.game_handler, 'get_cached_helper', None) if self.game_handler else None
+        cached = get_cached(helper_name) if callable(get_cached) else None
+        if cached is not None and cached != definition:
+            logging.warning(f"Helper '{helper_name}' has two different bodies; inlining this call site "
+                            f"instead of exporting it under the shared name")
+            return True
+        return False
+
     def _detect_and_register_param_mappings(self, helper_name: str, helper_func: Any,
                                              args_with_nodes: List[Any]) -> None:
         """

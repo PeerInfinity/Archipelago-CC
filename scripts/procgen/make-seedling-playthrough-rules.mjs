@@ -1496,6 +1496,30 @@ export function withEventGates(events, eventGates) {
     });
 }
 
+/**
+ * ⛓ THE EVENT LAYER (session tile-primitives-events-as-locations, ⚖ 2026-10-23 "Extract one producer fn") — the
+ * obstacle, lock, button and talk events of `doc`, in the order each derivation needs the ones before it, with the
+ * exit gates and internal exit rules they bring. ONE function, so this producer's compile and the maze preset's
+ * (`make-seedling-playthrough-maze.mjs`) read the same events in the same order. Ropes and landing gates are not in
+ * it: each caller places those itself. Run after `buildPlaythroughAtlas(…)` on the document it returned, and after
+ * `setPlaythroughLandingAtlas(doc)`.
+ */
+export function playthroughEventLayer(doc) {
+    const obstacle = playthroughObstacleEvents(doc);
+    const locks = playthroughLockEvents(doc, { existing: obstacle.events });
+    const buttons = playthroughButtonEvents(doc, { existing: [...obstacle.events, ...locks.events] });
+    // ⛓ RULES watcher-event: the gated solid's OWN event needs the prerequisite too (its flag cannot clear first).
+    const talks = playthroughTalkEvents(doc, { existing: [...obstacle.events, ...locks.events, ...buttons.events] });
+    const priorEvents = withEventGates([...obstacle.events, ...locks.events, ...buttons.events], talks.eventGates);
+    return {
+        obstacle, locks, buttons, talks,
+        events: [...priorEvents, ...talks.events],
+        // ⛓ RULES lock-events: a latched lock's far-side return costs its event, not the reach of its open side.
+        internalExitRules: locks.internalExitRules,
+        exitGates: [...obstacle.exitGates, ...buttons.exitGates, ...talks.exitGates],
+    };
+}
+
 /** Every exit whose arrival spawn is NOT its entrance tile, and why — derived, printed, never typed. */
 export const movedArrivalSpawns = [];
 
@@ -1736,12 +1760,8 @@ function main() {
 
     movedArrivalSpawns.length = 0;
     setPlaythroughLandingAtlas(doc);
-    const obstacle = playthroughObstacleEvents(doc);
-    const locks = playthroughLockEvents(doc, { existing: obstacle.events });
-    const buttons = playthroughButtonEvents(doc, { existing: [...obstacle.events, ...locks.events] });
-    // ⛓ RULES watcher-event: the gated solid's OWN event needs the prerequisite too (its flag cannot clear first).
-    const talks = playthroughTalkEvents(doc, { existing: [...obstacle.events, ...locks.events, ...buttons.events] });
-    const priorEvents = withEventGates([...obstacle.events, ...locks.events, ...buttons.events], talks.eventGates);
+    const layer = playthroughEventLayer(doc);
+    const { obstacle, locks, buttons, talks } = layer;
     const landingGates = playthroughLandingGates(doc);
     const ropes = playthroughRopeEvents(doc);
     const { rules, report } = compileRegionAtlas(doc, {
@@ -1763,11 +1783,11 @@ function main() {
         // ⛓ RULES l38-button-event: and the cross-room button presses (obstacle = the target, side = the button).
         // ⛓ RULES watcher-event: and the cross-room prerequisites (the Watcher's talk, read by the FinalDoor).
         // ⛓ RULES rope-events: and the rope cuts (their gates are priced by the analyzer).
-        events: [...priorEvents, ...talks.events, ...ropes.events],
+        events: [...layer.events, ...ropes.events],
         // ⛓ RULES lock-events: a latched lock's far-side return costs its event, not the reach of its open side.
-        internalExitRules: locks.internalExitRules,
+        internalExitRules: layer.internalExitRules,
         // ⛓ RULES game-truth-gaps (R2): and the landings on lethal terrain.
-        exitGates: [...obstacle.exitGates, ...buttons.exitGates, ...talks.exitGates, ...landingGates, ...ropes.exitGates],
+        exitGates: [...layer.exitGates, ...landingGates, ...ropes.exitGates],
     });
     applyBossLocationOptions(rules);
     const rulesText = stringifyRulesJson(rules);
