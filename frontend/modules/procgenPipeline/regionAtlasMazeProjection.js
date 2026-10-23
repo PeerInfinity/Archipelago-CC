@@ -184,7 +184,8 @@ function bindWorldEvents(builder, events, local, inGrid) {
             byCell.get(key).push(ev);
         }
     }
-    // The cells of one event that share an obstacle are one cut state (a multi-cell rock), as a rope's run.
+    // The cells of one event that share an obstacle are one cut state (a multi-cell rock), as a rope's run. An event's
+    // tiles are ONE entity's (`ctx.eventsFor`), so one cut state never joins two separate game objects.
     const firstCell = new Map();
     for (const [key, evs] of byCell) {
         const base = builder.obstacleLib[builder.obstacles.get(key)];
@@ -197,6 +198,7 @@ function bindWorldEvents(builder, events, local, inGrid) {
                 if (!firstCell.has(id)) firstCell.set(id, key);
                 entry.at = firstCell.get(id);
             } else if (names.length > 0 && base.clear_set_type === 'rule') {
+                if (!base.clear_rule) throw new Error(`event "${evs[0].name}": obstacle "${base.id}" at ${key} is rule-typed with no clear_rule`);
                 entry.clear_rule = { rule: 'Or', children: [base.clear_rule, names.length === 1 ? names[0] : { rule: 'And', children: names }] };
             }
             builder.obstacleLib[id] = entry;
