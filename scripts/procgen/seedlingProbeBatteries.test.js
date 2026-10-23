@@ -27,6 +27,11 @@ describe('the committed batteries', () => {
             'probe-seedling-seal-delivery.mjs --only=A',
         ]);
     });
+    it('long is logical-links B alone, on a budget past standard\'s 900 s (§5.128)', () => {
+        expect(batteryMatrix('long').map((e) => `${e.probe} ${e.args}`.trim())).toEqual([
+            'probe-seedling-wasm-logical-links.mjs --only=B --budget-s=1200',
+        ]);
+    });
 });
 
 describe('the validator refuses', () => {

@@ -8,7 +8,8 @@ name: Seedling wasm probe (manual)
 # Three ways in:
 #   - a BATTERY (once this file is on the default branch): `gh workflow run seedling-probe.yml --ref <branch>
 #     -f battery=standard` — the named list in scripts/procgen/seedling-probe-batteries.json, one job per entry,
-#     EACH WITH ITS OWN ARGS, each in full; `probes`/`args` are ignored. The `summary` job prints one line per probe;
+#     EACH WITH ITS OWN ARGS, each in full; `probes`/`args` are ignored. The `summary` job prints one line per probe.
+#     `standard` gates every landing; `long` (logical-links B on a longer budget) is dispatched by hand only;
 #   - workflow_dispatch (once this file is on the default branch): `gh workflow run seedling-probe.yml
 #     --ref <branch> -f probes=probe-seedling-lethal-landings.mjs -f args='--only=50,54'`;
 #   - push to a ref named `seedling-probe/**`: runs the DEFAULT probe list at that SHA (a workflow_dispatch file
