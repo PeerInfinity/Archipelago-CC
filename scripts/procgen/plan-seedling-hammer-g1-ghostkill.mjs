@@ -19,6 +19,12 @@
  * ⛔ NOT the roster: a witness kept beside its samples (`fixtures/hammer-g1-ghostkill-witness/`, hammer-phase D's
  * `hammer-d-ghostwall-witness/` shape). The bomb lobber `bombpusher@112,128` (wave 13) does not reach this room.
  *
+ * ⚖ THE PRESS-KILL GUARDS ARE PINNED OFF HERE (hammer-phase GF, 2026-10-23). The user flipped
+ * `pressKillGuards.PRESS_KILL_SHAKE_GUARD` / `PRESS_KILL_REBOOT_GUARD` ON; ON, the reboot guard refuses the press kill
+ * at the chaser's death (t1216), so the kill this witness is ABOUT never lands. The witness stays the OFF kill the game
+ * played, and this script's solves run with both guards OFF (`withPressKillShakeGuard(false, …)`,
+ * `withPressKillRebootGuard(false, …)`). The ON answer is pinned in `hammerGhostKillRung.test.js` beside the witness row.
+ *
  * Run (the solve takes 2–3 minutes):
  *   node scripts/procgen/plan-seedling-hammer-g1-ghostkill.mjs            # write the tape
  *   node scripts/procgen/plan-seedling-hammer-g1-ghostkill.mjs --check    # exit 1 on drift
@@ -58,8 +64,10 @@ export async function ghostKillSolve(staging, enabled) {
     const { createRunForStaging } = await import(join(MODULE, 'tapeRunner.js'));
     const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
     const { withGhostKillRung } = await import(join(MODULE, 'ghostSpinnerPress.js'));
+    const { withPressKillRebootGuard, withPressKillShakeGuard } = await import(join(MODULE, 'pressKillGuards.js'));
     const run = createRunForStaging(staging, atlasLevelSource());
-    return withGhostKillRung(enabled, () => {
+    const guardsOff = (fn) => withPressKillShakeGuard(false, () => withPressKillRebootGuard(false, fn));
+    return guardsOff(() => withGhostKillRung(enabled, () => {
         try {
             const out = solveSegment({ run, goals: [JSON.parse(JSON.stringify(GOAL))], name: NAME, boot: staging.boot,
                 dashMode: 'all' });
@@ -67,7 +75,7 @@ export async function ghostKillSolve(staging, enabled) {
         } catch (e) {
             return { verdict: 'REFUSED', perTick: e.perTick ?? [], message: String(e?.message ?? e) };
         }
-    });
+    }));
 }
 
 /** The model's account of a walk: the landings, each body's removal tick, the player's hits and deaths. */

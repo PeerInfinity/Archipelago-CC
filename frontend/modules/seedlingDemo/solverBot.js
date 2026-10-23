@@ -192,7 +192,7 @@ import { HOLD_FIRST_KEY_SETS, SPACE_TIME_CHECK_EVERY, SPACE_TIME_KEY_SETS, bestF
 import { activeProgress, progressAsked, progressCaches, progressEnter, progressFrame, progressGoal, progressHeartbeat, progressLeave,
     progressPreview, progressReaders, progressRow, progressRun, progressRung, progressSearch, progressSegment,
     progressSite, progressStatesFor, progressTick, withSolveProgress } from './solveProgress.js';
-// ⛓ hammer-phase LB (HX) — the press kill's shake-band and reboot guards (`PRESS_KILL_SHAKE_GUARD`, `PRESS_KILL_REBOOT_GUARD`, OFF).
+// ⛓ hammer-phase LB (HX) — the press kill's shake-band and reboot guards (`PRESS_KILL_SHAKE_GUARD`, `PRESS_KILL_REBOOT_GUARD`, ON since GF).
 import { PRESS_KILL_GUARD_COUNTS, PRESS_KILL_REBOOT_GUARD, PRESS_KILL_SHAKE_GUARD, isShakeBandThrow }
     from './pressKillGuards.js';
 // ⛓ seedling-fidelity-forcedhit D2 — the forced-hit rung's proof and crossing (`FORCED_HITS`, OFF).
