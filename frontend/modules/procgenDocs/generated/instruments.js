@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 96,
-            "count": 143,
+            "browser": 97,
+            "count": 144,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 450,
-        "browser": 161,
+        "blockStyle": 451,
+        "browser": 162,
         "cited": 241,
-        "files": 464,
+        "files": 465,
         "lineStyle": 14,
-        "withDocblock": 464,
-        "withFlags": 381
+        "withDocblock": 465,
+        "withFlags": 382
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -14634,6 +14634,59 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "THE SINCE-BEGIN RECORD, MEASURED ON THE GAME (seedling-wasm-leak L4 item 4c, ⚖ D3 capability `sincebegin`) — the acceptance witness for `botSeam().sinceBegin = {stepped, dead, input_frames, pressed, held_at_begin, rng_first}`, which p4f added so a host can adopt a room it did not start.",
             "path": "scripts/procgen/probe-seedling-since-begin.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check",
+                "fmtHits",
+                "gameKey",
+                "mKey"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-skin-swing.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "boot"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-skin-swing — ⛓⛓⛓ seedling-fidelity-skinswing: DOES THE GAME LAND THE TWO ART-STANDS' SWINGS?",
+            "path": "scripts/procgen/probe-seedling-skin-swing.mjs"
         },
         {
             "argvHelpers": [],

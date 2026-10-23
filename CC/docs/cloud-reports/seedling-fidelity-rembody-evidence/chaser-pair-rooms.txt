@@ -1,0 +1,29 @@
+L5	chasers 3	Enemy-movers 3	{"bob":3}
+L6	chasers 2	Enemy-movers 2	{"bob":2}
+L14	chasers 6	Enemy-movers 6	{"bob":6}
+L16	chasers 7	Enemy-movers 7	{"bob":7}
+L17	chasers 3	Enemy-movers 3	{"bob":3}
+L25	chasers 2	Enemy-movers 2	{"bob":2}
+L26	chasers 2	Enemy-movers 2	{"puncher":2}
+L40	chasers 15	Enemy-movers 14	{"bob":12,"bobsoldier":1,"puncher":2}
+L53	chasers 4	Enemy-movers 4	{"jellyfish":3,"puncher":1}
+L54	chasers 3	Enemy-movers 3	{"jellyfish":3}
+L60	chasers 2	Enemy-movers 2	{"jellyfish":2}
+L63	chasers 2	Enemy-movers 2	{"jellyfish":2}
+L71	chasers 5	Enemy-movers 5	{"lavarunner":5}
+L72	chasers 3	Enemy-movers 3	{"lavarunner":3}
+L73	chasers 2	Enemy-movers 2	{"bulb":1,"lavarunner":1}
+L74	chasers 3	Enemy-movers 3	{"lavarunner":2,"bulb":1}
+L75	chasers 2	Enemy-movers 2	{"lavarunner":2}
+L77	chasers 3	Enemy-movers 3	{"bulb":1,"lavarunner":2}
+L78	chasers 5	Enemy-movers 5	{"lavarunner":5}
+L80	chasers 4	Enemy-movers 4	{"lavarunner":4}
+L91	chasers 3	Enemy-movers 3	{"bob":3}
+L92	chasers 2	Enemy-movers 2	{"jellyfish":1,"bob":1}
+L98	chasers 3	Enemy-movers 3	{"jellyfish":3}
+L99	chasers 3	Enemy-movers 3	{"lavarunner":3}
+L100	chasers 5	Enemy-movers 4	{"flyer":1,"jellyfish":4}
+L105	chasers 3	Enemy-movers 1	{"flyer":2,"jellyfish":1}
+rooms 26: 5,6,14,16,17,25,26,40,53,54,60,63,71,72,73,74,75,77,78,80,91,92,98,99,100,105
+legs 189 of 850
++ L82 (the King of Fire's runtime lavarunners, kingOfFireFight ON at this base): appended to leg-keys

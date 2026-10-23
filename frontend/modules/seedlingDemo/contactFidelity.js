@@ -988,6 +988,21 @@ export const CONTACT_FIDELITY = {
      * probes standard ON green.
      */
     drillKillFirst: true,
+    /**
+     * fidelity REMBODY (wave 27) — A BODY REMOVED THIS FRAME STILL BLOCKS THE BODIES THAT UPDATE AFTER IT, UNTIL THE FRAME
+     * ENDS. `World.remove` (`net/flashpunk/World.as:118-124`) only queues the entity in `_remove`; `World.updateLists`
+     * (`:895-911`) takes it out of the type lists after `World.update` has run every entity. So the chaser whose
+     * `Mobile.death` fade ends this frame (`FP.world.remove(this)`, `Mobile.as:68`) — or a bulb whose "die" ends — is still
+     * an "Enemy" in `collideTypes(solids, …)` for every body stepped after it this frame (`Bob.solids` and
+     * `LavaRunner.solids` carry "Enemy": `Bob.as:39`, `LavaRunner.as:43`). ON: `stepChasersNow` and its mirror
+     * `chaserForecastNow` keep each body removed in this frame as a sibling wall for the rest of that frame (`removed`
+     * is still set at once: every other reader is unchanged). OFF: the body stops blocking at once (byte-identical).
+     * Witnessed on p4g (SKINSWING's `skinswing-l71-resite`: t63, three bodies removed, the game's `lavarunner@64,192`
+     * held at y 203.303 — ON reproduces it to the end of the tape at 0 px). `SEEDLING_REMOVED_BODY_BLOCKS=0|1` for a node
+     * measurement. NOT here (named in the REMBODY report): the other families' removals (drill, wallflyer, turret,
+     * spinner, the static bodies) as walls to a mover stepped after them in the same frame.
+     */
+    removedBodyBlocks: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1182,6 +1197,9 @@ if (globalThis.process?.env?.SEEDLING_SPEAR_GAME_TEST === '0') CONTACT_FIDELITY.
 // ⛓ fidelity DRILLKILL: `SEEDLING_DRILL_KILL_FIRST=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DRILL_KILL_FIRST === '1') CONTACT_FIDELITY.drillKillFirst = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_KILL_FIRST === '0') CONTACT_FIDELITY.drillKillFirst = false;
+// ⛓ fidelity REMBODY: `SEEDLING_REMOVED_BODY_BLOCKS=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_REMOVED_BODY_BLOCKS === '1') CONTACT_FIDELITY.removedBodyBlocks = true;
+if (globalThis.process?.env?.SEEDLING_REMOVED_BODY_BLOCKS === '0') CONTACT_FIDELITY.removedBodyBlocks = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
