@@ -166,6 +166,27 @@ export async function createLab() {
     let ls = null;
     function engineLevelSource() { return ls; }
 
+    /** ⛓ ARRIVAL LATCH (§5.124) — the frames a hold-tape hit is compared over are bounded (a latch is ~20). */
+    const ARRIVAL_LATCH_MAX_FRAMES = 120;
+    /**
+     * ⛓ ARRIVAL LATCH (§5.124) — the MODEL stepping an arrival staging with nothing held, `frames` frames (its own
+     * `createRunForStaging` + `advance`; nothing here changes its stepping): `rows[i]` the state after tick i + 1, and
+     * the hits its ledger bills (`playerHits`, `t` = the tick that took it). `seedlingHitTicks.arrivalLatchVerdict`
+     * compares them with the game's read.
+     */
+    function arrivalModel(req, frames) {
+        try {
+            const run = createRunForStaging(req.staging, req.levelSource ?? engineLevelSource(), { scratchPersistence: req.scratchPersistence === true });
+            const rows = [];
+            for (let i = 0; i < frames; i++) {
+                run.advance(new Set());
+                rows.push({ x: run.state.x, y: run.state.y, hitsTimer: run.damage?.hitsTimer ?? null, hits: run.damage?.hits ?? null });
+            }
+            const billed = (run.ledger('playerHits') ?? []).map((h) => ({ t: h.t, source: h.source ?? null, id: h.id ?? null }));
+            return { seamTime: req.staging?.seam?.time ?? null, frames, rows, billed };
+        } catch (err) { return { error: `${err.name}: ${String(err.message).slice(0, 200)}` }; }
+    }
+
     /** First differing field between a game row and a model row, over the fields both carry. */
     function firstField(g, m) {
         const keys = Object.keys(g).filter((k) => k !== 't' && k in m && typeof g[k] !== 'object');
@@ -241,6 +262,21 @@ export async function createLab() {
         // the plans: settled results of the solves this leg made
         const solves = tap.solves.slice(s0n).map((s) => ({ req: s.request, res: s.handle.result, passes: s.handle.passes }));
         ls ??= solves.find((s) => s.req.levelSource)?.req.levelSource ?? null;
+        // ⛓ ARRIVAL LATCH (§5.124) — a hit on a 0-tick HOLD tape (an arrival waiting for its latch) against the model
+        // stepping that arrival's staging (the first solve after the hold, staged with no prefix) over the frames the
+        // game ran to the read (`gt` − the staged clock, + 1)
+        const legTapes = tap.tapes.slice(t0n);
+        for (const h of roomHits.hits) {
+            const tp = legTapes[h.tape];
+            if (!tp?.hold || tp.ticks !== 0 || typeof h.gt !== 'number') continue;
+            const req = tap.solves.slice(s0n).find((x) => x.at >= tp.at)?.request ?? null;
+            if (!req || (req.perTick?.length ?? 0) > 0 || !Number.isFinite(req.staging?.seam?.time)) {
+                h.arrival = { error: req ? 'the solve after the hold is not an arrival staging (a prefix, or no seam clock)' : 'no solve after the hold' };
+                continue;
+            }
+            const frames = Math.min(Math.max(h.gt - req.staging.seam.time + 1, 1), ARRIVAL_LATCH_MAX_FRAMES);
+            h.arrival = arrivalModel(req, frames);
+        }
         const plans = solves.map((s) => ({ ok: s.res?.ok ?? null, kind: s.res?.kind ?? null,
             message: s.res?.ok === false ? String(s.res?.message ?? '').split('\n')[0].slice(0, 400) : undefined,
             producer: s.res?.plan?.producer ?? null, verbs: s.res?.plan?.verbs ?? null, ticks: s.res?.plan?.solution?.length ?? null,

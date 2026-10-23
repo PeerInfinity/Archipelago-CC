@@ -240,7 +240,78 @@
             }
           }
         ],
-        "locations": []
+        "locations": [
+          {
+            "name": "L16 flag 0: rope@32,16 cleared",
+            "id": null,
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Progressive Sword"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Ghost Spear"
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Fire"
+                  }
+                }
+              ]
+            },
+            "item": {
+              "name": "L16 flag 0: rope@32,16 cleared",
+              "player": 1,
+              "advancement": true,
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true,
+            "event_id": "flag:L16:0",
+            "event_kind": "game_state",
+            "obstacle": {
+              "level": 16,
+              "tag": 0,
+              "class": "rope",
+              "x": 32,
+              "y": 16
+            },
+            "action": {
+              "verb": "cut",
+              "item": null,
+              "opens": [
+                {
+                  "class": "arrowtrap",
+                  "x": 96,
+                  "y": 32,
+                  "effect": "silences"
+                },
+                {
+                  "class": "arrowtrap",
+                  "x": 112,
+                  "y": 32,
+                  "effect": "silences"
+                },
+                {
+                  "class": "arrowtrap",
+                  "x": 128,
+                  "y": 32,
+                  "effect": "silences"
+                }
+              ]
+            },
+            "side": "level_16__r1c1",
+            "across": []
+          }
+        ]
       },
       "level_16__r1c9": {
         "name": "level_16__r1c9",
@@ -527,7 +598,10 @@
             "name": "level_17 -> level_16__r3c7",
             "connected_region": "level_16__r3c7",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "L16 flag 0: rope@32,16 cleared"
+              }
             }
           }
         ],
@@ -579,6 +653,17 @@
         "classification": "progression",
         "type": null,
         "max_count": 2
+      },
+      "L16 flag 0: rope@32,16 cleared": {
+        "name": "L16 flag 0: rope@32,16 cleared",
+        "id": null,
+        "groups": [
+          "Event"
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       }
     }
   },
@@ -587,7 +672,8 @@
   },
   "itempool_counts": {
     "1": {
-      "Seal": 2
+      "Seal": 2,
+      "L16 flag 0: rope@32,16 cleared": 1
     }
   },
   "world": {
@@ -1123,52 +1209,27 @@
             {
               "x": 2,
               "y": 1,
-              "id": "atlas_gate_0"
+              "id": "rope_2_1"
             },
             {
               "x": 4,
               "y": 1,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_0"
             },
             {
               "x": 4,
               "y": 2,
-              "id": "atlas_gate_1"
-            },
-            {
-              "x": 6,
-              "y": 2,
-              "id": "atlas_gate_2"
-            },
-            {
-              "x": 7,
-              "y": 2,
-              "id": "atlas_gate_2"
-            },
-            {
-              "x": 8,
-              "y": 2,
-              "id": "atlas_gate_2"
+              "id": "atlas_gate_0"
             },
             {
               "x": 4,
               "y": 3,
-              "id": "atlas_gate_1"
-            },
-            {
-              "x": 6,
-              "y": 3,
-              "id": "atlas_gate_2"
-            },
-            {
-              "x": 8,
-              "y": 3,
-              "id": "atlas_gate_2"
+              "id": "atlas_gate_0"
             },
             {
               "x": 4,
               "y": 4,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_0"
             },
             {
               "x": 6,
@@ -1183,7 +1244,7 @@
             {
               "x": 4,
               "y": 5,
-              "id": "atlas_gate_1"
+              "id": "atlas_gate_0"
             },
             {
               "x": 6,
@@ -1198,27 +1259,7 @@
             {
               "x": 4,
               "y": 6,
-              "id": "atlas_gate_1"
-            },
-            {
-              "x": 6,
-              "y": 6,
-              "id": "atlas_gate_2"
-            },
-            {
-              "x": 7,
-              "y": 6,
-              "id": "atlas_gate_2"
-            },
-            {
-              "x": 6,
-              "y": 7,
-              "id": "atlas_gate_2"
-            },
-            {
-              "x": 7,
-              "y": 7,
-              "id": "atlas_gate_2"
+              "id": "atlas_gate_0"
             },
             {
               "x": 20,
@@ -1239,6 +1280,20 @@
               ],
               "color": "#7a6a55"
             },
+            "rope_2_1": {
+              "id": "rope_2_1",
+              "name": "rope@32,16",
+              "kind": "rope",
+              "clear_set": [],
+              "struck_by": [
+                "sword",
+                "spear",
+                "fire"
+              ],
+              "activates": "sw_0",
+              "event": "L16 flag 0: rope@32,16 cleared",
+              "color": "#b08a4a"
+            },
             "lock_1": {
               "id": "lock_1",
               "name": "lock (group 1)",
@@ -1252,59 +1307,12 @@
             },
             "atlas_gate_0": {
               "id": "atlas_gate_0",
-              "name": "(Progressive Sword OR Ghost Spear OR Fire)",
-              "clear_set_type": "rule",
-              "clear_rule": {
-                "rule": "Or",
-                "children": [
-                  {
-                    "rule": "Has",
-                    "args": {
-                      "item_name": "Progressive Sword"
-                    }
-                  },
-                  {
-                    "rule": "Has",
-                    "args": {
-                      "item_name": "Ghost Spear"
-                    }
-                  },
-                  {
-                    "rule": "Has",
-                    "args": {
-                      "item_name": "Fire"
-                    }
-                  }
-                ]
-              },
-              "color": "#b06eb8",
-              "display": {
-                "mode": "tree"
-              }
-            },
-            "atlas_gate_1": {
-              "id": "atlas_gate_1",
               "name": "Progressive Swim",
               "clear_set_type": "rule",
               "clear_rule": {
                 "rule": "Has",
                 "args": {
                   "item_name": "Progressive Swim"
-                }
-              },
-              "color": "#b06eb8",
-              "display": {
-                "mode": "tree"
-              }
-            },
-            "atlas_gate_2": {
-              "id": "atlas_gate_2",
-              "name": "L16 flag 0: rope@32,16 cleared",
-              "clear_set_type": "rule",
-              "clear_rule": {
-                "rule": "Has",
-                "args": {
-                  "item_name": "L16 flag 0: rope@32,16 cleared"
                 }
               },
               "color": "#b06eb8",
@@ -1344,6 +1352,102 @@
               "primitive": "strike",
               "condition": "strikes",
               "key": "x"
+            },
+            "fire": {
+              "item": "Fire",
+              "primitive": "strike",
+              "condition": "strikes",
+              "key": "c"
+            }
+          },
+          "traps": [
+            {
+              "x": 6,
+              "y": 2,
+              "id": "trap_0_unless_active",
+              "label": "arrowtrap@96,32",
+              "lane": [
+                {
+                  "x": 6,
+                  "y": 2
+                },
+                {
+                  "x": 6,
+                  "y": 3
+                },
+                {
+                  "x": 6,
+                  "y": 4
+                },
+                {
+                  "x": 6,
+                  "y": 5
+                },
+                {
+                  "x": 6,
+                  "y": 6
+                },
+                {
+                  "x": 6,
+                  "y": 7
+                }
+              ]
+            },
+            {
+              "x": 7,
+              "y": 2,
+              "id": "trap_0_unless_active",
+              "label": "arrowtrap@112,32",
+              "lane": [
+                {
+                  "x": 7,
+                  "y": 2
+                },
+                {
+                  "x": 7,
+                  "y": 3
+                },
+                {
+                  "x": 7,
+                  "y": 4
+                },
+                {
+                  "x": 7,
+                  "y": 5
+                },
+                {
+                  "x": 7,
+                  "y": 6
+                },
+                {
+                  "x": 7,
+                  "y": 7
+                }
+              ]
+            },
+            {
+              "x": 8,
+              "y": 2,
+              "id": "trap_0_unless_active",
+              "label": "arrowtrap@128,32",
+              "lane": [
+                {
+                  "x": 8,
+                  "y": 2
+                },
+                {
+                  "x": 8,
+                  "y": 3
+                }
+              ]
+            }
+          ],
+          "trapLib": {
+            "trap_0_unless_active": {
+              "kind": "arrow_trap",
+              "name": "arrow trap (group 0, fires unless_active)",
+              "active": "sw_0",
+              "fires": "unless_active"
             }
           },
           "shared_world": {
@@ -1357,7 +1461,7 @@
             ],
             "rows": [
               ".........................",
-              ".A.A.A...BBBBBBB.........",
+              ".AAA.A...BBBBBBB.........",
               ".AAA.A...BBBBBBB.........",
               ".AAA.A.C..BBBBBB.BBB.....",
               ".AAA.A.C..BBBBBBBBB..DDD.",

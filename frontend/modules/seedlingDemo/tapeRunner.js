@@ -941,6 +941,12 @@ export function createTapeStepper(tape, opts = {}) {
              */
             watcherSeedLive: run ? run.watcherSeedLive : [],
             /**
+             * ⛓⛓ fidelity YETI D2 (`CONTACT_FIDELITY.yetiTalk`): the Yeti's two writes (`{58,0}` its own tag, `{58,1}`
+             * the DeadBoss portal) and its open/close/write rows. Empty OFF and in every room without a speaking Yeti.
+             */
+            yetiFlags: run ? run.yetiFlags : [],
+            yetiEvents: run ? run.yetiEvents : [],
+            /**
              * ⛓⛓⛓ R6 SLICE 6c — THE FINAL DOOR's three, and the first is a
              * DEAD-FRAME claim rather than a positional one.
              *

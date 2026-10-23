@@ -72,6 +72,7 @@ Level 048 - Chest: Seal
 Level 049 - Conch: Progressive Swim
 Level 055 - Boss Key 3: Blue Key
 Level 057 - Tentacled Beast: Seal
+L58 flag 1: yeti@56,56 cleared: L58 flag 1: yeti@56,56 cleared
 L63 flag 1: lightpole@64,88 cleared: L63 flag 1: lightpole@64,88 cleared
 L62 flag 0: lightpole@120,200 cleared: L62 flag 0: lightpole@120,200 cleared
 Level 063 - Chest: Seal
@@ -161,6 +162,7 @@ Playthrough:
 8: {
   L40 flag 8: bosslock@480,352 cleared: L40 flag 8: bosslock@480,352 cleared
   L48 flag 1: bosslock@48,144 cleared: L48 flag 1: bosslock@48,144 cleared
+  L58 flag 1: yeti@56,56 cleared: L58 flag 1: yeti@56,56 cleared
   Level 040 - Totem Part 64,144: Totem Shard
   Level 041 - Totem Part 240,144: Totem Shard
   Level 042 - Totem Part 184,152: Totem Shard

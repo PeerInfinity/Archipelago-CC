@@ -61,6 +61,9 @@
  *                                  open floor; null = none (every other world)
  *   facing                'N'|'E'|'S'|'W'|null  ITEM ACTIONS: `state.facing`, drawn
  *                                  as a tick on the player; null draws nothing
+ *   armedTraps            boolean[]|null  ARROW TRAPS: per `world.traps` entry, is its
+ *                                  lane live (engine `armedTraps`); null = none drawn as
+ *                                  armed (a world with traps then shows them silent)
  *
  * ── ⛓ THE GATE IS AN ORDERED DRAW-OP LOG, AND WHY THAT IS THE PIXELS ──
  *
@@ -120,6 +123,10 @@ export const COLORS = {
     // X1: mana-refill tiles get a fixed blue; cross-game consumable
     // tiles get a per-substrate hue from consumableTileColor below.
     manaTile: '#5ac8e8',
+    // ARROW TRAPS (session tile-primitives-arrow-rope): a lane red while armed, grey while silenced.
+    laneArmed: '#d04040',
+    laneSilent: '#808080',
+    trap: '#e0c040',
 };
 
 /**
@@ -145,7 +152,7 @@ export function consumableTileColor(substrateId) {
 export const VIEW_FIELDS = Object.freeze([
     'tilePx', 'playerPos', 'inventory', 'isPlayback', 'checkedLocations', 'ruleEvaluator',
     'fogEnabled', 'isTileVisible', 'seenTiles', 'isExitVisible', 'isLocationVisible',
-    'isConsumableCollected', 'broken', 'facing',
+    'isConsumableCollected', 'broken', 'facing', 'armedTraps',
 ]);
 
 /**
@@ -239,7 +246,7 @@ export function assertView(view) {
  */
 export function plainView({
     tilePx = TILE_PX, playerPos = null, inventory = null, ruleEvaluator = null,
-    broken = null, facing = null,
+    broken = null, facing = null, armedTraps = null,
 } = {}) {
     return {
         tilePx,
@@ -256,6 +263,7 @@ export function plainView({
         isConsumableCollected: null,
         broken,
         facing,
+        armedTraps,
     };
 }
 
@@ -525,6 +533,23 @@ export function drawWorld(ctx, world, view) {
     // when a content-module-aware procgen pipeline produced this
     // region; legacy worlds without the field render normally.
     drawHazards(ctx, w.hazards, px);
+
+    // ⛓ ARROW TRAPS (session tile-primitives-arrow-rope, ⚖ "Lane tint + named refusal"): each trap's lane
+    // tinted red while armed and grey while silenced, the trap's own cell marked along its top edge. Under
+    // the fog like the hazards; drawn only on a world that has traps, so every other draw log is unchanged.
+    if (Array.isArray(w.traps) && w.traps.length > 0) {
+        w.traps.forEach((trap, i) => {
+            ctx.globalAlpha = 0.3;
+            ctx.fillStyle = view.armedTraps?.[i] ? COLORS.laneArmed : COLORS.laneSilent;
+            for (const key of trap.lane) {
+                const [lx, ly] = key.split(',').map(Number);
+                ctx.fillRect(lx * px, ly * px, px, px);
+            }
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = COLORS.trap;
+            ctx.fillRect(trap.x * px + 2, trap.y * px, px - 4, Math.max(2, Math.floor(px / 5)));
+        });
+    }
 
     // Fog overlay — paint solid black over every unseen tile. Runs
     // after grid lines so the grid doesn't leak the unexplored

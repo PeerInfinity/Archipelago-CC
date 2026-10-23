@@ -11,6 +11,9 @@
  *   strike — ITEM ACTIONS: `USE:<id>` breaks the FACING cell for this visit
  *            condition: the `action_lib` entry's `condition` helper (`strikes`); the entry's `item`
  *            must be in the effective inventory (data, not a condition). `TURN_<dir>` sets facing.
+ *   lane   — ARROW TRAPS: the player may not END a move on a cell of an armed lane
+ *            condition: tileLib.trap.armed, asked of the destination with the stance AFTER the move
+ *   cut    — ROPES: a rope obstacle activates its group token while cut      condition: tileLib.rope.cut
  *
  * Helpers are called as `f(cell, tile)` with `state`/`player` ambient (⚖ Q4 v1): `state.has` reads
  * the EFFECTIVE inventory — carried plus held tokens — through the context's `hasItem`.
@@ -28,6 +31,8 @@ export const MAZE_TILE_LIB = {
     cell: { primitive: 'enter', enter: 'player_may_enter' },
     block: { primitive: 'push', may_enter: 'block_may_enter' },
     button: { primitive: 'hold', pressed: 'presses' },
+    trap: { primitive: 'lane', armed: 'lane_armed' },
+    rope: { primitive: 'cut', cut: 'rope_cut' },
 };
 
 /**
@@ -67,6 +72,8 @@ function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = n
         else if (type === 'combo_list') clearSet = entry?.clear_set ?? [];
         else throw new Error(`spike: obstacle ${obstacle} is ${type}, only combo_list and rule are modelled`);
     }
+    const lanes = (world.trapLanes?.get(key) ?? []).map((i) => world.trapLib[world.traps[i].id]);
+    const rope = obstacle !== null ? world.obstacleLib?.[obstacle] : null;
     return {
         floor: isFloor(world, x, y),
         block: blocks?.includes(key) ?? false,
@@ -77,6 +84,11 @@ function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = n
         broken: broken?.includes(key) ?? false,
         struck: actionId !== null && obstacle !== null
             && (world.obstacleLib?.[obstacle]?.struck_by ?? []).includes(actionId),
+        // ARROW TRAPS: the group tokens of the traps whose lane holds this cell, by how they fire.
+        lane_unless: lanes.filter((e) => e.fires === 'unless_active').map((e) => e.active),
+        lane_while: lanes.filter((e) => e.fires === 'while_active').map((e) => e.active),
+        // ROPES: the event a cut of this obstacle is (null when it is not a rope).
+        event: rope?.activates ? (rope.event ?? null) : null,
     };
 }
 
@@ -106,18 +118,50 @@ export function ruleToClearSet(rule, obstacle = '?') {
     }
 }
 
-/** The HOLD primitive: carried ∪ the token of every button whose `pressed` condition holds. */
-export function scriptedEffectiveInventory(world, carried, playerPos, blocks, tileLib, helpers) {
-    if (!world.buttons || world.buttons.size === 0) return carried;
+/**
+ * The HOLD primitive: carried ∪ the token of every button whose `pressed` condition holds — and the CUT
+ * primitive: ∪ the token every rope `activates` whose `cut` condition holds (`broken` = this visit's).
+ */
+const ROPES = new WeakMap();
+/** The world's rope cells `[[posKey, id]]`, cached per obstacle map (rebuilt when it changes size). */
+function ropeCells(world) {
+    const hit = ROPES.get(world.obstacles);
+    if (hit && hit.size === world.obstacles.size && hit.lib === world.obstacleLib) return hit.ropes;
+    const ropes = [...world.obstacles].filter(([, id]) => world.obstacleLib?.[id]?.activates);
+    ROPES.set(world.obstacles, { size: world.obstacles.size, lib: world.obstacleLib, ropes });
+    return ropes;
+}
+
+export function scriptedEffectiveInventory(world, carried, playerPos, blocks, tileLib, helpers, broken = undefined) {
+    const ropes = ropeCells(world);
+    if ((!world.buttons || world.buttons.size === 0) && ropes.length === 0) return carried;
     const out = new Set(carried);
     const ctx = makeContext(helpers, carried);
-    for (const [key, buttonId] of world.buttons) {
+    for (const [key, buttonId] of world.buttons ?? []) {
         const token = world.buttonLib?.[buttonId]?.holds;
         if (!token) continue;
         const [x, y] = key.split(',').map(Number);
         if (callHelper(ctx, tileLib.button.pressed, { x, y }, tileAt(world, x, y, blocks, playerPos))) out.add(token);
     }
+    for (const [key, id] of ropes) {
+        const [x, y] = key.split(',').map(Number);
+        if (callHelper(ctx, tileLib.rope.cut, { x, y }, tileAt(world, x, y, blocks, playerPos, broken))) {
+            out.add(world.obstacleLib[id].activates);
+        }
+    }
     return out;
+}
+
+/**
+ * The LANE condition at the player's cell of `state` (a search's arrival in a live lane reaches nothing).
+ * The primitive covers LANE cells only: elsewhere no trap aims, and the helper is not asked.
+ */
+export function scriptedStandsInArmedLane(world, state, helpers, tileLib = MAZE_TILE_LIB) {
+    const { x, y } = state.player_pos;
+    if (!world.trapLanes?.has(posKey(x, y))) return false;
+    const inv = scriptedEffectiveInventory(world, state.inventory, state.player_pos, state.blocks, tileLib, helpers, state.broken);
+    return callHelper(makeContext(helpers, inv), tileLib.trap.armed, { x, y },
+        tileAt(world, x, y, state.blocks, state.player_pos, state.broken));
 }
 
 /**
@@ -142,7 +186,7 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
         const actionId = input.slice(USE_PREFIX.length);
         const entry = state.facing === undefined ? undefined : world.actionLib?.[actionId];
         if (!entry) return noInput;
-        const inv = scriptedEffectiveInventory(world, state.inventory, state.player_pos, state.blocks, tileLib, helpers);
+        const inv = scriptedEffectiveInventory(world, state.inventory, state.player_pos, state.blocks, tileLib, helpers, state.broken);
         if (entry.item && !inv.has(entry.item)) {
             return { next: null, refused: { primitive: 'strike', cell: null, helper: null, item: entry.item } };
         }
@@ -163,7 +207,7 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
     if (!delta) return noInput;
     const nx = state.player_pos.x + delta.dx;
     const ny = state.player_pos.y + delta.dy;
-    const inv = scriptedEffectiveInventory(world, state.inventory, state.player_pos, state.blocks, tileLib, helpers);
+    const inv = scriptedEffectiveInventory(world, state.inventory, state.player_pos, state.blocks, tileLib, helpers, state.broken);
     const ctx = makeContext(helpers, inv);
     const target = tileAt(world, nx, ny, state.blocks, state.player_pos, state.broken);
     if (!callHelper(ctx, tileLib.cell.enter, { x: nx, y: ny }, target)) {
@@ -188,6 +232,9 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
     if (pushedFrom !== null) {
         next.blocks[next.blocks.indexOf(pushedFrom)] = pushedTo;
         next.blocks.sort();
+    }
+    if (world.trapLanes && scriptedStandsInArmedLane(world, next, helpers, tileLib)) {
+        return { next: null, refused: { primitive: 'lane', cell: { x: nx, y: ny }, helper: tileLib.trap.armed } };
     }
     const itemId = latch ? getItem(world, nx, ny) : null;
     if (itemId) next.inventory.add(itemId);

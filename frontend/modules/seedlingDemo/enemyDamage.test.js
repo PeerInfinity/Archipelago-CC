@@ -133,7 +133,17 @@ describe('the policy — an ENUMERATION, checked against `combat.js`', () => {
      * the press census in slice 11.
      */
     // ⛓ fidelity LAPSECOST D2: asked with `flyerLive` OFF (ON, the Flyer's row is `modelled`).
-    it('⛔ every refusal carries its OWN reason, not a shared one', () => withContactFidelity({ flyerLive: false }, () => {
+    // ⛓ planning-10's lightsBossFight flip (2026-10-22): likewise `lightsBossFight` OFF (ON, LightBoss's row is `modelled`;
+    //   the row below pins that LightBoss is the ONLY entry the flip moves out of 'refused').
+    it('⛔ the Lights flip moves exactly one entry out of \'refused\': LightBoss', () => {
+        const refusedUnder = (fl) => withContactFidelity(fl, () => Object.entries(KILL_ARM_POLICY)
+            .filter(([, p]) => p.policy === 'refused').map(([k]) => k));
+        const off = refusedUnder({ flyerLive: false, lightsBossFight: false });
+        const on = refusedUnder({ flyerLive: false, lightsBossFight: true });
+        expect(off.filter((k) => !on.includes(k))).toEqual(['LightBoss']);
+        expect(on.filter((k) => !off.includes(k))).toEqual([]);
+    });
+    it('⛔ every refusal carries its OWN reason, not a shared one', () => withContactFidelity({ flyerLive: false, lightsBossFight: false }, () => {
         const refused = Object.entries(KILL_ARM_POLICY)
             .filter(([, p]) => p.policy === 'refused');
         expect(refused.length).toBeGreaterThan(15);

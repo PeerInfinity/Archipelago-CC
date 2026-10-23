@@ -10,7 +10,9 @@
  * The sample: both shared level worlds the parity was built on (L15, L16) and one per-sub-region level (L14).
  *
  * Slow tier: ~35 s native (every region, then the sample again for its lines) + ~86 s scripted sample on one
- * core (measured 2026-10-21, L13–L17).
+ * core (measured 2026-10-21, L13–L17). Since the arrow trap + rope (session tile-primitives-arrow-rope, 2026-10-22)
+ * L16's cut doubles its state space; with the facing-free search: native every region 43.5 s, native sample 21.5 s,
+ * scripted sample 146 s. No exemption: every region agrees, the rope gate derived from the lane and the cut.
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -21,18 +23,6 @@ const RULES = JSON.parse(readFileSync(
     new URL('../../../presets/seedling_playthrough_maze/AP_1/AP_1_rules.json', import.meta.url), 'utf8'));
 const SAMPLE = ['level_14', 'level_15__r1c5', 'level_15__r1c9', 'level_15__r6c8', 'level_16__r1c1', 'level_16__r4c21'];
 
-/**
- * ⛓ NAMED GAP "the arrow lane is not modelled in the maze (rope lane rocks)" (⚖ user 2026-10-22 "Land with exact
- * exemptions"; session rules-rope-events; maze.md § The preset). The atlas charges every L16 rope-lane cell with
- * the rope's event, rocks included (a lane rock costs weapon AND the cut); the projection makes the lane's rocks
- * (6,4), (6,5), (7,5) plain sword/spear rocks, so from r1c1 a weapon alone breaks (6,4) onto the lane's stairs.
- * The maze is LOOSER than the atlas there, and nowhere else. This is the exact problem list (the certifier names
- * the FIRST differing item subset of a pair, so each pair appears once); it FAILS once the arrow-lane slice models
- * the lane as a hazard and the cut as an in-world action — delete it then.
- */
-const ARROW_LANE_NOT_MODELLED = [
-    'level_16__r1c1 → level_16__r3c7 holding [Ghost Spear]: derived true, atlas false',
-];
 /** A copy of the preset with one AP exit's rule replaced — the closure comparison's mutant controls. */
 const withExitRule = (from, to, rule) => {
     const copy = structuredClone(RULES);
@@ -46,14 +36,14 @@ describe('seedling_playthrough_maze — every region certified against the atlas
     let sampleLines;
     it('native engine, every region', () => {
         const { problems, lines } = certifyPlaythroughMaze(RULES, HELPERS, { native: true });
-        expect(problems).toEqual(ARROW_LANE_NOT_MODELLED);
+        expect(problems).toEqual([]);
         expect(lines.length).toBeGreaterThan(0);
         sampleLines = certifyPlaythroughMaze(RULES, HELPERS, { native: true, regions: SAMPLE }).lines;
     }, 300_000);
     it('scripted tile definition on the sample — and it agrees with the native one', () => {
         for (const r of SAMPLE) expect(Object.keys(RULES.preset_sidecars['1'])).toContain(r);
         const { problems, lines } = certifyPlaythroughMaze(RULES, HELPERS, { native: false, regions: SAMPLE });
-        expect(problems).toEqual(ARROW_LANE_NOT_MODELLED);
+        expect(problems).toEqual([]);
         expect(lines).toEqual(sampleLines);
     }, 600_000);
     // ⛓ The in-world CLOSURE comparison is two-sided: a mutated in-world AP row that makes the atlas stricter than

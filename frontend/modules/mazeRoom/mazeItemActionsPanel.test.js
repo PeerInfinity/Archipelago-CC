@@ -10,7 +10,9 @@ import { _testOnly_resetModuleState } from './index.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { createState } from './mazeRoomEngine.js';
 import { crossEntry, useEntry } from './mazeKeys.js';
-import { itemActionPicture, ROCK_CORRIDOR, SWORD } from './mazeItemActions.fixtures.js';
+import {
+    itemActionPicture, ROCK_CORRIDOR, SWORD, arrowTrapPicture, ARROW_ROPE, ROPE_EVENT,
+} from './mazeItemActions.fixtures.js';
 import { hashOf, recordingContext } from './drawOpRecorder.js';
 
 function panelOn(rows, opts) {
@@ -145,5 +147,69 @@ describe('MazeRoomUI — item-action buttons', () => {
     it('no row on a world without an action_lib', () => {
         const panel = panelOn(ROCK_CORRIDOR, { actionLib: null });
         expect(rowOf(panel)).toBeNull();
+    });
+});
+
+// ⛓⛓ ARROW TRAPS + ROPES in the panel (session tile-primitives-arrow-rope, ⚖ 2026-10-22 "Lane tint + named
+// refusal", "Both: this visit + event item"): the lane refuses by name, Z on the facing rope CUTS it (and in
+// playback checks its event location), and the lane is drawn red while armed, grey once silenced.
+describe('MazeRoomUI — arrow traps and ropes', () => {
+    beforeEach(() => {
+        _testOnly_resetModuleState();
+        discoveryStateSingleton.eventBus = { publish: () => {} };
+    });
+    afterEach(() => { MazeRoomUI.moduleApis = undefined; });
+    const trapPanel = () => {
+        const panel = new MazeRoomUI(null, {});
+        panel.world = arrowTrapPicture(ARROW_ROPE);
+        panel.world.itemLocationNames = new Map();
+        panel.state = createState(panel.world);
+        panel.state.inventory.add(SWORD);
+        panel.render = () => {};
+        return panel;
+    };
+    const draw = (panel) => {
+        const ctx = recordingContext();
+        panel._drawWorld({ getContext: () => ctx });
+        return ctx.__log;
+    };
+
+    it('the lane refuses by name; Z on the facing rope cuts it; the lane then lets the player through', () => {
+        const panel = trapPanel();
+        key(panel, 'ArrowRight');
+        key(panel, 'ArrowRight');
+        expect(panel._queueRefusal).toBe('move E blocked: arrow lane of trap@3,1 is armed — cut rope@c at (1,1) (sword)');
+        key(panel, 'ArrowLeft');
+        key(panel, 'ArrowUp', true);
+        key(panel, 'z');
+        expect(panel.state.broken).toEqual(['1,1']);
+        expect(panel.message).toBe('Cut rope@c with sword.');
+        for (const k of ['ArrowRight', 'ArrowRight', 'ArrowRight']) key(panel, k);
+        expect(panel.state.player_pos).toEqual({ x: 4, y: 2 });
+    });
+
+    it('in playback the cut checks the rope\'s EVENT location (its item silences the lane on later visits)', () => {
+        const panel = trapPanel();
+        const published = [];
+        MazeRoomUI.moduleApis = { dispatcher: { publish: (name, payload) => published.push([name, payload]) } };
+        panel.externalInventory = new Set([SWORD]);
+        panel.currentRegionId = 'r1';
+        key(panel, 'ArrowUp', true);
+        key(panel, 'z');
+        expect(published.filter(([n]) => n === 'user:locationCheck'))
+            .toEqual([['user:locationCheck', { locationName: ROPE_EVENT, regionName: 'r1' }]]);
+    });
+
+    it('the lane is drawn armed, then silent once the rope is cut; a world without traps draws no lane', () => {
+        const panel = trapPanel();
+        const fillsOf = (log) => log.filter((op) => JSON.stringify(op).includes('#d04040') || JSON.stringify(op).includes('#808080'))
+            .map((op) => JSON.stringify(op));
+        const armed = draw(panel);
+        expect(fillsOf(armed).some((s) => s.includes('#d04040'))).toBe(true);
+        panel.state.broken = ['1,1'];
+        const silent = draw(panel);
+        expect(fillsOf(silent).some((s) => s.includes('#808080'))).toBe(true);
+        expect(fillsOf(silent).some((s) => s.includes('#d04040'))).toBe(false);
+        expect(hashOf(silent)).not.toBe(hashOf(armed));
     });
 });

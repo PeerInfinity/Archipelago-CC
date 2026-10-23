@@ -179,15 +179,17 @@ function setup({ game: gopts = {}, live = {}, decline = false, editPlan = null, 
     const teleports = [];
     const logs = [];
     let t = 0;
+    // ⛓ ARRIVAL HOLD (§5.124) — the glue's swap state, mutable (a test bumps `pushes` for a redirect it lands)
+    const swap = { marks: [], queued: 0, pushedOn: null, pushes: 0 };
     const engine = createWasmPlayback({
         getGame: () => game, teleport: (p) => { teleports.push({ ...p, afterCall: game.calls.length }); game.land(); return true; }, records: RECORDS, solveService: service, timers,
         now: () => (t += 1), getDelivery: () => delivery, onFailed: (r) => failures.push(r), onDone: (x) => dones.push(x),
         log: (m) => logs.push(m),
         // ⛓ CROSS-LEVEL END — `glue`: the glue query answers CLEAR (no redirect in flight), so arrivals are held between goals.
-        ...(glue ? { getSwapState: () => ({ marks: [], queued: 0, pushedOn: null, pushes: 0 }) } : {}),
+        ...(glue ? { getSwapState: () => ({ ...swap }) } : {}),
     });
     const runUntil = (pred, max = 4000) => { for (let i = 0; i < max && !pred(); i++) timers.run(1); };
-    return { engine, game, timers, delivery, seen, failures, dones, runUntil, teleports, logs };
+    return { engine, game, timers, delivery, seen, failures, dones, runUntil, teleports, logs, swap };
 }
 
 describe('⛓ MID-ROOM REPLAN — the delivery gate', () => {
@@ -836,13 +838,18 @@ describe('⛓ CROSS-LEVEL END — a location tape that ends in another level is 
         ? { ...plan, expected: [...plan.expected.slice(0, -1), { ...plan.expected.at(-1), level: OTHER }] } : plan);
     const LANDING = { ...A.seam.beginEntry, 'rng.gameplay': 77, 'save.time': A.seam.beginEntry['save.time'] + 200 };
     const STALE = { kind: 'exit', level: 0, tiles: [[0, 0]], name: 'level_32 -> level_30__r2c10' };
-    /** Walk the chest to its crossing's landing (`LANDING`), queuing `queue` (if any) behind the playing tape. */
-    function toLanding({ queue = null, selfChecks = true } = {}) {
+    /**
+     * Walk the chest to its crossing's landing (`LANDING`), queuing `queue` (if any) behind the playing tape.
+     * ⛓ ARRIVAL HOLD (§5.124) — the fake stages only the house, so its landing is in the house: a glue REDIRECT
+     * (`pushes` moved since the ship) makes that a landing; `redirect: false` lands it un-redirected (never done).
+     */
+    function toLanding({ queue = null, selfChecks = true, redirect = true } = {}) {
         const e = setup({ glue: true, selfChecks, editPlan: crossPlan });
         e.engine.walkTo(CHEST);
         e.runUntil(() => e.engine.status().phase === 'playing' && e.game.drained >= 8);
         if (queue) expect(e.engine.walkTo(queue)).toEqual({ ok: true, action: 'queue' });
         e.marks = { calls: e.game.calls.length };
+        if (redirect) e.swap.pushes += 1;
         e.game.be = LANDING; // the pit: the game's own Game.begin in the new room
         e.runUntil(() => e.engine.status().phase === 'held' || e.failures.length > 0);
         return e;
@@ -871,6 +878,58 @@ describe('⛓ CROSS-LEVEL END — a location tape that ends in another level is 
         expect(e.seen[1].request.staging.seam.time).toBeLessThan(LANDING['save.time']);
         expect(e.game.calls).not.toContain('botReset');
         expect(e.teleports).toHaveLength(1); // the cold start only — no re-entry
+    });
+
+    it('⛓ ARRIVAL HOLD (§5.124) — the same landing UN-redirected (a new Game in the level the crossing leaves, no death planned) is never done: failed by name, nothing held', () => {
+        const e = toLanding({ redirect: false });
+        expect(e.dones).toEqual([]);
+        expect(e.failures).toEqual([expect.stringMatching(/a new Game in level 86 at \(\d+,\d+\), the level the crossing is leaving \(its plan ends in level 30\): the plan bills 0 death\(s\)/)]);
+        expect(e.engine.stats.held).toBe(1); // the cold start only
+        expect(e.engine.stats.crossLevelEnds).toEqual([]);
+    });
+
+    /**
+     * The crossing plan with ONE planned death: from row `at` on, the shadow counts a death (`deaths` +1) and row `at`
+     * stands where the new Game builds its player in the house: `spawn` (the spawn pair) + half a tile (`Player.as:375`)
+     * — `wasm-exit-22`'s shape, one death of its two.
+     */
+    const deathPlan = (spawn, at = 5) => (plan, n) => {
+        const p = crossPlan(plan, n);
+        if (n !== 0) return p;
+        return { ...p, expected: p.expected.map((r, i) => (i < at ? r
+            : { ...r, deaths: (r.deaths ?? 0) + 1, ...(i === at ? { level: HOUSE, x: spawn.x + 8, y: spawn.y + 8 } : {}) })) };
+    };
+    const SPAWN = { x: A.state.playerPositionX, y: A.state.playerPositionY };
+    const RESPAWN = { ...A.seam.beginEntry, 'rng.gameplay': 55, 'save.time': A.seam.beginEntry['save.time'] + 100 };
+    function toRespawn(spawn) {
+        const e = setup({ glue: true, selfChecks: true, editPlan: deathPlan(spawn) });
+        e.engine.walkTo(CHEST);
+        e.runUntil(() => e.engine.status().phase === 'playing' && e.game.drained >= 8);
+        e.game.be = RESPAWN; // the planned death's new Game, in the level the crossing is leaving
+        e.runUntil(() => e.engine.stats.respawnsPlayed.length > 0 || e.failures.length > 0);
+        return e;
+    }
+
+    it('⛓ ARRIVAL HOLD (§5.124) — a PLANNED death\'s respawn is played through (never held as the landing); the crossing\'s landing after it is', () => {
+        const e = toRespawn(SPAWN);
+        expect(e.failures).toEqual([]);
+        expect(e.dones).toEqual([]);
+        expect(e.engine.status().phase).toBe('playing');
+        expect(e.engine.stats.held).toBe(1); // the cold start only — the respawn was NOT held
+        expect(e.engine.stats.respawnsPlayed).toEqual([{ level: HOUSE, death: 1, row: 5, tick: expect.anything(), time: RESPAWN['save.time'] }]);
+        e.swap.pushes += 1; // the crossing's landing (a redirect: the fake stages only the house)
+        e.game.be = LANDING;
+        e.runUntil(() => e.engine.status().phase === 'held' || e.failures.length > 0);
+        expect(e.failures).toEqual([]);
+        expect(e.dones).toEqual([expect.objectContaining({ goal: CHEST, heldArrival: HOUSE })]);
+        expect(e.engine.stats.held).toBe(2);
+    });
+
+    it('⛓ ARRIVAL HOLD (§5.124) — a respawn at a spawn NO row of the planned death stands on is not the shadow\'s: failed by name, never done', () => {
+        const e = toRespawn({ x: SPAWN.x + 16, y: SPAWN.y });
+        expect(e.dones).toEqual([]);
+        expect(e.failures).toEqual([expect.stringMatching(/death 1 of the 1 the plan bills, but no row of it stands at that spawn/)]);
+        expect(e.engine.stats.respawnsPlayed).toEqual([]);
     });
 
     it('a goal queued off the PRE-crossing region (the room the leg LEFT) is not begun: the room stays held until the bot\'s re-route replaces it', () => {

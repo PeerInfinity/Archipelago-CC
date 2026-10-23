@@ -558,6 +558,76 @@
       "w": 24,
       "h": 12
     },
+    "NPCs/AdnanCharacterPic": {
+      "file": "sheets/NPCs/AdnanCharacterPic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/ForestCharacterPic": {
+      "file": "sheets/NPCs/ForestCharacterPic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/HermitPic": {
+      "file": "sheets/NPCs/HermitPic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/IntroCharacterPic": {
+      "file": "sheets/NPCs/IntroCharacterPic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/KarlorePic": {
+      "file": "sheets/NPCs/KarlorePic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/OraclePic": {
+      "file": "sheets/NPCs/OraclePic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/RekcahdamPic": {
+      "file": "sheets/NPCs/RekcahdamPic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/SenseiPic": {
+      "file": "sheets/NPCs/SenseiPic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/WatcherPic": {
+      "file": "sheets/NPCs/WatcherPic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/WitchPic": {
+      "file": "sheets/NPCs/WitchPic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/YetiPic": {
+      "file": "sheets/NPCs/YetiPic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/BobBoss1Pic": {
+      "file": "sheets/NPCs/BobBoss1Pic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/BobBoss2Pic": {
+      "file": "sheets/NPCs/BobBoss2Pic.png",
+      "w": 16,
+      "h": 16
+    },
+    "NPCs/BobBoss3Pic": {
+      "file": "sheets/NPCs/BobBoss3Pic.png",
+      "w": 16,
+      "h": 16
+    },
     "Sword": {
       "file": "sheets/Sword.png",
       "w": 48,
@@ -2731,6 +2801,160 @@
         0
       ],
       "as3": "Game.as:396-397 sprHealth Spritemap(12, 12); :1537-1546 drawHealth: frame int(i > healthc), screen-anchored"
+    },
+    "seedling:portrait/AdnanCharacter": {
+      "sheet": "NPCs/AdnanCharacterPic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/AdnanCharacter.as:21 myPic = new Image(AdnanCharacterPic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/ForestCharacter": {
+      "sheet": "NPCs/ForestCharacterPic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/ForestCharacter.as:21 myPic = new Image(ForestCharacterPic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/Hermit": {
+      "sheet": "NPCs/HermitPic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/Hermit.as:23 myPic = new Image(HermitPic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/IntroCharacter": {
+      "sheet": "NPCs/IntroCharacterPic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/IntroCharacter.as:22 myPic = new Image(IntroCharacterPic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/Karlore": {
+      "sheet": "NPCs/KarlorePic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/Karlore.as:21 myPic = new Image(KarlorePic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/Oracle": {
+      "sheet": "NPCs/OraclePic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/Oracle.as:52 myPic = new Image(OraclePic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/Rekcahdam": {
+      "sheet": "NPCs/RekcahdamPic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/Rekcahdam.as:22 myPic = new Image(RekcahdamPic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/Sensei": {
+      "sheet": "NPCs/SenseiPic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/Sensei.as:23 myPic = new Image(SenseiPic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/Watcher": {
+      "sheet": "NPCs/WatcherPic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/Watcher.as:44 myPic = new Image(WatcherPic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/Witch": {
+      "sheet": "NPCs/WitchPic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/Witch.as:27 myPic = new Image(WitchPic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/Yeti": {
+      "sheet": "NPCs/YetiPic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/Yeti.as:24 myPic = new Image(YetiPic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/BobBoss0": {
+      "sheet": "NPCs/BobBoss1Pic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/BobBossNPC.as:21 pics[0] myPic = new Image(BobBoss1Pic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/BobBoss1": {
+      "sheet": "NPCs/BobBoss2Pic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/BobBossNPC.as:21 pics[1] myPic = new Image(BobBoss2Pic); Game.as:1726-1731 talk() draws it screen-anchored"
+    },
+    "seedling:portrait/BobBoss2": {
+      "sheet": "NPCs/BobBoss3Pic",
+      "fw": 16,
+      "fh": 16,
+      "frames": 1,
+      "origin": [
+        0,
+        0
+      ],
+      "as3": "NPCs/BobBossNPC.as:21 pics[2] myPic = new Image(BobBoss3Pic); Game.as:1726-1731 talk() draws it screen-anchored"
     },
     "seedling:pickup/sword": {
       "sheet": "Sword",
