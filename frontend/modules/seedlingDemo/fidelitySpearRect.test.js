@@ -9,7 +9,7 @@
 import { describe, expect, it } from 'vitest';
 import { CONTACT_FIDELITY, CONTACT_FIDELITY_DEFAULTS, withContactFidelity } from './contactFidelity.js';
 import {
-    DOWN, LEFT, RIGHT, SPEAR_HIT_TICKS_UNMODELLED, SPEAR_REPEAT_OFFSETS, UP, pressRectTouches, spearGameRect,
+    DOWN, LEFT, RIGHT, SPEAR_HIT_TICKS, SPEAR_REPEAT_OFFSETS, UP, pressRectTouches, spearGameRect,
     spearHitRect, spearRect,
 } from './presses.js';
 
@@ -68,8 +68,8 @@ describe('fidelity SPEARRECT D2 — the rule', () => {
         expect(pressRectTouches(spearRect(125, 72, RIGHT), touching)).toBe(false);
     });
 
-    it('the repeats: T+3 and T+5 are offsets 2 and 4 from the first test (`SPEAR_HIT_TICKS_UNMODELLED`)', () => {
-        expect(SPEAR_HIT_TICKS_UNMODELLED.ticks).toEqual([1, 3, 5]);
+    it('the repeats: T+3 and T+5 are offsets 2 and 4 from the first test (`SPEAR_HIT_TICKS`)', () => {
+        expect(SPEAR_HIT_TICKS.ticks).toEqual([1, 3, 5]);
         expect(SPEAR_REPEAT_OFFSETS).toEqual([2, 4]);
     });
 });

@@ -15,7 +15,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { classOf, gameBodyEvents, modelReadings } from './killLockWitness.js';
-import { SPEAR_HIT_TICKS_UNMODELLED } from './presses.js';
+import { SPEAR_HIT_TICKS } from './presses.js';
 import { ICE_TURRET_SPEAR_ARM, withIceTurretSpearArm } from './solverBot.js';
 import { createTapeStepper } from './tapeRunner.js';
 import { atlasLevelSource } from './levelSource.js';
@@ -56,13 +56,13 @@ describe('C3 D1 — the spear through the wall, on the game (c3-d1-l98-spear-wes
     /**
      * ⛔ THE ONE DISAGREEMENT, NAMED FOR FIDELITY (C3's hand-over): `jellyfish@56,48` reaches the pocket, and the
      * second thrust's REPEAT hit lands on it in the game at t39 inside its i-frame (an earlier dark-shield bump latched
-     * `hitByDarkStuff`). The model carries one landing a thrust (`SPEAR_HIT_TICKS_UNMODELLED`). A slice that models
+     * `hitByDarkStuff`). The model carries one landing a thrust (`SPEAR_HIT_TICKS`). A slice that models
      * the repeats turns this row red, by design.
      */
     // ⛓ planning-10's SPEARRECT flip: "a slice that models the repeats turns this row red, by design" — it did. ON the
     //   jellyfish rows AGREE (no Jellyfish disagreement); the old disagreement is this row's OFF control.
-    it('the jellyfish rows agree with `spearGameTest` ON (the t39 repeat lands); OFF they disagree from t39 exactly as `SPEAR_HIT_TICKS_UNMODELLED` says (the game: hits 3, "die")', () => {
-        expect(SPEAR_HIT_TICKS_UNMODELLED.ticks).toEqual([1, 3, 5]);
+    it('the jellyfish rows agree with `spearGameTest` ON (the t39 repeat lands); OFF they disagree from t39 exactly as `SPEAR_HIT_TICKS` says (the game: hits 3, "die")', () => {
+        expect(SPEAR_HIT_TICKS.ticks).toEqual([1, 3, 5]);
         expect(bodyDisagreements(w.game.samples, m.bodies, classOf).bad.filter((b) => b.cls === 'Jellyfish')).toEqual([]);
         const off = withContactFidelity({ spearGameTest: false }, () => modelReadings(w.tape));
         const jelly = bodyDisagreements(w.game.samples, off.bodies, classOf).bad.filter((b) => b.cls === 'Jellyfish');

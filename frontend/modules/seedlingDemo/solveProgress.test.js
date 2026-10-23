@@ -751,7 +751,7 @@ describe('hammer-phase RK2 — precondition, the error\'s name, and the residue\
         ['unmodelled', 'the crusher ordering search', 'the ordering search found ${found.ordering.length}', 'in-solver search.', refusal],
         ['unmodelled', 'a body this run does not step', 'the count waits on', 'does not step it', refusal],
         ['unmodelled', 'the kill-lock ledger', 'every counted body is gone and the run\'s own kill-lock ledger', 'nothing computed the consequence', refusal],
-        ['unmodelled', 'the spear\'s repeats', 'could walk into the thrust\'s rect', 'SPEAR_HIT_TICKS_UNMODELLED', refusal],
+        ['unmodelled', 'the spear\'s repeats', 'could walk into the thrust\'s rect', 'unmodelled on this arm', refusal],
         ['unmodelled', 'a strategy not registered', 'is selected and NOT registered this slice.', undefined, refusal],
         // exhausted — a search with nothing left to try
         ['exhausted', 'the ceiling\'s wait cell', 'NO reachable cell within four tiles', 'it is waiting to drain.', refusal],

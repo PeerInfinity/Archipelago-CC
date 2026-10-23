@@ -5814,7 +5814,7 @@
       "surface": "import",
       "name": "auditFire",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 1377,
+      "line": 1376,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -5832,7 +5832,7 @@
       "surface": "import",
       "name": "auditPress",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 732,
+      "line": 731,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -5868,7 +5868,7 @@
       "surface": "import",
       "name": "distanceRectPoint",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 437,
+      "line": 436,
       "class": "physics",
       "form": "geometry-query",
       "files": {
@@ -5891,7 +5891,7 @@
       "surface": "import",
       "name": "DOWN",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 295,
+      "line": 294,
       "class": "physics",
       "form": "constant",
       "files": {
@@ -5909,7 +5909,7 @@
       "surface": "import",
       "name": "EMPTY_SWORD_WINDOW",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 193,
+      "line": 192,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -5927,7 +5927,7 @@
       "surface": "import",
       "name": "LEFT",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 294,
+      "line": 293,
       "class": "physics",
       "form": "constant",
       "files": {
@@ -5945,7 +5945,7 @@
       "surface": "import",
       "name": "PRESS_ARM_POLICY",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 819,
+      "line": 818,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -5963,7 +5963,7 @@
       "surface": "import",
       "name": "pressRectTouches",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 384,
+      "line": 383,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -5982,7 +5982,7 @@
       "surface": "import",
       "name": "RIGHT",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 292,
+      "line": 291,
       "class": "physics",
       "form": "constant",
       "files": {
@@ -6058,7 +6058,7 @@
       "surface": "import",
       "name": "slashRect",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 409,
+      "line": 408,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -6079,9 +6079,9 @@
     },
     {
       "surface": "import",
-      "name": "SPEAR_HIT_TICKS_UNMODELLED",
+      "name": "SPEAR_HIT_TICKS",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 159,
+      "line": 158,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -6099,7 +6099,7 @@
       "surface": "import",
       "name": "spearHitRect",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 376,
+      "line": 375,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -6118,7 +6118,7 @@
       "surface": "import",
       "name": "spearRect",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 325,
+      "line": 324,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -6154,7 +6154,7 @@
       "surface": "import",
       "name": "swordWindowReplace",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 271,
+      "line": 270,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -6172,7 +6172,7 @@
       "surface": "import",
       "name": "swordWindowSchedule",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 285,
+      "line": 284,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -6190,7 +6190,7 @@
       "surface": "import",
       "name": "swordWindowStep",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 226,
+      "line": 225,
       "class": "seedling",
       "form": "stepper",
       "files": {
@@ -6208,7 +6208,7 @@
       "surface": "import",
       "name": "UP",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 293,
+      "line": 292,
       "class": "physics",
       "form": "constant",
       "files": {
