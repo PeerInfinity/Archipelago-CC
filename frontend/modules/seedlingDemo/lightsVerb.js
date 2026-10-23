@@ -32,8 +32,8 @@ import {
 } from './solverView.js';
 // ⛓ fidelity LIGHTSARR D2: the shield's shove, forecast as the run steps it (`levelRun.lightsShieldBumpNow`).
 import { lightsShieldBump } from './solverView.js';
-// ⛓ seedling-fidelity-slowfix D-A: the sortie portfolio's switch.
-import { CONTACT_FIDELITY } from './contactFidelity.js';
+// ⛓ seedling-fidelity-slowfix D-A: the sortie portfolio's switch (through the door).
+import { CONTACT_FIDELITY } from './solverView.js';
 
 /** The planner's numbers. Each is a search bound or a safety margin, not a game constant. */
 export const LIGHTS_VERB = Object.freeze({
