@@ -47,6 +47,13 @@
  *              skips the leg by name (`goal-needs-unmappable-event`). A leg whose goal needs no event is byte-identical.
  *   key        `legKey` — (region, the arrival's door, goal): the leg's identity ACROSS SHAs. The numeric `id` is
  *              the list position (display only: it shifts when an earlier leg is added or removed).
+ *   door-less  ⛓ (§5.126) a room NO door enters (no arrival above) is entered in play by WALKING a logical link from a
+ *              sibling room of its level (`linkArrivals`): its legs start at that sibling's door arrival (the jump is a
+ *              real door spawn; ⛔ no door is invented, no position written) and walk across, `arrive.entry: 'link'`,
+ *              key `<region> <- <door> ~> <room walked from> -> <goal>`. The link's `game_state` event stages as a door
+ *              edge's does. They are built AFTER every preset's door legs, so a door leg's id, key and bytes never move
+ *              (`fixtures/divergence-door-leg-keys.json` pins the keys). A door-less room with a goal and no such arrival
+ *              prints `UNREACHABLE-AS-LEG: <preset>:<region> — <why>`; the goal-less ones are named in one INFO line.
  *
  * Run: node scripts/procgen/seedling-divergence-legs.mjs --out=<legs.jsonl> [--presets=a,b] [--blocks]
  */
