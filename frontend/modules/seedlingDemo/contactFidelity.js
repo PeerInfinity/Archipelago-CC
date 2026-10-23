@@ -1001,7 +1001,7 @@ export const CONTACT_FIDELITY = {
      * asked with `drillPass`) and the player preview (`previewStepper`), with a standing tail for the cut; certifies it on a
      * fork of the run with the cut itself; and plays it. OFF: byte-identical. `SEEDLING_DRILL_TIMED_PASS=0|1`.
      */
-    drillTimedPass: false,
+    drillTimedPass: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
