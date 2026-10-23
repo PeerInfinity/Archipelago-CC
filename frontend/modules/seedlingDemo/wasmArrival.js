@@ -490,11 +490,13 @@ export function arrivalSolveRequest({ staging, solverGoal, levelSource, records,
  *   ordinary continuation (the solver steps off it from the shadow).
  */
 export function continuationSolveRequest({ staging, shipped, goal, levelSource, records, record, name = 'wasm-continuation',
-    equips = null }) {
+    equips = null, holds = null }) {
     const perTick = shipped.map((h) => new Set(h));
+    // ⛓ HOLD SEAM — `holds` (room tick → the engine frames a hold ran before it): replayed by the shadow AND the worker.
+    const hd = holds && holds.size ? new Map(holds) : null;
     // ⛓ WASM EQUIPS — `equips` (room tick → slot): the slots the shipped tapes selected, re-made at their ticks.
     const eq = equips && equips.size ? new Map(equips) : null;
-    const shadow = replayTape({ staging, perTick, levelSource, scratchPersistence: true, equips: eq });
+    const shadow = replayTape({ staging, perTick, levelSource, scratchPersistence: true, equips: eq, holds: hd });
     const live = liveOf(shadow);
     // The held check compares the selected slot too (`wasmPlayback.shadowMismatch`).
     const shadowRow = { ...live.row, primary: shadow.primary };
@@ -504,7 +506,7 @@ export function continuationSolveRequest({ staging, shipped, goal, levelSource, 
     // ⛓ DELIVERY DEFERRAL — the spawn pair the host's `atBootPosition` reads after the prefix (`wasmPlayback.bootAtCtor`).
     const shadowCtor = { ...shadow.worldCtor };
     const mapped = arrivalSolverGoal(goal, { staging, levelSource, record,
-        run: replayTape({ staging, perTick, levelSource, scratchPersistence: true, equips: eq }) });
+        run: replayTape({ staging, perTick, levelSource, scratchPersistence: true, equips: eq, holds: hd }) });
     if (!mapped.goal) return { shadowRow, shadowDamage, shadowCtor, mapped, refusal: `the solver has no goal for ${goal?.name ?? goal?.kind}: ${mapped.walker}` };
     return {
         shadowRow,
@@ -512,6 +514,6 @@ export function continuationSolveRequest({ staging, shipped, goal, levelSource, 
         shadowCtor,
         mapped,
         request: { staging, perTick, live, solverGoal: mapped.goal, name, scratchPersistence: true, equips: eq, levelSource,
-            source: { records } },
+            source: { records }, ...(hd ? { holds: hd } : {}) },
     };
 }

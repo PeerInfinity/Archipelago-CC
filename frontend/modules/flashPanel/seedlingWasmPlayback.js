@@ -115,6 +115,7 @@ import {
     SOLVER_BUDGET_WORK, SOLVER_UPGRADE_WINDOW_WORK,
 } from '../seedlingDemo/jsRuntimeSolver.js';
 import { createWorkerSolveService } from '../seedlingDemo/jsRuntimeSolveService.js';
+import { continuationHoldSeam, holdSeamRestage, holdsMap } from '../seedlingDemo/wasmHoldSeam.js';
 import { applyAxeDodgeAsk, parseAxeDodgeAsk } from '../seedlingDemo/axeDodgeAskHook.js';
 import { axeDodgeOverride } from './seedlingAxeDodgeSettings.js';
 import { applyDashOnlyWindow, parseDashOnlyWindow } from '../seedlingDemo/dashOnlyWindowHook.js';
@@ -386,6 +387,9 @@ export function createWasmPlayback({
         swapPushes: [],
         // ⛓ ARRIVAL JITTER — every plan ship's clock: staged, shipped prefix, the game's (a diagnostic, never acted on)
         shipClock: [],
+        // ⛓ HOLD SEAM — each continuation's swim channel across its hold: `{level, t, model, game, n, refusal, outcome}`
+        // (`n` = the held frames stepped, measured off `sound_pin`; outcome `solved` → `shipped` | `re-staged`)
+        holdSeams: [],
         // ⛓ RESTART HOLD (an instrument, never acted on) — the arrival watch around each EXPECTED arrival (`expectArrival`,
         // a Restart's start hop), from the arming to the hold: `expect`, `walkTo`, `begin` (a re-base) / `begin-keep`,
         // `seen`, `stop-drop`. Only those rows, so the cap (`ARRIVAL_WATCH_ROWS`) keeps the last ~10 handshakes whole.
@@ -1259,12 +1263,26 @@ export function createWasmPlayback({
         let heldRow = null;
         let heldDamage = null;
         let heldCtor = null;
+        let held = null;
         try {
+            // ⛓ HOLD SEAM — the room is HELD at tick `r.shipped.length` (a tape's held end, or a delivery's freeze before
+            // its lead tick), and every held frame stepped the game's pinned swim channel. The model is stepped by the
+            // frames the GAME's pin says ran (`heldSwimFrames`, never a guess), so the shadow, the worker's replay and the
+            // solver's forks all start the continuation on the game's boost window. ⛓ `ship()` re-reads the pin: the
+            // hold runs on while the solver thinks. No `sound` pin, or no open channel at the seam → nothing is replayed
+            // or stepped, and the request is the one it always was.
+            const hs = continuationHoldSeam({ staging: r.staging, shipped: r.shipped, levelSource, equips: roomEquips(r), roomHolds: r.holds ?? [], status: st });
+            const { holds } = hs;
+            if (hs.seam) {
+                held = { level: r.level, ...hs.seam, outcome: 'solved' };
+                stats.holdSeams.push(held);
+                if (held.refusal) log(`[wasm playback] the hold seam in level ${r.level} at tick ${held.t} was not stepped — ${held.refusal}`, 'warn');
+            }
             c = continuationSolveRequest({ staging: r.staging, shipped: [...r.shipped, ...lead], goal, levelSource, records, record,
-                name: `wasm-continue-${goal.kind}-${goal.level}`, equips: roomEquips(r) });
+                name: `wasm-continue-${goal.kind}-${goal.level}`, equips: roomEquips(r), holds });
             if (lead.length) {
                 const before = replayTape({ staging: r.staging, perTick: r.shipped.map((h) => new Set(h)), levelSource, scratchPersistence: true,
-                    equips: roomEquips(r) });
+                    equips: roomEquips(r), holds });
                 heldRow = { level: before.level, x: before.state.x, y: before.state.y, deaths: before.playerDeaths.length, primary: before.primary };
                 heldDamage = before.damage;
                 heldCtor = { ...before.worldCtor };
@@ -1293,7 +1311,7 @@ export function createWasmPlayback({
         }
         if (c.refusal) { contFallback(c.refusal, 'continuation-refused'); return; }
         stats.continuations += 1;
-        startSolve(c.request, { staging: r.staging, continuation: true, prefix: r.shipped.length, lead, heldRow, bootCtor });
+        startSolve(c.request, { staging: r.staging, continuation: true, prefix: r.shipped.length, lead, heldRow, bootCtor, holdSeam: held });
     }
 
     /**
@@ -1446,6 +1464,7 @@ export function createWasmPlayback({
         handle = null;
         room.shipped = f.shippedBefore;
         room.equips = f.equipsBefore;
+        room.holds = f.holdsBefore;
         room.lead = null;
         room.slotLag = null;
         play = f.leg;
@@ -1570,6 +1589,19 @@ export function createWasmPlayback({
                 + 'thing that keeps the game where the solve started)');
             return;
         }
+        // ⛓ HOLD SEAM — the hold ran on while the solver thought: the game's pin NOW is the channel the plan's first
+        // tick sees. A plan solved on another channel (its count re-measured gives a different channel) is re-staged —
+        // solved again from the shadow on the pin as it reads now. Bounded: the channel only moves forward while held
+        // and stops at closed, so each re-stage sees a later channel than the last, and a closed one never moves.
+        const hs = play.holdSeam;
+        const again = holdSeamRestage(hs, st, room?.staging?.pins);
+        if (again) {
+            hs.outcome = 're-staged';
+            hs.shipGame = again.game;
+            tl('hold-seam-restage', { level: hs.level, t: hs.t, solved: hs.n, now: again.n });
+            solveInRoom();
+            return;
+        }
         // ⛓ MID-ROOM REPLAN — the lead tick (`solveInRoom`) goes first, its row the held one.
         const lead = play.lead ?? [];
         if (lead.length && !play.leadShipped) {
@@ -1654,6 +1686,9 @@ export function createWasmPlayback({
             room.lead = null;
             // ⛓ WASM EQUIPS — indexed by the room's shipped ticks, as the shadow replays them.
             room.equips = [...(room.equips ?? []), ...tapeEquips(plan.equipsAt, room.shipped.length)];
+            // ⛓ HOLD SEAM — the frames the plan was solved across, at the tick they ran before (every later shadow replays them).
+            if (play.holdSeam) play.holdSeam.outcome = 'shipped';
+            if (play.holdSeam?.n && !play.holdSeam.refusal) room.holds = [...(room.holds ?? []), { t: play.holdSeam.t, n: play.holdSeam.n }];
             room.shipped = [...room.shipped, ...plan.solution.map((h) => [...h])];
             room.plans = (room.plans ?? 0) + 1;
             if (talk?.left) room.talkCircles = [];
@@ -2083,7 +2118,7 @@ export function createWasmPlayback({
         const leg = play;
         // What a resume needs (`resumeFrozen`): the room as it stood, the interrupted leg, the freeze-time readout.
         frozen = { tick: k, solution: plan.solution, heldKeys, at: t0, leg, items, statusAt: st,
-            stagingBefore: room.staging, shippedBefore: room.shipped, equipsBefore: room.equips ?? [] };
+            stagingBefore: room.staging, shippedBefore: room.shipped, equipsBefore: room.equips ?? [], holdsBefore: room.holds ?? [] };
         const post = slotsAfterDelivery({ slots: st.inventory_slots ?? [], primary: st.primary, secondary: st.secondary }, items);
         const added = deliveredSaveArrays({ staging: room.staging, status: st, save });
         const row = { level: room.level, goal: goal?.name ?? goal?.kind, phase: 'playing', tick: k, of: plan.solution.length,
@@ -2101,6 +2136,8 @@ export function createWasmPlayback({
         admit(items, row, (landed) => {
             room.shipped = prefix;
             room.equips = prefixEquips;
+            // ⛓ HOLD SEAM — the holds the prefix was played across (one AT its end ran before the frozen tick's lead).
+            room.holds = (room.holds ?? []).filter((h) => h.t <= prefix.length);
             room.lead = heldKeys.length ? [heldKeys] : null;
             // ⛓ SLOTS CONSUMER — the game's array as it stood before the write: the model appends the delivered slot.
             // ⛓ KEY DELIVERY — a delivered key is staged at the arrival too (only what is new to the staging and the game).
@@ -2279,6 +2316,7 @@ export function createWasmPlayback({
                 sceneLeaks: stats.sceneLeaks.map((r) => ({ ...r })),
                 deliveries: stats.deliveries.map((d) => ({ ...d })), deliveryDeferred: [...stats.deliveryDeferred],
                 swapPushes: stats.swapPushes.map((r) => ({ ...r })), shipClock: stats.shipClock.map((r) => ({ ...r })),
+                holdSeams: stats.holdSeams.map((r) => ({ ...r })),
                 adoptClock: stats.adoptClock.map((r) => ({ ...r })), arrivalClock: stats.arrivalClock.map((r) => ({ ...r })),
                 latchWaits: stats.latchWaits.map((r) => ({ ...r, first: { ...r.first }, last: { ...r.last } })), selfChecks: stats.selfChecks.map((r) => ({ ...r })),
                 timeline: stats.timeline.map((r) => ({ ...r })), staleGoals: stats.staleGoals.map((r) => ({ ...r })),
@@ -2288,7 +2326,7 @@ export function createWasmPlayback({
         get arrivalReads() { return arrivalReads.map((a) => structuredClone(a)); },
         /** ⛓ W7 — the held room's recipe (the probe rebuilds the shadow from it); null when none. */
         get room() {
-            return room ? structuredClone({ level: room.level, staging: room.staging, shipped: room.shipped, equips: room.equips ?? [], spawn: room.spawn }) : null;
+            return room ? structuredClone({ level: room.level, staging: room.staging, shipped: room.shipped, equips: room.equips ?? [], holds: room.holds ?? [], spawn: room.spawn }) : null;
         },
         dispose() { this.stop(); try { service?.dispose?.(); } catch { /* gone */ } },
     };
