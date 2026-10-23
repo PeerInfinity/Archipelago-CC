@@ -12400,8 +12400,13 @@ export function createLevelRun({
      *
      * `null` while the switch is OFF, under `noclip`/`noDamage` (nothing is stepped), or in a room with neither class.
      */
-    function corridorBodyForecastNow() {
-        if (noclip || noDamage || !CONTACT_FIDELITY.corridorBodyPricing) return null;
+    function corridorBodyForecastNow({ drillPass = false } = {}) {
+        /**
+         * ⛓ fidelity TIMEDPASS D2: `drillPass` — the solver's timed pass past a stepped drill
+         * (`CONTACT_FIDELITY.drillTimedPass`) asks this forecast with `corridorBodyPricing` OFF; the forecast is the same
+         * one. Without it (every other caller) the gate is the switch's, byte-identical.
+         */
+        if (noclip || noDamage || !(CONTACT_FIDELITY.corridorBodyPricing || drillPass)) return null;
         // The live order: the LAST wallflyer placement updates first; the drills in placement order.
         const flyers = [...wallFlyerStateFor(level)].reverse().filter(([, w]) => !w.removed)
             .map(([id, w]) => [id, { ...w, dieAnim: w.dieAnim ? { ...w.dieAnim } : null }]);
@@ -12415,14 +12420,20 @@ export function createLevelRun({
         const sctx = spinnerCtx();
         const shieldOn = CONTACT_FIDELITY.wallFlyerShieldBump && inventory?.hasShield === true;
         const dark = inventory?.hasDarkShield === true;
-        let iframe = damage?.hitsTimer ?? 0;
-        // The camera, seeded from the live one and stepped by this forecast alone (`chaserForecastNow`'s).
-        let fcam = cam ? { ...cam } : null;
-        let fband = camBand ? { x: { ...camBand.x }, y: { ...camBand.y } } : null;
-        let fshake = shake;
         const worldRec = world.world;
         const target = bossCameraTarget;
-        let first = true;
+        return corridorBodyForecastFrom({ fl, dr, iframe: damage?.hitsTimer ?? 0,
+            // The camera, seeded from the live one and stepped by this forecast alone (`chaserForecastNow`'s).
+            fcam: cam ? { ...cam } : null,
+            fband: camBand ? { x: { ...camBand.x }, y: { ...camBand.y } } : null,
+            fshake: shake, first: true }, { sctx, shieldOn, dark, worldRec, target });
+    }
+    /**
+     * ⛓ fidelity TIMEDPASS D2: the forecast's body, over its own state — so `fork()` hands out an independent copy (the
+     * timed pass's search branches on it). The state's members are `corridorBodyForecastNow`'s former locals, unchanged.
+     */
+    function corridorBodyForecastFrom(S, { sctx, shieldOn, dark, worldRec, target }) {
+        let { fl, dr, iframe, fcam, fband, fshake, first } = S;
         const advanceCamera = (player) => {
             if (fband === null && fshake === 0) {
                 fcam = stepCamera(fcam, player, worldRec, { cameraTarget: target });
@@ -12532,6 +12543,24 @@ export function createLevelRun({
                     }
                 }
                 return landed;
+            },
+            /**
+             * ⛓ fidelity TIMEDPASS D2: an independent copy of this forecast as it stands (its bodies, camera, shake,
+             * i-frame and first-step flag) — the timed pass branches its search on it. Bodies are stepped as new objects
+             * (`stepDrill`/`stepWallFlyer` spread them), so a shallow copy of each map is a deep one for every step.
+             */
+            fork() {
+                return corridorBodyForecastFrom({
+                    fl: new Map([...fl].map(([id, w]) => [id, { ...w, dieAnim: w.dieAnim ? { ...w.dieAnim } : null }])),
+                    dr: new Map(dr), iframe,
+                    fcam: fcam ? { ...fcam } : null,
+                    fband: fband ? { x: { ...fband.x }, y: { ...fband.y } } : null,
+                    fshake, first,
+                }, { sctx, shieldOn, dark, worldRec, target });
+            },
+            /** ⛓ fidelity TIMEDPASS D2: the forecast's drills as they stand (`{id, x, y, anim, sprite, hitsTimer, …}`). */
+            drills() {
+                return [...dr.values()].filter((d) => !d.removed);
             },
         };
     }
@@ -19787,8 +19816,8 @@ export function createLevelRun({
          * ⛓ fidelity CORRIDOR D2: THE WALLFLYERS AND DRILLS, FORECAST — see `corridorBodyForecastNow`. `null` while
          * `CONTACT_FIDELITY.corridorBodyPricing` is OFF, so every preview is byte-identical then.
          */
-        corridorBodyForecast() {
-            return corridorBodyForecastNow();
+        corridorBodyForecast(opts) {
+            return corridorBodyForecastNow(opts);
         },
         /**
          * ⛓ U15-swim D2: THE TURRET SUBSYSTEM, FORECAST — see `spitForecastNow`.

@@ -988,6 +988,20 @@ export const CONTACT_FIDELITY = {
      * probes standard ON green.
      */
     drillKillFirst: true,
+    /**
+     * fidelity TIMEDPASS (wave 27) — THE SOLVER WALKS PAST A HOPPING DRILL IT CANNOT KILL (`solverBot.execDrillTimedPass`).
+     * ⚖ The user (2026-10-23): *"Keep Fire; timed pass."* L28's rope rule stays Sword | Spear | Fire, and Fire cannot kill
+     * a drill (DRILLKILL W0), so Fire alone from the L26 arrival needs a no-hit walk past `drill@80,96` (and
+     * `drill@128,96`). `Drill.update` hops one tile toward a player within `runRange` from "sit" (every 15 ticks while
+     * awake: "drill" 7 + "undrill" 7 + the "sit" check), and `hitPlayer` is the 10x10 box against the player's 4x5 on every
+     * tick — so a pass is a POSITION question at each hop (a player 8-9 px off on an axis is jumped over, landing 7-8 px
+     * behind), which a waypoint walk cannot answer. ON: before a `rope` clear-tag whose planned walk wakes a live stepped
+     * drill and whose run holds no weapon that kills one (the kill stays first, ⚖ "fight the drills first"), the solver
+     * SEARCHES a tick-by-tick walk to one of the cut's stances on the run's own drill forecast (`corridorBodyForecast`,
+     * asked with `drillPass`) and the player preview (`previewStepper`), with a standing tail for the cut; certifies it on a
+     * fork of the run with the cut itself; and plays it. OFF: byte-identical. `SEEDLING_DRILL_TIMED_PASS=0|1`.
+     */
+    drillTimedPass: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1182,6 +1196,9 @@ if (globalThis.process?.env?.SEEDLING_SPEAR_GAME_TEST === '0') CONTACT_FIDELITY.
 // ⛓ fidelity DRILLKILL: `SEEDLING_DRILL_KILL_FIRST=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DRILL_KILL_FIRST === '1') CONTACT_FIDELITY.drillKillFirst = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_KILL_FIRST === '0') CONTACT_FIDELITY.drillKillFirst = false;
+// ⛓ fidelity TIMEDPASS: `SEEDLING_DRILL_TIMED_PASS=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_DRILL_TIMED_PASS === '1') CONTACT_FIDELITY.drillTimedPass = true;
+if (globalThis.process?.env?.SEEDLING_DRILL_TIMED_PASS === '0') CONTACT_FIDELITY.drillTimedPass = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
