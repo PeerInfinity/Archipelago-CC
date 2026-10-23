@@ -14,11 +14,12 @@ import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
 
 const RULES = JSON.parse(readFileSync(
     new URL('../../../presets/seedling_playthrough_maze/AP_1/AP_1_rules.json', import.meta.url), 'utf8'));
+const ATLAS = JSON.parse(readFileSync(new URL('../../flashPanel/atlases/seedling-playthrough.json', import.meta.url), 'utf8'));
 
 describe('seedling_playthrough_maze — scripted ≡ native on every region', () => {
     it('every region, both engines, no problem and the same lines', () => {
-        const native = certifyPlaythroughMaze(RULES, HELPERS, { native: true });
-        const scripted = certifyPlaythroughMaze(RULES, HELPERS, { native: false });
+        const native = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS });
+        const scripted = certifyPlaythroughMaze(RULES, HELPERS, { native: false, atlas: ATLAS });
         expect(native.problems).toEqual([]);
         expect(scripted.problems).toEqual([]);
         expect(scripted.lines).toEqual(native.lines);

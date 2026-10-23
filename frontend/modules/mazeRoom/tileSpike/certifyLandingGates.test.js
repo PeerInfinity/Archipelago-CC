@@ -51,7 +51,7 @@ describe('landing gates in the maze preset (L49 + L50)', () => {
     });
 
     it('certifies clean; without the gate the world is STRICTER than AP, and L49 (the start) does not imply the Swim', () => {
-        const run = (rules) => certifyPlaythroughMaze(rules, HELPERS, { native: true });
+        const run = (rules) => certifyPlaythroughMaze(rules, HELPERS, { native: true, atlas: ATLAS });
         const clean = run(RULES);
         expect(clean.problems).toEqual([]);
         expect(clean.accepted).toEqual([]);
@@ -61,7 +61,7 @@ describe('landing gates in the maze preset (L49 + L50)', () => {
 
     it('a stricter row is ACCEPTED when every AP route into its source needs the missing item — and named', () => {
         // L50 → L49 ungated: the world still needs the Swim, but no AP state stands in L50 without it.
-        const out = certifyPlaythroughMaze(withExitRule(RULES, 'level_50', 'level_49', { rule: 'True_' }), HELPERS, { native: true });
+        const out = certifyPlaythroughMaze(withExitRule(RULES, 'level_50', 'level_49', { rule: 'True_' }), HELPERS, { native: true, atlas: ATLAS });
         expect(out.problems).toEqual([]);
         expect(out.accepted).toEqual([{ label: 'level_50 → level_49', source: 'level_50', by: 'Progressive Swim' }]);
     }, 120_000);
@@ -69,11 +69,11 @@ describe('landing gates in the maze preset (L49 + L50)', () => {
     it('a LOOSER row is never accepted, even where the source needs the item', () => {
         // The Conch is free in the world; an AP rule asking the Swim for it is looser in the world's direction.
         const conch = withLocationRule(RULES, 'level_49', 'Level 049 - Conch', SWIM);
-        expect(certifyPlaythroughMaze(conch, HELPERS, { native: true }).problems)
+        expect(certifyPlaythroughMaze(conch, HELPERS, { native: true, atlas: ATLAS }).problems)
             .toEqual(['level_49 @ Level 049 - Conch holding []: derived true, atlas false']);
         // L50's exit asks the Swim AND a key the world never needs: looser at [Swim], in a source that needs the Swim.
         const key = { rule: 'And', children: [SWIM, { rule: 'Has', args: { item_name: 'Green Key' } }] };
-        const out = certifyPlaythroughMaze(withExitRule(RULES, 'level_50', 'level_49', key), HELPERS, { native: true });
+        const out = certifyPlaythroughMaze(withExitRule(RULES, 'level_50', 'level_49', key), HELPERS, { native: true, atlas: ATLAS });
         expect(out.problems).toEqual(['level_50 → level_49 holding [Progressive Swim]: derived true, atlas false']);
     }, 120_000);
 });

@@ -24,6 +24,15 @@
  * region's way OUT is compared (L16 r3c7 → L17: the atlas's True_, the world's Has(cut)), but only after
  * checking that no AP exit INTO the region admits that inventory — else that entry is the problem.
  *
+ * ⛓ THE GAME'S LANDING CELL (session tile-primitives-landing-cells, ⚖ 2026-10-23 "Certifier only" + "Any shut
+ * obstacle"). The game lands a crossing on the atlas connection's to-end `entrance_tile`, an arrival-only `in_*` exit
+ * the projection never emits. That is neither the maze runtime's landing (the reverse exit tile) nor the sub-region
+ * entrance a region is priced from: whole game, 299 of 304 crossings land on a third cell. `arrivalBlocked` judges
+ * the crossing there, from the ATLAS (`atlasLandings`): it is refused at an inventory for which that cell is shut,
+ * whatever the obstacle (L56's pit drops into L57's Swim water; the world crossed free, LOOSER than its landing gate),
+ * and a landing on a cell the maze world walls is a problem by name. The trap-lane check reads the same cell. An exit
+ * between two sub-regions of ONE level (the atlas's `internal_exits`, no connection) keeps `resolveMazeArrival`.
+ *
  * ⛔ A counted Has (count ≥ 2) in an AP rule is a PROBLEM by name: the truth table enumerates SETS, which
  * cannot hold two of anything, so it would certify the rule vacuously (⚖ "Refuse counted rules").
  *
@@ -36,10 +45,10 @@
  * LOOSER row, stays a problem. The reach is optimistic (a counted Has asks for one; an unknown kind passes), so it
  * can only under-state what is necessary — never accept a row it should not.
  */
-import { deserializeMazeWorld, createState, step, standsInArmedLane } from '../mazeRoomEngine.js';
+import { deserializeMazeWorld, createState, step, standsInArmedLane, getObstacle, isFloor } from '../mazeRoomEngine.js';
 import { resolveMazeArrival } from '../mazeArrival.js';
 import { ropeEvents } from './deriveTileLogic.js';
-import { evaluateRuleAgainstInventory } from '../../shared/procgen/library.js';
+import { evaluateRuleAgainstInventory, isObstacleCleared } from '../../shared/procgen/library.js';
 import { deriveLevelWorldLogic, deriveEntryLogic, enteredAt } from './deriveLevelWorldLogic.js';
 import { ruleFromMinimalSets } from './deriveTileLogic.js';
 
@@ -81,13 +90,57 @@ function apReach(REGIONS, starts, inv) {
     return seen;
 }
 
+/** The sidecar that carries `name`'s playable payload (a level world's first sub-region carries it for all). */
+const carrierOf = (SIDECARS, name) => {
+    const own = SIDECARS[name];
+    return own.playable_payload ? own
+        : Object.values(SIDECARS).find((s) => s.playable_payload && s.shared_world === own.shared_world);
+};
+
+/**
+ * Where the GAME lands each crossing of a compiled maze document: AP exit name → the cell in the TARGET world's own
+ * coordinates (the to-end exit's `entrance_tile` less the target payload's `origin`), read off the atlas's
+ * `vanilla_layout.connections` (both legs of a two-way one). A crossing the atlas does not wire is absent.
+ *
+ * @param {object} atlas the region atlas the document was compiled from
+ * @param {object} rules a compiled rules document (player '1')
+ * @returns {Map<string, {x: number, y: number}>}
+ */
+export function atlasLandings(atlas, rules) {
+    const SIDECARS = rules.preset_sidecars['1'];
+    const toEnd = new Map();
+    for (const c of atlas.vanilla_layout?.connections ?? []) {
+        toEnd.set(`${c.from[0]}|${c.from[1]}`, c.to);
+        if (c.one_way !== true) toEnd.set(`${c.to[0]}|${c.to[1]}`, c.from);
+    }
+    const regionOf = new Map(atlas.regions.map((r) => [r.region_id, r]));
+    const out = new Map();
+    for (const side of Object.values(SIDECARS)) {
+        const payload = side.playable_payload;
+        for (const exit of payload?.exits ?? []) {
+            const to = exit.targetRegion && toEnd.get(`${payload.atlas_region}|${exit.atlas_exit_id}`);
+            if (!to || !SIDECARS[exit.targetRegion]) continue;
+            const target = carrierOf(SIDECARS, exit.targetRegion).playable_payload;
+            const tile = regionOf.get(to[0])?.exits?.find((e) => e.exit_id === to[1])?.entrance_tile;
+            if (target.atlas_region !== to[0] || !tile) {
+                throw new Error(`landing cells: ${exit.exitName} lands on ${to.join('/')}, which the compiled ${exit.targetRegion} does not hold`);
+            }
+            out.set(exit.exitName ?? exit.exit_id, { x: tile[0] - (target.origin?.x ?? 0), y: tile[1] - (target.origin?.y ?? 0) });
+        }
+    }
+    return out;
+}
+
 /**
  * @param {object} rules a compiled rules document (player '1')
  * @param {object} helpers the tile helpers (`maze_tiles.helpers.json`)
- * @param {{native: boolean, regions?: string[]}} opts `regions` = the AP regions to certify (default: all);
- *   a level world's pairs are certified when any of its members is in the sample
+ * @param {{native: boolean, regions?: string[], atlas: object}} opts `regions` = the AP regions to certify (default:
+ *   all); a level world's pairs are certified when any of its members is in the sample. `atlas` (required) = the region
+ *   atlas the document was compiled from — where the game lands each crossing
  */
-export function certifyPlaythroughMaze(rules, helpers, { native, regions } = {}) {
+export function certifyPlaythroughMaze(rules, helpers, { native, regions, atlas } = {}) {
+    if (!atlas) throw new Error('certifier: the atlas is required — a crossing is judged by the cell the game lands it on');
+    const landings = atlasLandings(atlas, rules);
     const REGIONS = rules.regions['1'];
     const SIDECARS = rules.preset_sidecars['1'];
     const problems = [];
@@ -125,36 +178,48 @@ export function certifyPlaythroughMaze(rules, helpers, { native, regions } = {})
         }
         for (const item of by) accepted.push({ label, source, by: item });
     };
-    const worldOf = (name) => {
-        const own = SIDECARS[name];
-        const carrier = own.playable_payload ? own
-            : Object.values(SIDECARS).find((s) => s.playable_payload && s.shared_world === own.shared_world);
-        return deserializeMazeWorld(carrier.playable_payload);
-    };
+    const worldOf = (name) => deserializeMazeWorld(carrierOf(SIDECARS, name).playable_payload);
     /**
-     * ⛓ A crossing out of `source` is a HIT when its arrival (`resolveMazeArrival` by source region, else the
-     * target's own entrance) stands in an ARMED lane of the target world for that inventory. The items it
-     * reads (the target's rope events — what silences a lane from afar) join the source's lattice axis.
+     * ⛓ A crossing out of `source` is refused when its arrival — the cell the GAME lands it on (`atlasLandings`; an
+     * in-world exit's, `resolveMazeArrival`) — is SHUT for that inventory, or stands in an ARMED lane of the target world. The items those read (the landing
+     * obstacle's own, the target's rope events — what silences a lane from afar) join the source's lattice axis.
      */
     const arrivalBlockedFrom = (source) => {
         const cache = new Map();
+        const levelOf = (name) => carrierOf(SIDECARS, name).playable_payload.atlas_region;
         const arrivalOf = (exit) => {
-            if (cache.has(exit.targetRegion)) return cache.get(exit.targetRegion);
+            const name = exit.exitName ?? exit.exit_id;
+            if (cache.has(name)) return cache.get(name);
             let found = null;
             if (SIDECARS[exit.targetRegion]) {
                 const tw = worldOf(exit.targetRegion);
-                if (tw.trapLanes) {
-                    const into = tw.sharedWorld ? enteredAt(tw, exit.targetRegion) : tw;
-                    const at = resolveMazeArrival(into, { source_region: source, exit_id: exit.targetExitId ?? null });
-                    found = { world: into, at: at ? { x: at.x, y: at.y } : into.entrance, items: ropeEvents(tw).map((r) => r.event) };
+                const into = tw.sharedWorld ? enteredAt(tw, exit.targetRegion) : tw;
+                const inWorld = levelOf(exit.targetRegion) === levelOf(source);
+                let at = inWorld ? resolveMazeArrival(into, { source_region: source, exit_id: exit.targetExitId ?? null })
+                    : landings.get(name) ?? null;
+                if (!inWorld && !at) problems.push(`${name}: the atlas does not say where the game lands it`);
+                else if (!inWorld && !isFloor(into, at.x, at.y)) {
+                    problems.push(`${name}: the game lands on (${at.x},${at.y}) in ${exit.targetRegion}, which the maze world walls`);
+                    at = null;
+                }
+                const ob = at && !inWorld ? getObstacle(into, at.x, at.y) : null;
+                if (ob || tw.trapLanes) {
+                    const lib = ob ? into.obstacleLib?.[ob] ?? {} : null;
+                    found = {
+                        world: into, at: at ?? into.entrance, ob,
+                        items: [...(lib ? [...ruleItems(lib.clear_rule), ...(lib.clear_set ?? []).filter((i) => typeof i === 'string')] : []),
+                            ...(tw.trapLanes ? ropeEvents(tw).map((r) => r.event) : [])],
+                    };
                 }
             }
-            cache.set(exit.targetRegion, found);
+            cache.set(name, found);
             return found;
         };
         const blocked = (exit, inv) => {
             const a = arrivalOf(exit);
             if (!a) return false;
+            if (a.ob && !isObstacleCleared(a.ob, new Set(inv), a.world.obstacleLib)) return true;
+            if (!a.world.trapLanes) return false;
             const s = createState(a.world);
             s.player_pos = { ...a.at };
             return standsInArmedLane(a.world, s, new Set(inv));
