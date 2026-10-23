@@ -17,6 +17,7 @@ import {
 } from './ghostSpinnerPress.js';
 import { atlasLevelSource } from './levelSource.js';
 import { SLASH_REACH } from './presses.js';
+import { withPressKillRebootGuard, withPressKillShakeGuard } from './pressKillGuards.js';
 import { solveSegment } from './solverBot.js';
 import { SPINNER } from './spinner.js';
 import { parseTape } from './tapeFormat.js';
@@ -87,17 +88,23 @@ function stagingA() {
     return staging;
 }
 
-function solveA(enabled) {
+/**
+ * Staging A solved with `GHOST_KILL_RUNG` at `enabled` and the press kill's two guards at `guards` (`pressKillGuards.js`).
+ * ⚖ The witness is ABOUT the kill, which crosses the chaser's death at t1216: hammer-phase GF (2026-10-23) flipped the
+ * guards ON, and ON the reboot guard refuses the kill at that death, so the rows that reproduce the witness pin the
+ * guards OFF, and a sibling row pins the ON answer (the witness's own first 1216 ticks, then the guard's refusal).
+ */
+function solveA(enabled, guards = false) {
     const staging = stagingA();
     const run = createRunForStaging(staging, atlasLevelSource());
-    return withGhostKillRung(enabled, () => {
+    return withPressKillShakeGuard(guards, () => withPressKillRebootGuard(guards, () => withGhostKillRung(enabled, () => {
         try {
             return { perTick: solveSegment({ run, goals: [{ kind: 'collect-placement', placement: { x: 880, y: 816 } }],
                 name: NAME, boot: staging.boot, dashMode: 'all' }).perTick, message: null };
         } catch (e) {
             return { perTick: e.perTick ?? [], message: String(e?.message ?? e) };
         }
-    });
+    })));
 }
 
 describe(`${NAME} — the kill rung's ghost press kill, on the game (hammer-phase G1, D2)`, () => {
@@ -141,10 +148,20 @@ describe(`${NAME} — the kill rung's ghost press kill, on the game (hammer-phas
         expect(off.message).toContain(GATE);
     }, 120_000);
 
-    it('⛓⛓⛓ ON: the rung asks the press kill, and the solve\'s executed prefix IS the witness, key for key', () => {
-        const on = solveA(true);
+    it('⛓⛓⛓ ON: the rung asks the press kill, and the solve\'s executed prefix IS the witness, key for key (the '
+        + 'press-kill guards OFF: the witness is the kill across the death)', () => {
+        const on = solveA(true, false);
         expect(on.message).not.toContain(GATE);
         expect(on.perTick.length).toBe(2195);
         expect(on.perTick.map((k) => [...k].sort())).toEqual(w.keys.slice(0, 2195).map((k) => [...k].sort()));
+    }, 900_000);
+
+    it('⛓⛓ ON, with the press-kill guards at their shipped ON: the kill is refused at the death (t1216), and the '
+        + 'executed prefix is the witness\'s first 1216 ticks', () => {
+        const on = solveA(true, true);
+        expect(on.message).not.toContain(GATE);
+        expect(on.message).toContain('PRESS_KILL_REBOOT_GUARD');
+        expect(on.perTick.length).toBe(1216);
+        expect(on.perTick.map((k) => [...k].sort())).toEqual(w.keys.slice(0, 1216).map((k) => [...k].sort()));
     }, 900_000);
 });

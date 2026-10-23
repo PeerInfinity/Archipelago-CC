@@ -35,6 +35,8 @@
  *      there, its route BEGINS with RESTART, and it walks on from the start. The Restart is TAKEN (else a hard FAIL),
  *      and its start-hop arrival is HELD: ≥ 1 expected arrival, each ends `held`, 0 `no-held-arrival` fallbacks.
  *
+ * B also prints ONE `B ENDED: <refusal at <goal> | finished | budget exhausted> (…)` line: why its walk stopped (§5.128).
+ *
  * Prints `PASS:`/`FAIL:` rows, `ROW <tag> {json}` measurement rows, and `ALL CHECKS PASSED` /
  * `N CHECK(S) FAILED` (exit 1).
  *
@@ -596,6 +598,15 @@ async function main() {
             out('B reach', { seconds: Math.round((Date.now() - t0) / 1000), sword, swordAt, checks, moves,
                 logicalMoves: g.stats.logicalMoves, finalStatus: end?.status, region: end?.region, statuses: statuses.slice(-15) });
             out('B next refusal', { status: (end?.status ?? '').startsWith('error') ? end.status : null, engineRefusal: eng.lastRefusal ?? null });
+            // ⛓ END REASON (§5.128) — ONE named line saying WHY the walk stopped: a refusal (the goal it was refused at, and
+            // the bot's text), FINISHED, or the budget. A green run that ended on a refusal says so here, out loud.
+            const endStatus = end?.status ?? '';
+            const endAt = `+${Math.round((Date.now() - t0) / 1000)} s, ${checks.length} check(s)`;
+            if (endStatus.startsWith('error')) {
+                const goal = /to (?:location|region) "([^"]+)"/.exec(endStatus)?.[1] ?? /^error: ([^:]+):/.exec(endStatus)?.[1] ?? '?';
+                console.log(`B ENDED: refusal at ${goal} (${endAt}): ${endStatus}`);
+            } else if (endStatus.startsWith('finished')) console.log(`B ENDED: finished (${endAt}): ${endStatus}`);
+            else console.log(`B ENDED: budget exhausted (${BUDGET_MS / 1000} s; ${endAt}), last status: ${endStatus}`);
             check(`B: the first move is the stairs walked straight from ${START} (\`${START} -> level_2\`, not logical)`,
                 moves[0] === `${START} -> level_2`, JSON.stringify(moves.slice(0, 6)));
             check('B: nothing is credited at r1c6 (the sealed link is gone from the rules)',
