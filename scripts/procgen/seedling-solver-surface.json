@@ -1259,12 +1259,12 @@
       "files": {
         "arrivalSolid.js": 5,
         "arrowLaneCrossing.js": 2,
-        "botDriverV2.js": 116,
+        "botDriverV2.js": 117,
         "crusherBait.js": 6,
         "lightsVerb.js": 7,
         "solverBot.js": 542
       },
-      "sites": 678,
+      "sites": 679,
       "seen": "both",
       "via": [
         "direct",
@@ -2591,10 +2591,10 @@
       "class": "physics",
       "form": "live-state",
       "files": {
-        "botDriverV2.js": 1,
+        "botDriverV2.js": 2,
         "solverBot.js": 3
       },
-      "sites": 4,
+      "sites": 5,
       "seen": "both",
       "via": [
         "direct"
@@ -4189,13 +4189,13 @@
       "files": {
         "arrowLaneCrossing.js": 4,
         "axePricedCrossing.js": 4,
-        "botDriverV2.js": 4,
+        "botDriverV2.js": 5,
         "dangerMap.js": 1,
         "forcedHit.js": 4,
         "solverBot.js": 71,
         "strikePolicy.js": 2
       },
-      "sites": 90,
+      "sites": 91,
       "seen": "static",
       "via": [
         "import"
