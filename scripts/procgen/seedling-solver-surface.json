@@ -152,9 +152,9 @@
       "files": {
         "botDriverV2.js": 27,
         "lightsVerb.js": 1,
-        "solverBot.js": 51
+        "solverBot.js": 52
       },
-      "sites": 79,
+      "sites": 80,
       "seen": "both",
       "via": [
         "direct",
@@ -479,9 +479,9 @@
         "crusherBait.js": 3,
         "dangerMap.js": 21,
         "lightsVerb.js": 1,
-        "solverBot.js": 162
+        "solverBot.js": 164
       },
-      "sites": 292,
+      "sites": 294,
       "seen": "both",
       "via": [
         "direct",
@@ -617,7 +617,7 @@
           "solverBot.js": 4
         },
         "tentacleBeastFight": {
-          "solverBot.js": 4
+          "solverBot.js": 6
         },
         "turretDamage": {
           "botDriverV2.js": 2
@@ -766,9 +766,9 @@
         "dangerMap.js": 2,
         "director.js": 4,
         "forcedHit.js": 2,
-        "solverBot.js": 83
+        "solverBot.js": 84
       },
-      "sites": 145,
+      "sites": 146,
       "seen": "both",
       "via": [
         "direct",
@@ -838,7 +838,7 @@
         "playerHits": {
           "botDriverV2.js": 6,
           "forcedHit.js": 1,
-          "solverBot.js": 35
+          "solverBot.js": 36
         },
         "presses": {
           "botDriverV2.js": 1,
@@ -1261,9 +1261,9 @@
         "botDriverV2.js": 115,
         "crusherBait.js": 6,
         "lightsVerb.js": 7,
-        "solverBot.js": 511
+        "solverBot.js": 512
       },
-      "sites": 646,
+      "sites": 647,
       "seen": "both",
       "via": [
         "direct",

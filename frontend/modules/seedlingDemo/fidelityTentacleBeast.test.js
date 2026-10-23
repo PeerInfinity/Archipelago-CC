@@ -324,7 +324,9 @@ describe('bossfork D1b — a reach-exit at the mouth waits out "dying" (`awaitTe
  * OFF) — THE FORK RANKS THE VARIANTS: no hit first, then the fewest hits, then ticks. OFF the fork commits the first
  * variant that opens the mouth without a death, and on `tb-solve-s2`'s own staging (seed 2) that is variant 0, which
  * takes a swipe at t393 — the game took the same swipe playing that plan (the witness ends at `hits` 1). ON all five are
- * played: 0 takes 1 hit, 1/3/4 none, 2 dies; the fewest-tick hitless one (1, 1485 t) is committed.
+ * played: 0 takes 1 hit, 1/3/4 none, 2 dies; the fewest-tick hitless one (1, 1649 t with its settle) is committed.
+ * ON the verb also SETTLES: once the mouth stands it holds out of every live whirlpool's keep-out until none is left
+ * (the beast spawns none after its death; a walk to the mouth across a live one drowns — sweep leg 494, measured).
  * Seed 7: variant 1's fork walks into a whirlpool's centre (the drown the run refuses by name, a death) — ON that
  * variant is rejected as a death is, where playing it ended the whole solve.
  *
@@ -333,6 +335,8 @@ describe('bossfork D1b — a reach-exit at the mouth waits out "dying" (`awaitTe
  * ledger (no `hitsBefore`) → nothing on these stagings (the arrival holds no earlier hit) — survives, named.
  * H1 RUN: the seed-2 row, and also the synthetic ranking row and D2's `tb-hitless-s2` re-plan (not predicted);
  * H2 RUN: the seed-7 row alone, as predicted.
+ * H5 (the settle) drop `{ settle: true }` from the fork's play and the run's → every ON row's tick count reds (the
+ * settle's ticks are gone), and D2's three re-plan rows (the tapes hold the settle). RUN: those six, as predicted.
  */
 describe('fidelity HITLESS — the Tentacled Beast\'s fork prefers a variant that takes no hit (`tentacleHitlessFirst`)', () => {
     const w = witnesses.find((x) => x.name === 'tb-solve-s2');
@@ -372,9 +376,10 @@ describe('fidelity HITLESS — the Tentacled Beast\'s fork prefers a variant tha
         const on = solveAt(2, true);
         expect(on.hits).toEqual([]);
         expect(on.rec.choice).toEqual({ rule: 'hitless', variant: 1, hits: 0, tried: 5, hitless: 3 });
-        expect(on.rec.tried.map((t) => [t.ok, t.hits, t.spent])).toEqual([[true, 1, 847], [true, 0, 1485],
-            [false, null, 4272], [true, 0, 2269], [true, 0, 1616]]);
-        expect([on.run.level, on.run.playerDeaths.length, on.out.perTick.length]).toEqual([58, 0, 1693]);
+        // `spent` counts the settle (the whirlpools left alive when the mouth stands, held out of until none is)
+        expect(on.rec.tried.map((t) => [t.ok, t.hits, t.spent])).toEqual([[true, 1, 952], [true, 0, 1649],
+            [false, null, 4272], [true, 0, 2430], [true, 0, 1747]]);
+        expect([on.run.level, on.run.playerDeaths.length, on.out.perTick.length]).toEqual([58, 0, 1850]);
         expect(on.run.earnedClears.map((c) => `${c.level}:${c.tag}`)).toContain('57:0');
     }, 120000);
 
@@ -383,7 +388,25 @@ describe('fidelity HITLESS — the Tentacled Beast\'s fork prefers a variant tha
         expect(on.rec.tried[1]).toMatchObject({ ok: false, hits: null });
         expect(on.rec.tried[1].why).toMatch(/^the player drowned: .*calls `Player\.drown\(\)` from outside the player/);
         expect(on.rec.choice).toEqual({ rule: 'hitless', variant: 0, hits: 0, tried: 5, hitless: 3 });
-        expect([on.hits, on.run.level, on.out.perTick.length]).toEqual([[], 58, 955]);
+        expect([on.hits, on.run.level, on.out.perTick.length]).toEqual([[], 58, 1133]);
+    }, 120000);
+
+    // The door's staging (`tb-hitless-door`'s tape) at seed 35: every variant takes a swipe (0 hitless of 5), so the hit
+    // stays ACCEPTABLE and the fewest-hits rule commits variant 3 (1 hit, 1694 t — variant 0 also takes 1, in 1858 t).
+    it('door staging, seed 35: no variant is hitless — the fewest hits win (one swipe), the solve still completes', () => {
+        const d = witnesses.find((x) => x.name === 'tb-hitless-door');
+        const on = withContactFidelity({ tentacleBeastFight: true, tentacleHitlessFirst: true }, () => {
+            const staging = stagingFromTape(parseTape(JSON.stringify({ ...d.tape, rng: { ...d.tape.rng, seed: 35 },
+                inputs: [], tick_count: 0 })));
+            const run = createRunForStaging(staging, SRC);
+            const out = solveSegment({ run, goals, name: 'hitless-door-s35', boot: staging.boot,
+                forkRun: () => createRunForStaging(staging, SRC) });
+            return { run, out, rec: out.records.find((r) => r.verb === 'tentaclebeast') };
+        });
+        expect(on.rec.choice).toEqual({ rule: 'fewest-hits', variant: 3, hits: 1, tried: 5, hitless: 0 });
+        expect(on.rec.tried.map((t) => t.hits)).toEqual([1, 2, 1, 1, 1]);
+        expect([(on.run.ledger('playerHits') ?? []).map((h) => `${h.t}:${h.source}`), on.run.level, on.run.playerDeaths.length])
+            .toEqual([['169:tentacle'], 58, 0]);
     }, 120000);
 });
 
@@ -393,10 +416,11 @@ describe('fidelity HITLESS — the Tentacled Beast\'s fork prefers a variant tha
  * one L57 arrival, one tick past the solve; the game plays it with `hits` 0 on every sampled tick, writes {57,0} and
  * leaves into L58, and the model replays it at 0 px (the eight-witness loop above):
  *   · `tb-hitless-pit`  — the route's arrival (survey step 110's staging: the pit landing from L56 at (96,160), its rng
- *                         seed 418414780); ON commits variant 4 (all five hitless), 1228 t; OFF 2060 t, also hitless;
- *   · `tb-hitless-door` — the L58 door's arrival (96,64) on that staging (sweep legs 494/495's door); variant 1, 855 t;
+ *                         seed 418414780); ON commits variant 4 (all five hitless), 1389 t; OFF 2060 t, also hitless;
+ *   · `tb-hitless-door` — the L58 door's arrival (96,64) on that staging (sweep legs 494/495's door); variant 1, 977 t;
  *   · `tb-hitless-s2`   — `tb-solve-s2`'s staging (seed 2), where the OFF plan's swipe at t393 lands on the game too
- *                         (`tb-solve-s2` ends at `hits` 1); variant 1, 1693 t.
+ *                         (`tb-solve-s2` ends at `hits` 1); variant 1, 1850 t.
+ * Each tape holds the settle (the whirlpools alive at the mouth, waited out), which the game plays with no pull.
  * Mutant (predicted, copy + restore): H4 `tentacleHitlessFirst: false` in `replanOf` → all three "ON re-plans the
  * witness" rows red (OFF commits variant 0: other tapes; s2's takes the t393 swipe). RUN: those three, as predicted.
  */
@@ -418,9 +442,9 @@ describe('fidelity HITLESS D2 — the hitless solves, witnessed on the game at 0
         return { out, run, rec: out.records.find((r) => r.verb === 'tentaclebeast') };
     });
     const expected = {
-        'tb-hitless-pit': { ticks: 1228, variant: 4, hitless: 5, boot: [96, 160] },
-        'tb-hitless-door': { ticks: 855, variant: 1, hitless: 3, boot: [96, 64] },
-        'tb-hitless-s2': { ticks: 1693, variant: 1, hitless: 3, boot: [96, 160] },
+        'tb-hitless-pit': { ticks: 1389, variant: 4, hitless: 5, boot: [96, 160] },
+        'tb-hitless-door': { ticks: 977, variant: 1, hitless: 3, boot: [96, 64] },
+        'tb-hitless-s2': { ticks: 1850, variant: 1, hitless: 3, boot: [96, 160] },
     };
     for (const [name, e] of Object.entries(expected)) {
         it(`${name}: the game takes no hit, writes {57,0} and leaves into L58`, () => {

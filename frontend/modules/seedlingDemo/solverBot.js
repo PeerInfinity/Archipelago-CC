@@ -223,7 +223,9 @@ function switchGatedRow(table, key, get) {
 // ⛓ seedling-fidelity-bosskills D2 — the King of Fire's policy (the run steps the fight, `lavaBoss.js`).
 import { LAVA_BOSS_POLICY_VARIANTS, createLavaBossPolicy, lavaBossPolicyStep } from './lavaBossPolicy.js';
 // ⛓ seedling-fidelity-bosskills D3 — the Tentacled Beast's policy (the run steps the fight, `tentacleBeast.js`).
-import { TENTACLE_BEAST_POLICY_VARIANTS, createTentacleBeastPolicy, tentacleBeastPolicyStep } from './tentacleBeastPolicy.js';
+import {
+    TENTACLE_BEAST_POLICY_VARIANTS, createTentacleBeastPolicy, tentacleBeastPolicyStep, tentacleBeastSettleStep,
+} from './tentacleBeastPolicy.js';
 
 /**
  * ⛓⛓⛓ THE TRANSIT PROBE'S OWN NON-VACUITY, AS A FUNCTION.
@@ -16216,7 +16218,9 @@ function resolveTentacleBeastStrategy(run, obstacle) {
  * game adds at the end of "dying" — the report `{57,0}` is written at its start.
  */
 const TENTACLE_BEAST_FIGHT_BOUND = 6000;
-function playTentacleBeastPolicy(r, perTick, params, ctx) {
+/** ⛓ HITLESS: the settle's bound — a whirlpool lives 150 + 60 + 30 updates (`Whirlpool.as`), and none spawns after. */
+const TENTACLE_BEAST_SETTLE_BOUND = 300;
+function playTentacleBeastPolicy(r, perTick, params, ctx, { settle = false } = {}) {
     const mem = createTentacleBeastPolicy(params);
     const deathsBefore = (r.ledger('playerHits') ?? []).filter((h) => h.died).length;
     // ⛓ fidelity HITLESS: the landed `Player.hit`s of this play (read by the ranking under `tentacleHitlessFirst`).
@@ -16225,6 +16229,7 @@ function playTentacleBeastPolicy(r, perTick, params, ctx) {
     for (let spent = 0; spent <= TENTACLE_BEAST_FIGHT_BOUND; spent += 1) {
         const view = r.entities('tentacleBeastFight');
         if (view === null) return { ok: false, why: `the room (level ${r.level}) holds no fight any more`, spent };
+        if (view.mouth && settle) return settleTentacleWhirlpools(r, perTick, mem, ctx, { spent, hitsNow, deathsBefore });
         if (view.mouth) return { ok: true, spent, report: view.report, log: mem.log, hits: hitsNow() };
         const held = tentacleBeastPolicyStep(mem, { view, p: r.state, slashing: r.progress('slashInfo').state.slashing });
         if (perTick) perTick.push(held);
@@ -16237,6 +16242,34 @@ function playTentacleBeastPolicy(r, perTick, params, ctx) {
         if (deaths > deathsBefore) return { ok: false, why: `the player died at spent ${spent}`, spent };
     }
     return { ok: false, why: `the mouth is not open after ${TENTACLE_BEAST_FIGHT_BOUND} ticks`, spent: TENTACLE_BEAST_FIGHT_BOUND };
+}
+/**
+ * ⛓ fidelity HITLESS — THE SETTLE (`tentacleHitlessFirst` only): the mouth stands, and the whirlpools the beast left
+ * still pull and drown. Hold out of their keep-out (`tentacleBeastSettleStep`) until none is alive, so the walk to the
+ * mouth that follows crosses none (measured: sweep leg 494's ON variant left one alive, and the walk drowned in it at
+ * t928). `spent` counts the settle too; a death or a crossing during it is the fight's.
+ */
+function settleTentacleWhirlpools(r, perTick, mem, ctx, { spent, hitsNow, deathsBefore }) {
+    let view = r.entities('tentacleBeastFight');
+    const report = view.report;
+    let settled = 0;
+    for (; view !== null && view.whirlpools.length > 0; settled += 1) {
+        if (settled >= TENTACLE_BEAST_SETTLE_BOUND) {
+            return { ok: false, why: `whirlpools still alive ${TENTACLE_BEAST_SETTLE_BOUND} ticks after the mouth opened`,
+                spent: spent + settled };
+        }
+        const held = tentacleBeastSettleStep(mem, { view, p: r.state });
+        if (perTick) perTick.push(held);
+        const { transition } = r.advance(held);
+        if (transition) {
+            fail(`${ctx.what}: the run crossed from level ${transition.from_level} to ${transition.to_level} while `
+                + 'settling the Tentacled Beast\'s whirlpools. The fight is per visit.');
+        }
+        const deaths = (r.ledger('playerHits') ?? []).filter((h) => h.died).length;
+        if (deaths > deathsBefore) return { ok: false, why: `the player died settling at spent ${spent + settled}`, spent: spent + settled };
+        view = r.entities('tentacleBeastFight');
+    }
+    return { ok: true, spent: spent + settled, settled, report, log: mem.log, hits: hitsNow() };
 }
 /**
  * ⛓ fidelity HITLESS — the ranking of the variants a fork played (`tried`, in `TENTACLE_BEAST_POLICY_VARIANTS` order):
@@ -16280,7 +16313,7 @@ function execTentacleBeast(run, perTick, resolved, ctx) {
             if (!f) break;
             let r;
             try {
-                r = playTentacleBeastPolicy(f, null, v, ctx);
+                r = playTentacleBeastPolicy(f, null, v, ctx, { settle: true });
             } catch (e) {
                 // A whirlpool's drown (`Player.drown()` from outside the player) is a DEATH the run refuses by name
                 // rather than steps (`levelRun.stepTentacleRuntimeNow`, bosskills D3): on a fork it rejects that
@@ -16313,7 +16346,7 @@ function execTentacleBeast(run, perTick, resolved, ctx) {
             { obstacle });
         }
     }
-    const r = playTentacleBeastPolicy(run, perTick, params, ctx);
+    const r = playTentacleBeastPolicy(run, perTick, params, ctx, { settle: choice !== null });
     if (!r.ok) {
         throw new SolverRefusal(`${ctx.what}: the Tentacled Beast policy ${JSON.stringify(params)} did not open the `
             + `mouth of ${resolved.boss}: ${r.why}`, { obstacle });
