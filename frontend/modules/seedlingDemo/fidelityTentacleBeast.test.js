@@ -144,9 +144,10 @@ const rows = (a) => a.map((p) => p.join(',')).sort();
 
 describe('bosskills D3 — the game witnesses, at 0 px (the switch ON)', () => {
     // ⛓ BOSSFORK D2 added `tb-enter-cleared` (L58 → L57 with {57,0} cleared: the arrival stands on the mouth and stays).
-    it('there are five, each recorded on p4g', () => {
-        expect(witnesses.map((w) => w.name)).toEqual(['tb-death-s3', 'tb-enter-cleared', 'tb-idle-s1', 'tb-policy-s2',
-            'tb-solve-s2']);
+    // ⛓ fidelity HITLESS D2 added the three hitless solves (`tb-hitless-door`, `-pit`, `-s2`).
+    it('there are eight, each recorded on p4g', () => {
+        expect(witnesses.map((w) => w.name)).toEqual(['tb-death-s3', 'tb-enter-cleared', 'tb-hitless-door',
+            'tb-hitless-pit', 'tb-hitless-s2', 'tb-idle-s1', 'tb-policy-s2', 'tb-solve-s2']);
         for (const w of witnesses) expect(w.page).toBe('seedling_bot_ap_p4g');
     });
 
@@ -330,6 +331,8 @@ describe('bossfork D1b — a reach-exit at the mouth waits out "dying" (`awaitTe
  * Mutants (predicted, copy + restore): H1 rank by ticks before hits → the seed-2 row reds (variant 0, 847 t, 1 hit);
  * H2 drop the drown catch → the seed-7 row throws the levelRun drown error; H3 `hits` counted from the run's whole
  * ledger (no `hitsBefore`) → nothing on these stagings (the arrival holds no earlier hit) — survives, named.
+ * H1 RUN: the seed-2 row, and also the synthetic ranking row and D2's `tb-hitless-s2` re-plan (not predicted);
+ * H2 RUN: the seed-7 row alone, as predicted.
  */
 describe('fidelity HITLESS — the Tentacled Beast\'s fork prefers a variant that takes no hit (`tentacleHitlessFirst`)', () => {
     const w = witnesses.find((x) => x.name === 'tb-solve-s2');
@@ -382,4 +385,58 @@ describe('fidelity HITLESS — the Tentacled Beast\'s fork prefers a variant tha
         expect(on.rec.choice).toEqual({ rule: 'hitless', variant: 0, hits: 0, tried: 5, hitless: 3 });
         expect([on.hits, on.run.level, on.out.perTick.length]).toEqual([[], 58, 955]);
     }, 120000);
+});
+
+/**
+ * ⛓⛓ fidelity HITLESS D2 — THE HITLESS SOLVES, ON THE GAME (p4g, headless; `probe-seedling-bosskills.mjs --record
+ * --dir=tentaclebeast-witness`). Each witness's tape IS the solver's ON answer (clear-tag {57,0}, then the mouth) from
+ * one L57 arrival, one tick past the solve; the game plays it with `hits` 0 on every sampled tick, writes {57,0} and
+ * leaves into L58, and the model replays it at 0 px (the eight-witness loop above):
+ *   · `tb-hitless-pit`  — the route's arrival (survey step 110's staging: the pit landing from L56 at (96,160), its rng
+ *                         seed 418414780); ON commits variant 4 (all five hitless), 1228 t; OFF 2060 t, also hitless;
+ *   · `tb-hitless-door` — the L58 door's arrival (96,64) on that staging (sweep legs 494/495's door); variant 1, 855 t;
+ *   · `tb-hitless-s2`   — `tb-solve-s2`'s staging (seed 2), where the OFF plan's swipe at t393 lands on the game too
+ *                         (`tb-solve-s2` ends at `hits` 1); variant 1, 1693 t.
+ * Mutant (predicted, copy + restore): H4 `tentacleHitlessFirst: false` in `replanOf` → all three "ON re-plans the
+ * witness" rows red (OFF commits variant 0: other tapes; s2's takes the t393 swipe). RUN: those three, as predicted.
+ */
+describe('fidelity HITLESS D2 — the hitless solves, witnessed on the game at 0 px', () => {
+    const goals = [
+        { kind: 'clear-tag', tag: { level: 57, tag: 0 }, at: { x: 80, y: 48 }, obstacle: 'tentaclebeast@80,48' },
+        { kind: 'reach-exit', exit: { x: 96, y: 64 } },
+    ];
+    const keysOf = (tape) => {
+        const per = Array.from({ length: tape.tick_count }, () => new Set());
+        for (const i of tape.inputs) for (let t = i.from; t < i.to; t += 1) per[t].add(i.key);
+        return per.map((k) => [...k].sort().join('+'));
+    };
+    const replanOf = (tape) => withContactFidelity({ tentacleBeastFight: true, tentacleHitlessFirst: true }, () => {
+        const staging = stagingFromTape(parseTape(JSON.stringify({ ...tape, inputs: [], tick_count: 0 })));
+        const run = createRunForStaging(staging, SRC);
+        const out = solveSegment({ run, goals, name: tape.name, boot: staging.boot,
+            forkRun: () => createRunForStaging(staging, SRC) });
+        return { out, run, rec: out.records.find((r) => r.verb === 'tentaclebeast') };
+    });
+    const expected = {
+        'tb-hitless-pit': { ticks: 1228, variant: 4, hitless: 5, boot: [96, 160] },
+        'tb-hitless-door': { ticks: 855, variant: 1, hitless: 3, boot: [96, 64] },
+        'tb-hitless-s2': { ticks: 1693, variant: 1, hitless: 3, boot: [96, 160] },
+    };
+    for (const [name, e] of Object.entries(expected)) {
+        it(`${name}: the game takes no hit, writes {57,0} and leaves into L58`, () => {
+            const w = witnesses.find((x) => x.name === name);
+            expect([w.tape.boot.level, w.tape.boot.x, w.tape.boot.y]).toEqual([57, ...e.boot]);
+            expect(w.samples.every((g) => g.hits === 0)).toBe(true);
+            expect(w.samples.some((g) => g.cleared.includes(0))).toBe(true);
+            expect([w.end.level, w.samples.at(-1).level]).toEqual([58, 58]);
+        });
+
+        it(`${name}: ON re-plans the witness's own tape (variant ${e.variant}, ${e.ticks} t, 0 hits)`, () => {
+            const w = witnesses.find((x) => x.name === name);
+            const { out, run, rec } = replanOf(w.tape);
+            expect([out.perTick.length, run.level, (run.ledger('playerHits') ?? []).length]).toEqual([e.ticks, 58, 0]);
+            expect(rec.choice).toMatchObject({ rule: 'hitless', variant: e.variant, hits: 0, tried: 5, hitless: e.hitless });
+            expect([...out.perTick.map((k) => [...k].sort().join('+')), '']).toEqual(keysOf(w.tape));
+        }, 120000);
+    }
 });
