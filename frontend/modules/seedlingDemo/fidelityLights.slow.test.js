@@ -3,6 +3,11 @@
  * the L70 pit landing (48,128) and leaves by the exit Teleporter, and its tape IS the one recorded on the game
  * (`fixtures/lights-witness/lights-solve-{sword,spear}.json`, reproduced at 0 px by `fidelityLights.test.js`).
  * Slow tier: each solve forecasts a few thousand sortie candidates (≈ 15–20 s).
+ *
+ * ⚖ The spear solve's witness is `lights-solve-spear-on` (494 t), recorded on p4g at 0 px with `spearGameTest` ON
+ * (the SPEARRECT flip; user: "Record ON tape + queue"). With the switch OFF the solver finds the 361 t
+ * `lights-solve-spear` — that tape still replays at 0 px ON (`fidelityLights.test.js`), so the ON solver misses a
+ * faster plan: a queued coverage row, pinned by the OFF row below.
  */
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -23,10 +28,10 @@ const GOALS = [
     { kind: 'reach-exit', exit: { x: 72, y: 72 } },
 ];
 
-async function solveLike(name) {
+async function solveLike(name, switches = {}) {
     const tape = parseTape(JSON.stringify(witness(name).tape));
     const staging = solveStaging(stagingFromTape(tape));
-    const solved = await withContactFidelity({ lightsBossFight: true }, () => twoPassSolve({
+    const solved = await withContactFidelity({ lightsBossFight: true, ...switches }, () => twoPassSolve({
         makeRun: (p) => createRunForStaging({ ...staging, persistence: p }, levelSource),
         goals: GOALS, name: 'lights-solve', boot: staging.boot, dashMode: 'all',
         persistence: staging.persistence, log: () => {},
@@ -35,9 +40,10 @@ async function solveLike(name) {
 }
 
 describe('fidelity LIGHTS D3 — the solves are the tapes the game witnessed', () => {
-    for (const name of ['lights-solve-sword', 'lights-solve-spear']) {
-        it(`${name}: the solver's tape equals the recorded one, key for key`, async () => {
-            const { solved, staging } = await solveLike(name);
+    for (const [name, switches] of [['lights-solve-sword', {}], ['lights-solve-spear-on', {}],
+        ['lights-solve-spear', { spearGameTest: false }]]) {
+        it(`${name}${switches.spearGameTest === false ? ' (spearGameTest OFF)' : ''}: the solver's tape equals the recorded one, key for key`, async () => {
+            const { solved, staging } = await solveLike(name, switches);
             const rebuilt = buildStagedTape({ staging, perTick: [...solved.out.perTick], name: 'lights-solve' });
             expect(rebuilt.inputs).toEqual(witness(name).tape.inputs);
             expect(rebuilt.tick_count).toBe(witness(name).tape.tick_count);

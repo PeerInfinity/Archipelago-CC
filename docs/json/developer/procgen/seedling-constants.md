@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**82 files, 6894 literals.** Class × position:
+**82 files, 6899 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
-| physics | 7 | 1718 | 599 | 2324 |
-| rule | 14 | 1194 | 584 | 1792 |
+| physics | 7 | 1718 | 605 | 2330 |
+| rule | 14 | 1196 | 584 | 1794 |
 | cosmetic | 0 | 62 | 14 | 76 |
-| structural | 15 | 387 | 2300 | 2702 |
+| structural | 15 | 387 | 2297 | 2699 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 36 | 3361 | 3497 | 6894 |
+| total | 36 | 3363 | 3500 | 6899 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
-| physics | 1809 | 0 | 97 | 123 | 4 | 291 | 2324 |
-| rule | 662 | 141 | 243 | 22 | 617 | 107 | 1792 |
+| physics | 1809 | 0 | 97 | 123 | 4 | 297 | 2330 |
+| rule | 662 | 141 | 243 | 22 | 617 | 109 | 1794 |
 
 Rows whose note starts `REVIEW:`: **114**.
 
@@ -514,7 +514,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**21 named scalars** are `physics` or `rule` (16 with an AS3 anchor), and **183 small tables** (at most 16 literals) hold at least one (106 with an AS3 reference).
+**21 named scalars** are `physics` or `rule` (16 with an AS3 anchor), and **184 small tables** (at most 16 literals) hold at least one (106 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -573,6 +573,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `DESTROYING_TILE_TYPES` | seedlingDemo/pushables.js | 3 | 3 | rule | sentinel |  |
 | `PUSH_STEP` | seedlingDemo/pushables.js | 8 | 8 | physics | sign | Player.as:1103 |
 | `SPEAR_HIT_TICKS_UNMODELLED` | seedlingDemo/presses.js | 3 | 3 | rule | magnitude |  |
+| `SPEAR_REPEAT_OFFSETS` | seedlingDemo/presses.js | 2 | 2 | rule | derivation |  |
 | `FIRE_SPRITE` | seedlingDemo/fireVerb.js | 6 | 6 | physics/rule | count/magnitude | Player.as:53 |
 | `FIRE_PRESS_CADENCE` | seedlingDemo/fireVerb.js | 1 | 1 | rule | derivation |  |
 | `FIRE_RADIUS` | seedlingDemo/fireVerb.js | 1 | 1 | physics | derivation |  |
