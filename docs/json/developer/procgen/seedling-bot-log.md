@@ -24777,3 +24777,34 @@ all five. The line waiver has no witness (no witnessed arm tests a line; m5 surv
   inclusivity decides the hit, and the strict comparison misses it on alternate ticks.
 - A probe that measured ONE effect per press (R4's bridge: one decrement) does not prove one TEST per press; two game
   witnesses show the T+3 test landing on a mover. The bridge's single decrement stays an open question.
+
+### Seedling fidelity REMBODY — a body removed this frame still blocks the bodies stepped after it (`removedBodyBlocks`, OFF)
+
+Planner `seedling-fidelity-planning-11`, wave 27, from SKINSWING's hand-over (the L71 re-site's t63 gap). The report is
+`CC/docs/cloud-reports/seedling-fidelity-rembody.md`.
+
+**The game's rule.** `World.remove` (`net/flashpunk/World.as:118-124`) only queues the entity in `_remove`;
+`World.updateLists` (`:895-911`) drains the queue after `World.update` has run every entity (and `Entity.collide` walks
+the type list with no `_world` test). So a body whose `Mobile.death` fade ends in its own update (`FP.world.remove(this)`,
+`Mobile.as:68`) is still an "Enemy" to `collideTypes(solids, …)` for every body that updates after it that frame, and is
+gone the next. `Bob.solids` and `LavaRunner.solids` carry "Enemy" (`Bob.as:39`, `LavaRunner.as:43`). The model set
+`c.removed = true` in `stepChaserEntity`'s fade, and the siblings stepped after it skipped it at once.
+
+**The model (switch ON).** `stepChasersNow` keeps a per-CALL set of the bodies its loop removed (the fade, a bulb's
+"die") and a sibling's sweep still meets them for the rest of that call. Per call, not per model tick, because a
+ceremony's stepped dead frames call it once per frame. `chaserForecastNow` mirrors it for the removals it steps (a
+BobSoldier corpse, a bulb). `removed` is still set at once, so every other reader is unchanged. OFF: byte-identical. No
+run state was added: the sets are locals, so no digest part is owed.
+
+**Witness (p4g, SKINSWING's `skinswing-l71-resite`).** L71, the player at (80,208) in FIGHT for 300 ticks. On t63 three
+lavarunners are removed and the game's `lavarunner@64,192` stays at y 203.303. OFF the model moves it to 204.467; ON it
+reproduces the whole tape at 0 px. The other three SKINSWING tapes: ON = OFF = the game.
+
+**Trap candidates.**
+- `World.add`/`remove` are DEFERRED in FlashPunk. A body leaving the world mid-frame is still in its type lists for
+  every later collide that frame, and a body added mid-frame does not update until the next. The shield boss and the
+  totem already modelled the remove half (`removeRequested`); the chasers did not.
+- The forecast's corpses never fade (its destroy branch steps only a BobSoldier's), so OFF the FORECAST agreed with the
+  game on the removal tick and the LIVE step did not. A mirror that "agrees" may be agreeing for another reason.
+- `addUpdate` PREPENDS: the update order is the REVERSE of the add order (the model already reversed the `.oel` order;
+  the brief's "add order" was wrong).
