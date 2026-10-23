@@ -1258,12 +1258,12 @@
       "files": {
         "arrivalSolid.js": 5,
         "arrowLaneCrossing.js": 2,
-        "botDriverV2.js": 115,
+        "botDriverV2.js": 116,
         "crusherBait.js": 6,
         "lightsVerb.js": 7,
-        "solverBot.js": 511
+        "solverBot.js": 512
       },
-      "sites": 646,
+      "sites": 648,
       "seen": "both",
       "via": [
         "direct",
@@ -1999,10 +1999,10 @@
       "class": "seedling",
       "form": "geometry-query",
       "files": {
-        "botDriverV2.js": 4,
+        "botDriverV2.js": 5,
         "solverBot.js": 9
       },
-      "sites": 13,
+      "sites": 14,
       "seen": "both",
       "via": [
         "direct",
@@ -2300,10 +2300,10 @@
       "class": "physics",
       "form": "geometry-query",
       "files": {
-        "botDriverV2.js": 5,
+        "botDriverV2.js": 6,
         "solverBot.js": 7
       },
-      "sites": 12,
+      "sites": 13,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2590,9 +2590,10 @@
       "class": "physics",
       "form": "live-state",
       "files": {
-        "solverBot.js": 2
+        "botDriverV2.js": 1,
+        "solverBot.js": 3
       },
-      "sites": 2,
+      "sites": 4,
       "seen": "both",
       "via": [
         "direct"
@@ -4187,13 +4188,13 @@
       "files": {
         "arrowLaneCrossing.js": 4,
         "axePricedCrossing.js": 4,
-        "botDriverV2.js": 3,
+        "botDriverV2.js": 4,
         "dangerMap.js": 1,
         "forcedHit.js": 4,
         "solverBot.js": 66,
         "strikePolicy.js": 2
       },
-      "sites": 84,
+      "sites": 85,
       "seen": "static",
       "via": [
         "import"
@@ -5177,12 +5178,12 @@
       "class": "physics",
       "form": "constant",
       "files": {
-        "botDriverV2.js": 47,
+        "botDriverV2.js": 49,
         "bulbPlacement.js": 2,
         "crusherBait.js": 4,
         "solverBot.js": 162
       },
-      "sites": 215,
+      "sites": 217,
       "seen": "static",
       "via": [
         "import"
