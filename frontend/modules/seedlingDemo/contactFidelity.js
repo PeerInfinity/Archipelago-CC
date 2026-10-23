@@ -964,7 +964,7 @@ export const CONTACT_FIDELITY = {
      * `endAnim`'s "die" case plays `""` (`drill.stepDrillGraphic`), which the L88 skin golden reads. OFF: byte-identical.
      * `SEEDLING_DRILL_KILL_FIRST=0|1`.
      */
-    drillKillFirst: false,
+    drillKillFirst: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
