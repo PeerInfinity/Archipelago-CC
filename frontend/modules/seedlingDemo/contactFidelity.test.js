@@ -224,7 +224,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             pixelMaskSightLines: true,
             // ⛓ fidelity SPEARRECT (wave 25): the spear's test as the game runs it, for every arm — shipped OFF;
             // ⛓ planning-10's flip (⚖ user "Harvest + flip ON", 2026-10-22) turns it ON.
-            spearGameTest: true });
+            spearGameTest: true,
+            // ⛓ fidelity DRILLKILL (wave 26): the solver kills L28's drills before the rope cut; ships OFF.
+            drillKillFirst: false });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
