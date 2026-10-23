@@ -2662,7 +2662,7 @@ key order is *content* for this document (the session's `equal` is
 differ from the record you were looking at.
 
 ⚠ The other **13** presets are written *compact*, so their download is up to
-**1.74×** the file on disk (`procgen_topdown/AP_8`: 1,811,130 B → 3,157,914 B).
+**1.84×** the file on disk; the largest, `procgen_topdown/AP_8`, is 1,917,739 B → 3,264,523 B.
 That is deliberate — the majority formatting is what a reader expects and no
 loader cares — but it is why every size below is in **pretty** bytes.
 
