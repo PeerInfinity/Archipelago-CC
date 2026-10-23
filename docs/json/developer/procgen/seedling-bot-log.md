@@ -24793,6 +24793,10 @@ solves; the spear's mean 374 → 357, the sword's unchanged). Carrying the forec
 the greedy never reads (it re-clones from the run): a spear press set the sword's `slashTimer`/`slashing`; `set spearing`
 sets neither (`Player.as:810-822`). At the committed staging: the spear 303 t (rollouts 421 | 239), recorded on p4g at
 0 px as `lights-solve-spear-portfolio`; the sword's rollouts tie (507 | 507) and it plays `lights-solve-sword` unchanged.
+Two rollouts cost twice the greedy (both L69 sweep legs ran out the 90 s leg budget ON); two EXACT prunes ride the switch
+— a sortie that has landed nothing by its last test stops forecasting, and the first dodge unhit to the horizon
+(`Infinity`, unbeatable under `>`) ends the dodge search — the same answers everywhere measured, and the portfolio now
+costs less than the greedy alone (L69 legs done/done ×2).
 
 **D-B — the L15 post-chest walk (`l15-post-chest-walk`, model 115.05 / game 115.30 at t18).** Not the chest and not the
 walk's sub-pixel. In AP play the chest is the page's `apitem` {tag 1, look chest}, and the player ends the chest leg

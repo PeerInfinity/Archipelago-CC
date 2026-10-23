@@ -4190,11 +4190,11 @@
         "botDriverV2.js": 3,
         "dangerMap.js": 1,
         "forcedHit.js": 4,
-        "lightsVerb.js": 2,
+        "lightsVerb.js": 3,
         "solverBot.js": 67,
         "strikePolicy.js": 2
       },
-      "sites": 87,
+      "sites": 88,
       "seen": "static",
       "via": [
         "import"
