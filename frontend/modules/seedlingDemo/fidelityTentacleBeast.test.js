@@ -197,16 +197,19 @@ describe('bosskills D3 — the solver (`solid:tentaclebeast` → `tentaclebeast`
         { kind: 'reach-exit', exit: { x: 96, y: 64 } },
     ];
 
-    it('ON: the verb opens the mouth with no death, {57,0} is earned, and the walk leaves into L58', () => {
+    // ⛓ HITLESS's flip (⚖ user "Harvest + flip ON", 2026-10-23): at the defaults the fork ranks hitless first, so the
+    // solve is `tb-hitless-s2`'s (1850 t, no hit); the first-ok plan that takes the t393 swipe is `tb-solve-s2`'s (OFF).
+    it.each([[true, 'tb-hitless-s2'], [false, 'tb-solve-s2']])('ON (tentacleHitlessFirst %s): the verb opens the mouth with no death, {57,0} is earned, and the walk leaves into L58 — the plan is %s', (hitless, plan) => {
         const staging = stagingFromTape(tapeOf({}));
-        withContactFidelity({ tentacleBeastFight: true }, () => {
+        withContactFidelity({ tentacleBeastFight: true, tentacleHitlessFirst: hitless }, () => {
             const run = createRunForStaging(staging, SRC);
             const out = solveSegment({ run, goals, name: 'tb-solve-s2', boot: staging.boot,
                 forkRun: () => createRunForStaging(staging, SRC) });
             expect(run.level).toBe(58);
             expect(run.earnedClears.map((c) => `${c.level}:${c.tag}`)).toContain('57:0');
             expect(run.playerDeaths.length).toBe(0);
-            expect(out.perTick.length).toBe(w.tape.tick_count);
+            // HITLESS's witnesses are recorded one tick past the solve (its maketape); tb-solve-s2 is the solve itself
+            expect(out.perTick.length).toBe(witnesses.find((x) => x.name === plan).tape.tick_count - (hitless ? 1 : 0));
         });
     }, 120000);
 
@@ -354,8 +357,9 @@ describe('fidelity HITLESS — the Tentacled Beast\'s fork prefers a variant tha
         return { run, out, rec, hits: (run.ledger('playerHits') ?? []).map((h) => `${h.t}:${h.source}`) };
     });
 
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY.tentacleHitlessFirst).toBe(false);
+    // ⛓ planning-11's flip (⚖ user "Harvest + flip ON", 2026-10-23).
+    it.skipIf(!!process.env.SEEDLING_TENTACLE_HITLESS_FIRST)('is ON by default (flipped)', () => {
+        expect(CONTACT_FIDELITY.tentacleHitlessFirst).toBe(true);
     });
 
     it('the ranking: hitless, then fewest hits, then ticks, then list order; a death never wins; none ok → null', () => {

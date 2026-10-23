@@ -1041,8 +1041,11 @@ export const CONTACT_FIDELITY = {
      * when no variant is hitless (the verb's record names how many were tried and each one's hits). Only deaths are
      * refused, as before. OFF: byte-identical (first-without-a-death). `SEEDLING_TENTACLE_HITLESS_FIRST=0|1` for a
      * node measurement.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, HITLESS "Harvest + flip ON") turns it ON. Measured movers (CI, main
+     * b749d62c4a + the slice): survey only L57 step 110 SOLVED 2060 → 1389 t; the L57/L58 sweep legs ×2 per arm: 492/493
+     * game hits 1 → 0, verdicts equal; probes standard ON green.
      */
-    tentacleHitlessFirst: false,
+    tentacleHitlessFirst: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
