@@ -90,6 +90,7 @@ import {
     KILL_ARM_POLICY,
     DOWN, EMPTY_SWORD_WINDOW, LEFT, RIGHT, SLASH_HIT_TICKS, SLASH_REACH, UP,
     distanceRectPoint, slashReachFor, slashRect, SPEAR_HIT_TICKS_UNMODELLED, spearRect,
+    pressRectTouches, spearHitRect,
     swordWindowReplace, swordWindowSchedule, swordWindowStep,
     /**
      * ⛓⛓⛓ R9 SLICE 4 — THE ROCK'S OWN TRANSCRIPTION, ASKED RATHER THAN COPIED.
@@ -4012,8 +4013,9 @@ function spearPressStance(run, row, from, dir, state, bags, atStart, plansOrCros
     const facing = PRESS_FACING[dir];
     const step = SHOVE_STEP[dir];
     const blockR = blockRectAt(from);
-    const on = (at) => rectsOverlapLocal(spearRect(at.x, at.y, facing), blockR);
-    const strays = (at) => auditPress(run.world, spearRect(at.x, at.y, facing), {
+    // ⛓ fidelity SPEARRECT: the thrust's rect and its test are the run's (`spearHitRect` + `pressRectTouches`).
+    const on = (at) => pressRectTouches(spearHitRect(at.x, at.y, facing), blockR);
+    const strays = (at) => auditPress(run.world, spearHitRect(at.x, at.y, facing), {
         weapon: 'spear',
         intended: [{ as3: 'PushableBlockSpear', x: row.x, y: row.y }],
         pushables: bags.solid.pushables ?? null,
@@ -9518,7 +9520,7 @@ function execSpearPress(run, perTick, p, ctx, what) {
         refuse(`the face tap left the player facing ${run.state.direction}, not ${facing} — the stance is `
             + 'pinned against something in the facing direction.');
     }
-    if (!rectsOverlapLocal(spearRect(run.state.x, run.state.y, facing), l0.rect)) {
+    if (!pressRectTouches(spearHitRect(run.state.x, run.state.y, facing), l0.rect)) {
         refuse(`the walk settled at (${run.state.x},${run.state.y}) and the spear's 32x5 rect facing ${p.dir} `
             + `from there misses ${p.blockId} at (${l0.rect.x},${l0.rect.y}) — a stance finding, not a block one.`);
     }
@@ -14340,6 +14342,9 @@ function boxGapFrom(h, box) {
  * C3 D1), not on a body a dark-shield bump has latched.
  */
 function spearRepeatReaches(run, dir) {
+    // ⛓ fidelity SPEARRECT: with `spearGameTest` ON the run steps the repeats (`levelRun.spearRepeatsNow`), so a body
+    // that walks into them is the model's answer, not a gap to plan around.
+    if (CONTACT_FIDELITY.spearGameTest) return null;
     const t = SPEAR_HIT_TICKS_UNMODELLED.ticks.at(-1) + 1;
     const thrust = spearRect(run.state.x, run.state.y, dir);
     for (const b of run.entities('strikeBodies') ?? []) {
@@ -14402,7 +14407,7 @@ function killIceTurretBySpear(run, perTick, id, resolved, ctx) {
     const r = turret().rect;
     const opts = solverPlanOpts(run, resolved.contacts ?? new Set());
     const axes = (run.world.combat?.hazards ?? []).filter((h) => h.tag === 'spinningaxe');
-    const on = (x, y, dir) => rectsOverlapLocal(spearRect(x, y, dir), r);
+    const on = (x, y, dir) => pressRectTouches(spearHitRect(x, y, dir), r);
     const reach = spearRect(0, 0, RIGHT).right + 8; // the thrust's length off its own rect, and a tile of slack
     const cands = [];
     for (const t of run.world.walkableTiles ?? []) {
@@ -17738,7 +17743,7 @@ function ropeFireReach(run, at, ropeId) {
 
 /** What a spear thrust facing `dir` from `at` does to the rope: `hit`, and every non-inert other responder. */
 function ropeSpearReach(run, at, dir, ropeId) {
-    const audit = auditPress(run.world, spearRect(at.x, at.y, dir),
+    const audit = auditPress(run.world, spearHitRect(at.x, at.y, dir),
         { weapon: 'spear', pushables: run.entities('pushables') });
     const isRope = (r) => r.as3 === 'RopeStart' && `${r.tag}@${r.x},${r.y}` === ropeId;
     return {
@@ -19808,17 +19813,17 @@ function deriveLightPole(run, body, contacts, blocked = []) {
                 for (const dir of [RIGHT, UP, LEFT, DOWN]) cands.push({ x: sx, y: sy, dir });
             }
         }
-        const deep = (c) => (coreDepth(spearRect(c.x, c.y, c.dir), core) >= LIGHT_ARM_CORE_MARGIN ? 0 : 1);
+        const deep = (c) => (coreDepth(spearHitRect(c.x, c.y, c.dir), core) >= LIGHT_ARM_CORE_MARGIN ? 0 : 1);
         cands.sort((a, b) => (deep(a) - deep(b)) || (Math.hypot(a.x - run.state.x, a.y - run.state.y)
             - Math.hypot(b.x - run.state.x, b.y - run.state.y)));
         for (const c of cands) {
-            const sr = spearRect(c.x, c.y, c.dir);
-            if (!rectsOverlapLocal(sr, core)) continue;
+            const sr = spearHitRect(c.x, c.y, c.dir);
+            if (!pressRectTouches(sr, core)) continue;
             tried += 1;
             const others = run.world.pressResponders.filter((r) => `${r.tag}@${r.x},${r.y}` !== pole.id
-                && rectsOverlapLocal(sr, r.rect));
+                && pressRectTouches(sr, r.rect));
             const bodies = (run.world.combat?.enemies ?? []).filter((e) => e.as3 !== 'DarkTrap'
-                && contactRect(e) && rectsOverlapLocal(sr, contactRect(e)));
+                && contactRect(e) && pressRectTouches(sr, contactRect(e)));
             if (others.length > 0 || bodies.length > 0) { crowded += 1; continue; }
             if (rectsOverlapLocal(playerBoxAt(c.x, c.y), body.rect)) { unsafe += 1; continue; }
             // A stance the player box cannot occupy (a solid under it) is not a stance, whatever a lattice says.
@@ -21575,8 +21580,8 @@ function solveSegmentUnder({
                     .find((p) => p.id === d.pole.id);
                 const core = { x: pole.rect.x, y: pole.rect.y + DARKTRAP_LIGHT_DEATH.pole.bob * 2,
                     right: pole.rect.right, bottom: pole.rect.bottom - DARKTRAP_LIGHT_DEATH.pole.bob * 2 };
-                const sr = spearRect(run.state.x, run.state.y, run.state.direction);
-                if (run.state.direction !== d.dir || !rectsOverlapLocal(sr, core)) {
+                const sr = spearHitRect(run.state.x, run.state.y, run.state.direction);
+                if (run.state.direction !== d.dir || !pressRectTouches(sr, core)) {
                     refuse(`${what} -> light (${d.pole.id}): the stance settled at (${run.state.x},${run.state.y}) facing `
                         + `${run.state.direction}, and the spear rect from there does not reach the pole's core — `
                         + `the derivation's stance was (${d.stance.x},${d.stance.y}) facing ${d.dir}.`,

@@ -24765,3 +24765,40 @@ with `=0`. Censuses unmoved.
 **Trap candidates.**
 - A witness row that reproduces a solve pins every switch its premise needs, not only the one it is named for: a
   later default flip moves the solve under it, and the honest fix is to pin, not to re-record a game-witnessed tape.
+### Seedling fidelity SPEARRECT — the spear's test as the game runs it, for every spear arm (`spearGameTest`, OFF)
+
+Planner `seedling-fidelity-planning-10`, wave 25 (⚖ the user picked "SPEAR-RECT slice" from DRILL's hand-over). The
+report is `CC/docs/cloud-reports/seedling-fidelity-spearrect.md`.
+
+**The game's rule** (`Player.spear()`, `Player.as:954-992`): every hitable under a 32x5 rect from the `int` origin
+(`spearX`/`spearY` are `int` getters, `Player.as:1341-1348`), collected by `collideRectInto` → `Entity.collideRect`,
+whose edges are INCLUSIVE (`Entity.as:263`); `genericHit(v[i], "Spear", spearForce 7, spearDamage 2)` with no reach gate
+and no line test; and again on T+3 and T+5 (`spearDelayMax` 1). The model's spear used the float `spearRect` with strict
+edges, borrowed `slash()`'s 16 px `distanceRectPoint` gate and its line of sight in most arms, handed `genericHit` the
+sword's force 5, and tested once (DRILL and LIGHTS had the game's rule for the drills and the fliers alone).
+
+**The model (switch ON).** One rule in `presses.js`: `spearGameRect` (the int origin, `inclusive: true`),
+`pressRectTouches` (inclusive for a rect that says so, strict otherwise — `pressRespondersIn` asks it), `spearHitRect`
+(the switch) and `SPEAR_REPEAT_OFFSETS` [2, 4]. `levelRun.applyThrust` tests a spear thrust by it for every arm it owns,
+waives the reach and the line for the spear, hands the spear's force, and re-runs the whole thrust on T+3 / T+5
+(`spearRepeats`, from the live position in the latched direction); an arm the game refuses inside five ticks refuses by
+its own state (an i-frame, a moving block, a pole's `hitsTimer`, the bridge's `bridges.has(id)`). DRILL's
+`spearTouchesDrill` is the shared rule now; the drills' and fliers' own repeat lists stay empty ON. The solver's spear
+stances (the block push, runSpear's L0 check, the turret, the rope, the light pole, the lights forecast) aim with
+`spearHitRect` + `pressRectTouches`, and C3's `spearRepeatReaches` guard stands down ON. OFF: byte-identical.
+
+**Witnesses (p4g, 0 px; `probe-seedling-spearrect.mjs`, `fixtures/spearrect-witness/`).** A T+3 hit on a jellyfish that
+walked into the rect after the first test (`spearrect-l98-jelly-repeat`, hammer C3's L98 tape replayed on p4g); a hit
+~32 px up the rect that `slash()`'s reach refused, with the spear's knockback (`spearrect-l63-jelly-reach`); a corner
+touch on both inclusive edges against an ice turret resting a half pixel off its cell (`spearrect-l40-turret-corner`);
+a block caught by the far edge `int(80) + 32 = 112` (`spearrect-l63-block-far-edge`); and the other way, a block the
+float rect reaches and the truncated origin does not (`spearrect-l63-block-truncated-y`). OFF parts from the game in
+all five. The line waiver has no witness (no witnessed arm tests a line; m5 survives, named).
+
+**Trap candidates.**
+- A weapon's ARGUMENTS are part of its test: the spear's `genericHit` carries `spearForce` 7, and a model that reused
+  the sword's 5 lands the hit on the right tick and the knockback 4 px short.
+- A body that rests on half pixels (an ice turret's rest cycle) meets an `int`-origined rect's `.5` edges exactly:
+  inclusivity decides the hit, and the strict comparison misses it on alternate ticks.
+- A probe that measured ONE effect per press (R4's bridge: one decrement) does not prove one TEST per press; two game
+  witnesses show the T+3 test landing on a mover. The bridge's single decrement stays an open question.
