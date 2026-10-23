@@ -101,13 +101,15 @@ describe('fidelity ROPE — D2: the clear-tag on a rope\'s own tag (the switch O
             silenced: ['arrowtrap@96,32', 'arrowtrap@112,32', 'arrowtrap@128,32'] });
         expect(run.ledger('ropePulls').map((p) => p.id)).toEqual(['rope@32,16']);
     }));
-    it('L28 from the L25 arrival: {28,0} cut, 52 t', () => ON(() => {
+    // ⛓ DRILLKILL's flip (⚖ user "Harvest + flip ON", 2026-10-23): ON the Sword kills L28's drills first (170 t,
+    // `fidelityDrillKill.test.js`); the verb's own 52 t cut is read with drillKillFirst OFF.
+    it('L28 from the L25 arrival: {28,0} cut, 52 t (drillKillFirst OFF)', () => ON(() => withContactFidelity({ drillKillFirst: false }, () => {
         const { run, out, refusal } = solve(FROM_L25, L28);
         expect(refusal).toBeNull();
         expect(clearTagRow(out)).toMatchObject({ arm: 'cleared-in-passing', flag: { level: 28, tag: 0 },
             ledgerAt: 44, confirmedAt: 52 });
         expect(run.ledger('ropePulls').map((p) => p.id)).toEqual(['rope@160,64']);
-    }));
+    })));
     it('a rope booted pulled (its tag cleared) is `already-clear`, no tick', () => ON(() => {
         const { out, refusal } = solve(FROM_L15, L16, { cleared: [0] });
         expect(refusal).toBeNull();
@@ -136,7 +138,8 @@ describe('fidelity ROPE — D1: the verb\'s plans on the game (p4g), at 0 px', (
     for (const w of ROPE_WITNESSES) {
         it(`${w.name}: the solver plans the recorded tape today, and the model is the game on every tick`, async () => {
             const r = recorded[w.name];
-            const { tape } = await ropePlan(w);
+            // ⛓ DRILLKILL's flip: the recorded rope-l28-cut is the cut WITHOUT the drill kill (52 t) — planned drillKillFirst OFF.
+            const { tape } = await withContactFidelity({ drillKillFirst: false }, () => ropePlan(w));
             expect(tape.inputs).toEqual(r.tape.inputs);
             expect(tape.tick_count).toBe(r.tape.tick_count);
             const model = await modelSamples(r.tape);

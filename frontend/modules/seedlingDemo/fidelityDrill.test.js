@@ -159,7 +159,9 @@ describe('fidelity DRILL — D3: ROPESTANCE\'s interim retires behind the key', 
             return { run, out: null, refusal: e };
         }
     };
-    const both = (on, fn) => withContactFidelity({ ropeCutAnyWeapon: true, drillMixedRooms: on }, fn);
+    // ⛓ DRILLKILL's flip (⚖ user "Harvest + flip ON", 2026-10-23): ON the solver kills L28's drills first (the Spear from
+    // L25 SOLVES; the Sword plans 170 t, `fidelityDrillKill.test.js`), so these rows — DRILL's own D3 — run drillKillFirst OFF.
+    const both = (on, fn) => withContactFidelity({ ropeCutAnyWeapon: true, drillMixedRooms: on, drillKillFirst: false }, fn);
     it('OFF: the L28 spear from the L25 arrival refuses on the interim (byte-identical)', () => both(false, () => {
         const { refusal } = solve(['hasSpear']);
         expect(refusal.message).toMatch(/UNSTEPPED drill \(\[drill@80,96, drill@128,96\]/);
