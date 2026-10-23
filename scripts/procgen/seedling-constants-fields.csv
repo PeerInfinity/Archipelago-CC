@@ -257,6 +257,7 @@ frontend/modules/flashPanel/seedlingSemantics.js|TILE_TYPE_IDS|(module),rule,sen
 frontend/modules/flashPanel/seedlingSemantics.js|TILE_COLUMN_VARIANTS|(module),cosmetic,,,column keys of the cosmetic-only waterfall/grass variant flags
 frontend/modules/flashPanel/seedlingSemantics.js|TILE_TYPE_SEMANTICS|(module),rule,sentinel,,tile type id
 frontend/modules/flashPanel/seedlingSemantics.js|entityPixelRect|entityPixelRect,physics,magnitude,,default 1x1 tile footprint
+frontend/modules/flashPanel/seedlingSemantics.js|entityPixelRect|ha714c504|-1|0,structural,,Game.as:RopeStart,`nodes.at(-1)`: the rope's LAST node is its far end (the `for each` keeps the last) — an array index
 frontend/modules/flashPanel/seedlingSemantics.js|SEEDLING_PLAYER_BOX|(module),physics,magnitude,Player.as:normalHitbox,player hitbox
 frontend/modules/flashPanel/seedlingSemantics.js|has|has,rule,count,,item count required
 frontend/modules/flashPanel/seedlingSemantics.js|buildFlagItemRules|hd2b6a69f|1|0,rule,derivation,,progressive item count = chain index + 1

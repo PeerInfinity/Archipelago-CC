@@ -193,6 +193,21 @@ describe('entity gating', () => {
         const e = { type: 'rope', x: 32, y: 16, attrs: { xend: '80' } };
         expect(entityFootprint(e, ENTITY_SEMANTICS.rope)).toEqual({ x: 2, y: 1, w: 4, h: 1 });
     });
+
+    // ⛓ rules-l39 F1 — the extract carries the far end in `nodes[]`; the game builds the rope with the LAST node's
+    // x (`Game.as:2419-2427`) and a hitbox `_xend - _x + 16` wide (`RopeStart.as:26`).
+    it('reads the far end off the LAST node when no attribute names it (the extract\'s own spelling)', () => {
+        const l39 = { type: 'rope', x: 96, y: 384, attrs: { tset: '6', tag: '9' }, nodes: [{ x: 192, y: 384 }] };
+        expect(entityPixelRect(l39, ENTITY_SEMANTICS.rope)).toEqual({ x: 96, y: 384, w: 112, h: 16 });
+        expect(entityFootprint(l39, ENTITY_SEMANTICS.rope)).toEqual({ x: 6, y: 24, w: 7, h: 1 });
+        const two = { ...l39, nodes: [{ x: 128, y: 384 }, { x: 160, y: 384 }] };
+        expect(entityPixelRect(two, ENTITY_SEMANTICS.rope).w).toBe(80);
+        // no node and no attribute: the pulley alone, as before; an attribute still wins over a node
+        expect(entityPixelRect({ ...l39, nodes: [] }, ENTITY_SEMANTICS.rope).w).toBe(16);
+        expect(entityPixelRect({ ...l39, attrs: { xend: '112' } }, ENTITY_SEMANTICS.rope).w).toBe(32);
+        // a row without `spanNode` never reads nodes
+        expect(entityPixelRect(l39, { ...ENTITY_SEMANTICS.rope, spanNode: false }).w).toBe(16);
+    });
 });
 
 describe('flag -> AP item rules', () => {

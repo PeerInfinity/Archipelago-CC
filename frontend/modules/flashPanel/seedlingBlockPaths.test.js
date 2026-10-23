@@ -188,7 +188,7 @@ describe('L15 — the block must pass both rocks, so the lock costs a weapon', (
 
     it('the heldBy census names the block and no enemy', () => {
         expect(buildBlockHolders(MAP).get(15)).toEqual({
-            blocks: [{ tx: 4, ty: 4, kind: 'pushableblock', condition: null }], pulser: false, fallers: [],
+            blocks: [{ tx: 4, ty: 4, kind: 'pushableblock', condition: null }], pulser: false, pulsers: [], fallers: [],
         });
     });
 
@@ -226,7 +226,8 @@ describe('L28 — the designed holder is a falling rock, its rope on a plateau n
     it('the census reads the rock, its rope and the cut\'s event', () => {
         const rope = MAP.levels.find((l) => l.level === 28).entities.find((e) => e.type === 'rope');
         expect(buildBlockHolders(MAP).get(28).fallers).toEqual([
-            { tx: 7, ty: 15, event: EVENT, triggers: [{ tiles: [[10, 4]], condition: entitySemantics(rope).condition }] },
+            // ⛓ rules-l39: the rope's whole RUN (10..12, 4) is its tiles until the cut (`RopeStart.as:26`)
+            { tx: 7, ty: 15, event: EVENT, triggers: [{ tiles: [[10, 4], [11, 4], [12, 4]], condition: entitySemantics(rope).condition }] },
         ]);
         expect(EVENT).toEqual({ event: 'L28 flag 0: rope@160,64 cleared' });
     });
@@ -245,9 +246,88 @@ describe('L41 — ⚖ applied: the FIRE block is the only holder, so Totem Part 
     });
 });
 
-describe('L39 — a Pulser moves fire blocks with no item, so the room is UNDECIDED', () => {
-    it('the first wandlock of the chain keeps the player-reach price (free from (9,5))', () => {
-        expect(buildBlockHolders(MAP).get(39).pulser).toBe(true);
-        expect(cellAt(gridOf(MAP, 39), 9, 4).enter?.N).toBeUndefined();
+// ⛓ rules-l39 — L39's pulser@64,96 (4,6) is armed by the rope's cut (tset 6), but no fire block STARTS within its
+// reach (the 8 tiles round it: `Pulser.as:23,92-99`), and a fire block moves only on a Fire or Pulse hit, so every
+// pulse follows a Fire push: the room is DECIDED. Its chain wandlock@144,64/48/32 = (9,4)/(9,3)/(9,2), tset 3/4/5,
+// is a lock RUN — three groups crossed in one walk — so each lock is priced from the run's outer cell (9,5), and the
+// room's three fire blocks are three bodies for the three groups.
+describe('L39 — the pulser is decided (no fire block starts in its reach), and the chain is a lock RUN priced Fire', () => {
+    const FIRE = conditionKey(flag('hasFire'));
+    it('the census names the pulser\'s tile, and the verdict decides the room', () => {
+        const held = buildBlockHolders(MAP).get(39);
+        expect(held.pulser).toBe(true);
+        expect(held.pulsers).toEqual([{ tx: 4, ty: 6 }]);
+        expect(held.blocks.map((b) => [b.tx, b.ty, b.kind])).toEqual([
+            [9, 11, 'pushableblockfire'], [13, 5, 'pushableblockfire'], [3, 11, 'pushableblockfire']]);
+    });
+    it('every lock of the chain costs Fire from the room side (moving N), and the north side is walled (moving S)', () => {
+        const grid = gridOf(MAP, 39);
+        for (const y of [4, 3, 2]) {
+            expect(keyOfEntry(cellAt(grid, 9, y).enter.N), `(9,${y}) N`).toBe(FIRE);
+            expect(keyOfEntry(cellAt(grid, 9, y).enter.S), `(9,${y}) S`).toBe('WALLED');
+        }
+    });
+    it('wandlock@48,160 (3,10) falls out of the same search: Fire from the north, walled from its fire block\'s cell', () => {
+        const gates = cellAt(gridOf(MAP, 39), 3, 10).enter;
+        expect([keyOfEntry(gates.S), keyOfEntry(gates.N)]).toEqual([FIRE, 'WALLED']);
+    });
+    it('a RUN needs a body per group: with one fire block fewer (2 bodies, 3 groups) the chain is walled past its first lock', () => {
+        const doc = JSON.parse(JSON.stringify(MAP));
+        const l39 = levelById(doc, 39);
+        l39.entities = l39.entities.filter((e) => !(e.type === 'pushableblockfire' && e.x === 48 && e.y === 176));
+        const grid = gridOf(doc, 39);
+        expect(keyOfEntry(cellAt(grid, 9, 4).enter.N)).toBe(FIRE);
+        expect(keyOfEntry(cellAt(grid, 9, 3).enter.N)).toBe(FIRE);
+        expect(keyOfEntry(cellAt(grid, 9, 2).enter.N)).toBe('WALLED');
+    });
+    it('the Pulser is a static Solid (`Pulser.as:47-48`): its own tile is a wall', () => {
+        expect(cellAt(gridOf(MAP, 39), 4, 6).kind).toBe('wall');
+    });
+});
+
+describe('pulser-arm — UNDECIDED only where a fire block STARTS within a pulser\'s reach (L38, L40, L107 by design)', () => {
+    const fire = (tx, ty) => ({ tx, ty, kind: 'pushableblockfire', condition: flag('hasFire') });
+    const grid = { width: 3, height: 3, cells: Array.from({ length: 9 }, () => ({ kind: 'open', conditions: [] })) };
+    const verdictOf = (blocks, pulsers) => blockHolderVerdict(grid, {
+        heldBy: { blocks, pulser: true, pulsers, fallers: [] }, holders: [[0, 0]], lockCells: new Set([8]),
+        tileTypes: new Map(), keyOf: conditionKey,
+    });
+    it('a fire block beside the pulser, orthogonal or diagonal, keeps the room undecided', () => {
+        expect(verdictOf([fire(1, 1)], [{ tx: 2, ty: 1 }])).toMatchObject({ decided: false, why: 'pulser-arm' });
+        expect(verdictOf([fire(1, 1)], [{ tx: 2, ty: 2 }])).toMatchObject({ decided: false, why: 'pulser-arm' });
+    });
+    it('two tiles away (24 px > radiusHit 22) it does not', () => {
+        expect(verdictOf([fire(0, 0)], [{ tx: 2, ty: 2 }]).why).not.toBe('pulser-arm');
+    });
+    it('the real rooms: L40\'s pulser@592,576 (37,36) has pushableblockfire@576,576 (36,36) beside it', () => {
+        const held = buildBlockHolders(MAP).get(40);
+        expect(held.pulsers).toEqual([{ tx: 37, ty: 36 }]);
+        expect(held.blocks.some((b) => b.kind === 'pushableblockfire' && b.tx === 36 && b.ty === 36)).toBe(true);
+    });
+});
+
+// ⛓ rules-l39 F1 — an uncut rope is solid over its whole RUN (`RopeStart.as:26`, game-witnessed on L39 by
+// `probe-seedling-l39-pulser.mjs` span-blocked / span-cut / span-slash), at the cut's condition; the run's
+// tiles are the rope's, so the pulley tile keeps the same price. L39's run crosses the col-9 corridor at (9,24).
+describe('the rope RUN is solid at the cut\'s condition — L39 (the corridor), L16 and L28', () => {
+    const CUT = conditionKey(entitySemantics({ type: 'rope' }).condition);
+    const priced = (grid, x, y) => {
+        const c = cellAt(grid, x, y);
+        return c.kind === 'wall' ? 'WALL' : c.conditions.map(conditionKey).join('&');
+    };
+    it('L39: the corridor tile (9,24) costs the cut; the run\'s other tiles stand in the shaft\'s walls', () => {
+        const grid = gridOf(MAP, 39);
+        expect(priced(grid, 9, 24)).toBe(CUT);
+        expect(cellAt(grid, 9, 23).kind).toBe('open');
+        expect(cellAt(grid, 9, 25).kind).toBe('open');
+    });
+    it('L16: the run (2..5, 1) — (3,1) and the control\'s tile (5,1) cost the cut, the water (4,1) the cut AND Swim', () => {
+        const grid = gridOf(MAP, 16);
+        expect([2, 3, 5].map((x) => priced(grid, x, 1))).toEqual([CUT, CUT, CUT]);
+        expect(cellAt(grid, 4, 1).conditions.map(conditionKey).sort()).toEqual([CUT, conditionKey(flag('canSwim'))].sort());
+    });
+    it('L28: the run (10..12, 4) costs the cut on every tile', () => {
+        const grid = gridOf(MAP, 28);
+        expect([10, 11, 12].map((x) => priced(grid, x, 4))).toEqual([CUT, CUT, CUT]);
     });
 });

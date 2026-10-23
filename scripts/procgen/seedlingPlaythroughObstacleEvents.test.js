@@ -138,21 +138,24 @@ describe('the playthrough\'s obstacle events', () => {
         expect(buttons.events.map((e) => e.fields.event_id)).toEqual(['flag:L39:8', 'flag:L62:0', 'flag:L63:1']);
         expect(buttons.reused).toEqual([]);
         const [e] = buttons.events;
-        expect(e.fields.side).toBe('level_38__r0c9');
+        // ⛓ rules-l39: L38 is ONE region now (its static pulser's empty pocket r12c5 is gone), and the plug's L39
+        // side is the corridor r25c9 (the rope's run, solid until cut, splits it from the room r2c11)
+        expect(e.fields.side).toBe('level_38');
         expect(e.fields.obstacle).toEqual({ level: 39, tag: 8, class: 'wandlock', x: 144, y: 592 });
         expect(e.fields.action.presser).toEqual({ level: 38, class: 'buttonroom', x: 32, y: 48 });
         expect(e.fields.across).toEqual([]);
         const gates = gatesOf(RULES, new Set([e.name]));
-        expect(gates.map((g) => `${g.from}->${g.to}`).sort()).toEqual(['level_38__r0c9->level_39__r2c11', 'level_39__r2c11->level_38__r0c9']);
+        expect(gates.map((g) => `${g.from}->${g.to}`).sort()).toEqual(['level_38->level_39__r25c9', 'level_39__r25c9->level_38']);
         // the fresh derivation gates exactly the departures the committed rules ask it on
         expect(buttons.exitGates.filter((g) => JSON.stringify(g.rule).includes(e.name)).map((g) => `${g.region_id}/${g.exit_id}`))
             .toEqual(['level_38/out_teleporter_144_0', 'level_39/out_teleporter_144_624']);
         // a solid target has no in-room arm: the event alone (darktrap-events' Or is the pole's)
         expect(buttons.exitGates.filter((g) => JSON.stringify(g.rule).includes(e.name)).map((g) => g.rule))
             .toEqual([{ rule: 'Has', args: { item_name: e.name } }, { rule: 'Has', args: { item_name: e.name } }]);
-        // the lock's own region is NOT split: the atlas carries no event and no gate
+        // the lock's own region is NOT split by the event: the atlas carries no event and no gate. (⛓ rules-l39:
+        // the room's chain north to r0c9 is a lock RUN held by fire blocks, priced Fire — the block paths, not this event)
         expect(RULES.regions['1'].level_39__r2c11.exits.find((x) => x.connected_region === 'level_39__r0c9').access_rule)
-            .toEqual({ rule: 'True_' });
+            .toEqual({ rule: 'Has', args: { item_name: 'Fire' } });
         // ⚖ rules l37-fallrock-patch: the delivered set drops L37's fallrock, so the L38 arrival button's write
         // reaches NO target on the playthrough's map (it was `-> {37,4} fallrock@288,32`, an arm).
         // ⛓ RULES darktrap-events: L61's and L63's presses are no longer skipped as cosmetic (next row).

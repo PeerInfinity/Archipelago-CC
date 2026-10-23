@@ -1,0 +1,41 @@
+{
+ "tape": "l43-open",
+ "set_id": "seedling-vanilla-record-5aeefc3c",
+ "mounted": "seedling-vanilla-record-5aeefc3c",
+ "observations": 201,
+ "boot": {
+  "level": 43,
+  "x": 180,
+  "y": 352
+ },
+ "persistence": [
+  "43,1",
+  "43,2",
+  "43,3"
+ ],
+ "maxY43": 461.55000000000007,
+ "transitions": [
+  {
+   "t": 88,
+   "from": 43,
+   "to": 40,
+   "at": {
+    "x": 328,
+    "y": 600
+   }
+  }
+ ],
+ "clears": [
+  "43,1",
+  "43,2",
+  "43,3"
+ ],
+ "hits": 0,
+ "minY39": null,
+ "final": {
+  "t": 200,
+  "x": 328,
+  "y": 684.9999999999998,
+  "level": 40
+ }
+}
