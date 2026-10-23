@@ -1695,11 +1695,15 @@ export const SWING_WINDOW_NOTE = Object.freeze({
         + '`slashing` is up), and the run records a press row for each. The rect is '
         + 'RECOMPUTED per tick from the live position, so a player being knocked back swings '
         + 'from where they are',
-    spear: `a spear press records ONE row. The game tests on ticks `
-        + `${SPEAR_HIT_TICKS_UNMODELLED.ticks.join(', ')} of the same animation and the model `
-        + `fires the first only — ${SPEAR_HIT_TICKS_UNMODELLED.why} That is a bound on the `
-        + 'MODEL, not a fact about the swing, and the two extra rects are absent because '
-        + 'this run never made those hit tests',
+    // ⛓ planning-10's SPEARRECT flip (`CONTACT_FIDELITY.spearGameTest`, ON by default): the spear's three tests are the
+    // game's, so the note says so; the OFF bound is named WITH its switch (js-planning-8's review).
+    spear: `a spear press fires ${SPEAR_HIT_TICKS_UNMODELLED.ticks.length} hit tests, on ticks `
+        + `T+${SPEAR_HIT_TICKS_UNMODELLED.ticks.join(', T+')} of the same animation (\`Player.spear()\`: `
+        + '`spearDelayMax` 1, so the test runs on alternate ticks while `spearing` is up), and the run records a '
+        + 'press row for each — the thrust\'s row, then two `repeat` rows. Each test rebuilds the int-origined 32x5 '
+        + 'rect (inclusive edges) from the live position, with no reach gate and no line test, so a body that moves '
+        + 'INTO the thrust after the first test is hit. With `spearGameTest` OFF the model fires the first test only '
+        + `(${SPEAR_HIT_TICKS_UNMODELLED.why}) — a bound on the MODEL, and the two extra rects are then absent`,
     hold: 'the HOLD is a DISPLAY CHOICE of this page and not the game\'s timing — a rect '
         + 'kept on screen for N ticks after the engine stopped swinging, drawn dimmer and '
         + 'outline-only so it can never be read as a hit test. Set it to 0 for the raw '

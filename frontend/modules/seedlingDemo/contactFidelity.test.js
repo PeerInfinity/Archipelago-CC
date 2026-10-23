@@ -221,7 +221,10 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             yetiTalk: true,
             // ⛓ fidelity MASKS (wave 25): `pixelMaskSightLines` (every run line samples the "Solid" pixelmasks) shipped OFF;
             // ⛓ planning-10's flip (⚖ user "Harvest + flip ON", 2026-10-22) turns it ON.
-            pixelMaskSightLines: true });
+            pixelMaskSightLines: true,
+            // ⛓ fidelity SPEARRECT (wave 25): the spear's test as the game runs it, for every arm — shipped OFF;
+            // ⛓ planning-10's flip (⚖ user "Harvest + flip ON", 2026-10-22) turns it ON.
+            spearGameTest: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

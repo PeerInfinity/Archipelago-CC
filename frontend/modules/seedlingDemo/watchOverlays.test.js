@@ -41,6 +41,7 @@ import { detectionRects } from './crusher.js';
 import { createTapeStepper, runTapeToStream, stagingFromTape } from './tapeRunner.js';
 import { solveForPage } from './watchSolve.js';
 import { parseTape } from './tapeFormat.js';
+import { withContactFidelity } from './contactFidelity.js';
 
 /** One level source for the slice-9 rows — built once, like the page's. */
 const levelSourceForTests = atlasLevelSource();
@@ -1457,8 +1458,27 @@ describe('group B — the attack window and the held afterimage', () => {
      * MADE, and the readout carries the reason the other two are absent — an
      * absence with no written cause reads as a room where nothing happened.
      */
-    it('⚠ a SPEAR press is ONE row, and the missing two are a NAMED model bound', () => {
+    // ⛓ planning-10's SPEARRECT flip (`spearGameTest` ON by default) models T+3 / T+5 — this row is the OFF control of the
+    //   old bound (ON every thrust carries two `repeat` rows; fidelitySpearRect pins them).
+    // ⛓ planning-10's SPEARRECT flip (`spearGameTest` ON by default): every thrust is THREE rows — the thrust (T+1) and
+    //   its `repeat` rows 2 and 4 (T+3, T+5), each on the thrust's own press tick — and the note says exactly that.
+    it('a SPEAR press is THREE rows with spearGameTest ON: the thrust, then repeats 2 and 4 on T+3 / T+5', () => {
         const presses = collectRun(tape('r4-walk-full'), levelSourceForTests).run.presses;
+        const thrusts = presses.filter((p) => !p.repeat);
+        expect(thrusts.length).toBeGreaterThan(0);
+        expect(thrusts.every((p) => p.weapon === 'spear' && p.fired === p.t + 1)).toBe(true);
+        for (const p of thrusts) {
+            const reps = presses.filter((r) => r.repeat && r.t === p.t);
+            expect(reps.map((r) => r.repeat), `thrust t${p.t}`).toEqual([2, 4]);
+            expect(reps.map((r) => r.fired), `thrust t${p.t}`).toEqual([p.t + 3, p.t + 5]);
+        }
+        expect(presses.length).toBe(thrusts.length * 3);
+        expect(SWING_WINDOW_NOTE.spear).toMatch(/a spear press fires 3 hit tests, on ticks T\+1, T\+3, T\+5/);
+        expect(SWING_WINDOW_NOTE.spear).toMatch(/the thrust's row, then two `repeat` rows/);
+    });
+
+    it('⚠ a SPEAR press is ONE row, and the missing two are a NAMED model bound (spearGameTest OFF)', () => {
+        const presses = withContactFidelity({ spearGameTest: false }, () => collectRun(tape('r4-walk-full'), levelSourceForTests).run.presses);
         expect(presses.length).toBeGreaterThan(0);
         expect(presses.every((p) => p.weapon === 'spear')).toBe(true);
         expect(presses.every((p) => p.fired === p.t + 1)).toBe(true);
@@ -1466,8 +1486,9 @@ describe('group B — the attack window and the held afterimage', () => {
         // the readout says WHICH fact the absence is, and it says it in the
         // engine's own numbers rather than in a page-side paraphrase
         expect(SPEAR_HIT_TICKS_UNMODELLED.ticks).toEqual([1, 3, 5]);
-        expect(SWING_WINDOW_NOTE.spear).toContain('1, 3, 5');
-        expect(SWING_WINDOW_NOTE.spear).toMatch(/bound on the\s+MODEL/);
+        // ⛓ the note names the OFF bound together with its switch (planning-10's SPEARRECT flip).
+        expect(SWING_WINDOW_NOTE.spear).toMatch(/With `spearGameTest` OFF the model fires the first test only/);
+        expect(SWING_WINDOW_NOTE.spear).toMatch(/a bound on the MODEL, and the two extra rects are then absent/);
     });
 
     /**

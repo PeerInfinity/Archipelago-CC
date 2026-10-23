@@ -42,7 +42,9 @@ describe('C3 D1 — the spear through the wall, on the game (c3-d1-l98-spear-wes
         const { compared, bad } = bodyDisagreements(w.game.samples, m.bodies, classOf);
         expect(compared).toBeGreaterThan(100);
         expect(bad.filter((b) => b.cls === 'IceTurret')).toEqual([]);
-        expect(m.died).toEqual({ 'iceturret@104,24': 36 });
+        // ⛓ planning-10's SPEARRECT flip (`spearGameTest` ON): the T+3 / T+5 tests are modelled, so the jellyfish's t39
+        //   repeat hit lands in the model as in the game (`spearrect-l98-jelly-repeat`): it dies at t39 too.
+        expect(m.died).toEqual({ 'iceturret@104,24': 36, 'jellyfish@56,48': 39 });
         expect(m.gone).toEqual({ 'iceturret@104,24': 47 });
         const g = gameBodyEvents(w.game.samples, m.ticks).gone.IceTurret;
         expect(g).toEqual([{ lo: 47, hi: 47 }]);
@@ -57,9 +59,13 @@ describe('C3 D1 — the spear through the wall, on the game (c3-d1-l98-spear-wes
      * `hitByDarkStuff`). The model carries one landing a thrust (`SPEAR_HIT_TICKS_UNMODELLED`). A slice that models
      * the repeats turns this row red, by design.
      */
-    it('the jellyfish rows disagree from t39 exactly as `SPEAR_HIT_TICKS_UNMODELLED` says (the game: hits 3, "die")', () => {
+    // ⛓ planning-10's SPEARRECT flip: "a slice that models the repeats turns this row red, by design" — it did. ON the
+    //   jellyfish rows AGREE (no Jellyfish disagreement); the old disagreement is this row's OFF control.
+    it('the jellyfish rows agree with `spearGameTest` ON (the t39 repeat lands); OFF they disagree from t39 exactly as `SPEAR_HIT_TICKS_UNMODELLED` says (the game: hits 3, "die")', () => {
         expect(SPEAR_HIT_TICKS_UNMODELLED.ticks).toEqual([1, 3, 5]);
-        const jelly = bodyDisagreements(w.game.samples, m.bodies, classOf).bad.filter((b) => b.cls === 'Jellyfish');
+        expect(bodyDisagreements(w.game.samples, m.bodies, classOf).bad.filter((b) => b.cls === 'Jellyfish')).toEqual([]);
+        const off = withContactFidelity({ spearGameTest: false }, () => modelReadings(w.tape));
+        const jelly = bodyDisagreements(w.game.samples, off.bodies, classOf).bad.filter((b) => b.cls === 'Jellyfish');
         expect(jelly[0]).toEqual({ t: 39, cls: 'Jellyfish', game: ['0/0', '0/0', '3/30'], model: ['0/0', '0/0', '1/19'] });
         const row = w.game.samples.find((s) => s.t === 39).rows.find((r) => r.cls === 'Jellyfish' && r.hits === 3);
         expect(row.anim).toBe('die');

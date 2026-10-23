@@ -180,6 +180,8 @@ export {
     slashReachFor, slashRect, SPEAR_HIT_TICKS_UNMODELLED, spearRect, SWORD_DAMAGE, swordWindowReplace, swordWindowSchedule,
     swordWindowStep, UP,
 } from './presses.js';
+// ⛓ fidelity SPEARRECT: the spear's rect and its test as the game runs them (`spearGameTest`), for the spear stances.
+export { pressRectTouches, spearHitRect } from './presses.js';
 // ⛓ SEEDLING FIDELITY PUSHBLOCK: the spear push's stance audit (a thrust that reaches anything but the block).
 export { auditPress, PRESS_ARM_POLICY } from './presses.js';
 // pull.js — solverBot · seedling 2

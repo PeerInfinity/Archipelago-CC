@@ -1,0 +1,27 @@
+PASS: spearrect-l98-jelly-repeat: the model (key ON) replays the tape to its end
+PASS: spearrect-l98-jelly-repeat: ON, the game reproduces the model at 0 px — the player on all 61 observation(s)
+PASS: spearrect-l98-jelly-repeat: ON, every Jellyfish/IceTurret row the game samples is the model's (86 rows)
+PASS: spearrect-l98-jelly-repeat: OFF, the model does NOT reproduce the game (the witness for the key) — first t39 Jellyfish: game [0/0,0/0,3/30] model [0/0,0/0,1/19]
+recorded frontend/modules/seedlingDemo/fixtures/spearrect-witness/spearrect-l98-jelly-repeat.json — 61 observation(s), 46 sample(s)
+PASS: spearrect-l40-turret-corner: the model (key ON) replays the tape to its end
+PASS: spearrect-l40-turret-corner: ON, the game reproduces the model at 0 px — the player on all 38 observation(s)
+PASS: spearrect-l40-turret-corner: ON, every IceTurret row the game samples is the model's (28 rows)
+PASS: spearrect-l40-turret-corner: OFF, the model does NOT reproduce the game (the witness for the key) — first t8 IceTurret: game [2/30] model [0/0]
+recorded frontend/modules/seedlingDemo/fixtures/spearrect-witness/spearrect-l40-turret-corner.json — 38 observation(s), 28 sample(s)
+PASS: spearrect-l63-block-far-edge: the model (key ON) replays the tape to its end
+PASS: spearrect-l63-block-far-edge: ON, the game reproduces the model at 0 px — the player on all 54 observation(s)
+PASS: spearrect-l63-block-far-edge: ON, every PushableBlockSpear row the game samples is the model's (51 rows)
+PASS: spearrect-l63-block-far-edge: OFF, the model does NOT reproduce the game (the witness for the key) — first t15 PushableBlockSpear: game [112.5,96] model [112,96]
+recorded frontend/modules/seedlingDemo/fixtures/spearrect-witness/spearrect-l63-block-far-edge.json — 54 observation(s), 51 sample(s)
+PASS: spearrect-l63-block-truncated-y: the model (key ON) replays the tape to its end
+PASS: spearrect-l63-block-truncated-y: ON, the game reproduces the model at 0 px — the player on all 54 observation(s)
+PASS: spearrect-l63-block-truncated-y: ON, every PushableBlockSpear row the game samples is the model's (46 rows)
+PASS: spearrect-l63-block-truncated-y: OFF, the model does NOT reproduce the game (the witness for the key) — first t16 PushableBlockSpear: game [112,96] model [113,96]
+recorded frontend/modules/seedlingDemo/fixtures/spearrect-witness/spearrect-l63-block-truncated-y.json — 54 observation(s), 46 sample(s)
+ALL CHECKS PASSED
+PASS: spearrect-l63-jelly-reach: the model (key ON) replays the tape to its end
+PASS: spearrect-l63-jelly-reach: ON, the game reproduces the model at 0 px — the player on all 37 observation(s)
+PASS: spearrect-l63-jelly-reach: ON, every Jellyfish row the game samples is the model's (32 rows)
+PASS: spearrect-l63-jelly-reach: OFF, the model does NOT reproduce the game (the witness for the key) — first t9 Jellyfish: game [0/0,2/28] model [0/0,0/0]
+recorded frontend/modules/seedlingDemo/fixtures/spearrect-witness/spearrect-l63-jelly-reach.json — 37 observation(s), 32 sample(s)
+ALL CHECKS PASSED

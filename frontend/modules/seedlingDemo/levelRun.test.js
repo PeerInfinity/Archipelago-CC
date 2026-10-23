@@ -156,10 +156,13 @@ describe('R4: the spear press, the bridge and the block', () => {
         expect(moved.t - 25).toBe(60);
         // The press ledger: pressed at 25, the rect fired at 26, and it hit
         // the bridge tile (2,9) and nothing else.
-        expect(run.presses).toEqual([expect.objectContaining({
+        // ⛓ planning-10's SPEARRECT flip: the THRUST row; ON its T+3 / T+5 tests follow as `repeat` rows (the bridge's
+        //   re-hit is a no-op: `bridges.has(id)`), and the bridge still opens on tick 85.
+        expect(run.presses.filter((p) => !p.repeat)).toEqual([expect.objectContaining({
             t: 25, fired: 26, level: 63, weapon: 'spear', direction: 3,
             hits: [{ as3: 'Tile', id: '2,9' }],
         })]);
+        expect(run.presses.filter((p) => p.repeat).map((p) => p.repeat)).toEqual([2, 4]);
         expect([...run.openBridges]).toEqual(['2,9']);
     });
 
@@ -229,10 +232,13 @@ describe('R4: the spear press, the bridge and the block', () => {
         expect(run.pushedBlocks).toEqual([{
             id: 'pushableblockspear@176,128', x: 144, y: 112, tx: 9, ty: 7, removed: true,
         }]);
-        expect(run.presses).toHaveLength(3);
+        // ⛓ planning-10's SPEARRECT flip: three THRUST rows (ON each carries its T+3 / T+5 `repeat` rows too).
+        const thrusts = run.presses.filter((p) => !p.repeat);
+        expect(thrusts).toHaveLength(3);
+        expect(run.presses.length).toBe(9);
         // The third press hit BOTH — the block it was aimed at and the pole
         // it could not miss.
-        expect(run.presses[2].hits.map((h) => h.as3).sort())
+        expect(thrusts[2].hits.map((h) => h.as3).sort())
             .toEqual(['LightPole', 'PushableBlockSpear']);
         // ⚠ FIELD-WISE (see `finalDoorL113.test.js`): the row grew a `t` with
         // the editor arc's clears layer, and this test is about the POLE.
@@ -258,7 +264,8 @@ describe('R4: the spear press, the bridge and the block', () => {
             ...L65_BREACH_PRESS_SPANS,
             { key: 'primary', from: 320, to: 321 },
         ], 440);
-        const lit = run.presses.flatMap((p) => p.hits).filter((h) => h.as3 === 'LightPole');
+        // ⛓ planning-10's SPEARRECT flip: the thrusts' own pole hits (a repeat's is refused on the pole's `hitsTimer`).
+        const lit = run.presses.filter((p) => !p.repeat).flatMap((p) => p.hits).filter((h) => h.as3 === 'LightPole');
         expect(lit.map((h) => h.activate)).toEqual([true, false]);
         expect(run.earnedClears).toEqual([]);
     });
