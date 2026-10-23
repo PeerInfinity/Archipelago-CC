@@ -89,9 +89,10 @@ const keys = (out) => out.perTick.map((h) => [...h].sort().join('+'));
 const pulled = (run) => (run.ledger('ropePulls') ?? []).some((p) => p.id === 'rope@160,64');
 
 describe('fidelity TIMEDPASS — the switch', () => {
-    it('is OFF by default, and its prerequisites are ON (the kill first, every drill stepped)', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.drillTimedPass).toBe(false);
-        expect(CONTACT_FIDELITY.drillTimedPass).toBe(false);
+    // ⛓ planning-11's flip (⚖ user "Harvest + flip ON", 2026-10-23).
+    it('is ON by default (flipped), and its prerequisites are ON (the kill first, every drill stepped)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.drillTimedPass).toBe(true);
+        expect(CONTACT_FIDELITY.drillTimedPass).toBe(true);
         expect(CONTACT_FIDELITY_DEFAULTS).toMatchObject({ drillLive: true, drillMixedRooms: true, drillKillFirst: true,
             ropeCutAnyWeapon: true, corridorBodyPricing: false });
     });

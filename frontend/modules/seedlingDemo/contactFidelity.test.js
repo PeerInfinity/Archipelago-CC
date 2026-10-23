@@ -238,8 +238,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity HITLESS (wave 27): the Tentacled Beast's fork ranks hitless variants first — shipped OFF;
             // ⛓ planning-11's flip (⚖ user "Harvest + flip ON", 2026-10-23) turns it ON.
             tentacleHitlessFirst: true,
-            // ⛓ fidelity TIMEDPASS (wave 27): the solver's timed pass past a drill it cannot kill; ships OFF.
-            drillTimedPass: false });
+            // ⛓ fidelity TIMEDPASS (wave 27): the solver's timed pass past a drill it cannot kill; shipped OFF;
+            // ⛓ planning-11's flip (⚖ user "Harvest + flip ON", 2026-10-23) turns it ON.
+            drillTimedPass: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

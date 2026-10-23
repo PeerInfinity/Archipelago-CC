@@ -1058,8 +1058,12 @@ export const CONTACT_FIDELITY = {
      * SEARCHES a tick-by-tick walk to one of the cut's stances on the run's own drill forecast (`corridorBodyForecast`,
      * asked with `drillPass`) and the player preview (`previewStepper`), with a standing tail for the cut; certifies it on a
      * fork of the run with the cut itself; and plays it. OFF: byte-identical. `SEEDLING_DRILL_TIMED_PASS=0|1`.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, TIMEDPASS "Harvest + flip ON" — "Keep Fire; timed pass") turns it ON.
+     * Measured movers (CI, the DRILLKILL harvest + the slice): survey full ON = OFF; 42 L28 + FallRock-room sweep legs ×2
+     * per arm: ends identical; probes standard ON green. Plan movers: Fire alone L28 from L26 REFUSED → SOLVED 132 t;
+     * Fire from L25 89 → 70 t.
      */
-    drillTimedPass: false,
+    drillTimedPass: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
