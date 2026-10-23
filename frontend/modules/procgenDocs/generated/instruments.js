@@ -15781,6 +15781,8 @@ export const INSTRUMENTS = frz({
                 "budget-s",
                 "host",
                 "only",
+                "pocket",
+                "restart-budget-s",
                 "solver-budget-work",
                 "solver-upgrade-window-work",
                 "trace",
@@ -15805,6 +15807,18 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "pocket"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "restart-budget-s"
                 },
                 {
                     "how": [

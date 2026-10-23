@@ -48,8 +48,9 @@ const witnesses = readdirSync(WITNESS_DIR).filter((f) => f.endsWith('.json')).so
 const L57 = { x: 80, y: 48, tag: 0 };
 
 describe('bosskills D3 — the transcription (`Enemies/TentacleBeast.as`, `Enemies/Tentacle.as`)', () => {
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY.tentacleBeastFight).toBe(false);
+    // ⛓ shipped OFF; planning-10's flip (⚖ user "Flip now, hitless later", 2026-10-22) turns it ON.
+    it('ships ON (flipped)', () => {
+        expect(CONTACT_FIDELITY.tentacleBeastFight).toBe(true);
     });
 
     it('a tentacle\'s life is rise 16, sit 37, hit 16, hitting 4, sink 13 (86 updates); the beast rises in 46, dies in 61', () => {
@@ -210,11 +211,14 @@ describe('bosskills D3 — the solver (`solid:tentaclebeast` → `tentaclebeast`
 
     // ⛓ BOSSKILLS harvest: the `solid:tentaclebeast` row is switch-gated (as Lights' is), so OFF the catalogue has no row
     // at all — the survey's `bossGoal` reads `skip` as it did before the slice, and a clear-tag handed it refuses on the row.
+    // ⛓ planning-10's flip: the OFF arm is named (it was the default).
     it('OFF: the clear-tag refuses, and the refusal names the missing strategy row', () => {
         const staging = stagingFromTape(tapeOf({}));
-        const run = createRunForStaging(staging, SRC);
         let e = null;
-        try { solveSegment({ run, goals: goals.slice(0, 1), name: 'tb-off', boot: staging.boot }); } catch (x) { e = x; }
+        withContactFidelity({ tentacleBeastFight: false }, () => {
+            const run = createRunForStaging(staging, SRC);
+            try { solveSegment({ run, goals: goals.slice(0, 1), name: 'tb-off', boot: staging.boot }); } catch (x) { e = x; }
+        });
         expect(e).toBeInstanceOf(SolverRefusal);
         expect(e.message).toMatch(/no strategy row exists for solid:tentaclebeast/);
     }, 120000);
@@ -260,8 +264,11 @@ describe('bossfork D2 — a cleared L57 holds its mouth at the build (`tentacleM
         });
     });
 
+    // ⛓ planning-10's flip: `tentacleBeastFight` is ON by default, so the OFF arm is named.
     it('OFF, and ON with the beast alive: no mouth at the build', () => {
-        expect(mouths(createRunForStaging(stagingOf(revisit), SRC))).toEqual([]);
+        withContactFidelity({ tentacleBeastFight: false }, () => {
+            expect(mouths(createRunForStaging(stagingOf(revisit), SRC))).toEqual([]);
+        });
         withContactFidelity({ tentacleBeastFight: true }, () => {
             expect(mouths(createRunForStaging(stagingOf(base), SRC))).toEqual([]);
         });
