@@ -70,10 +70,14 @@ describe('ROBUST D3 — the Conch no longer loses L16 → L18', () => {
 
     // ⛓ fidelity FLIP14: ROBUST's game witnesses and pins were solved under the pre-flip strike gate — `strikeIframeLapse`
     // OFF. ON (⚖ the wave-14 flip, user 2026-10-12): idle 1 223 t, {sword, conch} → L18 808 t, 0 hits, unwitnessed.
-    it('{sword} alone is unmoved (878 t, PULL)', () => withContactFidelity({ strikeIframeLapse: false }, () => {
-        const r = canCross({ level: 16, exit: { x: 352, y: 80 }, arrival: { from: 15 }, inventory: ['sword'],
-            dashMode: 'none', witness: false });
-        expect(r.plan).toMatchObject({ ticks: 878, hash: 'b9fc18ae79', hits: 0, rungs: ['pull'] });
+    // ⛓ planning-10's MASKS flip (⚖ user, 2026-10-22, licensed with the flip): with `pixelMaskSightLines` ON the swings
+    //   at bob@224,96 from (280.5, 106→102.6) at t587-591 meet `tile:Stone` (271.3, 96) and a pushableblock — the chaser
+    //   line's BOX half (`mask-l65-wall`'s rule) — and the plan is 4 t longer. Unwitnessed on the game for this plan.
+    it('{sword} alone (882 t, PULL; 878 t with pixelMaskSightLines OFF)', () => withContactFidelity({ strikeIframeLapse: false }, () => {
+        const plan = (fl) => withContactFidelity(fl, () => canCross({ level: 16, exit: { x: 352, y: 80 }, arrival: { from: 15 },
+            inventory: ['sword'], dashMode: 'none', witness: false }).plan);
+        expect(plan({})).toMatchObject({ ticks: 882, hash: '8d7368f487', hits: 0, rungs: ['pull'] });
+        expect(plan({ pixelMaskSightLines: false })).toMatchObject({ ticks: 878, hash: 'b9fc18ae79', hits: 0, rungs: ['pull'] });
     }));
 
     it('the later-lane probe is bounded', () => {

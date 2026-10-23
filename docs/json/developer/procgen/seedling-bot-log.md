@@ -24703,3 +24703,39 @@ this door: on the straight approach the teleporter wins while it is live, and th
   next build is a different fact from one a per-frame reader (a `Teleporter`) sees at once: the Yeti's two writes have
   two readers and land at two times.
 - An `earnedClears` arm filtered on `clearedByLevel` hides a clear that the run itself applied mid-visit.
+
+### Seedling fidelity MASKS — the swing's line samples the "Solid" pixelmasks, and the chaser arm asks it (`pixelMaskSightLines`, OFF)
+
+Planner `seedling-fidelity-planning-10`, wave 25 (⚖ the user picked "Pixel-mask sight lines" from DRILL's hand-over). The
+report is `CC/docs/cloud-reports/seedling-fidelity-masks.md`.
+
+**W0.** The game's `collideLine("Solid", …)` tests are five: `Player.slash` (`Player.as:917`, every swing target but a
+Solid / Rope / Flyer, waived for the ghost sword), `Crusher.as:58`, `Drill.as:86`, `Spinner.as:82` (`runRange` 0: moot) and
+`LavaTrap.as:88` (no model reader). Every other line the brief listed — a spinner's hammer, a wallflyer's ray, the BobBoss
+swords, a chest's probe, a spinning axe — is `collideLine("Player", …)`, which no mask can block. No crusher shares a level
+with a mask. A swing at a Tree does nothing (`Tree.hit` is empty), at a LightPole only on "Spear", at a text-less Watcher
+nothing (L94's watcher behind the TreeLarge is moot). Masks lie on swing lines beside the MOVERS of L12, L28, L88, L91, L92
+(with a spinner), L99, L100, and on L57's tentacles (the beast's own body).
+
+**The model (switch ON).** `collideLineSolid`'s `{masks}` (DRILL's sampler, plus an exact bounding prefilter) is passed by
+the lone drill's trigger, the swing at a drill / wallflyer / tentacle (the bosskills D3 by-name interim retires), the
+corridor body forecast, and the solver's chaser and drill mirrors. Two things the witnesses found:
+- **the chaser arm of `applyThrust` asked NO line at all** — not even the boxes. A bob behind a wall tile was knocked back in
+  the model and untouched on the game (`mask-l65-wall`). ON, the arm asks `Player.slash`'s line, boxes and masks.
+- **an `OpenTree` is not "Solid"**: it extends `Tree`, whose ctor writes `type = "Tree"`. The first cut sampled it and
+  refused a swing the game lands (`mask-l65-opentree`, now a control). The line excludes it; `ENTITY_CLASSES.opentree`'s
+  "Solid" is handed over (the row has other readers).
+The spinner family (the hammer arc's forecast and strike line, and the executor that must agree with them) stays on the
+boxes — handed over.
+
+**Witnesses (p4g, 0 px; `probe-seedling-mask-lines.mjs`, `fixtures/mask-witness/`).** `mask-l65-wall`, `mask-l65-opentree`.
+No CliffSide-on-a-chaser-line case was found by search (idle and walk-then-swing, L12/L28/L91/L92/L99/L100): a chaser closes
+on a clear line, so a mask between them is rarely within reach.
+
+**Movers (ON).** Route survey full: 0 (250 rows identical). Bounded vitest: `seedlingRobust`'s L16 `{sword}` pin 878 → 882 t
+(swings at `bob@224,96` through a Stone tile and a pushable block, t587-591 — the box half of the chaser line), plus the
+defaults table and dashShape's stamp row.
+
+**Trap candidates.**
+- A collider's TYPE comes from the constructor chain, not the asset: an `OpenTree` draws a mask and is still a "Tree".
+- A gate the game runs on every target of a swing can be missing from ONE arm of the model's dispatch: read every arm.
