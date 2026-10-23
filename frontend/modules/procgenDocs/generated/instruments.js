@@ -231,7 +231,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 450,
         "browser": 161,
-        "cited": 242,
+        "cited": 241,
         "files": 464,
         "lineStyle": 14,
         "withDocblock": 464,
@@ -12592,6 +12592,59 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/probe-seedling-l37-fallrock.mjs"
         },
         {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "out"
+            ],
+            "file": "probe-seedling-l39-pulser.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling's L39 PULSER and ROPE SPAN, ON THE GAME (rules `rules-l39`). `rope@96,384` (tset 6, tag 9) arms `pulser@64,96` (tset 6): `RopeStart.set activate` publishes the rope's group (`RopeStart.as:79-91`) and a Pulser pulses only while `activate` (`Pulser.as:54-84`); on every later entry `check()` re-hits the rope f…",
+            "path": "scripts/procgen/probe-seedling-l39-pulser.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": false,
             "category": "probe",
@@ -15088,51 +15141,6 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling L57's DEATH-SPAWNED EXIT, THE GAME'S WAY (rules `rules-game-truth-gaps`, the L57 lift: ⚖ the user 2026-10-06, \"lift L57 like L82\").",
             "path": "scripts/procgen/probe-seedling-tentacle-mouth.mjs"
-        },
-        {
-            "argvHelpers": [
-                "arg"
-            ],
-            "browser": true,
-            "category": "probe",
-            "citedBy": [
-                "docs/json/developer/procgen/seedling-bot-log.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [],
-            "file": "probe-seedling-timed-pass.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "dump"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "only"
-                },
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "record"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "probe-seedling-timed-pass — ⛓⛓⛓ seedling-fidelity-timedpass: THE SOLVER WALKS PAST L28's HOPPING DRILLS WITH FIRE ALONE (`CONTACT_FIDELITY.drillTimedPass`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
-            "path": "scripts/procgen/probe-seedling-timed-pass.mjs"
         },
         {
             "argvHelpers": [],

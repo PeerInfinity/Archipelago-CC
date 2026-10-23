@@ -1,0 +1,23 @@
+{
+ "tape": "pulse-control",
+ "set_id": "seedling-vanilla-record-5aeefc3c",
+ "mounted": "seedling-vanilla-record-5aeefc3c",
+ "observations": 201,
+ "boot": {
+  "level": 39,
+  "x": 82,
+  "y": 100
+ },
+ "persistence": [],
+ "maxY43": null,
+ "transitions": [],
+ "clears": [],
+ "hits": 0,
+ "minY39": 108,
+ "final": {
+  "t": 200,
+  "x": 90,
+  "y": 108,
+  "level": 39
+ }
+}

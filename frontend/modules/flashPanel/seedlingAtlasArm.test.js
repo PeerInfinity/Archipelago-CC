@@ -123,7 +123,9 @@ describe('the sixth fact — `atlas`, decided by (iii)\'s own count', () => {
         // ⛓ R4b (rules-boss-locations): 255 -> 256, L69 lifted from never-enter (⚖ 2026-10-19, "All 7 bosses").
         // ⛓ RULES rope-events: 256 -> 259, L16 splits at its rope-silenced arrow lanes (r1c9 east, r3c7 the L17 arrival's
         //   pocket, r6c8 the cells beyond the lanes below the breakable rocks).
-        expect(atlasRoomRegions(rulesOf('seedling_playthrough'))).toHaveLength(259);
+        // ⛓ rules-l39: 259 -> 257 — L39 +1 (r25c9, the corridor south of the rope's run); L38 and L107 each merge their
+        // static pulser's empty pocket (r12c5 / r2c5) into one region (-2 each, +1 each); L40 loses r36c37 (-1).
+        expect(atlasRoomRegions(rulesOf('seedling_playthrough'))).toHaveLength(257);
         expect(atlasRoomRegions(rulesOf('seedling'))).toHaveLength(0);
         expect(atlasRoomRegions(rulesOf('seedling_generated_room'))).toHaveLength(0);
     });

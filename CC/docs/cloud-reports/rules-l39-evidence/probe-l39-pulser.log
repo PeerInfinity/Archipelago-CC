@@ -1,0 +1,36 @@
+PAGE: seedling_bot_ap_p4g · delivered seedling-vanilla-record-5aeefc3c · l43-control on seedling-vanilla-record-f5bdb07d
+# box lock: TAKEN by probe-seedling-l39-pulser.mjs (browser, pid 3996007) — head f68210f08, 34 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"pulse-armed","set_id":"seedling-vanilla-record-5aeefc3c","mounted":"seedling-vanilla-record-5aeefc3c","observations":201,"boot":{"level":39,"x":82,"y":100},"persistence":["39,9"],"maxY43":null,"transitions":[],"clears":["39,9"],"hits":2,"minY39":108,"final":{"t":200,"x":167.87141274256015,"y":109,"level":39}}
+PASS: pulse-armed: the game ran the tape to its end on the delivered set — 201 obs, seedling-vanilla-record-5aeefc3c
+PASS: pulse-armed: with {39,9} (the cut) the pulser pulses and hits the player beside it — {"clears":["39,9"],"hits":2,"minY39":108,"maxY43":null,"final":{"t":200,"x":167.87141274256015,"y":109,"level":39},"transitions":[]}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"pulse-control","set_id":"seedling-vanilla-record-5aeefc3c","mounted":"seedling-vanilla-record-5aeefc3c","observations":201,"boot":{"level":39,"x":82,"y":100},"persistence":[],"maxY43":null,"transitions":[],"clears":[],"hits":0,"minY39":108,"final":{"t":200,"x":90,"y":108,"level":39}}
+PASS: pulse-control: the game ran the tape to its end on the delivered set — 201 obs, seedling-vanilla-record-5aeefc3c
+PASS: pulse-control: the CONTROL: nothing staged, the pulser never pulses — no hit — {"clears":[],"hits":0,"minY39":108,"maxY43":null,"final":{"t":200,"x":90,"y":108,"level":39},"transitions":[]}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"span-blocked","set_id":"seedling-vanilla-record-5aeefc3c","mounted":"seedling-vanilla-record-5aeefc3c","observations":161,"boot":{"level":39,"x":148,"y":440},"persistence":[],"maxY43":null,"transitions":[],"clears":[],"hits":0,"minY39":402.04999999999995,"final":{"t":160,"x":156,"y":402.04999999999995,"level":39}}
+PASS: span-blocked: the game ran the tape to its end on the delivered set — 161 obs, seedling-vanilla-record-5aeefc3c
+PASS: span-blocked: the uncut rope's RUN stops a walk up the corridor at col 9 (y >= 400) — {"clears":[],"hits":0,"minY39":402.04999999999995,"maxY43":null,"final":{"t":160,"x":156,"y":402.04999999999995,"level":39},"transitions":[]}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"span-cut","set_id":"seedling-vanilla-record-5aeefc3c","mounted":"seedling-vanilla-record-5aeefc3c","observations":161,"boot":{"level":39,"x":148,"y":440},"persistence":["39,9"],"maxY43":null,"transitions":[],"clears":["39,9"],"hits":0,"minY39":259.9999999999999,"final":{"t":160,"x":156,"y":259.9999999999999,"level":39}}
+PASS: span-cut: the game ran the tape to its end on the delivered set — 161 obs, seedling-vanilla-record-5aeefc3c
+PASS: span-cut: with {39,9} the run is gone and the walk passes north (y < 384) — {"clears":["39,9"],"hits":0,"minY39":259.9999999999999,"maxY43":null,"final":{"t":160,"x":156,"y":259.9999999999999,"level":39},"transitions":[]}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"span-slash","set_id":"seedling-vanilla-record-5aeefc3c","mounted":"seedling-vanilla-record-5aeefc3c","observations":201,"boot":{"level":39,"x":148,"y":440},"persistence":[],"maxY43":null,"transitions":[],"clears":["39,9"],"hits":0,"minY39":354.5499999999999,"final":{"t":200,"x":156,"y":354.5499999999999,"level":39}}
+PASS: span-slash: the game ran the tape to its end on the delivered set — 201 obs, seedling-vanilla-record-5aeefc3c
+PASS: span-slash: with the Sword a slash from the corridor cuts the rope ({39,9}) and the walk passes — {"clears":["39,9"],"hits":0,"minY39":354.5499999999999,"maxY43":null,"final":{"t":200,"x":156,"y":354.5499999999999,"level":39},"transitions":[]}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"chain-armed","set_id":"seedling-vanilla-record-5aeefc3c","mounted":"seedling-vanilla-record-5aeefc3c","observations":301,"boot":{"level":39,"x":148,"y":100},"persistence":["39,9"],"maxY43":null,"transitions":[],"clears":["39,9"],"hits":0,"minY39":82.55000000000001,"final":{"t":300,"x":156,"y":82.55000000000001,"level":39}}
+PASS: chain-armed: the game ran the tape to its end on the delivered set — 301 obs, seedling-vanilla-record-5aeefc3c
+PASS: chain-armed: an armed pulser opens no chain lock with no item: the walk stops under wandlock@144,64 (y >= 80) — {"clears":["39,9"],"hits":0,"minY39":82.55000000000001,"maxY43":null,"final":{"t":300,"x":156,"y":82.55000000000001,"level":39},"transitions":[]}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"l43-open","set_id":"seedling-vanilla-record-5aeefc3c","mounted":"seedling-vanilla-record-5aeefc3c","observations":201,"boot":{"level":43,"x":180,"y":352},"persistence":["43,1","43,2","43,3"],"maxY43":461.55000000000007,"transitions":[{"t":88,"from":43,"to":40,"at":{"x":328,"y":600}}],"clears":["43,1","43,2","43,3"],"hits":0,"minY39":null,"final":{"t":200,"x":328,"y":684.9999999999998,"level":40}}
+PASS: l43-open: the game ran the tape to its end on the delivered set — 201 obs, seedling-vanilla-record-5aeefc3c
+PASS: l43-open: after the Wand (its three rock tags cleared) the delivered L43 doorway stays open: the walk south takes the stairs to L40 — {"clears":["43,1","43,2","43,3"],"hits":0,"minY39":null,"maxY43":461.55000000000007,"final":{"t":200,"x":328,"y":684.9999999999998,"level":40},"transitions":[{"t":88,"from":43,"to":40,"at":{"x":328,"y":600}}]}
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+ROW {"tape":"l43-control","set_id":"seedling-vanilla-record-f5bdb07d","mounted":"seedling-vanilla-record-f5bdb07d","observations":201,"boot":{"level":43,"x":180,"y":352},"persistence":["43,1","43,2","43,3"],"maxY43":380.95000000000005,"transitions":[],"clears":["43,1","43,2","43,3"],"hits":0,"minY39":null,"final":{"t":200,"x":188,"y":380.95000000000005,"level":43}}
+PASS: l43-control: the game ran the tape to its end on the delivered set — 201 obs, seedling-vanilla-record-f5bdb07d
+PASS: l43-control: the CONTROL, the pre-L43 set: the fallen doorway rock stops the walk (y < 384) — {"clears":["43,1","43,2","43,3"],"hits":0,"minY39":null,"maxY43":380.95000000000005,"final":{"t":200,"x":188,"y":380.95000000000005,"level":43},"transitions":[]}
+wrote 8 witness file(s) to CC/docs/cloud-reports/rules-l39-evidence
+ALL CHECKS PASSED
