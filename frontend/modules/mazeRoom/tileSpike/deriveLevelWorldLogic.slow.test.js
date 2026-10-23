@@ -21,6 +21,7 @@ import HELPERS from './maze_tiles.helpers.json' with { type: 'json' };
 
 const RULES = JSON.parse(readFileSync(
     new URL('../../../presets/seedling_playthrough_maze/AP_1/AP_1_rules.json', import.meta.url), 'utf8'));
+const ATLAS = JSON.parse(readFileSync(new URL('../../flashPanel/atlases/seedling-playthrough.json', import.meta.url), 'utf8'));
 const SAMPLE = ['level_14', 'level_15__r1c5', 'level_15__r1c9', 'level_15__r6c8', 'level_16__r1c1', 'level_16__r4c21'];
 
 /** A copy of the preset with one AP exit's rule replaced — the closure comparison's mutant controls. */
@@ -35,14 +36,14 @@ const withExitRule = (from, to, rule) => {
 describe('seedling_playthrough_maze — every region certified against the atlas at every subset', () => {
     let sampleLines;
     it('native engine, every region', () => {
-        const { problems, lines } = certifyPlaythroughMaze(RULES, HELPERS, { native: true });
+        const { problems, lines } = certifyPlaythroughMaze(RULES, HELPERS, { native: true, atlas: ATLAS });
         expect(problems).toEqual([]);
         expect(lines.length).toBeGreaterThan(0);
-        sampleLines = certifyPlaythroughMaze(RULES, HELPERS, { native: true, regions: SAMPLE }).lines;
+        sampleLines = certifyPlaythroughMaze(RULES, HELPERS, { native: true, regions: SAMPLE, atlas: ATLAS }).lines;
     }, 300_000);
     it('scripted tile definition on the sample — and it agrees with the native one', () => {
         for (const r of SAMPLE) expect(Object.keys(RULES.preset_sidecars['1'])).toContain(r);
-        const { problems, lines } = certifyPlaythroughMaze(RULES, HELPERS, { native: false, regions: SAMPLE });
+        const { problems, lines } = certifyPlaythroughMaze(RULES, HELPERS, { native: false, regions: SAMPLE, atlas: ATLAS });
         expect(problems).toEqual([]);
         expect(lines).toEqual(sampleLines);
     }, 600_000);
@@ -50,7 +51,7 @@ describe('seedling_playthrough_maze — every region certified against the atlas
     // the world (the world LOOSER), or looser than it, is still caught (rules-rope-events; asked by
     // tile-primitives-design). L15 alone: its world is certified when any member is in the sample.
     it('the closure comparison still catches an in-world row the world disagrees with, both ways', () => {
-        const L15 = { native: true, regions: ['level_15__r1c5'] };
+        const L15 = { native: true, regions: ['level_15__r1c5'], atlas: ATLAS };
         expect(certifyPlaythroughMaze(RULES, HELPERS, L15).problems).toEqual([]);
         const looser = certifyPlaythroughMaze(withExitRule('level_15__r1c5', 'level_15__r1c9',
             { rule: 'Has', args: { item_name: 'Progressive Swim' } }), HELPERS, L15).problems;

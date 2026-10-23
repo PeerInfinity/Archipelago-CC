@@ -18,6 +18,7 @@ import { evaluateRuleAgainstInventory } from '../../shared/procgen/library.js';
 
 const RULES = JSON.parse(readFileSync(
     new URL('../../../presets/seedling_playthrough_maze/AP_1/AP_1_rules.json', import.meta.url), 'utf8'));
+const ATLAS = JSON.parse(readFileSync(new URL('../../flashPanel/atlases/seedling-playthrough.json', import.meta.url), 'utf8'));
 const R1C5 = 'level_15__r1c5';
 const R1C9 = 'level_15__r1c9';
 const l15 = () => deserializeMazeWorld(RULES.preset_sidecars['1'][R1C5].playable_payload);
@@ -153,7 +154,7 @@ describe('L13–L17 — the doors and the second level world', () => {
     // only when the arrival in L16 is not a hit, so `level_17 -> level_16__r3c7` derives as exactly the cut — no walk
     // through the armed lane at any inventory of real items. Mutant: an AP rule of True_ there is caught as stricter.
     it('⚖ the L17 → L16 crossing derives as the cut alone; an AP rule that lets it through armed is caught', () => {
-        const L17 = { native: true, regions: ['level_17'] };
+        const L17 = { native: true, regions: ['level_17'], atlas: ATLAS };
         const { problems, lines } = certifyPlaythroughMaze(RULES, HELPERS, L17);
         expect(problems).toEqual([]);
         expect(lines).toContain(`level_17->level_16__r3c7=${JSON.stringify([[ROPE]])}`);
