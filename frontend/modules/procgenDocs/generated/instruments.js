@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 103,
-            "count": 150,
+            "browser": 104,
+            "count": 151,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 457,
-        "browser": 168,
-        "cited": 247,
-        "files": 471,
+        "blockStyle": 458,
+        "browser": 169,
+        "cited": 248,
+        "files": 472,
         "lineStyle": 14,
-        "withDocblock": 471,
-        "withFlags": 388
+        "withDocblock": 472,
+        "withFlags": 389
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -11263,6 +11263,52 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Measure-only (slice `seedling-fidelity-terrain` D1, planner `seedling-fidelity-planning-3`) — THE HELD PER-TICK COMPARE behind the divergence sweep's \"terrain\" rows: each leg of `--legs=<jsonl>` (`seedling-divergence-legs.mjs`) is served by the PRODUCTION wasm playback engine on the live `seedling_playthrough` page …",
             "path": "scripts/procgen/probe-seedling-contact-divergence.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-corpse-bump.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-corpse-bump — ⛓⛓⛓ seedling-fidelity-corpsebump: THE BODIES A PUSHABLE'S GLIDE AND AN ICE-TURRET CORPSE'S SLIDE STOP ON (`CONTACT_FIDELITY.blockSweepBodies`), AND THE CORPSE BUMPED ONTO A BUTTON AS A WEIGH'S HOLDER (`CONTACT_FIDELITY.corpseBumpWeigh`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TIC…",
+            "path": "scripts/procgen/probe-seedling-corpse-bump.mjs"
         },
         {
             "argvHelpers": [

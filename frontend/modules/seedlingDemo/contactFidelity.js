@@ -1226,6 +1226,31 @@ export const CONTACT_FIDELITY = {
      * `SEEDLING_FIRE_BLOCK_ROUTE=0|1` for a node measurement.
      */
     fireBlockRoute: false,
+    /**
+     * fidelity CORPSEBUMP D1 (wave 29) — A PUSHABLE'S GLIDE AND A TURRET CORPSE'S SLIDE STOP ON THE "Enemy" BODIES THE
+     * RUN STEPS. `PushableBlock*`'s ctor does `solids.push("Enemy", "Player")` (`PushableBlock.as:28`,
+     * `PushableBlockFire.as:31`) and `IceTurret.death()` does the same (`IceTurret.as:148`), so a Bob (`type =
+     * "Enemy"`, `Enemy.as:58`) in the corridor stops the glide dead (`moveX`/`moveY` return the body). The block's
+     * sweep (`levelRun.pushableCtx`) consulted the spinners only, and the corpse's slide THREW on a chaser. ON: the
+     * block's sweep also asks every live bridged chaser (where the previous tick left it: `Game.as:2276-2301` add the
+     * chasers before the blocks at `:2382-2384`, and `addUpdate` prepends) and every unremoved ice turret, alive or a
+     * corpse (`:2296`, likewise); the corpse's slide asks the spinners (updated first) and the chasers added before it
+     * (`bob`, `bobsoldier`, `flyer`, `bulb`), and a `Puncher` (added after it, so read one tick late here) refuses by
+     * name within a tick's reach. `botDriverV2.runFire`'s enemy-room refusals narrow to the bodies those sweeps do not
+     * see (`run.blockSweepBodyIds`). OFF: byte-identical. `SEEDLING_BLOCK_SWEEP_BODIES=0|1`.
+     */
+    blockSweepBodies: false,
+    /**
+     * fidelity CORPSEBUMP D2 (wave 29) — AN ICE TURRET'S CORPSE IS A WEIGH'S HOLDER (`solverBot.deriveCorpseWeigh`).
+     * `IceTurret.bump` moves a corpse one tile away from a Fire press (`IceTurret.as:172-203`), and a corpse on a
+     * plain Button presses it for ever (`Button.hitables` holds "Solid" and "Enemy"). `deriveWeigh` asked the pushable
+     * roster only, so L40's t2 group (`button@480,384`, the room's holder is `iceturret@472,400`'s corpse) was a wall
+     * (guard iii). ON: where no block reaches and none is parked, a turret whose corpse tile shares an axis with the
+     * presser is killed (`killIceTurretInPlace`, corpse only) and bumped there press by press (`runFire`'s bump arm),
+     * each press audited against the corpse where it will be; then the fade is waited out. Needs `blockSweepBodies` and
+     * `fireLiveTurretReach` ON (refused by name otherwise). OFF: byte-identical. `SEEDLING_CORPSE_BUMP_WEIGH=0|1`.
+     */
+    corpseBumpWeigh: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1459,6 +1484,11 @@ if (globalThis.process?.env?.SEEDLING_PULSER_PUBLISH_LAG === '0') CONTACT_FIDELI
 // ⛓ fidelity FIREMOVE: `SEEDLING_FIRE_BLOCK_ROUTE=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_FIRE_BLOCK_ROUTE === '1') CONTACT_FIDELITY.fireBlockRoute = true;
 if (globalThis.process?.env?.SEEDLING_FIRE_BLOCK_ROUTE === '0') CONTACT_FIDELITY.fireBlockRoute = false;
+// ⛓ fidelity CORPSEBUMP: `SEEDLING_BLOCK_SWEEP_BODIES=0|1` and `SEEDLING_CORPSE_BUMP_WEIGH=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_BLOCK_SWEEP_BODIES === '1') CONTACT_FIDELITY.blockSweepBodies = true;
+if (globalThis.process?.env?.SEEDLING_BLOCK_SWEEP_BODIES === '0') CONTACT_FIDELITY.blockSweepBodies = false;
+if (globalThis.process?.env?.SEEDLING_CORPSE_BUMP_WEIGH === '1') CONTACT_FIDELITY.corpseBumpWeigh = true;
+if (globalThis.process?.env?.SEEDLING_CORPSE_BUMP_WEIGH === '0') CONTACT_FIDELITY.corpseBumpWeigh = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

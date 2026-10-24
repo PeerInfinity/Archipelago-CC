@@ -25220,3 +25220,50 @@ t2360 of 2505); legs 368/371/404 differ run to run and answer OFF = ON on their 
   responder that opens on the landing tick is already open when the dwell starts.
 - A sweep `timeout` can be a SOLVED plan whose playback outran the leg budget: read `history[].verbs` before calling it a
   failure.
+
+### Seedling fidelity CORPSEBUMP — a block's glide and a turret corpse's slide see the stepped bodies (`blockSweepBodies`); an ice turret's corpse is a weigh's holder (`corpseBumpWeigh`) — both OFF
+
+Planner `seedling-fidelity-planning-12`, wave 29. The report is `CC/docs/cloud-reports/seedling-fidelity-corpsebump.md`.
+
+**W0 — what stops a glide.** `PushableBlock*`'s ctor pushes `"Enemy"` and `"Player"` onto `Mobile.solids`
+(`["Solid","Tree","Rock","Rope","ShieldBoss"]`), and `IceTurret.death()` pushes the same two. Every chaser (Bob, BobSoldier,
+Puncher, Bulb, Flyer) is `type = "Enemy"`, and a live ice turret is too. `Game.loadlevel` adds the chasers (`:2276-2301`) and
+the ice turret (`:2296`) before the blocks (`:2382-2384`), and `addUpdate` prepends, so a block reads every one of them where
+the previous tick left it. A Puncher (`:2301`) is added after the turret, so it updates before the corpse.
+
+**D1 (`blockSweepBodies`).** `levelRun.pushableCtx` also asks every live bridged chaser (none under `noDamage`, where they
+are not stepped) and every unremoved ice turret, alive or a corpse. A turret corpse's slide stops on the spinners and on the
+chasers added before it; a puncher within 4 px of the slide refuses by name. `runFire`'s enemy-room refusals narrow to the
+bodies those sweeps do not consult (`run.blockSweepBodyIds`; `enemiesUnseenByBlockSweep`'s `seenIds`). Witness (p4g, 0 px,
+`corpsebump-l4-bob-wedge`): L4, the block shoved east stops at x 48.5 against `bob@64,64`. With the key OFF the model parts
+from the game at t79.
+
+**D2 (`corpseBumpWeigh`).** `deriveWeigh` asked the pushable roster only, so L40's t2 group (`button@480,384`, whose holder is
+`iceturret@472,400`'s corpse) was a guard-(iii) wall. `deriveWeighSource` adds the corpse as a second source, used only
+where no block reaches and none is parked: a turret whose corpse tile shares an axis with the presser. Each press is audited
+against a corpse at that cell. `execCorpseWeigh` runs the kill (`killForCorpse`), then the Fire bumps (each next stance read
+off where the corpse comes to rest), then the fade, then a wait for the shake to settle. The dangerMap no longer prices a
+dead turret at its placement. Witness (p4g, 0 px over 462 ticks, `corpsebump-l40-t2-holder`): from the pocket, the solver
+kills the turret, bumps the corpse north twice onto t2 (it rests there from t215), and walks west through the opened lock
+into the pit.
+
+**The kill is the finding.** With the Sword alone no standing kill of `iceturret@472,400` is hitless. The model shows no
+hitless one over 72 timings, and the mechanism explains why: the turret starts its next shot on the tick its 30-tick
+i-frame runs out, the third landing comes after that shot fires, and the shield protects only while moving. The Ghost Sword
+(damage 2) kills in two landings, before the shot. The AP rule (`Fire AND (Ghost Spear | Sword)`) admits the Sword.
+
+**Trap candidates.**
+- One update order is not the whole order. The block reads the Puncher a tick late, but the corpse reads it on the same
+  tick, so each mover's sweep needs its own row.
+- A glide's speed equals the corpse's two-cycle step (0.5 px). "Moved at most 0.5 px" is therefore not a rest test; compare
+  against two and four ticks back.
+- One press can carry a corpse two tiles. A plan's tile list is the audit, and the presses follow the corpse.
+
+**Movers (ON, measured locally; the CI dispatches are in the report).**
+- The full survey, A (FIREPUSH's three ON) vs B (+ both keys): one row differs, L69 step 148, a timeout in A that solves
+  alone in A.
+- The keyed sweep ×2 over 104 legs (L4, L16, L22, L25, L40, L65, L98): 0 key-driven verdicts; the two B2-only legs replay
+  A = B byte-identically.
+- Probes standard ON: 11/11.
+- The bounded vitest ON moves `botDriverV2.test.js`'s five L4-shove rows. They shove past a living `bob@64,64` after an
+  8-tick hold, and the game stops that block, so a flip owes them a re-pin.
