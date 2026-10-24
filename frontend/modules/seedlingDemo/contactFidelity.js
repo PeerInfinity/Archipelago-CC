@@ -1225,7 +1225,7 @@ export const CONTACT_FIDELITY = {
      * stance walk is already in flight, or whose stance IS this walk's aim, is passed over by name. OFF:
      * byte-identical. `SEEDLING_STANCE_REENTRY_NEXT_DOOR=0|1` for a node measurement.
      */
-    stanceReentryNextDoor: false,
+    stanceReentryNextDoor: true,
     /**
      * fidelity L40RES (wave 29) — A SPINNER SEES A RESPONDER'S TURN-OFF ONE TICK LATER (`levelRun.spinnerCtx`).
      * `Game.loadlevel` adds the lock family and `cover` (`Game.as:2355-2364`) before `spinner` (`:2416`), and
@@ -1236,7 +1236,7 @@ export const CONTACT_FIDELITY = {
      * state: a fade responder's `held` names its turn-off step). OFF: byte-identical.
      * `SEEDLING_SPINNER_LOCK_LAG=0|1` for a node measurement.
      */
-    spinnerLockLag: false,
+    spinnerLockLag: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
