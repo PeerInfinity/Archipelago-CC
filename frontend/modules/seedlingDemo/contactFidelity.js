@@ -1077,7 +1077,7 @@ export const CONTACT_FIDELITY = {
      * group whose pressers all republish refines to `weigh`, as a lock does, so guard (iii) derives the weigh and a
      * cover no block reaches is a wall. OFF: byte-identical. `SEEDLING_COVER_WEIGH_REFINE=0|1`.
      */
-    coverWeighRefine: false,
+    coverWeighRefine: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
