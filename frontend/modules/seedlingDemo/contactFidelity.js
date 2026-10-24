@@ -1064,6 +1064,17 @@ export const CONTACT_FIDELITY = {
      * Fire from L25 89 → 70 t.
      */
     drillTimedPass: true,
+    /**
+     * fidelity FIREPUSH (wave 28) — A `PushableBlockFire` ON THE FRONTIER IS SHOVED BY THE ROOM'S PULSER
+     * (`solverBot.resolveFireBlockShove`). `PushableBlockFire.moveTypes` is `["Fire", "Pulse"]` and it has no lean, so
+     * `resolveShoveStrategy` resolved the fire family to nothing and the frontier refused *"Strategy 'shove' failed to
+     * apply"* (L40's Boss Key 2, legs 869/870: `pushableblockfire@576,576` under the walk block, whose Fire push north
+     * stops dead against it). ON: a pulser whose 22 px reach holds the block, whose push (`pulsePushes`) leaves a
+     * corridor to the aim, is driven by holding a publisher of its group until the block is at rest on the destination
+     * (L40: `button@816,400` → `pulser@592,576` → west into (35,36)). The Fire press is considered and named, not
+     * executed. OFF: byte-identical. `SEEDLING_FIRE_BLOCK_PULSE_SHOVE=0|1` for a node measurement.
+     */
+    fireBlockPulseShove: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1270,6 +1281,9 @@ if (globalThis.process?.env?.SEEDLING_TENTACLE_HITLESS_FIRST === '0') CONTACT_FI
 // ⛓ fidelity TIMEDPASS: `SEEDLING_DRILL_TIMED_PASS=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DRILL_TIMED_PASS === '1') CONTACT_FIDELITY.drillTimedPass = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_TIMED_PASS === '0') CONTACT_FIDELITY.drillTimedPass = false;
+// ⛓ fidelity FIREPUSH: `SEEDLING_FIRE_BLOCK_PULSE_SHOVE=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_FIRE_BLOCK_PULSE_SHOVE === '1') CONTACT_FIDELITY.fireBlockPulseShove = true;
+if (globalThis.process?.env?.SEEDLING_FIRE_BLOCK_PULSE_SHOVE === '0') CONTACT_FIDELITY.fireBlockPulseShove = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
