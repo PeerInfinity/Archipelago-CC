@@ -21,7 +21,7 @@
 
 import { evaluateRule } from '../../shared/ruleEngine/index.js';
 import {
-    INPUT_WAIT, TURN_PREFIX, USE_PREFIX, getObstacle, getItem, isFloor, posKey,
+    INPUT_WAIT, TURN_PREFIX, USE_PREFIX, getObstacle, getItem, isFloor, posKey, copyInventory, holdInInventory,
 } from '../mazeRoomEngine.js';
 
 const DELTAS = { N: { dx: 0, dy: -1 }, S: { dx: 0, dy: 1 }, E: { dx: 1, dy: 0 }, W: { dx: -1, dy: 0 } };
@@ -46,7 +46,8 @@ function makeContext(helpers, inventory) {
         getPlayerId: () => PLAYER,
         getStaticData: () => ({ helpers: { [PLAYER]: helpers } }),
         hasItem: (name) => inventory.has(name),
-        countItem: (name) => (inventory.has(name) ? 1 : 0),
+        // ⛓ COUNTED ITEMS: a Map inventory answers its count (`state.count`); a Set holds everything once.
+        countItem: (name) => (inventory instanceof Map ? inventory.get(name) ?? 0 : (inventory.has(name) ? 1 : 0)),
     };
 }
 
@@ -69,7 +70,7 @@ function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = n
         const entry = world.obstacleLib?.[obstacle];
         const type = entry?.clear_set_type ?? 'combo_list';
         if (type === 'rule') clearSet = ruleToClearSet(entry.clear_rule, obstacle);
-        else if (type === 'combo_list') clearSet = entry?.clear_set ?? [];
+        else if (type === 'combo_list') clearSet = (entry?.clear_set ?? []).map((combo) => combo.map((item) => [item, 1]));
         else throw new Error(`spike: obstacle ${obstacle} is ${type}, only combo_list and rule are modelled`);
     }
     const lanes = (world.trapLanes?.get(key) ?? []).map((i) => world.trapLib[world.traps[i].id]);
@@ -94,27 +95,29 @@ function tileAt(world, x, y, blocks, playerPos, broken = undefined, actionId = n
     };
 }
 
+/** Join two `[item, n]` combos: an item named by both needs the larger count. */
+function joinCombos(a, b) {
+    const need = new Map(a);
+    for (const [item, n] of b) need.set(item, Math.max(need.get(item) ?? 0, n));
+    return [...need];
+}
+
 /**
  * A `clear_set_type: 'rule'` obstacle's rule as the combo list the `cleared` helper reads, so the
  * condition is answered against THIS step's effective inventory (held tokens and a search's
  * hypothetical inventory included) — not a stateManager snapshot (brief, spike finding F2).
- * Has / And / Or / True_ / False_ only; any other kind — and a Has with a count — is refused BY NAME (registry D3).
+ * A combo is a list of `[item, n]` pairs: ⛓ COUNTED ITEMS (session tile-primitives-counted-rules, ⚖ "Count map"; this
+ * replaced grow-levels' "Refuse counted rules") — `Has(item, count n)` needs n, which `cleared` asks via `state.count`.
+ * Has / And / Or / True_ / False_ only; any other kind is refused BY NAME (registry D3).
  */
 export function ruleToClearSet(rule, obstacle = '?') {
     switch (rule?.rule) {
         case 'True_': return [[]];
         case 'False_': return [];
-        case 'Has':
-            // ⛔ A count the set inventory cannot hold (session tile-primitives-grow-levels; the
-            // extractor's twin refusal in mazeRoomEngine `clearRuleItems`).
-            if ((rule.args.count ?? 1) > 1) {
-                throw new Error(`tile logic: obstacle ${obstacle}'s clear_rule needs ${rule.args.count}× '${rule.args.item_name}' `
-                    + '— the search holds a SET inventory and cannot price a count');
-            }
-            return [[rule.args.item_name]];
+        case 'Has': return [[[rule.args.item_name, rule.args.count ?? 1]]];
         case 'Or': return (rule.children ?? []).flatMap((c) => ruleToClearSet(c, obstacle));
         case 'And': return (rule.children ?? []).reduce(
-            (acc, c) => acc.flatMap((a) => ruleToClearSet(c, obstacle).map((b) => [...a, ...b])), [[]]);
+            (acc, c) => acc.flatMap((a) => ruleToClearSet(c, obstacle).map((b) => joinCombos(a, b))), [[]]);
         default:
             throw new Error(`tile logic: obstacle ${obstacle}'s clear_rule kind ${rule?.rule ?? rule?.type} is not modelled`);
     }
@@ -137,18 +140,18 @@ function ropeCells(world) {
 export function scriptedEffectiveInventory(world, carried, playerPos, blocks, tileLib, helpers, broken = undefined) {
     const ropes = ropeCells(world);
     if ((!world.buttons || world.buttons.size === 0) && ropes.length === 0) return carried;
-    const out = new Set(carried);
+    const out = copyInventory(carried);
     const ctx = makeContext(helpers, carried);
     for (const [key, buttonId] of world.buttons ?? []) {
         const token = world.buttonLib?.[buttonId]?.holds;
         if (!token) continue;
         const [x, y] = key.split(',').map(Number);
-        if (callHelper(ctx, tileLib.button.pressed, { x, y }, tileAt(world, x, y, blocks, playerPos))) out.add(token);
+        if (callHelper(ctx, tileLib.button.pressed, { x, y }, tileAt(world, x, y, blocks, playerPos))) holdInInventory(out, token);
     }
     for (const [key, id] of ropes) {
         const [x, y] = key.split(',').map(Number);
         if (callHelper(ctx, tileLib.rope.cut, { x, y }, tileAt(world, x, y, blocks, playerPos, broken))) {
-            out.add(world.obstacleLib[id].activates);
+            holdInInventory(out, world.obstacleLib[id].activates);
         }
     }
     return out;
@@ -241,7 +244,7 @@ export function scriptedStep(world, state, input, helpers, tileLib = MAZE_TILE_L
         return { next: null, refused: { primitive: 'lane', cell: { x: nx, y: ny }, helper: tileLib.trap.armed } };
     }
     const itemId = latch ? getItem(world, nx, ny) : null;
-    if (itemId) next.inventory.add(itemId);
+    if (itemId) holdInInventory(next.inventory, itemId);
     return { next, refused: null };
 }
 
@@ -249,7 +252,7 @@ function cloneState(state) {
     const next = {
         player_pos: { ...state.player_pos },
         turn: state.turn,
-        inventory: new Set(state.inventory),
+        inventory: copyInventory(state.inventory),
     };
     if (state.blocks !== undefined) next.blocks = state.blocks.slice();
     if (state.facing !== undefined) next.facing = state.facing;

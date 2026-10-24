@@ -1,9 +1,12 @@
 /**
  * seedling-fidelity-skinswing — DOES THE GAME LAND THE TWO ART-STANDS' SWINGS? (a WITNESS slice; no model edit).
  *
- * `seedlingEnemySkin.test.js`'s stands `lavarunner-L71` (boot [96,200]) and `bulb-L74` ([80,100]) run the `FIGHT` key
- * tape for 300 ticks. Since the MASKS flip they run with `pixelMaskSightLines` OFF, because with it ON the model's
- * chaser arm asks `Player.slash`'s line of sight (`Player.as:917`) and the stand's swings never land (0 'die' frames).
+ * `seedlingEnemySkin.test.js`'s stands `lavarunner-L71` (booted at [96,200] when recorded) and `bulb-L74` ([80,100]) ran
+ * the `FIGHT` key tape for 300 ticks, with `pixelMaskSightLines` OFF since the MASKS flip (with it ON the model's chaser arm
+ * asks `Player.slash`'s line of sight, `Player.as:917`, and the swings never landed: 0 'die' frames). ⛓ The verdict (the
+ * game agrees with ON: both boots stood inside Dark Stone) re-sited both stands: js skin-stands moved `bulb-L74` to [64,100]
+ * and js l71-resite moved `lavarunner-L71` to (80,208) — their stand witnesses are `skinswing-l74-resite` and
+ * `skinswing-l71-resite`; the original two are kept as the FORMER sites (`resite: true`).
  * Each stand is played here as a staged tape (the same boot, the sword, the same keys — `fidelitySkinSwing.test.js`
  * checks the staged run equals the stand's `createJsRuntime` boot tick for tick) on a FRESH p4g page by
  * `scripts/procgen/probe-seedling-skin-swing.mjs --record` → `fixtures/skinswing-witness/`, and the model replays it
@@ -28,11 +31,11 @@ export const FIGHT = Object.freeze(['primary', '', '', '', '', '', '', '', '', '
  * game — js picks the re-site; these are measured offers, not the choice).
  */
 export const SKINSWING_WITNESSES = Object.freeze([
-    Object.freeze({ name: 'skinswing-l71-lavarunner', stand: 'lavarunner-L71', boot: { level: 71, x: 96, y: 200 }, n: 300 }),
+    // ⛓ former site [96,200]; js re-sited the stand to (80,208)
+    Object.freeze({ name: 'skinswing-l71-lavarunner', stand: 'lavarunner-L71', boot: { level: 71, x: 96, y: 200 }, n: 300, resite: true }),
     // ⛓ js skin-stands moved the `bulb-L74` stand from [80,100] to [64,100]: this witness is its FORMER site (planning-11)
     Object.freeze({ name: 'skinswing-l74-bulb', stand: 'bulb-L74', boot: { level: 74, x: 80, y: 100 }, n: 300, resite: true }),
-    Object.freeze({ name: 'skinswing-l71-resite', stand: 'lavarunner-L71', boot: { level: 71, x: 80, y: 208 }, n: 300,
-        resite: true }),
+    Object.freeze({ name: 'skinswing-l71-resite', stand: 'lavarunner-L71', boot: { level: 71, x: 80, y: 208 }, n: 300 }),
     Object.freeze({ name: 'skinswing-l74-resite', stand: 'bulb-L74', boot: { level: 74, x: 64, y: 100 }, n: 300 }),
 ]);
 

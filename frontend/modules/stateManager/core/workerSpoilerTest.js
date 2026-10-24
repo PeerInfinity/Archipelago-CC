@@ -13,6 +13,7 @@
 import { profiler } from '../../shared/profiler.js';
 import { evaluateRule } from '../../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../../shared/snapshotInterface.js';
+import { findUncreditedSphereZeroItems } from './sphereZeroCredit.js';
 
 /**
  * Worker-side spoiler test runner
@@ -235,10 +236,31 @@ export class WorkerSpoilerTest {
       // Find newly added items
       const newlyAddedItems = this.findNewlyAddedItems(this.previousInventory, inventoryFromLog);
 
+      const isSphere0Base = sphereNumberInt === 0 && !String(sphereIndex).includes('.');
+      if (isSphere0Base) {
+        // The init above added the starting items; credit what sphere 0's log inventory
+        // holds beyond them (items the world computed from them), so later deltas land on
+        // the right base. See sphereZeroCredit.js.
+        const uncredited = findUncreditedSphereZeroItems(
+          inventoryFromLog,
+          (itemName) => this.sm.getItemCount(itemName),
+          useResolvedItems ? accumulatorTargets : new Set()
+        );
+        let credited = 0;
+        if (useResolvedItems) this.sm._skipGameLogicHooks = true;
+        for (const [itemName, count] of Object.entries(uncredited)) {
+          this.sm.addItemToInventory(itemName, count);
+          credited += count;
+        }
+        if (useResolvedItems) this.sm._skipGameLogicHooks = false;
+        result.itemsAdded += credited;
+        if (credited > 0) {
+          this.log('info', `[WorkerSpoilerTest] Credited ${credited} sphere 0 items beyond the starting items`);
+        }
+      }
+
       if (addItemsUpfront) {
         // Add items upfront mode (DLCQuest, Blasphemous, etc.)
-        const isSphere0Base = sphereNumberInt === 0 && !String(sphereIndex).includes('.');
-
         if (!isSphere0Base && newlyAddedItems.length > 0) {
           // Add items, skipping accumulator targets when using resolved_items
           // (they appear in resolved_items but are just computed values, not real items)
@@ -289,7 +311,6 @@ export class WorkerSpoilerTest {
         // In multiworld, items can be received from other players without checking locations.
         // We need to add items from new_inventory_details that are NOT from checking our own locations.
         // Items from checking our own locations will be added by checkLocation().
-        const isSphere0Base = sphereNumberInt === 0 && !String(sphereIndex).includes('.');
         if (!isSphere0Base && newlyAddedItems.length > 0) {
           if (useResolvedItems) {
             // When using resolved_items, add ALL items from the sphere log directly.

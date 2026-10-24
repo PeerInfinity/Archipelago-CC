@@ -1064,6 +1064,30 @@ export const CONTACT_FIDELITY = {
      * Fire from L25 89 → 70 t.
      */
     drillTimedPass: true,
+    /**
+     * fidelity PITPORT (wave 26) — A LIVE TELEPORTER STANDING ON A PIT TILE IS AN EXIT THE WALK ENDS ON
+     * (`botDriverV2.findExit`, `botDriverV2.plannerObstacleAt`'s pit arm, `solverBot.findExitNamed`).
+     *
+     *     Teleporter.as:89-118  update(): no fall guard — a live door fires on the first frame the player box overlaps
+     *                           it (`!playerTouching`), and the teleporters update BEFORE the player (`addUpdate`
+     *                           prepends), so the swap is recorded before `Player.update` reads the tile
+     *     Player.as:745-771     checkFallingInPit(): the fall needs 20 frames of fade before its own `FP.world =`
+     *                           (or `die()`), and only a fall already in flight could lose the race
+     *
+     * The pit edge reads the tile under `(x, y + checkOffsetY)`, a point inside the 4x5 box, and a door's 16x16 rect is
+     * its own tile (L43, L58, L100: every pit door in the atlas), so on any approach the door's overlap comes no later
+     * than the edge, and the door wins. ON: `findExit` admits a LIVE, unlatched door on a pit, and the planner exempts
+     * that one pit tile only while it plans to that door (`allowTeleporter`). A SHUT door stays refused (DEACTIVATED)
+     * and its pit stays forbidden floor; a run LATCHED on a pit door keeps `unmodelled-pit-teleporter` (the door cannot
+     * fire, the pit takes the player). OFF: byte-identical. `SEEDLING_PIT_TELEPORTER_CROSSING=0|1` for a node
+     * measurement. Witnessed on p4g: YETI's `talk`/`shut`, and PITPORT's `fixtures/pitdoor-witness/`.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, PITPORT "Harvest + flip, re-pin"; PITLATCH's one latch predicate, js-9's
+     * review condition) turns it ON. Measured movers (CI, main 45e27e95e8 + PITPORT): survey verdicts equal (4 refusal
+     * wordings advance to the next obstacle); 28 pit-room sweep legs ×2 per arm, 0 movers; probes standard ON: the two
+     * arrival-composites pit-door legs cross on p4g (re-pinned `named` → `cross`). PITLATCH: 0 survey / 43-leg sweep movers vs
+     * PITPORT ON; the doorless key L58 r1c4 failed → done.
+     */
+    pitTeleporterCrossing: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1270,6 +1294,9 @@ if (globalThis.process?.env?.SEEDLING_TENTACLE_HITLESS_FIRST === '0') CONTACT_FI
 // ⛓ fidelity TIMEDPASS: `SEEDLING_DRILL_TIMED_PASS=0|1`, likewise.
 if (globalThis.process?.env?.SEEDLING_DRILL_TIMED_PASS === '1') CONTACT_FIDELITY.drillTimedPass = true;
 if (globalThis.process?.env?.SEEDLING_DRILL_TIMED_PASS === '0') CONTACT_FIDELITY.drillTimedPass = false;
+// ⛓ fidelity PITPORT: `SEEDLING_PIT_TELEPORTER_CROSSING=0|1`, likewise.
+if (globalThis.process?.env?.SEEDLING_PIT_TELEPORTER_CROSSING === '1') CONTACT_FIDELITY.pitTeleporterCrossing = true;
+if (globalThis.process?.env?.SEEDLING_PIT_TELEPORTER_CROSSING === '0') CONTACT_FIDELITY.pitTeleporterCrossing = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {
