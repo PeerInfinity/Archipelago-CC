@@ -1081,8 +1081,13 @@ export const CONTACT_FIDELITY = {
      * and its pit stays forbidden floor; a run LATCHED on a pit door keeps `unmodelled-pit-teleporter` (the door cannot
      * fire, the pit takes the player). OFF: byte-identical. `SEEDLING_PIT_TELEPORTER_CROSSING=0|1` for a node
      * measurement. Witnessed on p4g: YETI's `talk`/`shut`, and PITPORT's `fixtures/pitdoor-witness/`.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, PITPORT "Harvest + flip, re-pin"; PITLATCH's one latch predicate, js-9's
+     * review condition) turns it ON. Measured movers (CI, main 45e27e95e8 + PITPORT): survey verdicts equal (4 refusal
+     * wordings advance to the next obstacle); 28 pit-room sweep legs ×2 per arm, 0 movers; probes standard ON: the two
+     * arrival-composites pit-door legs cross on p4g (re-pinned `named` → `cross`). PITLATCH: 0 survey / 43-leg sweep movers vs
+     * PITPORT ON; the doorless key L58 r1c4 failed → done.
      */
-    pitTeleporterCrossing: false,
+    pitTeleporterCrossing: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

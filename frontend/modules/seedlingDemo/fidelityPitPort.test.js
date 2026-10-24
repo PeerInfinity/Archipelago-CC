@@ -53,9 +53,10 @@ const solveExit = (staging, level) => {
 };
 
 describe('PITPORT D2 — the switch and the door lookup', () => {
-    it.skipIf(ENV.some((k) => process.env[k]))('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.pitTeleporterCrossing).toBe(false);
-        expect(CONTACT_FIDELITY.pitTeleporterCrossing).toBe(false);
+    // ⛓ planning-11's flip (⚖ user "Harvest + flip, re-pin", 2026-10-23).
+    it.skipIf(ENV.some((k) => process.env[k]))('is ON by default (flipped)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.pitTeleporterCrossing).toBe(true);
+        expect(CONTACT_FIDELITY.pitTeleporterCrossing).toBe(true);
     });
 
     it('the atlas holds exactly three doors on a Pit tile, each on its own tile, in a room with no fallthrough', () => {
