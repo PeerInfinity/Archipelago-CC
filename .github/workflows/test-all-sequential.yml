@@ -297,8 +297,7 @@ jobs:
   # Minimal Spoiler Tests (10 parallel jobs)
   test-minimal-spoiler:
     name: Test Minimal Spoiler Split ${{ matrix.split_num }} (${{ inputs.template_type }})
-    # Pinned, not ubuntu-latest: Playwright refuses chromium on ubuntu-26.04 (2026-10-22). Un-pin once Playwright supports 26.04.
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     needs: setup-branch
     if: inputs.enable_minimal_spoilers
     timeout-minutes: 180
@@ -660,8 +659,7 @@ jobs:
   # Full Spoiler Tests (10 parallel jobs)
   test-full-spoiler:
     name: Test Full Spoiler Split ${{ matrix.split_num }} (${{ inputs.template_type }})
-    # Pinned, not ubuntu-latest: Playwright refuses chromium on ubuntu-26.04 (2026-10-22). Un-pin once Playwright supports 26.04.
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     needs: [setup-branch, combine-minimal-spoiler]
     if: ${{ !cancelled() && inputs.enable_full_spoilers && (needs.setup-branch.result == 'success') }}
     timeout-minutes: 180
@@ -978,8 +976,7 @@ jobs:
   # Multiclient Tests (10 parallel jobs)
   test-multiclient:
     name: Test Multiclient Split ${{ matrix.split_num }} (${{ inputs.template_type }})
-    # Pinned, not ubuntu-latest: Playwright refuses chromium on ubuntu-26.04 (2026-10-22). Un-pin once Playwright supports 26.04.
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     needs: [setup-branch, combine-full-spoiler]
     if: ${{ !cancelled() && inputs.enable_multiclient && (needs.setup-branch.result == 'success') }}
     timeout-minutes: 180
@@ -1242,8 +1239,7 @@ jobs:
   # Multiworld Test (single job version) - Original templates
   test-multiworld-single:
     name: Test Multiworld (Single Job) (${{ inputs.template_type }})
-    # Pinned, not ubuntu-latest: Playwright refuses chromium on ubuntu-26.04 (2026-10-22). Un-pin once Playwright supports 26.04.
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     needs: [setup-branch, combine-multiclient]
     if: ${{ !cancelled() && inputs.enable_multiworld && inputs.multiworld_parallelization == 'single-job' && (needs.setup-branch.result == 'success') }}
     timeout-minutes: 180
@@ -1468,8 +1464,7 @@ jobs:
   # Multiworld Tests (10 parallel jobs)
   test-multiworld:
     name: Test Multiworld Split ${{ matrix.split_num }} (${{ inputs.template_type }})
-    # Pinned, not ubuntu-latest: Playwright refuses chromium on ubuntu-26.04 (2026-10-22). Un-pin once Playwright supports 26.04.
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     needs: [setup-branch, combine-multiclient]
     if: ${{ !cancelled() && inputs.enable_multiworld && inputs.multiworld_parallelization == 'parallel-10-jobs' && (needs.setup-branch.result == 'success') }}
     timeout-minutes: 180

@@ -13,7 +13,7 @@
  *   set in EXACTLY the Vulkan pair and in nothing else, so the two cannot drift
  *   apart when somebody edits one of them.
  */
-import { readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -106,7 +106,11 @@ describe("Playwright's own --enable-features= list survives the merge", () => {
         // reds here instead of being deleted by our switch in silence.
         const require = createRequire(import.meta.url);
         const pkg = require.resolve('playwright-core/package.json');
-        const src = readFileSync(join(dirname(pkg), 'lib/server/chromium/chromiumSwitches.js'), 'utf8');
+        // ⛓ ≤1.56 shipped lib/server/chromium/chromiumSwitches.js; by 1.63 the
+        // server is one lib/coreBundle.js. Read whichever the install has.
+        const src = ['lib/server/chromium/chromiumSwitches.js', 'lib/coreBundle.js']
+            .map((f) => join(dirname(pkg), f)).filter((f) => existsSync(f))
+            .map((f) => readFileSync(f, 'utf8'))[0] ?? '';
         const theirs = [...src.matchAll(/--enable-features=([A-Za-z0-9_,]+)/g)]
             .flatMap((m) => m[1].split(','));
         expect(theirs.length).toBeGreaterThan(0);

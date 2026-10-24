@@ -74,8 +74,7 @@ jobs:
   test-single-runner:
     name: Spoiler Fuzz Test ${{ inputs.game }}
     if: inputs.parallel_runners == '1'
-    # Pinned, not ubuntu-latest: Playwright refuses chromium on ubuntu-26.04 (2026-10-22). Un-pin once Playwright supports 26.04.
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 180
 
     steps:
@@ -416,8 +415,7 @@ jobs:
   test-split-runner:
     name: Spoiler Fuzz Test ${{ inputs.game }} (Split ${{ matrix.split_num }}/10)
     if: inputs.parallel_runners == '10'
-    # Pinned, not ubuntu-latest: Playwright refuses chromium on ubuntu-26.04 (2026-10-22). Un-pin once Playwright supports 26.04.
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 180
 
     strategy:
