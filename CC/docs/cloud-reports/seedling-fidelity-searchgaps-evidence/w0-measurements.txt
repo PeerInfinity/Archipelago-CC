@@ -1,0 +1,30 @@
+W0 — measured on the legs' captured requests (local sweep at base d3346cf784, p4g, inv, page-legs 1, --capture-requests;
+the same refusals as re-sweep 40015230731: 871 at seam 5279, 908 at seam 5434), replayed in node.
+
+D-A — leg 871 (L41 Totem Part from in_L40_944_96), dashless pass, searchBaitOrdering's state space by configuration:
+  cfg crusher@240,64 at 256,80 (home)    states 1   maxRegion 320  keepStart 1  path -
+  cfg 64,80                              states 2   maxRegion 280  keepStart 1  path W
+  cfg 64,80   HOT                        states 64  maxRegion 1    keepStart 0  path W
+  cfg 64,240                             states 2   maxRegion 280  keepStart 1  path WS
+  cfg 64,240  HOT                        states 32  maxRegion 1    keepStart 0  path WS
+  cfg 256,240 (ON button@248,232)        states 1   maxRegion 368  keepStart 1  path WSE
+  => R5's W,S,E is found with the round trip kept; reachesAim is false on every state: totempart@240,144 is behind
+     wandlock@240,96 (t1, button@176,176 — only pushableblockfire@112,144 can hold it), the block behind cover@112,128
+     (t0, button@248,232 — only the crusher can hold it). The search's goal is one mechanism short; the round trip and the
+     pessimistic escape reading are not what fail.
+  The search ran on a run whose rocks were ALREADY broken: the frontier's `break` order (breakablerock@224,80) swung from
+  the west lane and the crusher killed the player — run.ledger('playerDeaths') = [{t:147, source:'crusher',
+  id:'crusher@240,64', hits:1000, respawn:{x:24,y:168}}]; the bait was then resolved from the respawn at (24,168).
+
+D-B — leg 908 (L67 Boss Key 4 from in_L59_0_128); each pass solveFromTape'd with a counting shouldStop that never trips:
+  pass dashless: 5,348 units (7.5 s) — sites crusher-fork 5,328, walk 18, block-route 2 — REFUSED (combat ladder
+                 exhausted on arrowLane:arrowtrap@48,48)
+  pass full:     4,027 units (5.6 s) — crusher-fork 3,996, walk 16, sword-dash 13, block-route 2 — REFUSED (same)
+  the crusher-fork asks are ONE caller: replayOntoFork's stop (every WALK_CHECK_TICKS = 32 replayed ticks) inside
+  forcedHit.proveForcedHit (climbLadderUnder rung 6), from (182.4,119.9) 135 px from the danger: 36 + 1,296 forks of a
+  134-tick replay (1,332 fork steps), then "depth 3 needs 46656 fork(s) … over the advance budget's 418884 — a search that
+  gave up is not a proof".
+  budgeted (the request's 640, held retry 2560): dashless 641/2561 units, deadline at crusher-fork; full 1 unit, deadline
+  at walk.
+  SEEDLING_ARROW_LANE_CROSSING=1 (not this slice's key): still REFUSED — "ARROWLANE … the fork's drive is refuted …
+  waypoint 5 (56,152): not reached within 400 ticks".

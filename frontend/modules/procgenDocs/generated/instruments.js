@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 99,
-            "count": 146,
+            "browser": 100,
+            "count": 147,
             "id": "probe"
         },
         {
@@ -229,13 +229,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 453,
-        "browser": 164,
-        "cited": 243,
-        "files": 467,
+        "blockStyle": 454,
+        "browser": 165,
+        "cited": 244,
+        "files": 468,
         "lineStyle": 14,
-        "withDocblock": 467,
-        "withFlags": 384
+        "withDocblock": 468,
+        "withFlags": 385
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -11313,6 +11313,45 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling CROSS-ROOM BUTTON WRITE, THE GAME'S WAY (rules `rules-l38-button-event`, W0).",
             "path": "scripts/procgen/probe-seedling-cross-room-button.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-crusher-press.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-crusher-press — ⛓⛓⛓ seedling-fidelity-searchgaps D-A: THE SOLVER BAITS L41's CRUSHER ONTO THE COVER'S BUTTON (`CONTACT_FIDELITY.crusherBaitPressGoal`), PLAYED ON THE GAME AND COMPARED WITH THE MODEL TICK BY TICK.",
+            "path": "scripts/procgen/probe-seedling-crusher-press.mjs"
         },
         {
             "argvHelpers": [],
