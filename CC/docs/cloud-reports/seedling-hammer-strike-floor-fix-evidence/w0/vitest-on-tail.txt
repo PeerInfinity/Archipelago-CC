@@ -1,0 +1,8 @@
+     ✓ ⛓⛓⛓ ON: the rung asks the press kill, and the solve's executed prefix IS the witness, key for key (the press-kill guards OFF: the witness is the kill across the death; the strike floor OFF)  169325ms
+     ✓ ⛓⛓ ON, with the press-kill guards at their shipped ON: the kill is refused at the death (t1216), and the executed prefix is the witness's first 1216 ticks (the strike floor OFF)  76857ms
+
+ Test Files  80 passed (80)
+      Tests  2967 passed (2967)
+   Start at  01:24:17
+   Duration  557.97s (transform 10.73s, setup 0ms, import 71.95s, tests 1266.08s, environment 8ms)
+
