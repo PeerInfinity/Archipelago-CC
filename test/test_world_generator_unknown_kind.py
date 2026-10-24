@@ -229,6 +229,74 @@ class TestUnknownHelperName(unittest.TestCase):
         self.assertIn(b"Has('Key', 1)", strict['Rules.py'])
 
 
+class TestSpeculativeHelperExpansionRecordsOnlyWhatIsEmitted(unittest.TestCase):
+    """rule-node R2c: the body_rule expansion of a helper call is speculative (it is thrown away when
+    it converts to a bare ``True_()`` or raises), so its lossy placeholders count only when kept.
+
+    The old code recorded them anyway: a lossy record listing a placeholder the output never had.
+    """
+
+    UNKNOWN = {'rule': 'helper', 'args': {'name': 'no_such_helper_r2c'}}  # convertible, then a placeholder
+    CALL = {'type': 'helper', 'name': 'outer', 'args': []}
+
+    def _generator(self, body):
+        generator = RuleCodeGenerator('Test')
+        generator.set_helpers({'outer'}, {'outer': body})
+        return generator
+
+    def test_a_discarded_expansion_records_nothing(self) -> None:
+        with lossy_codegen() as record:
+            code = self._generator(self.UNKNOWN)._convert_rule(self.CALL)
+        self.assertEqual(code, 'HelperCall(helper_func=outer, helper_name="outer")')
+        self.assertEqual(record, {})
+
+    def test_a_kept_expansion_records_its_placeholder(self) -> None:
+        body = {'rule': 'And', 'children': [{'rule': 'Has', 'args': {'item_name': 'Key'}}, self.UNKNOWN]}
+        with lossy_codegen() as record:
+            code = self._generator(body)._convert_rule(self.CALL)
+        self.assertIn('body_rule=And(True_(), ', code)
+        self.assertEqual(record, {'rule dispatch:helper': 1})
+
+    def test_an_expansion_that_raises_after_recording_records_nothing(self) -> None:
+        from world_generator._unknown_kind import unknown_kind
+        generator = self._generator({'rule': 'Has', 'args': {'item_name': 'Key'}})
+
+        def record_then_raise(rule):
+            unknown_kind('rule dispatch', 'r2c_probe', 'True_()')
+            raise RuntimeError('after recording')
+        generator._convert_rule = record_then_raise
+        with lossy_codegen() as record:
+            self.assertIsNone(generator._try_convert_helper_body_to_rule('outer', []))
+        self.assertEqual(record, {})
+
+    def test_every_registered_record_is_scratched(self) -> None:
+        import contextvars
+
+        from world_generator import _unknown_kind
+        other: contextvars.ContextVar = contextvars.ContextVar('r2c_probe_record', default=None)
+        _unknown_kind.SPECULATIVE_RECORDS.append(other)
+        self.addCleanup(_unknown_kind.SPECULATIVE_RECORDS.remove, other)
+        outer = __import__('collections').Counter()
+        token = other.set(outer)
+        self.addCleanup(other.reset, token)
+        for keep in (False, True):
+            with _unknown_kind.speculative_record() as attempt:
+                other.get()['x'] += 1
+                if keep:
+                    attempt.keep()
+            self.assertIs(other.get(), outer)
+        self.assertEqual(outer, {'x': 1})
+
+    def test_the_unobtainable_record_is_registered(self) -> None:
+        from world_generator import _unknown_kind
+        self.assertIn(_unknown_kind._unobtainable_record, _unknown_kind.SPECULATIVE_RECORDS)
+        self.assertIn(_unknown_kind._lossy_record, _unknown_kind.SPECULATIVE_RECORDS)
+
+    def test_strict_is_unchanged_the_attempt_is_dropped(self) -> None:
+        code = self._generator(self.UNKNOWN)._convert_rule(self.CALL)
+        self.assertEqual(code, 'HelperCall(helper_func=outer, helper_name="outer")')
+
+
 class TestCountTrueAboveTheExpansionLimit(unittest.TestCase):
     """rule-kind F2: a mixed count_true with C(n, count) > 120 used to sink to True_() with a warning.
 
@@ -279,3 +347,71 @@ class TestCountTrueAboveTheExpansionLimit(unittest.TestCase):
         rule = eval(self.convert(5, self.ITEMS + self.REGIONS), vars(rule_builder)).resolve(World())
         names = ['I0', 'R0', 'I1', 'R1', 'I2', 'R2']  # mixes both condition kinds
         self.assertEqual([rule(State(set(names[:k]))) for k in (4, 5, 6)], [False, True, True])
+
+
+class TestCountTrueWithANonIntegerCount(unittest.TestCase):
+    """rule-node R2c: a count_true whose count is not a number (e.g. an expression dict) crashed
+    with a TypeError (``dict <= int``). It is now loud by name, the F1 way: strict raises naming
+    the rule, lossy keeps ``True_()`` and records it. 0 corpus hits (F2's measure).
+    """
+    CONDITIONS = [{'type': 'item_check', 'item': 'A'}, {'type': 'item_check', 'item': 'B'}]
+    COUNT = {'type': 'attribute', 'object': {'type': 'name', 'name': 'options'}, 'attr': 'needed'}
+
+    def shapes(self):
+        return ({'type': 'count_true', 'count': self.COUNT, 'conditions': self.CONDITIONS},
+                {'rule': 'AST_count_true', 'args': {'count': self.COUNT, 'conditions': self.CONDITIONS}})
+
+    def test_strict_raises_naming_the_rule_in_both_shapes(self) -> None:
+        for rule in self.shapes():
+            with self.assertRaisesRegex(UnknownRuleKindError, 'count_true with non-integer count') as caught:
+                RuleCodeGenerator('Test')._convert_rule(rule)
+            self.assertEqual(caught.exception.site, 'count_true')
+
+    def test_lossy_keeps_true_and_records_it(self) -> None:
+        with lossy_codegen() as record:
+            for rule in self.shapes():
+                gen = RuleCodeGenerator('Test')
+                self.assertEqual(gen._convert_rule(rule), 'True_()')
+                self.assertIn('True_', gen.required_imports)
+        self.assertEqual(sum(record.values()), 2)
+        self.assertTrue(all(key.startswith('count_true:count_true with non-integer count') for key in record), record)
+
+    def test_an_integral_float_count_is_its_integer(self) -> None:
+        rule = {'type': 'count_true', 'count': 2.0, 'conditions': self.CONDITIONS}
+        self.assertEqual(RuleCodeGenerator('Test')._convert_rule(rule),
+                         RuleCodeGenerator('Test')._convert_rule({**rule, 'count': 2}))
+
+
+class TestUnobtainableItemIsANamedRecord(unittest.TestCase):
+    """rule-node R2c: a Has on an item the rules file never creates (no item definition, pool entry,
+    placement or starting item) becomes False_(), which is EXACT (the generated world can never
+    hold it), so it is not a lossy placeholder and never raises. It used to be a stderr print only;
+    it is now recorded by name in both modes (``WorldGenerator.unobtainable_items``).
+    Corpus: 3 presets, all 'Progressive Swim' (seedling_atlas 8, seedling_atlas_maze 8,
+    seedling_playthrough_maze 4).
+    """
+    PHANTOM = {'rule': 'Has', 'args': {'item_name': 'Phantom', 'count': 1}}
+
+    def _generate(self, rules, lossy):
+        return TestUnknownHelperName._generate(self, rules, lossy)
+
+    def test_the_converter_records_it_and_emits_false(self) -> None:
+        from world_generator._unknown_kind import unobtainable_record
+        gen = RuleCodeGenerator('Test')
+        gen.set_obtainable_items({'Key'})
+        with unobtainable_record() as record:
+            self.assertEqual(gen._convert_rule(self.PHANTOM), 'False_()')
+            self.assertEqual(gen._convert_rule({'rule': 'Has', 'args': {'item_name': 'Key', 'count': 1}}),
+                             "Has('Key', 1)")
+        self.assertEqual(record, {'Has:Phantom': 1})
+
+    def test_a_world_records_it_in_both_modes_with_the_same_bytes(self) -> None:
+        rules = _world_rules(self.PHANTOM)
+        strict_gen, strict = self._generate(rules, lossy=False)
+        lossy_gen, lossy = self._generate(rules, lossy=True)
+        for generator in (strict_gen, lossy_gen):
+            self.assertEqual(generator.unobtainable_items, {'Has:Phantom': 1})
+            self.assertEqual(generator.lossy_placeholders, {})
+        self.assertEqual(strict, lossy)
+        self.assertIn(b'False_()', strict['Rules.py'])
+        self.assertNotIn(b"Has('Phantom'", strict['Rules.py'])

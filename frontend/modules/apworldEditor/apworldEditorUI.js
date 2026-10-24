@@ -204,6 +204,7 @@ import {
 } from '../procgenCore/compositeMapRenderer.js';
 import { reconstructResultFromSidecars, refusedRegionsNote } from '../procgenPipeline/compositeMapDocument.js';
 import { SHOW_MENU_ON_MAP_SETTING, menuMarkerFor, showMenuOnMap } from './menuMarker.js';
+import { LOSSY_BUILD_KEY, LOSSY_BUILD_SETTING, isLossyRefusal, lossyBuildOn, lossyRecordView } from './lossyBuild.js';
 import { downloadJson, rulesDownloadName } from './downloadJson.js';
 import { buildApworld, downloadBytes } from '../apworldBuild/apworldBuild.js';
 import {
@@ -707,6 +708,7 @@ class ApworldEditorUI {
     this.settingsUnsubscribe = this.eventBus.subscribe('settings:changed', (ev) => {
       const key = ev?.key;
       if ((key === '*' || key === SHOW_MENU_ON_MAP_SETTING) && this.activeTab === 'map') this._render();
+      if (key === '*' || key === LOSSY_BUILD_SETTING) this._syncLossyToggle();
     });
 
     /**
@@ -1167,6 +1169,30 @@ class ApworldEditorUI {
       + '.apworld (runs world_generator in the browser; the first build loads Python, ~10 MB)';
     toolbar.appendChild(this.apworldButton);
 
+    /**
+     * ⛓ rule-node R2c — LOSSY, OPT-IN. The checkbox mirrors the module setting
+     * `apworldBuildLossy` (default OFF: strict, ⚖ D3) and writes it on change; a
+     * lossy build lists its placeholders in `apworldLossyRecord` below the
+     * toolbar, so a world with free locations is never built silently.
+     */
+    const lossyLabel = document.createElement('label');
+    lossyLabel.className = 'apworld-build-lossy-toggle';
+    lossyLabel.title = 'Lossy .apworld build: a rule kind or helper name world_generator has no codegen '
+      + 'for becomes an always-true placeholder (listed after the build) instead of an error. Off by default.';
+    Object.assign(lossyLabel.style, { fontSize: '12px', color: '#bbb', display: 'flex', alignItems: 'center', gap: '3px' });
+    this.apworldLossyInput = document.createElement('input');
+    this.apworldLossyInput.type = 'checkbox';
+    this.apworldLossyInput.className = 'apworld-build-lossy';
+    this.apworldLossyInput.checked = false;
+    this.apworldLossyInput.addEventListener('change', () => {
+      Promise.resolve(settingsManager.updateModuleSetting('apworldEditor', LOSSY_BUILD_KEY,
+        this.apworldLossyInput.checked === true))
+        .catch(err => log('warn', 'could not save the lossy-build setting:', err));
+    });
+    lossyLabel.append(this.apworldLossyInput, 'lossy');
+    toolbar.appendChild(lossyLabel);
+    this._syncLossyToggle();
+
     this.clearButton = this._makeButton('Clear', '#8a2a2a', () => this._handleClear());
     this.clearButton.title = 'Remove all regions, exits, locations, and items (metadata kept)';
     toolbar.appendChild(this.clearButton);
@@ -1256,6 +1282,15 @@ class ApworldEditorUI {
     toolbar.appendChild(this.statusLabel);
 
     this.rootElement.appendChild(toolbar);
+
+    // ⛓ rule-node R2c — the last lossy build's record (hidden until one ran).
+    this.apworldLossyRecord = document.createElement('div');
+    this.apworldLossyRecord.className = 'apworld-build-lossy-record';
+    this.apworldLossyRecord.hidden = true;
+    Object.assign(this.apworldLossyRecord.style, { padding: '4px 8px', fontSize: '11px', color: '#e8c070',
+      backgroundColor: '#2a2418', borderBottom: '1px solid #4a3a20', flex: '0 0 auto',
+      maxHeight: '8em', overflowY: 'auto' });
+    this.rootElement.appendChild(this.apworldLossyRecord);
 
     this.tabBar = document.createElement('div');
     Object.assign(this.tabBar.style, {
@@ -5308,6 +5343,44 @@ class ApworldEditorUI {
    * Build the .apworld and save it. Returns the build result (or null), so
    * the in-app row can await the same promise the click starts.
    */
+  /** ⛓ R2c — set the lossy checkbox from the saved setting (default OFF). */
+  _syncLossyToggle() {
+    Promise.resolve(settingsManager.getSetting(LOSSY_BUILD_SETTING))
+      .catch(() => undefined)
+      .then((value) => {
+        if (this.apworldLossyInput) this.apworldLossyInput.checked = lossyBuildOn(value);
+      });
+  }
+
+  /** ⛓ R2c — show a lossy build's record (null hides it: a strict build has none). */
+  _showLossyRecord(record) {
+    const box = this.apworldLossyRecord;
+    if (!box) return;
+    box.replaceChildren();
+    if (record === null) {
+      box.hidden = true;
+      return;
+    }
+    const view = lossyRecordView(record);
+    const head = document.createElement('div');
+    head.className = 'apworld-build-lossy-heading';
+    head.textContent = view.heading;
+    box.appendChild(head);
+    if (view.lines.length) {
+      const ul = document.createElement('ul');
+      Object.assign(ul.style, { margin: '2px 0 0', paddingLeft: '18px' });
+      for (const line of view.lines) {
+        const li = document.createElement('li');
+        li.className = 'apworld-build-lossy-entry';
+        li.textContent = line;
+        ul.appendChild(li);
+      }
+      box.appendChild(ul);
+    }
+    box.dataset.total = String(view.total);
+    box.hidden = false;
+  }
+
   async _handleApworldDownload() {
     if (!this.rulesDoc) {
       this._flashButton(this.apworldButton, false);
@@ -5325,21 +5398,31 @@ class ApworldEditorUI {
     };
     this.apworldButton.disabled = true;
     say('starting…');
+    // ⛓ R2c — the checkbox is the setting's mirror; only a checked box builds lossy.
+    const lossy = this.apworldLossyInput?.checked === true;
+    this._showLossyRecord(null);
     this._apworldBuilding = (async () => {
       try {
         const built = await buildApworld(this.rulesDoc, {
           gameName: this.apworldNameInput?.value,
           playerId: this.playerId,
+          lossy,
           onProgress: stage => say(stageText[stage] ?? stage),
         });
         const written = downloadBytes(built.fileName, built.bytes);
+        const total = lossy ? lossyRecordView(built.lossyPlaceholders).total : 0;
         say(`downloaded ${written.fileName} (${written.bytes.toLocaleString()} bytes, `
-          + `game "${built.gameName}", ${built.ms} ms).`);
-        log('info', `Built ${written.fileName} — ${written.bytes} bytes in ${built.ms} ms.`);
+          + `game "${built.gameName}", ${built.ms} ms)`
+          + (lossy ? ` — LOSSY: ${total} always-true placeholder${total === 1 ? '' : 's'}, listed below.` : '.'));
+        if (lossy) this._showLossyRecord(built.lossyPlaceholders);
+        log('info', `Built ${written.fileName} — ${written.bytes} bytes in ${built.ms} ms`
+          + (lossy ? ` (lossy, ${total} placeholders).` : '.'));
         return built;
       } catch (err) {
         log('error', '.apworld build failed:', err);
-        say(`build failed: ${err.message}`);
+        say(`build failed: ${err.message}`
+          + (!lossy && isLossyRefusal(err.message)
+            ? ' — tick "lossy" to build with always-true placeholders instead (listed after the build).' : ''));
         this._flashButton(this.apworldButton, false);
         return null;
       } finally {
