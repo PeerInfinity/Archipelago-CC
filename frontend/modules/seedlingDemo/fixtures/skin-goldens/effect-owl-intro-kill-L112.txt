@@ -1,0 +1,3 @@
+t=0 none
+t=1..3 owlIntro finalboss cc=1 | fillRect(#000000, 0, 0, 160, 26) alpha=0.8 ; fillRect(#000000, 0, 133, 160, 27) alpha=0.8 ; fillRect(#ffffff, 4, 137, 18, 18) ; drawImage(seedling/NPCs/OwlPic, 0, 0, 5, 138) ; drawImage(seedling/SeedlingFont, 20, 16, 31, 143) glyph=69 ; fillRect(#000000, 0, 0, 160, 160)
+t=4..30 none
