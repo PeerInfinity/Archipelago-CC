@@ -1251,6 +1251,36 @@ export const CONTACT_FIDELITY = {
      * `fireLiveTurretReach` ON (refused by name otherwise). OFF: byte-identical. `SEEDLING_CORPSE_BUMP_WEIGH=0|1`.
      */
     corpseBumpWeigh: false,
+    /**
+     * fidelity TURRETCIRCLE D1 (wave 29) — AN ICE TURRET'S BLAST STOPS ON THE PLAYER'S SHIELD. `IceTurretBlast.hitables`
+     * is `["Player", "Tree", "Solid", "Shield"]` (`IceTurretBlast.as:17`), and `Player.addShield` adds a `"Shield"`
+     * entity whose box `render` places by the facing (`Player.as:1180-1256`; `bobBossFight.playerShieldRect`). A blast
+     * that meets that box and not the player is removed with no freeze and no hit; one that meets both still hits.
+     * The spit and the lava ball already asked it (`stepSpitsNow`, `stepLavaBallsNow`); `stepBlastsNow` did not, so a
+     * shielded player was hit by blasts the game stops. ON: `stepBlastsNow` passes the shield box. OFF: byte-identical.
+     * `SEEDLING_ICE_BLAST_SHIELD=0|1`.
+     */
+    iceBlastShield: false,
+    /**
+     * fidelity TURRETCIRCLE D2 (wave 29) — THE PLAIN SWORD KILLS AN ICE TURRET ON THE MOVE. ⚖ The user (2026-10-24):
+     * *"The way to not get hit is to keep moving while attacking. Keep circling around the turret."* No standing Sword
+     * kill is hitless (the third landing follows the turret's next shot; CORPSEBUMP), while a player circling the body
+     * on the lanes beside it, swinging on the move, is never where a frozen aim points (game-measured,
+     * `turretcircle-l40-sword-circle`, p4g, 0 px). ON: `killForCorpse` with the Sword alone kills by
+     * `killIceTurretInPlace`'s `circle` option (`circleKillIceTurret`), tried on a fork per start delay, direction and
+     * first corner; none hitless ⇒ refused by name. OFF: byte-identical (the Sword alone refuses as before).
+     * `SEEDLING_TURRET_CIRCLE_KILL=0|1`.
+     */
+    turretCircleKill: false,
+    /**
+     * fidelity TURRETCIRCLE D3 (wave 29) — AN ICE TURRET'S DEATH STOPS ITS SHOT. `IceTurret.death()`'s first call does
+     * `play("dead")` (`IceTurret.as:135-151`), which resets the Spritemap's clock onto a rate-0 animation, so a
+     * `startshot` in progress never wraps and `endAnim` never spawns its volley; `death()` runs inside `e.update()`,
+     * before that tick's `graphic.update()`. `iceTurret.interceptIceTurretDeath` set `dead` and left the shot's clock
+     * running, so a corpse could fire (game-measured: `turretcircle-l40-t2-holder-sword` t70, no blast on the game, three
+     * in the model). ON: the corpse's anim is "dead". OFF: byte-identical. `SEEDLING_ICE_TURRET_DEATH_ANIM=0|1`.
+     */
+    iceTurretDeathAnim: false,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });
@@ -1489,6 +1519,13 @@ if (globalThis.process?.env?.SEEDLING_BLOCK_SWEEP_BODIES === '1') CONTACT_FIDELI
 if (globalThis.process?.env?.SEEDLING_BLOCK_SWEEP_BODIES === '0') CONTACT_FIDELITY.blockSweepBodies = false;
 if (globalThis.process?.env?.SEEDLING_CORPSE_BUMP_WEIGH === '1') CONTACT_FIDELITY.corpseBumpWeigh = true;
 if (globalThis.process?.env?.SEEDLING_CORPSE_BUMP_WEIGH === '0') CONTACT_FIDELITY.corpseBumpWeigh = false;
+// ⛓ fidelity TURRETCIRCLE: `SEEDLING_ICE_BLAST_SHIELD`, `SEEDLING_TURRET_CIRCLE_KILL` and `SEEDLING_ICE_TURRET_DEATH_ANIM` (`=0|1`), likewise.
+if (globalThis.process?.env?.SEEDLING_ICE_BLAST_SHIELD === '1') CONTACT_FIDELITY.iceBlastShield = true;
+if (globalThis.process?.env?.SEEDLING_ICE_BLAST_SHIELD === '0') CONTACT_FIDELITY.iceBlastShield = false;
+if (globalThis.process?.env?.SEEDLING_TURRET_CIRCLE_KILL === '1') CONTACT_FIDELITY.turretCircleKill = true;
+if (globalThis.process?.env?.SEEDLING_TURRET_CIRCLE_KILL === '0') CONTACT_FIDELITY.turretCircleKill = false;
+if (globalThis.process?.env?.SEEDLING_ICE_TURRET_DEATH_ANIM === '1') CONTACT_FIDELITY.iceTurretDeathAnim = true;
+if (globalThis.process?.env?.SEEDLING_ICE_TURRET_DEATH_ANIM === '0') CONTACT_FIDELITY.iceTurretDeathAnim = false;
 
 /** Run `fn` with some switches set, then restore them (also on a throw; after the promise, for an async `fn`). */
 export function withContactFidelity(over, fn) {

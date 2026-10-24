@@ -9515,11 +9515,16 @@ export function createLevelRun({
         const opts = normalizeLiveOpts(liveSolidOpts());
         const box = playerBoxAt(state.x, state.y);
         const reach = blastReachFor(level);
+        // ⛓ fidelity TURRETCIRCLE D1 (`iceBlastShield`): `IceTurretBlast.hitables` holds "Shield" — the player's shield
+        // ENTITY, placed by the previous frame's `render` (`stepSpitsNow`'s box, the same transcription).
+        const shieldBox = CONTACT_FIDELITY.iceBlastShield && inventory?.hasShield
+            ? playerShieldRect(shieldRenderState ?? state, slashState.slashing) : null;
         for (const b of list) {
             const r = stepIceTurretBlast(b, {
                 frozen: ceremony !== null,
                 playerBox: box,
                 blockedAt: (bx) => !!world.collidesBlast(bx, opts),
+                ...(shieldBox ? { shieldBox } : {}),
             });
             if (r.hitPlayer) {
                 // `(hits[i] as Player).freeze(freezeTime)` — UNGATED, the
