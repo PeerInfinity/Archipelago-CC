@@ -2019,6 +2019,12 @@
             "enabled": true,
             "category": "Rule Converter",
             "_comment": "helper-script P4: the Rule Converter's Exact engine — real exporter analyzer + world_generator under Pyodide (CDN, booted on the first Convert). A helper script both ways through the Convert buttons, and the loaded alttp_worldgen preset's 36 helpers round-trip with its options. Category unclaimed by testBatches.js, so batch fast (on push)."
+        },
+        {
+            "id": "seedling-js-runtime-solver-cuts-rope-event",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "seedling-js-event-goals. Runtime js + the solver mode ON on seedling_playthrough: the sword granted, the page teleported to level_16__r1c1, and the Playback Bot asks for the L16 rope EVENT by name; the page walks the solver's clear-tag and completes on the game's flag {16,0} (persistence_cleared, one pendingCheck <seq>|16|0|0, the event collector's local check). Batch seedling-js."
         }
     ]
 }
