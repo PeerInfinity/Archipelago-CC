@@ -48,7 +48,7 @@
 import { plannerObstacleAt } from './botDriverV2.js';
 // ⛓ the solver family's import door (`seedling-solver-surface.json`).
 import {
-    CRUSHER, DIRECTIONS, TILE_SIZE, crusherRect, playerBoxAt, scanCrusher,
+    CONTACT_FIDELITY, CRUSHER, DIRECTIONS, TILE_SIZE, crusherRect, playerBoxAt, scanCrusher,
 } from './solverView.js';
 
 export class CrusherBaitError extends Error {
@@ -126,6 +126,38 @@ export function crusherSightDanger(run, box, point, solidsFor) {
         }
     }
     return out;
+}
+
+/**
+ * ⛓ SEARCHGAPS D-A (wave 28, read only while `CONTACT_FIDELITY.crusherBaitPressGoal` is ON) — A ROCK THAT SHIELDS A
+ * CRUSHER. A standing `breakablerock` inside a resting crusher's detection lane (`crusher.detectionRects`' four rects,
+ * transcribed: the body grown by `intDist` along each axis) is that crusher's SHIELD: `collideLine` takes its early exit
+ * on it, and the swing that removes it is the moment the crusher can see. L41: `breakablerock@224,64`/`@224,80` stand in
+ * `crusher@240,64`'s west lane, and every stance a swing reaches them from is in that lane (row 6 is wall but col 11) —
+ * so a bare `break` is a walk into the charge (measured: the frontier's `break` order died at t147, crusher 1000).
+ * Returns `{crusher, rocks: [rock id]}` (every standing rock in that crusher's lanes) or null.
+ */
+export function crusherShieldOf(run, rockId) {
+    const live = run.entities('crushers');
+    if (!live || live.size === 0 || !run.entities('crushersParked')) return null;
+    const broken = run.entities('brokenRocks') ?? new Set();
+    const rocks = (run.world.solids ?? []).filter((s) => s.rockId && !broken.has(s.rockId) && s.rect);
+    const rock = rocks.find((s) => s.rockId === rockId);
+    if (!rock) return null;
+    const rectOf = (s) => ({ x: s.rect.x, y: s.rect.y, right: s.rect.right ?? s.rect.x + s.rect.w,
+        bottom: s.rect.bottom ?? s.rect.y + s.rect.h });
+    const lanesOf = (c) => DIRECTIONS.map((d) => {
+        const x = c.x - CRUSHER.originX + CRUSHER.intDist * (d.dx < 0 ? d.dx : 0);
+        const y = c.y - CRUSHER.originY + CRUSHER.intDist * (d.dy < 0 ? d.dy : 0);
+        return { x, y, right: x + CRUSHER.w + CRUSHER.intDist * Math.abs(d.dx),
+            bottom: y + CRUSHER.h + CRUSHER.intDist * Math.abs(d.dy) };
+    });
+    for (const id of [...live.keys()].sort()) {
+        const lanes = lanesOf(live.get(id));
+        if (!lanes.some((l) => overlaps(l, rectOf(rock)))) continue;
+        return { crusher: id, rocks: rocks.filter((s) => lanes.some((l) => overlaps(l, rectOf(s)))).map((s) => s.rockId) };
+    }
+    return null;
 }
 
 /**
@@ -353,6 +385,9 @@ export function searchBaitOrdering({ run, liveOpts, inventory = null, aimRect,
     const queue = [first];
     let expanded = 0;
     let found = null;
+    // ⛓ SEARCHGAPS D-A — the PRESS goal (`crusherBaitPressGoal`; null while OFF: never asked).
+    const pressesOf = CONTACT_FIDELITY.crusherBaitPressGoal ? pressGoalFor(run, ids, home) : null;
+    let pressed = null;
     while (queue.length) {
         if (expanded >= maxStates) {
             return { ordering: null, stats: { expanded, distinct: seenStates.size, bound: true },
@@ -364,6 +399,10 @@ export function searchBaitOrdering({ run, liveOpts, inventory = null, aimRect,
             && reachesAim(state.seed, state.cfg)) {
             found = state;
             break;
+        }
+        if (pressesOf && pressed === null && !state.hot && state.path.length > 0 && state.region.has(start)) {
+            const holds = pressesOf(state.cfg);
+            if (holds.length) pressed = { state, holds };
         }
         for (const self of ids) {
             for (const d of DIRECTIONS) {
@@ -398,12 +437,40 @@ export function searchBaitOrdering({ run, liveOpts, inventory = null, aimRect,
         }
     }
     const stats = { expanded, distinct: seenStates.size, startSafeNodes: startComp.size };
+    if (!found && pressed) {
+        const s = pressed.state;
+        return { ordering: s.path, chains: chainsOf(s.path), stats: { ...stats, goal: 'press' }, parks: s.cfg,
+            goal: 'press', holds: pressed.holds };
+    }
     if (!found) {
         return { ordering: null, stats,
             why: 'no ordering of charges opens the aim AND keeps the cell the bait began from in reach '
                 + '(the round trip) — the searched space is exhausted' };
     }
     return { ordering: found.path, chains: chainsOf(found.path), stats, parks: found.cfg };
+}
+
+/**
+ * ⛓ SEARCHGAPS D-A (wave 28) — THE PRESS GOAL, read only while `CONTACT_FIDELITY.crusherBaitPressGoal` is ON.
+ *
+ * A crusher is a `"Solid"`, and `Button.update` collides `["Player","Enemy","Solid"]` (`levelRun.movingSolidsNow`'s
+ * R5-slice-15 arm already presses with a parked one). So a configuration of parks is PROGRESS when it holds down a
+ * presser that no crusher holds at home, of a group whose activators are not all open now — the frontier then
+ * re-plans in a room the search cannot see past (L41: the parked crusher holds `cover@112,128` open, and the block it
+ * frees is `weigh`'s, not this search's). The aim goal still wins wherever the search finds one; the press goal is
+ * the SHORTEST such ordering (the BFS order), taken only when the aim is out of the exhausted space.
+ *
+ * Returns `cfg → [presser label]` (empty = no new hold), or null when the room has no presser.
+ */
+function pressGoalFor(run, ids, home) {
+    const pressers = (run.world.pressers ?? []).filter((p) => p.rect);
+    if (pressers.length === 0) return null;
+    const open = new Set(run.entities('openActivators') ?? []);
+    const shut = new Set((run.world.activators ?? []).filter((a) => !open.has(a.id)).map((a) => a.t));
+    const held = (cfg, p) => ids.some((id) => cfg[id].x > -500 && overlaps(crusherRect(cfg[id]), p.rect));
+    const candidates = pressers.filter((p) => shut.has(p.t) && !held(home, p));
+    if (candidates.length === 0) return null;
+    return (cfg) => candidates.filter((p) => held(cfg, p)).map((p) => `${p.tag ?? 'presser'}@${p.x},${p.y} {t ${p.t}}`);
 }
 
 /**
@@ -563,8 +630,75 @@ export const BAIT_CHOREOGRAPHIES = Object.freeze([
     }),
 ]);
 
+/**
+ * ⛓ SEARCHGAPS D-A (wave 28) — R5's three L41 chains (`r5Totem.L41_PART3.baits`, driven byte-exact on the game as
+ * `r5-l41-part3`), the second spelling held to the first as the L42 rows are (`fidelityCrusher.test.js`). `start` is
+ * each bait's measured ENTITY stance (the previous bait's resting cell; bait 1's is the boot's (208,80) a half-tile
+ * in), `stanceTile` the tile it stands in. Read by `choreographyFor` only while `crusherBaitPressGoal` is ON: with it
+ * OFF the library is `BAIT_CHOREOGRAPHIES`, byte for byte.
+ */
+export const BAIT_CHOREOGRAPHIES_L41 = Object.freeze([
+    libraryRow({
+        src: 'L41_PART3.baits[0]',
+        level: 41,
+        crusher: 'crusher@240,64',
+        from: { x: 256, y: 80 },
+        charges: ['W'],
+        park: { x: 64, y: 80 },
+        stanceTile: { tx: 13, ty: 5 },
+        start: { x: 216, y: 88 },
+        approach: Object.freeze([
+            Object.freeze({ key: 'left', ticks: 21 }),
+        ]),
+        spans: Object.freeze([
+            Object.freeze({ key: 'down', ticks: 40 }),
+            Object.freeze({ key: null, ticks: 160 }),
+        ]),
+    }),
+    libraryRow({
+        src: 'L41_PART3.baits[1]',
+        level: 41,
+        crusher: 'crusher@240,64',
+        from: { x: 64, y: 80 },
+        charges: ['S'],
+        park: { x: 64, y: 240 },
+        stanceTile: { tx: 11, ty: 8 },
+        start: { x: 185.795, y: 135.999 },
+        approach: Object.freeze([
+            Object.freeze({ key: 'left', ticks: 40 }),
+            Object.freeze({ key: 'down', ticks: 22 }),
+            Object.freeze({ key: 'left', ticks: 70 }),
+            Object.freeze({ key: 'up', ticks: 10 }),
+        ]),
+        spans: Object.freeze([
+            Object.freeze({ key: 'down', ticks: 20 }),
+            Object.freeze({ key: 'right', ticks: 40 }),
+            Object.freeze({ key: null, ticks: 220 }),
+        ]),
+    }),
+    libraryRow({
+        src: 'L41_PART3.baits[2]',
+        level: 41,
+        crusher: 'crusher@240,64',
+        from: { x: 64, y: 240 },
+        charges: ['E'],
+        park: { x: 256, y: 240 },
+        stanceTile: { tx: 6, ty: 11 },
+        start: { x: 104.969, y: 182.37 },
+        approach: Object.freeze([
+            Object.freeze({ key: 'down', ticks: 40 }),
+        ]),
+        spans: Object.freeze([
+            Object.freeze({ key: 'up', ticks: 12 }),
+            Object.freeze({ key: null, ticks: 260 }),
+        ]),
+    }),
+]);
+
 export function choreographyFor(level, chain) {
-    return BAIT_CHOREOGRAPHIES.find((r) => r.level === level && r.crusher === chain.id
+    const rows = CONTACT_FIDELITY.crusherBaitPressGoal
+        ? [...BAIT_CHOREOGRAPHIES, ...BAIT_CHOREOGRAPHIES_L41] : BAIT_CHOREOGRAPHIES;
+    return rows.find((r) => r.level === level && r.crusher === chain.id
         && r.from.x === chain.from.x && r.from.y === chain.from.y
         && r.park.x === chain.park.x && r.park.y === chain.park.y
         && r.charges.join('') === chain.charges.join('')) ?? null;

@@ -100,7 +100,7 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
         || !!process.env.SEEDLING_SHAKE_BAND_MOOT || !!process.env.SEEDLING_SPINNER_SWING_LOS
         || !!process.env.SEEDLING_KING_OF_FIRE_FIGHT || !!process.env.SEEDLING_TENTACLE_BEAST_FIGHT
         || !!process.env.SEEDLING_LIGHTS_SORTIE_PORTFOLIO
-        || !!process.env.SEEDLING_FORCED_HIT_WITNESS_FIRST)('the shipped defaults: all three ON', () => {
+        || !!process.env.SEEDLING_CRUSHER_BAIT_PRESS_GOAL || !!process.env.SEEDLING_FORCED_HIT_WITNESS_FIRST)('the shipped defaults: all three ON', () => {
         // ⛓ fidelity BOBSOLDIER: W4 `bobSoldierLive` ships ON as well; W5 `chaserPointExact` was retired as a switch at
         // the wave-8 harvest (its OFF arm was a second `Point.length` spelling — the one-spelling law).
         // ⛓ fidelity WALLFLYER: W6 `wallFlyerKill` and W7 `wallFlyerShieldBump` ship ON (nothing committed moved).
@@ -242,6 +242,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity TIMEDPASS (wave 27): the solver's timed pass past a drill it cannot kill; shipped OFF;
             // ⛓ planning-11's flip (⚖ user "Harvest + flip ON", 2026-10-23) turns it ON.
             drillTimedPass: true,
+            // ⛓ fidelity SEARCHGAPS D-A (wave 28): the crusher bait's press goal + L41's chains; ships OFF.
+            crusherBaitPressGoal: false,
             // ⛓ fidelity SEARCHGAPS D-B (wave 28): the forced-hit proof asks one hitless witness first; ships OFF.
             forcedHitWitnessFirst: false });
     });

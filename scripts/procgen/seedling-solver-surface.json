@@ -476,12 +476,12 @@
       "files": {
         "arrowLaneCrossing.js": 1,
         "botDriverV2.js": 104,
-        "crusherBait.js": 3,
+        "crusherBait.js": 7,
         "dangerMap.js": 21,
         "lightsVerb.js": 1,
         "solverBot.js": 166
       },
-      "sites": 296,
+      "sites": 300,
       "seen": "both",
       "via": [
         "direct",
@@ -531,6 +531,7 @@
         },
         "brokenRocks": {
           "botDriverV2.js": 3,
+          "crusherBait.js": 1,
           "solverBot.js": 5
         },
         "burnedTrees": {
@@ -543,13 +544,13 @@
         },
         "crushers": {
           "botDriverV2.js": 8,
-          "crusherBait.js": 2,
+          "crusherBait.js": 3,
           "dangerMap.js": 2,
           "solverBot.js": 2
         },
         "crushersParked": {
           "botDriverV2.js": 5,
-          "crusherBait.js": 1,
+          "crusherBait.js": 2,
           "solverBot.js": 1
         },
         "darkTraps": {
@@ -575,6 +576,7 @@
         },
         "openActivators": {
           "botDriverV2.js": 23,
+          "crusherBait.js": 1,
           "solverBot.js": 18
         },
         "openBridges": {
@@ -1458,13 +1460,13 @@
         "arrivalSolid.js": 2,
         "botDriverV2.js": 58,
         "bulbPlacement.js": 1,
-        "crusherBait.js": 2,
+        "crusherBait.js": 5,
         "dangerMap.js": 1,
         "lightsVerb.js": 2,
         "solveProgress.js": 2,
         "solverBot.js": 265
       },
-      "sites": 333,
+      "sites": 336,
       "seen": "both",
       "via": [
         "direct",
@@ -1534,9 +1536,10 @@
       "files": {
         "arrivalSolid.js": 1,
         "botDriverV2.js": 10,
+        "crusherBait.js": 1,
         "solverBot.js": 22
       },
-      "sites": 33,
+      "sites": 34,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2070,9 +2073,10 @@
       "form": "constant",
       "files": {
         "botDriverV2.js": 2,
+        "crusherBait.js": 1,
         "solverBot.js": 20
       },
-      "sites": 22,
+      "sites": 23,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2233,10 +2237,11 @@
       "files": {
         "arrivalSolid.js": 1,
         "botDriverV2.js": 4,
+        "crusherBait.js": 1,
         "lightsVerb.js": 1,
         "solverBot.js": 9
       },
-      "sites": 15,
+      "sites": 16,
       "seen": "both",
       "via": [
         "direct",
@@ -4189,13 +4194,14 @@
         "arrowLaneCrossing.js": 4,
         "axePricedCrossing.js": 4,
         "botDriverV2.js": 3,
+        "crusherBait.js": 2,
         "dangerMap.js": 1,
-        "forcedHit.js": 4,
+        "forcedHit.js": 5,
         "lightsVerb.js": 3,
-        "solverBot.js": 74,
+        "solverBot.js": 77,
         "strikePolicy.js": 2
       },
-      "sites": 95,
+      "sites": 101,
       "seen": "static",
       "via": [
         "import"
@@ -4230,9 +4236,9 @@
       "class": "seedling",
       "form": "constant",
       "files": {
-        "crusherBait.js": 4
+        "crusherBait.js": 12
       },
-      "sites": 4,
+      "sites": 12,
       "seen": "static",
       "via": [
         "import"
@@ -4248,9 +4254,9 @@
       "class": "seedling",
       "form": "geometry-query",
       "files": {
-        "crusherBait.js": 7
+        "crusherBait.js": 8
       },
-      "sites": 7,
+      "sites": 8,
       "seen": "static",
       "via": [
         "import"
@@ -4266,9 +4272,9 @@
       "class": "seedling",
       "form": "constant",
       "files": {
-        "crusherBait.js": 2
+        "crusherBait.js": 3
       },
-      "sites": 2,
+      "sites": 3,
       "seen": "static",
       "via": [
         "import"
@@ -5877,11 +5883,11 @@
         "botDriverV2.js": 1,
         "lavaBossPolicy.js": 1,
         "lightsVerb.js": 1,
-        "solverBot.js": 18,
+        "solverBot.js": 20,
         "strikePolicy.js": 2,
         "tentacleBeastPolicy.js": 1
       },
-      "sites": 24,
+      "sites": 26,
       "seen": "static",
       "via": [
         "import"

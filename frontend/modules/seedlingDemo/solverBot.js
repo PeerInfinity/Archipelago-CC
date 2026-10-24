@@ -79,7 +79,8 @@ import { runBait } from './botDriverV2.js';
 // ⛓ seedling-fidelity-movingwait — the paced wait's driver (behind `MOVING_WAIT`).
 import { pacedSummary, runPace } from './botDriverV2.js';
 import {
-    BAIT_ALIGN, CRUSHER_BAIT, alignmentCandidates, choreographyFor, crusherSightDanger, searchBaitOrdering,
+    BAIT_ALIGN, CRUSHER_BAIT, alignmentCandidates, choreographyFor, crusherShieldOf, crusherSightDanger,
+    searchBaitOrdering,
 } from './crusherBait.js';
 import {
     KEY_RESPONDERS, RESPONDERS, TOUCH_RESPONDERS, keyLineTouches, localPublish,
@@ -925,18 +926,29 @@ function clearTagExecutor(strategy) {
  */
 function resolveBaitStrategy(run, obstacle, aim, allowTeleporter) {
     if (!run.entities('crushers')) return null;
+    /**
+     * ⛓ SEARCHGAPS D-A (only while `crusherBaitPressGoal` is ON; `refineStrategy` sends a rock here only then) — the
+     * obstacle is a rock that SHIELDS a crusher: the ordering is searched with the shield gone (the swing that removes
+     * it is chain 1's trigger, `execBait`'s `shield`), and the bait is that crusher's.
+     */
+    const shield = CONTACT_FIDELITY.crusherBaitPressGoal && obstacle.id?.startsWith('breakablerock@')
+        ? crusherShieldOf(run, obstacle.id) : null;
+    if (CONTACT_FIDELITY.crusherBaitPressGoal && obstacle.id?.startsWith('breakablerock@') && !shield) return null;
+    const target = shield ? shield.crusher : obstacle.id;
     const refuse = (why) => {
-        throw new SolverRefusal(`solverBot: bait ${obstacle.id} in level ${run.level} — ${why}`,
-            { obstacle: { kind: 'solid', tag: 'crusher', id: obstacle.id } });
+        throw new SolverRefusal(`solverBot: bait ${target} in level ${run.level} — ${why}`,
+            { obstacle: { kind: 'solid', tag: 'crusher', id: target } });
     };
     if (!run.entities('crushersParked')) {
         refuse('a crusher in this room is CHARGING; the ordering search plans from parks, and a '
             + 'body in motion is not one.');
     }
     const aimRect = { x: aim.x - 4, y: aim.y - 4, right: aim.x + 4, bottom: aim.y + 4 };
+    const liveOpts = run.liveGeometryOpts();
     const found = searchBaitOrdering({
-        run, liveOpts: run.liveGeometryOpts(), inventory: run.progress('inventory'),
-        aimRect, allowTeleporter,
+        run, liveOpts: shield
+            ? { ...liveOpts, brokenRocks: new Set([...(liveOpts.brokenRocks ?? []), ...shield.rocks]) } : liveOpts,
+        inventory: run.progress('inventory'), aimRect, allowTeleporter,
     });
     if (!found.ordering) {
         refuse(`the ordering search found nothing: ${found.why} (${found.stats.expanded} state(s) `
@@ -952,17 +964,24 @@ function resolveBaitStrategy(run, obstacle, aim, allowTeleporter) {
             + 'order is that chain\'s beam search (R5 slices 17-19: 8-tick blocks, per-stage walls), '
             + 'which is too slow to be an in-solver search.');
     }
+    if (shield && plan[0].chain.id !== shield.crusher) {
+        refuse(`the ordering's first chain is ${plan[0].chain.id}'s, and the shield [${shield.rocks.join(', ')}] is `
+            + `${shield.crusher}'s — the swing that removes it would wake a crusher the ordering does not start with.`);
+    }
     return {
         strategy: 'bait',
-        target: obstacle.id,
+        target,
         stance: { ...plan[0].row.stance },
         chains: plan,
         charges: found.ordering.length,
         parks: found.parks,
         searched: found.stats,
+        // ⛓ SEARCHGAPS D-A — present only while `crusherBaitPressGoal` is ON (optional fields).
+        ...(found.goal ? { goal: found.goal, holds: found.holds } : {}),
+        ...(shield ? { shield: { rocks: [...shield.rocks] } } : {}),
         rejected: [{
             option: 'avoid (hard-avoid the four lanes)',
-            why: `${obstacle.id} is a \`Crusher\`: a 32x32 Solid that charges at 1 px/tick when it SEES `
+            why: `${target} is a \`Crusher\`: a 32x32 Solid that charges at 1 px/tick when it SEES `
                 + 'the player in a lane and PARKS where a Solid stops it (`crusher.js`). The corridor '
                 + 'runs through its body, so the route OPERATES it: '
                 + `${found.ordering.length} charge(s) in ${plan.length} chain(s), searched with the round `
@@ -992,9 +1011,9 @@ function execBait(run, perTick, resolved, ctx) {
         const label = `${what} chain ${i + 1}/${resolved.chains.length} ${chain.id} ${row.charges.join('')}`;
         if (i > 0) ctx.walkTo(ctx.goal, { ...row.stance }, { what: `${label} stance` });
         const [ox, oy] = chain.id.slice(chain.id.indexOf('@') + 1).split(',').map(Number);
-        const spec = () => ({
+        const spec = (prefix = []) => ({
             crusher: { x: ox, y: oy },
-            approach: row.approach.map((sp) => ({ ...sp })),
+            approach: [...prefix, ...row.approach.map((sp) => ({ ...sp }))],
             spans: row.spans.map((sp) => ({ ...sp })),
             park: { ...row.park },
         });
@@ -1007,6 +1026,41 @@ function execBait(run, perTick, resolved, ctx) {
         let chosen = null;
         let tried = 0;
         const failures = [];
+        /**
+         * ⛓ SEARCHGAPS D-A — THE SHIELD SWING (chain 1 only, only when the resolver found the obstacle to be a rock that
+         * shields this crusher: `resolved.shield`, which exists only while `crusherBaitPressGoal` is ON). From the aligned
+         * rest state, face the nearest shield rock, press, and idle until every shield rock is gone — that tick the
+         * crusher still rests (measured on the model: rocks gone t8 after a face + press from (216,88); R5's chain 1
+         * survives from there with any 0-14 idle ticks), so the chain's own `runBait` starts from a parked crusher with
+         * the line clear, the state R5's `r5-l41-part3` booted in. Returns null, or why the shield stood.
+         */
+        const shieldRocks = i === 0 && resolved.shield ? resolved.shield.rocks : null;
+        const swingShield = (r, out) => {
+            const solids = (r.world.solids ?? []).filter((s) => shieldRocks.includes(s.rockId));
+            const goneAll = () => {
+                const broken = r.entities('brokenRocks') ?? new Set();
+                return shieldRocks.every((id) => broken.has(id));
+            };
+            const rectOf = (s) => ({ x: s.rect.x, y: s.rect.y, right: s.rect.right ?? s.rect.x + s.rect.w,
+                bottom: s.rect.bottom ?? s.rect.y + s.rect.h });
+            const nearest = solids.map(rectOf).sort((a, b) => distanceRectPoint(r.state.x, r.state.y, a)
+                - distanceRectPoint(r.state.x, r.state.y, b))[0];
+            if (!nearest) return 'no shield rock stands in the room';
+            let pressed = false;
+            for (let t = 0; t < 40; t += 1) {
+                if (pressed && goneAll()) return null;
+                let held = new Set();
+                if (!pressed) {
+                    const want = facingToward(r.state, nearest);
+                    if (r.direction === want) { held = new Set(['primary']); pressed = true; } else held = new Set([FACING_KEYS[want]]);
+                }
+                out.push(held);
+                const { transition } = r.advance(held);
+                if (transition) return `the swing crossed to level ${transition.to_level}`;
+            }
+            return `[${shieldRocks.join(', ')}] still stood 40 ticks after the swing began at `
+                + `(${r.state.x.toFixed(2)},${r.state.y.toFixed(2)})`;
+        };
         if (ctx.fork) {
             for (const c of candidates) {
                 /**
@@ -1022,9 +1076,27 @@ function execBait(run, perTick, resolved, ctx) {
                 }
                 tried += 1;
                 for (const held of c.ticks) f.advance(held);
+                let prefix = [];
+                if (shieldRocks) {
+                    // the swing is recorded on its own fork, then driven as the head of the chain's APPROACH: the
+                    // crusher rests when the approach begins and charges when it ends (`runBait`'s two checks)
+                    const g = fineDeadlineReached('crusher-fork') ? null : ctx.fork();
+                    if (g === null) {
+                        refuse(`${label}: deadline — the caller's anytime deadline (\`shouldStop\`) was reached at the `
+                            + `\`crusher-fork\` site recording the shield swing after ${tried} fork tr(y|ies)`);
+                    }
+                    for (const held of c.ticks) g.advance(held);
+                    const swung = [];
+                    const stood = swingShield(g, swung);
+                    if (stood !== null) {
+                        if (failures.length < 3) failures.push(`(${c.at.x.toFixed(2)},${c.at.y.toFixed(2)}): the shield swing — ${stood}`);
+                        continue;
+                    }
+                    prefix = swung.map((h) => ({ key: h.size ? [...h].join('+') : null, ticks: 1 }));
+                }
                 try {
-                    runBait(f, [], spec(), `${label} (fork)`);
-                    chosen = c;
+                    runBait(f, [], spec(prefix), `${label} (fork)`);
+                    chosen = { ...c, prefix };
                     break;
                 } catch (e) {
                     if (!(e instanceof BotDriverV2Error)) throw e;
@@ -1050,9 +1122,13 @@ function execBait(run, perTick, resolved, ctx) {
             refuse(`${label}: the align was previewed to rest at (${chosen.at.x},${chosen.at.y}) and the RUN `
                 + `rests at (${run.state.x},${run.state.y}) — the preview and the run disagree.`);
         }
+        if (shieldRocks && !chosen.prefix) {
+            // no fork to record it on: the swing's ticks are previewed on the live run's own pace by driving it
+            refuse(`${label}: the shield swing is certified on a FORK, and this segment has none.`);
+        }
         let rec;
         try {
-            rec = runBait(run, perTick, spec(), label);
+            rec = runBait(run, perTick, spec(chosen.prefix ?? []), label);
         } catch (e) {
             if (e instanceof BotDriverV2Error) refuse(e.message);
             throw e;
@@ -2771,6 +2847,12 @@ export const NESTED_OPENER_DEPTH = 2;
  * are which, and it is asked rather than copied (trap 89).
  */
 function refineStrategy(run, strategy, obstacle) {
+    // ⛓ fidelity SEARCHGAPS D-A (behind `CONTACT_FIDELITY.crusherBaitPressGoal`): a rock that SHIELDS a resting crusher
+    // (`crusherBait.crusherShieldOf`) is broken by the BAIT whose first chain it triggers, not by a bare `break` — every
+    // swing stance is in the lane it opens. OFF: the table's `break`, byte for byte.
+    if (CONTACT_FIDELITY.crusherBaitPressGoal && CRUSHER_BAIT.enabled && strategy === 'break'
+        && obstacle?.kind === 'solid' && typeof obstacle.id === 'string' && obstacle.id.startsWith('breakablerock@')
+        && crusherShieldOf(run, obstacle.id)) return 'bait';
     // ⛓ fidelity SEALDOOR D2 (behind `CONTACT_FIDELITY.sealDoorApproach`): the FinalDoor is opened by APPROACH. The
     // shared table keeps no row for it, so OFF the answer is the table's (none) byte for byte.
     if (CONTACT_FIDELITY.sealDoorApproach && obstacle?.kind === 'solid' && obstacle?.tag === 'finaldoor') return 'approach';
@@ -24922,6 +25004,10 @@ function solveSegmentUnder({
                                 // every dash candidate's (BOBSOLDIER2's lesson: the drive is a priced walk).
                                 ...(plan.strategy === 'keylock' && KEYLOCK_WAIT_PRICED.enabled
                                     ? keylockStandWalk(run, plan.resolved) : {}),
+                                // ⛓ SEARCHGAPS D-A: a dash's swing would break the bait's SHIELD on the way to the
+                                // stance (measured: rocks gone at t127, the crusher charging before the bait), so this
+                                // walk is undashed. `shield` exists only while `crusherBaitPressGoal` is ON.
+                                ...(plan.strategy === 'bait' && plan.resolved.shield ? { undashed: true } : {}),
                             });
                         } finally {
                             stanceWalks.delete(walking);
