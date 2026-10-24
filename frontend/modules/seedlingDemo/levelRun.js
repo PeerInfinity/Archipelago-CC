@@ -1417,6 +1417,26 @@ export function createLevelRun({
      */
     const activatorStates = new Map();
     /**
+     * ⛓⛓ SEEDLING FIDELITY DIGESTREAD D2 — A GETTER READS; IT KEEPS NOTHING IT BUILDS
+     * (`CC/docs/cloud-reports/seedling-fidelity-digestread.md`).
+     *
+     * Every per-visit state is built lazily, by the first `…StateFor(n)` that asks. The tick asks for all of them, so
+     * a run that only ticks holds the same maps whoever asked first — but a GETTER read between a visit's build and
+     * its first `advance` (the page's graphics read `crushers`, `bossesWoken`, … every tick) stored a build the
+     * never-read run did not have yet: an empty Map in a room without the family, and `stateDigestParts`' `visit`
+     * part hashes these maps whole, so the read moved the digest (30 getters; `bobBoss` moved `player`).
+     *
+     * ⛔ So while a getter runs (`readingDepth > 0`, set by `readingGetters` on every getter of the run object) a
+     * builder hands back what it built WITHOUT keeping it (`keptUnlessReading`), and the tick builds the same state
+     * from the same inputs when it first asks. A state already kept is read as it is. Methods (`entities`, the
+     * forecasts, `previewStepper`) are not getters and still build — DA's `lightsFights` row builds on purpose.
+     */
+    let readingDepth = 0;
+    const keptUnlessReading = (map, n, built) => {
+        if (readingDepth === 0) map.set(n, built);
+        return built;
+    };
+    /**
      * ⛓⛓ SEEDLING FIDELITY F7: a new `Game`'s activator state is the build's
      * AND its first frame's `check()` pass — `createActivatorState` boots the
      * pressed ButtonRooms (F6), and `bootPulledRopes` the pulled ropes. ONE
@@ -1430,7 +1450,7 @@ export function createLevelRun({
     };
     const activatorStateFor = (n) => {
         worldFor(n);
-        if (!activatorStates.has(n)) activatorStates.set(n, buildActivatorState(n));
+        if (!activatorStates.has(n)) return keptUnlessReading(activatorStates, n, buildActivatorState(n));
         return activatorStates.get(n);
     };
     const freshActivatorState = (n) => {
@@ -1483,15 +1503,15 @@ export function createLevelRun({
      */
     const burnStates = new Map();
     const bridgeStateFor = (n) => {
-        if (!bridgeStates.has(n)) bridgeStates.set(n, new Map());
+        if (!bridgeStates.has(n)) return keptUnlessReading(bridgeStates, n, new Map());
         return bridgeStates.get(n);
     };
     const rockStateFor = (n) => {
-        if (!rockStates.has(n)) rockStates.set(n, createRockState());
+        if (!rockStates.has(n)) return keptUnlessReading(rockStates, n, createRockState());
         return rockStates.get(n);
     };
     const burnStateFor = (n) => {
-        if (!burnStates.has(n)) burnStates.set(n, createBurnState());
+        if (!burnStates.has(n)) return keptUnlessReading(burnStates, n, createBurnState());
         return burnStates.get(n);
     };
     /**
@@ -1511,7 +1531,7 @@ export function createLevelRun({
      */
     const ropeStates = new Map();
     const ropeStateFor = (n) => {
-        if (!ropeStates.has(n)) ropeStates.set(n, new Set());
+        if (!ropeStates.has(n)) return keptUnlessReading(ropeStates, n, new Set());
         return ropeStates.get(n);
     };
     /**
@@ -1636,7 +1656,7 @@ export function createLevelRun({
                     landed: fallen,
                 });
             }
-            fallRockStates.set(n, st);
+            return keptUnlessReading(fallRockStates, n, st);
         }
         return fallRockStates.get(n);
     };
@@ -1815,7 +1835,7 @@ export function createLevelRun({
                     moonrockSet);
                 st.set(r.id, r);
             }
-            moonrockStates.set(n, st);
+            return keptUnlessReading(moonrockStates, n, st);
         }
         return moonrockStates.get(n);
     };
@@ -1845,7 +1865,7 @@ export function createLevelRun({
             for (const c of worldFor(n).crushers ?? []) {
                 byId.set(c.id, { id: c.id, t: c.t, x: c.ex, y: c.ey, vx: 0, vy: 0 });
             }
-            crusherStates.set(n, byId);
+            return keptUnlessReading(crusherStates, n, byId);
         }
         return crusherStates.get(n);
     };
@@ -1907,7 +1927,7 @@ export function createLevelRun({
                 // spelling it differently.
                 byId.set(b.id, { ...createBossTotem(b.ex, b.ey), id: b.id });
             }
-            bossStates.set(n, byId);
+            return keptUnlessReading(bossStates, n, byId);
         }
         return bossStates.get(n);
     };
@@ -1960,7 +1980,7 @@ export function createLevelRun({
                     id: b.id, x: b.ex, y: b.ey, tag: b.persistTag ?? -1,
                 }));
             }
-            shieldBossStates.set(n, byId);
+            return keptUnlessReading(shieldBossStates, n, byId);
         }
         return shieldBossStates.get(n);
     };
@@ -1984,9 +2004,10 @@ export function createLevelRun({
                 }
                 fight = createLavaBossFight({ x: e[0].x, y: e[0].y, tag: Number(e[0].attrs?.tag ?? -1) });
                 // The ctor writes `playerPosition` (`LavaBoss.as:53`): a death in this room reboots there.
-                if (n === level) worldCtor = { x: LAVA_BOSS.respawn.x, y: LAVA_BOSS.respawn.y };
+                // (DIGESTREAD D2: the build a getter does not keep writes nothing; the tick's build writes it.)
+                if (n === level && readingDepth === 0) worldCtor = { x: LAVA_BOSS.respawn.x, y: LAVA_BOSS.respawn.y };
             }
-            lavaBossFights.set(n, fight);
+            return keptUnlessReading(lavaBossFights, n, fight);
         }
         return lavaBossFights.get(n);
     };
@@ -2347,7 +2368,7 @@ export function createLevelRun({
                     pendingRemove: false,
                 });
             }
-            finalDoorStates.set(n, byId);
+            return keptUnlessReading(finalDoorStates, n, byId);
         }
         return finalDoorStates.get(n);
     };
@@ -2408,7 +2429,7 @@ export function createLevelRun({
             for (const t of worldFor(n).iceTurrets ?? []) {
                 byId.set(t.id, createIceTurret(t.x, t.y));
             }
-            turretStates.set(n, byId);
+            return keptUnlessReading(turretStates, n, byId);
         }
         return turretStates.get(n);
     };
@@ -2555,7 +2576,7 @@ export function createLevelRun({
                     attrs: e.attrs ?? {} }, worldFor(n).world);
                 byId.set(id, Object.assign(t, { id, yKnown: true, animKnown: true, lastClock: null }));
             }
-            beamTowerStates.set(n, byId);
+            return keptUnlessReading(beamTowerStates, n, byId);
         }
         return beamTowerStates.get(n);
     };
@@ -2587,7 +2608,7 @@ export function createLevelRun({
             for (const l of worldFor(n).magicalLocks ?? []) {
                 byId.set(l.id, createMagicalLock(l.id, { tag: l.tag, x: l.x, y: l.y }, l.lockType));
             }
-            magicalLockStates.set(n, byId);
+            return keptUnlessReading(magicalLockStates, n, byId);
         }
         return magicalLockStates.get(n);
     };
@@ -3879,7 +3900,7 @@ export function createLevelRun({
     const chestStates = new Map();
     const chestsOf = (n) => worldFor(n).chests ?? [];
     const chestStateFor = (n) => {
-        if (!chestStates.has(n)) chestStates.set(n, createChestState(chestsOf(n)));
+        if (!chestStates.has(n)) return keptUnlessReading(chestStates, n, createChestState(chestsOf(n)));
         return chestStates.get(n);
     };
     const openChestIdsNow = () => {
@@ -3906,7 +3927,7 @@ export function createLevelRun({
         if (!pulserStates.has(n)) {
             const byId = new Map();
             for (const p of pulsersOf(n)) byId.set(p.id, createPulser(p.x, p.y, p.t));
-            pulserStates.set(n, byId);
+            return keptUnlessReading(pulserStates, n, byId);
         }
         return pulserStates.get(n);
     };
@@ -3967,7 +3988,7 @@ export function createLevelRun({
      */
     let sealPiece = null;
     const pushableStateFor = (n) => {
-        if (!pushableStates.has(n)) pushableStates.set(n, createPushableState(worldFor(n)));
+        if (!pushableStates.has(n)) return keptUnlessReading(pushableStates, n, createPushableState(worldFor(n)));
         return pushableStates.get(n);
     };
     /**
@@ -3992,7 +4013,7 @@ export function createLevelRun({
             // spinner roster comes into existence, so the bound cannot be
             // skipped by a path that forgot to ask.
             assertSpinnerSolidsBound(n);
-            spinnerStates.set(n, createSpinnerState(worldFor(n)));
+            return keptUnlessReading(spinnerStates, n, createSpinnerState(worldFor(n)));
         }
         return spinnerStates.get(n);
     };
@@ -9183,7 +9204,7 @@ export function createLevelRun({
      */
     const pullsByLevel = new Map();
     function pullsFor(n) {
-        if (!pullsByLevel.has(n)) pullsByLevel.set(n, createPulls(recordFor(n).entities));
+        if (!pullsByLevel.has(n)) return keptUnlessReading(pullsByLevel, n, createPulls(recordFor(n).entities));
         return pullsByLevel.get(n);
     }
     function stepPullsNow() {
@@ -15794,10 +15815,9 @@ export function createLevelRun({
     const bobArenaNow = () => {
         if (bobArena && bobArena.level === level) return bobArena;
         const rock = (world.fallRocks ?? []).find((r) => r.thirdBoss === true);
-        if (!rock) {
-            bobArena = { level, none: true };
-            return bobArena;
-        }
+        // ⛓ DIGESTREAD D2: a getter's ask (`bobBoss`) reads the arena it would build and keeps none (`player` digests it)
+        const kept = (a) => (readingDepth === 0 ? (bobArena = a) : a);
+        if (!rock) return kept({ level, none: true });
         // ⛓⛓⛓ R3-swim D3: the rock's flag is already false, so the ctor
         // builds it FALLEN (Solid) with `cameraTimer = 0`, and its first live
         // `update()` takes the `cameraTimer == 0` arm at once — see the rock
@@ -15806,7 +15826,7 @@ export function createLevelRun({
         // arrival after a death mid-fight, `levelWorld.arenaRockOf`): the same
         // ctor state, so the same arena.
         const fallen = bobRocksFallen.has(level) || rock.fallenAtBuild === true;
-        bobArena = {
+        return kept({
             level,
             rockId: rock.id,
             persistTag: rock.persistTag,
@@ -15819,8 +15839,7 @@ export function createLevelRun({
             fire: null,
             fireCollected: false,
             faceUp: false,
-        };
-        return bobArena;
+        });
     };
     const bobLedger = (row) => bobBossLedger.push({ t: ticksCompleted, level, ...row });
     /** `new BobBossNPC(72, 72, ...)` -> `NPC`'s `+ Tile/2`: the point the NPC occupies. */
@@ -16463,8 +16482,7 @@ export function createLevelRun({
             fight.totemGone = false;
             fight.pendingEnd = false;
         }
-        lightsFights.set(n, fight);
-        return fight;
+        return keptUnlessReading(lightsFights, n, fight);
     }
 
     /** `liveSolidOpts`' `lightTotems`: the totem's state by its solid's `lightTotemId` (only rooms with a fight). */
@@ -17895,7 +17913,31 @@ export function createLevelRun({
     // ⛓ fidelity BOSSFORK D2: and the boot's build, here because every binding the fight's build reads is now made.
     tentacleMouthAtBuild();
 
-    return {
+    /**
+     * ⛓ DIGESTREAD D2: every getter of the run object runs with `readingDepth` raised, so a lazy `…StateFor` it reaches
+     * keeps nothing (`keptUnlessReading`). Wrapped from the object's own descriptors, so a getter added later is a
+     * reader the day it lands (`levelRunDigestRead.test.js` reads them all).
+     */
+    const readingGetters = (api) => {
+        for (const [k, d] of Object.entries(Object.getOwnPropertyDescriptors(api))) {
+            if (typeof d.get !== 'function') continue;
+            const read = d.get;
+            Object.defineProperty(api, k, {
+                ...d,
+                get() {
+                    readingDepth += 1;
+                    try {
+                        return read.call(this);
+                    } finally {
+                        readingDepth -= 1;
+                    }
+                },
+            });
+        }
+        return api;
+    };
+
+    return readingGetters({
         get level() { return level; },
         get world() { return world; },
         get state() { return state; },
@@ -22771,5 +22813,5 @@ export function createLevelRun({
             });
             return { transition: record, grant, ...hits };
         },
-    };
+    });
 }
