@@ -248,3 +248,64 @@ describe('fidelity RESIDUE D-B — the solver (HITLESS OFF: the walk to the mout
         expect(keys(on.out)).toEqual(keys(off.out));
     }, 240000);
 });
+
+describe('fidelity RESIDUE D-B — the game witness (p4g): a walk into a live whirlpool, drowned, at 0 px', () => {
+    // `whirlpool-drown-s15`: the door staging at seed 15, the HITLESS-OFF fight (variant 0), then a bang-bang walk at
+    // whirlpool#78's centre until the game kills the player (`probe-seedling-bosskills.mjs --record --dir=whirlpool-witness`).
+    const w = JSON.parse(readFileSync(join(HERE, 'fixtures', 'whirlpool-witness', 'whirlpool-drown-s15.json'), 'utf8'));
+    const model = (drown) => {
+        const out = [];
+        let error = null;
+        let deaths = [];
+        withContactFidelity({ whirlpoolDrown: drown }, () => {
+            let run = null;
+            const st = createTapeStepper(parseTape(JSON.stringify(w.tape)), { levelSource: SRC,
+                onTick: (t, s, h, rn) => { run = rn; } });
+            try {
+                for (let r = st.next(); !r.done; r = st.next()) {
+                    const o = r.value.observation;
+                    const v = run.tentacleBeastFight;
+                    out[o.t] = { x: o.x, y: o.y, level: run.level, hits: run.damage.hits, beast: v ? v.beast.anim : null,
+                        tentacles: (v?.tentacles ?? []).map((q) => [q.x, q.y, q.anim, q.index, q.alpha]).map((p) => p.join(','))
+                            .sort().join('|'),
+                        rngState: v ? v.rngState : null, dead: v ? v.beast.dead === true : false };
+                }
+            } catch (e) {
+                error = e.message;
+            }
+            deaths = run.ledger('playerDeaths');
+        });
+        return { out, error, deaths };
+    };
+    it('is recorded on the default build; the game holds the player still for the drown and kills it at t2202', () => {
+        expect(w.page).toBe('seedling_bot_ap_p4g');
+        const at = (t) => w.samples.find((g) => g.t === t);
+        expect([at(2184).x, at(2184).y]).toEqual([106.96743277070284, 115.89532353711422]);
+        expect([at(2201).x, at(2201).y, at(2201).hits]).toEqual([106.96743277070284, 115.89532353711422, 1]);
+        expect([at(2202).x, at(2202).y, at(2202).hits, at(2202).level]).toEqual([104, 72, 0, 57]);
+    });
+    it('ON: the model reproduces the game on every sampled tick, and the death is a `playerDeaths` row', () => {
+        const m = model(true);
+        expect(m.error).toBeNull();
+        const bad = [];
+        for (const g of w.samples) {
+            const s = m.out[g.t];
+            if (!s) { bad.push(`t ${g.t}: no model tick`); continue; }
+            if (s.x !== g.x || s.y !== g.y) bad.push(`t ${g.t}: player game (${g.x}, ${g.y}) model (${s.x}, ${s.y})`);
+            if (s.level !== g.level || s.hits !== g.hits) bad.push(`t ${g.t}: level/hits game ${g.level}/${g.hits}`);
+            if (g.level !== 57) continue;
+            if ((g.boss?.anim ?? null) !== s.beast) bad.push(`t ${g.t}: beast game ${g.boss?.anim} model ${s.beast}`);
+            if (g.tentacleRows.map((p) => p.join(',')).sort().join('|') !== s.tentacles) bad.push(`t ${g.t}: tentacles`);
+            if (s.rngState === null && s.dead) continue;
+            if (g.rngState !== s.rngState) bad.push(`t ${g.t}: rng game ${g.rngState} model ${s.rngState}`);
+        }
+        expect(bad.slice(0, 6)).toEqual([]);
+        expect(m.deaths).toEqual([{ t: 2202, level: 57, source: 'whirlpool', id: 'whirlpool#78', hits: 1,
+            respawn: { x: 104, y: 72 } }]);
+    }, 120000);
+    it('OFF: the model refuses the first `drown()` call by name (t2183) — the residue HITLESS named', () => {
+        const m = model(false);
+        expect(m.error).toMatch(/^levelRun: whirlpool#78 pulls the player to its centre at tick 2183 .*not transcribed/);
+        expect(m.deaths).toEqual([]);
+    }, 120000);
+});
