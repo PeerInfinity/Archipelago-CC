@@ -171,10 +171,14 @@ export function analyzeSeedlingAtlas(atlas, deps) {
  * @param {{ mapDoc:object, gameConfig:object, levelWorlds?:object, analysis?:object }} deps
  * @returns {{ gridFor:Function, conditionKey:Function, resolveCondition:Function, unresolved:string[] }}
  */
-export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = null, analysis = null }) {
+export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = null, analysis = null, events = null }) {
     const levels = indexSeedlingLevels(mapDoc);
     const options = seedlingAnalyzerOptions(gameConfig);
     return {
+        // ⛓ EVENTS AS LOCATIONS (session tile-primitives-events-as-locations) — OPT-IN: the rules producer's AP
+        // events the world can model (`events`: `{name, side, mode, obstacle: {level, class, x, y}}`), each with its
+        // entity's tiles, for the projection's `bindWorldEvents`. A compile without `events` is byte-identical.
+        ...(events ? { eventsFor: (region) => seedlingEventTiles(levels.get(levelKeyOf(region.map_ref)), events) } : {}),
         conditionKey: analysis?.conditionKey ?? options.conditionKey,
         resolveCondition: analysis?.resolveCondition ?? options.resolveCondition,
         unresolved: options.unresolved,
@@ -202,6 +206,28 @@ export function seedlingMazeProjectionDeps({ mapDoc, gameConfig, levelWorlds = n
             partitionFor: (region) => levelWorlds.partition?.regions?.[region.region_id] ?? null,
         } : {}),
     };
+}
+
+/**
+ * The `events` of one level with the TILES of the entity each names (its sealed tiles, else its footprint — the cells
+ * `seedlingLevelEntities` would lay). An event whose entity the level does not have is refused by name.
+ */
+export function seedlingEventTiles(level, events) {
+    if (!level) return [];
+    return events.filter((ev) => ev.obstacle.level === level.level).map((ev) => {
+        const { class: cls, x, y } = ev.obstacle;
+        const entity = (level.entities ?? []).find((e) => e.type === cls && e.x === x && e.y === y);
+        if (!entity) throw new Error(`event "${ev.name}": L${level.level} has no ${cls}@${x},${y}`);
+        const sem = entitySemantics(entity);
+        const sealed = sem ? entitySealedTiles(entity, sem) : [];
+        const tiles = sealed.length > 0 ? sealed : (() => {
+            const f = entityFootprint(entity, sem);
+            const out = [];
+            for (let ty = f.y; ty < f.y + f.h; ty += 1) for (let tx = f.x; tx < f.x + f.w; tx += 1) out.push([tx, ty]);
+            return out;
+        })();
+        return { name: ev.name, side: ev.side, mode: ev.mode, tiles };
+    });
 }
 
 /**

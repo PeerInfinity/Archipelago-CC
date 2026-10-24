@@ -19,7 +19,7 @@ import {
     solveForPage, stagingFromJson, TRUE_START_CHAIN, TRUE_START_SEGMENT, withItemFlag,
 } from './watchSolve.js';
 import {
-    parseTape, requiredTapeVersion, SEAM_BOOT_SPEC, PIN_NAMES,
+    ITEM_NAMES, ITEM_PROPERTIES, parseTape, requiredTapeVersion, SEAM_BOOT_SPEC, PIN_NAMES,
 } from './tapeFormat.js';
 import {
     createRunForStaging, createTapeStepper, solveStaging, stagingFromTape,
@@ -398,7 +398,7 @@ describe('⛓⛓⛓ THE DEFAULT BOOT IS THE TRUE GAME START (slice 5)', () => {
     });
 });
 
-describe('⛓⛓⛓ THE BOOT FORM v1 — sword and shield (slice 5)', () => {
+describe('⛓⛓⛓ THE BOOT FORM — the whole inventory (slice 5; v2 2026-10-23)', () => {
     /**
      * ⛔⛔ THE FIELD THE RULING NAMES DOES NOT EXIST WHERE IT SOUNDS LIKE IT
      * DOES. §12.4 says `save.hasSword`; a tape's version-6 `save` block is
@@ -407,56 +407,97 @@ describe('⛓⛓⛓ THE BOOT FORM v1 — sword and shield (slice 5)', () => {
      * property path — and the wire key is `seam.items.hasSword`. This row
      * pins the translation so the form cannot drift onto the other space.
      */
-    it('the form\'s two fields ARE seam spec rows, both key spaces', () => {
+    it('every form field IS a modelled seam spec row, both key spaces', () => {
         for (const f of ITEM_FORM_FIELDS) {
             const row = SEAM_BOOT_SPEC.find((s) => s.key === f.key);
             expect(row).toBeTruthy();
             expect(row.field).toBe(f.field);
-            expect(row.type).toBe('boolean');
+            expect(row.type).toBe(f.type);
             expect(row.modelled).toBe(true);
+            expect(f.field).toBe(`save.${ITEM_PROPERTIES[f.id].property}`);
         }
-        expect(ITEM_FORM_FIELDS.map((f) => f.id)).toEqual(['sword', 'shield']);
+        // ⛓ DERIVED from the item table, one row per item, in its order…
+        expect(ITEM_FORM_FIELDS.map((f) => f.id)).toEqual(ITEM_NAMES);
+        // …and pinned ON PURPOSE, so a new item is a decision, not a drift.
+        expect(ITEM_FORM_FIELDS.map((f) => `${f.id}:${f.type}`)).toEqual([
+            'sword:boolean', 'darksword:boolean', 'ghostsword:boolean', 'shield:boolean',
+            'darkshield:boolean', 'fire:boolean', 'wand:boolean', 'firewand:boolean',
+            'conch:boolean', 'feather:boolean', 'spear:boolean', 'darksuit:boolean',
+            'torch:boolean', 'health:int',
+        ]);
+        expect(ITEM_FORM_FIELDS.find((f) => f.id === 'health'))
+            .toMatchObject({ key: 'hits_max', field: 'save.hitsMax', min: 1, max: 99 });
     });
 
     it('⚠ reads THREE states — declared true, declared false, and undeclared', () => {
-        // `r7-act2-11` declares the sword true and the shield false; the
-        // page's own default declares no seam at all.
-        expect(itemFlagsOf(stagingOf('r8-solve-11'))).toEqual({ sword: true, shield: false });
+        // `r8-solve-11` declares every item (sword true, the rest false,
+        // hits_max 3); the page's own default declares no seam at all.
+        const declared = itemFlagsOf(stagingOf('r8-solve-11'));
+        expect(declared).toMatchObject({ sword: true, shield: false, darksuit: false, health: 3 });
+        expect(Object.values(declared).every((v) => v !== null)).toBe(true);
         expect(stagingOf(TRUE_START_SEGMENT).seam).toBeNull();
-        expect(itemFlagsOf(stagingOf(TRUE_START_SEGMENT)))
-            .toEqual({ sword: null, shield: null });
+        expect(Object.values(itemFlagsOf(stagingOf(TRUE_START_SEGMENT))))
+            .toEqual(ITEM_FORM_FIELDS.map(() => null));
     });
 
-    it('⛓ a tick WRITES a real declaration, and the block still PARSES', () => {
-        const before = stagingOf(TRUE_START_SEGMENT);
-        const after = withItemFlag(before, 'sword', true);
-        expect(itemFlagsOf(after)).toEqual({ sword: true, shield: null });
-        // ⛔ THE ROUND TRIP IS THE ROW. The page serialises the edited block
-        // into the textarea and re-parses it on the next keystroke, so a
-        // write the parser then refuses would disable the form it came from.
-        const back = stagingFromJson(JSON.parse(JSON.stringify(after)));
-        expect(itemFlagsOf(back)).toEqual({ sword: true, shield: null });
-        expect(back.seam).toEqual({ items: { hasSword: true } });
+    /**
+     * ⛓ EVERY FIELD, THREE STATES, THROUGH THE PAGE'S OWN ROUND TRIP: write
+     * → serialise → `stagingFromJson` → `itemFlagsOf`. A write the parser
+     * then refused would disable the form it came from.
+     */
+    for (const f of ITEM_FORM_FIELDS) {
+        const [on, off] = f.type === 'boolean' ? [true, false] : [f.max, f.min];
+        it(`⛓ ${f.id}: declared ${on}, declared ${off}, and undeclared round-trip`, () => {
+            const roundTrip = (staging) => stagingFromJson(JSON.parse(JSON.stringify(staging)));
+            const base = stagingOf(TRUE_START_SEGMENT);
+            for (const v of [on, off]) {
+                const back = roundTrip(withItemFlag(base, f.id, v));
+                const flags = itemFlagsOf(back);
+                expect(flags[f.id]).toBe(v);
+                // …and ONLY that field became declared.
+                expect(Object.entries(flags).filter(([, x]) => x !== null).map(([k]) => k))
+                    .toEqual([f.id]);
+            }
+            // ⚠ null UNDECLARES: the key goes, and an emptied group with it.
+            const cleared = roundTrip(withItemFlag(withItemFlag(base, f.id, on), f.id, null));
+            expect(itemFlagsOf(cleared)[f.id]).toBeNull();
+            expect(cleared.seam ?? {}).toEqual({});
+            // ⛔ and undeclaring one field of a FULLY declared block leaves the rest.
+            const full = stagingOf('r8-solve-11');
+            const one = roundTrip(withItemFlag(full, f.id, null));
+            expect({ ...itemFlagsOf(one), [f.id]: itemFlagsOf(full)[f.id] })
+                .toEqual(itemFlagsOf(full));
+            expect(itemFlagsOf(one)[f.id]).toBeNull();
+        });
+    }
+
+    it('⛔ an int outside its spec row is a NAMED refusal, not text the parser refuses later', () => {
+        const base = stagingOf(TRUE_START_SEGMENT);
+        for (const bad of [0, 100, 2.5, '4']) {
+            expect(() => withItemFlag(base, 'health', bad)).toThrow(/health .* must be an integer in 1\.\.99/);
+        }
     });
 
     it('⚠ writes ONLY the flag it was given — a partial seam stays partial', () => {
         /**
-         * A form that filled in the other twelve item flags would make the
-         * page claim state nobody measured — `seamToBlock`'s own law: "not
-         * declared" and "declared at the fresh-page value" are different
-         * segments and only one can be checked against a predecessor.
+         * A form that filled in the other flags would make the page claim
+         * state nobody measured — `seamToBlock`'s own law: "not declared"
+         * and "declared at the fresh-page value" are different segments and
+         * only one can be checked against a predecessor.
          */
         const both = withItemFlag(withItemFlag(stagingOf(TRUE_START_SEGMENT), 'sword', true),
             'shield', false);
         expect(both.seam).toEqual({ items: { hasSword: true, hasShield: false } });
+        expect(withItemFlag(stagingOf(TRUE_START_SEGMENT), 'health', 4).seam)
+            .toEqual({ hits_max: 4 });
     });
 
-    it('⛓ and it edits a DECLARED block in place, leaving the other twelve alone', () => {
+    it('⛓ and it edits a DECLARED block in place, leaving every other field alone', () => {
         const before = stagingOf('r8-solve-11');
         const after = withItemFlag(before, 'shield', true);
         expect(after.seam.items.hasShield).toBe(true);
-        expect(after.seam.items.hasSword).toBe(before.seam.items.hasSword);
-        expect(Object.keys(after.seam).sort()).toEqual(Object.keys(before.seam).sort());
+        expect({ ...after.seam.items, hasShield: false }).toEqual(before.seam.items);
+        expect({ ...after.seam, items: before.seam.items }).toEqual(before.seam);
         expect(after.boot).toEqual(before.boot);
         expect(after.rng).toEqual(before.rng);
     });
@@ -466,24 +507,26 @@ describe('⛓⛓⛓ THE BOOT FORM v1 — sword and shield (slice 5)', () => {
             .toThrow(/is not a boot-form field/);
     });
 
-    it('⛓⛓ THE FLAG REACHES THE RUN — a ticked sword really arms the player', () => {
-        /**
-         * ⛔ THE CONSUMER, ASSERTED IN THE DRIVEN SYSTEM (the graceful-
-         * fallback law). A checkbox that edited JSON nobody built a world
-         * from would pass every row above and change nothing — which is
-         * exactly what the SOLVE arm did with its whole textarea until this
-         * slice re-read it at press time.
-         */
-        const runFor = (staging) => createRunForStaging(solveStaging(staging), levelSource);
-        const off = runFor(stagingOf(TRUE_START_SEGMENT));
-        const on = runFor(withItemFlag(stagingOf(TRUE_START_SEGMENT), 'sword', true));
-        // ⚠ MEASURED AT `run.inventory` — the layer the seam block is APPLIED
-        // to, not at the world the census reads. The sword changes no
-        // placement in L0, so a census check would have been green either way
-        // and proved nothing about whether the flag arrived.
-        expect(off.inventory.hasSword).toBe(false);
-        expect(on.inventory.hasSword).toBe(true);
-        // …and only that flag: a form write is not a fresh inventory.
-        expect({ ...on.inventory, hasSword: false }).toEqual(off.inventory);
-    });
+    /**
+     * ⛓⛓ EVERY FIELD REACHES THE RUN. ⛔ THE CONSUMER, ASSERTED IN THE DRIVEN
+     * SYSTEM (the graceful-fallback law). A control that edited JSON nobody
+     * built a world from would pass every row above and change nothing —
+     * which is exactly what the SOLVE arm did with its whole textarea until
+     * slice 5 re-read it at press time. ⚠ MEASURED AT `run.inventory` — the
+     * layer the seam block is APPLIED to, not at the world the census reads:
+     * most items change no placement in L0, so a census check would be
+     * green either way and prove nothing about whether the field arrived.
+     */
+    const runFor = (staging) => createRunForStaging(solveStaging(staging), levelSource);
+    const off = runFor(stagingOf(TRUE_START_SEGMENT));
+    for (const f of ITEM_FORM_FIELDS) {
+        it(`⛓⛓ ${f.id} REACHES THE RUN — run.inventory.${ITEM_PROPERTIES[f.id].property}`, () => {
+            const prop = ITEM_PROPERTIES[f.id].property;
+            const v = f.type === 'boolean' ? !off.inventory[prop] : off.inventory[prop] + 1;
+            const on = runFor(withItemFlag(stagingOf(TRUE_START_SEGMENT), f.id, v));
+            expect(on.inventory[prop]).toBe(v);
+            // …and only that field: a form write is not a fresh inventory.
+            expect({ ...on.inventory, [prop]: off.inventory[prop] }).toEqual(off.inventory);
+        });
+    }
 });

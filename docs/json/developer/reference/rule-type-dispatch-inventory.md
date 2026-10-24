@@ -113,9 +113,9 @@ in beside them. Count read pattern at these sites: `rule.count` at root (JS) /
 **`count_true` is the AST-format semantic equivalent of AtLeast** ("at least N of
 conditions"). `world_generator/_rule_converters.py:214` (`_convert_count_true_logic`)
 already expands it (count==1→Or, count==n→And, middle band→`HasFromListUnique` for
-item lists or a `C(n,k)` Or-of-Ands expansion, with a `True_()` fallback for
->120 combos). This is the model for how AtLeast can be handled wherever only the
-AST path exists.
+item lists or a `C(n,k)` Or-of-Ands expansion up to 120 combos; above that it emits
+a native `AtLeast` — it used to fall back to `True_()`). This is the model for how
+AtLeast can be handled wherever only the AST path exists.
 
 ---
 

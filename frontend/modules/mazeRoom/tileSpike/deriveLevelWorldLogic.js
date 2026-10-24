@@ -14,7 +14,7 @@
  */
 
 import {
-    regionItems, reachUnder, regionTargets, ropeEvents, NOTHING_REACHED, reachedTarget, planToTarget, reachKey, reachInputs,
+    regionItems, reachUnder, regionTargets, cutEvents, NOTHING_REACHED, reachedTarget, planToTarget, targetCell, reachKey, reachInputs,
 } from './deriveTileLogic.js';
 import { MAZE_TILE_LIB } from './tileStep.js';
 import {
@@ -32,7 +32,7 @@ export function nativeReachUnder(world, inventory, { cap = 400000 } = {}) {
     start.inventory = new Set(inventory);
     // ⚖ never expect tanking a hit: an arrival in an armed lane reaches nothing.
     if (standsInArmedLane(w, start)) return NOTHING_REACHED;
-    const ropes = ropeEvents(w);
+    const ropes = cutEvents(w);
     const cuts = new Map();
     const have = start.inventory;
     const inputs = reachInputs(worldInputs(w).filter((input) => {
@@ -187,10 +187,12 @@ export function deriveEntryLogic(world, region, helpers, {
     if (items.length > maxItems) {
         throw new Error(`entry logic: ${items.length} items exceed the lattice cap ${maxItems}: ${items.join(', ')}`);
     }
-    const taken = (reach, t, set) => reachedTarget(reach, t) && !(t.exit && arrivalBlocked?.(t.exit, set));
+    const taken = (reach, t, set) => reachedTarget(reach, t, set, entered) && !(t.exit && arrivalBlocked?.(t.exit, set));
     const owns = (x, y) => !shared || sharedWorldOwnerAt(world, x, y) === region;
+    // ⛓ An event bound by the projection names the AP region whose location it is (`side`); a rope's goes by its cell.
+    const ownsTarget = (t) => (t.side ? t.side === region : owns(t.x, t.y));
     const exitAt = new Map([...world.exits.values()].map((e) => [`${e.x},${e.y}`, e]));
-    const targets = regionTargets(world).filter((t) => owns(t.x, t.y)).flatMap((t) => {
+    const targets = regionTargets(world).filter(ownsTarget).flatMap((t) => {
         if (t.kind === 'exit') {
             const exit = exitAt.get(`${t.x},${t.y}`);
             return exit?.targetRegion ? [{ ...t, exitName: exit.exitName ?? exit.exit_id, exit }] : [];
@@ -205,7 +207,7 @@ export function deriveEntryLogic(world, region, helpers, {
     for (const t of targets) {
         t.minimal = [];
         t.witnesses = [];
-        t.unreachable = !taken(full, t, items);
+        t.unreachable = !taken(full, t, t.event ? items.filter((i) => i !== t.event) : items);
     }
     const live = targets.filter((t) => !t.unreachable);
     const covered = (t, set) => t.minimal.some((m) => m.every((i) => set.includes(i)));
@@ -218,7 +220,7 @@ export function deriveEntryLogic(world, region, helpers, {
             for (const t of live) {
                 if (covered(t, set) || !taken(reach, t, set)) continue;
                 t.minimal.push(set);
-                t.witnesses.push({ inventory: set, plan: planToTarget(reach, t) });
+                t.witnesses.push({ inventory: set, plan: planToTarget(reach, t, set, entered), cell: targetCell(reach, t, set, entered) });
             }
         }
     }

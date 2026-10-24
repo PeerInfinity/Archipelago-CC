@@ -10,6 +10,7 @@ from ._template_option_effects import option_count_bindings
 from .constants import BOOLEAN_RULE_TYPES
 from .constants import BUILTIN_SETTINGS
 from .extractors import ExtractedData, HelperData
+from ._unknown_kind import UnknownRuleKindError
 from .rule_codegen import RuleCodeGenerator, HelperCodeGenerator, is_trivial_rule, ANALYZER_RUNTIME_TYPES
 from ._sanitization import sanitize_for_class_name, sanitize_for_identifier
 
@@ -478,6 +479,8 @@ def {func_name}(state: "CollectionState", player: int) -> bool:
     return {rule_expr}
 {func_name}._internal_function = True
 ''')
+                    except UnknownRuleKindError:
+                        raise  # loud, not the always-true fallback below (lossy mode never raises)
                     except Exception as e:
                         defeat_rule_functions.append(f'''
 def {func_name}(state: "CollectionState", player: int) -> bool:

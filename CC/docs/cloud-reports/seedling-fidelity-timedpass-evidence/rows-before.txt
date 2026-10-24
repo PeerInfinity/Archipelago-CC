@@ -1,0 +1,6 @@
+bounded vitest BEFORE (base a1457afd33): 93 files, 3134 tests, 3129 passed, 5 failed
+FAIL fidelityDrill.test.js > fidelity DRILL — D3: ROPESTANCE's interim retires behind the key ON: the stance (136,72) is walked, and the cut refuses naming drill@128,96 at t59 (the game's tick)
+FAIL fidelityDrill.test.js > fidelity DRILL — D3: ROPESTANCE's interim retires behind the key ON: the Sword from the L25 arrival plans what OFF plans
+FAIL fidelityRope.test.js > fidelity ROPE — D2: the clear-tag on a rope's own tag (the switch ON) L28 from the L25 arrival: {28,0} cut, 52 t
+FAIL fidelityRope.test.js > fidelity ROPE — D1: the verb's plans on the game (p4g), at 0 px rope-l28-cut: the solver plans the recorded tape today, and the model is the game on every tick
+FAIL seedlingRoomBodySkin.test.js > 1–2. golden body ops (frame CHOICE, not pixels) the drill-L88 tape: every tick's Drill ops

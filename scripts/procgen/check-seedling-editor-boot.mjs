@@ -45,6 +45,7 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { ITEM_FORM_FIELDS } from '../../frontend/modules/seedlingDemo/watchSolve.js';
 
 argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'check-seedling-editor-boot.mjs', kind: 'browser' });
@@ -163,13 +164,17 @@ console.log('\n## the default boot — no ?boot=, nothing typed');
 
 // ── ROW 2: the FORM, both directions, ending in the RUN ──────────────────
 
-console.log('\n## the boot form — two checkboxes over ONE parsed block');
+console.log('\n## the boot form — one control per inventory item, over ONE parsed block');
 {
     const { page, errors } = await open(`${PAGE}?source=solve`);
     await page.waitForFunction(() => document.querySelector('#bootBox')?.value?.length > 0);
 
-    check(await page.isVisible('#bootForm-sword') && await page.isVisible('#bootForm-shield'),
-        'the two checkboxes are mounted, generated from ITEM_FORM_FIELDS');
+    const mounted = await page.$$eval('#bootForm [data-boot-field]',
+        (els) => els.map((el) => `${el.dataset.bootField}:${el.type}`));
+    check(JSON.stringify(mounted) === JSON.stringify(ITEM_FORM_FIELDS.map(
+        (f) => `${f.id}:${f.type === 'boolean' ? 'checkbox' : 'number'}`)),
+        'one control per ITEM_FORM_FIELDS row is mounted — a checkbox per flag, a number for health',
+        mounted.join(' '));
     /**
      * ⚠ THE THIRD STATE IS ON SCREEN. `r7-act2-1` declares `seam: null`, so
      * neither flag is DECLARED — and "undeclared" and "declared false" are
@@ -198,6 +203,25 @@ console.log('\n## the boot form — two checkboxes over ONE parsed block');
     check(await page.$eval('#bootForm-sword', (el) => !el.checked && !el.indeterminate)
         && await page.$eval('#bootForm-shield', (el) => el.checked),
         '⛓⛓ …and TYPING in the box re-derives the boxes — one source of truth, both ways');
+
+    // ── the int field: a number writes hits_max, EMPTY undeclares it ──
+    await page.fill('#bootForm-health', '4');
+    await page.dispatchEvent('#bootForm-health', 'change');
+    const withHealth = await bootBlock(page);
+    check(withHealth.seam?.hits_max === 4,
+        '⛓ the health field WROTE seam.hits_max', JSON.stringify(withHealth.seam));
+    await page.fill('#bootForm-health', '0');
+    await page.dispatchEvent('#bootForm-health', 'change');
+    check((await bootBlock(page)).seam?.hits_max === 4
+        && await page.inputValue('#bootForm-health') === '4'
+        && /must be an integer in 1\.\.99/.test(await page.textContent('#bootForm')),
+        '⛔ …an out-of-range value is REFUSED by name and the field shows the block again');
+    await page.fill('#bootForm-health', '');
+    await page.dispatchEvent('#bootForm-health', 'change');
+    const cleared = await bootBlock(page);
+    check(cleared.seam?.hits_max === undefined && cleared.seam?.items?.hasShield === true,
+        '⚠ …and EMPTYING it undeclares hits_max, leaving the rest of the seam',
+        JSON.stringify(cleared.seam));
 
     // ── the refusal: a box that cannot parse disables the controls ──
     await page.fill('#bootBox', '{ not json');
@@ -263,6 +287,39 @@ console.log('\n## ⛔ the SOLVE button solves what is IN THE BOX (the slice\'s o
     check(/level 4 has 2 live exit\(s\)/.test(named) && /exit:64,16/.test(named),
         '⛓⛓ …and the block it SOLVED is the box\'s — the refusal names LEVEL 4\'s own exits',
         named.replace(/\s+/g, ' ').slice(0, 130));
+    check(errors.length === 0, 'no page errors — clean', errors.slice(0, 2).join(' | '));
+    await page.close();
+}
+
+// ── ROW 3b: ⛓⛓ A NEW CONTROL CHANGES THE SOLVE ───────────────────────────
+
+console.log('\n## ⛓⛓ a v2 control reaches the SOLVE — the conch on L11');
+{
+    /**
+     * ⛓ MEASURED in node before it was written (`solveForPage`, the page's own
+     * path): `r8-solve-11` toward the L3 exit (32,0) solves in 97 ticks as
+     * declared and in 95 with `canSwim` true — the conch, one of the controls
+     * v1 left out. A form that wrote the flag into a block nobody solved
+     * would print 97 twice.
+     */
+    const boot = `${TAPES}/r8-solve-11.json`;
+    const { page, errors } = await open(`${PAGE}?source=solve&boot=${boot}&goals=exit:32,0`);
+    await page.waitForFunction(() => document.querySelector('#bootBox')?.value?.length > 0);
+    const solve = async () => {
+        await page.evaluate(() => { window.__editorSolve = null; });
+        await page.click('#solveGo');
+        await page.waitForFunction(() => window.__editorSolve?.status, null, { timeout: 120000 });
+        return page.evaluate(() => window.__editorSolve);
+    };
+    const before = await solve();
+    await page.check('#bootForm-conch');
+    check((await bootBlock(page)).seam.items.canSwim === true,
+        'ticking the conch wrote seam.items.canSwim');
+    const after = await solve();
+    check(before.status === 'ok' && after.status === 'ok'
+        && before.tickCount === 97 && after.tickCount === 95,
+        '⛓⛓ …and the SOLVE changed — 97 ticks as declared, 95 with the conch',
+        `${before.status} ${before.tickCount} → ${after.status} ${after.tickCount}`);
     check(errors.length === 0, 'no page errors — clean', errors.slice(0, 2).join(' | '));
     await page.close();
 }

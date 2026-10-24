@@ -55,8 +55,9 @@ class WorldGenerator:
             canonical_seed: If set, generated world will place items in original locations when seed matches this value
             player_id: Player ID to extract from multiworld rules file (default: '1')
             apply_name_substitutions: If True, apply name_substitutions from the rules file (default: False)
-            lossy: If True, a rule kind with no codegen path becomes an always-true placeholder
-                (recorded in ``lossy_placeholders``) instead of raising UnknownRuleKindError
+            lossy: If True, a rule kind with no codegen path, or a helper name with no definition,
+                becomes an always-true placeholder (recorded in ``lossy_placeholders``) instead of
+                raising UnknownRuleKindError / UnknownHelperNameError
         """
         self.json_path = Path(json_path)
         self.game_name_override = game_name
@@ -65,7 +66,8 @@ class WorldGenerator:
         self.player_id = player_id
         self.apply_name_substitutions = apply_name_substitutions
         self.lossy = lossy
-        # '<site>:<kind>' -> count of always-true placeholders emitted (lossy mode only)
+        # '<site>:<kind>' (or '<site>:helper <name>') -> count of always-true placeholders
+        # emitted (lossy mode only)
         self.lossy_placeholders: Dict[str, int] = {}
         self.data: Optional[ExtractedData] = None
         self._output_dir: Optional[Path] = Path(output_dir) if output_dir else None
@@ -195,14 +197,19 @@ class WorldGenerator:
             dry_run: If True, only show what would be generated without writing
 
         Raises:
-            UnknownRuleKindError: a rule kind has no codegen path (unless ``lossy``)
+            UnknownRuleKindError: a rule kind has no codegen path, or (UnknownHelperNameError) a
+                helper name has no definition (unless ``lossy``)
         """
-        with lossy_codegen(self.lossy) as record:
+        if self.data is None:
+            self.load()
+        assert self.data is not None
+        with lossy_codegen(self.lossy, game=self.data.metadata.game_name) as record:
             self._generate(dry_run)
         self.lossy_placeholders = dict(record)
         if record:
             logger.warning(
-                "LOSSY: always-true placeholders for rule kinds with no codegen path: "
+                "LOSSY: always-true placeholders for rule kinds with no codegen path "
+                "and helper names with no definition: "
                 + ", ".join(f"{k} x{n}" for k, n in sorted(record.items())))
 
     def _generate(self, dry_run: bool) -> None:

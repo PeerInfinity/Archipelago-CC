@@ -14,7 +14,7 @@ import logging
 import sys
 from typing import Any, Dict, Optional
 
-from ..utils import is_simple_value, make_json_serializable
+from ..utils import is_simple_value, make_json_serializable, PLAYER_PARAMS_KEY
 from ..closure_function_analyzer import ClosureFunctionAnalyzer, BunnyRulePatternMatcher
 from .base import BaseVisitorMixin
 
@@ -454,6 +454,10 @@ class CallVisitorMixin(BaseVisitorMixin):
                                         from exporter.games.base import BaseGameExportHandler
                                         size = BaseGameExportHandler.count_rule_nodes(recursive_result)
                                         if size > threshold:
+                                            # A same-named helper with a DIFFERENT body (two region builders each defining
+                                            # their own nested `def`) must not overwrite the cached one: inline this one.
+                                            if self._cached_helper_differs(actual_func_name, recursive_result):
+                                                return recursive_result
                                             logging.debug(f"Helper {actual_func_name} has {size} nodes (threshold {threshold}), preserving as helper")
                                             # Register the helper for export with param_mappings detection
                                             self._register_helper_usage(actual_func_name, resolved_func, args_with_nodes)
@@ -464,7 +468,8 @@ class CallVisitorMixin(BaseVisitorMixin):
                                             # result would have specific argument values baked in, which is wrong.
                                             if hasattr(self.game_handler, 'cache_analyzed_helper') and hasattr(resolved_func, '__code__'):
                                                 all_params = resolved_func.__code__.co_varnames[:resolved_func.__code__.co_argcount]
-                                                extra_params = [p for p in all_params if p not in ('state', 'player', 'world')]
+                                                extra_params = [p for p in all_params if p not in ('state', 'player', 'world')
+                                                                                         and p not in param_mapping.get(PLAYER_PARAMS_KEY, ())]
                                                 if not extra_params:
                                                     # No extra params - safe to cache the fully-resolved definition
                                                     self.game_handler.cache_analyzed_helper(actual_func_name, recursive_result)
@@ -589,6 +594,10 @@ class CallVisitorMixin(BaseVisitorMixin):
                                   from exporter.games.base import BaseGameExportHandler
                                   size = BaseGameExportHandler.count_rule_nodes(recursive_result)
                                   if size > threshold:
+                                      # A same-named helper with a DIFFERENT body (two region builders each defining
+                                      # their own nested `def`) must not overwrite the cached one: inline this one.
+                                      if self._cached_helper_differs(closure_func_name, recursive_result):
+                                          return recursive_result
                                       logging.debug(f"Helper {closure_func_name} has {size} nodes (threshold {threshold}), preserving as helper")
                                       # Register the helper for export with param_mappings detection
                                       self._register_helper_usage(closure_func_name, actual_func, args_with_nodes)
@@ -599,7 +608,8 @@ class CallVisitorMixin(BaseVisitorMixin):
                                       # result would have specific argument values baked in, which is wrong.
                                       if hasattr(self.game_handler, 'cache_analyzed_helper') and hasattr(actual_func, '__code__'):
                                           all_params = actual_func.__code__.co_varnames[:actual_func.__code__.co_argcount]
-                                          extra_params = [p for p in all_params if p not in ('state', 'player', 'world')]
+                                          extra_params = [p for p in all_params if p not in ('state', 'player', 'world')
+                                                                                   and p not in param_mapping.get(PLAYER_PARAMS_KEY, ())]
                                           if not extra_params:
                                               # No extra params - safe to cache the fully-resolved definition
                                               self.game_handler.cache_analyzed_helper(closure_func_name, recursive_result)

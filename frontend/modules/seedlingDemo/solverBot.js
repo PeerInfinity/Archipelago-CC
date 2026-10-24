@@ -223,7 +223,9 @@ function switchGatedRow(table, key, get) {
 // ⛓ seedling-fidelity-bosskills D2 — the King of Fire's policy (the run steps the fight, `lavaBoss.js`).
 import { LAVA_BOSS_POLICY_VARIANTS, createLavaBossPolicy, lavaBossPolicyStep } from './lavaBossPolicy.js';
 // ⛓ seedling-fidelity-bosskills D3 — the Tentacled Beast's policy (the run steps the fight, `tentacleBeast.js`).
-import { TENTACLE_BEAST_POLICY_VARIANTS, createTentacleBeastPolicy, tentacleBeastPolicyStep } from './tentacleBeastPolicy.js';
+import {
+    TENTACLE_BEAST_POLICY_VARIANTS, createTentacleBeastPolicy, tentacleBeastPolicyStep, tentacleBeastSettleStep,
+} from './tentacleBeastPolicy.js';
 
 /**
  * ⛓⛓⛓ THE TRANSIT PROBE'S OWN NON-VACUITY, AS A FUNCTION.
@@ -16224,13 +16226,19 @@ function resolveTentacleBeastStrategy(run, obstacle) {
  * game adds at the end of "dying" — the report `{57,0}` is written at its start.
  */
 const TENTACLE_BEAST_FIGHT_BOUND = 6000;
-function playTentacleBeastPolicy(r, perTick, params, ctx) {
+/** ⛓ HITLESS: the settle's bound — a whirlpool lives 150 + 60 + 30 updates (`Whirlpool.as`), and none spawns after. */
+const TENTACLE_BEAST_SETTLE_BOUND = 300;
+function playTentacleBeastPolicy(r, perTick, params, ctx, { settle = false } = {}) {
     const mem = createTentacleBeastPolicy(params);
     const deathsBefore = (r.ledger('playerHits') ?? []).filter((h) => h.died).length;
+    // ⛓ fidelity HITLESS: the landed `Player.hit`s of this play (read by the ranking under `tentacleHitlessFirst`).
+    const hitsBefore = (r.ledger('playerHits') ?? []).length;
+    const hitsNow = () => (r.ledger('playerHits') ?? []).length - hitsBefore;
     for (let spent = 0; spent <= TENTACLE_BEAST_FIGHT_BOUND; spent += 1) {
         const view = r.entities('tentacleBeastFight');
         if (view === null) return { ok: false, why: `the room (level ${r.level}) holds no fight any more`, spent };
-        if (view.mouth) return { ok: true, spent, report: view.report, log: mem.log };
+        if (view.mouth && settle) return settleTentacleWhirlpools(r, perTick, mem, ctx, { spent, hitsNow, deathsBefore });
+        if (view.mouth) return { ok: true, spent, report: view.report, log: mem.log, hits: hitsNow() };
         const held = tentacleBeastPolicyStep(mem, { view, p: r.state, slashing: r.progress('slashInfo').state.slashing });
         if (perTick) perTick.push(held);
         const { transition } = r.advance(held);
@@ -16243,6 +16251,52 @@ function playTentacleBeastPolicy(r, perTick, params, ctx) {
     }
     return { ok: false, why: `the mouth is not open after ${TENTACLE_BEAST_FIGHT_BOUND} ticks`, spent: TENTACLE_BEAST_FIGHT_BOUND };
 }
+/**
+ * ⛓ fidelity HITLESS — THE SETTLE (`tentacleHitlessFirst` only): the mouth stands, and the whirlpools the beast left
+ * still pull and drown. Hold out of their keep-out (`tentacleBeastSettleStep`) until none is alive, so the walk to the
+ * mouth that follows crosses none (measured: sweep leg 494's ON variant left one alive, and the walk drowned in it at
+ * t928). `spent` counts the settle too; a death or a crossing during it is the fight's.
+ */
+function settleTentacleWhirlpools(r, perTick, mem, ctx, { spent, hitsNow, deathsBefore }) {
+    let view = r.entities('tentacleBeastFight');
+    const report = view.report;
+    let settled = 0;
+    for (; view !== null && view.whirlpools.length > 0; settled += 1) {
+        if (settled >= TENTACLE_BEAST_SETTLE_BOUND) {
+            return { ok: false, why: `whirlpools still alive ${TENTACLE_BEAST_SETTLE_BOUND} ticks after the mouth opened`,
+                spent: spent + settled };
+        }
+        const held = tentacleBeastSettleStep(mem, { view, p: r.state });
+        if (perTick) perTick.push(held);
+        const { transition } = r.advance(held);
+        if (transition) {
+            fail(`${ctx.what}: the run crossed from level ${transition.from_level} to ${transition.to_level} while `
+                + 'settling the Tentacled Beast\'s whirlpools. The fight is per visit.');
+        }
+        const deaths = (r.ledger('playerHits') ?? []).filter((h) => h.died).length;
+        if (deaths > deathsBefore) return { ok: false, why: `the player died settling at spent ${spent + settled}`, spent: spent + settled };
+        view = r.entities('tentacleBeastFight');
+    }
+    return { ok: true, spent: spent + settled, settled, report, log: mem.log, hits: hitsNow() };
+}
+/**
+ * ⛓ fidelity HITLESS — the ranking of the variants a fork played (`tried`, in `TENTACLE_BEAST_POLICY_VARIANTS` order):
+ * of those that opened the mouth without a death (`ok`), no hit first, then the fewest hits, then the fewest ticks
+ * (`spent`), then list order. Null when none is `ok`. `rule` says which test decided ('hitless' | 'fewest-hits'),
+ * `tried` how many variants were played and `hitless` how many of them took no hit.
+ */
+export function chooseTentacleVariant(tried) {
+    let best = null;
+    for (const [i, t] of tried.entries()) {
+        if (!t.ok) continue;
+        if (best === null || t.hits < best.hits || (t.hits === best.hits && t.spent < best.spent)) {
+            best = { variant: i, hits: t.hits, spent: t.spent };
+        }
+    }
+    if (best === null) return null;
+    return { rule: best.hits === 0 ? 'hitless' : 'fewest-hits', variant: best.variant, hits: best.hits,
+        tried: tried.length, hitless: tried.filter((t) => t.ok && t.hits === 0).length };
+}
 function execTentacleBeast(run, perTick, resolved, ctx) {
     const obstacle = { kind: 'solid', id: resolved.boss, tag: 'tentaclebeast' };
     if (resolved.held === false) {
@@ -16252,7 +16306,40 @@ function execTentacleBeast(run, perTick, resolved, ctx) {
     const from = perTick.length;
     const tried = [];
     let params = TENTACLE_BEAST_POLICY_VARIANTS[0];
-    if (typeof ctx.fork === 'function') {
+    let choice = null;
+    if (typeof ctx.fork === 'function' && CONTACT_FIDELITY.tentacleHitlessFirst) {
+        /**
+         * ⛓⛓ fidelity HITLESS (`CONTACT_FIDELITY.tentacleHitlessFirst`; OFF the first-without-a-death loop below,
+         * byte-identical). Every variant is played on its own fork; among those that open the mouth without a death
+         * the committed one takes no hit if any does, else the fewest hits, then the fewest ticks, then list order.
+         * A hit stays acceptable when no variant is hitless — `choice` says which rule picked it, `tried` holds each
+         * variant's hits.
+         */
+        params = null;
+        for (const v of TENTACLE_BEAST_POLICY_VARIANTS) {
+            const f = ctx.fork();
+            if (!f) break;
+            let r;
+            try {
+                r = playTentacleBeastPolicy(f, null, v, ctx, { settle: true });
+            } catch (e) {
+                // A whirlpool's drown (`Player.drown()` from outside the player) is a DEATH the run refuses by name
+                // rather than steps (`levelRun.stepTentacleRuntimeNow`, bosskills D3): on a fork it rejects that
+                // variant as a death does. Playing every variant meets it more often than the first-without-a-death
+                // loop did, where it ended the whole solve. Anything else still throws.
+                if (!/calls `Player\.drown\(\)` from outside the player/.test(String(e?.message))) throw e;
+                r = { ok: false, why: `the player drowned: ${e.message}`, spent: null };
+            }
+            tried.push({ params: { ...v }, ok: r.ok, spent: r.spent, why: r.why ?? null, hits: r.hits ?? null });
+        }
+        choice = chooseTentacleVariant(tried);
+        if (choice === null) {
+            throw new SolverRefusal(`${ctx.what}: no Tentacled Beast policy variant opens the mouth of ${resolved.boss} `
+                + `without a death on a fork of this run — ${tried.map((t) => `${JSON.stringify(t.params)}: ${t.why}`).join('; ')}`,
+            { obstacle });
+        }
+        params = TENTACLE_BEAST_POLICY_VARIANTS[choice.variant];
+    } else if (typeof ctx.fork === 'function') {
         params = null;
         for (const v of TENTACLE_BEAST_POLICY_VARIANTS) {
             const f = ctx.fork();
@@ -16267,13 +16354,18 @@ function execTentacleBeast(run, perTick, resolved, ctx) {
             { obstacle });
         }
     }
-    const r = playTentacleBeastPolicy(run, perTick, params, ctx);
+    const r = playTentacleBeastPolicy(run, perTick, params, ctx, { settle: choice !== null });
     if (!r.ok) {
         throw new SolverRefusal(`${ctx.what}: the Tentacled Beast policy ${JSON.stringify(params)} did not open the `
             + `mouth of ${resolved.boss}: ${r.why}`, { obstacle });
     }
+    if (choice !== null && r.hits !== choice.hits) {
+        // ⛓ HITLESS: the run plays what its fork played (the fork is the run's own replay); a different count is a bug.
+        throw new SolverRefusal(`${ctx.what}: the Tentacled Beast policy ${JSON.stringify(params)} took ${r.hits} hit(s) on `
+            + `the run where its fork took ${choice.hits}`, { obstacle });
+    }
     return { verb: 'tentaclebeast', target: resolved.boss, from, ticks: perTick.length - from, params: { ...params },
-        tried, report: r.report };
+        tried, report: r.report, ...(choice !== null ? { choice } : {}) };
 }
 
 function execFight(run, perTick, resolved, ctx) {
@@ -18517,7 +18609,11 @@ function execDrillKillsFirst(run, perTick, resolved, ctx) {
          * 0). The cut is planned as before — its stance may be one the drill never reaches (Fire from the L25 arrival
          * is: `ropestance-l28-fire`), and where it is not, the cut's own refusal names the drill (`execRopeCut`).
          */
-        if (!kw) break;
+        if (!kw) {
+            // ⛓ fidelity TIMEDPASS D2: no weapon kills a drill — a timed walk past them, searched and certified.
+            if (CONTACT_FIDELITY.drillTimedPass) kills.push(execDrillTimedPass(run, perTick, resolved, woken, ctx));
+            break;
+        }
         const whys = [];
         let done = null;
         for (const d of [...woken].sort((a, b) => Math.hypot(a.x - run.state.x, a.y - run.state.y)
@@ -18534,6 +18630,326 @@ function execDrillKillsFirst(run, perTick, resolved, ctx) {
         kills.push(done);
     }
     return kills.length > 0 ? kills : null;
+}
+
+/**
+ * ⛓⛓ fidelity TIMEDPASS (wave 27) — A WALK PAST A HOPPING DRILL THE RUN CANNOT KILL (`CONTACT_FIDELITY.drillTimedPass`,
+ * OFF).
+ *
+ * ⚖ The user (2026-10-23): *"Keep Fire; timed pass."* Fire cannot kill a drill (DRILLKILL W0), and from the L26 arrival
+ * every fire stance for `rope@160,64` lies past `drill@80,96` and within `drill@128,96`'s run range. What a pass has to
+ * beat, from `Drill.as` (transcribed in `drill.js`, witnessed at 0 px):
+ *   · THE HOP — from "sit" only, toward a player within `runRange` (48) on a clear "Solid" line: ±16 on each axis on
+ *     which the player is more than `Tile.w/2` (8) away. Awake, a drill reaches "sit" every 15 ticks ("drill" 5 frames
+ *     and "undrill" 4 at rate 20: 7 + 7 ticks, then the check) — measured on the model, not the 27 the frame counts at
+ *     60 fps would give.
+ *   · THE CONTACT — `Enemy.hitPlayer`, on EVERY tick the drill is not dying and its `hitsTimer` is out: its 10x10 box
+ *     (origin 5,5) against the player's 4x5 (origin 2,2), read where the previous tick left the player (the drills
+ *     update first). There is no timing window in the contact itself: a pass is a POSITION question at each hop. A
+ *     player 8-9 px off on an axis when the drill checks is jumped over — the drill lands 7-8 px past, outside the
+ *     boxes' 7 px overlap (DRILLKILL's `drillkill-l28-fire-l26`: 8.05 in front, then 7.95 behind) — and a player who
+ *     then keeps walking away gains ~2 px a cycle (1.2 px a tick against 16 per 15).
+ * A waypoint walk cannot hold a 2 px band, so the pass is SEARCHED tick by tick on the run's own forecast: the player by
+ * `previewStepper` (the drive's stepper), every drill by `corridorBodyForecast({drillPass: true})` (`stepDrill` /
+ * `stepDrillGraphic` on clones, the camera and its shake band stepped with them; a sample the band leaves `uncertain` is
+ * pruned, ⚖ never model the cosmetic RNG). A beam over the nine key sets, deduplicated per tick, ranked by the floor
+ * distance to the stance and kept diverse per (8 px cell, drill configuration) so that waiting survives rushing; a state
+ * whose forecast reads a drill contact, a fall, a crossing, water or lava is dropped. The goal is the cut's stance
+ * (`hasArrived`) with `tail` standing ticks contact-free (the cut's settle, press and pull). The found walk is then
+ * CERTIFIED on a fork of the run (`ctx.fork`) with the cut itself and the clear-tag's confirmation wait (`confirmTail`),
+ * against the run's own `playerHits` — and only then played. Without a fork it is played as found, and any hit refuses
+ * by name. The cut is then planned from that stance (the caller moves it to the head of the order).
+ */
+export const DRILL_TIMED_PASS = Object.freeze({
+    /** States kept per tick of the search. */
+    beam: 400,
+    /** At most this many per (8 px cell, drill configuration) group, best first. */
+    perGroup: 2,
+    /** Ticks searched before the pass is refused. */
+    horizon: 400,
+    /** Contact-free standing ticks the search asks at the stance: the cut's press and pull (L25's fire cut: 4 + the press). */
+    tail: 14,
+    /** The certificate's bound on idle ticks after the cut until its write lands (the clear-tag's `waitForWrite`). */
+    confirmTail: 8,
+    /** The search's bound on expanded states. */
+    maxExpanded: 250000,
+    /** The search stops when its best distance to the stance has not improved for this many ticks. */
+    stall: 100,
+    /** …and this many ticks after its first arrival with no arrival whose stand holds: three of a drill's 15-tick cycles. */
+    arrivalStall: 45,
+});
+
+/** The nine key sets a pass is searched over, in a fixed order (the beam's ties keep it). */
+const DRILL_PASS_KEYS = Object.freeze([[], ['right'], ['left'], ['up'], ['down'], ['right', 'up'], ['right', 'down'],
+    ['left', 'up'], ['left', 'down']].map((k) => new Set(k)));
+
+/**
+ * The floor distance field to `stance`: tiles 4-connected over `isWalkableTile` (the drills' own cells admitted), and
+ * a state's estimate the best of (a lower-field neighbour's distance + the straight line to its centre).
+ */
+function drillPassDistance(run, stance, opts) {
+    const tx0 = Math.floor(stance.x / TILE_SIZE);
+    const ty0 = Math.floor(stance.y / TILE_SIZE);
+    const drillCells = new Set(liveDrills(run).map((d) => `${Math.floor(d.x / TILE_SIZE)},${Math.floor(d.y / TILE_SIZE)}`));
+    const W = Number.isFinite(run.world.width) ? run.world.width : 64;
+    const H = Number.isFinite(run.world.height) ? run.world.height : 64;
+    const floor = (tx, ty) => tx >= 0 && ty >= 0 && tx < W && ty < H
+        && (drillCells.has(`${tx},${ty}`) || isWalkableTile(run.world, tx, ty, null, opts));
+    const dist = new Map([[`${tx0},${ty0}`, 0]]);
+    const queue = [[tx0, ty0]];
+    for (let i = 0; i < queue.length; i += 1) {
+        const [x, y] = queue[i];
+        for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+            const k = `${x + dx},${y + dy}`;
+            if (dist.has(k) || !floor(x + dx, y + dy)) continue;
+            dist.set(k, dist.get(`${x},${y}`) + 1);
+            queue.push([x + dx, y + dy]);
+        }
+    }
+    return (p) => {
+        const tx = Math.floor(p.x / TILE_SIZE);
+        const ty = Math.floor(p.y / TILE_SIZE);
+        const d = dist.get(`${tx},${ty}`);
+        if (d === undefined) return Infinity;
+        if (d === 0) return Math.hypot(p.x - stance.x, p.y - stance.y);
+        let best = Infinity;
+        for (let dx = -1; dx <= 1; dx += 1) {
+            for (let dy = -1; dy <= 1; dy += 1) {
+                const dn = dist.get(`${tx + dx},${ty + dy}`);
+                if (dn === undefined || dn >= d) continue;
+                const v = dn === 0 ? Math.hypot(p.x - stance.x, p.y - stance.y)
+                    : dn * TILE_SIZE + Math.hypot(p.x - ((tx + dx) * TILE_SIZE + TILE_SIZE / 2),
+                        p.y - ((ty + dy) * TILE_SIZE + TILE_SIZE / 2));
+                if (v < best) best = v;
+            }
+        }
+        return best;
+    };
+}
+
+/** Why a previewed player state cannot be part of a pass, or null. */
+function drillPassStateRefused(st, inventory) {
+    if (st.transition) return 'crosses';
+    if (st.fall) return 'falls';
+    if (st.hazard?.inLava && !inventory?.hasDarkSuit) return 'lava';
+    if (st.hazard?.inWater && !inventory?.canSwim) return 'water';
+    return null;
+}
+
+/** One forecast step's verdict: a drill (or flyer) contact, or a body the shake band leaves uncertain. */
+function drillPassRowsRefused(rows) {
+    return rows.some((r) => r.contact || r.uncertain);
+}
+
+/**
+ * SEARCH a no-contact walk from the run's state to `stance` with `tail` contact-free standing ticks there (see
+ * `DRILL_TIMED_PASS`). Pure: the run is only read (its forecast and stepper). Returns `{keys, ticks, expanded}` or
+ * `{why, expanded}`.
+ */
+function searchDrillTimedPass(run, stances, opts, P = DRILL_TIMED_PASS) {
+    const fc0 = run.corridorBodyForecast?.({ drillPass: true }) ?? null;
+    if (fc0 === null) return { why: 'the run hands no drill forecast (no stepped drill, or noclip)', expanded: 0 };
+    const stepper = run.previewStepper();
+    const inventory = run.progress('inventory');
+    const fields = stances.map((a) => drillPassDistance(run, a, opts));
+    // The stances still searched for: one whose arrivals have not stood for `arrivalStall` ticks drops out.
+    const active = new Set(stances.map((a, i) => i));
+    const firstArrival = new Map();
+    const stalled = [];
+    const h = (p) => Math.min(...[...active].map((i) => fields[i](p)));
+    const at = (st) => [...active].find((i) => hasArrived(st, stances[i], DEFAULT_TOLERANCE)) ?? -1;
+    const NONE = DRILL_PASS_KEYS[0];
+    const stepSafe = (st, k) => {
+        try {
+            const q = stepper(st, k);
+            return drillPassStateRefused(q, inventory) ? null : q;
+        } catch (e) {
+            if (!(e instanceof PhysicsV2Error)) throw e;
+            return null;
+        }
+    };
+    const tailHolds = (st, fc, stance) => {
+        const f = fc.fork();
+        let s = st;
+        for (let i = 0; i < P.tail; i += 1) {
+            if (drillPassRowsRefused(f.step(s))) return false;
+            s = stepSafe(s, NONE);
+            if (s === null || !hasArrived(s, stance, DEFAULT_TOLERANCE)) return false;
+        }
+        return true;
+    };
+    const drillKey = (fc, fine) => fc.drills().map((d) => (fine
+        ? `${d.x},${d.y},${d.anim},${d.sprite?.index ?? ''},${(d.sprite?.timer ?? 0).toFixed(4)},${d.hitsTimer}`
+        : `${d.x},${d.y},${d.anim}`)).join('|');
+    let layer = [{ st: { ...run.state }, fc: fc0, keys: [] }];
+    let expanded = 0;
+    let deaths = 0;
+    let best = Infinity;
+    let bestAt = 0;
+    for (let t = 0; t < P.horizon; t += 1) {
+        if (t % 25 === 0 && fineDeadlineReached('drill-pass')) return { why: `the deadline at search tick ${t}`, expanded };
+        const next = new Map();
+        for (const n of layer) {
+            if (drillPassRowsRefused(n.fc.step(n.st))) { deaths += 1; continue; }
+            expanded += 1;
+            const dk = drillKey(n.fc, true);
+            for (const k of DRILL_PASS_KEYS) {
+                const st = stepSafe(n.st, k);
+                if (st === null) continue;
+                const key = `${Math.round(st.x * 2)},${Math.round(st.y * 2)},${Math.round(st.vx * 10)},`
+                    + `${Math.round(st.vy * 10)}|${dk}`;
+                if (next.has(key)) continue;
+                next.set(key, { st, fc: n.fc, parent: n, k, score: h(st) });
+            }
+        }
+        if (expanded > P.maxExpanded) return { why: `${expanded} states expanded by search tick ${t}`, expanded };
+        const ranked = [...next.values()].filter((c) => Number.isFinite(c.score)).sort((a, b) => a.score - b.score);
+        const per = new Map();
+        const kept = [];
+        for (const c of ranked) {
+            const g = `${Math.floor(c.st.x / 8)},${Math.floor(c.st.y / 8)}|${drillKey(c.fc, false)}`;
+            const m = per.get(g) ?? 0;
+            if (m >= P.perGroup) continue;
+            per.set(g, m + 1);
+            kept.push(c);
+            if (kept.length >= P.beam) break;
+        }
+        layer = kept.map((c) => ({ st: c.st, fc: c.fc.fork(), keys: [...c.parent.keys, c.k] }));
+        if (kept.length > 0 && kept[0].score < best - 1e-9) {
+            best = kept[0].score;
+            bestAt = t;
+        }
+        if (layer.length === 0) {
+            return { why: `every walk meets a drill by search tick ${t + 1} (${deaths} state(s) contacted)`, expanded };
+        }
+        const arrived = layer.map((n) => ({ n, i: at(n.st) })).filter((x) => x.i >= 0);
+        for (const x of arrived) if (!firstArrival.has(x.i)) firstArrival.set(x.i, t);
+        const done = arrived.find((x) => tailHolds(x.n.st, x.n.fc, stances[x.i]));
+        if (done) return { keys: done.n.keys, ticks: done.n.keys.length, stance: done.i, expanded, stalled };
+        for (const [i, t0] of firstArrival) {
+            if (!active.has(i) || t - t0 < P.arrivalStall) continue;
+            active.delete(i);
+            stalled.push({ x: stances[i].x, y: stances[i].y, why: `walks arrive from search tick ${t0 + 1}, and none in `
+                + `${P.arrivalStall} ticks stands ${P.tail} ticks there contact-free` });
+            // the beam re-ranks on the stances left (its best distance is theirs from here)
+            best = Infinity;
+            bestAt = t;
+        }
+        if (active.size === 0) {
+            return { why: stalled.map((x) => `(${x.x},${x.y}): ${x.why}`).join(' | '), expanded };
+        }
+        if (t - bestAt >= P.stall) {
+            return { why: `the search's best walk came within ${best.toFixed(1)} px of a stance at search tick ${bestAt} `
+                + `and no nearer in ${P.stall} more (no contact-free arrival with a ${P.tail}-tick stand)`, expanded };
+        }
+    }
+    return { why: `no walk reaches a stance contact-free with a ${P.tail}-tick stand within ${P.horizon} ticks `
+        + `(beam ${P.beam})`, expanded };
+}
+
+/**
+ * CERTIFY a found pass on a fork (`ctx.fork`): the keys, then the cut itself from that stance (`execRopeCutOnce`, the
+ * order narrowed to it), then `confirmTail` idle ticks — against the fork's own `playerHits` and `ropePulls`. Returns
+ * null when it holds, else why.
+ */
+function certifyDrillTimedPass(f, keys, resolved, a, ctx) {
+    const hits = () => (f.ledger('playerHits') ?? []).length;
+    const h0 = hits();
+    for (let i = 0; i < keys.length; i += 1) {
+        const { transition } = f.advance(keys[i]);
+        if (transition) return `the fork crossed to level ${transition.to_level} at pass tick ${i}`;
+        if (hits() !== h0) {
+            const h = (f.ledger('playerHits') ?? []).at(-1);
+            return `the fork's player was hit at pass tick ${i} (source ${h?.source ?? '?'}${h?.id ? ` ${h.id}` : ''})`;
+        }
+    }
+    if (!hasArrived(f.state, a, DEFAULT_TOLERANCE)) {
+        return `the fork ended the pass at (${f.state.x.toFixed(2)},${f.state.y.toFixed(2)}), not at (${a.x},${a.y})`;
+    }
+    const scratch = [];
+    try {
+        execRopeCutOnce(f, scratch, { ...resolved, approach: [a] }, {
+            what: `${ctx.what} (pass certificate)`, goal: ctx.goal,
+            walkTo: () => { throw new SolverRefusal('the certificate does not walk'); },
+            equip: (slot) => f.equipNow(slot),
+        });
+    } catch (e) {
+        if (!(e instanceof SolverRefusal)) throw e;
+        return `the cut from (${a.x},${a.y}) refused on the fork: ${e.message.split('\n')[0].slice(0, 200)}`;
+    }
+    const pull = (f.ledger('ropePulls') ?? []).find((p) => p.id === resolved.rope) ?? null;
+    if (!pull) return `the fork's cut pulled no ${resolved.rope}`;
+    // The clear-tag's `waitForWrite`: idle until the write has landed (`clearTagLanded`'s generic arm: past its tick).
+    for (let i = 0; i < DRILL_TIMED_PASS.confirmTail && !(f.ticksCompleted > pull.t); i += 1) f.advance(new Set());
+    if (hits() !== h0) {
+        const h = (f.ledger('playerHits') ?? []).at(-1);
+        return `the fork's player was hit during the cut (source ${h?.source ?? '?'}${h?.id ? ` ${h.id}` : ''}, run tick `
+            + `${h?.t ?? '?'})`;
+    }
+    return null;
+}
+
+/**
+ * Executor: a timed pass to one of the cut's stances (see `DRILL_TIMED_PASS`). `woken` names the drills the planned
+ * walk would wake. Tries the order's stances in turn; the first whose pass is found (and certified, with a fork) is
+ * played. Returns the pass record (`verb: 'drill-pass'`, `stance` the approach row the cut must use) or throws a
+ * `SolverRefusal` naming every stance's reason (`obstacle: {kind: 'drill', id}`, the first woken drill).
+ */
+function execDrillTimedPass(run, perTick, resolved, woken, ctx) {
+    const from = perTick.length;
+    const stances = resolved.approach ?? (resolved.stance ? [resolved.stance] : []);
+    const opts = solverPlanOpts(run, senseContacts(run));
+    const tried = [];
+    let found = null;
+    // One search per stance, in the cut's own order (a joint beam aimed at the nearest stance chases the drills into a
+    // configuration the farther stances cannot stand in — measured: L26's (152,56) pass, found alone at t121, is lost).
+    for (const a of stances) {
+        const r = searchDrillTimedPass(run, [{ x: a.x, y: a.y }], opts);
+        if (!r.keys) { tried.push({ stance: { x: a.x, y: a.y }, why: r.why, expanded: r.expanded }); continue; }
+        const f = typeof ctx.fork === 'function' ? ctx.fork() : null;
+        const cert = f ? certifyDrillTimedPass(f, r.keys, resolved, a, ctx) : null;
+        if (cert !== null) {
+            tried.push({ stance: { x: a.x, y: a.y }, why: `found (${r.ticks} t) but not certified: ${cert}`,
+                expanded: r.expanded });
+            continue;
+        }
+        found = { a, r, certified: f !== null };
+        break;
+    }
+    const names = woken.map((d) => d.id).join(', ');
+    if (found === null) {
+        throw new SolverRefusal(`${ctx.what}: the walk to the cut's stance wakes [${names}], this run holds no weapon `
+            + 'that kills a drill (FIRE CANNOT), and no timed pass reaches a stance — '
+            + `${tried.map((x) => `(${x.stance.x},${x.stance.y}): ${x.why}`).join(' | ')}`,
+        { goal: ctx.goal, obstacle: { kind: 'drill', id: woken[0].id } });
+    }
+    const hitsBefore = (run.ledger('playerHits') ?? []).length;
+    for (let i = 0; i < found.r.keys.length; i += 1) {
+        const keys = found.r.keys[i];
+        perTick.push(keys);
+        const { transition } = run.advance(keys);
+        if (transition) {
+            throw new SolverRefusal(`${ctx.what} -> drill pass: crossed to level ${transition.to_level} at pass tick ${i}`,
+                { goal: ctx.goal, obstacle: { kind: 'drill', id: woken[0].id }, perTick: [...perTick] });
+        }
+        const hits = run.ledger('playerHits') ?? [];
+        if (hits.length !== hitsBefore) {
+            const h = hits.at(-1);
+            throw new SolverRefusal(`${ctx.what} -> drill pass to (${found.a.x},${found.a.y}): the player was HIT at pass `
+                + `tick ${i} (run tick ${run.ticksCompleted}, source ${h?.source ?? '?'}${h?.id ? ` ${h.id}` : ''}) at `
+                + `(${run.state.x.toFixed(2)},${run.state.y.toFixed(2)}) — the forecast's walk did not hold on the run`,
+            { goal: ctx.goal, obstacle: { kind: 'drill', id: h?.id ?? woken[0].id }, perTick: [...perTick] });
+        }
+    }
+    if (!hasArrived(run.state, found.a, DEFAULT_TOLERANCE)) {
+        throw new SolverRefusal(`${ctx.what} -> drill pass: the walk ended at (${run.state.x.toFixed(2)},`
+            + `${run.state.y.toFixed(2)}), not at the stance (${found.a.x},${found.a.y})`,
+        { goal: ctx.goal, obstacle: { kind: 'drill', id: woken[0].id }, perTick: [...perTick] });
+    }
+    return {
+        verb: 'drill-pass', drills: woken.map((d) => d.id), stance: { ...found.a }, ticks: perTick.length - from,
+        expanded: found.r.expanded, certified: found.certified, skipped: tried,
+    };
 }
 
 /**
@@ -25585,8 +26001,19 @@ function solveSegmentUnder({
             chests: run.entities('openChests'),
         };
         // ⛓ fidelity DRILLKILL D2: the drills the walk to the cut's stance would wake, killed first (null OFF).
-        const drillKills = verb === 'rope'
-            ? execDrillKillsFirst(run, perTick, resolved, { what: `${whatCT} -> ${verb}`, walkTo, goal, equip }) : null;
+        const drillFirst = verb === 'rope'
+            ? execDrillKillsFirst(run, perTick, resolved, { what: `${whatCT} -> ${verb}`, walkTo, goal, equip,
+                // ⛓ fidelity TIMEDPASS D2: the segment's fork, for the pass's certificate (no kill reads it).
+                ...(CONTACT_FIDELITY.drillTimedPass ? { fork } : {}) }) : null;
+        // ⛓ fidelity TIMEDPASS D2: a pass record rides beside the kills (`drillPass`), and the cut starts from its stance.
+        const drillPass = drillFirst?.find((k) => k.verb === 'drill-pass') ?? null;
+        const drillKills = drillPass
+            ? (drillFirst.filter((k) => k.verb !== 'drill-pass').length > 0
+                ? drillFirst.filter((k) => k.verb !== 'drill-pass') : null)
+            : drillFirst;
+        const verbResolved = drillPass ? { ...resolved, approach: [drillPass.stance,
+            ...(resolved.approach ?? []).filter((a) => a.x !== drillPass.stance.x || a.y !== drillPass.stance.y)] }
+            : resolved;
         if (resolved.stance) {
             walkTo(goal, resolved.stance, {
                 what: `${whatCT} -> ${verb} stance`,
@@ -25599,10 +26026,10 @@ function solveSegmentUnder({
             const waited = waitForWrite('the walk to the stance cleared it');
             done('cleared-in-passing', { waited, during: 'stance walk', strategy: verb,
                 why: `the walk to ${verb}'s stance cleared ${id} on its way — the verb is not run again`,
-                ...(drillKills ? { drillKills } : {}) });
+                ...(drillKills ? { drillKills } : {}), ...(drillPass ? { drillPass } : {}) });
             return;
         }
-        const record = clearTagExecutor(verb)(run, perTick, resolved, {
+        const record = clearTagExecutor(verb)(run, perTick, verbResolved, {
             maxTicksPerTarget, economies, dashMode, what: `${whatCT} -> ${verb}`,
             before, walkTo, goal, equip, rewind,
             // ⛓ fidelity BOSSFORK D1: the segment's own fork (`forkRun`, above; null without one), as the frontier arm
@@ -25620,7 +26047,8 @@ function solveSegmentUnder({
         // The verb's own finish is the WORLD's (the solid gone, the lock open);
         // the GAME's write can land later (a lock's `turnOff` closes its fade).
         const waited = waitForWrite(`'${verb}' ran (${JSON.stringify(record).slice(0, 160)})`);
-        done('verb', { strategy: verb, waited, ...record, ...(drillKills ? { drillKills } : {}) });
+        done('verb', { strategy: verb, waited, ...record, ...(drillKills ? { drillKills } : {}),
+            ...(drillPass ? { drillPass } : {}) });
     };
 
     // ── the goals, in order ───────────────────────────────────────────
