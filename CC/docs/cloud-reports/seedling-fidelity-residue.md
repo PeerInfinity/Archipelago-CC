@@ -267,7 +267,11 @@ proof (`proveForcedHit`, called only in a measurement that was then removed) are
 
 ## CI
 
-CI_LINE
+`JavaScript Unit Tests` at `7bf06d68` (run 40058506803): **failure, 1 red of 22,450** in the unfiltered suite
+(22,449 passed), slow battery green (267/267). The red is `procgenDocs/generated.test.js` › *`--check` exits 0* — the docs
+index's line/word counts, moved by the bot-log paragraph added in that same commit (mine; the regenerated index is the
+next commit). The run at this report's head is quoted in the session's closing message (`ci-vitest-summary.mjs <head>`);
+expected: green.
 
 ## Rows to BANK
 
