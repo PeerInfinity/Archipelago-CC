@@ -10945,6 +10945,17 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
         try {
             walk = previewWalk(run, [{ x: cell.x, y: cell.y }], DEFAULT_TOLERANCE);
         } catch (e) {
+            // ⛓ hammer-phase SFF2 — A PREVIEWED DEATH IS A STEP NOT TAKEN (A2's `previewOrDeath` rule and its test):
+            // the preview stepper THROWS the run's death refusal (`deathRefusal`, a `PhysicsV2Error`) when the walk
+            // drowns, and with `STRIKE_ETA_FLOOR` ON the bounded pass previews here, so the throw left the whole
+            // solve (`empty post-sword seed 30`: the generator's oracle aborted). The walk reads as truncated and
+            // names the death: no pass picks the candidate, and the walk loop refuses it by name.
+            if (e instanceof PhysicsV2Error) {
+                const out = { walk: { truncated: { kind: 'death' }, samples: [] }, eta: 0, unsafe: null,
+                    death: e.message.split(' — ')[0] };
+                walks.set(cell, out);
+                return out;
+            }
             // ⛓ hammer-phase LB (HO1, `PRESS_KILL_SHAKE_GUARD`; OFF rethrows): a preview the camera's shake band
             // cannot answer refuses this CANDIDATE by name; its walk reads as truncated, so no pass picks it.
             if (!PRESS_KILL_SHAKE_GUARD.enabled || !isShakeBandThrow(e)) throw e;
@@ -11041,7 +11052,12 @@ export function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuatio
     const rejected = [];
     for (const o of opportunities) {
         // `previewWalk` returns the samples `drive` would spend getting there.
-        const { walk, unsafe, shake } = walkTo(o.cell);
+        const { walk, unsafe, shake, death } = walkTo(o.cell);
+        if (death !== undefined) {
+            rejected.push({ option: `strike (${o.cell.x},${o.cell.y}) at +${o.i}`,
+                why: `the preview DIED: ${death} — a previewed death is a step not taken, so the walk is no plan` });
+            continue;
+        }
         if (shake !== undefined) {
             rejected.push({ option: `strike (${o.cell.x},${o.cell.y}) at +${o.i}`,
                 why: `the preview cannot be asked inside the camera's shake band: ${shake} depends on where `
