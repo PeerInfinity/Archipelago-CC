@@ -1,9 +1,3 @@
-level_25 <- in_L22_0_128 -> exit:out_teleporter_96_128
-level_25 <- in_L26_144_32 -> exit:out_teleporter_96_128
-level_25 <- in_L28_96_0 -> exit:out_teleporter_96_128
-level_26__r13c8 <- in_L28_0_96 -> exit:out_teleporter_144_208
-level_27 <- in_L26_64_304 -> exit:out_teleporter_168_16
-level_27 <- in_L28_128_304 -> exit:out_teleporter_168_16
 level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_0_96
 level_28__r0c6 <- in_L25_96_128 -> exit:out_teleporter_96_0
 level_28__r0c6 <- in_L25_96_128 -> location:L28 flag 0: rope@160,64 cleared
@@ -12,11 +6,6 @@ level_28__r0c6 <- in_L26_144_208 -> exit:out_teleporter_96_0
 level_28__r0c6 <- in_L26_144_208 -> location:L28 flag 0: rope@160,64 cleared
 level_28__r1c18 <- in_L30_0_128 -> exit:out_teleporter_304_16
 level_28__r11c4 <- in_L27_168_16 -> exit:out_teleporter_128_304
-level_30__r2c10 <- in_L28_304_16 -> exit:out_teleporter_0_128
-level_30__r2c10 <- in_L31_160_384 -> exit:out_teleporter_0_128
-level_30__r2c10 <- in_pit_L32_14_5 -> exit:out_teleporter_0_128
-level_30__r2c10 <- in_pit_L32_15_5 -> exit:out_teleporter_0_128
-level_56 <- in_L52_224_112 -> exit:out_pit_6_10
 level_57 <- in_pit_L56_6_10 -> exit:out_tentaclebeast_80_48
 level_57 <- in_pit_L56_6_10 -> location:Level 057 - Tentacled Beast
 level_57 <- in_L58_48_112 -> exit:out_tentaclebeast_80_48
