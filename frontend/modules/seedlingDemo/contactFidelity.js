@@ -281,8 +281,11 @@ export const CONTACT_FIDELITY = {
      * still wait prices a bomb and the hold is LATCHED (`deriveHold`'s `latched`, or `runLatchedWait`'s group), the
      * wait paces an out-and-back cycle from the stance, chosen only when every previewed sample is clean
      * (`planPacedWait`), and returns to the stance bit-exactly at each cycle end.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, WANDHOLD: "Flip both ON" / "Flip ON") turns it ON — MOVINGWAIT's paced hold — with bombBlastBody, WANDHOLD's L40 pair: leg 368 SOLVED, p4g 0 hits 0 px. Measured
+     * (CI, main d3346cf784 + WANDHOLD): survey 0 verdict movers; the L38–L41 keyed sweep ×2 and a full sweep per arm: 368
+     * failed → done, nothing else beyond known noise legs; probes standard ON green.
      */
-    movingWait: false,
+    movingWait: true,
     /**
      * fidelity MOVINGWAIT D4 — THE TOTEM SHOT'S EXPLOSION IS AN `int` (`bossTotemFight.BOSS_TOTEM_SHOT.explosionHitRadiusInt`).
      *
@@ -700,8 +703,11 @@ export const CONTACT_FIDELITY = {
      * `what: 'body-hit'` per body) and the walk's chaser forecast steps the same blasts onto its own bodies (D3). A
      * static census body in the square (no stepped state) still refuses by name. OFF: byte-identical.
      * `SEEDLING_BOMB_BLAST_BODY=0|1` for a node measurement.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, WANDHOLD: "Flip both ON" / "Flip ON") turns it ON — the L40 pair with movingWait (WANDHOLD). Measured
+     * (CI, main d3346cf784 + WANDHOLD): survey 0 verdict movers; the L38–L41 keyed sweep ×2 and a full sweep per arm: 368
+     * failed → done, nothing else beyond known noise legs; probes standard ON green.
      */
-    bombBlastBody: false,
+    bombBlastBody: true,
     /**
      * fidelity APBOSSES D2 — THE R4 BOSS-REPORT AS3 (`apReportBosses.js`; PeerInfinity/Seedling `r4-boss-report`
      * @ `0eda15f785`, ⚖ user 2026-10-19 Q1–Q3: all seven bosses report, Bob is always fought, every map).
@@ -1100,8 +1106,11 @@ export const CONTACT_FIDELITY = {
      * `Totem Part 72,40`) then grinds 400 ticks against `cover@112,144` (*"grazing 395 solid(s)"*). ON: a cover with a
      * group whose pressers all republish refines to `weigh`, as a lock does, so guard (iii) derives the weigh and a
      * cover no block reaches is a wall. OFF: byte-identical. `SEEDLING_COVER_WEIGH_REFINE=0|1`.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, WANDHOLD: "Flip both ON" / "Flip ON") turns it ON — L39's 400-tick grind → a named refusal (WANDHOLD). Measured
+     * (CI, main d3346cf784 + WANDHOLD): survey 0 verdict movers; the L38–L41 keyed sweep ×2 and a full sweep per arm: 368
+     * failed → done, nothing else beyond known noise legs; probes standard ON green.
      */
-    coverWeighRefine: false,
+    coverWeighRefine: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

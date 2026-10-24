@@ -120,8 +120,8 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity BOMBPUSHER D2: `bombPusherLive` (the lobber, its Bomb and its Explosion) — ⚖ ON since the wave-13 harvest.
             bombPusherLive: true,
             // ⛓ fidelity MOVINGWAIT D2: `movingWait` (`solverBot.MOVING_WAIT`, a latched wait inside a lobber's reach
-            // paces) ships OFF.
-            movingWait: false,
+            // paces) shipped OFF; ⛓ planning-11's flip (⚖ user, 2026-10-23, WANDHOLD) turns it ON.
+            movingWait: true,
             // ⛓ fidelity MOVINGWAIT D4: `totemShotBlastInt` (the totem shot's Explosion at its int point, r 15) and
             // `rebootShake` (a death reboot settles the camera through the shake) shipped OFF — ⚖ (user, 2026-10-12,
             // "Both ON") ON since the wave-14 flip.
@@ -182,8 +182,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             watcherTalkVerb: true,
             // ⛓ housekeep D3: `walkerBeamTowers` (the walker's planner reads the beam towers' drifted Solids) ships OFF.
             walkerBeamTowers: false,
-            // ⛓ fidelity BOMBBLAST D2: `bombBlastBody` (a bomb's Explosion lands on a body) ships OFF.
-            bombBlastBody: false,
+            // ⛓ fidelity BOMBBLAST D2: `bombBlastBody` (a bomb's Explosion lands on a body) shipped OFF;
+            // ⛓ planning-11's flip (⚖ user, 2026-10-23, WANDHOLD) turns it ON.
+            bombBlastBody: true,
             // ⛓ fidelity APBOSSES D2: `apReportBosses` (the R4 boss-report AS3) shipped OFF; ⛓ APFLIP D6 flipped it ON
             // inside the R7 merge (⚖ user 2026-10-19, "ON in R7 merge").
             apReportBosses: true,
@@ -244,8 +245,9 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity PITPORT (wave 26): a live door on a Pit tile is an exit the walk ends on; shipped OFF;
             // ⛓ planning-11's flip (⚖ user "Harvest + flip, re-pin", 2026-10-23) turns it ON.
             pitTeleporterCrossing: true,
-            // ⛓ fidelity WANDHOLD (wave 28): a cover behind plain Buttons refines to `weigh`; ships OFF.
-            coverWeighRefine: false });
+            // ⛓ fidelity WANDHOLD (wave 28): a cover behind plain Buttons refines to `weigh`; shipped OFF;
+            // ⛓ planning-11's flip (⚖ user, 2026-10-23, WANDHOLD) turns it ON.
+            coverWeighRefine: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)

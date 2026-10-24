@@ -172,9 +172,11 @@ describe('BOMBPUSHER D3 — the hold inside the lobber\'s reach is refused by na
             persistence: staging.persistence, log: () => {} });
     };
 
-    it('ON: the cluster boot\'s plan stops at buttonroom@272,208\'s hold, naming the lobber and the blast', async () => {
+    // ⛓ WANDHOLD's flip (⚖ user "Flip both ON", 2026-10-23): movingWait + bombBlastBody ON by default pace the hold — this
+    // row pins the STILL hold's refusal, so it names the pair OFF.
+    it('ON (movingWait, bombBlastBody OFF): the cluster boot\'s plan stops at buttonroom@272,208\'s hold, naming the lobber and the blast', async () => {
         let refusal = null;
-        await withContactFidelity({ bombPusherLive: true }, async () => {
+        await withContactFidelity({ bombPusherLive: true, movingWait: false, bombBlastBody: false }, async () => {
             try { await solveFromCluster(); } catch (e) { refusal = e; }
         });
         expect(refusal).toBeInstanceOf(SolverRefusal);

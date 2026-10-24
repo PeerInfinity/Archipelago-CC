@@ -106,10 +106,11 @@ function disagreements(w, cols) {
 }
 
 describe('WANDHOLD — the switch', () => {
-    it('coverWeighRefine ships OFF; the L40 pair (movingWait, bombBlastBody) is still OFF at this base', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.coverWeighRefine).toBe(false);
-        expect(CONTACT_FIDELITY_DEFAULTS.movingWait).toBe(false);
-        expect(CONTACT_FIDELITY_DEFAULTS.bombBlastBody).toBe(false);
+    // ⛓ planning-11's flip (⚖ user, 2026-10-23: "Flip ON" coverWeighRefine, "Flip both ON" the L40 pair).
+    it('coverWeighRefine and the L40 pair (movingWait, bombBlastBody) are ON by default (flipped)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.coverWeighRefine).toBe(true);
+        expect(CONTACT_FIDELITY_DEFAULTS.movingWait).toBe(true);
+        expect(CONTACT_FIDELITY_DEFAULTS.bombBlastBody).toBe(true);
     });
 });
 
@@ -130,8 +131,8 @@ describe('WANDHOLD L39 — a cover held by a plain Button does not outlive the w
         expect(cols.get(100).p[0]).toBe(cols.get(88).p[0]);
     });
 
-    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY)('OFF (the default): the hold stance is hypothesised behind the cover and the walk grinds 400 ticks against it', async () => {
-        const e = await caught(solveL39());
+    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY)('OFF (coverWeighRefine OFF): the hold stance is hypothesised behind the cover and the walk grinds 400 ticks against it', async () => {
+        const e = await withContactFidelity({ coverWeighRefine: false }, () => caught(solveL39()));
         expect(e).toBeInstanceOf(SolverRefusal);
         expect(e.message).toContain('hold stance (wandlock@144,64): the re-planned corridor failed too');
         expect(e.message).toContain('waypoint 1 (120,152): not reached within 400 ticks; stalled at (119.37585598070463,162.0184411286208)');
@@ -150,8 +151,8 @@ describe('WANDHOLD L39 — a cover held by a plain Button does not outlive the w
 });
 
 describe.each(L40_LEGS)('WANDHOLD L40 — leg $leg', (row) => {
-    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY)('OFF (the default): the sweep\'s refusal — a still hold inside the lobber\'s reach', async () => {
-        const e = await caught(solveL40(row.boot));
+    it.skipIf(!!process.env.SEEDLING_CONTACT_FIDELITY)('OFF (movingWait, bombBlastBody OFF): the sweep\'s refusal — a still hold inside the lobber\'s reach', async () => {
+        const e = await withContactFidelity({ movingWait: false, bombBlastBody: false }, () => caught(solveL40(row.boot)));
         expect(e).toBeInstanceOf(SolverRefusal);
         expect(e.message).toContain(`hold stance (wandlock@176,80) -> hold: the hold stands still for up to 131 tick(s) at ${row.still}, `
             + 'inside bombpusher@112,128\'s 256 px reach');
