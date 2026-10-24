@@ -1,0 +1,10 @@
+# box lock: TAKEN by probe-seedling-fire-move.mjs (browser, pid 3463) — head e8d85de8d, 4 tracked change(s) frozen (untracked paths excluded: a measuring run writes logs)
+      firemove-l41-part3: 2346 t from /tmp/claude-0/fm/step94-walk-on.json
+PASS: firemove-l41-part3: the model (keys ON) replays the tape to its end
+CHANNEL: headless logic-only — __swfGpu = {"lost":1,"stalls":0} (device lost at the first present, as asked; no pixels, no texFail, no stalls)
+PASS: firemove-l41-part3: the game reproduces the model at 0 px (the player, every pushable block) on all 2343 sampled tick(s)
+PASS: firemove-l41-part3: the game parks the fire block on button@176,176 (11,11) — from t1947
+      firemove-l41-part3: the game ends at L40 t2346
+recorded frontend/modules/seedlingDemo/fixtures/firemove-witness/firemove-l41-part3.json — 2343 tick(s)
+
+ALL CHECKS PASSED

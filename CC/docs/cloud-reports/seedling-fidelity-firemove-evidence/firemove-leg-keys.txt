@@ -1,0 +1,58 @@
+level_38 <- in_L37_288_0 -> exit:out_teleporter_144_0
+level_38 <- in_L37_288_0 -> exit:out_teleporter_144_304
+level_38 <- in_L37_288_0 -> location:Level 038 - Chest
+level_38 <- in_L37_288_0 -> location:L39 flag 8: wandlock@144,592 cleared
+level_38 <- in_L39_144_624 -> exit:out_teleporter_144_0
+level_38 <- in_L39_144_624 -> exit:out_teleporter_144_304
+level_38 <- in_L39_144_624 -> location:Level 038 - Chest
+level_39__r0c9 <- in_L40_480_912 -> exit:out_teleporter_144_0
+level_39__r0c9 <- in_L40_480_912 -> location:Level 039 - Totem Part 72,40
+level_39__r25c9 <- in_L38_144_0 -> exit:out_teleporter_144_624
+level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_848_0
+level_40__r0c53 <- in_L41_0_160 -> exit:out_teleporter_944_96
+level_40__r0c53 <- in_L41_0_160 -> location:Level 040 - Totem Part 64,144
+level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_848_0
+level_40__r0c53 <- in_L42_240_336 -> exit:out_teleporter_944_96
+level_40__r0c53 <- in_L42_240_336 -> location:Level 040 - Totem Part 64,144
+level_40__r23c29 <- in_L39_144_0 -> exit:out_stairsdown_320_576
+level_40__r23c29 <- in_L39_144_0 -> exit:out_teleporter_480_912
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_20
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_20
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_20
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_20
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_21
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_21
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_13_21
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_14_21
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_22
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_22
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_4_23
+level_40__r23c29 <- in_L39_144_0 -> exit:out_pit_5_23
+level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Totem Part 160,640
+level_40__r23c29 <- in_L39_144_0 -> location:Level 040 - Chest
+level_40__r23c29 <- in_L39_144_0 -> location:L40 flag 8: bosslock@480,352 cleared
+level_40__r23c29 <- in_L43_176_464 -> exit:out_stairsdown_320_576
+level_40__r23c29 <- in_L43_176_464 -> exit:out_teleporter_480_912
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_20
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_20
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_20
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_20
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_21
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_21
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_13_21
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_14_21
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_22
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_22
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_4_23
+level_40__r23c29 <- in_L43_176_464 -> exit:out_pit_5_23
+level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Totem Part 160,640
+level_40__r23c29 <- in_L43_176_464 -> location:Level 040 - Chest
+level_40__r23c29 <- in_L43_176_464 -> location:L40 flag 8: bosslock@480,352 cleared
+level_41__r4c3 <- in_L40_944_96 -> exit:out_teleporter_0_160
+level_107 <- in_L102_224_96 -> exit:out_teleporter_0_48
+level_107 <- in_L102_224_96 -> exit:out_teleporter_304_176
+level_107 <- in_L108_0_32 -> exit:out_teleporter_0_48
+level_107 <- in_L108_0_32 -> exit:out_teleporter_304_176
+level_40__r32c36 <- in_L39_144_0 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+level_40__r32c36 <- in_L43_176_464 ~> level_40__r23c29 -> location:Level 040 - Boss Key 2
+level_41__r7c15 <- in_L40_944_96 ~> level_41__r4c3 ~> level_41__r4c15 -> location:Level 041 - Totem Part 240,144

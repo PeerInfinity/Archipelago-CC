@@ -1,0 +1,13 @@
+ FAIL  frontend/modules/flashPanel/seedlingAtlasArm.test.js [ frontend/modules/flashPanel/seedlingAtlasArm.test.js ]
+ FAIL  frontend/modules/flashPanel/seedlingEncounterBinding.test.js [ frontend/modules/flashPanel/seedlingEncounterBinding.test.js ]
+ FAIL  frontend/modules/flashPanel/seedlingRandomizerWiring.test.js [ frontend/modules/flashPanel/seedlingRandomizerWiring.test.js ]
+ FAIL  frontend/modules/procgenDocs/generated.test.js > the registry matrix is one column per ENTRY and one row per FIELD
+ FAIL  frontend/modules/procgenDocs/generated.test.js > the capability chart is every statement × every registered entry
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  frontend/modules/procgenDocs/generated.test.js > the generated modules ARE what the code says > ⛓⛓ `--check` exits 0 — regenerating produces byte-identical files
++ FAIL: registry.js DIFFERS from what the code says
++ FAIL: capabilities.js DIFFERS from what the code says
++ FAIL: docs/json/developer/procgen/substrate-registry.md § GENERATED:substrate-capability-matrix DIFFERS from what the code says
++ FAIL: docs/json/features/procgen-substrates.md § GENERATED:substrate-capability-chart DIFFERS from what the code says
+ Test Files  4 failed | 118 passed (122)
+      Tests  1 failed | 4351 passed | 14 skipped (4366)
