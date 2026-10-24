@@ -144,7 +144,7 @@
     },
     {
       "name": "Raft.yaml",
-      "reason": "Temporarily excluded. The WorldGen spoiler test times out at 300 seconds. Also: strict world_generator refuses it (rule-node F1, 2026-10-23): 1 helper name(s) with no definition in the rules file's helpers block (has ×26; an exporter gap: the LogicMixin's self.has(item, player) exports as a helper named has, not an item check), so it generates only with --lossy."
+      "reason": "Temporarily excluded. The WorldGen spoiler test times out at 300 seconds. (Strict world_generator generates it since 2026-10-24: the exporter now reads a LogicMixin's self.has(item, player) as an item check, not a helper named has.)"
     },
     {
       "name": "Secret of Evermore.yaml",

@@ -1226,7 +1226,8 @@ rather than silently absent.
 gate that held the Windows driver path now also imports `headlessChromium.js`
 and runs headless by default, so `gateRoster` classifies it `dual` (`windows`
 now means Windows-ONLY, and no gate is), `ciRunnable` admits it, and CI runs it
-on ubuntu-latest. Two headless channels exist on both the box and the runner:
+on ubuntu-latest (⚠ since 2026-10-22 the browser shards are PINNED to
+`ubuntu-24.04`: `ubuntu-latest` became 26.04, where Playwright refuses chromium). Two headless channels exist on both the box and the runner:
 **logic-only** (`HEADLESS_LOGIC_ONLY_ARGS`, the device lost on purpose and proved
 by `__swfGpu.lost` in `seedlingChannel.js`) for every wasm gate, and **pixels**
 (`HEADLESS_WEBGPU_ARGS`) for the two whose claims assert zero pageerrors
