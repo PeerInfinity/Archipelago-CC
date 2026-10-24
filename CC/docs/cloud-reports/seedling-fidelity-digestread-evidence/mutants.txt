@@ -1,0 +1,8 @@
+DIGESTREAD mutants — each predicted first, made by copy + restore (cmp-verified), guard = levelRunDigestRead.test.js.
+M1 the wrap removed (D2's first shape: readingGetters → identity)  PREDICTED the base's 6 reds incl. bobBoss  → 6 red, bobBoss listed (=)
+M2 keptUnlessReading always stores                                  PREDICTED red without bobBoss; "after one tick" green → 5 red, no bobBoss, after-one-tick green (=)
+M3 crusherStateFor stores again                                     PREDICTED `crushers -> visit` in all 15 rooms only → 15 × crushers (=)
+M4 lavaBossFightFor's worldCtor gate removed                        PREDICTED green (worldCtor is in no digest part) → green (=; the gate is unguarded by this row, see residue)
+M5 armedArrowTraps unwrapped (rework shape)                         PREDICTED only the isolated row red, on 16:armedArrowTraps
+                                                                    → isolated row red on 16:armedArrowTraps (=) AND the cumulative boot + f7 entry rows red (≠:
+                                                                      once `pushables` reads without keeping, nothing earlier masks it)

@@ -25180,3 +25180,38 @@ the arrival, with the solver's tail (pulse hold, walk-block shove N3, the key) �
 - "Updates before the player" is not the whole order: a reader that updates before its PUBLISHER reads the publish a tick
   late, whatever the player did.
 - A committed tape that is byte-exact on the player can still be wrong on a body nobody compared (`r5-l40-part5`'s corpse).
+
+### Seedling fidelity DIGESTREAD — a run getter read no longer moves `run.stateDigest()` (no switch; byte-identical ticks)
+
+Planner `seedling-fidelity-planning-12`, wave 29. The report is `CC/docs/cloud-reports/seedling-fidelity-digestread.md`.
+
+**W0 — the defect, measured.** Before D2, 31 getters moved `run.stateDigest()` when read. 30 moved `visit` and `bobBoss`
+moved `player`. Each one asks a lazy `…StateFor(level)` (or `bobArenaNow`), and that call STORES what it builds: an
+empty Map in a room without the family. The digest hashes those maps whole. The window is narrower than G5 reported. It
+is the span between a visit's build (the boot, or a level entry) and that visit's first `advance`, because the tick
+builds every one of these states itself. So a run digested every tick reds on ONE tick per visit, not on every tick. The
+exception is L112, where the tick never asks for `bobArena` and a `bobBoss` read moves `player` after any tick. The brief
+named 2 getters; there were 31.
+
+**D2 — `reading(…)` + `keptUnlessReading`.** While one of those 31 getters runs, `readingDepth` is raised, and each lazy
+builder of a digested per-visit map returns its build without storing it. The tick then builds the same state from the
+same inputs. The King of Fire's build writes `worldCtor` only when it is kept, and `bobArenaNow` keeps the arena only
+outside a read. `stateDigest`/`stateDigestParts` are untouched. Methods (`entities`, the forecasts, `previewStepper`)
+still build and keep, and DA's `lightsFights` row relies on that.
+
+**D1/D3 — the guard (`levelRunDigestRead.test.js`).** It enumerates every getter from the run's own descriptors and
+reads them on 15 rooms (each lazy family present and absent): before the first tick, after one tick, and on each tick a
+level entry lands. An isolated row reads each getter alone on L16 and L41, and a further row walks a tape read every
+tick against a twin that is never read. D3 is G3c's read set every tick for 120 ticks on L63. The digest is equal on
+every one.
+
+**Byte-inertia.** The identity block, the six `--check`s, the tapeRunner pairs (635 `88fc7df4`), and the local full
+route survey (239 rows, 0 differ in any field but `ms`) all equal W0.
+
+**Trap candidates.**
+- A lazy getter that STORES its build is a write. "The tick builds it anyway" makes the two runs agree only after the
+  first tick, and a digest compared before that tick reds.
+- A cumulative read sweep hides a getter behind an earlier getter that built the same state. Read each getter alone too
+  (here, `armedArrowTraps` behind `pushables`).
+- A source-text census counts CALL text: wrapping `f()` as `reading(f)` removes a call site from the census (R8's
+  `liveSolidOpts` count), and wrapping the run's `return { … }` removes the object every AST census parses.

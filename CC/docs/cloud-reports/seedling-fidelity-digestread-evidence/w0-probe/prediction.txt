@@ -1,0 +1,8 @@
+W0/D1 PREDICTION (before the first run, 2026-10-24): getters that move `visit` on a fresh visit of a room without the family:
+ certain: crushers, bossesWoken (the brief's two)
+ likely : crushersParked/crusherContacts/crusherScans (crusherStateFor), bosses/bossClamps (bossStateFor), shieldBosses (shieldBossStateFor),
+          finalDoors/finalDoorGate (finalDoorStateFor), turrets/turretsSettled (turretStateFor), lightsFight (lightsFightFor, ON),
+          lavaBossFight (lavaBossFightFor)
+ unsure : openChests (chestStateFor), armedPulsers (pulserStateFor), spinnerBodies (spinnerStateFor), pushables, openActivators,
+          openBridges, brokenRocks, burnedTrees, pulledRopes, moonrock, igneousTiles
+ parts  : `visit` only; no getter moves place/player/persist/clock/staging/globals.
