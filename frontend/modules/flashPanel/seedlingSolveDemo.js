@@ -1,6 +1,6 @@
 /**
  * flashPanel/seedlingSolveDemo — ⛓ AUTO-SHOW (slice `solve-progress-auto`): **A SOLVE THE PANEL CAN STAGE**, so the
- * Solve Progress view can be watched (and its feature check `seedling-solve-progress-auto-show` can run) on a real
+ * Solve Progress view can be watched (and its feature check `seedling-solve-progress-line` can run) on a real
  * solve without a test harness reaching into the page.
  *
  * `l6-enemy-room` is the L6 enemy room the in-app row `seedling-js-runtime-solve-progress-view` solves: the
