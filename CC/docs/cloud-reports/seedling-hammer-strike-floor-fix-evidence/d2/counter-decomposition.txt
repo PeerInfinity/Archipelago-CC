@@ -1,0 +1,6 @@
+# SFF2 D2 — scripts/d2.mjs at the D1 tree, instrumented in a scratch worktree (globalThis.__D2 counters in measuredPair).
+# inKnown/outKnown = known-refusing skips in / out of the press's reach; fresh = skips at a cell's first preview;
+# capIn/capOut = cap skips in / out of reach. Staging A (hammer-p1-l40-south-boot), STRIKE_ETA_FLOOR ON, P1 ON.
+P2 ON  {"first":{"cell":{"x":728,"y":680},"D":{"fresh":16,"inKnown":795,"outKnown":43}},"again":{"cell":{"x":728,"y":680},"D":{"fresh":16,"inKnown":795,"outKnown":43}},"far":{"cell":null,"etaSkipped":9149,"capSkipped":0,"scanned":5,"D":{"fresh":5,"inKnown":8079,"outKnown":1065}}}
+P2 OFF {"first":{"cell":{"x":728,"y":680},"D":{"fresh":16,"inKnown":795,"outKnown":2453,"capOut":38205}},"again":{"cell":{"x":728,"y":680},"D":{"fresh":16,"inKnown":795,"outKnown":2453,"capOut":38205}},"far":{"cell":null,"etaSkipped":16202,"capSkipped":0,"scanned":5,"D":{"fresh":5,"inKnown":8079,"outKnown":8118}}}
+# => in reach: 8079 + 5 = 8084 both ways; the 7053 between 9149 and 16202 = 8118 - 1065, all out of reach.
