@@ -390,7 +390,8 @@ describe('fidelity HITLESS — the Tentacled Beast\'s fork prefers a variant tha
     it('seed 7: ON, a variant whose fork drowns at a whirlpool\'s centre is rejected as a death, and a hitless one wins', () => {
         const on = solveAt(7, true);
         expect(on.rec.tried[1]).toMatchObject({ ok: false, hits: null });
-        expect(on.rec.tried[1].why).toMatch(/^the player drowned: .*calls `Player\.drown\(\)` from outside the player/);
+        // ⛓ RESIDUE's flip (`whirlpoolDrown` ON by default): the drown is a transcribed death, not a thrown Error.
+        expect(on.rec.tried[1].why).toMatch(/^the player drowned in whirlpool#\d+ at /);
         expect(on.rec.choice).toEqual({ rule: 'hitless', variant: 0, hits: 0, tried: 5, hitless: 3 });
         expect([on.hits, on.run.level, on.out.perTick.length]).toEqual([[], 58, 1133]);
     }, 120000);

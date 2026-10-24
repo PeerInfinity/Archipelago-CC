@@ -1147,8 +1147,11 @@ export const CONTACT_FIDELITY = {
      * (the stepper's transition through that teleporter) — certified on a fork, then played; and (2) a pass to a cut's
      * stance whose segment's NEXT goal is a `reach-exit` is certified only when the cut leaves that crossing's pass open
      * (the search tries further stands until one does). OFF: byte-identical. `SEEDLING_DRILL_TIMED_PASS_EXIT=0|1`.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, RESIDUE "Harvest + flip both ON") turns it ON — Fire-only L28 leaves by both doors from L25 (182/134 t, p4g 0 px); from L26 a named refusal. Measured (CI,
+     * main d3346cf784 + RESIDUE): survey ON = OFF; the 16 L28/L57/L58 sweep legs ×2: one mover (leg 494's continuation,
+     * done both arms); probes standard ON green.
      */
-    drillTimedPassExit: false,
+    drillTimedPassExit: true,
     /**
      * seedling-fidelity-residue D-B (wave 28) — A WHIRLPOOL'S DROWN IS A DEATH THE SOLVER SEES, AND ITS PULL IS PRICED
      * (`Puzzlements/Whirlpool.as:61-83`, `Player.as:1431-1444`). A live whirlpool (timer in [dies, live + dies)) writes
@@ -1164,8 +1167,11 @@ export const CONTACT_FIDELITY = {
      * `whirlpoolDanger` (the disc inside the box, at the tick's own timer in transit) and a `dangerVolumes` row (its
      * 32x32 box), so the walk's probe and its AVOID / WAIT rungs see it. OFF: byte-identical.
      * `SEEDLING_WHIRLPOOL_DROWN=0|1`.
+     * ⛓ planning-11's flip (⚖ user, 2026-10-23, RESIDUE "Harvest + flip both ON") turns it ON — a whirlpool drown is a death the solver sees, its pull priced; L57's exit continuation plans a dodge. Measured (CI,
+     * main d3346cf784 + RESIDUE): survey ON = OFF; the 16 L28/L57/L58 sweep legs ×2: one mover (leg 494's continuation,
+     * done both arms); probes standard ON green.
      */
-    whirlpoolDrown: false,
+    whirlpoolDrown: true,
 };
 /** The defaults this slice shipped, for a reader that asks what "default" was. */
 export const CONTACT_FIDELITY_DEFAULTS = Object.freeze({ ...CONTACT_FIDELITY });

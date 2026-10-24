@@ -88,9 +88,10 @@ const OFF = (fn) => withContactFidelity({ drillTimedPass: true, drillTimedPassEx
 const keys = (out) => out.perTick.map((h) => [...h].sort().join('+'));
 
 describe('fidelity RESIDUE D-A — the switch', () => {
-    it('ships OFF, behind `drillTimedPass` (ON)', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.drillTimedPassExit).toBe(false);
-        expect(CONTACT_FIDELITY.drillTimedPassExit).toBe(false);
+    // ⛓ planning-11's flip (⚖ user "Harvest + flip both ON", 2026-10-23).
+    it('is ON by default (flipped), behind `drillTimedPass` (ON)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.drillTimedPassExit).toBe(true);
+        expect(CONTACT_FIDELITY.drillTimedPassExit).toBe(true);
         expect(CONTACT_FIDELITY_DEFAULTS.drillTimedPass).toBe(true);
     });
 });
@@ -195,9 +196,10 @@ function solve57(seed, { hitless, drown, goals = [L57_FIGHT, L57_MOUTH] }) {
 }
 
 describe('fidelity RESIDUE D-B — the switch', () => {
-    it('ships OFF', () => {
-        expect(CONTACT_FIDELITY_DEFAULTS.whirlpoolDrown).toBe(false);
-        expect(CONTACT_FIDELITY.whirlpoolDrown).toBe(false);
+    // ⛓ planning-11's flip (⚖ user "Harvest + flip both ON", 2026-10-23).
+    it('is ON by default (flipped)', () => {
+        expect(CONTACT_FIDELITY_DEFAULTS.whirlpoolDrown).toBe(true);
+        expect(CONTACT_FIDELITY.whirlpoolDrown).toBe(true);
     });
 });
 

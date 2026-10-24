@@ -255,10 +255,12 @@ describe('contact witnesses (fixtures/contact-witness)', () => {
             // ⛓ fidelity SEARCHGAPS D-B (wave 28): the forced-hit proof asks one hitless witness first; shipped OFF;
             // ⛓ planning-11's flip (⚖ user "Harvest + flip both ON", 2026-10-23) turns it ON.
             forcedHitWitnessFirst: true,
-            // ⛓ seedling-fidelity-residue D-A (wave 28): the timed pass extended to a `reach-exit`; ships OFF.
-            drillTimedPassExit: false,
-            // ⛓ seedling-fidelity-residue D-B (wave 28): a whirlpool's drown transcribed, its pull priced; ships OFF.
-            whirlpoolDrown: false });
+            // ⛓ seedling-fidelity-residue D-A (wave 28): the timed pass extended to a `reach-exit`; shipped OFF;
+            // ⛓ planning-11's flip (⚖ user "Harvest + flip both ON", 2026-10-23) turns it ON.
+            drillTimedPassExit: true,
+            // ⛓ seedling-fidelity-residue D-B (wave 28): a whirlpool's drown transcribed, its pull priced; shipped OFF;
+            // ⛓ planning-11's flip (⚖ user "Harvest + flip both ON", 2026-10-23) turns it ON.
+            whirlpoolDrown: true });
     });
 
     // ⛓ LINEFLIP: with W1 ON by default, #264 and #283 reproduce at the default too (they waited on W1 at TERRAIN)
