@@ -1,9 +1,15 @@
 /**
- * ⛓ KNOWN DIVERGENCES (§5.124) — the L15 post-chest entry matches EXACTLY the measured divergence (battery
- * 39870675057 / repeat 39873208691, history 74–76) and nothing near it; a mutant tightened to 0.1 px goes red.
+ * ⛓ KNOWN DIVERGENCES (§5.124) — the classifier, on the retired L15 post-chest entry (battery 39870675057 / repeat
+ * 39873208691, history 74–76): an entry matches EXACTLY its measured divergence and nothing near it; a mutant
+ * tightened to 0.1 px goes red. ⛓ HOLD SEAM — the entry is RETIRED (the list is empty): that divergence fails again.
  */
 import { describe, it, expect } from 'vitest';
-import { classifyDivergences, KNOWN_DIVERGENCES } from './seedlingKnownDivergences.js';
+import { classifyDivergences as classifyWith, KNOWN_DIVERGENCES } from './seedlingKnownDivergences.js';
+
+/** The retired entry, as it stood (§5.124): the classifier's rows run on it, passed explicitly. */
+const L15 = Object.freeze({ id: 'l15-post-chest-walk', finding: 'fidelity finding: L15 post-chest walk +0.25 px x @ t18',
+    goal: 'level_15__r1c5 -> level_14', after: 'Level 015 - Chest', level: 15, t: 18, maxDx: 0.5, maxRecoveryTicks: 10 });
+const classifyDivergences = (history, entries = [L15]) => classifyWith(history, entries);
 
 const DIV = { t: 18, expected: { level: 15, x: 115.05000000000047, y: 103.44999999999993 },
     got: { level: 15, x: 115.30000000000047, y: 103.44999999999993 } };
@@ -16,7 +22,17 @@ const measured = (patch = {}) => [
     { goal: 'level_14 -> level_13', outcome: 'done', ticks: 55, divergence: null },
 ];
 
-describe('classifyDivergences — the L15 post-chest entry', () => {
+describe('KNOWN_DIVERGENCES — the L15 post-chest entry RETIRED (the hold seam)', () => {
+    it('the list is empty, and the measured L15 divergence is UNKNOWN again (it fails the row)', () => {
+        expect(KNOWN_DIVERGENCES).toEqual([]);
+        const v = classifyWith(measured());
+        expect(v.known).toEqual([]);
+        expect(v.unknown.map((u) => u.goal)).toEqual(['level_15__r1c5 -> level_14']);
+        expect(v.reached).toEqual({});
+    });
+});
+
+describe('classifyDivergences — on the retired L15 post-chest entry', () => {
     it('the measured divergence is KNOWN (and the leg reached)', () => {
         const v = classifyDivergences(measured());
         expect(v.unknown).toEqual([]);
@@ -58,7 +74,7 @@ describe('classifyDivergences — the L15 post-chest entry', () => {
     });
 
     it('it bites: the bound tightened to 0.1 px leaves the measured divergence unknown (red)', () => {
-        const tight = KNOWN_DIVERGENCES.map((e) => ({ ...e, maxDx: 0.1 }));
+        const tight = [{ ...L15, maxDx: 0.1 }];
         const v = classifyDivergences(measured(), tight);
         expect(v.known).toEqual([]);
         expect(v.unknown[0].why).toMatch(/\|dx\| 0\.25\d* > 0\.1/);

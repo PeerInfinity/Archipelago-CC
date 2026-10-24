@@ -39,6 +39,7 @@
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { evaluateRule } from '../shared/ruleEngine.js';
 import { createSnapshotInterface } from '../shared/snapshotInterface.js';
+import { findUncreditedSphereZeroItems } from '../stateManager/core/sphereZeroCredit.js';
 import { createUniversalLogger } from '../../app/core/universalLogger.js';
 import settingsManager from '../../app/core/settingsManager.js';
 import { profiler } from '../shared/profiler.js';
@@ -360,6 +361,26 @@ export class EventProcessor {
               // Wait for state to stabilize after adding starting items
               await stateManager.pingWorker('sphere_0_starting_items_added', 10000);
               this.logCallback('info', 'Starting items added successfully.');
+            }
+
+            // Credit what sphere 0's log inventory holds beyond the starting items (items the
+            // world computed from them), so later deltas land on the right base.
+            // See sphereZeroCredit.js.
+            const sphere0Interface = createSnapshotInterface(
+              await stateManager.getFullSnapshot(),
+              stateManager.getStaticData()
+            );
+            const uncredited = findUncreditedSphereZeroItems(
+              inventory_from_log,
+              (itemName) => sphere0Interface.countItem(itemName),
+              useResolvedItems ? accumulatorTargets : new Set()
+            );
+            if (Object.keys(uncredited).length > 0) {
+              this.logCallback('info', `Crediting sphere 0 items beyond the starting items: ${JSON.stringify(uncredited)}`);
+              for (const [itemName, count] of Object.entries(uncredited)) {
+                await stateManager.addItemToInventory(itemName, count);
+              }
+              await stateManager.pingWorker('sphere_0_computed_items_added', 10000);
             }
           } else {
             if (this.verboseMode) {
